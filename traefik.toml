@@ -1,0 +1,34 @@
+# Change this if needed
+logLevel = "ERROR"
+defaultEntryPoints = ["https","http"]
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+    address = ":443"
+  [entryPoints.https.tls]
+
+# REMOVE this section if you don't want the dashboard/API
+[api]
+entryPoint = "api"
+dashboard = true
+
+[retry]
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "roguesystems.co.bw"
+watch = true
+# I prefer to expose my containers explicitly
+exposedbydefault = false
+
+[acme]
+email = "ojmakhura@roguesystems.co.bw"
+storage = "acme.json"
+entryPoint = "https"
+OnHostRule = true
+[acme.httpChallenge]
+entryPoint = "http"

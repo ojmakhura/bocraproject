@@ -1,0 +1,315 @@
+version: "3.3"
+services:
+  proxy:
+    image: traefik:v2.4
+    container_name: bocra-proxy
+    hostname: bocra-proxy
+    networks:
+      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+      - bocra-network
+      - default
+      #- default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      #- /bocra/traefik/traefik.toml:/traefik.toml
+      - traefik-data:${BOCRA_DATA}/traefik
+    ports:
+      - 80:80
+      - 8080:8080
+      # Listen on port 443, default for HTTPS
+      - 443:443
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=${TEST_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=${ACME_STORAGE}"
+    labels:
+      - "traefik.http.routers.bocra-proxy.rule=Host(`traefik.roguesystems.co.bw`)"
+      - "traefik.http.routers.bocra-proxy.service=api@internal"
+      - "traefik.http.middlewares.api-auth.basicauth.users=${TRAEFIK_USER}:${TRAEFIK_PASSWORD}"
+
+  db:
+    container_name: bocra-db
+    hostname: bocra-db
+    image: postgres:12
+    volumes:
+      - app-db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    networks:
+      - traefik-public
+      - bocra-network
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-db.rule=Host(`db.roguesystems.co.bw`)"
+      - "traefik.http.routers.bocra-db.entrypoints=websecure"
+      - "traefik.http.routers.bocra-db.tls.certresolver=myresolver"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: bocra-pgadmin
+    networks:
+      - traefik-public
+      - bocra-network
+      - default
+    depends_on:
+      - db
+    #env_file:
+    #  - .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    #ports:
+    #  - "8000:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-pgadmin.rule=Host(`pgadmin.roguesystems.co.bw`)"
+      - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.bocra-pgadmin.tls.certresolver=myresolver"
+
+  queue:
+    container_name: bocra-queue
+    image: rabbitmq:3
+    # Using the below image instead is required to enable the "Broker" tab in the flower UI:
+    # image: rabbitmq:3-management
+    #
+    # You also have to change the flower command
+
+  flower:
+    container_name: bocra-flower
+    image: mher/flower
+    networks:
+      - traefik-public
+      - default
+    env_file:
+      - .env
+    command:
+      - "--broker=amqp://guest@queue:5672//"
+      # For the "Broker" tab to work in the flower UI, uncomment the following command argument,
+      # and change the queue service's image as well
+      # - "--broker_api=http://guest:guest@queue:15672/api//"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-flower.rule=Host(`flower.roguesystems.co.bw`)"
+      - "traefik.http.routers.bocra-flower.entrypoints=websecure"
+      - "traefik.http.routers.bocra-flower.tls.certresolver=myresolver"
+
+  keycloak:
+    container_name: bocra-keycloak
+    hostname: bocra-keycloak
+    image: "bocra-keycloak:latest"
+    environment:
+      PROXY_ADDRESS_FORWARDING: "true"
+      DB_VENDOR: POSTGRES
+      DB_ADDR: bocra-db
+      DB_DATABASE: ${KEYCLOAK_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+    depends_on:
+      - db
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile.keycloak
+    #volumes:
+    #  - keycloak-installation:/opt/jboss/keycloak
+    networks:
+      - traefik-public
+      - bocra-network
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-keycloak.rule=Host(`keycloak.roguesystems.co.bw`)"
+      - "traefik.http.routers.bocra-keycloak.entrypoints=websecure"
+      - "traefik.http.routers.bocra-keycloak.tls.certresolver=myresolver"
+
+  web:
+    image: "bocra-web:latest"
+    hostname: web.roguesystems.co.bw
+    build:
+      context: .
+      dockerfile: bocra-web/Dockerfile
+    container_name: bocra-web
+    env_file:
+      - .env
+    volumes:
+      - web-app-data:/web
+    depends_on:
+      - db
+      - keycloak
+      - api
+    networks:
+      - traefik-public
+      - bocra-network
+      - default
+    #ports:
+    #  - 3100:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-web.rule=Host(`bocra.roguesystems.co.bw`)"
+      - "traefik.http.routers.bocra-web.entrypoints=websecure"
+      - "traefik.http.routers.bocra-web.tls.certresolver=myresolver"
+
+  api:
+    image: "bocra-api:latest"
+    container_name: bocra-api
+    hostname: bocra-api
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - keycloak
+    ports:
+      - ${API_SERVER_PORT}
+    volumes:
+      - api-uploads:${API_UPLOADS}
+    build:
+      context: .
+      dockerfile: bocra-api/Dockerfile
+    networks:
+      - traefik-public
+      - bocra-network
+      - default
+    environment:
+      POSTGRES_SERVER: bocra-db
+      SERVER_PORT: ${API_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-api.rule=Host(`api.roguesystems.co.bw`)"
+      - "traefik.http.routers.bocra-api.entrypoints=websecure"
+      - "traefik.http.routers.bocra-api.tls.certresolver=myresolver"
+
+  pipeline:
+    image: "bocra-pipeline:latest"
+    container_name: bocra-pipeline
+    hostname: bocra-pipeline
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - keycloak
+    ports:
+      - ${PIPELINE_SERVER_PORT}
+    volumes:
+      - pipeline-uploads:${BOCRA_UPLOADS}
+      - pipeline-data:${PIPELINE_FILES}
+    build:
+      context: .
+      dockerfile: bocra-pipeline/Dockerfile
+    networks:
+      - traefik-public
+      - bocra-network
+      - default
+    environment:
+      POSTGRES_SERVER: bocra-db
+      SERVER_PORT: ${PIPELINE_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-pipeline.rule=Host(`pipeline.roguesystems.co.bw`)"
+      - "traefik.http.routers.bocra-pipeline.entrypoints=websecure"
+      - "traefik.http.routers.bocra-pipeline.tls.certresolver=myresolver"
+
+  celeryworker:
+    container_name: bocra-celery
+    hostname: bocra-celery
+    image: "${DOCKER_IMAGE_CELERYWORKER?Variable not set}:${TAG-latest}"
+    depends_on:
+      - db
+      - queue
+    env_file:
+      - .env
+    networks:
+      - traefik-public
+    environment:
+      - SERVER_NAME=${TEST_DOMAIN?Variable not set}
+      - SERVER_HOST=https://${TEST_DOMAIN?Variable not set}
+      # Allow explicit env var override for tests
+      - SMTP_HOST=${SMTP_HOST?Variable not set}
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-false}
+
+volumes:
+  app-db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/db
+  web-app-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/web
+  api-uploads:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/api
+  pgadmin-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/pgadmin
+  pipeline-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/pipeline
+  pipeline-uploads:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_UPLOADS}
+  keycloak-installation:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/keycloak
+  traefik-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/traefik
+
+networks:
+  traefik-public:
+    # Allow setting it to false for testing
+    external: true
+  bocra-network:
+    name: bocra-network
+    driver: bridge
+    external: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.57.0/24

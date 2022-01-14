@@ -1,0 +1,194 @@
+/**/
+
+.container {
+  flex-grow: 1;
+  margin: 0 auto;
+  position: relative;
+  width: auto;
+}
+
+.columns {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+  padding-top: 0.75rem !important;
+  margin-top: 3rem !important;
+}
+
+.Accountcolumn.is-full {
+  flex: none;
+  width: 100%;
+}
+.Accountcolumn {
+  display: block;
+  padding: 0.75rem;
+}
+
+.title {
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.125;
+  word-break: break-word;
+}
+
+.pb-6 {
+  padding-bottom: 3rem !important;
+}
+
+.has-text-centered {
+  text-align: center !important;
+}
+
+.columns:not(.is-desktop) {
+  display: flex;
+}
+
+.columns.is-vcentered {
+  align-items: center;
+}
+
+.columns.is-centered {
+  justify-content: center;
+}
+
+.column.is-5-tablet {
+  flex: none;
+  width: 41.66667%;
+}
+
+.field:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+.control {
+  box-sizing: border-box;
+  clear: both;
+  font-size: 1rem;
+  position: relative;
+  text-align: inherit;
+  padding: 0.5rem;
+}
+
+.input {
+  background-color: transparent;
+  color: white;
+  border: 0;
+  border-bottom: 1px solid #3e4046;
+  box-shadow: none !important;
+  border-radius: 0;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+control.has-icons-left .input {
+  padding-left: 2.5em;
+}
+
+.control.has-icons-left .icon {
+  color: #2b2b31;
+  height: 2.5em;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 2.5em;
+  z-index: 4;
+}
+
+.control.has-icons-left .icon.is-left {
+  left: 0;
+}
+
+.icon {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.help.is-danger {
+  color: #f14668;
+}
+
+.help {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.checkbox,
+.radio {
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1.25;
+  position: relative;
+  color: white;
+}
+
+.field.is-grouped {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.is-white {
+  color: white;
+}
+
+.button.is-link {
+  background-color: #404344;
+  border-color: transparent;
+  color: #fff;
+}
+
+.button {
+  border-width: 1px solid;
+  border-radius: 12px;
+  cursor: pointer;
+  justify-content: center;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: calc(0.5em - 1px);
+  text-align: center;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.columns.is-vcentered {
+  align-items: center;
+}
+.columns.is-centered {
+  justify-content: center;
+}
+.columns:last-child {
+  margin-bottom: -0.75rem;
+}
+
+@media screen and (max-width: 769px) {
+  .is-size-3-mobile {
+    font-size: 32px !important;
+  }
+}
+
+@media screen and (max-width: 769px) {
+  .columns.is-vcentered {
+    width: 335px;
+    top: 50%;
+    left: 50%;
+    /* margin: -25px 0 0 -25px; apply negative top and left margins to truly center the element */
+    padding: 10px;
+  }
+}
+
+@media screen and (max-width: 769px) {
+  .Accountcolumn {
+    margin: auto;
+    width: 335px !important;
+    padding: 10px;
+  }
+}
+
+#acceptTerms {
+  width: unset;
+}
+
+.pf-c-form__label {
+  display: none;
+}

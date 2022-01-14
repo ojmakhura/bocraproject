@@ -1,0 +1,8 @@
+FROM jboss/keycloak:16.1.0
+
+COPY --chown=jboss:root keycloak/bocra /opt/jboss/keycloak/themes/bocra
+COPY --chown=jboss:root keycloak/base /opt/jboss/keycloak/themes/base
+COPY --chown=jboss:root keycloak/standalone.xml /opt/jboss/keycloak/standalone/configuration/standalone.xml
+
+COPY --chown=jboss:root keycloak/bocra/login/resources/css/bocra-login.css /opt/jboss/keycloak/themes/bocra/login/resources/css/bocra-login.css
+COPY --chown=jboss:root keycloak/bocra/account/resources/css/bocra-account.css /opt/jboss/keycloak/themes/bocra/account/resources/css/bocra-account.css

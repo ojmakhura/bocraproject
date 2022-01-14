@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>bw.org.bocra.portal</groupId>
+        <artifactId>bocraportal</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>bocraportal-webservice</artifactId>
+    <packaging>war</packaging>
+    <name>BOCRA Data Collection Portal Web Services</name>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>bocraportal-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>${application.id}-webservice</finalName>
+        <!-- Change from default src/main/java and src/test/java>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>src-test</testSourceDirectory -->
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven-war-plugin.version}</version>
+                <configuration>
+                    <!-- Default for maven is src/main/webapp. WebContent is Eclipse convention. -->
+                    <warSourceDirectory>src/main/webapp</warSourceDirectory>
+                    <warName>${project.artifactId}</warName>
+                    <excludes>**/*.java</excludes>
+                    <!-- Even though these dependencies are 'provided', they are still bundled with the war file. Modify as necessary.
+                         Exclude everything not already included in the EAR. -->
+                    <packagingExcludes>**/*.java,**/*.ref,**/andromda-*.jar,**/active*.jar,**/antlr*.jar,**/backport*.jar,**/bsh*.jar,**/*-pool.jar,**/cxf-rt*.jar,**/cxf-api*.jar,**/cxf-common*.jar,**/cxf-tools*.jar,**/dom4j*.jar,**/ehcache*.jar,**/geronimo-*.jar,**/groovy*.jar,**/jaxb-xjc*.jar,**/jetty*.jar,**/jaxen*.jar,**/jdom*.jar,**/oro-*.jar,**/qdox*.jar,**/saaj*.jar,**/spring-2.0.8.jar,**/stax*.jar,**/woodstox*.jar,**/xerces*.jar,**/xml-api*.jar,**/xmlbean*.jar</packagingExcludes>
+                    <archive>
+                        <manifest>
+                          <addClasspath>true</addClasspath>
+                          <useUniqueVersions>false</useUniqueVersions>
+                          <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                          <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                          <Implementation-Build>${maven.build.timestamp}</Implementation-Build>
+                          <url>${project.url}</url>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
