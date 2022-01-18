@@ -26,28 +26,23 @@ import { AppComponent } from './app.component';
 import { UseCaseScope } from '@app/utils/use-case-scope';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-    ],
-    imports: [
-        BrowserModule,
-        ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production }),
-        FormsModule,
-        HttpClientModule,
-        TranslateModule.forRoot(),
-        BrowserAnimationsModule,
-        MaterialModule,
-        CoreModule,
-        SharedModule,
-        ShellModule,
-        HomeModule,
-        AppRoutingModule, // must be imported as the last module as it contains the fallback route
-    ],
-    exports: [
-    ],
-    providers: [
-        UseCaseScope,
-    ],
-    bootstrap: [AppComponent]
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production }),
+    FormsModule,
+    HttpClientModule,
+    TranslateModule.forRoot(),
+    BrowserAnimationsModule,
+    MaterialModule,
+    CoreModule,
+    SharedModule,
+    ShellModule,
+    HomeModule,
+    AppRoutingModule, // must be imported as the last module as it contains the fallback route
+  ],
+  exports: [],
+  providers: [UseCaseScope],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

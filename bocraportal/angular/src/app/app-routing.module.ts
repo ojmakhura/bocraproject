@@ -13,12 +13,14 @@ const routes: Routes = [
   Shell.childRoutes([
     {
       path: 'about',
-      loadChildren: async () => (await import('./about/about.module')).AboutModule
+      loadChildren: async () => (await import('./about/about.module')).AboutModule,
     },
   ]),
   // Fallback when no prior route is matched
-  { 
-    path: '**', redirectTo: '', pathMatch: 'full' 
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full',
   },
 ];
 
