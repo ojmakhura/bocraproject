@@ -12,11 +12,11 @@ export class UserControlerImpl extends UserControler {
         super(injector);
     }
 
-    public createUser(userVO: UserVO): Observable<?> {
+    public createUser(userVO: UserVO): Observable<UserVO> {
 
         let formData: any = new FormData();
         formData.append("userVO", userVO)
-        return this.http.post<?>(this.path + '/create', formData);
+        return this.http.post<UserVO>(this.path + '/create', formData);
 
     }
 
@@ -32,11 +32,11 @@ export class UserControlerImpl extends UserControler {
 
     }
 
-    public signin(userVO: UserVO): Observable<?> {
+    public signin(userVO: UserVO): Observable<Object> {
 
         let formData: any = new FormData();
         formData.append("userVO", userVO)
-        return this.http.post<?>(this.path + '/signin', formData);
+        return this.http.post<Object>(this.path + '/signin', formData);
 
     }
 
