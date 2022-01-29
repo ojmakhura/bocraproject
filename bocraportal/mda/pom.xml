@@ -7,11 +7,11 @@
     <parent>
         <groupId>bw.org.bocra.portal</groupId>
         <artifactId>bocraportal</artifactId>
-        <version>1.0.0</version>
+        <version>0.1</version>
     </parent>
     <artifactId>bocraportal-mda</artifactId>
     <packaging>pom</packaging>
-    <name>BOCRA Data Collection Portal MDA</name>
+    <name>BOCRA Online Portal MDA</name>
     <dependencies>
         <!-- provided profile dependencies are not added to the manifest, used only at code generation time -->
         <dependency>
@@ -145,15 +145,9 @@
         <angular.view.dir>${angular.generated.dir}</angular.view.dir>
         <angular.view.impl.dir>${angular.manual.dir}</angular.view.impl.dir>
         <angular.form.dir>${angular.generated.dir}</angular.form.dir>
-        <springws.generated.dir>${project.basedir}/../springws/target</springws.generated.dir>
-        <springws.generated.java.dir>${springws.generated.dir}/src/main/java</springws.generated.java.dir>
-        <springws.manual.dir>${project.basedir}/../springws/src/main</springws.manual.dir>
-        <springws.manual.java.dir>${springws.manual.dir}/java</springws.manual.java.dir>
         <webservice.project>${project.basedir}/../webservice</webservice.project>
-        <webservice.generated.dir>${web.generated.dir}</webservice.generated.dir>
+        <webservice.generated.dir>${project.basedir}/../webservice/target/src/main</webservice.generated.dir>
         <webservice.manual.java.dir>${project.basedir}/../webservice/src/main/java</webservice.manual.java.dir>
-        <springws.generated.java.dir>${project.basedir}/../springws/target/src/main/java</springws.generated.java.dir>
-        <springws.manual.java.dir>${project.basedir}/../springws/src/main/java</springws.manual.java.dir>
         <!-- hibernate configuration -->
         <!-- default strategy to use when using inheritance -->
         <hibernate.inheritance.strategy>subclass</hibernate.inheritance.strategy>

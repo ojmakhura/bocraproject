@@ -23,26 +23,35 @@ import { HomeModule } from './home/home.module';
 import { ShellModule } from './shell/shell.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LicenseeModule } from '@app/view/licensee/licensee.module';
+import { LicenseeControllerImpl } from '@app/controller/licensee/licensee-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production }),
-    FormsModule,
-    HttpClientModule,
-    TranslateModule.forRoot(),
-    BrowserAnimationsModule,
-    MaterialModule,
-    CoreModule,
-    SharedModule,
-    ShellModule,
-    HomeModule,
-    AppRoutingModule, // must be imported as the last module as it contains the fallback route
-  ],
-  exports: [],
-  providers: [UseCaseScope],
-  bootstrap: [AppComponent],
+    declarations: [
+        AppComponent,
+    ],
+    imports: [
+        BrowserModule,
+        ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production }),
+        FormsModule,
+        HttpClientModule,
+        TranslateModule.forRoot(),
+        BrowserAnimationsModule,
+        MaterialModule,
+        CoreModule,
+        SharedModule,
+        ShellModule,
+        HomeModule,
+        LicenseeModule,
+        AppRoutingModule, // must be imported as the last module as it contains the fallback route
+    ],
+    exports: [
+    ],
+    providers: [
+        UseCaseScope,
+        LicenseeControllerImpl,
+    ],
+    bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

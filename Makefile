@@ -6,9 +6,6 @@ mvn_build_core:
 mvn_build_api:
 	cd bocra-api && mvn clean install -Dmaven.test.skip=true
 
-mvn_build_pipeline:
-	cd bocra-pipeline && mvn clean install -Dmaven.test.skip=true
-
 mvn_build_all: mvn_build_core mvn_build_api mvn_build_pipeline
 
 ##

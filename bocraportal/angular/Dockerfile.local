@@ -1,0 +1,13 @@
+FROM node:14
+WORKDIR /app
+
+RUN npm install -g @angular/cli
+
+COPY ./coronome-web/package.json .
+RUN npm install
+COPY ./coronome-web ./
+
+ENTRYPOINT ["ng", "serve"]
+
+#FROM nginx as runtime
+#COPY --from=build /app/dist/coronome-web /usr/share/nginx/html

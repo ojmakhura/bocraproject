@@ -1,7 +1,7 @@
-# bocraportal
+# BOCRA Online Portal
 
 This project was generated with [ngX-Rocket](https://github.com/ngx-rocket/generator-ngx-rocket/)
-version 9.2.0
+version 10.1.2
 
 # Getting started
 
@@ -20,7 +20,7 @@ version 9.2.0
 ```
 dist/                        web app production build
 docs/                        project docs and coding guides
-e2e/                         end-to-end tests
+cypress/                     end-to-end tests (Cypress)
 src/                         project source code
 |- app/                      app components
 |  |- core/                  core module (singleton services and single-use components)
@@ -53,7 +53,7 @@ Task                            | Description
 `npm run build [-- --configuration=production]` | Lint code and build web app for production (with [AOT](https://angular.io/guide/aot-compiler)) in `dist/` folder
 `npm test`                      | Run unit tests via [Karma](https://karma-runner.github.io) in watch mode
 `npm run test:ci`               | Lint code and run unit tests once for continuous integration
-`npm run e2e`                   | Run e2e tests using [Protractor](http://www.protractortest.org)
+`npm run e2e`                   | Run e2e tests using [Cypress](https://www.cypress.io/)
 `npm run lint`                  | Lint code
 `npm run translations:extract`  | Extract strings from code and templates to `src/app/translations/template.json`
 `npm run docs`                  | Display project documentation and coding guides
@@ -64,11 +64,13 @@ When building the application, you can specify the target configuration using th
 
 The default build configuration is `prod`.
 
+## Development server
 
 Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change
 any of the source files.
 You should not use `ng serve` directly, as it does not use the backend proxy configuration by default.
 
+## Code scaffolding
 
 Run `npm run generate -- component <name>` to generate a new component. You can also use
 `npm run generate -- directive|pipe|service|class|module`.
@@ -76,10 +78,12 @@ Run `npm run generate -- component <name>` to generate a new component. You can 
 If you have installed [angular-cli](https://github.com/angular/angular-cli) globally with `npm install -g @angular/cli`,
 you can also use the command `ng generate` directly.
 
+## Additional tools
 
 Tasks are mostly based on the `angular-cli` tool. Use `ng help` to get more help or go check out the
 [Angular-CLI README](https://github.com/angular/angular-cli).
 
+## Code formatting
 
 All `.ts`, `.js` & `.scss` files in this project are formatted automatically using [Prettier](https://prettier.io),
 and enforced via the `test:ci` script.
@@ -94,6 +98,7 @@ You can also force code formatting by running the command `npm run prettier`.
 The app template is based on [HTML5](http://whatwg.org/html), [TypeScript](http://www.typescriptlang.org) and
 [Sass](http://sass-lang.com). The translation files use the common [JSON](http://www.json.org) format.
 
+#### Tools
 
 Development, build and quality processes are based on [angular-cli](https://github.com/angular/angular-cli) and
 [NPM scripts](https://docs.npmjs.com/misc/scripts), which includes:
@@ -104,12 +109,13 @@ Development, build and quality processes are based on [angular-cli](https://gith
   [browserslist](https://github.com/ai/browserslist)
 - Asset revisioning for [better cache management](https://webpack.github.io/docs/long-term-caching.html)
 - Unit tests using [Jasmine](http://jasmine.github.io) and [Karma](https://karma-runner.github.io)
-- End-to-end tests using [Protractor](https://github.com/angular/protractor)
+- End-to-end tests using [Cypress](https://www.cypress.io/)
 - Static code analysis: [TSLint](https://github.com/palantir/tslint), [Codelyzer](https://github.com/mgechev/codelyzer),
   [Stylelint](http://stylelint.io) and [HTMLHint](http://htmlhint.com/)
 - Local knowledgebase server using [Hads](https://github.com/sinedied/hads)
 - Automatic code formatting with [Prettier](https://prettier.io)
 
+#### Libraries
 
 - [Angular](https://angular.io)
 - [Angular Material](https://material.angular.io)
@@ -118,6 +124,7 @@ Development, build and quality processes are based on [angular-cli](https://gith
 - [RxJS](http://reactivex.io/rxjs)
 - [ngx-translate](https://github.com/ngx-translate/core)
 
+#### Coding guides
 
 - [Angular](docs/coding-guides/angular.md)
 - [TypeScript](docs/coding-guides/typescript.md)
@@ -126,6 +133,7 @@ Development, build and quality processes are based on [angular-cli](https://gith
 - [Unit tests](docs/coding-guides/unit-tests.md)
 - [End-to-end tests](docs/coding-guides/e2e-tests.md)
 
+#### Other documentation
 
 - [I18n guide](docs/i18n.md)
 - [Working behind a corporate proxy](docs/corporate-proxy.md)

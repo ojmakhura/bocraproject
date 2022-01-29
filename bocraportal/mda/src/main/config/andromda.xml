@@ -183,8 +183,15 @@
                 <property name="ejbInterfacePattern">{0}.ejb.{1}</property>
                 <property name="ejbHomeInterfacePattern">{0}.ejb.{1}Home</property>
                 <property name="springVersion">5.2.4.RELEASE</property>
-                <property name="springwebservices">${springws.generated.java.dir}</property>
-                <property name="springwebservices-impl">${springws.manual.java.dir}</property>
+                                                <property name="webservice-types">${webservice.generated.dir}</property>
+                <property name="configuration">${webservice.generated.dir}</property>
+                <property name="webservice-project">${webservice.project}</property>
+                <property name="webservice-impl">${webservice.manual.java.dir}</property>
+                <property name="webservice-tests">${webservice.test.dir}</property>
+                <property name="core-tests">${core.manual.test.dir}</property>
+                <property name="service-impls">${core.manual.java.dir}</property>
+                <property name="jaxb-impl">${common.manual.dir}</property>
+                <property name="jaxb-gen">${common.generated.dir}</property>
             </properties>
         </namespace>
         <!-- See http://docs.andromda.org/andromda-cartridges/andromda-java-cartridge/namespace.html -->

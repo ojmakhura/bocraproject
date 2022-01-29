@@ -11,9 +11,9 @@
     <groupId>bw.org.bocra.portal</groupId>
     <artifactId>bocraportal</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
-    <name>BOCRA Data Collection Portal</name>
-    <description>The BOCRA Data Collection Portal Project.</description>
+    <version>0.1</version>
+    <name>BOCRA Online Portal</name>
+    <description>The BOCRA Online Portal Project.</description>
     <inceptionYear></inceptionYear>
     <url>http://andromda.sourceforge.net/</url>
     <issueManagement>
@@ -220,6 +220,16 @@
                 <!--scope>test</scope-->
             </dependency>
             <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.keycloak</groupId>
                 <artifactId>keycloak-spring-boot-starter</artifactId>
                 <version>${keycloak.version}</version>
@@ -307,13 +317,13 @@
         </plugins>
     </build>
     <modules>
-        <!-- Save the values used to generate this project from andromdapp applicationParentDirectory=. author=Onalenna J. Makhura modelType=uml2 applicationType=war war=true ear=$ear appServer=$appServer databaseType=postgres testDatabase=mysql transactionPersistenceType=spring jsr181Webservice=$jsr181Webservice ejb=$ejb ejb3=$ejb3 hibernate=$hibernate spring=true webType=angular jsf=false webservice=rest cxf=$cxf thymeleaf=false rest=true springws=true jbossSeam=$jbossSeam webserviceStack=spring embeddedWebServer=none jetty=$jetty tomcat=$tomcat
+        <!-- Save the values used to generate this project from andromdapp applicationParentDirectory=. author=Onalenna J. Makhura modelType=uml2 applicationType=war war=true ear=$ear appServer=$appServer databaseType=postgres testDatabase=h2 transactionPersistenceType=spring jsr181Webservice=$jsr181Webservice ejb=$ejb ejb3=$ejb3 hibernate=$hibernate spring=true webType=angular jsf=false webservice=rest cxf=$cxf thymeleaf=false rest=true springws=true jbossSeam=$jbossSeam webserviceStack=spring embeddedWebServer=none jetty=$jetty tomcat=$tomcat
         -->
         <module>mda</module>
         <module>common</module>
         <module>core</module>
+        <module>webservice</module>
         <module>angular</module>
-        <module>springws</module>
     </modules>
     <properties>
         <andromda.version>4.0-SNAPSHOT</andromda.version>
@@ -325,12 +335,11 @@
         <testdb.groupId>com.h2database</testdb.groupId>
         <testdb.artifactId>h2</testdb.artifactId>
         <testdb.version>1.4.180</testdb.version>
-        <testdb.driver>org.h2.Driver</testdb.driver>
-        <testdb.dialect>org.hibernate.dialect.H2Dialect</testdb.dialect>
-        <!-- See http://www.h2database.com/html/features.html#database_url (mixed mode) -->
-        <testdb.url>jdbc:h2:~/${application.id};AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1</testdb.url>
-        <testdb.username>sa</testdb.username>
-        <testdb.password>sa</testdb.password>
+        <testdb.driver>$${jdbc.driver}</testdb.driver>
+        <testdb.dialect>$${jdbc.dialect}</testdb.dialect>
+        <testdb.url>$${jdbc.url}</testdb.url>
+        <testdb.username>$${jdbc.username}</testdb.username>
+        <testdb.password>$${jdbc.password}</testdb.password>
         <!--
             Change this to generate to the correct MDA database mappings,
             For MySql use: MySQL
@@ -347,7 +356,7 @@
             For Derby use: Derby
         -->
         <sql.mappings>
-            MySQL
+            PostgreSQL
         </sql.mappings>
         <!--
         Change this for the appropriate database
@@ -378,8 +387,8 @@
         <tomcat.home>${env.CATALINA_HOME}</tomcat.home>
         <application.id>bocraportal</application.id>
         <application.package>bw.org.bocra.portal</application.package>
-        <application.name>BOCRA Data Collection Portal</application.name>
-        <application.version>1.0.0</application.version>
+        <application.name>BOCRA Online Portal</application.name>
+        <application.version>0.1</application.version>
         <dataSource.name>jdbc/${application.id}</dataSource.name>
         <dataSource>java:comp/env/${dataSource.name}</dataSource>
         <!-- Set andromda.xml hibernateVersion=4, sessionFactory and localTransactionManager to hibernate4.-->
@@ -388,9 +397,9 @@
         <!-- v5 migration needed -->
         <!-- <spring.version>5.3.2</spring.version> -->
         <spring-boot.version>2.6.2</spring-boot.version>
-        <keycloak.version>16.1.0</keycloak.version>
         <!-- To override parent default settings for compiler plugin and compliance checks-->
         <dependencyConvergence>true</dependencyConvergence>
+        <keycloak.version>16.1.0</keycloak.version>
         <!-- Any of these configuration values can be overridden by the descendant, the default is JDK 1.6 >
         <java.runtime.version>1.7</java.runtime.version>
         <java.required.version>1.7</java.required.version>
@@ -454,7 +463,7 @@
                     For Progress use: jdbc:JdbcProgress:T:localhost:3305:bocraportal
                 -->
                 <jdbc.url>
-                    jdbc:postgresql://localhost:3306/bocraportal
+                    jdbc:postgresql://localhost/bocraportal
                 </jdbc.url>
                 <!-- Enter id/password for the database connection -->
                 <jdbc.username>
@@ -477,7 +486,7 @@
                     For Progress use: org.jboss.resource.adapter.jdbc.vendor.DummyExceptionSorter
                 -->
                 <jdbc.exception.sorter>
-                    org.jboss.resource.adapter.jdbc.vendor.DummyExceptionSorter
+                    org.jboss.resource.adapter.jdbc.NullExceptionSorter
                 </jdbc.exception.sorter>
                 <!-- Change this to the host on which your webapp/service will be deployed -->
                 <service.host>localhost</service.host>
