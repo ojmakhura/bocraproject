@@ -16,7 +16,7 @@ const routes: Routes = [
       loadChildren: async () => (await import('./about/about.module')).AboutModule
     },
     {
-      path: '/licensee', 
+      path: 'licensee', 
       loadChildren: async () => (await import('@app/view/licensee/licensee.module')).LicenseeModule
     },
   ]),
