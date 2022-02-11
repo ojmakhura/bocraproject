@@ -25,7 +25,6 @@ public class UserOrganisationDaoImpl
     {
         // TODO verify behavior of toUserOrganisationVO
         super.toUserOrganisationVO(source, target);
-        // WARNING! No conversion for target.dateAdded (can't convert source.getDateAdded():java.util.Date to java.util.Date
     }
 
     /**
@@ -45,10 +44,7 @@ public class UserOrganisationDaoImpl
      */
     private UserOrganisation loadUserOrganisationFromUserOrganisationVO(UserOrganisationVO userOrganisationVO)
     {
-        // TODO implement loadUserOrganisationFromUserOrganisationVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.user.loadUserOrganisationFromUserOrganisationVO(UserOrganisationVO) not yet implemented.");
 
-        /* A typical implementation looks like this:
         if (userOrganisationVO.getId() == null)
         {
             return  UserOrganisation.Factory.newInstance();
@@ -57,7 +53,6 @@ public class UserOrganisationDaoImpl
         {
             return this.load(userOrganisationVO.getId());
         }
-        */
     }
 
     /**
@@ -82,6 +77,5 @@ public class UserOrganisationDaoImpl
     {
         // TODO verify behavior of userOrganisationVOToEntity
         super.userOrganisationVOToEntity(source, target, copyIfNull);
-        // No conversion for target.dateAdded (can't convert source.getDateAdded():java.util.Date to java.util.Date
     }
 }

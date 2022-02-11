@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   proxy:
-    image: traefik:v2.4
+    image: traefik:v2.6
     container_name: bocra-proxy
     hostname: traefik
     networks:
@@ -26,7 +26,7 @@ services:
   db:
     container_name: bocra-db
     hostname: db
-    image: postgres:12
+    image: postgres:14
     volumes:
       - app-db-data:/var/lib/postgresql/data
     env_file:
@@ -62,31 +62,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-pgadmin.rule=Host(`pgadmin.${DOMAIN}`)"
-
-  queue:
-    container_name: bocra-queue
-    image: rabbitmq:3
-    # Using the below image instead is required to enable the "Broker" tab in the flower UI:
-    # image: rabbitmq:3-management
-    #
-    # You also have to change the flower command
-
-  flower:
-    container_name: bocra-flower
-    image: mher/flower
-    networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - default
-    env_file:
-      - .env
-    command:
-      - "--broker=amqp://guest@queue:5672//"
-      # For the "Broker" tab to work in the flower UI, uncomment the following command argument,
-      # and change the queue service's image as well
-      # - "--broker_api=http://guest:guest@queue:15672/api//"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.bocra-flower.rule=Host(`flower.${DOMAIN}`)"
 
   keycloak:
     container_name: bocra-keycloak
@@ -173,28 +148,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-app.rule=Host(`app.${DOMAIN}`)"
-
-  celeryworker:
-    container_name: bocra-celery
-    hostname: celery
-    image: "${DOCKER_IMAGE_CELERYWORKER?Variable not set}:${TAG-latest}"
-    depends_on:
-      - db
-      - queue
-    env_file:
-      - .env
-    networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-    environment:
-      - SERVER_NAME=${DOMAIN?Variable not set}
-      - SERVER_HOST=https://${DOMAIN?Variable not set}
-      # Allow explicit env var override for tests
-      - SMTP_HOST=${SMTP_HOST?Variable not set}
-    build:
-      context: .
-      dockerfile: Dockerfile.worker
-      args:
-        INSTALL_DEV: ${INSTALL_DEV-false}
 
 volumes:
   app-db-data:

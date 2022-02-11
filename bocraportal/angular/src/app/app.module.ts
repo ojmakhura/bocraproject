@@ -25,6 +25,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LicenseeModule } from '@app/view/licensee/licensee.module';
 import { LicenseeControllerImpl } from '@app/controller/licensee/licensee-controller.impl';
+import { GroupModule } from '@app/view/group/group.module';
+import { GroupControllerImpl } from '@app/controller/group/group-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
 
 @NgModule({
@@ -44,6 +46,7 @@ import { UseCaseScope } from '@app/utils/use-case-scope';
         ShellModule,
         HomeModule,
         LicenseeModule,
+        GroupModule,
         AppRoutingModule, // must be imported as the last module as it contains the fallback route
     ],
     exports: [
@@ -51,6 +54,7 @@ import { UseCaseScope } from '@app/utils/use-case-scope';
     providers: [
         UseCaseScope,
         LicenseeControllerImpl,
+        GroupControllerImpl,
     ],
     bootstrap: [AppComponent]
 })

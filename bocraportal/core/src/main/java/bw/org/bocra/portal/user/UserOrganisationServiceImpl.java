@@ -29,7 +29,6 @@ public class UserOrganisationServiceImpl
     protected  UserOrganisationVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  UserOrganisationVO handleFindById(Long id)
         throw new UnsupportedOperationException("bw.org.bocra.portal.user.UserOrganisationService.handleFindById(Long id) Not implemented!");
     }
 

@@ -19,6 +19,10 @@ const routes: Routes = [
       path: 'licensee', 
       loadChildren: async () => (await import('@app/view/licensee/licensee.module')).LicenseeModule
     },
+    {
+      path: 'group', 
+      loadChildren: async () => (await import('@app/view/group/group.module')).GroupModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 

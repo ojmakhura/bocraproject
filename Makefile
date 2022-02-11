@@ -1,21 +1,23 @@
 include ./Makefile.dev
 
+mvn_build_mda:
+	cd bocraportal/mda && mvn install -Dmaven.test.skip=true
+
 mvn_build_core:
-	cd bocra-core && mvn clean install -Dmaven.test.skip=true
+	cd bocraportal/core && mvn install -Dmaven.test.skip=true
 
 mvn_build_api:
-	cd bocra-api && mvn clean install -Dmaven.test.skip=true
+	cd bocraportal/webservice && mvn install -Dmaven.test.skip=true
 
-mvn_build_all: mvn_build_core mvn_build_api mvn_build_pipeline
+mvn_build_all:
+	cd bocraportal && mvn install && mvn install -Dmaven.test.skip=true
+
 
 ##
 ## Building and running on the local platform
 ##
 build_local_api: gen_local_env mvn_build_api
 	docker-compose -f docker-compose-local.yml build api
-
-build_local_pipeline: gen_local_env mvn_build_pipeline
-	docker-compose -f docker-compose-local.yml build pipeline
 
 build_local_web: gen_local_env mvn_build_all
 	docker-compose -f docker-compose-local.yml build web
@@ -42,9 +44,6 @@ gen_local_env:
 ##
 build_test_api: gen_test_env mvn_build_api
 	docker-compose build api
-
-build_test_pipeline: gen_test_env mvn_build_pipeline
-	docker-compose build pipeline
 
 build_test_web: gen_test_env mvn_build_all
 	docker-compose build web
@@ -74,9 +73,6 @@ gen_test_env:
 ##
 build_live_api: gen_live_env mvn_build_api
 	docker-compose build api
-
-build_live_pipeline: gen_live_env mvn_build_pipeline
-	docker-compose build pipeline
 
 build_live_web: gen_live_env mvn_build_api
 	docker-compose build web
@@ -111,9 +107,6 @@ keycloak_logs:
 api_logs:
 	docker-compose logs api
 
-pipeline_logs:
-	docker-compose logs pipeline
-
 web_logs:
 	docker-compose logs web
 
@@ -123,11 +116,11 @@ proxy_logs:
 pgadmin_logs:
 	docker-compose logs pgadmin
 
-queue_logs:
-	docker-compose logs queue
+# queue_logs:
+# 	docker-compose logs queue
 
-flower_logs:
-	docker-compose logs flower
+# flower_logs:
+# 	docker-compose logs flower
 
 db_logs:
 	docker-compose logs db

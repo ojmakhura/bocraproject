@@ -1,11 +1,11 @@
-FROM node:14
+FROM node:17
 WORKDIR /app
 
 RUN npm install -g @angular/cli
 
-COPY ./coronome-web/package.json .
+COPY ./bocraportal/angular/package.json .
 RUN npm install
-COPY ./coronome-web ./
+COPY ./bocraportal/angular ./
 
 ENTRYPOINT ["ng", "serve"]
 

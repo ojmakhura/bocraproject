@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.licensee;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,8 +30,13 @@ public class LicenseeServiceImpl
     protected  LicenseeVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  LicenseeVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.LicenseeService.handleFindById(Long id) Not implemented!");
+        if(id == null) {
+            return null;
+        }
+
+        Licensee licensee = this.licenseeRepository.getById(id);
+
+        return licenseeDao.toLicenseeVO(licensee);
     }
 
     /**
@@ -40,8 +46,15 @@ public class LicenseeServiceImpl
     protected  LicenseeVO handleSave(LicenseeVO licenseeVO)
         throws Exception
     {
-        // TODO implement protected  LicenseeVO handleSave(LicenseeVO licenseeVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.LicenseeService.handleSave(LicenseeVO licenseeVO) Not implemented!");
+        
+        if(licenseeVO.getId() != null) {
+            this.update(licenseeVO);
+            return licenseeVO;
+        }
+
+        Licensee entity = licenseeRepository.save(getLicenseeDao().licenseeVOToEntity(licenseeVO));
+        return getLicenseeDao().toLicenseeVO(entity);
+
     }
 
     /**
@@ -51,8 +64,13 @@ public class LicenseeServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.LicenseeService.handleRemove(Long id) Not implemented!");
+        if(id != null) {
+            licenseeRepository.deleteById(id);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -62,8 +80,7 @@ public class LicenseeServiceImpl
     protected  Collection<LicenseeVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<LicenseeVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.LicenseeService.handleGetAll() Not implemented!");
+        return (Collection<LicenseeVO>) licenseeDao.loadAll(LicenseeDao.TRANSFORM_LICENSEEVO);
     }
 
     /**
@@ -73,8 +90,14 @@ public class LicenseeServiceImpl
     protected  Collection<LicenseeVO> handleSearch(LicenseeCriteria searchCriteria)
         throws Exception
     {
-        // TODO implement protected  Collection<LicenseeVO> handleSearch(LicenseeCriteria searchCriteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.LicenseeService.handleSearch(LicenseeCriteria searchCriteria) Not implemented!");
+
+        Collection<Licensee> licenses = this.licenseeDao.findByCriteria(searchCriteria);
+        Collection<LicenseeVO> vos = new ArrayList<>();
+
+        for (Licensee entity : licenses) {
+            vos.add(licenseeDao.toLicenseeVO(entity));
+        }
+        return vos;
     }
 
     /**
@@ -84,8 +107,12 @@ public class LicenseeServiceImpl
     protected  LicenseeVO handleUpdate(LicenseeVO licenseeVO)
         throws Exception
     {
-        // TODO implement protected  LicenseeVO handleUpdate(LicenseeVO licenseeVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.LicenseeService.handleUpdate(LicenseeVO licenseeVO) Not implemented!");
+
+        if(licenseeVO.getId() != null) {
+            licenseeDao.update(licenseeDao.licenseeVOToEntity(licenseeVO));
+        }
+
+        return null;
     }
 
 }

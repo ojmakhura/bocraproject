@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.user.UserVO;
+
 @RestController
 @RequestMapping("/user")
 @CrossOrigin()
