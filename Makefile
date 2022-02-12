@@ -30,6 +30,14 @@ up_local_app:
 
 run_local_app: build_local_images up_local_app
 
+# run_local_db: build_local_images up_local_app
+
+# run_local_auth: build_local_images up_local_app
+
+# run_local_api: build_local_images up_local_app
+
+# run_local_web: build_local_images up_local_app
+
 stop_local_app:
 	docker-compose -f docker-compose-local.yml  down
 
