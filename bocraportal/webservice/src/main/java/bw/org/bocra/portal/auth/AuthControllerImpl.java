@@ -10,8 +10,12 @@ import java.util.Optional;
 import org.keycloak.representations.AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,21 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthControllerImpl extends AuthControllerBase {
 
     protected static Logger log = LoggerFactory.getLogger(AuthControllerImpl.class);
-
-
-    @Override
-    public ResponseEntity<AccessToken> handleGetAccessToken(String username, String password) {
-        Optional<AccessToken> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<AccessToken> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return response;
-    }
 
     @Override
     public ResponseEntity<String> handleGetAccessTokenString(String username, String password) {
@@ -96,7 +85,18 @@ public class AuthControllerImpl extends AuthControllerBase {
 
     @Override
     public ResponseEntity<Object> handleSignin(String username, String password) {
-        Optional<Object> data = Optional.empty(); // TODO: Add custom code here;
+        System.out.println("Signin in! " + username);
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("username", username);
+        map.add("password", password);
+        map.add("client_id", getClientId());
+        map.add("grant_type", getGrantType());
+        map.add("client_secret", getClientSecret());
+        map.add("scope", getScope());
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, new HttpHeaders());
+
+        Optional<Object> data = Optional.of(getRestTemplate().postForObject(getKeycloakTokenUri(), request, String.class)); // TODO: Add custom code here;
         ResponseEntity<Object> response;
 
         if(data.isPresent()) {
@@ -111,5 +111,13 @@ public class AuthControllerImpl extends AuthControllerBase {
     @Override
     public void handleSignout(String refreshToken) {
         // TODO: Add custom code here;
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("client_id", getClientId());
+        map.add("client_secret", getClientSecret());
+        map.add("refresh_token", refreshToken);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, null);
+        getRestTemplate().postForObject(getKeycloakLogout(), request, String.class);
     }
 }

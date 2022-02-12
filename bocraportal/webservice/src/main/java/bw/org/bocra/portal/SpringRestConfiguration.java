@@ -22,19 +22,19 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 public class SpringRestConfiguration {
 	
-	@Bean
-	public CorsFilter corsFilter() {
-		UrlBasedCorsConfigurationSource confSource = new UrlBasedCorsConfigurationSource();
-		CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(Collections.singletonList("*"));
-        config.addAllowedHeader("*");
-        for(HttpMethod method : HttpMethod.values()) {
-            config.addAllowedMethod(method);
-        }
-		confSource.registerCorsConfiguration("/**", config);
-		return new CorsFilter(confSource);
-	}
+	// @Bean
+	// public CorsFilter corsFilter() {
+	// 	UrlBasedCorsConfigurationSource confSource = new UrlBasedCorsConfigurationSource();
+	// 	CorsConfiguration config = new CorsConfiguration();
+    //     config.setAllowCredentials(true);
+    //     config.setAllowedOriginPatterns(Collections.singletonList("*"));
+    //     config.addAllowedHeader("*");
+    //     for(HttpMethod method : HttpMethod.values()) {
+    //         config.addAllowedMethod(method);
+    //     }
+	// 	confSource.registerCorsConfiguration("/**", config);
+	// 	return new CorsFilter(confSource);
+	// }
 
     @Bean
     public Docket api() {

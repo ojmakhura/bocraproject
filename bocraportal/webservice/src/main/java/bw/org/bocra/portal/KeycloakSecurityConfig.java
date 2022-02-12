@@ -8,6 +8,8 @@ import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
+import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory;
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticatedActionsFilter;
 import org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcessingFilter;
@@ -19,6 +21,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,6 +30,7 @@ import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -46,22 +50,22 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) {
+    // @Autowired
+    // public void configureGlobal(AuthenticationManagerBuilder auth) {
 
-        SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
-        grantedAuthorityMapper.setPrefix("ROLE_");
+    //     SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
+    //     grantedAuthorityMapper.setPrefix("ROLE_");
 
-        KeycloakAuthenticationProvider authenticationProvider = keycloakAuthenticationProvider();
-        authenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
+    //     KeycloakAuthenticationProvider authenticationProvider = keycloakAuthenticationProvider();
+    //     authenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
 
-        auth.authenticationProvider(authenticationProvider);
-    }
+    //     auth.authenticationProvider(authenticationProvider);
+    // }
 
-    @Bean
-    public KeycloakConfigResolver keycloakConfigResolver() {
-        return new KeycloakSpringBootConfigResolver();
-    }
+    // @Bean
+    // public KeycloakConfigResolver keycloakConfigResolver() {
+    //     return new KeycloakSpringBootConfigResolver();
+    // }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -73,7 +77,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
             .permitAll()
             .antMatchers("/auth/signin")
             .permitAll()
-            .antMatchers("/swagger-ui.html")
+            .antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**")
             .permitAll()
             .anyRequest().authenticated();
     }
@@ -104,6 +108,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         registrationBean.setEnabled(false);
         return registrationBean;
     }
+
     // @Override
     // public void configure(WebSecurity web) throws Exception {
     //     // TODO Auto-generated method stub
@@ -128,18 +133,27 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     //     /* @formatter:on */
     // }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(
-                Arrays.asList("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList(CORS_ALLOWED_HEADERS.split(",")));
-        configuration.setMaxAge(corsMaxAge);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+    // @Bean
+    // public CorsConfigurationSource corsConfigurationSource() {
+    //     CorsConfiguration configuration = new CorsConfiguration();
+    //     configuration.setAllowedOrigins(Arrays.asList("*"));
+    //     configuration.setAllowedMethods(
+    //             Arrays.asList("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"));
+    //     configuration.setAllowedHeaders(Arrays.asList(CORS_ALLOWED_HEADERS.split(",")));
+    //     configuration.setMaxAge(corsMaxAge);
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     source.registerCorsConfiguration("/**", configuration);
+    //     return source;
+    // }
 
+    // Creating bean keycloakConfigResolver
+    @Bean
+    public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
+    }
     
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 }

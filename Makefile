@@ -38,18 +38,28 @@ run_local_app: build_local_images up_local_app
 
 # run_local_auth: build_local_images up_local_app
 
-# run_local_api: build_local_images up_local_app
+run_api_local: rm_env
+	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/webservice && mvn spring-boot:run
 
 # run_local_web: build_local_images up_local_app
 
 stop_local_app:
 	docker-compose -f docker-compose-local.yml  down
 
+rm_env:
+	rm -f .env
+
 gen_local_env: 
 	if [ -f .env ]; then \
 		rm -f .env; \
 	fi
 	@$(LOCAL_ENV)
+
+gen_docker_env: 
+	if [ -f .env ]; then \
+		rm -f .env; \
+	fi
+	@$(LOCAL_DOCKER_ENV)
 
 ##
 ## Building and running on the test platform
