@@ -98,7 +98,7 @@ services:
     hostname: web
     build:
       context: .
-      dockerfile: bocra-app/angular/Dockerfile
+      dockerfile: bocraportal/angular/Dockerfile
     container_name: bocra-web
     env_file:
       - .env
@@ -107,7 +107,7 @@ services:
     depends_on:
       - db
       - keycloak
-      - app
+      - api
     networks:
       - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
       - bocra-network
@@ -129,11 +129,9 @@ services:
       - keycloak
     ports:
       - ${API_SERVER_PORT}
-    volumes:
-      - api-uploads:${API_UPLOADS}
     build:
       context: .
-      dockerfile: bocra-api/Dockerfile
+      dockerfile: bocraportal/webservice/Dockerfile
     networks:
       - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
       - bocra-network
@@ -147,7 +145,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-app.rule=Host(`app.${DOMAIN}`)"
+      - "traefik.http.routers.bocraportal.rule=Host(`app.${DOMAIN}`)"
 
 volumes:
   app-db-data:
@@ -162,12 +160,6 @@ volumes:
       type: none
       o: bind
       device: ${BOCRA_DATA}/web
-  app-uploads:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/app
   pgadmin-data:
     driver: local
     driver_opts:

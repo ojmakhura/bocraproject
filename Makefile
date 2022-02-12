@@ -9,20 +9,24 @@ mvn_build_core:
 mvn_build_api:
 	cd bocraportal/webservice && mvn install -Dmaven.test.skip=true
 
-mvn_build_all:
-	cd bocraportal && mvn install && mvn install -Dmaven.test.skip=true
+mvn_build_all: gen_local_env
+	cd bocraportal &&  mvn install -Dmaven.test.skip=true
 
+mvn_clean_build: gen_local_env mvn_clean_all mvn_build_all
+
+mvn_clean_all:
+	cd bocraportal && mvn clean
 
 ##
 ## Building and running on the local platform
 ##
-build_local_api: gen_local_env mvn_build_api
+build_local_api: mvn_build_api
 	docker-compose -f docker-compose-local.yml build api
 
-build_local_web: gen_local_env mvn_build_all
+build_local_web: mvn_build_all
 	docker-compose -f docker-compose-local.yml build web
 
-build_local_images: gen_local_env mvn_build_all
+build_local_images: mvn_build_all
 	docker-compose -f docker-compose-local.yml build
 
 up_local_app: 

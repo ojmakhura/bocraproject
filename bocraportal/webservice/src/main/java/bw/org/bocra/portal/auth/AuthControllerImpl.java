@@ -5,7 +5,9 @@
 //
 package bw.org.bocra.portal.auth;
 
+import java.util.Collection;
 import java.util.Optional;
+import org.keycloak.representations.AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,12 +17,82 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("auth")
 @CrossOrigin()
 public class AuthControllerImpl extends AuthControllerBase {
 
     protected static Logger log = LoggerFactory.getLogger(AuthControllerImpl.class);
 
+
+    @Override
+    public ResponseEntity<AccessToken> handleGetAccessToken(String username, String password) {
+        Optional<AccessToken> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<AccessToken> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<String> handleGetAccessTokenString(String username, String password) {
+        Optional<String> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<String> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<String> handleGetRealmUrl() {
+        Optional<String> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<String> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<Collection<String>> handleGetRoles(String token) {
+        Optional<Collection<String>> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<Collection<String>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<String> handleGetUserInfo(String token) {
+        Optional<String> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<String> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
 
     @Override
     public ResponseEntity<Object> handleSignin(String username, String password) {
