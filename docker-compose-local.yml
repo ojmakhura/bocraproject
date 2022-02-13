@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   proxy:
-    image: traefik:v2.6
+    image: traefik:2.6
     container_name: bocra-proxy
     hostname: traefik
     networks:
@@ -33,6 +33,8 @@ services:
       - .env
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
+    depends_on:
+      - proxy
     networks:
       - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
       - bocra-network
@@ -51,6 +53,7 @@ services:
       - bocra-network
       - default
     depends_on:
+      - proxy
       - db
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
@@ -77,6 +80,7 @@ services:
       KEYCLOAK_USER: ${KEYCLOAK_USER}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
     depends_on:
+      - proxy
       - db
     env_file:
       - .env

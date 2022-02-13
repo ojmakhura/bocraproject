@@ -9,7 +9,7 @@ mvn_build_core:
 mvn_build_api:
 	cd bocraportal/webservice && mvn install -Dmaven.test.skip=true
 
-mvn_build_all: gen_local_env
+mvn_build_all: 
 	cd bocraportal &&  mvn install -Dmaven.test.skip=true
 
 mvn_clean_build: gen_local_env mvn_clean_all mvn_build_all
@@ -20,17 +20,38 @@ mvn_clean_all:
 ##
 ## Building and running on the local platform
 ##
-build_local_api: mvn_build_api
+build_local_api: gen_docker_env mvn_build_api
 	docker-compose -f docker-compose-local.yml build api
 
-build_local_web: mvn_build_all
+build_local_web: gen_docker_env mvn_build_all
 	docker-compose -f docker-compose-local.yml build web
 
-build_local_images: mvn_build_all
+build_local_db: gen_docker_env
+	docker-compose -f docker-compose-local.yml build db
+
+build_local_keycloak: gen_docker_env
+	docker-compose -f docker-compose-local.yml build keycloak
+
+build_local_proxy: gen_docker_env
+	docker-compose -f docker-compose-local.yml build proxy
+
+build_local_images: gen_docker_env mvn_build_all
 	docker-compose -f docker-compose-local.yml build
 
 up_local_app: 
 	docker-compose -f docker-compose-local.yml up -d
+
+up_local_db: 
+	docker-compose -f docker-compose-local.yml up -d db
+
+up_local_keycloak: 
+	docker-compose -f docker-compose-local.yml up -d keycloak
+
+up_local_proxy:
+	docker-compose -f docker-compose-local.yml up -d proxy
+
+up_local_web: 
+	docker-compose -f docker-compose-local.yml up -d web
 
 run_local_app: build_local_images up_local_app
 
@@ -38,8 +59,11 @@ run_local_app: build_local_images up_local_app
 
 # run_local_auth: build_local_images up_local_app
 
-run_api_local: rm_env
+run_api_local: rm_env gen_local_env
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/webservice && mvn spring-boot:run
+
+run_web_local: rm_env gen_local_env
+	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm start
 
 # run_local_web: build_local_images up_local_app
 
@@ -49,13 +73,13 @@ stop_local_app:
 rm_env:
 	rm -f .env
 
-gen_local_env: 
+gen_local_env: rm_env
 	if [ -f .env ]; then \
 		rm -f .env; \
 	fi
 	@$(LOCAL_ENV)
 
-gen_docker_env: 
+gen_docker_env: rm_env
 	if [ -f .env ]; then \
 		rm -f .env; \
 	fi
