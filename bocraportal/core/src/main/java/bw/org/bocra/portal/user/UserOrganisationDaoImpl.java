@@ -77,5 +77,13 @@ public class UserOrganisationDaoImpl
     {
         // TODO verify behavior of userOrganisationVOToEntity
         super.userOrganisationVOToEntity(source, target, copyIfNull);
+
+        if(source.getOrganisation() != null) {
+            target.setLicensee(licenseeDao.licenseeVOToEntity(source.getOrganisation()));
+        }
+
+        if(source.getUser() != null) {
+            //target.setUserId(source.getUser().get);
+        }
     }
 }

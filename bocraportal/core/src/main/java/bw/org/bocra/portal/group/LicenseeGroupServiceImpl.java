@@ -8,7 +8,11 @@
  */
 package bw.org.bocra.portal.group;
 
+import java.util.Arrays;
 import java.util.Collection;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +33,13 @@ public class LicenseeGroupServiceImpl
     protected  LicenseeGroupVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  LicenseeGroupVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.group.LicenseeGroupService.handleFindById(Long id) Not implemented!");
+        if(id == null) {
+            return null;
+        }
+
+        LicenseeGroup group = licenseeGroupRepository.getById(id);
+
+        return licenseeGroupDao.toLicenseeGroupVO(group);
     }
 
     /**
@@ -40,8 +49,18 @@ public class LicenseeGroupServiceImpl
     protected  LicenseeGroupVO handleSave(LicenseeGroupVO licenseeGroupVO)
         throws Exception
     {
-        // TODO implement protected  LicenseeGroupVO handleSave(LicenseeGroupVO licenseeGroupVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.group.LicenseeGroupService.handleSave(LicenseeGroupVO licenseeGroupVO) Not implemented!");
+
+        if(licenseeGroupVO.getId() == null) {
+
+            LicenseeGroup entity = getLicenseeGroupDao().licenseeGroupVOToEntity(licenseeGroupVO);
+            return (LicenseeGroupVO) licenseeGroupDao.create(LicenseeGroupDao.TRANSFORM_LICENSEEGROUPVO, entity);
+
+        } else {
+
+
+            return licenseeGroupVO;
+        }
+
     }
 
     /**
@@ -51,8 +70,12 @@ public class LicenseeGroupServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.group.LicenseeGroupService.handleRemove(Long id) Not implemented!");
+        if(id == null) {
+            return false;
+        }
+
+        licenseeGroupRepository.deleteById(id);
+        return true;
     }
 
     /**
@@ -62,8 +85,8 @@ public class LicenseeGroupServiceImpl
     protected  Collection<LicenseeGroupVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<LicenseeGroupVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.group.LicenseeGroupService.handleGetAll() Not implemented!");
+
+        return (Collection<LicenseeGroupVO>) this.licenseeGroupDao.loadAll(LicenseeGroupDao.TRANSFORM_LICENSEEGROUPVO);
     }
 
     /**
@@ -73,8 +96,29 @@ public class LicenseeGroupServiceImpl
     protected  Collection<LicenseeGroupVO> handleSearch(LicenseeGroupCriteria searchCriteria)
         throws Exception
     {
-        // TODO implement protected  Collection<LicenseeGroupVO> handleSearch(LicenseeGroupCriteria searchCriteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.group.LicenseeGroupService.handleSearch(LicenseeGroupCriteria searchCriteria) Not implemented!");
+        
+        Specification<LicenseeGroup> specs = null;
+
+        if(StringUtils.isNotBlank(searchCriteria.getGroupSearch())) {
+
+            specs = LicenseeGroupSpecifications.findByCodeContainingIgnoreCase(searchCriteria.getGroupSearch());
+            specs.or(LicenseeGroupSpecifications.findByDescriptionContainingIgnoreCase(searchCriteria.getGroupSearch()));
+            specs.or(LicenseeGroupSpecifications.findByGroupNameContainingIgnoreCase(searchCriteria.getGroupSearch()));
+        }
+
+        if(searchCriteria.getLicenseeId() != null) {
+            Specification<LicenseeGroup> licenseeSpec = LicenseeGroupSpecifications.findByLicenseesIdIn(Arrays.asList(searchCriteria.getLicenseeId()));
+
+            if(specs == null) {
+                specs = licenseeSpec;
+            } else {
+                specs.and(licenseeSpec);
+            }
+        }
+
+        Collection<LicenseeGroup> entities = licenseeGroupRepository.findAll(specs);
+
+        return getLicenseeGroupDao().toLicenseeGroupVOCollection(entities);
     }
 
     /**

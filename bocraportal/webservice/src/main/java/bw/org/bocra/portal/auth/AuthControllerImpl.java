@@ -85,7 +85,6 @@ public class AuthControllerImpl extends AuthControllerBase {
 
     @Override
     public ResponseEntity<Object> handleSignin(String username, String password) {
-        System.out.println("Signin in! " + username);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("username", username);
         map.add("password", password);
