@@ -1,27 +1,49 @@
 import { Injectable } from '@angular/core';
-import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-
-import { Logger } from '@shared';
-import { CredentialsService } from './credentials.service';
-
-const log = new Logger('AuthenticationGuard');
+import {
+  ActivatedRouteSnapshot,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class AuthenticationGuard implements CanActivate {
+export class AuthenticationGuard extends KeycloakAuthGuard {
+  constructor(
+    protected readonly router$: Router,
+    protected readonly keycloak: KeycloakService
+  ) {
+    super(router$, keycloak);
+  }
 
-  constructor(private router: Router,
-              private credentialsService: CredentialsService) { }
+  public async isAccessAllowed(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ) {
+    // Force the user to log in if currently unauthenticated.
+    if (!this.authenticated) {
+      await this.keycloak.login({
+        redirectUri: window.location.origin + state.url,
+      });
+    }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (this.credentialsService.isAuthenticated()) {
+    // Get the roles required from the route.
+    const requiredRoles = route.data['roles'];
+
+    // Allow the user to to proceed if no additional roles are required to access the route.
+    if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
       return true;
     }
 
-    log.debug('Not authenticated, redirecting and adding redirect url...');
-    this.router.navigate(['/login'], { queryParams: { redirect: state.url }, replaceUrl: true });
-    return false;
+    // Allow the user to proceed if all the required roles are present.
+    if (requiredRoles.every((role) => this.roles.includes(role))) {
+      return true;
+    } else {
+      // redirect to error page if the user doesn't have the nessecairy  role to access
+      // we will define this routes in a bit
+      this.router.navigate(['access-denied']);
+      return false;
+    }
   }
-
 }

@@ -2,8 +2,7 @@ import { Title } from '@angular/platform-browser';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-
-import { AuthenticationService, CredentialsService } from '@app/auth';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-shell',
@@ -14,20 +13,18 @@ export class ShellComponent implements OnInit {
 
   constructor(private router: Router,
               private titleService: Title,
-              private authenticationService: AuthenticationService,
-              private credentialsService: CredentialsService,
+              private keycloakService: KeycloakService,
               private breakpoint: BreakpointObserver) { }
 
   ngOnInit() { }
 
   logout() {
-    this.authenticationService.logout()
-      .subscribe(() => this.router.navigate(['/login'], { replaceUrl: true }));
+    this.keycloakService.logout();
   }
 
   get username(): string | null {
-    const credentials = this.credentialsService.credentials;
-    return credentials ? credentials.username : null;
+    const credentials = this.keycloakService.getUsername();
+    return credentials ? credentials : null;
   }
 
   get isMobile(): boolean {

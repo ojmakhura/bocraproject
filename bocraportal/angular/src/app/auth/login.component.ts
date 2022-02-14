@@ -24,8 +24,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router,
               private route: ActivatedRoute,
-              private formBuilder: FormBuilder,
-              private authenticationService: AuthenticationService) {
+              private formBuilder: FormBuilder) {
     this.createForm();
   }
 
@@ -33,20 +32,20 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.isLoading = true;
-    const login$ = this.authenticationService.login(this.loginForm.value);
-    login$.pipe(
-      finalize(() => {
-        this.loginForm.markAsPristine();
-        this.isLoading = false;
-      }),
-      untilDestroyed(this)
-    ).subscribe(credentials => {
-      log.debug(`${credentials.username} successfully logged in`);
-      this.router.navigate([ this.route.snapshot.queryParams['redirect'] || '/'], { replaceUrl: true });
-    }, error => {
-      log.debug(`Login error: ${error}`);
-      this.error = error;
-    });
+    // const login$ = this.authenticationService.login(this.loginForm.value);
+    // login$.pipe(
+    //   finalize(() => {
+    //     this.loginForm.markAsPristine();
+    //     this.isLoading = false;
+    //   }),
+    //   untilDestroyed(this)
+    // ).subscribe(credentials => {
+    //   log.debug(`${credentials.username} successfully logged in`);
+    //   this.router.navigate([ this.route.snapshot.queryParams['redirect'] || '/'], { replaceUrl: true });
+    // }, error => {
+    //   log.debug(`Login error: ${error}`);
+    //   this.error = error;
+    // });
   }
 
 
