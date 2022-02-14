@@ -84,7 +84,7 @@ public class AuthControllerImpl extends AuthControllerBase {
     }
 
     @Override
-    public ResponseEntity<Object> handleSignin(String username, String password) {
+    public ResponseEntity<String> handleSignin(String username, String password) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("username", username);
         map.add("password", password);
@@ -95,8 +95,8 @@ public class AuthControllerImpl extends AuthControllerBase {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, new HttpHeaders());
 
-        Optional<Object> data = Optional.of(getRestTemplate().postForObject(getKeycloakTokenUri(), request, String.class)); // TODO: Add custom code here;
-        ResponseEntity<Object> response;
+        Optional<String> data = Optional.of(getRestTemplate().postForObject(getKeycloakTokenUri(), request, String.class)); // TODO: Add custom code here;
+        ResponseEntity<String> response;
 
         if(data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());

@@ -93,17 +93,17 @@ public class LicenseeControllerImpl extends LicenseeControllerBase {
         return response;
     }
 
-    @Override
-    public ResponseEntity<LicenseeVO> handleUpdateLicensee(LicenseeVO licenseeVO) {
-        Optional<LicenseeVO> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<LicenseeVO> response;
+    // @Override
+    // public ResponseEntity<LicenseeVO> handleUpdateLicensee(LicenseeVO licenseeVO) {
+    //     Optional<LicenseeVO> data = Optional.empty(); // TODO: Add custom code here;
+    //     ResponseEntity<LicenseeVO> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    //     if(data.isPresent()) {
+    //         response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+    //     } else {
+    //         response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    //     }
 
-        return response;
-    }
+    //     return response;
+    // }
 }

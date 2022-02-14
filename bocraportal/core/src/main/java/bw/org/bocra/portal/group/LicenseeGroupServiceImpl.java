@@ -121,15 +121,4 @@ public class LicenseeGroupServiceImpl
         return getLicenseeGroupDao().toLicenseeGroupVOCollection(entities);
     }
 
-    /**
-     * @see bw.org.bocra.portal.group.LicenseeGroupService#update(LicenseeGroupVO)
-     */
-    @Override
-    protected  LicenseeGroupVO handleUpdate(LicenseeGroupVO licenseeGroupVO)
-        throws Exception
-    {
-        // TODO implement protected  LicenseeGroupVO handleUpdate(LicenseeGroupVO licenseeGroupVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.group.LicenseeGroupService.handleUpdate(LicenseeGroupVO licenseeGroupVO) Not implemented!");
-    }
-
 }

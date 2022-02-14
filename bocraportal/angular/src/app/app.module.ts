@@ -6,7 +6,6 @@
  *
  * MODEL CLASS:  $validationName
  */
-//hello there
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -28,6 +27,8 @@ import { LicenseeControllerImpl } from '@app/controller/licensee/licensee-contro
 import { GroupModule } from '@app/view/group/group.module';
 import { GroupControllerImpl } from '@app/controller/group/group-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
+import { AuthModule } from './auth';
+true
 
 @NgModule({
     declarations: [
@@ -47,6 +48,7 @@ import { UseCaseScope } from '@app/utils/use-case-scope';
         HomeModule,
         LicenseeModule,
         GroupModule,
+        AuthModule,
         AppRoutingModule, // must be imported as the last module as it contains the fallback route
     ],
     exports: [

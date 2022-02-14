@@ -48,7 +48,7 @@ public class LicenseeServiceImpl
     {
         
         if(licenseeVO.getId() != null) {
-            this.update(licenseeVO);
+            licenseeDao.update(licenseeDao.licenseeVOToEntity(licenseeVO));
             return licenseeVO;
         }
 
@@ -98,21 +98,6 @@ public class LicenseeServiceImpl
             vos.add(licenseeDao.toLicenseeVO(entity));
         }
         return vos;
-    }
-
-    /**
-     * @see bw.org.bocra.portal.licensee.LicenseeService#update(LicenseeVO)
-     */
-    @Override
-    protected  LicenseeVO handleUpdate(LicenseeVO licenseeVO)
-        throws Exception
-    {
-
-        if(licenseeVO.getId() != null) {
-            licenseeDao.update(licenseeDao.licenseeVOToEntity(licenseeVO));
-        }
-
-        return null;
     }
 
 }

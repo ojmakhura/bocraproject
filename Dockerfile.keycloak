@@ -1,5 +1,7 @@
 FROM jboss/keycloak:16.1.1
 
+COPY initdb.sql /docker-entrypoint-initdb.d/
+
 COPY --chown=jboss:root keycloak/bocra /opt/jboss/keycloak/themes/bocra
 COPY --chown=jboss:root keycloak/base /opt/jboss/keycloak/themes/base
 COPY --chown=jboss:root keycloak/standalone.xml /opt/jboss/keycloak/standalone/configuration/standalone.xml
