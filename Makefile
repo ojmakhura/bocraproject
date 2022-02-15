@@ -55,18 +55,16 @@ up_local_web:
 
 run_local_app: build_local_images up_local_app
 
-# run_local_db: build_local_images up_local_app
-
-# run_local_auth: build_local_images up_local_app
-
 run_api_local: rm_env gen_local_env
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/webservice && mvn spring-boot:run
+
+local_web_deps: rm_env gen_local_env mvn_build_all
+	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm i
 
 run_web_local: rm_env gen_local_env
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm start
 
 # run_local_web: build_local_images up_local_app
-
 stop_local_app:
 	docker-compose -f docker-compose-local.yml  down
 

@@ -4,7 +4,7 @@ import { SearchLicenseesComponent } from '@app/view/licensee/search-licensees.co
 import { SearchLicenseesSearchForm } from '@app/view/licensee/search-licensees.component';
 
 @Component({
-  selector: 'search-licensees',
+  selector: 'app-search-licensees',
   templateUrl: './search-licensees.component.html',
   styleUrls: ['./search-licensees.component.scss']
 })
@@ -22,9 +22,30 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
     }
 
     doNgAfterViewInit() {
-      
     }
 
     handleFormChanges(change: any) {
     }
+
+    /**
+     * This method may be overwritten
+     */
+    afterSetSearchLicenseesSearchForm(form: SearchLicenseesSearchForm): void {
+
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    beforeSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {
+
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    afterSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {
+
+    }
+    
 }

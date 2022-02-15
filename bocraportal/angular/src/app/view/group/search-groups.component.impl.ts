@@ -5,7 +5,7 @@ import { SearchGroupsEditForm } from '@app/view/group/search-groups.component';
 import { SearchGroupsSearchForm } from '@app/view/group/search-groups.component';
 
 @Component({
-  selector: 'search-groups',
+  selector: 'app-search-groups',
   templateUrl: './search-groups.component.html',
   styleUrls: ['./search-groups.component.scss']
 })
@@ -23,9 +23,51 @@ export class SearchGroupsComponentImpl extends SearchGroupsComponent {
     }
 
     doNgAfterViewInit() {
-      
     }
 
     handleFormChanges(change: any) {
     }
+
+    /**
+     * This method may be overwritten
+     */
+    afterSetSearchGroupsEditForm(form: SearchGroupsEditForm): void {
+
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    beforeSearchGroupsEdit(form: SearchGroupsEditForm): void {
+
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    afterSearchGroupsEdit(form: SearchGroupsEditForm): void {
+
+    }
+    
+    /**
+     * This method may be overwritten
+     */
+    afterSetSearchGroupsSearchForm(form: SearchGroupsSearchForm): void {
+
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    beforeSearchGroupsSearch(form: SearchGroupsSearchForm): void {
+
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    afterSearchGroupsSearch(form: SearchGroupsSearchForm): void {
+
+    }
+    
 }
