@@ -62,7 +62,7 @@ export const licenseeReducer = createReducer(
         searchCriteria: new LicenseeCriteria,
         licenseeArray: action.licensees
     })),
-    on(LicenseeActions.actionFailure, (state, action) => ({
+    on(LicenseeActions.licenseeActionFailure, (state, action) => ({
         ...state,
         error: action.error
     }))

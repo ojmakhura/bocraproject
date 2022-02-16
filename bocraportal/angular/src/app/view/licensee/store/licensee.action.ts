@@ -54,7 +54,7 @@ export const searchLicenseesSuccess = createAction(
     props<{ licensees: LicenseeVO[] }>()
 );
 
-export const actionFailure = createAction(
+export const licenseeActionFailure = createAction(
     LicenseeActionType.ACTION_FAILURE,
     props<{ error: any }>()
 );

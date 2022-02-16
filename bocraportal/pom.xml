@@ -475,13 +475,13 @@
                     For Progress use: jdbc:JdbcProgress:T:localhost:3305:bocraportal
                 -->
                 <jdbc.url>
-                    jdbc:postgresql://${env.POSTGRES_SERVER}/bocraportal
+                    jdbc:postgresql://${POSTGRES_SERVER}/bocraportal
                 </jdbc.url>
                 <!-- Enter id/password for the database connection -->
                 <jdbc.username>
-                    ${env.POSTGRES_USER}
+                    ${POSTGRES_USER}
                 </jdbc.username>
-                <jdbc.password>${env.POSTGRES_PASSWORD}</jdbc.password>
+                <jdbc.password>${POSTGRES_PASSWORD}</jdbc.password>
                 <!--
                     Change exception sorter class name for appropriate database
                     For H2 use: org.jboss.resource.adapter.jdbc.vendor.DummyExceptionSorter

@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("group")
 @CrossOrigin()
-public class LicenseeGroupControllerImpl extends LicenseeGroupControllerBase {
+public class LicenseeGroupRestControllerImpl extends LicenseeGroupRestControllerBase {
 
-    protected static Logger log = LoggerFactory.getLogger(LicenseeGroupControllerImpl.class);
+    protected static Logger log = LoggerFactory.getLogger(LicenseeGroupRestControllerImpl.class);
 
 
     @Override

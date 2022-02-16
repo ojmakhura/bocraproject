@@ -56,6 +56,9 @@ up_local_proxy:
 up_local_web: 
 	docker-compose -f docker-compose-local.yml up -d web
 
+up_local_pgadmin: 
+	docker-compose -f docker-compose-local.yml up -d pgadmin
+
 up_local_api: 
 	docker-compose -f docker-compose-local.yml up -d api
 

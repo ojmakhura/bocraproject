@@ -2,12 +2,12 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LicenseeController } from '@app/service/bw/org/bocra/portal/licensee/licensee-controller';
+import { LicenseeRestController } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
-import { LicenseeCriteria } from '@app/${import.filePath}';
+import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
 
 @Injectable()
-export class LicenseeControllerImpl extends LicenseeController {
+export class LicenseeRestControllerImpl extends LicenseeRestController {
 
     constructor(private injector: Injector) {
         super(injector);
@@ -44,14 +44,6 @@ export class LicenseeControllerImpl extends LicenseeController {
         let formData: any = new FormData();
         formData.append("searchCriteria", searchCriteria)
         return this.http.post<LicenseeVO[]>(this.path + '/search', formData);
-
-    }
-
-    public updateLicensee(licenseeVO: LicenseeVO): Observable<LicenseeVO> {
-
-        let formData: any = new FormData();
-        formData.append("licenseeVO", licenseeVO)
-        return this.http.put<LicenseeVO>(this.path, formData);
 
     }
 

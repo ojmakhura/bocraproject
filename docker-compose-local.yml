@@ -45,26 +45,26 @@ services:
         # - "traefik.http.routers.bocra-db.entrypoints=websecure"
         #- "traefik.http.routers.bocra-db.tls.certresolver=myresolver"
 
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   container_name: bocra-pgadmin
-  #   networks:
-  #     - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-  #     - bocra-network
-  #     - default
-  #   depends_on:
-  #     - proxy
-  #     - db
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-  #   #ports:
-  #   #  - "8000:80"
-  #   volumes:
-  #     - pgadmin-data:/var/lib/pgadmin
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.bocra-pgadmin.rule=Host(`pgadmin.${DOMAIN}`)"
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: bocra-pgadmin
+    networks:
+      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+      - bocra-network
+      - default
+    depends_on:
+      - proxy
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    #ports:
+    #  - "8000:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-pgadmin.rule=Host(`pgadmin.${DOMAIN}`)"
 
   keycloak:
     container_name: bocra-keycloak

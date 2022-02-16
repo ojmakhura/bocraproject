@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("users")
 @CrossOrigin()
-public class UserControllerImpl extends UserControllerBase {
+public class UserRestControllerImpl extends UserRestControllerBase {
 
-    protected static Logger log = LoggerFactory.getLogger(UserControllerImpl.class);
+    protected static Logger log = LoggerFactory.getLogger(UserRestControllerImpl.class);
 
 
     @Override

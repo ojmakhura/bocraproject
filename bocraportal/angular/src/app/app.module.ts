@@ -31,6 +31,8 @@ import { LicenseeControllerImpl } from '@app/controller/licensee/licensee-contro
 import { GroupModule } from '@app/view/group/group.module';
 import { GroupControllerImpl } from '@app/controller/group/group-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
+import { LicenseeGroupRestControllerImpl } from '@app/service/bw/org/bocra/portal/group/licensee-group-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -63,6 +65,8 @@ true
     ],
     providers: [
         UseCaseScope,
+        LicenseeGroupRestControllerImpl,
+        LicenseeRestControllerImpl,
         LicenseeControllerImpl,
         GroupControllerImpl,
     ],
