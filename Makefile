@@ -9,6 +9,9 @@ mvn_build_core:
 mvn_build_api:
 	cd bocraportal/webservice && mvn install -Dmaven.test.skip=true
 
+mvn_build_web:
+	cd bocraportal/webservice && mvn install -f angular -Dmaven.test.skip=true
+
 mvn_build_all: 
 	cd bocraportal &&  mvn install -Dmaven.test.skip=true
 
@@ -23,7 +26,7 @@ mvn_clean_all:
 build_local_api: gen_docker_env mvn_build_api
 	docker-compose -f docker-compose-local.yml build api
 
-build_local_web: gen_docker_env mvn_build_all
+build_local_web: gen_docker_env 
 	docker-compose -f docker-compose-local.yml build web
 
 build_local_db: gen_docker_env
@@ -52,6 +55,9 @@ up_local_proxy:
 
 up_local_web: 
 	docker-compose -f docker-compose-local.yml up -d web
+
+up_local_api: 
+	docker-compose -f docker-compose-local.yml up -d api
 
 run_local_app: build_local_images up_local_app
 

@@ -25,7 +25,7 @@ import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
-import { ConnectFormDirective } from './connect-form.directive';
+//import { ConnectFormDirective } from './connect-form.directive';
 import { LicenseeModule } from '@app/view/licensee/licensee.module';
 import { LicenseeControllerImpl } from '@app/controller/licensee/licensee-controller.impl';
 import { GroupModule } from '@app/view/group/group.module';
@@ -37,7 +37,6 @@ true
 @NgModule({
     declarations: [
         AppComponent,
-        ConnectFormDirective,
     ],
     imports: [
         BrowserModule,

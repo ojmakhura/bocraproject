@@ -9,7 +9,22 @@ import { env } from './.env';
 export const environment = {
   production: true,
   version: env['npm_package_version'],
-  serverUrl: 'https://api.chucknorris.io',
+  serverUrl: $ENV.API_URL,
   defaultLanguage: 'en-US',
-  supportedLanguages: ['en-US']
+  supportedLanguages: ['en-US'],
+  bocraApiServer: $ENV.API_URL,
+  bocraKeycloakServer: 'http://localhost:8080',
+  redirectUri: 'http://localhost:4200',
+  keycloak: {
+    issuer: $ENV.KEYCLOAK_AUTH_URL,
+    redirectUri: window.location.origin,
+    clientId: $ENV.KEYCLOAK_WEB_CLIENT,
+    scope: 'openid profile email offline_access',
+    responseType: 'code',
+    realm: $ENV.KEYCLOAK_REALM,
+    // at_hash is not present in JWT token
+    disableAtHashCheck: true,
+    showDebugInformation: true,
+    requireHttps: false,
+  },
 };

@@ -95,61 +95,61 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-keycloak.rule=Host(`keycloak.${DOMAIN}`)"
-#
-  # web:
-  #   image: "bocra-web:latest"
-  #   hostname: web
-  #   build:
-  #     context: .
-  #     dockerfile: bocraportal/angular/Dockerfile
-  #   container_name: bocra-web
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - web-app-data:/web
-  #   depends_on:
-  #     - db
-  #     - keycloak
-  #     - api
-  #   networks:
-  #     - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-  #     - bocra-network
-  #     - default
-  #   #ports:
-  #   #  - 3100:80
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.bocra-web.rule=Host(`bocra.${DOMAIN}`)"
-#
-  # api:
-  #   image: "bocra-api:latest"
-  #   container_name: bocra-api
-  #   hostname: api
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - db
-  #     - keycloak
-  #   ports:
-  #     - ${API_SERVER_PORT}
-  #   build:
-  #     context: .
-  #     dockerfile: bocraportal/webservice/Dockerfile
-  #   networks:
-  #     - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-  #     - bocra-network
-  #     - default
-  #   environment:
-  #     POSTGRES_SERVER: bocra-db
-  #     SERVER_PORT: ${API_SERVER_PORT}
-  #     POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #     POSTGRES_DB: ${POSTGRES_DB}
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.bocraportal.rule=Host(`app.${DOMAIN}`)"
-#
+
+  web:
+    image: "bocra-web:latest"
+    hostname: web
+    build:
+      context: .
+      dockerfile: bocraportal/angular/Dockerfile
+    container_name: bocra-web
+    env_file:
+      - .env
+    volumes:
+      - web-app-data:/web
+    depends_on:
+      - db
+      - keycloak
+      - api
+    networks:
+      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+      - bocra-network
+      - default
+    #ports:
+    #  - 3100:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-web.rule=Host(`bocra.${DOMAIN}`)"
+
+  api:
+    image: "bocra-api:latest"
+    container_name: bocra-api
+    hostname: api
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - keycloak
+    ports:
+      - ${API_SERVER_PORT}
+    build:
+      context: .
+      dockerfile: bocraportal/webservice/Dockerfile
+    networks:
+      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+      - bocra-network
+      - default
+    environment:
+      POSTGRES_SERVER: bocra-db
+      SERVER_PORT: ${API_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocraportal.rule=Host(`app.${DOMAIN}`)"
+
 volumes:
   app-db-data:
     driver: local
