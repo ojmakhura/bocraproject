@@ -34,6 +34,7 @@ import { UseCaseScope } from '@app/utils/use-case-scope';
 import { LicenseeGroupRestControllerImpl } from '@app/service/bw/org/bocra/portal/group/licensee-group-rest-controller.impl';
 import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { AuthModule } from './auth';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 true
 
 @NgModule({
@@ -56,6 +57,7 @@ true
         StoreModule.forRoot(reducers, {
             metaReducers
         }),
+        StoreDevtoolsModule.instrument({}),
         LicenseeModule,
         GroupModule,
         AuthModule,
