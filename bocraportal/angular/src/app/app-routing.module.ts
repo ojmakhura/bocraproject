@@ -23,6 +23,10 @@ const routes: Routes = [
       path: 'group', 
       loadChildren: async () => (await import('@app/view/group/group.module')).GroupModule
     },
+    {
+      path: 'user', 
+      loadChildren: async () => (await import('@app/view/user/user.module')).UserModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 

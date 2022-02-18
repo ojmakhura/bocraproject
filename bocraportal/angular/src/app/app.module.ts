@@ -25,16 +25,19 @@ import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 //import { ConnectFormDirective } from './connect-form.directive';
 import { LicenseeModule } from '@app/view/licensee/licensee.module';
 import { LicenseeControllerImpl } from '@app/controller/licensee/licensee-controller.impl';
 import { GroupModule } from '@app/view/group/group.module';
 import { GroupControllerImpl } from '@app/controller/group/group-controller.impl';
+import { UserModule } from '@app/view/user/user.module';
+import { UserControllerImpl } from '@app/controller/user/user-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
-import { LicenseeGroupRestControllerImpl } from '@app/service/bw/org/bocra/portal/group/licensee-group-rest-controller.impl';
 import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { LicenseeGroupRestControllerImpl } from '@app/service/bw/org/bocra/portal/group/licensee-group-rest-controller.impl';
+import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
 import { AuthModule } from './auth';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 true
 
 @NgModule({
@@ -54,12 +57,11 @@ true
         ShellModule,
         HomeModule,
         EffectsModule.forRoot([]),
-        StoreModule.forRoot(reducers, {
-            metaReducers
-        }),
+        StoreModule.forRoot({}),
         StoreDevtoolsModule.instrument({}),
         LicenseeModule,
         GroupModule,
+        UserModule,
         AuthModule,
         AppRoutingModule, // must be imported as the last module as it contains the fallback route
     ],
@@ -67,10 +69,12 @@ true
     ],
     providers: [
         UseCaseScope,
-        LicenseeGroupRestControllerImpl,
         LicenseeRestControllerImpl,
+        LicenseeGroupRestControllerImpl,
+        UserRestControllerImpl,
         LicenseeControllerImpl,
         GroupControllerImpl,
+        UserControllerImpl,
     ],
     bootstrap: [AppComponent]
 })
