@@ -54,7 +54,7 @@ export const searchGroupsSuccess = createAction(
     props<{ groups: LicenseeGroupVO[] }>()
 );
 
-export const actionFailure = createAction(
+export const groupActionFailure = createAction(
     GroupActionType.ACTION_FAILURE,
     props<{ error: any }>()
 );

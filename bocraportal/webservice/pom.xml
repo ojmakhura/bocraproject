@@ -8,6 +8,17 @@
     </parent>
     <artifactId>bocraportal-webservice</artifactId>
     <name>BOCRA Online Portal Web Services</name>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.keycloak.bom</groupId>
+                <artifactId>keycloak-adapter-bom</artifactId>
+                <version>${keycloak.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -30,7 +41,7 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
         </dependency>
-		<!-- <dependency>
+        <!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
@@ -41,6 +52,11 @@
         <!-- <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
+        </dependency> -->
+        <!-- <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>5.3.16</version>
         </dependency> -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

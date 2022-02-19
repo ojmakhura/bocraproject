@@ -33,10 +33,13 @@ import { GroupModule } from '@app/view/group/group.module';
 import { GroupControllerImpl } from '@app/controller/group/group-controller.impl';
 import { UserModule } from '@app/view/user/user.module';
 import { UserControllerImpl } from '@app/controller/user/user-controller.impl';
+import { GuardModule } from '@app/view/guard/guard.module';
+import { GuardControllerImpl } from '@app/controller/guard/guard-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { LicenseeGroupRestControllerImpl } from '@app/service/bw/org/bocra/portal/group/licensee-group-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
+import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -62,6 +65,7 @@ true
         LicenseeModule,
         GroupModule,
         UserModule,
+        GuardModule,
         AuthModule,
         AppRoutingModule, // must be imported as the last module as it contains the fallback route
     ],
@@ -69,12 +73,14 @@ true
     ],
     providers: [
         UseCaseScope,
-        LicenseeRestControllerImpl,
         LicenseeGroupRestControllerImpl,
+        LicenseeRestControllerImpl,
         UserRestControllerImpl,
+        UrlGuardRestControllerImpl,
         LicenseeControllerImpl,
         GroupControllerImpl,
         UserControllerImpl,
+        GuardControllerImpl,
     ],
     bootstrap: [AppComponent]
 })

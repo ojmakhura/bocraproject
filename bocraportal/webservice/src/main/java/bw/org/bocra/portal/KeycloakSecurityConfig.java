@@ -20,23 +20,33 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 @Configuration
 @ComponentScan(basePackageClasses = KeycloakSpringBootConfigResolver.class)
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     private static final String CORS_ALLOWED_HEADERS = "origin,content-type,accept,x-requested-with,Authorization";
     private long corsMaxAge = 60;
     private static final Logger logger = LoggerFactory.getLogger(KeycloakSecurityConfig.class);
+
+    // @Autowired
+    // private KeycloakClientRequestFactory keycloakClientRequestFactory;
 
     @Override
     @Bean
@@ -44,21 +54,22 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
     }
 
-    // @Autowired
-    // public void configureGlobal(AuthenticationManagerBuilder auth) {
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
 
-    //     SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
-    //     grantedAuthorityMapper.setPrefix("ROLE_");
+        SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
+        grantedAuthorityMapper.setPrefix("ROLE_");
 
-    //     KeycloakAuthenticationProvider authenticationProvider = keycloakAuthenticationProvider();
-    //     authenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
+        KeycloakAuthenticationProvider authenticationProvider = keycloakAuthenticationProvider();
+        authenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
 
-    //     auth.authenticationProvider(authenticationProvider);
-    // }
+        auth.authenticationProvider(authenticationProvider);
+    }
 
     // @Bean
-    // public KeycloakConfigResolver keycloakConfigResolver() {
-    //     return new KeycloakSpringBootConfigResolver();
+    // @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    // public KeycloakRestTemplate keycloakRestTemplate() {
+    //     return new KeycloakRestTemplate(keycloakClientRequestFactory);
     // }
 
     @Override

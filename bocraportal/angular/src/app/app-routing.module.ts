@@ -27,6 +27,10 @@ const routes: Routes = [
       path: 'user', 
       loadChildren: async () => (await import('@app/view/user/user.module')).UserModule
     },
+    {
+      path: 'guard', 
+      loadChildren: async () => (await import('@app/view/guard/guard.module')).GuardModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 

@@ -25,7 +25,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
     @Override
     public ResponseEntity<LicenseeVO> handleFindById(Long id) {
-        Optional<LicenseeVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<LicenseeVO> data = Optional.of(this.licenseeService.findById(id)); // TODO: Add custom code here;
         ResponseEntity<LicenseeVO> response;
 
         if(data.isPresent()) {
@@ -39,7 +39,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<LicenseeVO>> handleGetAll() {
-        Optional<Collection<LicenseeVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll()); // TODO: Add custom code here;
         ResponseEntity<Collection<LicenseeVO>> response;
 
         if(data.isPresent()) {
@@ -53,7 +53,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
     @Override
     public ResponseEntity<Boolean> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Boolean> data = Optional.of(this.licenseeService.remove(id)); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
         if(data.isPresent()) {
@@ -67,7 +67,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
     @Override
     public ResponseEntity<LicenseeVO> handleSave(LicenseeVO licenseeVO) {
-        Optional<LicenseeVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<LicenseeVO> data = Optional.of(this.licenseeService.save(licenseeVO)); // TODO: Add custom code here;
         ResponseEntity<LicenseeVO> response;
 
         if(data.isPresent()) {
@@ -81,7 +81,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<LicenseeVO>> handleSearchLicensees(LicenseeCriteria searchCriteria) {
-        Optional<Collection<LicenseeVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.search(searchCriteria)); // TODO: Add custom code here;
         ResponseEntity<Collection<LicenseeVO>> response;
 
         if(data.isPresent()) {

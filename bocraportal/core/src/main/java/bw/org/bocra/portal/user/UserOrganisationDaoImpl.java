@@ -25,6 +25,10 @@ public class UserOrganisationDaoImpl
     {
         // TODO verify behavior of toUserOrganisationVO
         super.toUserOrganisationVO(source, target);
+
+        if(source.getLicensee() != null) {
+            target.setOrganisation(licenseeDao.toLicenseeVO(source.getLicensee()));
+        }
     }
 
     /**
@@ -83,7 +87,7 @@ public class UserOrganisationDaoImpl
         }
 
         if(source.getUser() != null) {
-            //target.setUserId(source.getUser().get);
+            target.setUserId(source.getUser().getUserId());
         }
     }
 }

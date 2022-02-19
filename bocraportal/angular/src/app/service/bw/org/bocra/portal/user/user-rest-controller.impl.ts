@@ -20,6 +20,12 @@ export class UserRestControllerImpl extends UserRestController {
 
     }
 
+    public loadUsers(): Observable<UserVO[]> {
+
+        return this.http.get<UserVO[]>(this.path);
+
+    }
+
     public updateUserName(username: string, userId: string): Observable<boolean> {
 
         let formData: any = new FormData();

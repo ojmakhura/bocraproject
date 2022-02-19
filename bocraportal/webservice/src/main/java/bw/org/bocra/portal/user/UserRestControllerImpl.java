@@ -5,9 +5,8 @@
 //
 package bw.org.bocra.portal.user;
 
+import java.util.Collection;
 import java.util.Optional;
-
-import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("user")
 @CrossOrigin()
 public class UserRestControllerImpl extends UserRestControllerBase {
 
@@ -26,8 +25,22 @@ public class UserRestControllerImpl extends UserRestControllerBase {
 
     @Override
     public ResponseEntity<UserVO> handleCreateUser(UserVO userVO) {
-        Optional<UserVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<UserVO> data = Optional.empty();
         ResponseEntity<UserVO> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<Collection<UserVO>> handleLoadUsers() {
+        Optional<Collection<UserVO>> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<Collection<UserVO>> response;
 
         if(data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());

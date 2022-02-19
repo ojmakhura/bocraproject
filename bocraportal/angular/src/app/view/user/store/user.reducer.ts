@@ -2,13 +2,14 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
 import * as UserActions from './user.action';
+import { UserCriteria } from '@app/model/bw/org/bocra/portal/user/user-criteria';
 
 export const userKey = "user";
 
 export interface UserState {
     user: UserVO;
     users: UserVO[];
-    searchCriteria: string
+    searchCriteria: UserCriteria
     loading: boolean;
     id: string;
     error: any
@@ -17,7 +18,7 @@ export interface UserState {
 export const initialState: UserState = {
     user: new UserVO,
     users: [],
-    searchCriteria: '',
+    searchCriteria: new UserCriteria,
     loading: false,
     id: '',
     error: null

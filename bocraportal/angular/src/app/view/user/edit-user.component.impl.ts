@@ -12,6 +12,8 @@ import { EditUserSearchForm } from '@app/view/user/edit-user.component';
 })
 export class EditUserComponentImpl extends EditUserComponent {
 
+  hide = true;
+
     constructor(private injector: Injector) {
         super(injector);
     }

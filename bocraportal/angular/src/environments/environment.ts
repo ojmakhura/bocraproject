@@ -17,10 +17,10 @@ export const environment = {
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US'],
   bocraApiServer: 'http://localhost:8085',
-  bocraKeycloakServer: 'http://localhost:8080',
+  bocraKeycloakServer: 'http://keycloak.localhost',
   redirectUri: 'http://localhost:4200',
   keycloak: {
-    issuer: 'http://localhost:8080/auth',
+    issuer: 'http://keycloak.localhost/auth',
     redirectUri: window.location.origin,
     clientId: 'bocraportal-web',
     scope: 'openid profile email offline_access',

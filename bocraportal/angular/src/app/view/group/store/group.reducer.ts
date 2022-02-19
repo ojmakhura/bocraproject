@@ -62,7 +62,7 @@ export const groupReducer = createReducer(
         searchCriteria: new LicenseeGroupCriteria,
         licenseeGroupArray: action.groups
     })),
-    on(GroupActions.actionFailure, (state, action) => ({
+    on(GroupActions.groupActionFailure, (state, action) => ({
         ...state,
         error: action.error
     }))
