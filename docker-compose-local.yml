@@ -5,9 +5,10 @@ services:
     container_name: bocra-proxy
     hostname: traefik
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      bocra-network:
+        ipv4_address: ${BOCRA_PROXY_ADDRESS}
+      traefik-public:
+      default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /bocra/traefik:/bocra/traefik
@@ -20,7 +21,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
     labels:
-      traefik.http.routers.bocra-proxy.rule: Host(`traefik.${DOMAIN}`)
+      traefik.http.routers.bocra-proxy.rule: Host(`proxy.${DOMAIN}`)
       traefik.http.routers.bocra-proxy.service: api@internal
 
   db:
@@ -29,6 +30,7 @@ services:
     image: postgres:14
     volumes:
       - app-db-data:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
     env_file:
       - .env
     environment:
@@ -36,12 +38,13 @@ services:
     depends_on:
       - proxy
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_DB_ADDRESS}
+      default:
     labels:
       - "traefik.enable=true"
-        # - "traefik.http.routers.bocra-db.rule=Host(`db.${DOMAIN}`)"
+      - "traefik.http.routers.bocra-db.rule=Host(`db.${DOMAIN}`)"
         # - "traefik.http.routers.bocra-db.entrypoints=websecure"
         #- "traefik.http.routers.bocra-db.tls.certresolver=myresolver"
 
@@ -49,9 +52,10 @@ services:
     image: dpage/pgadmin4
     container_name: bocra-pgadmin
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_PGADMIN_ADDRESS}
+      default:
     depends_on:
       - proxy
       - db
@@ -89,9 +93,10 @@ services:
     #volumes:
     #  - keycloak-installation:/opt/jboss/keycloak
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_KEYCLOAK_ADDRESS}
+      default:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-keycloak.rule=Host(`keycloak.${DOMAIN}`)"
@@ -112,14 +117,15 @@ services:
       - keycloak
       - api
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_WEB_ADDRESS}
+      default:
     #ports:
     #  - 3100:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-web.rule=Host(`bocra.${DOMAIN}`)"
+      - "traefik.http.routers.bocra-web.rule=Host(`${DOMAIN}`)"
 
   api:
     image: "bocra-api:latest"
@@ -136,9 +142,10 @@ services:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      bocra-network:
+        ipv4_address: ${BOCRA_API_ADDRESS}
+      traefik-public:
+      default:
     environment:
       POSTGRES_SERVER: bocra-db
       SERVER_PORT: ${API_SERVER_PORT}
@@ -148,7 +155,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocraportal.rule=Host(`app.${DOMAIN}`)"
+      - "traefik.http.routers.bocraportal.rule=Host(`api.${DOMAIN}`)"
 
 volumes:
   app-db-data:

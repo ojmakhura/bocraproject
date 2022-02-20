@@ -6,6 +6,14 @@ import { EditURLGuardSaveForm } from '@app/view/guard/edit-url-guard.component';
 import { EditURLGuardNewForm } from '@app/view/guard/edit-url-guard.component';
 import { EditURLGuardSearchForm } from '@app/view/guard/edit-url-guard.component';
 import { SelectItem } from '@app/utils/select-item';
+import { environment } from '@env/environment';
+import { saveGuard } from './store/guard.action';
+import * as guardSelectors from './store/guard.selector';
+import * as guardActions from './store/guard.action';
+import { KeycloakService } from 'keycloak-angular';
+import { Observable } from 'rxjs';
+import { UrlGuardVO } from '@app/model/bw/org/bocra/portal/guard/url-guard-vo';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-edit-url-guard',
@@ -14,14 +22,23 @@ import { SelectItem } from '@app/utils/select-item';
 })
 export class EditURLGuardComponentImpl extends EditURLGuardComponent {
 
-    protected http: HttpClient;
-    constructor(private injector: Injector) {
-        super(injector);
-        this.http = this._injector.get(HttpClient);
-    }
+  protected http: HttpClient;
+  protected keycloakService: KeycloakService;
+  urlGuard$: Observable<UrlGuardVO>;
+  urlGuards$: Observable<UrlGuardVO[]>;
+  id$: Observable<number>;
+
+  constructor(private injector: Injector) {
+    super(injector);
+    this.http = this._injector.get(HttpClient);
+    this.keycloakService = this._injector.get(KeycloakService);
+    this.urlGuard$ = this.store.pipe(select(guardSelectors.selectGuard))
+    this.urlGuards$ = this.store.pipe(select(guardSelectors.selectGuards))
+    this.id$ = this.store.pipe(select(guardSelectors.selectId))
+  }
 
     beforeOnInit(){
-      this.http.get<any[]>("http://localhost:8080/auth/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles")
+      this.http.get<any[]>(environment.keycloakClientRoleUrl)
       .subscribe(role => {
         console.log(role);
         role.forEach(val => {
@@ -33,11 +50,32 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
           
           this.urlGuardVORoleBackingList.push(item);
         })
-    });
+      });
 
+      this.http.get<any[]>(environment.keycloakRealmRoleUrl)
+      .subscribe(role => {
+        console.log(role);
+        role.forEach(val => {
+          
+          let item = new SelectItem();
+          item.label = val['description'];
+          item.value = val['name'];
+          console.log(item);
+          
+          this.urlGuardVORoleBackingList.push(item);
+        })
+      });
     }
 	
     afterOnInit() {
+
+      if(this.useCaseScope.pageVariables['id']) {
+        this.store.dispatch(guardActions.findById({id: this.useCaseScope.pageVariables['id']}));
+      }
+  
+      this.urlGuard$.subscribe(guard => {
+        this.setEditURLGuardSaveForm({urlGuardVO: guard} as EditURLGuardSaveForm);
+      });
     }
 
     doNgAfterViewInit() {
@@ -50,14 +88,14 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
      * This method may be overwritten
      */
     afterSetEditURLGuardSaveForm(form: EditURLGuardSaveForm): void {
-
+      
     }
 
     /**
      * This method may be overwritten
      */
     beforeEditURLGuardSave(form: EditURLGuardSaveForm): void {
-
+      this.store.dispatch(saveGuard({guard: form.urlGuardVO}));
     }
 
     /**

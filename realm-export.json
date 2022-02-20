@@ -51,11 +51,16 @@
         "description": "Administrator",
         "composite": true,
         "composites": {
+          "realm": [
+            "USER"
+          ],
           "client": {
             "bocraportal-api": [
+              "BOCRA_API_USER",
               "BOCRA_API_ADMIN"
             ],
             "bocraportal-web": [
+              "BOCRA_WEB_USER",
               "BOCRA_WEB_ADMIN"
             ]
           }

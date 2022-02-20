@@ -2,8 +2,36 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { UserState } from './user.reducer';
 
-export const userKey = "user";
+export const userKey = 'user';
 
-export const selectUserState = createFeatureSelector<UserState> (
-    userKey
+export const selectUserState = createFeatureSelector<UserState>(userKey);
+
+export const selectGroup = createSelector(
+    selectUserState,
+      (state: UserState) => state.user
+);
+
+export const selectGroups = createSelector(
+    selectUserState,
+      (state: UserState) => state.users
+);
+
+export const selectError = createSelector(
+    selectUserState,
+      (state: UserState) => state.error
+);
+
+export const selectId = createSelector(
+    selectUserState,
+      (state: UserState) => state.id
+);
+
+export const selectLoading = createSelector(
+    selectUserState,
+      (state: UserState) => state.loading
+);
+
+export const selectCriteria = createSelector(
+    selectUserState,
+      (state: UserState) => state.searchCriteria
 );

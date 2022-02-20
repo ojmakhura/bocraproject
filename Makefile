@@ -41,25 +41,25 @@ build_local_proxy: gen_docker_env
 build_local_images: gen_docker_env mvn_build_all
 	docker-compose -f docker-compose-local.yml build
 
-up_local_app: 
+up_local_app: rm_env gen_docker_env
 	docker-compose -f docker-compose-local.yml up -d
 
-up_local_db: 
+up_local_db: rm_env gen_docker_env
 	docker-compose -f docker-compose-local.yml up -d db
 
-up_local_keycloak: 
+up_local_keycloak: rm_env gen_docker_env
 	docker-compose -f docker-compose-local.yml up -d keycloak
 
-up_local_proxy:
+up_local_proxy: rm_env gen_docker_env
 	docker-compose -f docker-compose-local.yml up -d proxy
 
-up_local_web: 
+up_local_web: rm_env gen_docker_env
 	docker-compose -f docker-compose-local.yml up -d web
 
-up_local_pgadmin: 
+up_local_pgadmin: rm_env gen_docker_env
 	docker-compose -f docker-compose-local.yml up -d pgadmin
 
-up_local_api: 
+up_local_api: rm_env gen_docker_env
 	docker-compose -f docker-compose-local.yml up -d api
 
 run_local_app: build_local_images up_local_app
