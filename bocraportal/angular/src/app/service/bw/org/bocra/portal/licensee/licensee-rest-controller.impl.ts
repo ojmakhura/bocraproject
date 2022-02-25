@@ -21,7 +21,7 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
 
     public getAll(): Observable<LicenseeVO[]> {
 
-        return this.http.get<LicenseeVO[]>(this.path + `all`);
+        return this.http.get<LicenseeVO[]>(this.path + `/all`);
 
     }
 
@@ -39,7 +39,7 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
 
     public searchLicensees(searchCriteria: LicenseeCriteria): Observable<LicenseeVO[]> {
 
-        return this.http.post<LicenseeVO[]>(this.path + `search`, searchCriteria);
+        return this.http.post<LicenseeVO[]>(this.path + `/search`, searchCriteria);
 
     }
 

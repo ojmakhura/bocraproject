@@ -2,49 +2,83 @@
 import { Component, Injector } from '@angular/core';
 import { SearchURLGuardsComponent } from '@app/view/guard/search-url-guards.component';
 import { SearchURLGuardsSearchForm } from '@app/view/guard/search-url-guards.component';
+import { Observable } from 'rxjs/internal/Observable';
+import { UrlGuardVO } from '@app/model/bw/org/bocra/portal/guard/url-guard-vo';
+import * as guardSelectors from './store/guard.selector';
+import * as guardActions from './store/guard.action';
+import { select } from '@ngrx/store';
+import { KeycloakService } from 'keycloak-angular';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '@env/environment';
+import { SelectItem } from '@app/utils/select-item';
 
 @Component({
   selector: 'app-search-url-guards',
   templateUrl: './search-url-guards.component.html',
-  styleUrls: ['./search-url-guards.component.scss']
+  styleUrls: ['./search-url-guards.component.scss'],
 })
 export class SearchURLGuardsComponentImpl extends SearchURLGuardsComponent {
+  urlGuards$: Observable<UrlGuardVO[]>;
+  protected keycloakService: KeycloakService;
+  protected http: HttpClient;
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  constructor(private injector: Injector) {
+    super(injector);
+    this.urlGuards$ = this.store.pipe(select(guardSelectors.selectGuards));
+    this.keycloakService = this._injector.get(KeycloakService);
+    this.http = this._injector.get(HttpClient);
+  }
 
-    beforeOnInit(){
-    }
-	
-    afterOnInit() {
-    }
+  beforeOnInit() {
+    this.store.dispatch(guardActions.reset());
 
-    doNgAfterViewInit() {
-    }
+    this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
+      role.forEach((val) => {
+        let item = new SelectItem();
+        item.label = val['description'];
+        item.value = val['name'];
 
-    handleFormChanges(change: any) {
-    }
+        this.searchCriteriaRolesBackingList.push(item);
+      });
+    });
 
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchURLGuardsSearchForm(form: SearchURLGuardsSearchForm): void {
+    this.http.get<any[]>(environment.keycloakRealmRoleUrl).subscribe((role) => {
+      role.forEach((val) => {
+        let item = new SelectItem();
+        item.label = val['description'];
+        item.value = val['name'];
+        console.log(item);
 
-    }
+        this.searchCriteriaRolesBackingList.push(item);
+      });
+    });
+  }
 
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchURLGuardsSearch(form: SearchURLGuardsSearchForm): void {
+  afterOnInit() {}
 
-    }
+  doNgAfterViewInit() {
+    this.urlGuards$.subscribe((guards) => {
+      this.setUrlGuards(guards);
+    });
+  }
 
-    /**
-     * This method may be overwritten
-     */
-    afterSearchURLGuardsSearch(form: SearchURLGuardsSearchForm): void {
+  handleFormChanges(change: any) {}
 
-    }
+  /**
+   * This method may be overwritten
+   */
+  afterSetSearchURLGuardsSearchForm(form: SearchURLGuardsSearchForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  beforeSearchURLGuardsSearch(form: SearchURLGuardsSearchForm): void {
+    this.store.dispatch(guardActions.searchGuards({searchCriteria: form.searchCriteria}));
     
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  afterSearchURLGuardsSearch(form: SearchURLGuardsSearchForm): void {}
 }

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { KeycloakService } from 'keycloak-angular';
+import * as nav from './navigation';
 
 @Component({
   selector: 'app-shell',
@@ -11,6 +12,7 @@ import { KeycloakService } from 'keycloak-angular';
 })
 export class ShellComponent implements OnInit {
 
+  menus: any[] = [];
   constructor(private router: Router,
               private titleService: Title,
               private keycloakService: KeycloakService,
@@ -18,6 +20,7 @@ export class ShellComponent implements OnInit {
 
   ngOnInit() { 
     //console.log(this.keycloakService.);
+    this.menus = nav.menuItems;
   }
 
   logout() {

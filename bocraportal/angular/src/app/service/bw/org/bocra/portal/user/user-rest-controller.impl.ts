@@ -26,7 +26,7 @@ export class UserRestControllerImpl extends UserRestController {
 
     public updateUserName(username: string, userId: string): Observable<boolean> {
 
-        return this.http.patch<boolean>(this.path + `username/userId/${userId}`, {username: username, userId: userId});
+        return this.http.patch<boolean>(this.path + `/username/userId/${userId}`, {username: username, userId: userId});
 
     }
 

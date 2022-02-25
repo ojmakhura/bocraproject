@@ -21,9 +21,6 @@ export class SearchUsersComponentImpl extends SearchUsersComponent {
     }
 
     doNgAfterViewInit() {
-      this.urlGuards$.subscribe(guards => {
-        this.setUrlGuards(guards);
-      });
     }
 
     handleFormChanges(change: any) {

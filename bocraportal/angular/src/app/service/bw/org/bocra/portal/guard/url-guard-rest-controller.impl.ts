@@ -21,7 +21,7 @@ export class UrlGuardRestControllerImpl extends UrlGuardRestController {
 
     public getAll(): Observable<UrlGuardVO[]> {
 
-        return this.http.get<UrlGuardVO[]>(this.path + `all`);
+        return this.http.get<UrlGuardVO[]>(this.path + `/all`);
 
     }
 
@@ -39,7 +39,7 @@ export class UrlGuardRestControllerImpl extends UrlGuardRestController {
 
     public search(criteria: UrlGuardCriteria): Observable<UrlGuardVO[]> {
 
-        return this.http.post<UrlGuardVO[]>(this.path + `search`, criteria);
+        return this.http.post<UrlGuardVO[]>(this.path + `/search`, criteria);
 
     }
 

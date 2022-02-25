@@ -13,7 +13,7 @@ export class AuthControllerImpl extends AuthController {
 
     public getAccessTokenString(username: string, password: string): Observable<string> {
 
-        return this.http.post<string>(this.path + `token_string`, {username: username, password: password});
+        return this.http.post<string>(this.path + `/token_string`, {username: username, password: password});
 
     }
 
@@ -25,13 +25,13 @@ export class AuthControllerImpl extends AuthController {
 
     public getRoles(): Observable<RoleRepresentation[]> {
 
-        return this.http.get<RoleRepresentation[]>(this.path + `roles`);
+        return this.http.get<RoleRepresentation[]>(this.path + `/roles`);
 
     }
 
     public getUserInfo(token: string): Observable<string> {
 
-        return this.http.post<string>(this.path + `info`, token);
+        return this.http.post<string>(this.path + `/info`, token);
 
     }
 
@@ -43,7 +43,7 @@ export class AuthControllerImpl extends AuthController {
 
     public signout(refreshToken: string): Observable<void> {
 
-        return this.http.post<void>(this.path + `signout`, refreshToken);
+        return this.http.post<void>(this.path + `/signout`, refreshToken);
 
     }
 

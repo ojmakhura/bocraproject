@@ -21,7 +21,7 @@ export class LicenseeGroupRestControllerImpl extends LicenseeGroupRestController
 
     public getAll(): Observable<LicenseeGroupVO[]> {
 
-        return this.http.get<LicenseeGroupVO[]>(this.path + `all`);
+        return this.http.get<LicenseeGroupVO[]>(this.path + `/all`);
 
     }
 
@@ -39,7 +39,7 @@ export class LicenseeGroupRestControllerImpl extends LicenseeGroupRestController
 
     public search(searchCriteria: LicenseeGroupCriteria): Observable<LicenseeGroupVO[]> {
 
-        return this.http.post<LicenseeGroupVO[]>(this.path + `search`, searchCriteria);
+        return this.http.post<LicenseeGroupVO[]>(this.path + `/search`, searchCriteria);
 
     }
 
