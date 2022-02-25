@@ -13,6 +13,7 @@ export enum UserActionType {
     LOAD_ALL_SUCCESS = '[User] Load All Success',
     SEARCH_USERS = '[User] Search Users',
     SEARCH_USERS_SUCCESS = '[User] Search Users Success',
+    RESET = '[User] Reset',
     ACTION_FAILURE = '[User] Action Failure'
 }
 
@@ -54,6 +55,8 @@ export const searchUsersSuccess = createAction(
     UserActionType.SEARCH_USERS_SUCCESS,
     props<{ users: UserVO[] }>()
 );
+
+export const reset = createAction(UserActionType.RESET);
 
 export const userActionFailure = createAction(
     UserActionType.ACTION_FAILURE,

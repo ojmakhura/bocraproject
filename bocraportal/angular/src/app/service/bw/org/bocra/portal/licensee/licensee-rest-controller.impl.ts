@@ -3,8 +3,8 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LicenseeRestController } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller';
-import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 
 @Injectable()
 export class LicenseeRestControllerImpl extends LicenseeRestController {
@@ -15,35 +15,31 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
 
     public findById(id: number): Observable<LicenseeVO> {
 
-        return this.http.get<LicenseeVO>(this.path);
+        return this.http.get<LicenseeVO>(this.path + `/id/${id}`);
 
     }
 
     public getAll(): Observable<LicenseeVO[]> {
 
-        return this.http.get<LicenseeVO[]>(this.path + '/all');
+        return this.http.get<LicenseeVO[]>(this.path + `all`);
 
     }
 
     public remove(id: number): Observable<boolean> {
 
-        return this.http.delete<boolean>(this.path);
+        return this.http.delete<boolean>(this.path + `/id/${id}`);
 
     }
 
     public save(licenseeVO: LicenseeVO): Observable<LicenseeVO> {
 
-        let formData: any = new FormData();
-        formData.append("licenseeVO", licenseeVO)
-        return this.http.post<LicenseeVO>(this.path, formData);
+        return this.http.post<LicenseeVO>(this.path, licenseeVO);
 
     }
 
     public searchLicensees(searchCriteria: LicenseeCriteria): Observable<LicenseeVO[]> {
 
-        let formData: any = new FormData();
-        formData.append("searchCriteria", searchCriteria)
-        return this.http.post<LicenseeVO[]>(this.path + '/search', formData);
+        return this.http.post<LicenseeVO[]>(this.path + `search`, searchCriteria);
 
     }
 

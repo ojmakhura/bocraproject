@@ -12,6 +12,7 @@ export enum GuardActionType {
     LOAD_ALL_SUCCESS = '[Guard] Load All Success',
     SEARCH_GUARDS = '[Guard] Search Guards',
     SEARCH_GUARDS_SUCCESS = '[Guard] Search Guards Success',
+    RESET = '[Guard] Reset',
     ACTION_FAILURE = '[Guard] Action Failure'
 }
 
@@ -53,6 +54,8 @@ export const searchGuardsSuccess = createAction(
     GuardActionType.SEARCH_GUARDS_SUCCESS,
     props<{ guards: UrlGuardVO[] }>()
 );
+
+export const reset = createAction(GuardActionType.RESET);
 
 export const guardActionFailure = createAction(
     GuardActionType.ACTION_FAILURE,

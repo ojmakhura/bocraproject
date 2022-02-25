@@ -3,8 +3,8 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LicenseeGroupRestController } from '@app/service/bw/org/bocra/portal/group/licensee-group-rest-controller';
-import { LicenseeGroupVO } from '@app/model/bw/org/bocra/portal/group/licensee-group-vo';
 import { LicenseeGroupCriteria } from '@app/model/bw/org/bocra/portal/group/licensee-group-criteria';
+import { LicenseeGroupVO } from '@app/model/bw/org/bocra/portal/group/licensee-group-vo';
 
 @Injectable()
 export class LicenseeGroupRestControllerImpl extends LicenseeGroupRestController {
@@ -15,35 +15,31 @@ export class LicenseeGroupRestControllerImpl extends LicenseeGroupRestController
 
     public findById(id: number): Observable<LicenseeGroupVO> {
 
-        return this.http.get<LicenseeGroupVO>(this.path);
+        return this.http.get<LicenseeGroupVO>(this.path + `/id/${id}`);
 
     }
 
     public getAll(): Observable<LicenseeGroupVO[]> {
 
-        return this.http.get<LicenseeGroupVO[]>(this.path + '/all');
+        return this.http.get<LicenseeGroupVO[]>(this.path + `all`);
 
     }
 
     public remove(id: number): Observable<boolean> {
 
-        return this.http.delete<boolean>(this.path);
+        return this.http.delete<boolean>(this.path + `/id/${id}`);
 
     }
 
     public save(licenseeGroupVO: LicenseeGroupVO): Observable<LicenseeGroupVO> {
 
-        let formData: any = new FormData();
-        formData.append("licenseeGroupVO", licenseeGroupVO)
-        return this.http.post<LicenseeGroupVO>(this.path, formData);
+        return this.http.post<LicenseeGroupVO>(this.path, licenseeGroupVO);
 
     }
 
     public search(searchCriteria: LicenseeGroupCriteria): Observable<LicenseeGroupVO[]> {
 
-        let formData: any = new FormData();
-        formData.append("searchCriteria", searchCriteria)
-        return this.http.post<LicenseeGroupVO[]>(this.path + '/search', formData);
+        return this.http.post<LicenseeGroupVO[]>(this.path + `search`, searchCriteria);
 
     }
 

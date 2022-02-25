@@ -75,6 +75,7 @@ public class UrlGuardDaoImpl
         boolean copyIfNull)
     {
         // TODO verify behavior of urlGuardVOToEntity
+        target.setRoles(new java.util.ArrayList<>());
         super.urlGuardVOToEntity(source, target, copyIfNull);
     }
 }

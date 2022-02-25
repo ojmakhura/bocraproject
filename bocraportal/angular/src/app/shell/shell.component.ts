@@ -16,7 +16,9 @@ export class ShellComponent implements OnInit {
               private keycloakService: KeycloakService,
               private breakpoint: BreakpointObserver) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    //console.log(this.keycloakService.);
+  }
 
   logout() {
     this.keycloakService.logout();

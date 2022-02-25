@@ -34,6 +34,7 @@ export const environment = {
     disableAtHashCheck: true,
     showDebugInformation: true,
     requireHttps: false,
+    checkLoginIframe: false
   },
 };
 

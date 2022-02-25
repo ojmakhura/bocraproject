@@ -60,7 +60,13 @@ export const userReducer = createReducer(
         ...state,
         user: new UserVO,
         searchCriteria: new UserCriteria,
-        userArray: action.users
+        users: action.users
+    })),
+    on(UserActions.reset, (state) => ({
+      ...state,
+      user: new UserVO,
+      searchCriteria: new UserCriteria,
+      users: []
     })),
     on(UserActions.userActionFailure, (state, action) => ({
         ...state,

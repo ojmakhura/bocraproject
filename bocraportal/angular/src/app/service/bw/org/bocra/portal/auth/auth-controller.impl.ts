@@ -11,20 +11,39 @@ export class AuthControllerImpl extends AuthController {
         super(injector);
     }
 
-    public signin(username: string, password: string): Observable<Object> {
+    public getAccessTokenString(username: string, password: string): Observable<string> {
 
-        let formData: any = new FormData();
-        formData.append("username", username)
-        formData.append("password", password)
-        return this.http.post<Object>(this.path + '/signin', formData);
+        return this.http.post<string>(this.path + `token_string`, {username: username, password: password});
+
+    }
+
+    public getRealmUrl(): Observable<string> {
+
+        return this.http.get<string>(this.path);
+
+    }
+
+    public getRoles(): Observable<RoleRepresentation[]> {
+
+        return this.http.get<RoleRepresentation[]>(this.path + `roles`);
+
+    }
+
+    public getUserInfo(token: string): Observable<string> {
+
+        return this.http.post<string>(this.path + `info`, token);
+
+    }
+
+    public signin(username: string, password: string): Observable<string> {
+
+        return this.http.post<string>(this.path + `/signin`, {username: username, password: password});
 
     }
 
     public signout(refreshToken: string): Observable<void> {
 
-        let formData: any = new FormData();
-        formData.append("refreshToken", refreshToken)
-        return this.http.post<void>(this.path + '/signout', formData);
+        return this.http.post<void>(this.path + `signout`, refreshToken);
 
     }
 

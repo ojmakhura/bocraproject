@@ -67,6 +67,7 @@ public class UrlGuardRestControllerImpl extends UrlGuardRestControllerBase {
 
     @Override
     public ResponseEntity<UrlGuardVO> handleSave(UrlGuardVO urlGuardVO) {
+        log.info(urlGuardVO.toString());
         Optional<UrlGuardVO> data = Optional.of(urlGuardService.save(urlGuardVO)); // TODO: Add custom code here;
         ResponseEntity<UrlGuardVO> response;
 

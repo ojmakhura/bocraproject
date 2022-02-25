@@ -18,10 +18,12 @@ export class SearchUsersComponentImpl extends SearchUsersComponent {
     }
 	
     afterOnInit() {
-        this.addUsersDummyData();
     }
 
     doNgAfterViewInit() {
+      this.urlGuards$.subscribe(guards => {
+        this.setUrlGuards(guards);
+      });
     }
 
     handleFormChanges(change: any) {

@@ -40,21 +40,18 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
     beforeOnInit(){
       this.http.get<any[]>(environment.keycloakClientRoleUrl)
       .subscribe(role => {
-        console.log(role);
         role.forEach(val => {
           
           let item = new SelectItem();
           item.label = val['description'];
           item.value = val['name'];
-          console.log(item);
           
-          this.urlGuardVORoleBackingList.push(item);
+          this.urlGuardVORolesBackingList.push(item);
         })
       });
 
       this.http.get<any[]>(environment.keycloakRealmRoleUrl)
       .subscribe(role => {
-        console.log(role);
         role.forEach(val => {
           
           let item = new SelectItem();
@@ -62,7 +59,7 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
           item.value = val['name'];
           console.log(item);
           
-          this.urlGuardVORoleBackingList.push(item);
+          this.urlGuardVORolesBackingList.push(item);
         })
       });
     }
@@ -116,7 +113,7 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
      * This method may be overwritten
      */
     beforeEditURLGuardNew(form: EditURLGuardNewForm): void {
-
+      this.store.dispatch(guardActions.reset());
     }
 
     /**

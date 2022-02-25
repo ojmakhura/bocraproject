@@ -12,6 +12,7 @@ export enum LicenseeActionType {
     LOAD_ALL_SUCCESS = '[Licensee] Load All Success',
     SEARCH_LICENSEES = '[Licensee] Search Licensees',
     SEARCH_LICENSEES_SUCCESS = '[Licensee] Search Licensees Success',
+    RESET = '[Licensee] Reset',
     ACTION_FAILURE = '[Licensee] Action Failure'
 }
 
@@ -53,6 +54,8 @@ export const searchLicenseesSuccess = createAction(
     LicenseeActionType.SEARCH_LICENSEES_SUCCESS,
     props<{ licensees: LicenseeVO[] }>()
 );
+
+export const reset = createAction(LicenseeActionType.RESET);
 
 export const licenseeActionFailure = createAction(
     LicenseeActionType.ACTION_FAILURE,

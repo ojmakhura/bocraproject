@@ -50,7 +50,7 @@ export const groupReducer = createReducer(
     on(GroupActions.loadAllSuccess, (state, action) => ({
         ...state,
         licenseeGroup: new LicenseeGroupVO,
-        licenseeGroupArray: action.groups
+        licenseeGroups: action.groups
     })),
     on(GroupActions.searchGroups, (state, action) => ({
         ...state,
@@ -60,7 +60,13 @@ export const groupReducer = createReducer(
         ...state,
         licenseeGroup: new LicenseeGroupVO,
         searchCriteria: new LicenseeGroupCriteria,
-        licenseeGroupArray: action.groups
+        licenseeGroups: action.groups
+    })),
+    on(GroupActions.reset, (state) => ({
+      ...state,
+      licenseeGroup: new LicenseeGroupVO(),
+      searchCriteria: new LicenseeGroupCriteria(),
+      licenseeGroups: [],
     })),
     on(GroupActions.groupActionFailure, (state, action) => ({
         ...state,

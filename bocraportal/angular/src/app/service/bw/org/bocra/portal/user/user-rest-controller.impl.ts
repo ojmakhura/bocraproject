@@ -14,9 +14,7 @@ export class UserRestControllerImpl extends UserRestController {
 
     public createUser(userVO: UserVO): Observable<UserVO> {
 
-        let formData: any = new FormData();
-        formData.append("userVO", userVO)
-        return this.http.post<UserVO>(this.path + '/create', formData);
+        return this.http.post<UserVO>(this.path + `/create`, userVO);
 
     }
 
@@ -28,10 +26,7 @@ export class UserRestControllerImpl extends UserRestController {
 
     public updateUserName(username: string, userId: string): Observable<boolean> {
 
-        let formData: any = new FormData();
-        formData.append("username", username)
-        formData.append("userId", userId)
-        return this.http.patch<boolean>(this.path + '/username', formData);
+        return this.http.patch<boolean>(this.path + `username/userId/${userId}`, {username: username, userId: userId});
 
     }
 

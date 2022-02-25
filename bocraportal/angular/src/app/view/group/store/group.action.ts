@@ -12,6 +12,7 @@ export enum GroupActionType {
     LOAD_ALL_SUCCESS = '[Group] Load All Success',
     SEARCH_GROUPS = '[Group] Search Groups',
     SEARCH_GROUPS_SUCCESS = '[Group] Search Groups Success',
+    RESET = '[Group] Reset',
     ACTION_FAILURE = '[Group] Action Failure'
 }
 
@@ -53,6 +54,8 @@ export const searchGroupsSuccess = createAction(
     GroupActionType.SEARCH_GROUPS_SUCCESS,
     props<{ groups: LicenseeGroupVO[] }>()
 );
+
+export const reset = createAction(GroupActionType.RESET);
 
 export const groupActionFailure = createAction(
     GroupActionType.ACTION_FAILURE,

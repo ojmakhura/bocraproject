@@ -50,7 +50,7 @@ export const guardReducer = createReducer(
     on(GuardActions.loadAllSuccess, (state, action) => ({
         ...state,
         guard: new UrlGuardVO,
-        guardArray: action.guards
+        guards: action.guards
     })),
     on(GuardActions.searchGuards, (state, action) => ({
         ...state,
@@ -60,7 +60,13 @@ export const guardReducer = createReducer(
         ...state,
         guard: new UrlGuardVO,
         searchCriteria: new UrlGuardCriteria,
-        guardArray: action.guards
+        guards: action.guards
+    })),
+    on(GuardActions.reset, (state) => ({
+      ...state,
+      guard: new UrlGuardVO(),
+      searchCriteria: new UrlGuardCriteria(),
+      guards: [],
     })),
     on(GuardActions.guardActionFailure, (state, action) => ({
         ...state,

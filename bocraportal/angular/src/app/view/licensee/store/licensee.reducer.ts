@@ -50,7 +50,7 @@ export const licenseeReducer = createReducer(
     on(LicenseeActions.loadAllSuccess, (state, action) => ({
         ...state,
         licensee: new LicenseeVO,
-        licenseeArray: action.licensees
+        licensees: action.licensees
     })),
     on(LicenseeActions.searchLicensees, (state, action) => ({
         ...state,
@@ -60,7 +60,13 @@ export const licenseeReducer = createReducer(
         ...state,
         licensee: new LicenseeVO,
         searchCriteria: new LicenseeCriteria,
-        licenseeArray: action.licensees
+        licensees: action.licensees
+    })),
+    on(LicenseeActions.reset, (state) => ({
+      ...state,
+      licensee: new LicenseeVO,
+      searchCriteria: new LicenseeCriteria,
+      licensees: []
     })),
     on(LicenseeActions.licenseeActionFailure, (state, action) => ({
         ...state,

@@ -15,35 +15,31 @@ export class UrlGuardRestControllerImpl extends UrlGuardRestController {
 
     public findById(id: number): Observable<UrlGuardVO> {
 
-        return this.http.get<UrlGuardVO>(this.path);
+        return this.http.get<UrlGuardVO>(this.path + `/id/${id}`);
 
     }
 
     public getAll(): Observable<UrlGuardVO[]> {
 
-        return this.http.get<UrlGuardVO[]>(this.path + '/all');
+        return this.http.get<UrlGuardVO[]>(this.path + `all`);
 
     }
 
     public remove(id: number): Observable<boolean> {
 
-        return this.http.delete<boolean>(this.path);
+        return this.http.delete<boolean>(this.path + `/id/${id}`);
 
     }
 
     public save(urlGuardVO: UrlGuardVO): Observable<UrlGuardVO> {
 
-        let formData: any = new FormData();
-        formData.append("urlGuardVO", urlGuardVO)
-        return this.http.post<UrlGuardVO>(this.path, formData);
+        return this.http.post<UrlGuardVO>(this.path, urlGuardVO);
 
     }
 
     public search(criteria: UrlGuardCriteria): Observable<UrlGuardVO[]> {
 
-        let formData: any = new FormData();
-        formData.append("criteria", criteria)
-        return this.http.post<UrlGuardVO[]>(this.path + '/search', formData);
+        return this.http.post<UrlGuardVO[]>(this.path + `search`, criteria);
 
     }
 
