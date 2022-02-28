@@ -1,26 +1,47 @@
 import { Title } from '@angular/platform-browser';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { KeycloakService } from 'keycloak-angular';
+import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
+import { UrlGuardCriteria } from '@app/model/bw/org/bocra/portal/guard/url-guard-criteria';
+import { UrlGuardType } from '@app/model/bw/org/bocra/portal/guard/url-guard-type';
 import * as nav from './navigation';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-shell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss']
 })
-export class ShellComponent implements OnInit {
+export class ShellComponent implements OnInit, AfterViewInit {
 
   menus: any[] = [];
   constructor(private router: Router,
-              private titleService: Title,
-              private keycloakService: KeycloakService,
-              private breakpoint: BreakpointObserver) { }
+    private titleService: Title,
+    private keycloakService: KeycloakService,
+    private http: HttpClient,
+    private breakpoint: BreakpointObserver,
+    private urlGuardRestController: UrlGuardRestControllerImpl) 
+  { }
 
   ngOnInit() { 
-    //console.log(this.keycloakService.);
-    this.menus = nav.menuItems;
+  }
+
+  ngAfterViewInit(): void {
+    let criteria: UrlGuardCriteria = new UrlGuardCriteria;
+    criteria.type = UrlGuardType.MENU;
+    criteria.roles = this.keycloakService.getUserRoles();
+
+    this.urlGuardRestController.search(criteria).subscribe(guards => {
+      nav.menuItems.forEach(value => {
+        guards.find(guard => {
+          if(guard.url === value.routerLink) {
+            this.menus.push(value);
+          }
+        })
+      })
+    })
   }
 
   logout() {

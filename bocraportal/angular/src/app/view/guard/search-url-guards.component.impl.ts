@@ -47,7 +47,6 @@ export class SearchURLGuardsComponentImpl extends SearchURLGuardsComponent {
         let item = new SelectItem();
         item.label = val['description'];
         item.value = val['name'];
-        console.log(item);
 
         this.searchCriteriaRolesBackingList.push(item);
       });

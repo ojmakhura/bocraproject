@@ -57,7 +57,6 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
           let item = new SelectItem();
           item.label = val['description'];
           item.value = val['name'];
-          console.log(item);
           
           this.urlGuardVORolesBackingList.push(item);
         })
