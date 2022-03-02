@@ -7,8 +7,8 @@ import { EditGroupNewForm } from '@app/view/group/edit-group.component';
 import { EditGroupSearchForm } from '@app/view/group/edit-group.component';
 import { select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import * as groupSelectors from './store/group.selector';
-import * as groupActions from './store/group.action';
+import * as groupSelectors from '@app/store/group/group.selector';
+import * as groupActions from '@app/store/group/group.action';
 import { EditLicenseeSaveForm } from '../licensee/edit-licensee.component';
 
 @Component({

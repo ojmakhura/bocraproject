@@ -82,7 +82,6 @@ public class UrlGuardRestControllerImpl extends UrlGuardRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<UrlGuardVO>> handleSearch(UrlGuardCriteria criteria) {
-        log.info(criteria.toString());
         Optional<Collection<UrlGuardVO>> data = Optional.of(urlGuardService.search(criteria)); // TODO: Add custom code here;
         ResponseEntity<Collection<UrlGuardVO>> response;
 

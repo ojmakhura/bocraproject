@@ -4,8 +4,8 @@ import { SearchURLGuardsComponent } from '@app/view/guard/search-url-guards.comp
 import { SearchURLGuardsSearchForm } from '@app/view/guard/search-url-guards.component';
 import { Observable } from 'rxjs/internal/Observable';
 import { UrlGuardVO } from '@app/model/bw/org/bocra/portal/guard/url-guard-vo';
-import * as guardSelectors from './store/guard.selector';
-import * as guardActions from './store/guard.action';
+import * as guardSelectors from '@app/store/guard/guard.selector';
+import * as guardActions from '@app/store/guard/guard.action';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { HttpClient } from '@angular/common/http';
