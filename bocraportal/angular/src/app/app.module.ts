@@ -37,8 +37,8 @@ import { GuardModule } from '@app/view/guard/guard.module';
 import { GuardControllerImpl } from '@app/controller/guard/guard-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
 import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
-import { LicenseeGroupRestControllerImpl } from '@app/service/bw/org/bocra/portal/group/licensee-group-rest-controller.impl';
 import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
+import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
 import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
 import { AuthModule } from './auth';
 true
@@ -74,8 +74,8 @@ true
     providers: [
         UseCaseScope,
         LicenseeRestControllerImpl,
-        LicenseeGroupRestControllerImpl,
         UserRestControllerImpl,
+        LicenseTypeRestControllerImpl,
         UrlGuardRestControllerImpl,
         LicenseeControllerImpl,
         GroupControllerImpl,

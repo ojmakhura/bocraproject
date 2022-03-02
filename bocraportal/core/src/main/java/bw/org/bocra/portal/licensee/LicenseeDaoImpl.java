@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
-import bw.org.bocra.portal.group.LicenseeGroup;
+import bw.org.bocra.portal.type.LicenseType;
 
 /**
  * @see Licensee
@@ -30,11 +30,11 @@ public class LicenseeDaoImpl
     {
         super.toLicenseeVO(source, target);
 
-        if(!CollectionUtils.isEmpty(source.getLicenseeGroups())) {
-            target.setGroups(new ArrayList<>());
+        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
+            target.setLicenseTypes(new ArrayList<>());
 
-            for(LicenseeGroup entity : source.getLicenseeGroups()) {
-                target.getGroups().add(licenseeGroupDao.toLicenseeGroupVO(entity));
+            for(LicenseType entity : source.getLicenseTypes()) {
+                target.getLicenseTypes().add(licenseTypeDao.toLicenseTypeVO(entity));
             }
         }
 
@@ -91,7 +91,7 @@ public class LicenseeDaoImpl
         // TODO verify behavior of licenseeVOToEntity
         super.licenseeVOToEntity(source, target, copyIfNull);
 
-        if(!CollectionUtils.isEmpty(source.getGroups())) {
+        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
             //target.setLicenseeGroups(new );
         }
     }
