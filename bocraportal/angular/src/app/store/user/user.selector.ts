@@ -6,12 +6,12 @@ export const userKey = 'user';
 
 export const selectUserState = createFeatureSelector<UserState>(userKey);
 
-export const selectGroup = createSelector(
+export const selectUser = createSelector(
     selectUserState,
       (state: UserState) => state.user
 );
 
-export const selectGroups = createSelector(
+export const selectUsers = createSelector(
     selectUserState,
       (state: UserState) => state.users
 );

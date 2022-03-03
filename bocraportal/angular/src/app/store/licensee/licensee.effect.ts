@@ -9,12 +9,12 @@ import * as LicenseeActions from './licensee.action';
 export class LicenseeEffects {
   constructor(private actions$: Actions, private licenseeService: LicenseeRestControllerImpl) {}
 
-  saveGroup$ = createEffect(() =>
+  saveLicensee$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LicenseeActions.saveLicensee),
       mergeMap(({ licensee }) =>
         this.licenseeService.save(licensee).pipe(
-          map((group) => LicenseeActions.saveLicenseeSuccess({ licensee })),
+          map((licensee) => LicenseeActions.saveLicenseeSuccess({ licensee })),
           catchError(({ error }) => [LicenseeActions.licenseeActionFailure(error)])
         )
       )

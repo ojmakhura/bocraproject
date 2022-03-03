@@ -20,8 +20,8 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/licensee/licensee.module')).LicenseeModule
     },
     {
-      path: 'group', 
-      loadChildren: async () => (await import('@app/view/group/group.module')).GroupModule
+      path: 'licensetype', 
+      loadChildren: async () => (await import('@app/view/type/license-type.module')).LicenseTypeModule
     },
     {
       path: 'user', 

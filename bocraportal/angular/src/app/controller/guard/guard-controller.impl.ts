@@ -28,4 +28,7 @@ export class GuardControllerImpl extends GuardController {
 	public doEditUrlGuard(form: any): void {
 	}
 
+	public doDelete(form: any): void {
+	}
+
 }

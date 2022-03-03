@@ -29,17 +29,17 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 //import { ConnectFormDirective } from './connect-form.directive';
 import { LicenseeModule } from '@app/view/licensee/licensee.module';
 import { LicenseeControllerImpl } from '@app/controller/licensee/licensee-controller.impl';
-import { GroupModule } from '@app/view/group/group.module';
-import { GroupControllerImpl } from '@app/controller/group/group-controller.impl';
+import { LicenseTypeModule } from '@app/view/type/license-type.module';
+import { LicenseTypeControllerImpl } from '@app/controller/type/license-type-controller.impl';
 import { UserModule } from '@app/view/user/user.module';
 import { UserControllerImpl } from '@app/controller/user/user-controller.impl';
 import { GuardModule } from '@app/view/guard/guard.module';
 import { GuardControllerImpl } from '@app/controller/guard/guard-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
 import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
 import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
+import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -63,7 +63,7 @@ true
         StoreModule.forRoot({}),
         StoreDevtoolsModule.instrument({}),
         LicenseeModule,
-        GroupModule,
+        LicenseTypeModule,
         UserModule,
         GuardModule,
         AuthModule,
@@ -73,12 +73,12 @@ true
     ],
     providers: [
         UseCaseScope,
-        LicenseeRestControllerImpl,
-        UserRestControllerImpl,
         LicenseTypeRestControllerImpl,
         UrlGuardRestControllerImpl,
+        UserRestControllerImpl,
+        LicenseeRestControllerImpl,
         LicenseeControllerImpl,
-        GroupControllerImpl,
+        LicenseTypeControllerImpl,
         UserControllerImpl,
         GuardControllerImpl,
     ],
