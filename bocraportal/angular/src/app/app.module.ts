@@ -35,11 +35,17 @@ import { UserModule } from '@app/view/user/user.module';
 import { UserControllerImpl } from '@app/controller/user/user-controller.impl';
 import { GuardModule } from '@app/view/guard/guard.module';
 import { GuardControllerImpl } from '@app/controller/guard/guard-controller.impl';
+import { PeriodModule } from '@app/view/period/period.module';
+import { PeriodControllerImpl } from '@app/controller/period/period-controller.impl';
+import { PeriodInstanceModule } from '@app/view/period/instance/period-instance.module';
+import { PeriodInstanceControllerImpl } from '@app/controller/period/instance/period-instance-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
-import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
-import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
 import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
+import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
+import { PeriodInstanceRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/instance/period-instance-rest-controller.impl';
 import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
+import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -66,6 +72,8 @@ true
         LicenseTypeModule,
         UserModule,
         GuardModule,
+        PeriodModule,
+        PeriodInstanceModule,
         AuthModule,
         AppRoutingModule, // must be imported as the last module as it contains the fallback route
     ],
@@ -73,14 +81,18 @@ true
     ],
     providers: [
         UseCaseScope,
-        LicenseTypeRestControllerImpl,
-        UrlGuardRestControllerImpl,
         UserRestControllerImpl,
+        UrlGuardRestControllerImpl,
+        PeriodInstanceRestControllerImpl,
         LicenseeRestControllerImpl,
+        PeriodRestControllerImpl,
+        LicenseTypeRestControllerImpl,
         LicenseeControllerImpl,
         LicenseTypeControllerImpl,
         UserControllerImpl,
         GuardControllerImpl,
+        PeriodControllerImpl,
+        PeriodInstanceControllerImpl,
     ],
     bootstrap: [AppComponent]
 })

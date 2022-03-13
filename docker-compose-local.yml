@@ -121,8 +121,8 @@ services:
       bocra-network:
         ipv4_address: ${BOCRA_WEB_ADDRESS}
       default:
-    #ports:
-    #  - 3100:80
+        #ports:
+        #  - 3100:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-web.rule=Host(`${DOMAIN}`)"

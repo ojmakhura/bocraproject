@@ -31,6 +31,14 @@ const routes: Routes = [
       path: 'guard', 
       loadChildren: async () => (await import('@app/view/guard/guard.module')).GuardModule
     },
+    {
+      path: 'period', 
+      loadChildren: async () => (await import('@app/view/period/period.module')).PeriodModule
+    },
+    {
+      path: 'periodinstance', 
+      loadChildren: async () => (await import('@app/view/period/instance/period-instance.module')).PeriodInstanceModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 
