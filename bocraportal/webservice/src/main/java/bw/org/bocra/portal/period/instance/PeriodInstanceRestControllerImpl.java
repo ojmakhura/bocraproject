@@ -5,7 +5,6 @@
 //
 package bw.org.bocra.portal.period.instance;
 
-import bw.org.bocra.portal.period.PeriodCriteria;
 import bw.org.bocra.portal.period.PeriodVO;
 import java.util.Collection;
 import java.util.Optional;
@@ -26,9 +25,9 @@ public class PeriodInstanceRestControllerImpl extends PeriodInstanceRestControll
 
 
     @Override
-    public ResponseEntity<PeriodVO> handleFindById(Long id) {
-        Optional<PeriodVO> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<PeriodVO> response;
+    public ResponseEntity<PeriodInstanceVO> handleFindById(Long id) {
+        Optional<PeriodInstanceVO> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<PeriodInstanceVO> response;
 
         if(data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
@@ -40,9 +39,9 @@ public class PeriodInstanceRestControllerImpl extends PeriodInstanceRestControll
     }
 
     @Override
-    public ResponseEntity<Collection<PeriodVO>> handleGetAll() {
-        Optional<Collection<PeriodVO>> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<Collection<PeriodVO>> response;
+    public ResponseEntity<Collection<PeriodInstanceVO>> handleGetAll() {
+        Optional<Collection<PeriodInstanceVO>> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<Collection<PeriodInstanceVO>> response;
 
         if(data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
@@ -68,9 +67,9 @@ public class PeriodInstanceRestControllerImpl extends PeriodInstanceRestControll
     }
 
     @Override
-    public ResponseEntity<PeriodVO> handleSave(PeriodVO periodVO) {
-        Optional<PeriodVO> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<PeriodVO> response;
+    public ResponseEntity<PeriodInstanceVO> handleSave(PeriodInstanceVO periodInstanceVO) {
+        Optional<PeriodInstanceVO> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<PeriodInstanceVO> response;
 
         if(data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
@@ -82,7 +81,7 @@ public class PeriodInstanceRestControllerImpl extends PeriodInstanceRestControll
     }
 
     @Override
-    public ResponseEntity<Collection<PeriodVO>> handleSearch(PeriodCriteria searchCriteria) {
+    public ResponseEntity<Collection<PeriodVO>> handleSearch(PeriodInstanceCriteria searchCriteria) {
         Optional<Collection<PeriodVO>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<PeriodVO>> response;
 

@@ -30,8 +30,7 @@ public class PeriodInstanceServiceImpl
     protected  PeriodInstanceVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  PeriodInstanceVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.period.instance.PeriodInstanceService.handleFindById(Long id) Not implemented!");
+        return (PeriodInstanceVO) getPeriodInstanceDao().get(PeriodInstanceDao.TRANSFORM_PERIODINSTANCEVO, id);
     }
 
     /**
@@ -41,8 +40,19 @@ public class PeriodInstanceServiceImpl
     protected  PeriodInstanceVO handleSave(PeriodInstanceVO periodInstanceVO)
         throws Exception
     {
-        // TODO implement protected  PeriodInstanceVO handleSave(PeriodInstanceVO periodInstanceVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.period.instance.PeriodInstanceService.handleSave(PeriodInstanceVO periodInstanceVO) Not implemented!");
+        if(periodInstanceVO == null) {
+            return null;
+        }
+
+        PeriodInstance entity = getPeriodInstanceDao().periodInstanceVOToEntity(periodInstanceVO);
+
+        if(periodInstanceVO.getId() != null) {
+            getPeriodInstanceDao().update(entity);
+        } else {
+            periodInstanceVO = (PeriodInstanceVO) getPeriodInstanceDao().create(PeriodInstanceDao.TRANSFORM_PERIODINSTANCEVO, entity);
+        }
+
+        return periodInstanceVO;
     }
 
     /**
@@ -52,8 +62,12 @@ public class PeriodInstanceServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.period.instance.PeriodInstanceService.handleRemove(Long id) Not implemented!");
+
+        if(id == null) return false;
+
+        this.periodInstanceRepository.deleteById(id);
+
+        return true;
     }
 
     /**
@@ -63,19 +77,18 @@ public class PeriodInstanceServiceImpl
     protected  Collection<PeriodInstanceVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<PeriodInstanceVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.period.instance.PeriodInstanceService.handleGetAll() Not implemented!");
+        return (Collection<PeriodInstanceVO>) getPeriodInstanceDao().loadAll(PeriodInstanceDao.TRANSFORM_PERIODINSTANCEVO);
     }
 
     /**
      * @see bw.org.bocra.portal.period.instance.PeriodInstanceService#search(PeriodCriteria)
      */
     @Override
-    protected  Collection<PeriodInstanceVO> handleSearch(PeriodCriteria searchCriteria)
+    protected  Collection<PeriodInstanceVO> handleSearch(PeriodInstanceCriteria searchCriteria)
         throws Exception
     {
-        // TODO implement protected  Collection<PeriodInstanceVO> handleSearch(PeriodCriteria searchCriteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.period.instance.PeriodInstanceService.handleSearch(PeriodCriteria searchCriteria) Not implemented!");
+
+        return (Collection<PeriodInstanceVO>) getPeriodInstanceDao().findByCriteria(PeriodInstanceDao.TRANSFORM_PERIODINSTANCEVO, searchCriteria);
     }
 
 }

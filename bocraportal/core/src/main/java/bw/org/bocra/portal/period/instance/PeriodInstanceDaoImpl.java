@@ -26,6 +26,11 @@ public class PeriodInstanceDaoImpl
         // TODO verify behavior of toPeriodInstanceVO
         super.toPeriodInstanceVO(source, target);
         // WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.Period to bw.org.bocra.portal.period.PeriodVO
+
+        if(source.getPeriod() != null && source.getPeriod().getId() != null) {
+            getPeriodDao().toPeriodVO(source.getPeriod(), target.getPeriod());
+        }
+
     }
 
     /**
@@ -45,10 +50,6 @@ public class PeriodInstanceDaoImpl
      */
     private PeriodInstance loadPeriodInstanceFromPeriodInstanceVO(PeriodInstanceVO periodInstanceVO)
     {
-        // TODO implement loadPeriodInstanceFromPeriodInstanceVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.period.instance.loadPeriodInstanceFromPeriodInstanceVO(PeriodInstanceVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (periodInstanceVO.getId() == null)
         {
             return  PeriodInstance.Factory.newInstance();
@@ -57,7 +58,6 @@ public class PeriodInstanceDaoImpl
         {
             return this.load(periodInstanceVO.getId());
         }
-        */
     }
 
     /**
@@ -82,5 +82,10 @@ public class PeriodInstanceDaoImpl
     {
         // TODO verify behavior of periodInstanceVOToEntity
         super.periodInstanceVOToEntity(source, target, copyIfNull);
+
+        if(source.getPeriod() == null) {
+            target.setPeriod(getPeriodDao().periodVOToEntity(source.getPeriod()));
+        }
+
     }
 }

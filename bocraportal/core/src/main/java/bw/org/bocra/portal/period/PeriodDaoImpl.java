@@ -6,6 +6,10 @@
  */
 package bw.org.bocra.portal.period;
 
+import java.util.Collection;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -44,10 +48,6 @@ public class PeriodDaoImpl
      */
     private Period loadPeriodFromPeriodVO(PeriodVO periodVO)
     {
-        // TODO implement loadPeriodFromPeriodVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.period.loadPeriodFromPeriodVO(PeriodVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (periodVO.getId() == null)
         {
             return  Period.Factory.newInstance();
@@ -56,7 +56,6 @@ public class PeriodDaoImpl
         {
             return this.load(periodVO.getId());
         }
-        */
     }
 
     /**
@@ -81,5 +80,31 @@ public class PeriodDaoImpl
     {
         // TODO verify behavior of periodVOToEntity
         super.periodVOToEntity(source, target, copyIfNull);
+    }
+
+    @Override
+    protected Collection<Period> handleFindByCriteria(PeriodCriteria searchCriteria) throws Exception {
+        
+        Specification<Period> specs = null;
+
+        if(searchCriteria.getMonth() != null) {
+            specs = PeriodSpecifications.findByPeriodStartGreaterThanEqual(searchCriteria.getMonth());
+            specs = PeriodSpecifications.findByPeriodEndLessThanEqual(searchCriteria.getMonth());
+        }
+
+        if(StringUtils.isNotBlank(searchCriteria.getPeriodName())){
+            if(specs == null) {
+                specs = PeriodSpecifications.findByPeriodNameContainingIgnoreCase(searchCriteria.getPeriodName());
+            } else {
+                specs = specs.and(PeriodSpecifications.findByPeriodNameContainingIgnoreCase(searchCriteria.getPeriodName()));
+            }
+        }
+
+        if(specs == null) {
+            return periodRepository.findAll();
+        } else {
+            return periodRepository.findAll(specs);
+        }
+
     }
 }
