@@ -1,24 +1,24 @@
 include ./Makefile.dev
 
 mvn_build_mda:
-	cd bocraportal/mda && mvn install -Dmaven.test.skip=true
+	cd bocraportal/mda && mvn install -Dmaven.test.skip=true -o
 
 mvn_build_core:
-	cd bocraportal/core && mvn install -Dmaven.test.skip=true
+	cd bocraportal/core && mvn install -Dmaven.test.skip=true -o
 
 mvn_build_api:
-	cd bocraportal/webservice && mvn install -Dmaven.test.skip=true
+	cd bocraportal/webservice && mvn install -Dmaven.test.skip= -o
 
 mvn_build_web:
-	cd bocraportal/webservice && mvn install -f angular -Dmaven.test.skip=true
+	cd bocraportal/webservice && mvn install -f angular -Dmaven.test.skip=true -o
 
 mvn_build_all: 
-	cd bocraportal &&  mvn install -Dmaven.test.skip=true
+	cd bocraportal &&  mvn install -Dmaven.test.skip=true -o
 
 mvn_clean_build: gen_local_env mvn_clean_all mvn_build_all
 
 mvn_clean_all:
-	cd bocraportal && mvn clean
+	cd bocraportal && mvn clean -o
 
 ##
 ## Building and running on the local platform

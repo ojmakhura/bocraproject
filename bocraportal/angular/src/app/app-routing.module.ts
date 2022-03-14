@@ -39,6 +39,18 @@ const routes: Routes = [
       path: 'periodinstance', 
       loadChildren: async () => (await import('@app/view/period/instance/period-instance.module')).PeriodInstanceModule
     },
+    {
+      path: 'mail', 
+      loadChildren: async () => (await import('@app/view/form/mail/mail.module')).MailModule
+    },
+    {
+      path: 'kpi', 
+      loadChildren: async () => (await import('@app/view/form/kpi/kpi.module')).KpiModule
+    },
+    {
+      path: 'sim', 
+      loadChildren: async () => (await import('@app/view/form/sim/sim.module')).SimModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 
