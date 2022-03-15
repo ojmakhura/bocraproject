@@ -7,7 +7,18 @@
 package bw.org.bocra.portal.form.kpi;
 
 import bw.org.bocra.portal.form.FormCriteria;
+import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.period.instance.PeriodInstance;
+import bw.org.bocra.portal.period.instance.PeriodInstanceVO;
+
 import java.util.Collection;
+import java.util.Date;
+
+import javax.persistence.criteria.Join;
+
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -23,8 +34,36 @@ public class KpiDaoImpl
     @Override
     protected Collection<Kpi> handleFindByCriteria(FormCriteria searchCriteria)
     {
-        // TODO implement public Collection<Kpi> handleFindByCriteria(FormCriteria searchCriteria)
-        return null;
+        Specification<Kpi> specs = null;
+
+        if(searchCriteria.getLicenseeId() != null) {
+            specs = KpiSpecifications.findByLicenseeId(searchCriteria.getLicenseeId())
+                        .or(KpiSpecifications.findByLicenseeNull());
+        }
+
+        if(searchCriteria.getMonth() != null) {
+            if(specs == null) {
+                specs = findByPeriod(searchCriteria.getMonth());
+            } else {
+                specs.and(findByPeriod(searchCriteria.getMonth()));
+            }
+        }
+
+        if(specs == null) {
+            return kpiRepository.findAll(Sort.by("updatedDate").descending());
+        } else {
+            return kpiRepository.findAll(specs, Sort.by("updatedDate").descending());
+        }
+    }
+
+    private Specification<Kpi> findByPeriod(Date periodDate) {
+
+        return (root, cq, cb) -> {
+            cq.distinct(true);
+            Join<Kpi, PeriodInstance> join = root.join("periodInstance");
+            return cb.between(join.<Date>get("periodStartDate"), periodDate, periodDate);
+        };
+
     }
 
     /**
@@ -38,7 +77,18 @@ public class KpiDaoImpl
         // TODO verify behavior of toKpiVO
         super.toKpiVO(source, target);
         // WARNING! No conversion for target.periodInstance (can't convert source.getPeriodInstance():bw.org.bocra.portal.period.instance.PeriodInstance to bw.org.bocra.portal.period.instance.PeriodInstanceVO
+        if(source.getPeriodInstance() != null) {
+            PeriodInstanceVO vo = new PeriodInstanceVO();
+            getPeriodInstanceDao().toPeriodInstanceVO(source.getPeriodInstance(), vo);
+            target.setPeriodInstance(vo);
+        }
+
         // WARNING! No conversion for target.licensee (can't convert source.getLicensee():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
+        if(source.getLicensee() == null) {
+            LicenseeVO licensee = new LicenseeVO();
+            getLicenseeDao().toLicenseeVO(source.getLicensee(), licensee);
+            target.setLicensee(licensee);
+        }
     }
 
     /**
@@ -58,10 +108,6 @@ public class KpiDaoImpl
      */
     private Kpi loadKpiFromKpiVO(KpiVO kpiVO)
     {
-        // TODO implement loadKpiFromKpiVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.kpi.loadKpiFromKpiVO(KpiVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (kpiVO.getId() == null)
         {
             return  Kpi.Factory.newInstance();
@@ -70,7 +116,6 @@ public class KpiDaoImpl
         {
             return this.load(kpiVO.getId());
         }
-        */
     }
 
     /**
@@ -95,5 +140,17 @@ public class KpiDaoImpl
     {
         // TODO verify behavior of kpiVOToEntity
         super.kpiVOToEntity(source, target, copyIfNull);
+
+        if(source.getPeriodInstance() != null) {
+            PeriodInstance instance = PeriodInstance.Factory.newInstance();
+            getPeriodInstanceDao().periodInstanceVOToEntity(source.getPeriodInstance(), instance, copyIfNull);
+            target.setPeriodInstance(instance);
+        }
+
+        if(source.getLicensee() != null) {
+            Licensee licensee = Licensee.Factory.newInstance();
+            getLicenseeDao().licenseeVOToEntity(source.getLicensee(), licensee, copyIfNull);
+            target.setLicensee(licensee);
+        }
     }
 }

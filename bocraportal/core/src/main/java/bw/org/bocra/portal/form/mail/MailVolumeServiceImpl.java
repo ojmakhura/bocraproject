@@ -64,8 +64,14 @@ public class MailVolumeServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.mail.MailVolumeService.handleRemove(Long id) Not implemented!");
+
+        if(id == null) {
+            return false;
+        }
+
+        getMailVolumeDao().remove(id);
+
+        return true;
     }
 
     /**
@@ -75,8 +81,7 @@ public class MailVolumeServiceImpl
     protected  Collection<MailVolumeVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<MailVolumeVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.mail.MailVolumeService.handleGetAll() Not implemented!");
+        return (Collection<MailVolumeVO>) this.getMailVolumeDao().loadAll(MailVolumeDao.TRANSFORM_MAILVOLUMEVO);
     }
 
     /**
@@ -86,8 +91,7 @@ public class MailVolumeServiceImpl
     protected  Collection<MailVolumeVO> handleSearch(MailVolumeCriteria searchCriteria)
         throws Exception
     {
-        // TODO implement protected  Collection<MailVolumeVO> handleSearch(MailVolumeCriteria searchCriteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.mail.MailVolumeService.handleSearch(MailVolumeCriteria searchCriteria) Not implemented!");
+        return (Collection<MailVolumeVO>) this.getMailVolumeDao().findByCriteria(MailVolumeDao.TRANSFORM_MAILVOLUMEVO, searchCriteria);
     }
 
 }

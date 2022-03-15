@@ -10,6 +10,8 @@ package bw.org.bocra.portal.form.kpi;
 
 import bw.org.bocra.portal.form.FormCriteria;
 import java.util.Collection;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @see bw.org.bocra.portal.form.kpi.KpiService
  */
-@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
+//@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 @Service("kpiService")
 public class KpiServiceImpl
     extends KpiServiceBase
@@ -30,8 +32,13 @@ public class KpiServiceImpl
     protected  KpiVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  KpiVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.kpi.KpiService.handleFindById(Long id) Not implemented!");
+
+        if(id == null) {
+            return null;
+        }
+
+        return (KpiVO) getKpiDao().get(KpiDao.TRANSFORM_KPIVO, id);
+
     }
 
     /**
@@ -41,8 +48,14 @@ public class KpiServiceImpl
     protected  KpiVO handleSave(KpiVO kpiVO)
         throws Exception
     {
-        // TODO implement protected  KpiVO handleSave(KpiVO kpiVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.kpi.KpiService.handleSave(KpiVO kpiVO) Not implemented!");
+        Kpi kpi = getKpiDao().kpiVOToEntity(kpiVO);
+        if(kpiVO.getId() == null) {
+            kpi = getKpiDao().create(kpi);
+            return getKpiDao().toKpiVO(kpi);
+        } else {
+            getKpiDao().update(kpi);
+            return kpiVO;
+        }
     }
 
     /**
@@ -52,8 +65,14 @@ public class KpiServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.kpi.KpiService.handleRemove(Long id) Not implemented!");
+
+        if(id == null) {
+            return false;
+        } 
+
+        kpiRepository.deleteById(id);
+
+        return true;
     }
 
     /**
@@ -63,8 +82,7 @@ public class KpiServiceImpl
     protected  Collection<KpiVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<KpiVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.kpi.KpiService.handleGetAll() Not implemented!");
+        return (Collection<KpiVO>) getKpiDao().loadAll(KpiDao.TRANSFORM_KPIVO);
     }
 
     /**
@@ -74,8 +92,7 @@ public class KpiServiceImpl
     protected  Collection<KpiVO> handleSearch(FormCriteria searchCriteria)
         throws Exception
     {
-        // TODO implement protected  Collection<KpiVO> handleSearch(FormCriteria searchCriteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.kpi.KpiService.handleSearch(FormCriteria searchCriteria) Not implemented!");
+        return getKpiDao().toKpiVOCollection(getKpiDao().findByCriteria(searchCriteria));
     }
 
 }

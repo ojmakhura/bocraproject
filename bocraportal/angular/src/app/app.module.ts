@@ -46,15 +46,15 @@ import { KpiControllerImpl } from '@app/controller/form/kpi/kpi-controller.impl'
 import { SimModule } from '@app/view/form/sim/sim.module';
 import { SimControllerImpl } from '@app/controller/form/sim/sim-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
+import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
+import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
 import { SimRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sim/sim-rest-controller.impl';
 import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
-import { MailVolumeRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/mail/mail-volume-rest-controller.impl';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
-import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
 import { KpiRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/kpi/kpi-rest-controller.impl';
-import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
+import { MailVolumeRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/mail/mail-volume-rest-controller.impl';
 import { PeriodInstanceRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/instance/period-instance-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -93,15 +93,15 @@ true
     ],
     providers: [
         UseCaseScope,
+        LicenseTypeRestControllerImpl,
+        UserRestControllerImpl,
         SimRestControllerImpl,
         PeriodRestControllerImpl,
-        MailVolumeRestControllerImpl,
-        LicenseeRestControllerImpl,
-        LicenseTypeRestControllerImpl,
         KpiRestControllerImpl,
-        UrlGuardRestControllerImpl,
-        UserRestControllerImpl,
+        MailVolumeRestControllerImpl,
         PeriodInstanceRestControllerImpl,
+        LicenseeRestControllerImpl,
+        UrlGuardRestControllerImpl,
         LicenseeControllerImpl,
         LicenseTypeControllerImpl,
         UserControllerImpl,
