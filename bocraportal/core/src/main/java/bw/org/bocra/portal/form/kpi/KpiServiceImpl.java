@@ -95,4 +95,10 @@ public class KpiServiceImpl
         return getKpiDao().toKpiVOCollection(getKpiDao().findByCriteria(searchCriteria));
     }
 
+    @Override
+    protected Collection<KpiVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
+        // TODO Auto-generated method stub
+        return getKpiDao().toKpiVOCollection(kpiRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent());
+    }
+
 }

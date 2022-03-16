@@ -10,6 +10,11 @@ package bw.org.bocra.portal.form.sim;
 
 import bw.org.bocra.portal.form.FormCriteria;
 import java.util.Collection;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +35,12 @@ public class SimServiceImpl
     protected  SimVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  SimVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sim.SimService.handleFindById(Long id) Not implemented!");
+
+        if(id == null) {
+            return null;
+        }
+
+        return getSimDao().toSimVO(getSimDao().get(id));
     }
 
     /**
@@ -41,8 +50,16 @@ public class SimServiceImpl
     protected  SimVO handleSave(SimVO simVO)
         throws Exception
     {
-        // TODO implement protected  SimVO handleSave(SimVO simVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sim.SimService.handleSave(SimVO simVO) Not implemented!");
+
+        Sim sim = getSimDao().simVOToEntity(simVO);
+
+        if(simVO.getId() == null) {
+            sim = simDao.create(sim);
+        } else {
+            simDao.update(sim);
+        }
+
+        return getSimDao().toSimVO(sim);
     }
 
     /**
@@ -52,8 +69,14 @@ public class SimServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sim.SimService.handleRemove(Long id) Not implemented!");
+
+        if(id == null) {
+            return false;
+        }
+
+        simRepository.deleteById(id);
+
+        return true;
     }
 
     /**
@@ -63,19 +86,31 @@ public class SimServiceImpl
     protected  Collection<SimVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<SimVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sim.SimService.handleGetAll() Not implemented!");
+        return simDao.toSimVOCollection(simRepository.findAll(Sort.by("createdBy").descending()));
     }
 
     /**
      * @see bw.org.bocra.portal.form.sim.SimService#search(FormCriteria)
      */
     @Override
-    protected  Collection<SimVO> handleSearch(FormCriteria searchCriteria)
-        throws Exception
-    {
-        // TODO implement protected  Collection<SimVO> handleSearch(FormCriteria searchCriteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sim.SimService.handleSearch(FormCriteria searchCriteria) Not implemented!");
+    protected Collection<SimVO> handleSearch(FormCriteria searchCriteria, Integer pageNumber, Integer pageSize)
+            throws Exception {
+
+        Collection<Sim> sims = null;
+
+        if(pageNumber < 0 || pageSize < 1) {
+            sims = simRepository.findAll();
+        } else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdBy").descending());
+            sims = simRepository.findAll(pageable).getContent();
+        }
+        
+        return sims == null ? null : getSimDao().toSimVOCollection(sims);
+    }
+
+    @Override
+    protected Collection<SimVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
+        return getSimDao().toSimVOCollection(simRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by("createdBy").descending())).getContent());
     }
 
 }

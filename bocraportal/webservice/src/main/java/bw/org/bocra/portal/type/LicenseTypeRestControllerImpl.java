@@ -25,7 +25,7 @@ public class LicenseTypeRestControllerImpl extends LicenseTypeRestControllerBase
 
     @Override
     public ResponseEntity<LicenseTypeVO> handleFindById(Long id) {
-        Optional<LicenseTypeVO> data = Optional.of(this.licenseTypeService.findById(id)); // TODO: Add custom code here;
+        Optional<LicenseTypeVO> data = Optional.of(this.licenseTypeService.findById(id)); 
         ResponseEntity<LicenseTypeVO> response;
 
         if(data.isPresent()) {
@@ -39,7 +39,7 @@ public class LicenseTypeRestControllerImpl extends LicenseTypeRestControllerBase
 
     @Override
     public ResponseEntity<Collection<LicenseTypeVO>> handleGetAll() {
-        Optional<Collection<LicenseTypeVO>> data = Optional.of(this.licenseTypeService.getAll()); // TODO: Add custom code here;
+        Optional<Collection<LicenseTypeVO>> data = Optional.of(this.licenseTypeService.getAll()); 
         ResponseEntity<Collection<LicenseTypeVO>> response;
 
         if(data.isPresent()) {
@@ -82,6 +82,20 @@ public class LicenseTypeRestControllerImpl extends LicenseTypeRestControllerBase
     @Override
     public ResponseEntity<Collection<LicenseTypeVO>> handleSearch(LicenseTypeCriteria searchCriteria) {
         Optional<Collection<LicenseTypeVO>> data = Optional.of(this.licenseTypeService.search(searchCriteria));
+        ResponseEntity<Collection<LicenseTypeVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<Collection<LicenseTypeVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+        Optional<Collection<LicenseTypeVO>> data = Optional.of(this.licenseTypeService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<LicenseTypeVO>> response;
 
         if(data.isPresent()) {

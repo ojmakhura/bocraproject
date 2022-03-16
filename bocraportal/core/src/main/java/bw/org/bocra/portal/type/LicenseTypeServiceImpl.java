@@ -12,6 +12,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -114,6 +117,21 @@ public class LicenseTypeServiceImpl
         Collection<LicenseType> entities = licenseTypeRepository.findAll(specs);
 
         return getLicenseTypeDao().toLicenseTypeVOCollection(entities);
+    }
+
+    @Override
+    protected Collection<LicenseTypeVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
+        
+        Collection<LicenseType> types = null;
+
+        if(pageNumber < 0 || pageSize < 1) {
+            types = licenseTypeRepository.findAll();
+        } else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("code").descending());
+            types = licenseTypeRepository.findAll(pageable).getContent();
+        }
+
+        return types == null ? null : getLicenseTypeDao().toLicenseTypeVOCollection(types);
     }
 
 }

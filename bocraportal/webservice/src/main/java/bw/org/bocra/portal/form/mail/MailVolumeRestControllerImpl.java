@@ -92,4 +92,18 @@ public class MailVolumeRestControllerImpl extends MailVolumeRestControllerBase {
 
         return response;
     }
+
+    @Override
+    public ResponseEntity<Collection<MailVolumeVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+        Optional<Collection<MailVolumeVO>> data = Optional.of(mailVolumeService.getAll(pageNumber, pageSize));
+        ResponseEntity<Collection<MailVolumeVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
 }

@@ -93,6 +93,7 @@ public class LicenseeDaoImpl
 
         if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
             //target.setLicenseeGroups(new );
+            
         }
     }
 }

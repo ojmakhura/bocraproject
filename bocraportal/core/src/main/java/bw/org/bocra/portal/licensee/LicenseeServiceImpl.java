@@ -100,4 +100,10 @@ public class LicenseeServiceImpl
         return vos;
     }
 
+    @Override
+    protected Collection<LicenseeVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

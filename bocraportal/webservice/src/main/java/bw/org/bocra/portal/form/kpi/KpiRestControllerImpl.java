@@ -93,4 +93,18 @@ public class KpiRestControllerImpl extends KpiRestControllerBase {
 
         return response;
     }
+
+    @Override
+    public ResponseEntity<Collection<KpiVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+        Optional<Collection<KpiVO>> data = Optional.of(kpiService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
+        ResponseEntity<Collection<KpiVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
 }

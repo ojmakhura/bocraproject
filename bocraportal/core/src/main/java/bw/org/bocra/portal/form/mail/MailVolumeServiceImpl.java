@@ -9,6 +9,9 @@
 package bw.org.bocra.portal.form.mail;
 
 import java.util.Collection;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @see bw.org.bocra.portal.form.mail.MailVolumeService
  */
-@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
+//@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 @Service("mailVolumeService")
 public class MailVolumeServiceImpl
     extends MailVolumeServiceBase
@@ -92,6 +95,14 @@ public class MailVolumeServiceImpl
         throws Exception
     {
         return (Collection<MailVolumeVO>) this.getMailVolumeDao().findByCriteria(MailVolumeDao.TRANSFORM_MAILVOLUMEVO, searchCriteria);
+    }
+
+    @Override
+    protected Collection<MailVolumeVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
+        
+        Page<MailVolume> page = mailVolumeRepository.findAll(PageRequest.of(pageNumber, pageSize));
+
+        return getMailVolumeDao().toMailVolumeVOCollection(page.getContent());
     }
 
 }

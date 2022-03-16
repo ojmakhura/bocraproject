@@ -9,6 +9,10 @@
 package bw.org.bocra.portal.period;
 
 import java.util.Collection;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -91,6 +95,21 @@ public class PeriodServiceImpl
     {
         Collection<Period> periods = getPeriodDao().findByCriteria(searchCriteria);
         return getPeriodDao().toPeriodVOCollection(periods);
+    }
+
+    @Override
+    protected Collection<PeriodVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
+
+        Collection<Period> periods = null;
+
+        if(pageNumber < 0 || pageSize < 1) {
+            periods = periodRepository.findAll();
+        } else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("periodName").descending());
+            periods = periodRepository.findAll(pageable).getContent();
+        }
+
+        return periods == null ? null : getPeriodDao().toPeriodVOCollection(periods);
     }
 
 }

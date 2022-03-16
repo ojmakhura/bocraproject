@@ -94,4 +94,18 @@ public class SimRestControllerImpl extends SimRestControllerBase {
 
         return response;
     }
+
+    @Override
+    public ResponseEntity<Collection<SimVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+        Optional<Collection<SimVO>> data = Optional.empty(); // TODO: Add custom code here;
+        ResponseEntity<Collection<SimVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
 }

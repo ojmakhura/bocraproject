@@ -93,4 +93,18 @@ public class UrlGuardRestControllerImpl extends UrlGuardRestControllerBase {
 
         return response;
     }
+
+    @Override
+    public ResponseEntity<Collection<UrlGuardVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+        Optional<Collection<UrlGuardVO>> data = Optional.of(urlGuardService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
+        ResponseEntity<Collection<UrlGuardVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
 }

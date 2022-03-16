@@ -92,4 +92,18 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
 
         return response;
     }
+
+    @Override
+    public ResponseEntity<Collection<PeriodVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+        Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll(pageNumber, pageSize)); 
+        ResponseEntity<Collection<PeriodVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
 }

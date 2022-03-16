@@ -26,7 +26,7 @@ public class PeriodInstanceRestControllerImpl extends PeriodInstanceRestControll
 
     @Override
     public ResponseEntity<PeriodInstanceVO> handleFindById(Long id) {
-        Optional<PeriodInstanceVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<PeriodInstanceVO> data = Optional.of(periodInstanceService.findById(id)); 
         ResponseEntity<PeriodInstanceVO> response;
 
         if(data.isPresent()) {
@@ -40,7 +40,7 @@ public class PeriodInstanceRestControllerImpl extends PeriodInstanceRestControll
 
     @Override
     public ResponseEntity<Collection<PeriodInstanceVO>> handleGetAll() {
-        Optional<Collection<PeriodInstanceVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<PeriodInstanceVO>> data = Optional.of(periodInstanceService.getAll());
         ResponseEntity<Collection<PeriodInstanceVO>> response;
 
         if(data.isPresent()) {
@@ -54,7 +54,7 @@ public class PeriodInstanceRestControllerImpl extends PeriodInstanceRestControll
 
     @Override
     public ResponseEntity<Boolean> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Boolean> data = Optional.of(periodInstanceService.remove(id)); 
         ResponseEntity<Boolean> response;
 
         if(data.isPresent()) {
@@ -68,7 +68,7 @@ public class PeriodInstanceRestControllerImpl extends PeriodInstanceRestControll
 
     @Override
     public ResponseEntity<PeriodInstanceVO> handleSave(PeriodInstanceVO periodInstanceVO) {
-        Optional<PeriodInstanceVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<PeriodInstanceVO> data = Optional.of(periodInstanceService.save(periodInstanceVO)); 
         ResponseEntity<PeriodInstanceVO> response;
 
         if(data.isPresent()) {
@@ -81,9 +81,23 @@ public class PeriodInstanceRestControllerImpl extends PeriodInstanceRestControll
     }
 
     @Override
-    public ResponseEntity<Collection<PeriodVO>> handleSearch(PeriodInstanceCriteria searchCriteria) {
-        Optional<Collection<PeriodVO>> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<Collection<PeriodVO>> response;
+    public ResponseEntity<Collection<PeriodInstanceVO>> handleSearch(PeriodInstanceCriteria searchCriteria) {
+        Optional<Collection<PeriodInstanceVO>> data = Optional.of(periodInstanceService.search(searchCriteria));
+        ResponseEntity<Collection<PeriodInstanceVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<Collection<PeriodInstanceVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+        Optional<Collection<PeriodInstanceVO>> data = Optional.of(periodInstanceService.getAll(pageNumber, pageSize)); 
+        ResponseEntity<Collection<PeriodInstanceVO>> response;
 
         if(data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());

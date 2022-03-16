@@ -93,6 +93,20 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
         return response;
     }
 
+    @Override
+    public ResponseEntity<Collection<LicenseeVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
+        ResponseEntity<Collection<LicenseeVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
     // @Override
     // public ResponseEntity<LicenseeVO> handleUpdateLicensee(LicenseeVO licenseeVO) {
     //     Optional<LicenseeVO> data = Optional.empty(); // TODO: Add custom code here;

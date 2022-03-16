@@ -9,6 +9,10 @@
 package bw.org.bocra.portal.guard;
 
 import java.util.Collection;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,6 +98,20 @@ public class UrlGuardServiceImpl
         throws Exception
     {
         return (Collection<UrlGuardVO>) this.urlGuardDao.findByCriteria(UrlGuardDao.TRANSFORM_URLGUARDVO, criteria);
+    }
+
+    @Override
+    protected Collection<UrlGuardVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
+        Collection<UrlGuard> guards = null;
+
+        if(pageNumber < 0 || pageSize < 1) {
+            guards = urlGuardRepository.findAll();
+        } else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("url").descending());
+            guards = urlGuardRepository.findAll(pageable).getContent();
+        }
+
+        return guards == null ? null : urlGuardDao.toUrlGuardVOCollection(guards);
     }
 
 }

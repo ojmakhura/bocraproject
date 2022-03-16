@@ -7,6 +7,13 @@
 package bw.org.bocra.portal.form.sim;
 
 import bw.org.bocra.portal.form.FormCriteria;
+import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.period.instance.PeriodInstance;
+import bw.org.bocra.portal.period.instance.PeriodInstanceVO;
+
+import java.util.Collection;
+
 import org.springframework.stereotype.Repository;
 
 /**
@@ -20,7 +27,7 @@ public class SimDaoImpl
      * {@inheritDoc}
      */
     @Override
-    protected Sim handleFindByCriteria(FormCriteria searchCriteria)
+    protected Collection<Sim> handleFindByCriteria(FormCriteria searchCriteria)
     {
         // TODO implement public Sim handleFindByCriteria(FormCriteria searchCriteria)
         return null;
@@ -37,7 +44,20 @@ public class SimDaoImpl
         // TODO verify behavior of toSimVO
         super.toSimVO(source, target);
         // WARNING! No conversion for target.licensee (can't convert source.getLicensee():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
+        if(source.getLicensee() != null) {
+            LicenseeVO licensee = new LicenseeVO();
+            getLicenseeDao().toLicenseeVO(source.getLicensee(), licensee);
+
+            target.setLicensee(licensee);
+        }
+        
         // WARNING! No conversion for target.periodInstance (can't convert source.getPeriodInstance():bw.org.bocra.portal.period.instance.PeriodInstance to bw.org.bocra.portal.period.instance.PeriodInstanceVO
+        if(source.getPeriodInstance() != null) {
+            PeriodInstanceVO instance = new PeriodInstanceVO();
+            getPeriodInstanceDao().toPeriodInstanceVO(source.getPeriodInstance(), instance);
+
+            target.setPeriodInstance(instance);
+        }
     }
 
     /**
@@ -57,10 +77,6 @@ public class SimDaoImpl
      */
     private Sim loadSimFromSimVO(SimVO simVO)
     {
-        // TODO implement loadSimFromSimVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sim.loadSimFromSimVO(SimVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (simVO.getId() == null)
         {
             return  Sim.Factory.newInstance();
@@ -69,7 +85,6 @@ public class SimDaoImpl
         {
             return this.load(simVO.getId());
         }
-        */
     }
 
     /**
@@ -94,5 +109,19 @@ public class SimDaoImpl
     {
         // TODO verify behavior of simVOToEntity
         super.simVOToEntity(source, target, copyIfNull);
+
+        if(source.getLicensee() != null) {
+            Licensee licensee = Licensee.Factory.newInstance();
+            getLicenseeDao().licenseeVOToEntity(source.getLicensee(), licensee, copyIfNull);
+
+            target.setLicensee(licensee);
+        }
+
+        if(source.getPeriodInstance() != null) {
+            PeriodInstance instance = PeriodInstance.Factory.newInstance();
+            getPeriodInstanceDao().periodInstanceVOToEntity(source.getPeriodInstance(), instance, copyIfNull);
+
+            target.setPeriodInstance(instance);
+        }
     }
 }

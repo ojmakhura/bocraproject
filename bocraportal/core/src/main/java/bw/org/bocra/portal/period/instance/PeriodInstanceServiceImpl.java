@@ -10,6 +10,10 @@ package bw.org.bocra.portal.period.instance;
 
 import bw.org.bocra.portal.period.PeriodCriteria;
 import java.util.Collection;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,6 +93,21 @@ public class PeriodInstanceServiceImpl
     {
 
         return (Collection<PeriodInstanceVO>) getPeriodInstanceDao().findByCriteria(PeriodInstanceDao.TRANSFORM_PERIODINSTANCEVO, searchCriteria);
+    }
+
+    @Override
+    protected Collection<PeriodInstanceVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
+        
+        Collection<PeriodInstance> instances = null;
+
+        if(pageNumber < 0 || pageSize < 1) {
+            instances = periodInstanceRepository.findAll();
+        } else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("periodInstanceName").descending());
+            instances = periodInstanceRepository.findAll(pageable).getContent();
+        }
+
+        return instances == null ? null : getPeriodInstanceDao().toPeriodInstanceVOCollection(instances);
     }
 
 }
