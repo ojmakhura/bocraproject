@@ -13,7 +13,7 @@ export class SimControllerImpl extends SimController {
 	public doInitialiseEditScreen(form: any): void {
 	}
 
-	public doClear(form: any): void {
+	public doDelete(form: any): void {
 	}
 
 	public doSave(form: any): void {
@@ -25,7 +25,7 @@ export class SimControllerImpl extends SimController {
 	public doSearch(form: any): void {
 	}
 
-	public doEditGroup(form: any): void {
+	public doEdit(form: any): void {
 	}
 
 }

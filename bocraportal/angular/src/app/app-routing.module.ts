@@ -49,7 +49,15 @@ const routes: Routes = [
     },
     {
       path: 'sim', 
-      loadChildren: async () => (await import('@app/view/form/sim/sim.module')).SimModule
+      loadChildren: async () => (await import('@app/view/form/sim/sim.module')).SIMModule
+    },
+    {
+      path: 'smstraffic', 
+      loadChildren: async () => (await import('@app/view/form/sms/sms-traffic.module')).SMSTrafficModule
+    },
+    {
+      path: 'voicetraffic', 
+      loadChildren: async () => (await import('@app/view/form/voice/voice-traffic.module')).VoiceTrafficModule
     },
   ]),
   // Fallback when no prior route is matched

@@ -13,7 +13,7 @@ export class PeriodControllerImpl extends PeriodController {
 	public doInitialiseEditScreen(form: any): void {
 	}
 
-	public doClear(form: any): void {
+	public doDelete(form: any): void {
 	}
 
 	public doSave(form: any): void {

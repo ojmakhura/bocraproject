@@ -62,6 +62,12 @@ up_local_pgadmin: rm_env gen_docker_env
 up_local_api: rm_env gen_docker_env
 	docker-compose -f docker-compose-local.yml up -d api
 
+up_local_registry: rm_env gen_docker_env
+	docker-compose -f docker-compose-local.yml up -d registry
+
+up_local_jenkins: rm_env gen_docker_env
+	docker-compose -f docker-compose-local.yml up -d jenkins
+
 run_local_app: build_local_images up_local_app
 
 run_api_local: rm_env gen_local_env
@@ -91,35 +97,6 @@ gen_docker_env: rm_env
 		rm -f .env; \
 	fi
 	@$(LOCAL_DOCKER_ENV)
-
-##
-## Building and running on the test platform
-##
-build_test_api: gen_test_env mvn_build_api
-	docker-compose build api
-
-build_test_web: gen_test_env mvn_build_all
-	docker-compose build web
-
-build_test_images: gen_test_env mvn_build_all
-	docker-compose build
-
-up_test_app: 
-	if [ -f /bocra/traefik/acme.json ]; then \
-		rm -f /bocra/traefik/acme.json; \
-	fi
-	docker-compose up -d
-
-run_test_app: build_test_images up_test_app
-
-stop_test_app:
-	docker-compose down
-
-gen_test_env: 
-	if [ -f .env ]; then \
-		rm -f .env; \
-	fi
-	@$(TEST_ENV)
 
 ##
 ## Building and running on the test platform

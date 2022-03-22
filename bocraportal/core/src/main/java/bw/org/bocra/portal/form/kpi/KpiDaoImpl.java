@@ -12,6 +12,7 @@ import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.period.instance.PeriodInstance;
 import bw.org.bocra.portal.period.instance.PeriodInstanceVO;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 
@@ -56,12 +57,12 @@ public class KpiDaoImpl
         }
     }
 
-    private Specification<Kpi> findByPeriod(Date periodDate) {
+    private Specification<Kpi> findByPeriod(LocalDate periodDate) {
 
         return (root, cq, cb) -> {
             cq.distinct(true);
             Join<Kpi, PeriodInstance> join = root.join("periodInstance");
-            return cb.between(join.<Date>get("periodStartDate"), periodDate, periodDate);
+            return cb.between(join.<LocalDate>get("periodStartDate"), periodDate, periodDate);
         };
 
     }

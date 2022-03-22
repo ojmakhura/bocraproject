@@ -13,9 +13,6 @@ export class MailVolumeControllerImpl extends MailVolumeController {
 	public doInitialiseEditScreen(form: any): void {
 	}
 
-	public doClear(form: any): void {
-	}
-
 	public doSave(form: any): void {
 	}
 
@@ -25,7 +22,10 @@ export class MailVolumeControllerImpl extends MailVolumeController {
 	public doSearch(form: any): void {
 	}
 
-	public doEditGroup(form: any): void {
+	public doEdit(form: any): void {
+	}
+
+	public doDelete(form: any): void {
 	}
 
 }

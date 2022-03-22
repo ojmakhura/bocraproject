@@ -13,9 +13,6 @@ export class GuardControllerImpl extends GuardController {
 	public doInitialiseEditScreen(form: any): void {
 	}
 
-	public doClear(form: any): void {
-	}
-
 	public doSave(form: any): void {
 	}
 
