@@ -87,9 +87,9 @@ public class PeriodDaoImpl
         
         Specification<Period> specs = null;
 
-        if(searchCriteria.getMonth() != null) {
-            specs = PeriodSpecifications.findByPeriodStartGreaterThanEqual(searchCriteria.getMonth());
-            specs = PeriodSpecifications.findByPeriodEndLessThanEqual(searchCriteria.getMonth());
+        if(searchCriteria.getSearchDate() != null) {
+            specs = PeriodSpecifications.findByPeriodStartGreaterThanEqual(searchCriteria.getSearchDate());
+            specs = specs.and(PeriodSpecifications.findByPeriodEndLessThanEqual(searchCriteria.getSearchDate()));
         }
 
         if(StringUtils.isNotBlank(searchCriteria.getPeriodName())){
@@ -100,11 +100,6 @@ public class PeriodDaoImpl
             }
         }
 
-        if(specs == null) {
-            return periodRepository.findAll();
-        } else {
-            return periodRepository.findAll(specs);
-        }
-
+        return periodRepository.findAll(specs);
     }
 }

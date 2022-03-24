@@ -7,7 +7,16 @@
 package bw.org.bocra.portal.form.voice;
 
 import bw.org.bocra.portal.form.FormCriteria;
+import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodVO;
+
 import java.util.Collection;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -23,8 +32,32 @@ public class VoiceTrafficDaoImpl
     @Override
     protected Collection<VoiceTraffic> handleFindByCriteria(FormCriteria searchCriteria)
     {
-        // TODO implement public Collection<VoiceTraffic> handleFindByCriteria(FormCriteria searchCriteria)
-        return null;
+        Specification<VoiceTraffic> specs = null;
+
+        if(searchCriteria.getStatus() != null) {
+            specs = VoiceTrafficSpecifications.findByStatus(searchCriteria.getStatus());
+        }
+
+        if(searchCriteria.getLicenseeId() != null) {
+            Specification<VoiceTraffic> tmp = VoiceTrafficSpecifications.findByLicenseeId(searchCriteria.getLicenseeId());
+            if(specs == null) {
+                specs = tmp;
+            } else {
+                specs.and(tmp);
+            }
+        }
+
+        Pageable pageable = null;
+
+        if(searchCriteria.getPaged()) {
+            pageable = PageRequest.of(searchCriteria.getPageNumber(), searchCriteria.getPageSize());
+        }
+
+        if(pageable == null) {
+            return voiceTrafficRepository.findAll(specs, pageable).getContent();
+        } else {
+            return voiceTrafficRepository.findAll(specs);
+        }
     }
 
     /**
@@ -38,7 +71,20 @@ public class VoiceTrafficDaoImpl
         // TODO verify behavior of toVoiceTrafficVO
         super.toVoiceTrafficVO(source, target);
         // WARNING! No conversion for target.licensee (can't convert source.getLicensee():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
-        // WARNING! No conversion for target.periodInstance (can't convert source.getPeriodInstance():bw.org.bocra.portal.period.instance.PeriodInstance to bw.org.bocra.portal.period.instance.PeriodInstanceVO
+        if(source.getLicensee() != null) {
+            if(target.getLicensee() == null) {
+                target.setLicensee(new LicenseeVO());
+            }
+            getLicenseeDao().toLicenseeVO(source.getLicensee(), target.getLicensee());
+        }
+
+        // WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.config.Period to bw.org.bocra.portal.period.config.PeriodVO
+        if(source.getPeriod() != null) {
+            if(target.getPeriod() == null) {
+                target.setPeriod(new PeriodVO());
+            }
+            getPeriodDao().toPeriodVO(source.getPeriod(), target.getPeriod());
+        }
     }
 
     /**
@@ -58,10 +104,6 @@ public class VoiceTrafficDaoImpl
      */
     private VoiceTraffic loadVoiceTrafficFromVoiceTrafficVO(VoiceTrafficVO voiceTrafficVO)
     {
-        // TODO implement loadVoiceTrafficFromVoiceTrafficVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.voice.loadVoiceTrafficFromVoiceTrafficVO(VoiceTrafficVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (voiceTrafficVO.getId() == null)
         {
             return  VoiceTraffic.Factory.newInstance();
@@ -70,7 +112,6 @@ public class VoiceTrafficDaoImpl
         {
             return this.load(voiceTrafficVO.getId());
         }
-        */
     }
 
     /**
@@ -95,5 +136,21 @@ public class VoiceTrafficDaoImpl
     {
         // TODO verify behavior of voiceTrafficVOToEntity
         super.voiceTrafficVOToEntity(source, target, copyIfNull);
+
+        if(source.getLicensee() != null) {
+            if(target.getLicensee() == null) {
+                target.setLicensee(Licensee.Factory.newInstance());
+            }
+
+            getLicenseeDao().licenseeVOToEntity(source.getLicensee(), target.getLicensee(), copyIfNull);
+        }
+
+        if(source.getPeriod() != null) {
+            if(target.getPeriod() == null) {
+                target.setPeriod(Period.Factory.newInstance());
+            }
+
+            getPeriodDao().periodVOToEntity(source.getPeriod(), target.getPeriod(), copyIfNull);
+        }
     }
 }

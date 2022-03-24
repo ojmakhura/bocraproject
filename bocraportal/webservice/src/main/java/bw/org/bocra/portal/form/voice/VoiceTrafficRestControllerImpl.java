@@ -26,7 +26,7 @@ public class VoiceTrafficRestControllerImpl extends VoiceTrafficRestControllerBa
 
     @Override
     public ResponseEntity<VoiceTrafficVO> handleFindById(Long id) {
-        Optional<VoiceTrafficVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<VoiceTrafficVO> data = Optional.of(voiceTrafficService.findById(id));
         ResponseEntity<VoiceTrafficVO> response;
 
         if(data.isPresent()) {
@@ -40,7 +40,7 @@ public class VoiceTrafficRestControllerImpl extends VoiceTrafficRestControllerBa
 
     @Override
     public ResponseEntity<Collection<VoiceTrafficVO>> handleGetAll() {
-        Optional<Collection<VoiceTrafficVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<VoiceTrafficVO>> data = Optional.of(voiceTrafficService.getAll());
         ResponseEntity<Collection<VoiceTrafficVO>> response;
 
         if(data.isPresent()) {
@@ -54,7 +54,7 @@ public class VoiceTrafficRestControllerImpl extends VoiceTrafficRestControllerBa
 
     @Override
     public ResponseEntity<Collection<VoiceTrafficVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<VoiceTrafficVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<VoiceTrafficVO>> data = Optional.of(voiceTrafficService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<VoiceTrafficVO>> response;
 
         if(data.isPresent()) {
@@ -68,7 +68,7 @@ public class VoiceTrafficRestControllerImpl extends VoiceTrafficRestControllerBa
 
     @Override
     public ResponseEntity<Boolean> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Boolean> data = Optional.of(voiceTrafficService.remove(id));
         ResponseEntity<Boolean> response;
 
         if(data.isPresent()) {
@@ -82,7 +82,7 @@ public class VoiceTrafficRestControllerImpl extends VoiceTrafficRestControllerBa
 
     @Override
     public ResponseEntity<VoiceTrafficVO> handleSave(VoiceTrafficVO voiceTrafficVO) {
-        Optional<VoiceTrafficVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<VoiceTrafficVO> data = Optional.of(voiceTrafficService.save(voiceTrafficVO));
         ResponseEntity<VoiceTrafficVO> response;
 
         if(data.isPresent()) {
@@ -96,7 +96,7 @@ public class VoiceTrafficRestControllerImpl extends VoiceTrafficRestControllerBa
 
     @Override
     public ResponseEntity<Collection<VoiceTrafficVO>> handleSearch(FormCriteria searchCriteria) {
-        Optional<Collection<VoiceTrafficVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<VoiceTrafficVO>> data = Optional.of(voiceTrafficService.search(searchCriteria));
         ResponseEntity<Collection<VoiceTrafficVO>> response;
 
         if(data.isPresent()) {

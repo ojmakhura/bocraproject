@@ -26,9 +26,9 @@ public class SimRestControllerImpl extends SimRestControllerBase {
 
 
     @Override
-    public ResponseEntity<KpiVO> handleFindById(Long id) {
-        Optional<KpiVO> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<KpiVO> response;
+    public ResponseEntity<SimVO> handleFindById(Long id) {
+        Optional<SimVO> data = Optional.of(simService.findById(id)); // TODO: Add custom code here;
+        ResponseEntity<SimVO> response;
 
         if(data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
@@ -41,7 +41,7 @@ public class SimRestControllerImpl extends SimRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<SimVO>> handleGetAll() {
-        Optional<Collection<SimVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<SimVO>> data = Optional.of(simService.getAll());
         ResponseEntity<Collection<SimVO>> response;
 
         if(data.isPresent()) {
@@ -55,7 +55,7 @@ public class SimRestControllerImpl extends SimRestControllerBase {
 
     @Override
     public ResponseEntity<Boolean> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Boolean> data = Optional.of(simService.remove(id));
         ResponseEntity<Boolean> response;
 
         if(data.isPresent()) {
@@ -69,7 +69,7 @@ public class SimRestControllerImpl extends SimRestControllerBase {
 
     @Override
     public ResponseEntity<SimVO> handleSave(SimVO simVO) {
-        Optional<SimVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<SimVO> data = Optional.of(simService.save(simVO));
         ResponseEntity<SimVO> response;
 
         if(data.isPresent()) {
@@ -83,7 +83,7 @@ public class SimRestControllerImpl extends SimRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<SimVO>> handleSearch(FormCriteria searchCriteria) {
-        Optional<Collection<SimVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<SimVO>> data = Optional.of(simService.search(searchCriteria));
         ResponseEntity<Collection<SimVO>> response;
 
         if(data.isPresent()) {
@@ -97,7 +97,7 @@ public class SimRestControllerImpl extends SimRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<SimVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<SimVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<SimVO>> data = Optional.of(simService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<SimVO>> response;
 
         if(data.isPresent()) {

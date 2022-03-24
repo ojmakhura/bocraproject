@@ -37,8 +37,8 @@ import { GuardModule } from '@app/view/guard/guard.module';
 import { GuardControllerImpl } from '@app/controller/guard/guard-controller.impl';
 import { PeriodModule } from '@app/view/period/period.module';
 import { PeriodControllerImpl } from '@app/controller/period/period-controller.impl';
-import { PeriodInstanceModule } from '@app/view/period/instance/period-instance.module';
-import { PeriodInstanceControllerImpl } from '@app/controller/period/instance/period-instance-controller.impl';
+import { PeriodConfigModule } from '@app/view/period/config/period-config.module';
+import { PeriodConfigControllerImpl } from '@app/controller/period/config/period-config-controller.impl';
 import { MailModule } from '@app/view/form/mail/mail.module';
 import { MailVolumeControllerImpl } from '@app/controller/form/mail/mail-volume-controller.impl';
 import { KpiModule } from '@app/view/form/kpi/kpi.module';
@@ -50,17 +50,17 @@ import { SMSTrafficControllerImpl } from '@app/controller/form/sms/smstraffic-co
 import { VoiceTrafficModule } from '@app/view/form/voice/voice-traffic.module';
 import { VoiceTrafficControllerImpl } from '@app/controller/form/voice/voice-traffic-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
+import { MailVolumeRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/mail/mail-volume-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { VoiceTrafficRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/voice/voice-traffic-rest-controller.impl';
+import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
+import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
+import { SimRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sim/sim-rest-controller.impl';
 import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
 import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
 import { KpiRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/kpi/kpi-rest-controller.impl';
+import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
 import { SMSTrafficRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sms/smstraffic-rest-controller.impl';
-import { MailVolumeRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/mail/mail-volume-rest-controller.impl';
-import { SimRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sim/sim-rest-controller.impl';
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
-import { PeriodInstanceRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/instance/period-instance-rest-controller.impl';
-import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
-import { VoiceTrafficRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/voice/voice-traffic-rest-controller.impl';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -88,7 +88,7 @@ true
         UserModule,
         GuardModule,
         PeriodModule,
-        PeriodInstanceModule,
+        PeriodConfigModule,
         MailModule,
         KpiModule,
         SIMModule,
@@ -101,23 +101,23 @@ true
     ],
     providers: [
         UseCaseScope,
+        MailVolumeRestControllerImpl,
+        LicenseeRestControllerImpl,
+        VoiceTrafficRestControllerImpl,
+        PeriodRestControllerImpl,
+        UserRestControllerImpl,
+        SimRestControllerImpl,
         LicenseTypeRestControllerImpl,
         UrlGuardRestControllerImpl,
         KpiRestControllerImpl,
+        PeriodConfigRestControllerImpl,
         SMSTrafficRestControllerImpl,
-        MailVolumeRestControllerImpl,
-        SimRestControllerImpl,
-        UserRestControllerImpl,
-        PeriodInstanceRestControllerImpl,
-        PeriodRestControllerImpl,
-        VoiceTrafficRestControllerImpl,
-        LicenseeRestControllerImpl,
         LicenseeControllerImpl,
         LicenseTypeControllerImpl,
         UserControllerImpl,
         GuardControllerImpl,
         PeriodControllerImpl,
-        PeriodInstanceControllerImpl,
+        PeriodConfigControllerImpl,
         MailVolumeControllerImpl,
         KpiControllerImpl,
         SimControllerImpl,

@@ -9,8 +9,8 @@ package bw.org.bocra.portal.form.kpi;
 import bw.org.bocra.portal.form.FormCriteria;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeVO;
-import bw.org.bocra.portal.period.instance.PeriodInstance;
-import bw.org.bocra.portal.period.instance.PeriodInstanceVO;
+import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodVO;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -61,7 +61,7 @@ public class KpiDaoImpl
 
         return (root, cq, cb) -> {
             cq.distinct(true);
-            Join<Kpi, PeriodInstance> join = root.join("periodInstance");
+            Join<Kpi, Period> join = root.join("period");
             return cb.between(join.<LocalDate>get("periodStartDate"), periodDate, periodDate);
         };
 
@@ -77,11 +77,11 @@ public class KpiDaoImpl
     {
         // TODO verify behavior of toKpiVO
         super.toKpiVO(source, target);
-        // WARNING! No conversion for target.periodInstance (can't convert source.getPeriodInstance():bw.org.bocra.portal.period.instance.PeriodInstance to bw.org.bocra.portal.period.instance.PeriodInstanceVO
-        if(source.getPeriodInstance() != null) {
-            PeriodInstanceVO vo = new PeriodInstanceVO();
-            getPeriodInstanceDao().toPeriodInstanceVO(source.getPeriodInstance(), vo);
-            target.setPeriodInstance(vo);
+        // WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.config.Period to bw.org.bocra.portal.period.config.PeriodVO
+        if(source.getPeriod() != null) {
+            PeriodVO vo = new PeriodVO();
+            getPeriodDao().toPeriodVO(source.getPeriod(), vo);
+            target.setPeriod(vo);
         }
 
         // WARNING! No conversion for target.licensee (can't convert source.getLicensee():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
@@ -142,10 +142,10 @@ public class KpiDaoImpl
         // TODO verify behavior of kpiVOToEntity
         super.kpiVOToEntity(source, target, copyIfNull);
 
-        if(source.getPeriodInstance() != null) {
-            PeriodInstance instance = PeriodInstance.Factory.newInstance();
-            getPeriodInstanceDao().periodInstanceVOToEntity(source.getPeriodInstance(), instance, copyIfNull);
-            target.setPeriodInstance(instance);
+        if(source.getPeriod() != null) {
+            Period instance = Period.Factory.newInstance();
+            getPeriodDao().periodVOToEntity(source.getPeriod(), instance, copyIfNull);
+            target.setPeriod(instance);
         }
 
         if(source.getLicensee() != null) {

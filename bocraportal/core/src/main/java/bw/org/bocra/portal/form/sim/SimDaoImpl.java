@@ -9,8 +9,8 @@ package bw.org.bocra.portal.form.sim;
 import bw.org.bocra.portal.form.FormCriteria;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeVO;
-import bw.org.bocra.portal.period.instance.PeriodInstance;
-import bw.org.bocra.portal.period.instance.PeriodInstanceVO;
+import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodVO;
 
 import java.util.Collection;
 
@@ -51,12 +51,12 @@ public class SimDaoImpl
             target.setLicensee(licensee);
         }
         
-        // WARNING! No conversion for target.periodInstance (can't convert source.getPeriodInstance():bw.org.bocra.portal.period.instance.PeriodInstance to bw.org.bocra.portal.period.instance.PeriodInstanceVO
-        if(source.getPeriodInstance() != null) {
-            PeriodInstanceVO instance = new PeriodInstanceVO();
-            getPeriodInstanceDao().toPeriodInstanceVO(source.getPeriodInstance(), instance);
+        // WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.config.Period to bw.org.bocra.portal.period.config.PeriodVO
+        if(source.getPeriod() != null) {
+            PeriodVO instance = new PeriodVO();
+            getPeriodDao().toPeriodVO(source.getPeriod(), instance);
 
-            target.setPeriodInstance(instance);
+            target.setPeriod(instance);
         }
     }
 
@@ -117,11 +117,11 @@ public class SimDaoImpl
             target.setLicensee(licensee);
         }
 
-        if(source.getPeriodInstance() != null) {
-            PeriodInstance instance = PeriodInstance.Factory.newInstance();
-            getPeriodInstanceDao().periodInstanceVOToEntity(source.getPeriodInstance(), instance, copyIfNull);
+        if(source.getPeriod() != null) {
+            Period instance = Period.Factory.newInstance();
+            getPeriodDao().periodVOToEntity(source.getPeriod(), instance, copyIfNull);
 
-            target.setPeriodInstance(instance);
+            target.setPeriod(instance);
         }
     }
 }

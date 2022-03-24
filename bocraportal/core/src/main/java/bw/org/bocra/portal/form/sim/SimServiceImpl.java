@@ -93,15 +93,15 @@ public class SimServiceImpl
      * @see bw.org.bocra.portal.form.sim.SimService#search(FormCriteria)
      */
     @Override
-    protected Collection<SimVO> handleSearch(FormCriteria searchCriteria, Integer pageNumber, Integer pageSize)
+    protected Collection<SimVO> handleSearch(FormCriteria searchCriteria)
             throws Exception {
 
         Collection<Sim> sims = null;
 
-        if(pageNumber < 0 || pageSize < 1) {
+        if(searchCriteria.getPageNumber() < 0 || searchCriteria.getPageSize() < 1) {
             sims = simRepository.findAll();
         } else {
-            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdBy").descending());
+            Pageable pageable = PageRequest.of(searchCriteria.getPageNumber(), searchCriteria.getPageSize(), Sort.by("createdBy").descending());
             sims = simRepository.findAll(pageable).getContent();
         }
         

@@ -8,8 +8,8 @@ package bw.org.bocra.portal.form.mail;
 
 import org.springframework.stereotype.Repository;
 
-import bw.org.bocra.portal.period.instance.PeriodInstance;
-import bw.org.bocra.portal.period.instance.PeriodInstanceVO;
+import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodVO;
 
 /**
  * @see MailVolume
@@ -28,14 +28,14 @@ public class MailVolumeDaoImpl
     {
         // TODO verify behavior of toMailVolumeVO
         super.toMailVolumeVO(source, target);
-        // WARNING! No conversion for target.periodInstance (can't convert source.getPeriodInstance():bw.org.bocra.portal.period.instance.PeriodInstance to bw.org.bocra.portal.period.instance.PeriodInstanceVO
+        // WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.config.Period to bw.org.bocra.portal.period.config.PeriodVO
 
-        if(source.getPeriodInstance() != null) {
+        if(source.getPeriod() != null) {
 
-            PeriodInstanceVO vo = new PeriodInstanceVO();
-            getPeriodInstanceDao().toPeriodInstanceVO(source.getPeriodInstance(), vo);
+            PeriodVO vo = new PeriodVO();
+            getPeriodDao().toPeriodVO(source.getPeriod(), vo);
 
-            target.setPeriodInstance(vo);
+            target.setPeriod(vo);
         }
 
     }
@@ -90,12 +90,12 @@ public class MailVolumeDaoImpl
         // TODO verify behavior of mailVolumeVOToEntity
         super.mailVolumeVOToEntity(source, target, copyIfNull);
 
-        if(source.getPeriodInstance() != null) {
+        if(source.getPeriod() != null) {
 
-            PeriodInstance instance = PeriodInstance.Factory.newInstance();
-            getPeriodInstanceDao().periodInstanceVOToEntity(source.getPeriodInstance(), instance, copyIfNull);
+            Period instance = Period.Factory.newInstance();
+            getPeriodDao().periodVOToEntity(source.getPeriod(), instance, copyIfNull);
 
-            target.setPeriodInstance(instance);
+            target.setPeriod(instance);
         }
 
     }

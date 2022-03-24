@@ -36,8 +36,8 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/period/period.module')).PeriodModule
     },
     {
-      path: 'periodinstance', 
-      loadChildren: async () => (await import('@app/view/period/instance/period-instance.module')).PeriodInstanceModule
+      path: 'periodconfig', 
+      loadChildren: async () => (await import('@app/view/period/config/period-config.module')).PeriodConfigModule
     },
     {
       path: 'mail', 

@@ -27,8 +27,12 @@ public class SMSTrafficServiceImpl
     protected  SMSTrafficVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  SMSTrafficVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sms.SMSTrafficService.handleFindById(Long id) Not implemented!");
+
+        if(id == null) {
+            return null;
+        }
+
+        return getSMSTrafficDao().toSMSTrafficVO(getSMSTrafficDao().get(id));
     }
 
     /**
@@ -38,8 +42,17 @@ public class SMSTrafficServiceImpl
     protected  SMSTrafficVO handleSave(SMSTrafficVO smsTrafficVO)
         throws Exception
     {
-        // TODO implement protected  SMSTrafficVO handleSave(SMSTrafficVO smsTrafficVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sms.SMSTrafficService.handleSave(SMSTrafficVO smsTrafficVO) Not implemented!");
+        SMSTraffic traffic = getSMSTrafficDao().sMSTrafficVOToEntity(smsTrafficVO);
+
+        if(smsTrafficVO.getId() == null) {
+            traffic = getSMSTrafficDao().create(traffic);
+
+        } else {
+            sMSTrafficDao.update(traffic);
+        }
+
+        return getSMSTrafficDao().toSMSTrafficVO(traffic);
+
     }
 
     /**
@@ -49,8 +62,13 @@ public class SMSTrafficServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sms.SMSTrafficService.handleRemove(Long id) Not implemented!");
+        if(id == null) {
+            return false;
+        }
+
+        sMSTrafficDao.remove(id);
+
+        return true;
     }
 
     /**
@@ -60,8 +78,7 @@ public class SMSTrafficServiceImpl
     protected  Collection<SMSTrafficVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<SMSTrafficVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sms.SMSTrafficService.handleGetAll() Not implemented!");
+        return (Collection<SMSTrafficVO>) sMSTrafficDao.loadAll(SMSTrafficDao.TRANSFORM_SMSTRAFFICVO);
     }
 
     /**
@@ -71,8 +88,8 @@ public class SMSTrafficServiceImpl
     protected  Collection<SMSTrafficVO> handleSearch(FormCriteria searchCriteria)
         throws Exception
     {
-        // TODO implement protected  Collection<SMSTrafficVO> handleSearch(FormCriteria searchCriteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sms.SMSTrafficService.handleSearch(FormCriteria searchCriteria) Not implemented!");
+        Collection<SMSTraffic> entities = getSMSTrafficDao().findByCriteria(searchCriteria);
+        return getSMSTrafficDao().toSMSTrafficVOCollection(entities);
     }
 
     /**
@@ -82,8 +99,7 @@ public class SMSTrafficServiceImpl
     protected  Collection<SMSTrafficVO> handleGetAll(Integer pageNumber, Integer pageSize)
         throws Exception
     {
-        // TODO implement protected  Collection<SMSTrafficVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.sms.SMSTrafficService.handleGetAll(Integer pageNumber, Integer pageSize) Not implemented!");
+        return (Collection<SMSTrafficVO>) getSMSTrafficDao().loadAll(SMSTrafficDao.TRANSFORM_SMSTRAFFICVO, pageNumber, pageSize);
     }
 
 }

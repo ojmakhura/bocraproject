@@ -27,7 +27,7 @@ public class SMSTrafficRestControllerImpl extends SMSTrafficRestControllerBase {
 
     @Override
     public ResponseEntity<SMSTrafficVO> handleFindById(Long id) {
-        Optional<SMSTrafficVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<SMSTrafficVO> data = Optional.of(sMSTrafficService.findById(id));
         ResponseEntity<SMSTrafficVO> response;
 
         if(data.isPresent()) {
@@ -41,7 +41,7 @@ public class SMSTrafficRestControllerImpl extends SMSTrafficRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<SMSTrafficVO>> handleGetAll() {
-        Optional<Collection<SMSTrafficVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<SMSTrafficVO>> data = Optional.of(sMSTrafficService.getAll());
         ResponseEntity<Collection<SMSTrafficVO>> response;
 
         if(data.isPresent()) {
@@ -55,7 +55,7 @@ public class SMSTrafficRestControllerImpl extends SMSTrafficRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<SMSTrafficVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<SMSTrafficVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<SMSTrafficVO>> data = Optional.of(sMSTrafficService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<SMSTrafficVO>> response;
 
         if(data.isPresent()) {
@@ -69,7 +69,7 @@ public class SMSTrafficRestControllerImpl extends SMSTrafficRestControllerBase {
 
     @Override
     public ResponseEntity<Boolean> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Boolean> data = Optional.of(sMSTrafficService.remove(id));
         ResponseEntity<Boolean> response;
 
         if(data.isPresent()) {
@@ -82,8 +82,8 @@ public class SMSTrafficRestControllerImpl extends SMSTrafficRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<SMSTrafficVO> handleSave(SimVO smsTrafficVO) {
-        Optional<SMSTrafficVO> data = Optional.empty(); // TODO: Add custom code here;
+    public ResponseEntity<SMSTrafficVO> handleSave(SMSTrafficVO smsTrafficVO) {
+        Optional<SMSTrafficVO> data = Optional.of(sMSTrafficService.save(smsTrafficVO)); // TODO: Add custom code here;
         ResponseEntity<SMSTrafficVO> response;
 
         if(data.isPresent()) {
@@ -97,7 +97,7 @@ public class SMSTrafficRestControllerImpl extends SMSTrafficRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<SMSTrafficVO>> handleSearch(FormCriteria searchCriteria) {
-        Optional<Collection<SMSTrafficVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<SMSTrafficVO>> data = Optional.of(sMSTrafficService.search(searchCriteria));
         ResponseEntity<Collection<SMSTrafficVO>> response;
 
         if(data.isPresent()) {
