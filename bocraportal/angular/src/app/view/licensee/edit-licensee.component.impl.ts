@@ -4,6 +4,11 @@ import { EditLicenseeComponent } from '@app/view/licensee/edit-licensee.componen
 import { EditLicenseeSaveForm } from '@app/view/licensee/edit-licensee.component';
 import { EditLicenseeNewForm } from '@app/view/licensee/edit-licensee.component';
 import { EditLicenseeSearchForm } from '@app/view/licensee/edit-licensee.component';
+import * as licenseeSelectors from '@app/store/licensee/licensee.selector';
+import * as licenseeActions from '@app/store/licensee/licensee.action';
+import { Observable } from 'rxjs';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -12,14 +17,28 @@ import { EditLicenseeSearchForm } from '@app/view/licensee/edit-licensee.compone
 })
 export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
+  licensee$: Observable<LicenseeVO>;
+  licensees$: Observable<LicenseeVO[]>;
+  id$: Observable<number>;
+
     constructor(private injector: Injector) {
         super(injector);
+        this.licensee$ = this.store.pipe(select(licenseeSelectors.selectLicensee))
+        this.licensees$ = this.store.pipe(select(licenseeSelectors.selectLicensees))
+        this.id$ = this.store.pipe(select(licenseeSelectors.selectId))
     }
 
     beforeOnInit(){
     }
 	
     afterOnInit() {
+      if(this.useCaseScope.pageVariables['id']) {
+        this.store.dispatch(licenseeActions.findById({id: this.useCaseScope.pageVariables['id']}));
+      }
+  
+      this.licensee$.subscribe(licensee => {
+        this.setEditLicenseeSaveForm({licenseeVO: licensee} as EditLicenseeSaveForm);
+      });
     }
 
     doNgAfterViewInit() {
@@ -39,7 +58,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
      * This method may be overwritten
      */
     beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
-
+      this.store.dispatch(licenseeActions.saveLicensee({licensee: form.licenseeVO}));
     }
 
     /**
@@ -60,7 +79,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
      * This method may be overwritten
      */
     beforeEditLicenseeNew(form: EditLicenseeNewForm): void {
-
+      this.store.dispatch(licenseeActions.reset());
     }
 
     /**

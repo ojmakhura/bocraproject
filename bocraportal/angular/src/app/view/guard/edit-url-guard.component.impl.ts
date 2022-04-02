@@ -7,7 +7,6 @@ import { EditURLGuardSearchForm } from '@app/view/guard/edit-url-guard.component
 import { EditURLGuardComponent, EditURLGuardDeleteForm } from '@app/view/guard/edit-url-guard.component';
 import { SelectItem } from '@app/utils/select-item';
 import { environment } from '@env/environment';
-import { saveGuard } from '@app/store/guard/guard.action';
 import * as guardSelectors from '@app/store/guard/guard.selector';
 import * as guardActions from '@app/store/guard/guard.action';
 import { KeycloakService } from 'keycloak-angular';
@@ -91,7 +90,7 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
      * This method may be overwritten
      */
     beforeEditURLGuardSave(form: EditURLGuardSaveForm): void {
-      this.store.dispatch(saveGuard({guard: form.urlGuardVO}));
+      this.store.dispatch(guardActions.saveGuard({guard: form.urlGuardVO}));
     }
 
     /**
@@ -144,15 +143,12 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
     }
     
   afterSetEditURLGuardDeleteForm(form: EditURLGuardDeleteForm): void {
-    console.log('1');
     
   }
 
   beforeEditURLGuardDelete(form: EditURLGuardDeleteForm): void {
-    console.log('2');
   }
 
   afterEditURLGuardDelete(form: EditURLGuardDeleteForm): void {
-    console.log('3');
   }
 }

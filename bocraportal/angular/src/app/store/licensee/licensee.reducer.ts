@@ -74,9 +74,7 @@ export const licenseeReducer = createReducer(
     }))
 );
 
-export const licenseeFeature = createFeature(
-    {
+export const licenseeFeature = createFeature({
         name: licenseeKey,
         reducer: licenseeReducer
-    }
-);
+});

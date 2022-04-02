@@ -18,7 +18,6 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
     }
 	
     afterOnInit() {
-        this.addLicenseesDummyData();
     }
 
     doNgAfterViewInit() {
