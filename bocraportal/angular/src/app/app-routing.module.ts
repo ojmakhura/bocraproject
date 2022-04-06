@@ -40,24 +40,8 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/period/config/period-config.module')).PeriodConfigModule
     },
     {
-      path: 'mail', 
-      loadChildren: async () => (await import('@app/view/form/mail/mail.module')).MailModule
-    },
-    {
-      path: 'kpi', 
-      loadChildren: async () => (await import('@app/view/form/kpi/kpi.module')).KpiModule
-    },
-    {
-      path: 'sim', 
-      loadChildren: async () => (await import('@app/view/form/sim/sim.module')).SIMModule
-    },
-    {
-      path: 'smstraffic', 
-      loadChildren: async () => (await import('@app/view/form/sms/sms-traffic.module')).SMSTrafficModule
-    },
-    {
-      path: 'voicetraffic', 
-      loadChildren: async () => (await import('@app/view/form/voice/voice-traffic.module')).VoiceTrafficModule
+      path: 'form', 
+      loadChildren: async () => (await import('@app/view/form/form.module')).FormModule
     },
   ]),
   // Fallback when no prior route is matched

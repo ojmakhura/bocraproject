@@ -39,27 +39,14 @@ import { PeriodModule } from '@app/view/period/period.module';
 import { PeriodControllerImpl } from '@app/controller/period/period-controller.impl';
 import { PeriodConfigModule } from '@app/view/period/config/period-config.module';
 import { PeriodConfigControllerImpl } from '@app/controller/period/config/period-config-controller.impl';
-import { MailModule } from '@app/view/form/mail/mail.module';
-import { MailVolumeControllerImpl } from '@app/controller/form/mail/mail-volume-controller.impl';
-import { KpiModule } from '@app/view/form/kpi/kpi.module';
-import { KpiControllerImpl } from '@app/controller/form/kpi/kpi-controller.impl';
-import { SIMModule } from '@app/view/form/sim/sim.module';
-import { SimControllerImpl } from '@app/controller/form/sim/sim-controller.impl';
-import { SMSTrafficModule } from '@app/view/form/sms/sms-traffic.module';
-import { SMSTrafficControllerImpl } from '@app/controller/form/sms/smstraffic-controller.impl';
-import { VoiceTrafficModule } from '@app/view/form/voice/voice-traffic.module';
-import { VoiceTrafficControllerImpl } from '@app/controller/form/voice/voice-traffic-controller.impl';
+import { FormModule } from '@app/view/form/form.module';
+import { FormControllerImpl } from '@app/controller/form/form-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
-import { SimRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sim/sim-rest-controller.impl';
 import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
-import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
 import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
-import { MailVolumeRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/mail/mail-volume-rest-controller.impl';
-import { KpiRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/kpi/kpi-rest-controller.impl';
-import { SMSTrafficRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sms/smstraffic-rest-controller.impl';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
-import { VoiceTrafficRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/voice/voice-traffic-rest-controller.impl';
+import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
 import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
 import { AuthModule } from './auth';
 true
@@ -89,11 +76,7 @@ true
         GuardModule,
         PeriodModule,
         PeriodConfigModule,
-        MailModule,
-        KpiModule,
-        SIMModule,
-        SMSTrafficModule,
-        VoiceTrafficModule,
+        FormModule,
         AuthModule,
         AppRoutingModule, // must be imported as the last module as it contains the fallback route
     ],
@@ -101,16 +84,11 @@ true
     ],
     providers: [
         UseCaseScope,
-        SimRestControllerImpl,
         UrlGuardRestControllerImpl,
-        LicenseTypeRestControllerImpl,
         PeriodConfigRestControllerImpl,
-        MailVolumeRestControllerImpl,
-        KpiRestControllerImpl,
-        SMSTrafficRestControllerImpl,
-        LicenseeRestControllerImpl,
-        VoiceTrafficRestControllerImpl,
+        LicenseTypeRestControllerImpl,
         PeriodRestControllerImpl,
+        LicenseeRestControllerImpl,
         UserRestControllerImpl,
         LicenseeControllerImpl,
         LicenseTypeControllerImpl,
@@ -118,11 +96,7 @@ true
         GuardControllerImpl,
         PeriodControllerImpl,
         PeriodConfigControllerImpl,
-        MailVolumeControllerImpl,
-        KpiControllerImpl,
-        SimControllerImpl,
-        SMSTrafficControllerImpl,
-        VoiceTrafficControllerImpl,
+        FormControllerImpl,
     ],
     bootstrap: [AppComponent]
 })
