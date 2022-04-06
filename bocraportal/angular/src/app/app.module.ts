@@ -50,17 +50,17 @@ import { SMSTrafficControllerImpl } from '@app/controller/form/sms/smstraffic-co
 import { VoiceTrafficModule } from '@app/view/form/voice/voice-traffic.module';
 import { VoiceTrafficControllerImpl } from '@app/controller/form/voice/voice-traffic-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
+import { SimRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sim/sim-rest-controller.impl';
+import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
+import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
+import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
 import { MailVolumeRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/mail/mail-volume-rest-controller.impl';
+import { KpiRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/kpi/kpi-rest-controller.impl';
+import { SMSTrafficRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sms/smstraffic-rest-controller.impl';
 import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { VoiceTrafficRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/voice/voice-traffic-rest-controller.impl';
 import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
 import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
-import { SimRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sim/sim-rest-controller.impl';
-import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
-import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
-import { KpiRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/kpi/kpi-rest-controller.impl';
-import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
-import { SMSTrafficRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/sms/smstraffic-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -101,17 +101,17 @@ true
     ],
     providers: [
         UseCaseScope,
+        SimRestControllerImpl,
+        UrlGuardRestControllerImpl,
+        LicenseTypeRestControllerImpl,
+        PeriodConfigRestControllerImpl,
         MailVolumeRestControllerImpl,
+        KpiRestControllerImpl,
+        SMSTrafficRestControllerImpl,
         LicenseeRestControllerImpl,
         VoiceTrafficRestControllerImpl,
         PeriodRestControllerImpl,
         UserRestControllerImpl,
-        SimRestControllerImpl,
-        LicenseTypeRestControllerImpl,
-        UrlGuardRestControllerImpl,
-        KpiRestControllerImpl,
-        PeriodConfigRestControllerImpl,
-        SMSTrafficRestControllerImpl,
         LicenseeControllerImpl,
         LicenseTypeControllerImpl,
         UserControllerImpl,
