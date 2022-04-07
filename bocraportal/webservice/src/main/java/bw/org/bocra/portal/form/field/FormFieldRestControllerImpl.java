@@ -25,7 +25,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
 
     @Override
     public ResponseEntity<FormFieldVO> handleFindById(Long id) {
-        Optional<FormFieldVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<FormFieldVO> data = Optional.of(formFieldService.findById(id));
         ResponseEntity<FormFieldVO> response;
 
         if(data.isPresent()) {
@@ -39,7 +39,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<FormFieldVO>> handleGetAll() {
-        Optional<Collection<FormFieldVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<FormFieldVO>> data = Optional.of(formFieldService.getAll());
         ResponseEntity<Collection<FormFieldVO>> response;
 
         if(data.isPresent()) {
@@ -53,7 +53,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<FormFieldVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<FormFieldVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<FormFieldVO>> data = Optional.of(formFieldService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<FormFieldVO>> response;
 
         if(data.isPresent()) {
@@ -67,7 +67,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
 
     @Override
     public ResponseEntity<Boolean> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Boolean> data = Optional.of(formFieldService.remove(id));
         ResponseEntity<Boolean> response;
 
         if(data.isPresent()) {
@@ -80,8 +80,8 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<FormFieldVO> handleSave(FormFieldVO formFIeldVO) {
-        Optional<FormFieldVO> data = Optional.empty(); // TODO: Add custom code here;
+    public ResponseEntity<FormFieldVO> handleSave(FormFieldVO formFieldVO) {
+        Optional<FormFieldVO> data = Optional.of(formFieldService.save(formFieldVO));
         ResponseEntity<FormFieldVO> response;
 
         if(data.isPresent()) {

@@ -9,6 +9,8 @@
 package bw.org.bocra.portal.form;
 
 import bw.org.bocra.portal.guard.UrlGuardVO;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +29,12 @@ public class FormServiceImpl
     protected  FormVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  FormVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.FormService.handleFindById(Long id) Not implemented!");
+
+        if(id == null) {
+            return null;
+        }
+
+        return getFormDao().toFormVO(getFormDao().load(id));
     }
 
     /**
@@ -38,8 +44,16 @@ public class FormServiceImpl
     protected  FormVO handleSave(FormVO formVO)
         throws Exception
     {
-        // TODO implement protected  FormVO handleSave(FormVO formVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.FormService.handleSave(FormVO formVO) Not implemented!");
+
+        Form form = getFormDao().formVOToEntity(formVO);
+
+        if(formVO.getId() == null) {
+            form = getFormDao().create(form);
+        } else {
+            getFormDao().update(form);
+        }
+
+        return getFormDao().toFormVO(form);
     }
 
     /**
@@ -49,8 +63,12 @@ public class FormServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.FormService.handleRemove(Long id) Not implemented!");
+        if(id == null) {
+            return false;
+        }
+
+        getFormDao().remove(id);
+        return true;
     }
 
     /**
@@ -60,8 +78,9 @@ public class FormServiceImpl
     protected  Collection<FormVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<FormVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.FormService.handleGetAll() Not implemented!");
+
+        return (Collection<FormVO>) getFormDao().loadAll(FormDao.TRANSFORM_FORMVO);
+
     }
 
     /**
@@ -71,6 +90,9 @@ public class FormServiceImpl
     protected  Collection<FormVO> handleSearch(FormCriteria criteria)
         throws Exception
     {
+
+        
+
         // TODO implement protected  Collection<FormVO> handleSearch(FormCriteria criteria)
         throw new UnsupportedOperationException("bw.org.bocra.portal.form.FormService.handleSearch(FormCriteria criteria) Not implemented!");
     }
@@ -79,11 +101,10 @@ public class FormServiceImpl
      * @see bw.org.bocra.portal.form.FormService#getAll(Integer, Integer)
      */
     @Override
-    protected  Collection<UrlGuardVO> handleGetAll(Integer pageNumber, Integer pageSize)
+    protected  Collection<FormVO> handleGetAll(Integer pageNumber, Integer pageSize)
         throws Exception
     {
-        // TODO implement protected  Collection<UrlGuardVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.FormService.handleGetAll(Integer pageNumber, Integer pageSize) Not implemented!");
+        return (Collection<FormVO>) getFormDao().loadAll(FormDao.TRANSFORM_FORMVO, pageNumber, pageSize);
     }
 
 }

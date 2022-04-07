@@ -6,7 +6,16 @@
  */
 package bw.org.bocra.portal.form;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
+
+import bw.org.bocra.portal.form.field.FormField;
+import bw.org.bocra.portal.form.field.FormFieldVO;
+import bw.org.bocra.portal.type.LicenseType;
+import bw.org.bocra.portal.type.LicenseTypeVO;
 
 /**
  * @see Form
@@ -25,6 +34,39 @@ public class FormDaoImpl
     {
         // TODO verify behavior of toFormVO
         super.toFormVO(source, target);
+
+        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
+
+            if(target.getLicenseTypes() == null) {
+                target.setLicenseTypes(new ArrayList<>());
+            }
+            
+            for (LicenseType entity : source.getLicenseTypes()) {
+                LicenseTypeVO type = new LicenseTypeVO();
+                type.setId(entity.getId());
+                type.setCode(entity.getCode());
+                type.setDescription(entity.getDescription());
+                type.setName(entity.getName());
+                
+                target.getLicenseTypes().add(type);
+            }
+        }
+
+        if(!CollectionUtils.isEmpty(source.getFormFields())) {
+            if(target.getFormFields() == null) {
+                target.setFormFields(new ArrayList<>());
+            }
+
+            for (FormField entity : source.getFormFields()) {
+                FormFieldVO field = new FormFieldVO();
+                field.setForm(target);
+                //field.setCreatedBy(entity);
+
+                field.setFieldName(entity.getFieldName());
+                field.setFieldType(entity.getFieldType());
+                field.setId(entity.getId());
+            }
+        }
     }
 
     /**
@@ -44,10 +86,6 @@ public class FormDaoImpl
      */
     private Form loadFormFromFormVO(FormVO formVO)
     {
-        // TODO implement loadFormFromFormVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.loadFormFromFormVO(FormVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (formVO.getId() == null)
         {
             return  Form.Factory.newInstance();
@@ -56,7 +94,6 @@ public class FormDaoImpl
         {
             return this.load(formVO.getId());
         }
-        */
     }
 
     /**
@@ -81,5 +118,35 @@ public class FormDaoImpl
     {
         // TODO verify behavior of formVOToEntity
         super.formVOToEntity(source, target, copyIfNull);
+
+        if(!CollectionUtils.isEmpty(source.getFormFields())) {
+
+            if(target.getFormFields() == null) {
+                target.setFormFields(new ArrayList<>());
+            }
+
+            for(FormFieldVO field : source.getFormFields()) {
+
+                FormField entity = FormField.Factory.newInstance();
+                getFormFieldDao().formFieldVOToEntity(field, entity, copyIfNull);
+                target.getFormFields().add(entity);
+            }
+
+        }
+
+        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
+
+            if(target.getLicenseTypes() == null) {
+                target.setLicenseTypes(new ArrayList<>());
+            }
+
+            for(LicenseTypeVO type : source.getLicenseTypes()) {
+                LicenseType entity = LicenseType.Factory.newInstance();
+                getLicenseTypeDao().licenseTypeVOToEntity(type, entity, copyIfNull);
+                target.getLicenseTypes().add(entity);
+            }
+        }
+
     }
+
 }

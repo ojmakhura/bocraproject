@@ -8,6 +8,9 @@ package bw.org.bocra.portal.form.field;
 
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormVO;
+
 /**
  * @see FormField
  */
@@ -26,6 +29,14 @@ public class FormFieldDaoImpl
         // TODO verify behavior of toFormFieldVO
         super.toFormFieldVO(source, target);
         // WARNING! No conversion for target.form (can't convert source.getForm():bw.org.bocra.portal.form.Form to bw.org.bocra.portal.form.FormVO
+        if(source.getForm() != null) {
+            FormVO form = new FormVO();
+            form.setId(source.getForm().getId());
+            form.setCode (source.getForm().getCode());
+            form.setFormName(source.getForm().getFormName());
+            
+            target.setForm(form);
+        }
     }
 
     /**
@@ -45,10 +56,6 @@ public class FormFieldDaoImpl
      */
     private FormField loadFormFieldFromFormFieldVO(FormFieldVO formFieldVO)
     {
-        // TODO implement loadFormFieldFromFormFieldVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.field.loadFormFieldFromFormFieldVO(FormFieldVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (formFieldVO.getId() == null)
         {
             return  FormField.Factory.newInstance();
@@ -57,7 +64,6 @@ public class FormFieldDaoImpl
         {
             return this.load(formFieldVO.getId());
         }
-        */
     }
 
     /**
@@ -82,5 +88,18 @@ public class FormFieldDaoImpl
     {
         // TODO verify behavior of formFieldVOToEntity
         super.formFieldVOToEntity(source, target, copyIfNull);
+
+        if(source.getForm() != null) {
+
+            Form form = Form.Factory.newInstance();
+            formDao.formVOToEntity(source.getForm(), form, copyIfNull);
+            
+            if(form.getId() == null) {
+                form = formDao.create(form);
+            }
+
+            target.setForm(form);
+        } 
+
     }
 }

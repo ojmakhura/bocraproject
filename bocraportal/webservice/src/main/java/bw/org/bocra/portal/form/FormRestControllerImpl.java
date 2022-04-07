@@ -25,7 +25,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     @Override
     public ResponseEntity<FormVO> handleFindById(Long id) {
-        Optional<FormVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<FormVO> data = Optional.of(formService.findById(id));
         ResponseEntity<FormVO> response;
 
         if(data.isPresent()) {
@@ -39,7 +39,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<FormVO>> handleGetAll() {
-        Optional<Collection<FormVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<FormVO>> data = Optional.of(formService.getAll());
         ResponseEntity<Collection<FormVO>> response;
 
         if(data.isPresent()) {
@@ -53,7 +53,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<FormVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<FormVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<FormVO>> data = Optional.of(formService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<FormVO>> response;
 
         if(data.isPresent()) {
@@ -67,7 +67,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     @Override
     public ResponseEntity<Boolean> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Boolean> data = Optional.of(formService.remove(id)); 
         ResponseEntity<Boolean> response;
 
         if(data.isPresent()) {
@@ -81,7 +81,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     @Override
     public ResponseEntity<FormVO> handleSave(FormVO formVO) {
-        Optional<FormVO> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<FormVO> data = Optional.of(formService.save(formVO));
         ResponseEntity<FormVO> response;
 
         if(data.isPresent()) {
@@ -95,7 +95,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<FormVO>> handleSearch(FormCriteria criteria) {
-        Optional<Collection<FormVO>> data = Optional.empty(); // TODO: Add custom code here;
+        Optional<Collection<FormVO>> data = Optional.of(formService.search(criteria)); 
         ResponseEntity<Collection<FormVO>> response;
 
         if(data.isPresent()) {

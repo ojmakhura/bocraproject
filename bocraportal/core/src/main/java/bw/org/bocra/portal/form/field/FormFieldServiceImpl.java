@@ -26,19 +26,30 @@ public class FormFieldServiceImpl
     protected  FormFieldVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  FormFieldVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.field.FormFieldService.handleFindById(Long id) Not implemented!");
+        if(id == null) {
+            return null;
+        }
+
+        return (FormFieldVO) formFieldDao.get(FormFieldDao.TRANSFORM_FORMFIELDVO, id);
+
     }
 
     /**
      * @see bw.org.bocra.portal.form.field.FormFieldService#save(FormFieldVO)
      */
     @Override
-    protected  FormFieldVO handleSave(FormFieldVO formFIeldVO)
+    protected  FormFieldVO handleSave(FormFieldVO formFieldVO)
         throws Exception
     {
-        // TODO implement protected  FormFieldVO handleSave(FormFieldVO formFIeldVO)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.field.FormFieldService.handleSave(FormFieldVO formFIeldVO) Not implemented!");
+
+        FormField field = getFormFieldDao().formFieldVOToEntity(formFieldVO);
+
+        if(field.getId() == null) {
+            field = getFormFieldDao().create(field);
+        } else {
+            getFormFieldDao().update(field);
+        }
+        return getFormFieldDao().toFormFieldVO(field);
     }
 
     /**
@@ -48,8 +59,13 @@ public class FormFieldServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.field.FormFieldService.handleRemove(Long id) Not implemented!");
+        if(id == null) {
+            return false;
+        }
+
+        formFieldRepository.deleteById(id);
+
+        return true;
     }
 
     /**
@@ -59,8 +75,7 @@ public class FormFieldServiceImpl
     protected  Collection<FormFieldVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<FormFieldVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.field.FormFieldService.handleGetAll() Not implemented!");
+        return (Collection<FormFieldVO>) getFormFieldDao().loadAll(FormFieldDao.TRANSFORM_FORMFIELDVO);
     }
 
     /**
@@ -70,8 +85,7 @@ public class FormFieldServiceImpl
     protected  Collection<FormFieldVO> handleGetAll(Integer pageNumber, Integer pageSize)
         throws Exception
     {
-        // TODO implement protected  Collection<FormFieldVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.field.FormFieldService.handleGetAll(Integer pageNumber, Integer pageSize) Not implemented!");
+        return (Collection<FormFieldVO>) getFormFieldDao().loadAll(FormFieldDao.TRANSFORM_FORMFIELDVO, pageNumber, pageSize);
     }
 
 }
