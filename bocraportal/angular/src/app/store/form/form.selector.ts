@@ -2,6 +2,34 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { formKey, FormState } from './form.reducer';
 
-export const selectFormState = createFeatureSelector<FormState> (
-    formKey
+export const selectFormState = createFeatureSelector<FormState>(formKey);
+
+export const selectForm = createSelector(
+    selectFormState,
+      (state: FormState) => state.form
+);
+
+export const selectForms = createSelector(
+    selectFormState,
+      (state: FormState) => state.forms
+);
+
+export const selectError = createSelector(
+    selectFormState,
+      (state: FormState) => state.error
+);
+
+export const selectId = createSelector(
+    selectFormState,
+      (state: FormState) => state.id
+);
+
+export const selectLoading = createSelector(
+    selectFormState,
+      (state: FormState) => state.loading
+);
+
+export const selectCriteria = createSelector(
+    selectFormState,
+      (state: FormState) => state.searchCriteria
 );

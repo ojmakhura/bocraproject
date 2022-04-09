@@ -2,6 +2,7 @@
 import { Component, Injector } from '@angular/core';
 import { SearchPeriodsComponent } from '@app/view/period/search-periods.component';
 import { SearchPeriodsSearchForm } from '@app/view/period/search-periods.component';
+import { SearchPeriodsVarsForm } from '@app/view/period/search-periods.component';
 
 @Component({
   selector: 'app-search-periods',
@@ -25,6 +26,13 @@ export class SearchPeriodsComponentImpl extends SearchPeriodsComponent {
     }
 
     handleFormChanges(change: any) {
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    afterSetSearchPeriodsVarsForm(form: SearchPeriodsVarsForm): void {
+
     }
 
     /**

@@ -2,6 +2,7 @@
 import { Component, Injector } from '@angular/core';
 import { SearchUsersComponent } from '@app/view/user/search-users.component';
 import { SearchUsersSearchForm } from '@app/view/user/search-users.component';
+import { SearchUsersVarsForm } from '@app/view/user/search-users.component';
 
 @Component({
   selector: 'app-search-users',
@@ -18,12 +19,20 @@ export class SearchUsersComponentImpl extends SearchUsersComponent {
     }
 	
     afterOnInit() {
+        this.addUsersDummyData();
     }
 
     doNgAfterViewInit() {
     }
 
     handleFormChanges(change: any) {
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    afterSetSearchUsersVarsForm(form: SearchUsersVarsForm): void {
+
     }
 
     /**

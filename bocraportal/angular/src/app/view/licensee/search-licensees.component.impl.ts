@@ -2,6 +2,7 @@
 import { Component, Injector } from '@angular/core';
 import { SearchLicenseesComponent } from '@app/view/licensee/search-licensees.component';
 import { SearchLicenseesSearchForm } from '@app/view/licensee/search-licensees.component';
+import { SearchLicenseesVarsForm } from '@app/view/licensee/search-licensees.component';
 
 @Component({
   selector: 'app-search-licensees',
@@ -18,12 +19,20 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
     }
 	
     afterOnInit() {
+        this.addLicenseesDummyData();
     }
 
     doNgAfterViewInit() {
     }
 
     handleFormChanges(change: any) {
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    afterSetSearchLicenseesVarsForm(form: SearchLicenseesVarsForm): void {
+
     }
 
     /**

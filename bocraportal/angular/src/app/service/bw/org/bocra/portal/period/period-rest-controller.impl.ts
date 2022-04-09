@@ -43,4 +43,8 @@ export class PeriodRestControllerImpl extends PeriodRestController {
 
     }
 
+    public getAllPaged(pageNumber: number, pageSize: number): Observable<PeriodVO[]> {
+      return this.http.get<PeriodVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+    }
+
 }

@@ -2,8 +2,9 @@
 import { Component, Injector } from '@angular/core';
 import { EditPeriodComponent } from '@app/view/period/edit-period.component';
 import { EditPeriodSaveForm } from '@app/view/period/edit-period.component';
-import { EditPeriodNewForm } from '@app/view/period/edit-period.component';
 import { EditPeriodSearchForm } from '@app/view/period/edit-period.component';
+import { EditPeriodDeleteForm } from '@app/view/period/edit-period.component';
+import { EditPeriodVarsForm } from '@app/view/period/edit-period.component';
 
 @Component({
   selector: 'app-edit-period',
@@ -31,6 +32,13 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     /**
      * This method may be overwritten
      */
+    afterSetEditPeriodVarsForm(form: EditPeriodVarsForm): void {
+
+    }
+
+    /**
+     * This method may be overwritten
+     */
     afterSetEditPeriodSaveForm(form: EditPeriodSaveForm): void {
 
     }
@@ -52,27 +60,6 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     /**
      * This method may be overwritten
      */
-    afterSetEditPeriodNewForm(form: EditPeriodNewForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditPeriodNew(form: EditPeriodNewForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditPeriodNew(form: EditPeriodNewForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
     afterSetEditPeriodSearchForm(form: EditPeriodSearchForm): void {
 
     }
@@ -88,6 +75,27 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
      * This method may be overwritten
      */
     afterEditPeriodSearch(form: EditPeriodSearchForm): void {
+
+    }
+    
+    /**
+     * This method may be overwritten
+     */
+    afterSetEditPeriodDeleteForm(form: EditPeriodDeleteForm): void {
+
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    beforeEditPeriodDelete(form: EditPeriodDeleteForm): void {
+
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    afterEditPeriodDelete(form: EditPeriodDeleteForm): void {
 
     }
     

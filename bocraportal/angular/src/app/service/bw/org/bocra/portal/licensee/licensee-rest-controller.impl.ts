@@ -43,4 +43,7 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
 
     }
 
+    public getAllPaged(pageNumber: number, pageSize: number): Observable<LicenseeVO[]> {
+        return this.http.get<LicenseeVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+      }
 }

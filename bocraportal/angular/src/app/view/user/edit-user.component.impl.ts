@@ -2,8 +2,9 @@
 import { Component, Injector } from '@angular/core';
 import { EditUserComponent } from '@app/view/user/edit-user.component';
 import { EditUserSaveForm } from '@app/view/user/edit-user.component';
-import { EditUserNewForm } from '@app/view/user/edit-user.component';
+import { EditUserDeleteForm } from '@app/view/user/edit-user.component';
 import { EditUserSearchForm } from '@app/view/user/edit-user.component';
+import { EditUserVarsForm } from '@app/view/user/edit-user.component';
 
 @Component({
   selector: 'app-edit-user',
@@ -11,8 +12,6 @@ import { EditUserSearchForm } from '@app/view/user/edit-user.component';
   styleUrls: ['./edit-user.component.scss']
 })
 export class EditUserComponentImpl extends EditUserComponent {
-
-  hide = true;
 
     constructor(private injector: Injector) {
         super(injector);
@@ -28,6 +27,13 @@ export class EditUserComponentImpl extends EditUserComponent {
     }
 
     handleFormChanges(change: any) {
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    afterSetEditUserVarsForm(form: EditUserVarsForm): void {
+
     }
 
     /**
@@ -54,21 +60,21 @@ export class EditUserComponentImpl extends EditUserComponent {
     /**
      * This method may be overwritten
      */
-    afterSetEditUserNewForm(form: EditUserNewForm): void {
+    afterSetEditUserDeleteForm(form: EditUserDeleteForm): void {
 
     }
 
     /**
      * This method may be overwritten
      */
-    beforeEditUserNew(form: EditUserNewForm): void {
+    beforeEditUserDelete(form: EditUserDeleteForm): void {
 
     }
 
     /**
      * This method may be overwritten
      */
-    afterEditUserNew(form: EditUserNewForm): void {
+    afterEditUserDelete(form: EditUserDeleteForm): void {
 
     }
     

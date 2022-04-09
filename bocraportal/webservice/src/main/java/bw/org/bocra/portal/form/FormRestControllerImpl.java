@@ -85,6 +85,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
         ResponseEntity<FormVO> response;
 
         if(data.isPresent()) {
+            log.info(data.get().toString());
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();

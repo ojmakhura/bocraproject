@@ -43,4 +43,8 @@ export class UrlGuardRestControllerImpl extends UrlGuardRestController {
 
     }
 
+    public getAllPaged(pageNumber: number, pageSize: number): Observable<UrlGuardVO[]> {
+      return this.http.get<UrlGuardVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+    }
+
 }
