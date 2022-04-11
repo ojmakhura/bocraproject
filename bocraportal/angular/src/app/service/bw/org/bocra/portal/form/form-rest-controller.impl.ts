@@ -38,8 +38,24 @@ export class FormRestControllerImpl extends FormRestController {
     }
 
     public save(formVO: FormVO): Observable<FormVO> {
-
-        return this.http.post<FormVO>(this.path, formVO);
+        let tmp: FormVO = new FormVO;
+        tmp.createdBy = formVO.createdBy;
+        tmp.createdDate = formVO.createdBy;
+        tmp.id = formVO.id;
+        tmp.roles = formVO.roles;
+        tmp.type = formVO.type;
+        tmp.updatedBy = formVO.updatedBy;
+        tmp.updatedDate = formVO.updatedDate;
+        tmp.url = formVO.url;
+    
+        if(formVO.id) {
+          tmp.updatedBy = this.keycloakService.getUsername();
+          tmp.updatedDate = new Date();
+        } else {
+          tmp.createdBy = this.keycloakService.getUsername();
+          tmp.createdDate = new Date();
+        }
+        return this.http.post<FormVO>(this.path, tmp);
 
     }
 

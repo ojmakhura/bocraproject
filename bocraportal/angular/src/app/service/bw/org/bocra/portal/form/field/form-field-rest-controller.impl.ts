@@ -36,9 +36,25 @@ export class FormFieldRestControllerImpl extends FormFieldRestController {
 
     }
 
-    public save(formFIeldVO: FormFieldVO): Observable<FormFieldVO> {
-
-        return this.http.post<FormFieldVO>(this.path, formFIeldVO);
+    public save(formFieldVO: FormFieldVO): Observable<FormFieldVO> {
+        let tmp: FormFieldVO = new FormFieldVO;
+        tmp.createdBy = formFieldVO.createdBy;
+        tmp.createdDate = formFieldVO.createdBy;
+        tmp.id = formFieldVO.id;
+        tmp.roles = formFieldVO.roles;
+        tmp.type = formFieldVO.type;
+        tmp.updatedBy = formFieldVO.updatedBy;
+        tmp.updatedDate = formFieldVO.updatedDate;
+        tmp.url = formFieldVO.url;
+    
+        if(formFieldVO.id) {
+          tmp.updatedBy = this.keycloakService.getUsername();
+          tmp.updatedDate = new Date();
+        } else {
+          tmp.createdBy = this.keycloakService.getUsername();
+          tmp.createdDate = new Date();
+        }
+        return this.http.post<FormFieldVO>(this.path, tmp);
 
     }
 

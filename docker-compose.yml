@@ -1,68 +1,74 @@
 version: "3.3"
 services:
+
+  ###############################################################################
+  # Traefik proxy
+  ###############################################################################
   proxy:
-    image: traefik:v2.4
+    image: traefik:2.6
     container_name: bocra-proxy
-    hostname: bocra-proxy
+    hostname: traefik
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
-      #- default
+      bocra-network:
+        ipv4_address: ${BOCRA_PROXY_ADDRESS}
+      traefik-public:
+      default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      #- /bocra/traefik/traefik.toml:/traefik.toml
-      - traefik-data:${BOCRA_DATA}/traefik
+      - /bocra/traefik:/bocra/traefik
     ports:
       - 80:80
       - 8080:8080
-      # Listen on port 443, default for HTTPS
-      - 443:443
     command:
-      - "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=${ACME_STORAGE}"
+      - "--entrypoints.web.address=:80"
     labels:
-      - "traefik.http.routers.bocra-proxy.rule=Host(`traefik.${DOMAIN}`)"
-      - "traefik.http.routers.bocra-proxy.service=api@internal"
-      - "traefik.http.middlewares.api-auth.basicauth.users=${TRAEFIK_USER}:${TRAEFIK_PASSWORD}"
+      traefik.http.routers.bocra-proxy.rule: Host(`proxy.${DOMAIN}`)
+      traefik.http.routers.bocra-proxy.service: api@internal
 
+  ###############################################################################
+  # Postgres database
+  ###############################################################################
   db:
     container_name: bocra-db
-    hostname: bocra-db
-    image: postgres:12
+    hostname: db
+    image: postgres:14
     volumes:
       - app-db-data:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
     env_file:
       - .env
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
+    depends_on:
+      - proxy
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_DB_ADDRESS}
+      default:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-db.rule=Host(`db.${DOMAIN}`)"
-      - "traefik.http.routers.bocra-db.entrypoints=websecure"
-      - "traefik.http.routers.bocra-db.tls.certresolver=myresolver"
+        # - "traefik.http.routers.bocra-db.entrypoints=websecure"
+        #- "traefik.http.routers.bocra-db.tls.certresolver=myresolver"
 
+  ###############################################################################
+  # Postgres administration frontend
+  ###############################################################################
   pgadmin:
     image: dpage/pgadmin4
     container_name: bocra-pgadmin
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_PGADMIN_ADDRESS}
+      default:
     depends_on:
+      - proxy
       - db
-    #env_file:
-    #  - .env
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -73,9 +79,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-pgadmin.rule=Host(`pgadmin.${DOMAIN}`)"
-      - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
-      - "traefik.http.routers.bocra-pgadmin.tls.certresolver=myresolver"
 
+  ###############################################################################
+  # Keycloak authentication server
+  ###############################################################################
   keycloak:
     container_name: bocra-keycloak
     hostname: bocra-keycloak
@@ -99,21 +106,23 @@ services:
     #volumes:
     #  - keycloak-installation:/opt/jboss/keycloak
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_KEYCLOAK_ADDRESS}
+      default:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-keycloak.rule=Host(`keycloak.${DOMAIN}`)"
-      - "traefik.http.routers.bocra-keycloak.entrypoints=websecure"
-      - "traefik.http.routers.bocra-keycloak.tls.certresolver=myresolver"
 
+  ###############################################################################
+  # Angular web application
+  ###############################################################################
   web:
     image: "bocra-web:latest"
-    hostname: web.roguesystems.co.bw
+    hostname: web
     build:
       context: .
-      dockerfile: bocra-web/Dockerfile
+      dockerfile: bocraportal/angular/Dockerfile
     container_name: bocra-web
     env_file:
       - .env
@@ -124,21 +133,23 @@ services:
       - keycloak
       - api
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
-    #ports:
-    #  - 3100:80
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_WEB_ADDRESS}
+      default:
+        #ports:
+        #  - 3100:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-web.rule=Host(`${WEB_SUBDOMAIN}${DOMAIN}`)"
-      - "traefik.http.routers.bocra-web.entrypoints=websecure"
-      - "traefik.http.routers.bocra-web.tls.certresolver=myresolver"
+      - "traefik.http.routers.bocra-web.rule=Host(`${DOMAIN}`)"
 
+  ###############################################################################
+  # The main API 
+  ###############################################################################
   api:
     image: "bocra-api:latest"
     container_name: bocra-api
-    hostname: bocra-api
+    hostname: api
     env_file:
       - .env
     depends_on:
@@ -146,15 +157,14 @@ services:
       - keycloak
     ports:
       - ${API_SERVER_PORT}
-    volumes:
-      - api-uploads:${API_UPLOADS}
     build:
       context: .
-      dockerfile: bocra-api/Dockerfile
+      dockerfile: bocraportal/webservice/Dockerfile
     networks:
-      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
-      - bocra-network
-      - default
+      bocra-network:
+        ipv4_address: ${BOCRA_API_ADDRESS}
+      traefik-public:
+      default:
     environment:
       POSTGRES_SERVER: bocra-db
       SERVER_PORT: ${API_SERVER_PORT}
@@ -165,9 +175,67 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-api.rule=Host(`api.${DOMAIN}`)"
-      - "traefik.http.routers.bocra-api.entrypoints=websecure"
-      - "traefik.http.routers.bocra-api.tls.certresolver=myresolver"
 
+  ###############################################################################
+  # Local docker container registry
+  ###############################################################################
+  registry:
+    image: registry:2
+    ports:
+      - 5000:5000
+    env_file:
+      - .env
+    depends_on:
+      - proxy
+    environment:
+      REGISTRY_HTTP_TLS_CERTIFICATE: ${REGISTRY_HTTP_TLS_CERTIFICATE}
+      REGISTRY_HTTP_TLS_KEY: ${REGISTRY_HTTP_TLS_KEY}
+      REGISTRY_AUTH: ${REGISTRY_AUTH}
+      REGISTRY_AUTH_HTPASSWD_PATH: ${REGISTRY_AUTH_HTPASSWD_PATH}
+      REGISTRY_AUTH_HTPASSWD_REALM: ${REGISTRY_AUTH_HTPASSWD_REALM}
+    volumes:
+      - registry-data:/var/lib/registry
+      - registry-certs:/certs
+      - registry-auth:/auth
+    networks:
+      bocra-network:
+        ipv4_address: ${BOCRA_REGISTRY_ADDRESS}
+      traefik-public:
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-registry.rule=Host(`registry.${DOMAIN}`)"
+  
+  ###############################################################################
+  # Jenkins for CI/CD
+  ###############################################################################
+  jenkins:
+    container_name: bocra-jenkins
+    image: jenkins/jenkins:lts
+    privileged: true
+    user: root
+    ports:
+      - 8083:8080
+      - 50003:50000
+    depends_on:
+      - proxy
+    env_file:
+      - .env
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      bocra-network:
+        ipv4_address: ${BOCRA_JENKINS_ADDRESS}
+      traefik-public:
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-jenkins.rule=Host(`jenkins.${DOMAIN}`)"
+
+###############################################################################
+# Volumes
+###############################################################################
 volumes:
   app-db-data:
     driver: local
@@ -181,30 +249,12 @@ volumes:
       type: none
       o: bind
       device: ${BOCRA_DATA}/web
-  api-uploads:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/api
   pgadmin-data:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ${BOCRA_DATA}/pgadmin
-  pipeline-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/pipeline
-  pipeline-uploads:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_UPLOADS}
   keycloak-installation:
     driver: local
     driver_opts:
@@ -217,7 +267,34 @@ volumes:
       type: none
       o: bind
       device: ${BOCRA_DATA}/traefik
+  registry-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/registry/data
+  registry-certs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/registry/certs
+  registry-auth:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/registry/auth
+  jenkins-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BOCRA_DATA}/jenkins
 
+###############################################################################
+# Networks
+###############################################################################
 networks:
   traefik-public:
     # Allow setting it to false for testing

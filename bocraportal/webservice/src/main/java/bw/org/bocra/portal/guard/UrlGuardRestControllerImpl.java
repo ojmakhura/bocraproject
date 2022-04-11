@@ -22,7 +22,6 @@ public class UrlGuardRestControllerImpl extends UrlGuardRestControllerBase {
 
     protected static Logger log = LoggerFactory.getLogger(UrlGuardRestControllerImpl.class);
 
-
     @Override
     public ResponseEntity<UrlGuardVO> handleFindById(Long id) {
         Optional<UrlGuardVO> data = Optional.of(this.urlGuardService.findById(id)); // TODO: Add custom code here;
@@ -82,12 +81,6 @@ public class UrlGuardRestControllerImpl extends UrlGuardRestControllerBase {
 
     @Override
     public ResponseEntity<Collection<UrlGuardVO>> handleSearch(UrlGuardCriteria criteria) {
-        log.info("Searching");
-        System.out.println(urlGuardService.getAll());
-        System.out.println(criteria.getUrl());
-        System.out.println(criteria.getRoles());
-        System.out.println(criteria.getType());
-        System.out.println(criteria.getFirstResult());
         Optional<Collection<UrlGuardVO>> data = Optional.of(urlGuardService.search(criteria)); // TODO: Add custom code here;
         ResponseEntity<Collection<UrlGuardVO>> response;
 
