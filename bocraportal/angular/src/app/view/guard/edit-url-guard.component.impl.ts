@@ -89,6 +89,14 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
      * This method may be overwritten
      */
     beforeEditURLGuardSave(form: EditURLGuardSaveForm): void {
+      if(form.urlGuardVO?.id) {
+
+        form.urlGuardVO.updatedBy = this.keycloakService.getUsername();
+        form.urlGuardVO.updatedDate = new Date();
+      } else {
+        form.urlGuardVO.createdBy = this.keycloakService.getUsername();
+        form.urlGuardVO.createdDate = new Date();
+      }
       this.store.dispatch(guardActions.saveGuard({guard: form.urlGuardVO}));
     }
 
