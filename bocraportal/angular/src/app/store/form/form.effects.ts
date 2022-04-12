@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import * as FormActions from './form.action';
+import * as FormActions from './form.actions';
 import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
 
 @Injectable()
@@ -64,7 +64,7 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.formRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( results => FormActions.getAllPagedSuccess({results})),
+                map( forms => FormActions.getAllPagedSuccess({forms})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )

@@ -2,7 +2,7 @@
 import { Action, createFeature, createReducer, on } from '@ngrx/store';
 import { UrlGuardCriteria } from '@app/model/bw/org/bocra/portal/guard/url-guard-criteria';
 import { UrlGuardVO } from '@app/model/bw/org/bocra/portal/guard/url-guard-vo';
-import * as UseCaseActions from './use-case.action';
+import * as UseCaseActions from './use-case.actions';
 
 export const useCaseKey = 'use-case';
 

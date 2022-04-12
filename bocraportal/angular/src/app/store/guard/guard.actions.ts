@@ -27,7 +27,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     GuardActionType.FIND_BY_ID_SUCCESS,
-//    props<{ results: UrlGuardVO | any }>()
+    props<{ urlGuardVO: UrlGuardVO | any }>()
 );
 
 export const save = createAction(
@@ -37,7 +37,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     GuardActionType.SAVE_SUCCESS,
-//    props<{ results: UrlGuardVO | any }>()
+    props<{ urlGuardVO: UrlGuardVO | any }>()
 );
 
 export const remove = createAction(
@@ -47,7 +47,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     GuardActionType.REMOVE_SUCCESS,
-//    props<{ results: boolean | any }>()
+    props<{ removed: boolean | any }>()
 );
 
 export const getAll = createAction(
@@ -55,7 +55,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     GuardActionType.GET_ALL_SUCCESS,
-//    props<{ results: UrlGuardVO[] | any }>()
+    props<{ urlGuards: UrlGuardVO[] | any }>()
 );
 
 export const search = createAction(
@@ -65,7 +65,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     GuardActionType.SEARCH_SUCCESS,
-//    props<{ results: UrlGuardVO[] | any }>()
+    props<{ urlGuards: UrlGuardVO[] | any }>()
 );
 
 export const getAllPaged = createAction(
@@ -75,7 +75,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     GuardActionType.GET_ALL_PAGED_SUCCESS,
-//    props<{ results: UrlGuardVO[] | any }>()
+    props<{ urlGuards: UrlGuardVO[] | any }>()
 );
 
 

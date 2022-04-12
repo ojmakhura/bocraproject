@@ -6,8 +6,8 @@ import { EditURLGuardSearchForm } from '@app/view/guard/edit-url-guard.component
 import { EditURLGuardComponent, EditURLGuardDeleteForm } from '@app/view/guard/edit-url-guard.component';
 import { SelectItem } from '@app/utils/select-item';
 import { environment } from '@env/environment';
-import * as guardSelectors from '@app/store/guard/guard.selector';
-import * as guardActions from '@app/store/guard/guard.action';
+import * as guardSelectors from '@app/store/guard/guard.selectors';
+import * as guardActions from '@app/store/guard/guard.actions';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
 import { UrlGuardVO } from '@app/model/bw/org/bocra/portal/guard/url-guard-vo';
@@ -30,8 +30,8 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
     super(injector);
     this.http = this._injector.get(HttpClient);
     this.keycloakService = this._injector.get(KeycloakService);
-    this.urlGuard$ = this.store.pipe(select(guardSelectors.selectGuard))
-    this.urlGuards$ = this.store.pipe(select(guardSelectors.selectGuards))
+    this.urlGuard$ = this.store.pipe(select(guardSelectors.selectUrlGuardVO))
+    this.urlGuards$ = this.store.pipe(select(guardSelectors.selectUrlGuards))
     this.id$ = this.store.pipe(select(guardSelectors.selectId))
   }
 
@@ -97,7 +97,7 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
         form.urlGuardVO.createdBy = this.keycloakService.getUsername();
         form.urlGuardVO.createdDate = new Date();
       }
-      this.store.dispatch(guardActions.saveGuard({guard: form.urlGuardVO}));
+      this.store.dispatch(guardActions.save({urlGuardVO: form.urlGuardVO}));
     }
 
     /**

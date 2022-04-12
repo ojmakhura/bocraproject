@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import * as PeriodConfigActions from './period-config.action';
+import * as PeriodConfigActions from './period-config.actions';
 import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class PeriodConfigEffects {
          this.actions$.pipe(
             ofType(PeriodConfigActions.findById),
             mergeMap(({ id }) => this.periodConfigRestController.findById(id).pipe(
-//                map( results => PeriodConfigActions.findByIdSuccess({results})),
+                map( periodConfigVO => PeriodConfigActions.findByIdSuccess({periodConfigVO})),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
             ))
         )
@@ -24,7 +24,7 @@ export class PeriodConfigEffects {
          this.actions$.pipe(
             ofType(PeriodConfigActions.save),
             mergeMap(({ periodConfigVO }) => this.periodConfigRestController.save(periodConfigVO).pipe(
-//                map( results => PeriodConfigActions.saveSuccess({results})),
+                map( periodConfigVO => PeriodConfigActions.saveSuccess({periodConfigVO})),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
             ))
         )
@@ -34,7 +34,7 @@ export class PeriodConfigEffects {
          this.actions$.pipe(
             ofType(PeriodConfigActions.remove),
             mergeMap(({ id }) => this.periodConfigRestController.remove(id).pipe(
-//                map( results => PeriodConfigActions.removeSuccess({results})),
+                map( removed => PeriodConfigActions.removeSuccess({removed})),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
             ))
         )
@@ -44,7 +44,7 @@ export class PeriodConfigEffects {
          this.actions$.pipe(
             ofType(PeriodConfigActions.getAll),
             mergeMap(() => this.periodConfigRestController.getAll().pipe(
-//                map( results => PeriodConfigActions.getAllSuccess({results})),
+                map( periodConfigs => PeriodConfigActions.getAllSuccess({periodConfigs})),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
             ))
         )
@@ -54,7 +54,7 @@ export class PeriodConfigEffects {
          this.actions$.pipe(
             ofType(PeriodConfigActions.search),
             mergeMap(({ searchCriteria }) => this.periodConfigRestController.search(searchCriteria).pipe(
-//                map( results => PeriodConfigActions.searchSuccess({results})),
+                map( periodConfigs => PeriodConfigActions.searchSuccess({periodConfigs})),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
             ))
         )
@@ -64,7 +64,7 @@ export class PeriodConfigEffects {
          this.actions$.pipe(
             ofType(PeriodConfigActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.periodConfigRestController.getAllPaged(pageNumber, pageSize).pipe(
-//                map( results => PeriodConfigActions.getAllPagedSuccess({results})),
+                map( periodConfigs => PeriodConfigActions.getAllPagedSuccess({periodConfigs})),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
             ))
         )

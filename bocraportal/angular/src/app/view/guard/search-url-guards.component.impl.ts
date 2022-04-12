@@ -4,8 +4,8 @@ import { SearchURLGuardsComponent, SearchURLGuardsVarsForm } from '@app/view/gua
 import { SearchURLGuardsSearchForm } from '@app/view/guard/search-url-guards.component';
 import { Observable } from 'rxjs/internal/Observable';
 import { UrlGuardVO } from '@app/model/bw/org/bocra/portal/guard/url-guard-vo';
-import * as guardSelectors from '@app/store/guard/guard.selector';
-import * as guardActions from '@app/store/guard/guard.action';
+import * as guardSelectors from '@app/store/guard/guard.selectors';
+import * as guardActions from '@app/store/guard/guard.actions';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { HttpClient } from '@angular/common/http';
@@ -24,13 +24,13 @@ export class SearchURLGuardsComponentImpl extends SearchURLGuardsComponent {
 
   constructor(private injector: Injector) {
     super(injector);
-    this.urlGuards$ = this.store.pipe(select(guardSelectors.selectGuards));
+    this.urlGuards$ = this.store.pipe(select(guardSelectors.selectUrlGuards));
     this.keycloakService = this._injector.get(KeycloakService);
     this.http = this._injector.get(HttpClient);
   }
 
   beforeOnInit() {
-    this.store.dispatch(guardActions.reset());
+    this.store.dispatch(guardActions.guardReset());
 
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
       role.forEach((val) => {
@@ -72,7 +72,7 @@ export class SearchURLGuardsComponentImpl extends SearchURLGuardsComponent {
    * This method may be overwritten
    */
   beforeSearchURLGuardsSearch(form: SearchURLGuardsSearchForm): void {
-    this.store.dispatch(guardActions.searchGuards({searchCriteria: form.searchCriteria}));
+    this.store.dispatch(guardActions.search({criteria: form.searchCriteria}));
     
   }
 

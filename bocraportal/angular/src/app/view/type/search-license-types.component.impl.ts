@@ -5,8 +5,8 @@ import { SearchLicenseTypesSearchForm } from '@app/view/type/search-license-type
 import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
 import { Observable } from 'rxjs';
 import { select } from '@ngrx/store';
-import * as licenseTypeSelectors from '@app/store/type/license-type.selector';
-import * as licenseTypeActions from '@app/store/type/license-type.action';
+import * as licenseTypeSelectors from '@app/store/type/license-type.selectors';
+import * as licenseTypeActions from '@app/store/type/license-type.actions';
 
 @Component({
   selector: 'app-search-license-types',
@@ -48,7 +48,7 @@ export class SearchLicenseTypesComponentImpl extends SearchLicenseTypesComponent
      * This method may be overwritten
      */
     beforeSearchLicenseTypesSearch(form: SearchLicenseTypesSearchForm): void {
-        this.store.dispatch(licenseTypeActions.searchLicenseTypes({ searchCriteria: form.searchCriteria }));
+        this.store.dispatch(licenseTypeActions.search({ searchCriteria: form.searchCriteria }));
     }
 
     /**

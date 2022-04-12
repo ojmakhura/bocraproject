@@ -27,7 +27,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     LicenseeActionType.FIND_BY_ID_SUCCESS,
-//    props<{ results: LicenseeVO | any }>()
+    props<{ licenseeVO: LicenseeVO | any }>()
 );
 
 export const save = createAction(
@@ -37,7 +37,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     LicenseeActionType.SAVE_SUCCESS,
-//    props<{ results: LicenseeVO | any }>()
+    props<{ licenseeVO: LicenseeVO | any }>()
 );
 
 export const remove = createAction(
@@ -47,7 +47,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     LicenseeActionType.REMOVE_SUCCESS,
-//    props<{ results: boolean | any }>()
+    props<{ removed: boolean | any }>()
 );
 
 export const getAll = createAction(
@@ -55,7 +55,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     LicenseeActionType.GET_ALL_SUCCESS,
-//    props<{ results: LicenseeVO[] | any }>()
+    props<{ licensees: LicenseeVO[] | any }>()
 );
 
 export const searchLicensees = createAction(
@@ -65,7 +65,7 @@ export const searchLicensees = createAction(
 
 export const searchLicenseesSuccess = createAction(
     LicenseeActionType.SEARCH_LICENSEES_SUCCESS,
-//    props<{ results: LicenseeVO[] | any }>()
+    props<{ licensees: LicenseeVO[] | any }>()
 );
 
 export const getAllPaged = createAction(
@@ -75,9 +75,8 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     LicenseeActionType.GET_ALL_PAGED_SUCCESS,
-//    props<{ results: LicenseeVO[] | any }>()
+    props<{ licensees: LicenseeVO[] | any }>()
 );
-
 
 export const licenseeReset = createAction(LicenseeActionType.LICENSEE_RESET);
 

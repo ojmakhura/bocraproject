@@ -19,7 +19,7 @@ export class SearchUsersComponentImpl extends SearchUsersComponent {
     }
 	
     afterOnInit() {
-        this.addUsersDummyData();
+        // this.addUsersDummyData();
     }
 
     doNgAfterViewInit() {

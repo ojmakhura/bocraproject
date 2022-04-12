@@ -5,7 +5,7 @@ import { EditLicenseTypeSaveForm } from '@app/view/type/edit-license-type.compon
 import { EditLicenseTypeSearchForm } from '@app/view/type/edit-license-type.component';
 import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
 import * as licenseTypeSelectors from '@app/store/type/license-type.selector';
-import * as licenseTypeActions from '@app/store/type/license-type.action';
+import * as licenseTypeActions from '@app/store/type/license-type.actions';
 import { Observable } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 import { select } from '@ngrx/store';
@@ -23,7 +23,7 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
 
   constructor(private injector: Injector) {
     super(injector);
-    this.licenseeType$ = this.store.pipe(select(licenseTypeSelectors.selectLicenseType));
+    this.licenseeType$ = this.store.pipe(select(licenseTypeSelectors.selectLicenseTypeVO));
     this.licenseeTypes$ = this.store.pipe(select(licenseTypeSelectors.selectLicenseTypes));
     this.id$ = this.store.pipe(select(licenseTypeSelectors.selectId));
     this.keycloakService = injector.get(KeycloakService);
@@ -63,7 +63,7 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
       form.licenseTypeVO.createdDate = new Date();
     }
 
-    this.store.dispatch(licenseTypeActions.saveLicenseType({ licenseType: form.licenseTypeVO }));
+    this.store.dispatch(licenseTypeActions.save({ licenseTypeVO: form.licenseTypeVO }));
   }
 
   /**

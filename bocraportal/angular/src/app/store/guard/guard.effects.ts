@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import * as GuardActions from './guard.action';
+import * as GuardActions from './guard.actions';
 import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.findById),
             mergeMap(({ id }) => this.urlGuardRestController.findById(id).pipe(
-//                map( results => GuardActions.findByIdSuccess({results})),
+                map( urlGuardVO => GuardActions.findByIdSuccess({urlGuardVO})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -24,7 +24,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.save),
             mergeMap(({ urlGuardVO }) => this.urlGuardRestController.save(urlGuardVO).pipe(
-//                map( results => GuardActions.saveSuccess({results})),
+                map( urlGuardVO => GuardActions.saveSuccess({urlGuardVO})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -34,7 +34,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.remove),
             mergeMap(({ id }) => this.urlGuardRestController.remove(id).pipe(
-//                map( results => GuardActions.removeSuccess({results})),
+                map( removed => GuardActions.removeSuccess({removed})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -44,7 +44,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.getAll),
             mergeMap(() => this.urlGuardRestController.getAll().pipe(
-//                map( results => GuardActions.getAllSuccess({results})),
+                map( urlGuards => GuardActions.getAllSuccess({urlGuards})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -54,7 +54,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.search),
             mergeMap(({ criteria }) => this.urlGuardRestController.search(criteria).pipe(
-//                map( results => GuardActions.searchSuccess({results})),
+                map( urlGuards => GuardActions.searchSuccess({urlGuards})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -64,7 +64,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.urlGuardRestController.getAllPaged(pageNumber, pageSize).pipe(
-//                map( results => GuardActions.getAllPagedSuccess({results})),
+                map( urlGuards => GuardActions.getAllPagedSuccess({urlGuards})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )

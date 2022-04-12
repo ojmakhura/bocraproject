@@ -10,7 +10,7 @@ import { I18nModule } from '@app/i18n';
 import { MaterialModule } from '@app/material.module';
 import { AuthModule } from '@app/auth';
 import { ShellComponent } from './shell.component';
-import { useCaseFeature } from '@app/store/usecase/use-case.reducer';
+import { useCaseFeature } from '@app/store/usecase/use-case.reducers';
 
 @NgModule({
   imports: [

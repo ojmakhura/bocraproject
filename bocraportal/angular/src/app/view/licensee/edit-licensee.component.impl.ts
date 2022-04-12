@@ -7,8 +7,8 @@ import {
 } from '@app/view/licensee/edit-licensee.component';
 import { EditLicenseeSaveForm } from '@app/view/licensee/edit-licensee.component';
 import { EditLicenseeSearchForm } from '@app/view/licensee/edit-licensee.component';
-import * as licenseeSelectors from '@app/store/licensee/licensee.selector';
-import * as licenseeActions from '@app/store/licensee/licensee.action';
+import * as licenseeSelectors from '@app/store/licensee/licensee.selectors';
+import * as licenseeActions from '@app/store/licensee/licensee.actions';
 import { Observable } from 'rxjs';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { select } from '@ngrx/store';
@@ -27,7 +27,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   constructor(private injector: Injector) {
     super(injector);
-    this.licensee$ = this.store.pipe(select(licenseeSelectors.selectLicensee));
+    this.licensee$ = this.store.pipe(select(licenseeSelectors.selectLicenseeVO));
     this.licensees$ = this.store.pipe(select(licenseeSelectors.selectLicensees));
     this.id$ = this.store.pipe(select(licenseeSelectors.selectId));
     this.keycloakService = injector.get(KeycloakService);
@@ -67,7 +67,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       form.licenseeVO.createdDate = new Date();
     }
     
-    this.store.dispatch(licenseeActions.saveLicensee({ licensee: form.licenseeVO }));
+    this.store.dispatch(licenseeActions.save({ licenseeVO: form.licenseeVO }));
   }
 
   /**

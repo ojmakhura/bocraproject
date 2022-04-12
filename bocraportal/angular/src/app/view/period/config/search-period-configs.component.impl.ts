@@ -19,7 +19,7 @@ export class SearchPeriodConfigsComponentImpl extends SearchPeriodConfigsCompone
     }
 	
     afterOnInit() {
-        this.addPeriodConfigsDummyData();
+        // this.addPeriodConfigsDummyData();
     }
 
     doNgAfterViewInit() {

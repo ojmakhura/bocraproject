@@ -85,6 +85,7 @@ COMMON_LOCAL_VARS = "export EMAIL=${TEST_EMAIL}"\
     "export BOCRA_REGISTRY_SUBDOMAIN=${BOCRA_REGISTRY_SUBDOMAIN}"\
 
 LOCAL_DOCKER_ENV = printf "%s\n" \
+    "IMAGE_VERSION=${DEV_IMAGE_VERSION}"\
     "DOMAIN=${LOCAL_DOMAIN}"\
     "DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${LOCAL_DOMAIN}"\
     "PGADMIN_DOMAIN=${BOCRA_PGADMIN_SUBDOMAIN}.${LOCAL_DOMAIN}"\
@@ -103,6 +104,7 @@ LOCAL_DOCKER_ENV = printf "%s\n" \
     >> .env
 
 TEST_DOCKER_ENV = printf "%s\n" \
+    "IMAGE_VERSION=${TEST_IMAGE_VERSION}"\
     "DOMAIN=${TEST_DOMAIN}"\
     "REDIRECT_URI=${TEST_REDIRECT_URI}"\
     "SMTP_HOST=${TEST_SMTP_HOST}"\
@@ -115,6 +117,7 @@ TEST_DOCKER_ENV = printf "%s\n" \
     >> .env
 
 LIVE_DOCKER_ENV = printf "%s\n" \
+    "IMAGE_VERSION=${LIVE_IMAGE_VERSION}"\
     "DOMAIN=${LIVE_DOMAIN}"\
     "REDIRECT_URI=${LIVE_REDIRECT_URI}"\
     "SMTP_HOST=${LIVE_SMTP_HOST}"\
@@ -127,6 +130,7 @@ LIVE_DOCKER_ENV = printf "%s\n" \
     
 LOCAL_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
+    "export IMAGE_VERSION=${DEV_IMAGE_VERSION}"\
     "export DOMAIN=${LOCAL_DOMAIN}"\
     "export DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${LOCAL_DOMAIN}"\
     "export PGADMIN_DOMAIN=${BOCRA_PGADMIN_SUBDOMAIN}.${LOCAL_DOMAIN}"\
@@ -146,6 +150,7 @@ LOCAL_ENV = printf "%s\n" \
 
 TEST_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
+    "export IMAGE_VERSION=${TEST_IMAGE_VERSION}"\
     "export DOMAIN=${TEST_DOMAIN}"\
     "export REDIRECT_URI=${TEST_REDIRECT_URI}"\
     "export SMTP_HOST=${TEST_SMTP_HOST}"\
@@ -160,6 +165,7 @@ TEST_ENV = printf "%s\n" \
 
 LIVE_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
+    "export IMAGE_VERSION=${LIVE_IMAGE_VERSION}"\
     "export DOMAIN=${LIVE_DOMAIN}"\
     "export REDIRECT_URI=${LIVE_REDIRECT_URI}"\
     "export SMTP_HOST=${LIVE_SMTP_HOST}"\

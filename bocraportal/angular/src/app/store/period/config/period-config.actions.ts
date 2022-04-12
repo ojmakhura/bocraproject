@@ -27,7 +27,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     PeriodConfigActionType.FIND_BY_ID_SUCCESS,
-//    props<{ results: PeriodConfigVO | any }>()
+    props<{ periodConfigVO: PeriodConfigVO | any }>()
 );
 
 export const save = createAction(
@@ -37,7 +37,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     PeriodConfigActionType.SAVE_SUCCESS,
-//    props<{ results: PeriodConfigVO | any }>()
+    props<{ periodConfigVO: PeriodConfigVO | any }>()
 );
 
 export const remove = createAction(
@@ -47,15 +47,16 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     PeriodConfigActionType.REMOVE_SUCCESS,
-//    props<{ results: boolean | any }>()
+    props<{ removed: boolean | any }>()
 );
 
 export const getAll = createAction(
-    PeriodConfigActionType.GET_ALL);
+    PeriodConfigActionType.GET_ALL
+);
 
 export const getAllSuccess = createAction(
     PeriodConfigActionType.GET_ALL_SUCCESS,
-//    props<{ results: PeriodConfigVO[] | any }>()
+    props<{ periodConfigs: PeriodConfigVO[] | any[] }>()
 );
 
 export const search = createAction(
@@ -65,7 +66,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     PeriodConfigActionType.SEARCH_SUCCESS,
-//    props<{ results: PeriodConfigVO[] | any }>()
+    props<{ periodConfigs: PeriodConfigVO[] | any[] }>()
 );
 
 export const getAllPaged = createAction(
@@ -75,9 +76,8 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     PeriodConfigActionType.GET_ALL_PAGED_SUCCESS,
-//    props<{ results: PeriodConfigVO[] | any }>()
+    props<{ periodConfigs: PeriodConfigVO[] | any[] }>()
 );
-
 
 export const periodConfigReset = createAction(PeriodConfigActionType.PERIODCONFIG_RESET);
 
