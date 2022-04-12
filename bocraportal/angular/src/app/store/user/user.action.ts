@@ -20,7 +20,7 @@ export const createUser = createAction(
 
 export const createUserSuccess = createAction(
     UserActionType.CREATE_USER_SUCCESS,
-    props<{ userVO: UserVO | any }>()
+//    props<{ results: UserVO | any }>()
 );
 
 export const updateUserName = createAction(
@@ -30,7 +30,7 @@ export const updateUserName = createAction(
 
 export const updateUserNameSuccess = createAction(
     UserActionType.UPDATE_USER_NAME_SUCCESS,
-    props<{ removed: Boolean | any }>()
+//    props<{ results: Boolean | any }>()
 );
 
 export const loadUsers = createAction(
@@ -38,7 +38,7 @@ export const loadUsers = createAction(
 
 export const loadUsersSuccess = createAction(
     UserActionType.LOAD_USERS_SUCCESS,
-    props<{ users: UserVO[] | any[] }>()
+//    props<{ results: UserVO[] | any }>()
 );
 
 

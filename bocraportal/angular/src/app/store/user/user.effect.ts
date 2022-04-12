@@ -10,31 +10,31 @@ export class UserEffects {
 
     constructor(private actions$: Actions, private userRestController: UserRestControllerImpl) {}
 
-    // createUser$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(UserActions.createUser),
-    //         mergeMap(({ userVO }) => this.userRestController.createUser(userVO).pipe(
-    //             map( results => UserActions.createUserSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
-    //         ))
-    //     )
-    // );
+    createUser$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(UserActions.createUser),
+            mergeMap(({ userVO }) => this.userRestController.createUser(userVO).pipe(
+//                map( results => UserActions.createUserSuccess({results})),
+                catchError(({error}) => [UserActions.userFailure(error)])
+            ))
+        )
+    );
 
-    // updateUserName$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(UserActions.updateUserName),
-    //         mergeMap((username, userId) => this.userRestController.updateUserName(username, userId).pipe(
-    //             map( updated => UserActions.updateUserNameSuccess({updated})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
-    //         ))
-    //     )
-    // );
+    updateUserName$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(UserActions.updateUserName),
+            mergeMap(({ username, userId }) => this.userRestController.updateUserName(username, userId).pipe(
+//                map( results => UserActions.updateUserNameSuccess({results})),
+                catchError(({error}) => [UserActions.userFailure(error)])
+            ))
+        )
+    );
 
     loadUsers$ = createEffect(() => 
          this.actions$.pipe(
             ofType(UserActions.loadUsers),
             mergeMap(() => this.userRestController.loadUsers().pipe(
-                map( users => UserActions.loadUsersSuccess({users})),
+//                map( results => UserActions.loadUsersSuccess({results})),
                 catchError(({error}) => [UserActions.userFailure(error)])
             ))
         )

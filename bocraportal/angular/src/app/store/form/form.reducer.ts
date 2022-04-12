@@ -2,97 +2,67 @@
 import { Action, createFeature, createReducer, on } from '@ngrx/store';
 import * as FormActions from './form.action';
 import {formKey, initialState} from './form.state';
-import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
-import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 
 export const formReducer = createReducer(
     initialState,
     on(FormActions.findByIdSuccess, (state, action) => ({
         ...state,
-        pageNumber: null, 
+        searchCriteria: null, 
+        forms: [], 
+        formVO: null, 
         id: null, 
-        pageSize: null, 
-        criteria: null, 
-        formVO: action.formVO,
-        forms: [],
-        removed: false,
-        error: null
+        error: action.error
     })),
     on(FormActions.saveSuccess, (state, action) => ({
         ...state,
-        pageNumber: null, 
+        searchCriteria: null, 
+        forms: [], 
+        formVO: null, 
         id: null, 
-        pageSize: null, 
-        criteria: null, 
-        formVO: action.formVO, 
-        forms: [],
-        removed: false,
-        error: null
+        error: action.error
     })),
     on(FormActions.removeSuccess, (state, action) => ({
         ...state,
-        pageNumber: null, 
-        id: null, 
-        pageSize: null, 
-        criteria: null, 
+        searchCriteria: null, 
+        forms: [], 
         formVO: null, 
-        forms: [],
-        removed: action.removed,
-        error: null
+        id: null, 
+        error: action.error
     })),
     on(FormActions.getAllSuccess, (state, action) => ({
         ...state,
-        pageNumber: null, 
-        id: null, 
-        pageSize: null, 
-        criteria: null, 
+        searchCriteria: null, 
+        forms: [], 
         formVO: null, 
-        forms: action.forms,
-        removed: false,
-        error: null
+        id: null, 
+        error: action.error
     })),
     on(FormActions.searchSuccess, (state, action) => ({
         ...state,
-        pageNumber: null, 
-        id: null, 
-        pageSize: null, 
-        criteria: null, 
+        searchCriteria: null, 
+        forms: [], 
         formVO: null, 
-        forms: action.forms,
-        removed: false,
-        error: null
+        id: null, 
+        error: action.error
     })),
     on(FormActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        pageNumber: null, 
-        id: null, 
-        pageSize: null, 
-        criteria: null, 
+        searchCriteria: null, 
+        forms: [], 
         formVO: null, 
-        forms: action.forms,
-        removed: false,
-        error: null
+        id: null, 
+        error: action.error
     })),
     on(FormActions.formReset, (state) => ({
       ...state,
-        pageNumber: null, 
-        id: null, 
-        pageSize: null, 
-        criteria: null, 
+        searchCriteria: null, 
+        forms: [], 
         formVO: null, 
-        forms: [],
-        removed: false,
+        id: null, 
         error: null
     })),
     on(FormActions.formFailure, (state, action) => ({
         ...state,
-        pageNumber: null, 
-        id: null, 
-        pageSize: null, 
-        criteria: null, 
-        formVO: null, 
-        forms: [],
-        removed: false,
         error: action.error
     }))
 );

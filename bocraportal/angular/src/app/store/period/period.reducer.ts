@@ -2,71 +2,63 @@
 import { Action, createFeature, createReducer, on } from '@ngrx/store';
 import * as PeriodActions from './period.action';
 import {periodKey, initialState} from './period.state';
-import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
-import { PeriodCriteria } from '@app/model/bw/org/bocra/portal/period/period-criteria';
 
 export const periodReducer = createReducer(
     initialState,
     on(PeriodActions.findByIdSuccess, (state, action) => ({
         ...state,
-        periodVO: action.periodVO, 
+        periods: [], 
         searchCriteria: null, 
+        periodVO: null, 
         id: null, 
-        pageSize: null, 
-        pageNumber: null, 
-        periods: null, 
-        removed: false, 
-        error: null
+        error: action.error
     })),
     on(PeriodActions.saveSuccess, (state, action) => ({
         ...state,
-        periodVO: action.periodVO, 
+        periods: [], 
         searchCriteria: null, 
+        periodVO: null, 
         id: null, 
-        pageSize: null, 
-        pageNumber: null, 
-        periods: action.periods, 
-        removed: false, 
-        error: null
+        error: action.error
     })),
     on(PeriodActions.removeSuccess, (state, action) => ({
         ...state,
-        periodVO: null, 
+        periods: [], 
         searchCriteria: null, 
+        periodVO: null, 
         id: null, 
-        pageSize: null, 
-        pageNumber: null, 
-        periods: null, 
-        removed: action.removed, 
-        error: null
+        error: action.error
     })),
     on(PeriodActions.getAllSuccess, (state, action) => ({
-        ...state, 
-        periods: action.periods, 
-        removed: false, 
-        error: null
+        ...state,
+        periods: [], 
+        searchCriteria: null, 
+        periodVO: null, 
+        id: null, 
+        error: action.error
     })),
     on(PeriodActions.searchSuccess, (state, action) => ({
         ...state,
-        periods: action.periods, 
-        removed: false, 
-        error: null
+        periods: [], 
+        searchCriteria: null, 
+        periodVO: null, 
+        id: null, 
+        error: action.error
     })),
     on(PeriodActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        periods: action.periods, 
-        removed: false, 
-        error: null
+        periods: [], 
+        searchCriteria: null, 
+        periodVO: null, 
+        id: null, 
+        error: action.error
     })),
     on(PeriodActions.periodReset, (state) => ({
       ...state,
-        periodVO: null, 
-        searchCriteria: null, 
-        id: null, 
-        pageSize: null, 
-        pageNumber: null, 
         periods: [], 
-        removed: false, 
+        searchCriteria: null, 
+        periodVO: null, 
+        id: null, 
         error: null
     })),
     on(PeriodActions.periodFailure, (state, action) => ({

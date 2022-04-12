@@ -2,50 +2,63 @@
 import { Action, createFeature, createReducer, on } from '@ngrx/store';
 import * as GuardActions from './guard.action';
 import {guardKey, initialState} from './guard.state';
-import { UrlGuardVO } from '@app/model/bw/org/bocra/portal/guard/url-guard-vo';
-import { UrlGuardCriteria } from '@app/model/bw/org/bocra/portal/guard/url-guard-criteria';
 
 export const guardReducer = createReducer(
     initialState,
     on(GuardActions.findByIdSuccess, (state, action) => ({
         ...state,
-        urlGuardVO: action.urlGuardVO, 
-        error: null
+        urlGuards: [], 
+        searchCriteria: null, 
+        id: null, 
+        urlGuardVO: null, 
+        error: action.error
     })),
     on(GuardActions.saveSuccess, (state, action) => ({
         ...state,
-        urlGuardVO: action.urlGuardVO, 
-        error: null
+        urlGuards: [], 
+        searchCriteria: null, 
+        id: null, 
+        urlGuardVO: null, 
+        error: action.error
     })),
     on(GuardActions.removeSuccess, (state, action) => ({
         ...state,
-        removed: action.removed, 
-        error: null
+        urlGuards: [], 
+        searchCriteria: null, 
+        id: null, 
+        urlGuardVO: null, 
+        error: action.error
     })),
     on(GuardActions.getAllSuccess, (state, action) => ({
         ...state,
-        urlGuards: action.urlGuards, 
-        error: null
+        urlGuards: [], 
+        searchCriteria: null, 
+        id: null, 
+        urlGuardVO: null, 
+        error: action.error
     })),
     on(GuardActions.searchSuccess, (state, action) => ({
         ...state,
-        urlGuards: action.urlGuards, 
-        error: null
+        urlGuards: [], 
+        searchCriteria: null, 
+        id: null, 
+        urlGuardVO: null, 
+        error: action.error
     })),
     on(GuardActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        urlGuards: action.urlGuards, 
-        error: null
+        urlGuards: [], 
+        searchCriteria: null, 
+        id: null, 
+        urlGuardVO: null, 
+        error: action.error
     })),
     on(GuardActions.guardReset, (state) => ({
       ...state,
-        urlGuardVO: null, 
+        urlGuards: [], 
+        searchCriteria: null, 
         id: null, 
-        criteria: null, 
-        pageNumber: null, 
-        pageSize: null, 
-        urlGuards: [],
-        removed: false,
+        urlGuardVO: null, 
         error: null
     })),
     on(GuardActions.guardFailure, (state, action) => ({

@@ -14,7 +14,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.findById),
             mergeMap(({ id }) => this.urlGuardRestController.findById(id).pipe(
-                map( results => GuardActions.findByIdSuccess({results})),
+//                map( results => GuardActions.findByIdSuccess({results})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -24,7 +24,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.save),
             mergeMap(({ urlGuardVO }) => this.urlGuardRestController.save(urlGuardVO).pipe(
-                map( results => GuardActions.saveSuccess({results})),
+//                map( results => GuardActions.saveSuccess({results})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -34,7 +34,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.remove),
             mergeMap(({ id }) => this.urlGuardRestController.remove(id).pipe(
-                map( results => GuardActions.removeSuccess({results})),
+//                map( results => GuardActions.removeSuccess({results})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -44,7 +44,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.getAll),
             mergeMap(() => this.urlGuardRestController.getAll().pipe(
-                map( results => GuardActions.getAllSuccess({results})),
+//                map( results => GuardActions.getAllSuccess({results})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -54,7 +54,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.search),
             mergeMap(({ criteria }) => this.urlGuardRestController.search(criteria).pipe(
-                map( results => GuardActions.searchSuccess({results})),
+//                map( results => GuardActions.searchSuccess({results})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -64,7 +64,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.urlGuardRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( results => GuardActions.getAllPagedSuccess({results})),
+//                map( results => GuardActions.getAllPagedSuccess({results})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )

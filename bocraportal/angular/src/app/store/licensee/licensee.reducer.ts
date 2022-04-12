@@ -2,50 +2,63 @@
 import { Action, createFeature, createReducer, on } from '@ngrx/store';
 import * as LicenseeActions from './licensee.action';
 import {licenseeKey, initialState} from './licensee.state';
-import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
-import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 
 export const licenseeReducer = createReducer(
     initialState,
     on(LicenseeActions.findByIdSuccess, (state, action) => ({
         ...state,
-        licenseeVO: action.licenseeVO, 
-        error: null
+        licensees: [], 
+        licenseeVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseeActions.saveSuccess, (state, action) => ({
         ...state,
-        licenseeVO: action.licenseeVO, 
-        error: null
+        licensees: [], 
+        licenseeVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseeActions.removeSuccess, (state, action) => ({
-        ...state, 
-        removed: action.removed, 
-        error: null
+        ...state,
+        licensees: [], 
+        licenseeVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseeActions.getAllSuccess, (state, action) => ({
         ...state,
-        licensees: action.licensees, 
-        error:null
+        licensees: [], 
+        licenseeVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseeActions.searchLicenseesSuccess, (state, action) => ({
         ...state,
-        licensees: action.licensees, 
-        error: null
+        licensees: [], 
+        licenseeVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        licensees: action.licensees, 
-        error: null
+        licensees: [], 
+        licenseeVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseeActions.licenseeReset, (state) => ({
       ...state,
-        pageNumber: null, 
-        pageSize: null, 
-        id: null, 
+        licensees: [], 
+        licenseeVO: null, 
         searchCriteria: null, 
-        licenseeVO: null,
-        licensees: [],
-        removed: false,
+        id: null, 
         error: null
     })),
     on(LicenseeActions.licenseeFailure, (state, action) => ({

@@ -2,44 +2,63 @@
 import { Action, createFeature, createReducer, on } from '@ngrx/store';
 import * as PeriodConfigActions from './period-config.action';
 import {periodConfigKey, initialState} from './period-config.state';
-import { PeriodConfigVO } from '@app/model/bw/org/bocra/portal/period/config/period-config-vo';
-import { PeriodConfigCriteria } from '@app/model/bw/org/bocra/portal/period/config/period-config-criteria';
 
 export const periodConfigReducer = createReducer(
     initialState,
     on(PeriodConfigActions.findByIdSuccess, (state, action) => ({
         ...state,
-        periodConfigVO: action.periodConfigVO, 
+        periodConfigVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        periodConfigs: [], 
+        error: action.error
     })),
     on(PeriodConfigActions.saveSuccess, (state, action) => ({
         ...state,
-        periodConfigVO: action.periodConfigVO
+        periodConfigVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        periodConfigs: [], 
+        error: action.error
     })),
     on(PeriodConfigActions.removeSuccess, (state, action) => ({
         ...state,
-        removed: action.removed
+        periodConfigVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        periodConfigs: [], 
+        error: action.error
     })),
     on(PeriodConfigActions.getAllSuccess, (state, action) => ({
         ...state,
-        periodConfigs: action.periodConfigs, 
-        error: null
+        periodConfigVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        periodConfigs: [], 
+        error: action.error
     })),
     on(PeriodConfigActions.searchSuccess, (state, action) => ({
         ...state,
-        periodConfigs: action.periodConfigs
+        periodConfigVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        periodConfigs: [], 
+        error: action.error
     })),
     on(PeriodConfigActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        periodConfigs: action.periodConfigs
+        periodConfigVO: null, 
+        searchCriteria: null, 
+        id: null, 
+        periodConfigs: [], 
+        error: action.error
     })),
     on(PeriodConfigActions.periodConfigReset, (state) => ({
       ...state,
         periodConfigVO: null, 
         searchCriteria: null, 
-        pageNumber: null, 
-        pageSize: null, 
         id: null, 
-        removed: false,
+        periodConfigs: [], 
         error: null
     })),
     on(PeriodConfigActions.periodConfigFailure, (state, action) => ({

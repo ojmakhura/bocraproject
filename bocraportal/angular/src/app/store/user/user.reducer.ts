@@ -2,41 +2,45 @@
 import { Action, createFeature, createReducer, on } from '@ngrx/store';
 import * as UserActions from './user.action';
 import {userKey, initialState} from './user.state';
-import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
 
 export const userReducer = createReducer(
     initialState,
-    // on(UserActions.createUserSuccess, (state, action) => ({
-    //     ...state,
-    //     userId: action.userId, 
-    //     username: action.username, 
-    //     userVO: action.userVO, 
-    //     results: action.results, 
-    //     error: action.error
-    // })),
-    // on(UserActions.updateUserNameSuccess, (state, action) => ({
-    //     ...state,
-    //     userId: action.userId, 
-    //     username: action.username, 
-    //     userVO: action.userVO, 
-    //     results: action.results, 
-    //     error: action.error
-    // })),
-    // on(UserActions.loadUsersSuccess, (state, action) => ({
-    //     ...state,
-    //     userId: action.userId, 
-    //     username: action.username, 
-    //     userVO: action.userVO, 
-    //     results: action.results, 
-    //     error: action.error
-    // })),
-    // on(UserActions.userReset, (state) => ({
-    //   ...state,
-    //     userId: null, 
-    //     username: null, 
-    //     userVO: null, 
-    //     error: null
-    // })),
+    on(UserActions.createUserSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        id: null, 
+        userId: null, 
+        userVO: null, 
+        users: [], 
+        error: action.error
+    })),
+    on(UserActions.updateUserNameSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        id: null, 
+        userId: null, 
+        userVO: null, 
+        users: [], 
+        error: action.error
+    })),
+    on(UserActions.loadUsersSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        id: null, 
+        userId: null, 
+        userVO: null, 
+        users: [], 
+        error: action.error
+    })),
+    on(UserActions.userReset, (state) => ({
+      ...state,
+        searchCriteria: null, 
+        id: null, 
+        userId: null, 
+        userVO: null, 
+        users: [], 
+        error: null
+    })),
     on(UserActions.userFailure, (state, action) => ({
         ...state,
         error: action.error

@@ -14,7 +14,7 @@ export class LicenseTypeEffects {
          this.actions$.pipe(
             ofType(LicenseTypeActions.findById),
             mergeMap(({ id }) => this.licenseTypeRestController.findById(id).pipe(
-                map( results => LicenseTypeActions.findByIdSuccess({results})),
+//                map( results => LicenseTypeActions.findByIdSuccess({results})),
                 catchError(({error}) => [LicenseTypeActions.licenseTypeFailure(error)])
             ))
         )
@@ -24,7 +24,7 @@ export class LicenseTypeEffects {
          this.actions$.pipe(
             ofType(LicenseTypeActions.save),
             mergeMap(({ licenseTypeVO }) => this.licenseTypeRestController.save(licenseTypeVO).pipe(
-                map( results => LicenseTypeActions.saveSuccess({results})),
+//                map( results => LicenseTypeActions.saveSuccess({results})),
                 catchError(({error}) => [LicenseTypeActions.licenseTypeFailure(error)])
             ))
         )
@@ -34,7 +34,7 @@ export class LicenseTypeEffects {
          this.actions$.pipe(
             ofType(LicenseTypeActions.remove),
             mergeMap(({ id }) => this.licenseTypeRestController.remove(id).pipe(
-                map( results => LicenseTypeActions.removeSuccess({results})),
+//                map( results => LicenseTypeActions.removeSuccess({results})),
                 catchError(({error}) => [LicenseTypeActions.licenseTypeFailure(error)])
             ))
         )
@@ -44,7 +44,7 @@ export class LicenseTypeEffects {
          this.actions$.pipe(
             ofType(LicenseTypeActions.getAll),
             mergeMap(() => this.licenseTypeRestController.getAll().pipe(
-                map( results => LicenseTypeActions.getAllSuccess({results})),
+//                map( results => LicenseTypeActions.getAllSuccess({results})),
                 catchError(({error}) => [LicenseTypeActions.licenseTypeFailure(error)])
             ))
         )
@@ -54,7 +54,7 @@ export class LicenseTypeEffects {
          this.actions$.pipe(
             ofType(LicenseTypeActions.search),
             mergeMap(({ searchCriteria }) => this.licenseTypeRestController.search(searchCriteria).pipe(
-                map( results => LicenseTypeActions.searchSuccess({results})),
+//                map( results => LicenseTypeActions.searchSuccess({results})),
                 catchError(({error}) => [LicenseTypeActions.licenseTypeFailure(error)])
             ))
         )
@@ -63,8 +63,8 @@ export class LicenseTypeEffects {
     getAllPaged$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenseTypeActions.getAllPaged),
-            mergeMap(({pageNumber, pageSize}) => this.licenseTypeRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( results => LicenseTypeActions.getAllPagedSuccess({results})),
+            mergeMap(({ pageNumber, pageSize }) => this.licenseTypeRestController.getAllPaged(pageNumber, pageSize).pipe(
+//                map( results => LicenseTypeActions.getAllPagedSuccess({results})),
                 catchError(({error}) => [LicenseTypeActions.licenseTypeFailure(error)])
             ))
         )

@@ -2,50 +2,63 @@
 import { Action, createFeature, createReducer, on } from '@ngrx/store';
 import * as LicenseTypeActions from './license-type.action';
 import {licenseTypeKey, initialState} from './license-type.state';
-import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
-import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/type/license-type-criteria';
 
 export const licenseTypeReducer = createReducer(
     initialState,
     on(LicenseTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
-        licenseTypeVO: action.licenseTypeVO 
-        error: null
+        licenseTypeVO: null, 
+        licenseTypes: [], 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseTypeActions.saveSuccess, (state, action) => ({
         ...state,
-        licenseTypeVO: action.licenseTypeVO, 
-        error: null
+        licenseTypeVO: null, 
+        licenseTypes: [], 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseTypeActions.removeSuccess, (state, action) => ({
         ...state,
-        removed: action.removed,
-        error: null
+        licenseTypeVO: null, 
+        licenseTypes: [], 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseTypeActions.getAllSuccess, (state, action) => ({
         ...state,
-        licenseTypes: action.licenseTypes,
-        error: null
+        licenseTypeVO: null, 
+        licenseTypes: [], 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseTypeActions.searchSuccess, (state, action) => ({
         ...state,
-        licenseTypes: action.licenseTypes,
-        error: null
+        licenseTypeVO: null, 
+        licenseTypes: [], 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        licenseTypes: action.licenseTypes,
-        error: null
+        licenseTypeVO: null, 
+        licenseTypes: [], 
+        searchCriteria: null, 
+        id: null, 
+        error: action.error
     })),
     on(LicenseTypeActions.licenseTypeReset, (state) => ({
       ...state,
-        id: null, 
-        pageNumber: null, 
         licenseTypeVO: null, 
+        licenseTypes: [], 
         searchCriteria: null, 
-        pageSize: null, 
-        licenseTypes: [],
-        removed: false,
+        id: null, 
         error: null
     })),
     on(LicenseTypeActions.licenseTypeFailure, (state, action) => ({

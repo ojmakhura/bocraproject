@@ -14,7 +14,7 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.findById),
             mergeMap(({ id }) => this.formRestController.findById(id).pipe(
-                map( formVO => FormActions.findByIdSuccess({ formVO })),
+                map( formVO => FormActions.findByIdSuccess({formVO})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -24,7 +24,7 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.save),
             mergeMap(({ formVO }) => this.formRestController.save(formVO).pipe(
-                map( formVO => FormActions.saveSuccess({ formVO })),
+                map( formVO => FormActions.saveSuccess({formVO})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -54,7 +54,7 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.search),
             mergeMap(({ criteria }) => this.formRestController.search(criteria).pipe(
-                map( forms => FormActions.searchSuccess({ forms })),
+                map( forms => FormActions.searchSuccess({forms})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -63,8 +63,8 @@ export class FormEffects {
     getAllPaged$ = createEffect(() => 
          this.actions$.pipe(
             ofType(FormActions.getAllPaged),
-            mergeMap(({ pageNumber, pageSize}) => this.formRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( forms => FormActions.getAllPagedSuccess({ forms })),
+            mergeMap(({ pageNumber, pageSize }) => this.formRestController.getAllPaged(pageNumber, pageSize).pipe(
+                map( results => FormActions.getAllPagedSuccess({results})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )

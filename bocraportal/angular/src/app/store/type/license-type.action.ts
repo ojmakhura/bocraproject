@@ -16,8 +16,8 @@ export enum LicenseTypeActionType {
     SEARCH_SUCCESS = '[LicenseType] Search Success',
     GET_ALL_PAGED = '[LicenseType] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[LicenseType] Get All Paged Success',
-    LICENSETYPE_RESET = '[LicenseType] License Type Reset',
-    LICENSETYPE_FAILURE = '[LicenseType] License Type Action Failure'
+    LICENSETYPE_RESET = '[LicenseType] LicenseType Reset',
+    LICENSETYPE_FAILURE = '[LicenseType] LicenseType Action Failure'
 }
 
 export const findById = createAction(
@@ -27,7 +27,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     LicenseTypeActionType.FIND_BY_ID_SUCCESS,
-    props<{ licenceTypeVO: LicenseTypeVO | any }>()
+//    props<{ results: LicenseTypeVO | any }>()
 );
 
 export const save = createAction(
@@ -37,7 +37,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     LicenseTypeActionType.SAVE_SUCCESS,
-    props<{ licenceTypeVO: LicenseTypeVO | any }>()
+//    props<{ results: LicenseTypeVO | any }>()
 );
 
 export const remove = createAction(
@@ -47,7 +47,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     LicenseTypeActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any }>()
+//    props<{ results: boolean | any }>()
 );
 
 export const getAll = createAction(
@@ -55,7 +55,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     LicenseTypeActionType.GET_ALL_SUCCESS,
-    props<{ licenceTypes: LicenseTypeVO[] | any }>()
+//    props<{ results: LicenseTypeVO[] | any }>()
 );
 
 export const search = createAction(
@@ -65,7 +65,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     LicenseTypeActionType.SEARCH_SUCCESS,
-    props<{ licenceTypes: LicenseTypeVO[] | any }>()
+//    props<{ results: LicenseTypeVO[] | any }>()
 );
 
 export const getAllPaged = createAction(
@@ -75,7 +75,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     LicenseTypeActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ licenceTypes: LicenseTypeVO[] | any }>()
+//    props<{ results: LicenseTypeVO[] | any }>()
 );
 
 
