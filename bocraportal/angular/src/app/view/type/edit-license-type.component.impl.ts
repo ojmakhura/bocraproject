@@ -4,7 +4,7 @@ import { EditLicenseTypeComponent, EditLicenseTypeDeleteForm, EditLicenseTypeVar
 import { EditLicenseTypeSaveForm } from '@app/view/type/edit-license-type.component';
 import { EditLicenseTypeSearchForm } from '@app/view/type/edit-license-type.component';
 import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
-import * as licenseTypeSelectors from '@app/store/type/license-type.selector';
+import * as licenseTypeSelectors from '@app/store/type/license-type.selectors';
 import * as licenseTypeActions from '@app/store/type/license-type.actions';
 import { Observable } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
