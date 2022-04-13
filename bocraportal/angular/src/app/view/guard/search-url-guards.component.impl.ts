@@ -18,13 +18,11 @@ import { SelectItem } from '@app/utils/select-item';
   styleUrls: ['./search-url-guards.component.scss'],
 })
 export class SearchURLGuardsComponentImpl extends SearchURLGuardsComponent {
-  urlGuards$: Observable<UrlGuardVO[]>;
   protected keycloakService: KeycloakService;
   protected http: HttpClient;
 
   constructor(private injector: Injector) {
     super(injector);
-    this.urlGuards$ = this.store.pipe(select(guardSelectors.selectUrlGuards));
     this.keycloakService = this._injector.get(KeycloakService);
     this.http = this._injector.get(HttpClient);
   }
@@ -56,10 +54,12 @@ export class SearchURLGuardsComponentImpl extends SearchURLGuardsComponent {
   afterOnInit() {}
 
   doNgAfterViewInit() {
-    this.urlGuards$.subscribe((guards) => {
-      this.setUrlGuards(guards);
-    });
+    // this.urlGuards$.subscribe((guards) => {
+    //   this.setUrlGuards(guards);
+    // });
   }
+
+  doNgOnDestroy(){}
 
   handleFormChanges(change: any) {}
 

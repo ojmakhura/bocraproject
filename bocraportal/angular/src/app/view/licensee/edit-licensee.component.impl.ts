@@ -20,16 +20,10 @@ import { KeycloakService } from 'keycloak-angular';
   styleUrls: ['./edit-licensee.component.scss'],
 })
 export class EditLicenseeComponentImpl extends EditLicenseeComponent {
-  licensee$: Observable<LicenseeVO>;
-  licensees$: Observable<LicenseeVO[]>;
-  id$: Observable<number>;
   protected keycloakService: KeycloakService;
 
   constructor(private injector: Injector) {
     super(injector);
-    this.licensee$ = this.store.pipe(select(licenseeSelectors.selectLicenseeVO));
-    this.licensees$ = this.store.pipe(select(licenseeSelectors.selectLicensees));
-    this.id$ = this.store.pipe(select(licenseeSelectors.selectId));
     this.keycloakService = injector.get(KeycloakService);
   }
 
@@ -40,7 +34,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       this.store.dispatch(licenseeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
     }
 
-    this.licensee$.subscribe((licensee) => {
+    this.licenseeVO$.subscribe((licensee) => {
       this.setEditLicenseeSaveForm({ licenseeVO: licensee } as EditLicenseeSaveForm);
     });
   }
@@ -48,6 +42,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   doNgAfterViewInit() {}
 
   handleFormChanges(change: any) {}
+
+  doNgOnDestroy(){}
 
   /**
    * This method may be overwritten

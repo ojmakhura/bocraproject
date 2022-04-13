@@ -27,6 +27,8 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
     handleFormChanges(change: any) {
     }
 
+    doNgOnDestroy(){}
+
     /**
      * This method may be overwritten
      */

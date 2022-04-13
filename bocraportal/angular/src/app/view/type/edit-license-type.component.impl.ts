@@ -4,11 +4,9 @@ import { EditLicenseTypeComponent, EditLicenseTypeDeleteForm, EditLicenseTypeVar
 import { EditLicenseTypeSaveForm } from '@app/view/type/edit-license-type.component';
 import { EditLicenseTypeSearchForm } from '@app/view/type/edit-license-type.component';
 import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
-import * as licenseTypeSelectors from '@app/store/type/license-type.selectors';
 import * as licenseTypeActions from '@app/store/type/license-type.actions';
 import { Observable } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
-import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-edit-license-type',
@@ -23,9 +21,6 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
 
   constructor(private injector: Injector) {
     super(injector);
-    this.licenseeType$ = this.store.pipe(select(licenseTypeSelectors.selectLicenseTypeVO));
-    this.licenseeTypes$ = this.store.pipe(select(licenseTypeSelectors.selectLicenseTypes));
-    this.id$ = this.store.pipe(select(licenseTypeSelectors.selectId));
     this.keycloakService = injector.get(KeycloakService);
   }
 
@@ -36,7 +31,7 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
       this.store.dispatch(licenseTypeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
     }
 
-    this.licenseeType$.subscribe((licenseType) => {
+    this.licenseTypeVO$.subscribe((licenseType) => {
       this.setEditLicenseTypeSaveForm({ licenseTypeVO: licenseType } as EditLicenseTypeSaveForm);
     });
   }
@@ -44,6 +39,8 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
   doNgAfterViewInit() {}
 
   handleFormChanges(change: any) {}
+
+  doNgOnDestroy(){}
 
   /**
    * This method may be overwritten

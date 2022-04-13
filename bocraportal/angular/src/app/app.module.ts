@@ -42,13 +42,13 @@ import { PeriodConfigControllerImpl } from '@app/controller/period/config/period
 import { FormModule } from '@app/view/form/form.module';
 import { FormControllerImpl } from '@app/controller/form/form-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
-import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
-import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
-import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
+import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
 import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
+import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
+import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -85,13 +85,13 @@ true
     ],
     providers: [
         UseCaseScope,
-        FormRestControllerImpl,
-        UserRestControllerImpl,
-        PeriodRestControllerImpl,
-        LicenseeRestControllerImpl,
         LicenseTypeRestControllerImpl,
-        UrlGuardRestControllerImpl,
+        UserRestControllerImpl,
+        LicenseeRestControllerImpl,
+        FormRestControllerImpl,
         PeriodConfigRestControllerImpl,
+        UrlGuardRestControllerImpl,
+        PeriodRestControllerImpl,
         LicenseeControllerImpl,
         LicenseTypeControllerImpl,
         UserControllerImpl,

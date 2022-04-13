@@ -28,6 +28,8 @@ export class SearchUsersComponentImpl extends SearchUsersComponent {
     handleFormChanges(change: any) {
     }
 
+    doNgOnDestroy(){}
+
     /**
      * This method may be overwritten
      */

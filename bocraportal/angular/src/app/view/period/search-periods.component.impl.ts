@@ -28,6 +28,8 @@ export class SearchPeriodsComponentImpl extends SearchPeriodsComponent {
     handleFormChanges(change: any) {
     }
 
+    doNgOnDestroy(){}
+
     /**
      * This method may be overwritten
      */

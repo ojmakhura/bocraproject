@@ -29,6 +29,8 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
     handleFormChanges(change: any) {
     }
 
+    doNgOnDestroy(){}
+
     /**
      * This method may be overwritten
      */

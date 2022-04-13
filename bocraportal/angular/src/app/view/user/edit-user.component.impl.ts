@@ -29,6 +29,8 @@ export class EditUserComponentImpl extends EditUserComponent {
     handleFormChanges(change: any) {
     }
 
+    doNgOnDestroy(){}
+
     /**
      * This method may be overwritten
      */

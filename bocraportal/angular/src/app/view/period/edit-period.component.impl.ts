@@ -23,6 +23,8 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     afterOnInit() {
     }
 
+    doNgOnDestroy(){}
+
     doNgAfterViewInit() {
     }
 

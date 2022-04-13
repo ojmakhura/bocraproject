@@ -2,10 +2,6 @@
 import { Component, Injector } from '@angular/core';
 import { SearchLicenseTypesComponent, SearchLicenseTypesVarsForm } from '@app/view/type/search-license-types.component';
 import { SearchLicenseTypesSearchForm } from '@app/view/type/search-license-types.component';
-import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
-import { Observable } from 'rxjs';
-import { select } from '@ngrx/store';
-import * as licenseTypeSelectors from '@app/store/type/license-type.selectors';
 import * as licenseTypeActions from '@app/store/type/license-type.actions';
 
 @Component({
@@ -15,20 +11,18 @@ import * as licenseTypeActions from '@app/store/type/license-type.actions';
 })
 export class SearchLicenseTypesComponentImpl extends SearchLicenseTypesComponent {
 
-    licenseTypes$: Observable<LicenseTypeVO[]>;
     
     constructor(private injector: Injector) {
         super(injector);
-        this.licenseTypes$ = this.store.pipe(select(licenseTypeSelectors.selectLicenseTypes));
     }
 
     beforeOnInit(){
     }
 	
     afterOnInit() {
-        this.licenseTypes$.subscribe(licenseTypes => {
-            this.setLicenseTypes(licenseTypes);
-        });
+        // this.licenseTypes$.subscribe(licenseTypes => {
+        //     this.setLicenseTypes(licenseTypes);
+        // });
     }
 
     doNgAfterViewInit() {
@@ -36,6 +30,8 @@ export class SearchLicenseTypesComponentImpl extends SearchLicenseTypesComponent
 
     handleFormChanges(change: any) {
     }
+
+    doNgOnDestroy(){}
 
     /**
      * This method may be overwritten

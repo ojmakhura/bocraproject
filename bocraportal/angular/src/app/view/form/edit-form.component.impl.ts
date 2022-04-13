@@ -29,6 +29,10 @@ export class EditFormComponentImpl extends EditFormComponent {
     handleFormChanges(change: any) {
     }
 
+    doNgOnDestroy() {
+      
+    }
+
     /**
      * This method may be overwritten
      */

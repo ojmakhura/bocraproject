@@ -10,7 +10,7 @@ mvn_build_api:
 	cd bocraportal/webservice && mvn install -Dmaven.test.skip=true -o
 
 mvn_build_web:
-	cd bocraportal/webservice && mvn install -f angular -Dmaven.test.skip=true -o
+	cd bocraportal && mvn install -f angular -Dmaven.test.skip=true -o
 
 mvn_build_all: 
 	cd bocraportal &&  mvn install -Dmaven.test.skip=true -o
@@ -73,7 +73,7 @@ run_local_app: build_local_images up_local_app
 run_api_local: rm_env gen_local_env
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/webservice && mvn spring-boot:run
 
-local_web_deps: rm_env gen_local_env mvn_build_all
+local_web_deps: rm_env gen_local_env mvn_build_web
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm i
 
 run_web_local: rm_env gen_local_env

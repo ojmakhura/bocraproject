@@ -22,17 +22,11 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
 
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
-  urlGuard$: Observable<UrlGuardVO>;
-  urlGuards$: Observable<UrlGuardVO[]>;
-  id$: Observable<number>;
 
   constructor(private injector: Injector) {
     super(injector);
     this.http = this._injector.get(HttpClient);
     this.keycloakService = this._injector.get(KeycloakService);
-    this.urlGuard$ = this.store.pipe(select(guardSelectors.selectUrlGuardVO))
-    this.urlGuards$ = this.store.pipe(select(guardSelectors.selectUrlGuards))
-    this.id$ = this.store.pipe(select(guardSelectors.selectId))
   }
 
     beforeOnInit(){
@@ -67,7 +61,7 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
         this.store.dispatch(guardActions.findById({id: this.useCaseScope.pageVariables['id']}));
       }
   
-      this.urlGuard$.subscribe(guard => {
+      this.urlGuardVO$.subscribe(guard => {
         this.setEditURLGuardSaveForm({urlGuardVO: guard} as EditURLGuardSaveForm);
       });
     }
@@ -99,6 +93,8 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
       }
       this.store.dispatch(guardActions.save({urlGuardVO: form.urlGuardVO}));
     }
+
+    doNgOnDestroy(){}
 
     /**
      * This method may be overwritten

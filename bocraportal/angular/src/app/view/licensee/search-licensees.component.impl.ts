@@ -19,7 +19,6 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
     }
 	
     afterOnInit() {
-        this.addLicenseesDummyData();
     }
 
     doNgAfterViewInit() {
@@ -27,6 +26,8 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
 
     handleFormChanges(change: any) {
     }
+
+    doNgOnDestroy(){}
 
     /**
      * This method may be overwritten

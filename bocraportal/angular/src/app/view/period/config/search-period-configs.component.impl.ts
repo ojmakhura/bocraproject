@@ -22,6 +22,8 @@ export class SearchPeriodConfigsComponentImpl extends SearchPeriodConfigsCompone
         // this.addPeriodConfigsDummyData();
     }
 
+    doNgOnDestroy(){}
+
     doNgAfterViewInit() {
     }
 
