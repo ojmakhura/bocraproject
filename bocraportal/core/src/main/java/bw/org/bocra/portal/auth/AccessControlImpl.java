@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @see bw.org.bocra.portal.auth.AccessControl
  */
-@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
+//@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 @Service("accessControl")
 public class AccessControlImpl
     extends AccessControlBase
