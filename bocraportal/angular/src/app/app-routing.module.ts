@@ -43,6 +43,10 @@ const routes: Routes = [
       path: 'form', 
       loadChildren: async () => (await import('@app/view/form/form.module')).FormModule
     },
+    {
+      path: 'formsubmission', 
+      loadChildren: async () => (await import('@app/view/form/submission/form-submission.module')).FormSubmissionModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 
