@@ -6,7 +6,7 @@ import { EditFormDeleteForm } from '@app/view/form/edit-form.component';
 import { EditFormSearchForm } from '@app/view/form/edit-form.component';
 import { EditFormVarsForm } from '@app/view/form/edit-form.component';
 import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
-
+import { select } from '@ngrx/store';
 @Component({
   selector: 'app-edit-form',
   templateUrl: './edit-form.component.html',
@@ -105,8 +105,9 @@ export class EditFormComponentImpl extends EditFormComponent {
 
     }
 
-    handleFormVOLicenseTypesAddDialog(): void {
+    handleFormLicenseTypesAddDialog(): void {
       
     }
     
+    handleFormFormFieldsAddDialog(): void {}
 }

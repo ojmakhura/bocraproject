@@ -7,7 +7,7 @@ export const periodConfigReducer = createReducer(
     initialState,
     on(PeriodConfigActions.findByIdSuccess, (state, action) => ({
         ...state,
-        periodConfigVO: action.periodConfigVO, 
+        periodConfig: action.periodConfig, 
         searchCriteria: null, 
         id: null, 
         periodConfigs: [], 
@@ -16,7 +16,7 @@ export const periodConfigReducer = createReducer(
     })),
     on(PeriodConfigActions.saveSuccess, (state, action) => ({
         ...state,
-        periodConfigVO: action.periodConfigVO, 
+        periodConfig: action.periodConfig, 
         searchCriteria: null, 
         id: null, 
         periodConfigs: [], 
@@ -25,7 +25,7 @@ export const periodConfigReducer = createReducer(
     })),
     on(PeriodConfigActions.removeSuccess, (state, action) => ({
         ...state,
-        periodConfigVO: null, 
+        periodConfig: null, 
         searchCriteria: null, 
         id: null, 
         periodConfigs: [], 
@@ -34,7 +34,7 @@ export const periodConfigReducer = createReducer(
     })),
     on(PeriodConfigActions.getAllSuccess, (state, action) => ({
         ...state,
-        periodConfigVO: null, 
+        periodConfig: null, 
         searchCriteria: null, 
         id: null, 
         periodConfigs: action.periodConfigs, 
@@ -43,7 +43,7 @@ export const periodConfigReducer = createReducer(
     })),
     on(PeriodConfigActions.searchSuccess, (state, action) => ({
         ...state,
-        periodConfigVO: null, 
+        periodConfig: null, 
         searchCriteria: null, 
         id: null, 
         periodConfigs: action.periodConfigs, 
@@ -52,7 +52,7 @@ export const periodConfigReducer = createReducer(
     })),
     on(PeriodConfigActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        periodConfigVO: null, 
+        periodConfig: null, 
         searchCriteria: null, 
         id: null, 
         periodConfigs: action.periodConfigs, 
@@ -61,7 +61,7 @@ export const periodConfigReducer = createReducer(
     })),
     on(PeriodConfigActions.periodConfigReset, (state) => ({
       ...state,
-        periodConfigVO: null, 
+        periodConfig: null, 
         searchCriteria: null, 
         id: null, 
         periodConfigs: [], 

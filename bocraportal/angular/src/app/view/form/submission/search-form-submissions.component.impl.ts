@@ -19,7 +19,6 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
     }
 	
     afterOnInit() {
-        this.addSubmissionsDummyData();
     }
 
     doNgAfterViewInit() {

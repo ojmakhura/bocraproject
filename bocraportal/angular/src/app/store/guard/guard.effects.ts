@@ -14,7 +14,7 @@ export class GuardEffects {
          this.actions$.pipe(
             ofType(GuardActions.findById),
             mergeMap(({ id }) => this.urlGuardRestController.findById(id).pipe(
-                map( urlGuardVO => GuardActions.findByIdSuccess({urlGuardVO})),
+                map( urlGuard => GuardActions.findByIdSuccess({urlGuard})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )
@@ -23,8 +23,8 @@ export class GuardEffects {
     save$ = createEffect(() => 
          this.actions$.pipe(
             ofType(GuardActions.save),
-            mergeMap(({ urlGuardVO }) => this.urlGuardRestController.save(urlGuardVO).pipe(
-                map( urlGuardVO => GuardActions.saveSuccess({urlGuardVO})),
+            mergeMap(({ urlGuard }) => this.urlGuardRestController.save(urlGuard).pipe(
+                map( urlGuard => GuardActions.saveSuccess({urlGuard})),
                 catchError(({error}) => [GuardActions.guardFailure(error)])
             ))
         )

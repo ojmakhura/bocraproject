@@ -27,17 +27,17 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     LicenseTypeActionType.FIND_BY_ID_SUCCESS,
-    props<{ licenseTypeVO: LicenseTypeVO | any }>()
+    props<{ licenseType: LicenseTypeVO | any }>()
 );
 
 export const save = createAction(
     LicenseTypeActionType.SAVE,
-    props<{ licenseTypeVO: LicenseTypeVO | any  }>()
+    props<{ licenseType: LicenseTypeVO | any  }>()
 );
 
 export const saveSuccess = createAction(
     LicenseTypeActionType.SAVE_SUCCESS,
-    props<{ licenseTypeVO: LicenseTypeVO | any }>()
+    props<{ licenseType: LicenseTypeVO | any }>()
 );
 
 export const remove = createAction(

@@ -27,17 +27,17 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     GuardActionType.FIND_BY_ID_SUCCESS,
-    props<{ urlGuardVO: UrlGuardVO | any }>()
+    props<{ urlGuard: UrlGuardVO | any }>()
 );
 
 export const save = createAction(
     GuardActionType.SAVE,
-    props<{ urlGuardVO: UrlGuardVO | any  }>()
+    props<{ urlGuard: UrlGuardVO | any  }>()
 );
 
 export const saveSuccess = createAction(
     GuardActionType.SAVE_SUCCESS,
-    props<{ urlGuardVO: UrlGuardVO | any }>()
+    props<{ urlGuard: UrlGuardVO | any }>()
 );
 
 export const remove = createAction(

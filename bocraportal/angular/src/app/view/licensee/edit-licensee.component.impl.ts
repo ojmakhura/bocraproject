@@ -34,8 +34,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       this.store.dispatch(licenseeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
     }
 
-    this.licenseeVO$.subscribe((licensee) => {
-      this.setEditLicenseeSaveForm({ licenseeVO: licensee } as EditLicenseeSaveForm);
+    this.licensee$.subscribe((licensee) => {
+      this.setEditLicenseeSaveForm({ licensee: licensee } as EditLicenseeSaveForm);
     });
   }
 
@@ -54,16 +54,16 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
    * This method may be overwritten
    */
   beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
-    if(form.licenseeVO?.id) {
+    if(form.licensee?.id) {
 
-      form.licenseeVO.updatedBy = this.keycloakService.getUsername();
-      form.licenseeVO.updatedDate = new Date();
+      form.licensee.updatedBy = this.keycloakService.getUsername();
+      form.licensee.updatedDate = new Date();
     } else {
-      form.licenseeVO.createdBy = this.keycloakService.getUsername();
-      form.licenseeVO.createdDate = new Date();
+      form.licensee.createdBy = this.keycloakService.getUsername();
+      form.licensee.createdDate = new Date();
     }
     
-    this.store.dispatch(licenseeActions.save({ licenseeVO: form.licenseeVO }));
+    this.store.dispatch(licenseeActions.save({ licensee: form.licensee }));
   }
 
   /**
@@ -93,4 +93,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   afterEditLicenseeDelete(form: EditLicenseeDeleteForm): void {}
 
   afterSetEditLicenseeVarsForm(form: EditLicenseeVarsForm): void {}
+
+  handleLicenseeLicenseTypesAddDialog(): void {}
+
+  handleLicenseeUsersAddDialog(): void {}
 }

@@ -7,7 +7,7 @@ export const licenseTypeReducer = createReducer(
     initialState,
     on(LicenseTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
-        licenseTypeVO: action.licenseTypeVO, 
+        licenseType: action.licenseType, 
         licenseTypes: [], 
         searchCriteria: null, 
         id: null, 
@@ -16,7 +16,7 @@ export const licenseTypeReducer = createReducer(
     })),
     on(LicenseTypeActions.saveSuccess, (state, action) => ({
         ...state,
-        licenseTypeVO: action.licenseTypeVO, 
+        licenseType: action.licenseType, 
         licenseTypes: [], 
         searchCriteria: null, 
         id: null, 
@@ -25,7 +25,7 @@ export const licenseTypeReducer = createReducer(
     })),
     on(LicenseTypeActions.removeSuccess, (state, action) => ({
         ...state,
-        licenseTypeVO: null, 
+        licenseType: null, 
         licenseTypes: [], 
         searchCriteria: null, 
         id: null, 
@@ -34,7 +34,7 @@ export const licenseTypeReducer = createReducer(
     })),
     on(LicenseTypeActions.getAllSuccess, (state, action) => ({
         ...state,
-        licenseTypeVO: null, 
+        licenseType: null, 
         licenseTypes: action.licenseTypes, 
         searchCriteria: null, 
         id: null, 
@@ -43,7 +43,7 @@ export const licenseTypeReducer = createReducer(
     })),
     on(LicenseTypeActions.searchSuccess, (state, action) => ({
         ...state,
-        licenseTypeVO: null, 
+        licenseType: null, 
         licenseTypes: action.licenseTypes, 
         searchCriteria: null, 
         id: null, 
@@ -52,7 +52,7 @@ export const licenseTypeReducer = createReducer(
     })),
     on(LicenseTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        licenseTypeVO: null, 
+        licenseType: null, 
         licenseTypes: action.licenseTypes, 
         searchCriteria: null, 
         id: null, 
@@ -61,7 +61,7 @@ export const licenseTypeReducer = createReducer(
     })),
     on(LicenseTypeActions.licenseTypeReset, (state) => ({
       ...state,
-        licenseTypeVO: null, 
+        licenseType: null, 
         licenseTypes: [], 
         searchCriteria: null, 
         id: null, 

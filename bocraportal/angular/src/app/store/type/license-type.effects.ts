@@ -14,7 +14,7 @@ export class LicenseTypeEffects {
          this.actions$.pipe(
             ofType(LicenseTypeActions.findById),
             mergeMap(({ id }) => this.licenseTypeRestController.findById(id).pipe(
-                map( licenseTypeVO => LicenseTypeActions.findByIdSuccess({licenseTypeVO})),
+                map( licenseType => LicenseTypeActions.findByIdSuccess({licenseType})),
                 catchError(({error}) => [LicenseTypeActions.licenseTypeFailure(error)])
             ))
         )
@@ -23,8 +23,8 @@ export class LicenseTypeEffects {
     save$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenseTypeActions.save),
-            mergeMap(({ licenseTypeVO }) => this.licenseTypeRestController.save(licenseTypeVO).pipe(
-                map( licenseTypeVO => LicenseTypeActions.saveSuccess({licenseTypeVO})),
+            mergeMap(({ licenseType }) => this.licenseTypeRestController.save(licenseType).pipe(
+                map( licenseType => LicenseTypeActions.saveSuccess({licenseType})),
                 catchError(({error}) => [LicenseTypeActions.licenseTypeFailure(error)])
             ))
         )

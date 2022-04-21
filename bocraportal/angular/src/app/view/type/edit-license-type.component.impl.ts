@@ -21,7 +21,7 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.licensees$ = this.store.select(select(LicenseSelectors.selectLicensees));
+    this.licensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
   }
 
   beforeOnInit() {}
@@ -31,8 +31,8 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
       this.store.dispatch(licenseTypeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
     }
 
-    this.licenseTypeVO$.subscribe((licenseType) => {
-      this.setEditLicenseTypeSaveForm({ licenseTypeVO: licenseType } as EditLicenseTypeSaveForm);
+    this.licenseType$.subscribe((licenseType) => {
+      this.setEditLicenseTypeSaveForm({ licenseType: licenseType } as EditLicenseTypeSaveForm);
     });
   }
 
@@ -51,16 +51,16 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
    * This method may be overwritten
    */
   beforeEditLicenseTypeSave(form: EditLicenseTypeSaveForm): void {
-    if(form.licenseTypeVO?.id) {
+    if(form.licenseType?.id) {
 
-      form.licenseTypeVO.updatedBy = this.keycloakService.getUsername();
-      form.licenseTypeVO.updatedDate = new Date();
+      form.licenseType.updatedBy = this.keycloakService.getUsername();
+      form.licenseType.updatedDate = new Date();
     } else {
-      form.licenseTypeVO.createdBy = this.keycloakService.getUsername();
-      form.licenseTypeVO.createdDate = new Date();
+      form.licenseType.createdBy = this.keycloakService.getUsername();
+      form.licenseType.createdDate = new Date();
     }
 
-    this.store.dispatch(licenseTypeActions.save({ licenseTypeVO: form.licenseTypeVO }));
+    this.store.dispatch(licenseTypeActions.save({ licenseType: form.licenseType }));
   }
 
   /**
@@ -95,6 +95,8 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
   afterSetEditLicenseTypeVarsForm(form: EditLicenseTypeVarsForm): void {
   }
 
-  handleLicenseTypeVOLicenseesAddDialog(): void {}
+  handleLicenseTypeLicenseesAddDialog(): void {}
+
+  handleLicenseTypeFormsAddDialog(): void {}
 
 }

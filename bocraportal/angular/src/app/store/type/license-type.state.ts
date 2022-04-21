@@ -5,7 +5,7 @@ import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/type/license
 export const licenseTypeKey = "licenseType";
 
 export interface LicenseTypeState {
-    licenseTypeVO: LicenseTypeVO | any,
+    licenseType: LicenseTypeVO | any,
     id: number | any,
     licenseTypes: Array<LicenseTypeVO> | Array<any>,
     searchCriteria: LicenseTypeCriteria | any,
@@ -14,7 +14,7 @@ export interface LicenseTypeState {
 }
 
 export const initialState: LicenseTypeState = {
-    licenseTypeVO: null,
+    licenseType: null,
     id: null,
     licenseTypes: [],
     searchCriteria: null,

@@ -9,7 +9,7 @@ export const periodReducer = createReducer(
         ...state,
         periods: [], 
         searchCriteria: null, 
-        periodVO: action.periodVO, 
+        period: action.period, 
         id: null, 
         removed: false,
         error: null
@@ -18,7 +18,7 @@ export const periodReducer = createReducer(
         ...state,
         periods: [], 
         searchCriteria: null, 
-        periodVO: action.periodVO, 
+        period: action.period, 
         id: null, 
         removed: false,
         error: null
@@ -27,7 +27,7 @@ export const periodReducer = createReducer(
         ...state,
         periods: [], 
         searchCriteria: null, 
-        periodVO: null, 
+        period: null, 
         id: null, 
         removed: action.removed,
         error: null
@@ -36,7 +36,7 @@ export const periodReducer = createReducer(
         ...state,
         periods: action.periods, 
         searchCriteria: null, 
-        periodVO: null, 
+        period: null, 
         id: null, 
         removed: false,
         error: null
@@ -45,7 +45,7 @@ export const periodReducer = createReducer(
         ...state,
         periods: action.periods, 
         searchCriteria: null, 
-        periodVO: null, 
+        period: null, 
         id: null, 
         removed: false,
         error: null
@@ -54,7 +54,7 @@ export const periodReducer = createReducer(
         ...state,
         periods: action.periods, 
         searchCriteria: null, 
-        periodVO: null, 
+        period: null, 
         id: null, 
         removed: false,
         error: null
@@ -63,7 +63,7 @@ export const periodReducer = createReducer(
       ...state,
         periods: [], 
         searchCriteria: null, 
-        periodVO: null, 
+        period: null, 
         id: null, 
         removed: false,
         error: null

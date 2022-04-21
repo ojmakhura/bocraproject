@@ -8,7 +8,7 @@ export const licenseeReducer = createReducer(
     on(LicenseeActions.findByIdSuccess, (state, action) => ({
         ...state,
         licensees: [], 
-        licenseeVO: action.licenseeVO, 
+        licensee: action.licensee, 
         searchCriteria: null, 
         removed: false,
         id: null, 
@@ -17,7 +17,7 @@ export const licenseeReducer = createReducer(
     on(LicenseeActions.saveSuccess, (state, action) => ({
         ...state,
         licensees: [], 
-        licenseeVO: action.licenseeVO, 
+        licensee: action.licensee, 
         searchCriteria: null, 
         removed: false,
         id: null, 
@@ -26,7 +26,7 @@ export const licenseeReducer = createReducer(
     on(LicenseeActions.removeSuccess, (state, action) => ({
         ...state,
         licensees: [], 
-        licenseeVO: null, 
+        licensee: null, 
         searchCriteria: null, 
         removed: action.removed,
         id: null, 
@@ -35,7 +35,7 @@ export const licenseeReducer = createReducer(
     on(LicenseeActions.getAllSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
-        licenseeVO: null, 
+        licensee: null, 
         searchCriteria: null, 
         removed: false,
         id: null, 
@@ -44,7 +44,7 @@ export const licenseeReducer = createReducer(
     on(LicenseeActions.searchLicenseesSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
-        licenseeVO: null, 
+        licensee: null, 
         searchCriteria: null, 
         removed: false,
         id: null, 
@@ -53,7 +53,7 @@ export const licenseeReducer = createReducer(
     on(LicenseeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
-        licenseeVO: null, 
+        licensee: null, 
         searchCriteria: null, 
         removed: false,
         id: null, 
@@ -62,7 +62,7 @@ export const licenseeReducer = createReducer(
     on(LicenseeActions.licenseeReset, (state) => ({
       ...state,
         licensees: [], 
-        licenseeVO: null, 
+        licensee: null, 
         searchCriteria: null, 
         removed: false,
         id: null, 

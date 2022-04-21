@@ -9,7 +9,7 @@ export const formReducer = createReducer(
         ...state,
         searchCriteria: null, 
         forms: [], 
-        formVO: action.formVO, 
+        form: action.form, 
         id: null,
         removed: false,
         error: null
@@ -18,7 +18,7 @@ export const formReducer = createReducer(
         ...state,
         searchCriteria: null, 
         forms: [], 
-        formVO: action.formVO, 
+        form: action.form, 
         id: null, 
         removed: false,
         error: null
@@ -27,7 +27,7 @@ export const formReducer = createReducer(
         ...state,
         searchCriteria: null, 
         forms: [], 
-        formVO: null, 
+        form: null, 
         id: null, 
         removed: action.removed,
         error: null
@@ -36,7 +36,7 @@ export const formReducer = createReducer(
         ...state,
         searchCriteria: null, 
         forms: action.forms, 
-        formVO: null, 
+        form: null, 
         id: null, 
         removed: false,
         error: null
@@ -45,7 +45,7 @@ export const formReducer = createReducer(
         ...state,
         searchCriteria: null, 
         forms: action.forms, 
-        formVO: null, 
+        form: null, 
         id: null, 
         removed: false,
         error: null
@@ -54,7 +54,7 @@ export const formReducer = createReducer(
         ...state,
         searchCriteria: null, 
         forms: action.forms, 
-        formVO: null, 
+        form: null, 
         id: null, 
         removed: false,
         error: null
@@ -63,7 +63,7 @@ export const formReducer = createReducer(
       ...state,
         searchCriteria: null, 
         forms: [], 
-        formVO: null, 
+        form: null, 
         id: null, 
         removed: false,
         error: null

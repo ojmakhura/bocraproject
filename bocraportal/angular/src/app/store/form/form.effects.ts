@@ -14,7 +14,7 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.findById),
             mergeMap(({ id }) => this.formRestController.findById(id).pipe(
-                map( formVO => FormActions.findByIdSuccess({formVO})),
+                map( form => FormActions.findByIdSuccess({form})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -23,8 +23,8 @@ export class FormEffects {
     save$ = createEffect(() => 
          this.actions$.pipe(
             ofType(FormActions.save),
-            mergeMap(({ formVO }) => this.formRestController.save(formVO).pipe(
-                map( formVO => FormActions.saveSuccess({formVO})),
+            mergeMap(({ form }) => this.formRestController.save(form).pipe(
+                map( form => FormActions.saveSuccess({form})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )

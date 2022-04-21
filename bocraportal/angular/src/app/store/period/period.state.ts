@@ -8,7 +8,7 @@ export interface PeriodState {
     id: number | any,
     searchCriteria: PeriodCriteria | any,
     periods: Array<PeriodVO> | Array<any>,
-    periodVO: PeriodVO | any,
+    period: PeriodVO | any,
     removed: boolean,
     error: any
 }
@@ -17,7 +17,7 @@ export const initialState: PeriodState = {
     id: null,
     searchCriteria: null,
     periods: [],
-    periodVO: null,
+    period: null,
     removed: false,
     error: null
 };

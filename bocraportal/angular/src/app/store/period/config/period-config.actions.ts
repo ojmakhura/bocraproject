@@ -27,17 +27,17 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     PeriodConfigActionType.FIND_BY_ID_SUCCESS,
-    props<{ periodConfigVO: PeriodConfigVO | any }>()
+    props<{ periodConfig: PeriodConfigVO | any }>()
 );
 
 export const save = createAction(
     PeriodConfigActionType.SAVE,
-    props<{ periodConfigVO: PeriodConfigVO | any  }>()
+    props<{ periodConfig: PeriodConfigVO | any  }>()
 );
 
 export const saveSuccess = createAction(
     PeriodConfigActionType.SAVE_SUCCESS,
-    props<{ periodConfigVO: PeriodConfigVO | any }>()
+    props<{ periodConfig: PeriodConfigVO | any }>()
 );
 
 export const remove = createAction(

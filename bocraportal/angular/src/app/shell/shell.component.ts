@@ -37,7 +37,9 @@ export class ShellComponent implements OnInit, AfterViewInit {
       nav.menuItems.forEach(value => {
         guards.find(guard => {
           if(guard.url === value.routerLink) {
-            this.menus.push(value);
+            if(!this.menus.find(menu => menu.routerLink === guard.url)){
+              this.menus.push(value);
+            }
           }
         })
       })

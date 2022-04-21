@@ -38,7 +38,7 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
           item.label = val['description'];
           item.value = val['name'];
           
-          this.urlGuardVORolesBackingList.push(item);
+          this.urlGuardRolesBackingList.push(item);
         })
       });
 
@@ -50,7 +50,7 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
           item.label = val['description'];
           item.value = val['name'];
           
-          this.urlGuardVORolesBackingList.push(item);
+          this.urlGuardRolesBackingList.push(item);
         })
       });
     }
@@ -61,8 +61,8 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
         this.store.dispatch(guardActions.findById({id: this.useCaseScope.pageVariables['id']}));
       }
   
-      this.urlGuardVO$.subscribe(guard => {
-        this.setEditURLGuardSaveForm({urlGuardVO: guard} as EditURLGuardSaveForm);
+      this.urlGuard$.subscribe(guard => {
+        this.setEditURLGuardSaveForm({urlGuard: guard} as EditURLGuardSaveForm);
       });
     }
 
@@ -83,15 +83,15 @@ export class EditURLGuardComponentImpl extends EditURLGuardComponent {
      * This method may be overwritten
      */
     beforeEditURLGuardSave(form: EditURLGuardSaveForm): void {
-      if(form.urlGuardVO?.id) {
+      if(form.urlGuard?.id) {
 
-        form.urlGuardVO.updatedBy = this.keycloakService.getUsername();
-        form.urlGuardVO.updatedDate = new Date();
+        form.urlGuard.updatedBy = this.keycloakService.getUsername();
+        form.urlGuard.updatedDate = new Date();
       } else {
-        form.urlGuardVO.createdBy = this.keycloakService.getUsername();
-        form.urlGuardVO.createdDate = new Date();
+        form.urlGuard.createdBy = this.keycloakService.getUsername();
+        form.urlGuard.createdDate = new Date();
       }
-      this.store.dispatch(guardActions.save({urlGuardVO: form.urlGuardVO}));
+      this.store.dispatch(guardActions.save({urlGuard: form.urlGuard}));
     }
 
     doNgOnDestroy(){}

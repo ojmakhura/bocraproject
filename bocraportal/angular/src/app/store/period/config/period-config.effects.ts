@@ -14,7 +14,7 @@ export class PeriodConfigEffects {
          this.actions$.pipe(
             ofType(PeriodConfigActions.findById),
             mergeMap(({ id }) => this.periodConfigRestController.findById(id).pipe(
-                map( periodConfigVO => PeriodConfigActions.findByIdSuccess({periodConfigVO})),
+                map( periodConfig => PeriodConfigActions.findByIdSuccess({periodConfig})),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
             ))
         )
@@ -23,8 +23,8 @@ export class PeriodConfigEffects {
     save$ = createEffect(() => 
          this.actions$.pipe(
             ofType(PeriodConfigActions.save),
-            mergeMap(({ periodConfigVO }) => this.periodConfigRestController.save(periodConfigVO).pipe(
-                map( periodConfigVO => PeriodConfigActions.saveSuccess({periodConfigVO})),
+            mergeMap(({ periodConfig }) => this.periodConfigRestController.save(periodConfig).pipe(
+                map( periodConfig => PeriodConfigActions.saveSuccess({periodConfig})),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
             ))
         )

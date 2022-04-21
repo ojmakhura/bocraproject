@@ -27,17 +27,17 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     FormActionType.FIND_BY_ID_SUCCESS,
-    props<{ formVO: FormVO | any }>()
+    props<{ form: FormVO | any }>()
 );
 
 export const save = createAction(
     FormActionType.SAVE,
-    props<{ formVO: FormVO | any  }>()
+    props<{ form: FormVO | any  }>()
 );
 
 export const saveSuccess = createAction(
     FormActionType.SAVE_SUCCESS,
-    props<{ formVO: FormVO | any }>()
+    props<{ form: FormVO | any }>()
 );
 
 export const remove = createAction(

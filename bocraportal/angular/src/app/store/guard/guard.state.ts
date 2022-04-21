@@ -5,7 +5,7 @@ import { UrlGuardCriteria } from '@app/model/bw/org/bocra/portal/guard/url-guard
 export const guardKey = "guard";
 
 export interface GuardState {
-    urlGuardVO: UrlGuardVO | any,
+    urlGuard: UrlGuardVO | any,
     id: number | any,
     searchCriteria: UrlGuardCriteria | any,
     urlGuards: Array<UrlGuardVO> | Array<any>,
@@ -14,7 +14,7 @@ export interface GuardState {
 }
 
 export const initialState: GuardState = {
-    urlGuardVO: null,
+    urlGuard: null,
     id: null,
     searchCriteria: null,
     urlGuards: [],

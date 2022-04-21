@@ -67,6 +67,7 @@ public class LicenseTypeRestControllerImpl extends LicenseTypeRestControllerBase
 
     @Override
     public ResponseEntity<LicenseTypeVO> handleSave(LicenseTypeVO licenseTypeVO) {
+        System.out.println(licenseTypeVO);
         Optional<LicenseTypeVO> data = Optional.of(this.licenseTypeService.save(licenseTypeVO));
         ResponseEntity<LicenseTypeVO> response;
 

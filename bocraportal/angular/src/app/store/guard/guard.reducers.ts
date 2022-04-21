@@ -10,7 +10,7 @@ export const guardReducer = createReducer(
         urlGuards: [], 
         searchCriteria: null, 
         id: null, 
-        urlGuardVO: action.urlGuardVO, 
+        urlGuard: action.urlGuard, 
         removed: false, 
         error: null
     })),
@@ -19,7 +19,7 @@ export const guardReducer = createReducer(
         urlGuards: [], 
         searchCriteria: null, 
         id: null, 
-        urlGuardVO: action.urlGuardVO, 
+        urlGuard: action.urlGuard, 
         removed: false, 
         error: null
     })),
@@ -28,7 +28,7 @@ export const guardReducer = createReducer(
         urlGuards: [], 
         searchCriteria: null, 
         id: null, 
-        urlGuardVO: null, 
+        urlGuard: null, 
         removed: action.removed, 
         error: null
     })),
@@ -37,7 +37,7 @@ export const guardReducer = createReducer(
         urlGuards: action.urlGuards, 
         searchCriteria: null, 
         id: null, 
-        urlGuardVO: null, 
+        urlGuard: null, 
         removed: false, 
         error: null
     })),
@@ -46,7 +46,7 @@ export const guardReducer = createReducer(
         urlGuards: action.urlGuards, 
         searchCriteria: null, 
         id: null, 
-        urlGuardVO: null, 
+        urlGuard: null, 
         removed: false, 
         error: null
     })),
@@ -55,7 +55,7 @@ export const guardReducer = createReducer(
         urlGuards: action.urlGuards, 
         searchCriteria: null, 
         id: null, 
-        urlGuardVO: null, 
+        urlGuard: null, 
         removed: false, 
         error: null
     })),
@@ -64,7 +64,7 @@ export const guardReducer = createReducer(
         urlGuards: [], 
         searchCriteria: null, 
         id: null, 
-        urlGuardVO: null, 
+        urlGuard: null, 
         removed: false, 
         error: null
     })),

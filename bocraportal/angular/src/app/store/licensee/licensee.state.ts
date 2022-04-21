@@ -8,7 +8,7 @@ export interface LicenseeState {
     id: number | any,
     licensees: Array<LicenseeVO> | Array<any>,
     searchCriteria: LicenseeCriteria | any,
-    licenseeVO: LicenseeVO | any,
+    licensee: LicenseeVO | any,
     removed: boolean,
     error: any
 }
@@ -17,7 +17,7 @@ export const initialState: LicenseeState = {
     id: null,
     licensees: [],
     searchCriteria: null,
-    licenseeVO: null,
+    licensee: null,
     removed: false,
     error: null
 };

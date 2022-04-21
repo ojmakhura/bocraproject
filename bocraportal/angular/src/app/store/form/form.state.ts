@@ -7,7 +7,7 @@ export const formKey = "form";
 export interface FormState {
     id: number | any,
     forms: Array<FormVO> | Array<any>,
-    formVO: FormVO | any,
+    form: FormVO | any,
     searchCriteria: FormCriteria | any,
     removed: boolean,
     error: any
@@ -16,7 +16,7 @@ export interface FormState {
 export const initialState: FormState = {
     id: null,
     forms: [],
-    formVO: null,
+    form: null,
     searchCriteria: null,
     removed: false,
     error: null
