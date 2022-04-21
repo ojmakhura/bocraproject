@@ -65,7 +65,7 @@ public class FormSubmissionDaoImpl
                 getFormDataDao().toFormDataVO(formData, data);
                 datas.add(data);
             }
-            //target.setfor
+            target.setFormDatas(datas);
         }
     }
 

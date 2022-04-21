@@ -5,6 +5,7 @@ import { EditFormSaveForm } from '@app/view/form/edit-form.component';
 import { EditFormDeleteForm } from '@app/view/form/edit-form.component';
 import { EditFormSearchForm } from '@app/view/form/edit-form.component';
 import { EditFormVarsForm } from '@app/view/form/edit-form.component';
+import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
 
 @Component({
   selector: 'app-edit-form',
@@ -15,6 +16,7 @@ export class EditFormComponentImpl extends EditFormComponent {
 
     constructor(private injector: Injector) {
         super(injector);
+        this.licenseTypes$ = this.store.pipe(select(LicenseTypeSelectors.selectLicenseTypes));
     }
 
     beforeOnInit(){
@@ -101,6 +103,10 @@ export class EditFormComponentImpl extends EditFormComponent {
      */
     afterEditFormSearch(form: EditFormSearchForm): void {
 
+    }
+
+    handleFormVOLicenseTypesAddDialog(): void {
+      
     }
     
 }

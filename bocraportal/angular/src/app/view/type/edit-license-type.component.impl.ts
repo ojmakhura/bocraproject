@@ -7,6 +7,8 @@ import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-
 import * as licenseTypeActions from '@app/store/type/license-type.actions';
 import { Observable } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
+import { select } from '@ngrx/store';
+import * as LicenseSelectors from '@app/store/licensee/licensee.selectors';
 
 @Component({
   selector: 'app-edit-license-type',
@@ -14,14 +16,12 @@ import { KeycloakService } from 'keycloak-angular';
   styleUrls: ['./edit-license-type.component.scss'],
 })
 export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
-  licenseeType$: Observable<LicenseTypeVO>;
-  licenseeTypes$: Observable<LicenseTypeVO[]>;
-  id$: Observable<number>;
   protected keycloakService: KeycloakService;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
+    this.licensees$ = this.store.select(select(LicenseSelectors.selectLicensees));
   }
 
   beforeOnInit() {}
@@ -94,5 +94,7 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
 
   afterSetEditLicenseTypeVarsForm(form: EditLicenseTypeVarsForm): void {
   }
+
+  handleLicenseTypeVOLicenseesAddDialog(): void {}
 
 }

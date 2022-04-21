@@ -4,7 +4,6 @@ import { EditFormSubmissionComponent } from '@app/view/form/submission/edit-form
 import { EditFormSubmissionSaveForm } from '@app/view/form/submission/edit-form-submission.component';
 import { EditFormSubmissionDeleteForm } from '@app/view/form/submission/edit-form-submission.component';
 import { EditFormSubmissionSearchForm } from '@app/view/form/submission/edit-form-submission.component';
-import { EditFormSubmissionAddFieldForm } from '@app/view/form/submission/edit-form-submission.component';
 import { EditFormSubmissionVarsForm } from '@app/view/form/submission/edit-form-submission.component';
 
 @Component({
@@ -100,27 +99,5 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
      */
     afterEditFormSubmissionSearch(form: EditFormSubmissionSearchForm): void {
 
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditFormSubmissionAddFieldForm(form: EditFormSubmissionAddFieldForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditFormSubmissionAddField(form: EditFormSubmissionAddFieldForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditFormSubmissionAddField(form: EditFormSubmissionAddFieldForm): void {
-
-    }
-    
+    }    
 }
