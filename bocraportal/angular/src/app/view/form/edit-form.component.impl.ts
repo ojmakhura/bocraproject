@@ -7,6 +7,8 @@ import { EditFormSearchForm } from '@app/view/form/edit-form.component';
 import { EditFormVarsForm } from '@app/view/form/edit-form.component';
 import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
 import { select } from '@ngrx/store';
+import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
+import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 @Component({
   selector: 'app-edit-form',
   templateUrl: './edit-form.component.html',
@@ -110,4 +112,15 @@ export class EditFormComponentImpl extends EditFormComponent {
     }
     
     handleFormFormFieldsAddDialog(): void {}
+
+    handleFormFormFieldsSearch(): void {}
+
+
+    handleFormLicenseTypesSearch(): void {}
+
+  handleFormLicenseTypesSelected(element: LicenseTypeVO, index: number): void {
+  }
+
+  handleFormFormFieldsSelected(element: FormFieldVO, index: number): void {
+  }
 }

@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 import { select } from '@ngrx/store';
 import * as LicenseSelectors from '@app/store/licensee/licensee.selectors';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 
 @Component({
   selector: 'app-edit-license-type',
@@ -99,4 +101,15 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
 
   handleLicenseTypeFormsAddDialog(): void {}
 
+  handleLicenseTypeLicenseesSearch(): void {
+  }
+
+  handleLicenseTypeLicenseesSelected(element: LicenseeVO, index: number): void {
+  }
+
+  handleLicenseTypeFormsSearch(): void {
+  }
+
+  handleLicenseTypeFormsSelected(element: FormVO, index: number): void {
+  }
 }

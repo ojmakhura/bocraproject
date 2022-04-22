@@ -13,6 +13,8 @@ import { Observable } from 'rxjs';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
+import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
+import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -97,4 +99,16 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   handleLicenseeLicenseTypesAddDialog(): void {}
 
   handleLicenseeUsersAddDialog(): void {}
+
+  handleLicenseeUsersSearch(): void {
+  }
+
+  handleLicenseeUsersSelected(element: UserVO, index: number): void {
+  }
+
+  handleLicenseeLicenseTypesSearch(): void {
+  }
+  
+  handleLicenseeLicenseTypesSelected(element: LicenseTypeVO, index: number): void {
+  }
 }
