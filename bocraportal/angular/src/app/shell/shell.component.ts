@@ -7,7 +7,14 @@ import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/gua
 import { UrlGuardCriteria } from '@app/model/bw/org/bocra/portal/guard/url-guard-criteria';
 import { UrlGuardType } from '@app/model/bw/org/bocra/portal/guard/url-guard-type';
 import * as nav from './navigation';
-import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Menu } from '@app/model/menu/menu';
+import { Store, select } from '@ngrx/store';
+import { AuthState } from '@app/store/auth/auth.state';
+import * as AuthSelectors from '@app/store/auth/auth.selectors';
+import * as AuthActions from '@app/store/auth/auth.actions';
+import * as MenuSelectors from '@app/store/menu/menu.selectors';
+import * as MenuActions from '@app/store/menu/menu.actions';
 
 @Component({
   selector: 'app-shell',
@@ -17,13 +24,19 @@ import { HttpClient } from '@angular/common/http';
 export class ShellComponent implements OnInit, AfterViewInit {
 
   menus: any[] = [];
+  menus$: Observable<Menu[]>;
+  username$: Observable<string>;
+
   constructor(private router: Router,
     private titleService: Title,
     private keycloakService: KeycloakService,
-    private http: HttpClient,
+    private store: Store<AuthState>,
     private breakpoint: BreakpointObserver,
     private urlGuardRestController: UrlGuardRestControllerImpl) 
-  { }
+  { 
+    this.menus$ = this.store.pipe(select (MenuSelectors.selectMenus));
+    this.username$ = this.store.pipe(select (AuthSelectors.selectUsername));
+  }
 
   ngOnInit() { 
   }
@@ -33,21 +46,27 @@ export class ShellComponent implements OnInit, AfterViewInit {
     criteria.type = UrlGuardType.MENU;
     criteria.roles = this.keycloakService.getUserRoles();
 
+    if(this.keycloakService.isLoggedIn()) {
+      this.store.dispatch(AuthActions.setUsername({ username: this.keycloakService.getUsername()}));
+    }
+
     this.urlGuardRestController.search(criteria).subscribe(guards => {
       nav.menuItems.forEach(value => {
-        guards.find(guard => {
-          if(guard.url === value.routerLink) {
-            if(!this.menus.find(menu => menu.routerLink === guard.url)){
-              this.menus.push(value);
-            }
+        guards.find((guard) => {
+          if (guard.url === value.routerLink) {
+            this.store.dispatch(MenuActions.addMenu({menu: value}));
           }
-        })
+        });        
       })
-    })
+    });
+    
   }
 
   logout() {
-    this.keycloakService.logout();
+    this.keycloakService.logout().then(() => {
+      this.store.dispatch(AuthActions.authReset());
+      this.store.dispatch(MenuActions.menuReset());
+    });
   }
 
   get username(): string | null {

@@ -18,10 +18,10 @@ export const createUser = createAction(
     props<{ userVO: UserVO | any  }>()
 );
 
-// export const createUserSuccess = createAction(
-//     UserActionType.CREATE_USER_SUCCESS,
-// //    props<{ results: UserVO | any }>()
-// );
+export const createUserSuccess = createAction(
+    UserActionType.CREATE_USER_SUCCESS,
+    props<{ user: UserVO | any }>()
+);
 
 export const updateUserName = createAction(
     UserActionType.UPDATE_USER_NAME,
@@ -30,16 +30,16 @@ export const updateUserName = createAction(
 
 // export const updateUserNameSuccess = createAction(
 //     UserActionType.UPDATE_USER_NAME_SUCCESS,
-// //    props<{ results: Boolean | any }>()
+//     props<{ results: Boolean | any }>()
 // );
 
 export const loadUsers = createAction(
     UserActionType.LOAD_USERS);
 
-// export const loadUsersSuccess = createAction(
-//     UserActionType.LOAD_USERS_SUCCESS,
-// //    props<{ results: UserVO[] | any }>()
-// );
+export const loadUsersSuccess = createAction(
+    UserActionType.LOAD_USERS_SUCCESS,
+    props<{ users: UserVO[] | any[] }>()
+);
 
 
 export const userReset = createAction(UserActionType.USER_RESET);

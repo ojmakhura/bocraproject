@@ -11,6 +11,7 @@ export interface UserState {
     userId: String | any,
     id: number | any,
     removed: boolean,
+    menus: Array<any>,
     error: any
 }
 
@@ -21,5 +22,6 @@ export const initialState: UserState = {
     userId: null,
     id: null,
     removed: false,
+    menus: [],
     error: null
 };

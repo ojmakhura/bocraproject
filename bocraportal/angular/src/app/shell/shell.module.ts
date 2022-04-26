@@ -12,6 +12,11 @@ import { AuthModule } from '@app/auth';
 import { ShellComponent } from './shell.component';
 import { useCaseFeature } from '@app/store/usecase/use-case.reducers';
 
+import { authFeature } from '@app/store/auth/auth.reducers';
+import { AuthEffects } from '@app/store/auth/auth.effects';
+import { menuFeature } from '@app/store/menu/menu.reducers';
+import { MenuEffects } from '@app/store/menu/menu.effects';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -22,7 +27,9 @@ import { useCaseFeature } from '@app/store/usecase/use-case.reducers';
     I18nModule,
     RouterModule,
     StoreModule.forFeature(useCaseFeature),
-    EffectsModule.forFeature([])
+    StoreModule.forFeature(authFeature),
+    StoreModule.forFeature(menuFeature),
+    EffectsModule.forFeature([AuthEffects, MenuEffects])
   ],
   declarations: [
     ShellComponent
