@@ -19,47 +19,44 @@ import * as MenuActions from '@app/store/menu/menu.actions';
 @Component({
   selector: 'app-shell',
   templateUrl: './shell.component.html',
-  styleUrls: ['./shell.component.scss']
+  styleUrls: ['./shell.component.scss'],
 })
 export class ShellComponent implements OnInit, AfterViewInit {
-
   menus: any[] = [];
   menus$: Observable<Menu[]>;
   username$: Observable<string>;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private titleService: Title,
     private keycloakService: KeycloakService,
     private store: Store<AuthState>,
     private breakpoint: BreakpointObserver,
-    private urlGuardRestController: UrlGuardRestControllerImpl) 
-  { 
-    this.menus$ = this.store.pipe(select (MenuSelectors.selectMenus));
-    this.username$ = this.store.pipe(select (AuthSelectors.selectUsername));
+    private urlGuardRestController: UrlGuardRestControllerImpl
+  ) {
+    this.menus$ = this.store.pipe(select(MenuSelectors.selectMenus));
+    this.username$ = this.store.pipe(select(AuthSelectors.selectUsername));
   }
 
-  ngOnInit() { 
-  }
+  ngOnInit() {}
 
   ngAfterViewInit(): void {
-    let criteria: UrlGuardCriteria = new UrlGuardCriteria;
+    let criteria: UrlGuardCriteria = new UrlGuardCriteria();
     criteria.type = UrlGuardType.MENU;
     criteria.roles = this.keycloakService.getUserRoles();
 
-    if(this.keycloakService.isLoggedIn()) {
-      this.store.dispatch(AuthActions.setUsername({ username: this.keycloakService.getUsername()}));
-    }
-
-    this.urlGuardRestController.search(criteria).subscribe(guards => {
-      nav.menuItems.forEach(value => {
-        guards.find((guard) => {
-          if (guard.url === value.routerLink) {
-            this.store.dispatch(MenuActions.addMenu({menu: value}));
-          }
-        });        
-      })
+    this.keycloakService.isLoggedIn().then(loggedIn => {
+      if(loggedIn) {
+        this.store.dispatch(AuthActions.setUsername({ username: this.keycloakService.getUsername() }));
+      }
     });
-    
+
+    this.urlGuardRestController.search(criteria).subscribe((guards) => {
+
+      let menuItems = nav.menuItems.filter(menu => guards.some(guard => guard.url === menu.routerLink))
+      this.store.dispatch(MenuActions.getMenusSuccess({ menus: menuItems}));
+      
+    });
   }
 
   logout() {

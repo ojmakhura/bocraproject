@@ -4,20 +4,17 @@ import { menuKey, initialState } from './menu.state';
 
 export const menuReducer = createReducer(
   initialState,
-  
+
   on(MenuActions.addMenu, (state, action) => ({
     ...state,
-    menus: state.menus.find((menu) => menu.routerLink === action.menu.routerLink) ? [...state.menus, action.menu] : [...state.menus],
+    menus: state.menus.some((menu) => menu.routerLink === action.menu.routerLink)
+      ? [...state.menus]
+      : [...state.menus, action.menu],
     error: null,
   })),
   on(MenuActions.getMenusSuccess, (state, action) => ({
     ...state,
     menus: action.menus,
-    error: null,
-  })),
-  on(MenuActions.addMenu, (state, action) => ({
-    ...state,
-    menus: [...state.menus, action.menu],
     error: null,
   })),
   on(MenuActions.menuReset, (state) => ({
