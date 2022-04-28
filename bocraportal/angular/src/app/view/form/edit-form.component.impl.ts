@@ -9,6 +9,8 @@ import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
 import { select } from '@ngrx/store';
 import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
+import { EditFormAddFieldForm } from '@app/view/form/edit-form.component';
+import { FieldComponentImpl } from './field.component.impl';
 @Component({
   selector: 'app-edit-form',
   templateUrl: './edit-form.component.html',
@@ -122,5 +124,18 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   handleFormFormFieldsSelected(element: FormFieldVO, index: number): void {
+  }
+
+  afterSetEditFormAddFieldForm(form: EditFormAddFieldForm): void {
+  }
+
+  beforeEditFormAddField(form: EditFormAddFieldForm): void {
+  }
+
+  afterEditFormAddField(form: EditFormAddFieldForm): void {
+    const dialogRef = this.dialog.open(FieldComponentImpl, { });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
   }
 }

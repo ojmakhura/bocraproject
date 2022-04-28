@@ -28,4 +28,10 @@ export class FormControllerImpl extends FormController {
 	public doEdit(form: any): void {
 	}
 
+	public doAddField(form: any): void {
+	}
+
+	public doAddFieldDone(form: any): void {
+	}
+
 }
