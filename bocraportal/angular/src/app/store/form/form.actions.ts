@@ -2,86 +2,61 @@
 import { createAction, props } from '@ngrx/store';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 
 export enum FormActionType {
-    FIND_BY_ID = '[Form] Find By Id',
-    FIND_BY_ID_SUCCESS = '[Form] Find By Id Success',
-    SAVE = '[Form] Save',
-    SAVE_SUCCESS = '[Form] Save Success',
-    REMOVE = '[Form] Remove',
-    REMOVE_SUCCESS = '[Form] Remove Success',
-    GET_ALL = '[Form] Get All',
-    GET_ALL_SUCCESS = '[Form] Get All Success',
-    SEARCH = '[Form] Search',
-    SEARCH_SUCCESS = '[Form] Search Success',
-    GET_ALL_PAGED = '[Form] Get All Paged',
-    GET_ALL_PAGED_SUCCESS = '[Form] Get All Paged Success',
-    FORM_RESET = '[Form] Form Reset',
-    FORM_FAILURE = '[Form] Form Action Failure'
+  FIND_BY_ID = '[Form] Find By Id',
+  FIND_BY_ID_SUCCESS = '[Form] Find By Id Success',
+  SAVE = '[Form] Save',
+  SAVE_SUCCESS = '[Form] Save Success',
+  REMOVE = '[Form] Remove',
+  REMOVE_SUCCESS = '[Form] Remove Success',
+  GET_ALL = '[Form] Get All',
+  GET_ALL_SUCCESS = '[Form] Get All Success',
+  SEARCH = '[Form] Search',
+  SEARCH_SUCCESS = '[Form] Search Success',
+  ADD_FORM_FIELD = '[Form] Add Form Field',
+  SET_FORM_FIELDs = '[Form] Set Form Fields',
+  GET_ALL_PAGED = '[Form] Get All Paged',
+  GET_ALL_PAGED_SUCCESS = '[Form] Get All Paged Success',
+  FORM_RESET = '[Form] Form Reset',
+  FORM_FAILURE = '[Form] Form Action Failure',
 }
 
-export const findById = createAction(
-    FormActionType.FIND_BY_ID,
-    props<{ id: number | any  }>()
-);
+export const findById = createAction(FormActionType.FIND_BY_ID, props<{ id: number | any }>());
 
-export const findByIdSuccess = createAction(
-    FormActionType.FIND_BY_ID_SUCCESS,
-    props<{ form: FormVO | any }>()
-);
+export const findByIdSuccess = createAction(FormActionType.FIND_BY_ID_SUCCESS, props<{ form: FormVO | any }>());
 
-export const save = createAction(
-    FormActionType.SAVE,
-    props<{ form: FormVO | any  }>()
-);
+export const save = createAction(FormActionType.SAVE, props<{ form: FormVO | any }>());
 
-export const saveSuccess = createAction(
-    FormActionType.SAVE_SUCCESS,
-    props<{ form: FormVO | any }>()
-);
+export const saveSuccess = createAction(FormActionType.SAVE_SUCCESS, props<{ form: FormVO | any }>());
 
-export const remove = createAction(
-    FormActionType.REMOVE,
-    props<{ id: number | any  }>()
-);
+export const remove = createAction(FormActionType.REMOVE, props<{ id: number | any }>());
 
-export const removeSuccess = createAction(
-    FormActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any }>()
-);
+export const removeSuccess = createAction(FormActionType.REMOVE_SUCCESS, props<{ removed: boolean | any }>());
 
-export const getAll = createAction(
-    FormActionType.GET_ALL);
+export const getAll = createAction(FormActionType.GET_ALL);
 
-export const getAllSuccess = createAction(
-    FormActionType.GET_ALL_SUCCESS,
-    props<{ forms: FormVO[] | any }>()
-);
+export const getAllSuccess = createAction(FormActionType.GET_ALL_SUCCESS, props<{ forms: FormVO[] | any[] }>());
 
-export const search = createAction(
-    FormActionType.SEARCH,
-    props<{ criteria: FormCriteria | any  }>()
-);
+export const addFormField = createAction(FormActionType.ADD_FORM_FIELD, props<{ formField: FormFieldVO | any }>());
 
-export const searchSuccess = createAction(
-    FormActionType.SEARCH_SUCCESS,
-    props<{ forms: FormVO[] | any }>()
-);
+export const setFormFields = createAction(FormActionType.SET_FORM_FIELDs, props<{ formFields: FormFieldVO[] | any[] }>());
+
+export const search = createAction(FormActionType.SEARCH, props<{ criteria: FormCriteria | any }>());
+
+export const searchSuccess = createAction(FormActionType.SEARCH_SUCCESS, props<{ forms: FormVO[] | any }>());
 
 export const getAllPaged = createAction(
-    FormActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any  }>()
+  FormActionType.GET_ALL_PAGED,
+  props<{ pageNumber: number | any; pageSize: number | any }>()
 );
 
 export const getAllPagedSuccess = createAction(
-    FormActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ forms: FormVO[] | any }>()
+  FormActionType.GET_ALL_PAGED_SUCCESS,
+  props<{ forms: FormVO[] | any }>()
 );
-
 
 export const formReset = createAction(FormActionType.FORM_RESET);
 
-export const formFailure = createAction(
-    FormActionType.FORM_FAILURE,
-    props<{ error: any }>()
-);
+export const formFailure = createAction(FormActionType.FORM_FAILURE, props<{ error: any }>());
