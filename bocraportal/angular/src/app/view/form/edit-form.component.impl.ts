@@ -102,7 +102,9 @@ export class EditFormComponentImpl extends EditFormComponent {
   afterEditFormAddField(form: EditFormAddFieldForm): void {
     const dialogRef = this.dialog.open(AddNewFieldComponentImpl, {});
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
+      if(result?.dialogData) {
+        this.addToFormFormFields(result.dialogData);
+      }
     });
   }
 }
