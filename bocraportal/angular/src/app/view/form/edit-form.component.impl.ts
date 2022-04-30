@@ -6,11 +6,13 @@ import { EditFormDeleteForm } from '@app/view/form/edit-form.component';
 import { EditFormSearchForm } from '@app/view/form/edit-form.component';
 import { EditFormVarsForm } from '@app/view/form/edit-form.component';
 import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
+import * as FormActions from '@app/store/form/form.actions';
 import { select } from '@ngrx/store';
 import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { EditFormAddFieldForm } from '@app/view/form/edit-form.component';
 import { AddNewFieldComponentImpl } from './add-new-field.component.impl';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-edit-form',
@@ -18,16 +20,28 @@ import { AddNewFieldComponentImpl } from './add-new-field.component.impl';
   styleUrls: ['./edit-form.component.scss'],
 })
 export class EditFormComponentImpl extends EditFormComponent {
+
+  protected keycloakService: KeycloakService;
+
   constructor(private injector: Injector) {
     super(injector);
     this.licenseTypes$ = this.store.pipe(select(LicenseTypeSelectors.selectLicenseTypes));
+    this.keycloakService = injector.get(KeycloakService);
   }
 
   beforeOnInit() {}
 
   afterOnInit() {}
 
-  doNgAfterViewInit() {}
+  doNgAfterViewInit() {
+    if (this.useCaseScope.pageVariables['id']) {
+      this.store.dispatch(FormActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
+    }
+
+    this.form$.subscribe((form) => {
+      this.setEditFormSaveForm({ form: form } as EditFormSaveForm);
+    });
+  }
 
   handleFormChanges(change: any) {}
 
@@ -46,7 +60,23 @@ export class EditFormComponentImpl extends EditFormComponent {
   /**
    * This method may be overwritten
    */
-  beforeEditFormSave(form: EditFormSaveForm): void {}
+  beforeEditFormSave(form: EditFormSaveForm): void {
+    console.log(this.form.valid)
+    console.log(this.form.pristine)
+    console.log(this.form.dirty)
+    console.log(form);
+    if(this.form.valid) {
+      if(form.form.id) {
+        form.form.updatedBy = this.keycloakService.getUsername();
+        form.form.updatedDate = new Date();
+      } else {
+
+        form.form.createdBy = this.keycloakService.getUsername();
+        form.form.createdDate = new Date();
+      }
+      this.store.dispatch(FormActions.save({form: form.form}));
+    }
+  }
 
   /**
    * This method may be overwritten
@@ -102,7 +132,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   afterEditFormAddField(form: EditFormAddFieldForm): void {
     const dialogRef = this.dialog.open(AddNewFieldComponentImpl, {});
     dialogRef.afterClosed().subscribe((result) => {
-      if(result?.dialogData) {
+      if (result?.dialogData) {
         this.addToFormFormFields(result.dialogData);
       }
     });
