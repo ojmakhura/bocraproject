@@ -121,16 +121,18 @@ public class FormDaoImpl
 
         if(!CollectionUtils.isEmpty(source.getFormFields())) {
 
-            if(target.getFormFields() == null) {
-                target.setFormFields(new ArrayList<>());
-            }
-
+            Collection<FormField> fields = new ArrayList<>();
             for(FormFieldVO field : source.getFormFields()) {
 
                 FormField entity = FormField.Factory.newInstance();
                 getFormFieldDao().formFieldVOToEntity(field, entity, copyIfNull);
-                target.getFormFields().add(entity);
+
+                fields.add(entity);
             }
+
+            target.setFormFields(fields);
+
+            System.out.println(target);
 
         }
 
@@ -146,7 +148,6 @@ public class FormDaoImpl
                 target.getLicenseTypes().add(entity);
             }
         }
-
     }
 
 }

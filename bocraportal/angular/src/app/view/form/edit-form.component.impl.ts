@@ -29,11 +29,14 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.keycloakService = injector.get(KeycloakService);
   }
 
-  beforeOnInit() {}
+  beforeOnInit() {
+  }
 
-  afterOnInit() {}
+  afterOnInit() {    
+  }
 
   doNgAfterViewInit() {
+    
     if (this.useCaseScope.pageVariables['id']) {
       this.store.dispatch(FormActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
     }
@@ -61,10 +64,6 @@ export class EditFormComponentImpl extends EditFormComponent {
    * This method may be overwritten
    */
   beforeEditFormSave(form: EditFormSaveForm): void {
-    console.log(this.form.valid)
-    console.log(this.form.pristine)
-    console.log(this.form.dirty)
-    console.log(form);
     if(this.form.valid) {
       if(form.form.id) {
         form.form.updatedBy = this.keycloakService.getUsername();

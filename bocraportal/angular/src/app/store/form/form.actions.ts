@@ -16,7 +16,10 @@ export enum FormActionType {
   SEARCH = '[Form] Search',
   SEARCH_SUCCESS = '[Form] Search Success',
   ADD_FORM_FIELD = '[Form] Add Form Field',
-  SET_FORM_FIELDs = '[Form] Set Form Fields',
+  ADD_FORM_FIELD_SUCCESSS = '[Form] Add Form Field Success',
+  REMOVE_FORM_FIELD = '[Form] Remove Form Field',
+  REMOVE_FORM_FIELD_SUCCESSS = '[Form] Remove Form Field Success',
+  SET_FORM_FIELDS = '[Form] Set Form Fields',
   GET_ALL_PAGED = '[Form] Get All Paged',
   GET_ALL_PAGED_SUCCESS = '[Form] Get All Paged Success',
   FORM_RESET = '[Form] Form Reset',
@@ -40,8 +43,15 @@ export const getAll = createAction(FormActionType.GET_ALL);
 export const getAllSuccess = createAction(FormActionType.GET_ALL_SUCCESS, props<{ forms: FormVO[] | any[] }>());
 
 export const addFormField = createAction(FormActionType.ADD_FORM_FIELD, props<{ formField: FormFieldVO | any }>());
+export const addFormFieldSuccess = createAction(FormActionType.ADD_FORM_FIELD_SUCCESSS, props<{ formField: FormFieldVO | any }>());
 
-export const setFormFields = createAction(FormActionType.SET_FORM_FIELDs, props<{ formFields: FormFieldVO[] | any[] }>());
+export const removeFormField = createAction(FormActionType.REMOVE_FORM_FIELD, props<{ id: number | any }>());
+export const removeFormFieldSuccess = createAction(FormActionType.REMOVE_FORM_FIELD_SUCCESSS, props<{ removed: boolean | any }>());
+
+export const setFormFields = createAction(
+  FormActionType.SET_FORM_FIELDS,
+  props<{ formFields: FormFieldVO[] | any[] }>()
+);
 
 export const search = createAction(FormActionType.SEARCH, props<{ criteria: FormCriteria | any }>());
 

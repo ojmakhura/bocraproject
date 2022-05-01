@@ -92,10 +92,8 @@ public class FormServiceImpl
         throws Exception
     {
 
-        
+        return (Collection<FormVO>) getFormDao().findByCriteria(FormDao.TRANSFORM_FORMVO, criteria);
 
-        // TODO implement protected  Collection<FormVO> handleSearch(FormCriteria criteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.FormService.handleSearch(FormCriteria criteria) Not implemented!");
     }
 
     /**
