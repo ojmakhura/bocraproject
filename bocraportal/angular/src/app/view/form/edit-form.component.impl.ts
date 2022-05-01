@@ -7,12 +7,14 @@ import { EditFormSearchForm } from '@app/view/form/edit-form.component';
 import { EditFormVarsForm } from '@app/view/form/edit-form.component';
 import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
 import * as FormActions from '@app/store/form/form.actions';
+import * as FormSelectors from '@app/store/form/form.selectors';
 import { select } from '@ngrx/store';
 import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { EditFormAddFieldForm } from '@app/view/form/edit-form.component';
 import { AddNewFieldComponentImpl } from './add-new-field.component.impl';
 import { KeycloakService } from 'keycloak-angular';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-form',
@@ -27,12 +29,14 @@ export class EditFormComponentImpl extends EditFormComponent {
     super(injector);
     this.licenseTypes$ = this.store.pipe(select(LicenseTypeSelectors.selectLicenseTypes));
     this.keycloakService = injector.get(KeycloakService);
+    this.formFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
   }
 
   beforeOnInit() {
   }
 
-  afterOnInit() {    
+  afterOnInit() {
+    
   }
 
   doNgAfterViewInit() {
@@ -44,9 +48,16 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.form$.subscribe((form) => {
       this.setEditFormSaveForm({ form: form } as EditFormSaveForm);
     });
+
+    this.formFields$.subscribe(data => {
+      console.log(data);
+    });
   }
 
-  handleFormChanges(change: any) {}
+  handleFormChanges(change: any) {
+    console.log('chaning');
+    
+  }
 
   doNgOnDestroy() {}
 
@@ -132,8 +143,17 @@ export class EditFormComponentImpl extends EditFormComponent {
     const dialogRef = this.dialog.open(AddNewFieldComponentImpl, {});
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.dialogData) {
+        let field: FormFieldVO = result.dialogData;
+        if(field.id) {
+          field.updatedBy = this.keycloakService.getUsername();
+          field.updatedDate = new Date();
+        } else {
+          field.createdBy = this.keycloakService.getUsername();
+          field.createdDate = new Date();
+          field.form = this.form.value
+        }
         this.addToFormFormFields(result.dialogData);
-      }
+      } 
     });
   }
 }

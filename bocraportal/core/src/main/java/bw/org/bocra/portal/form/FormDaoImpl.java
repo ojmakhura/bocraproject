@@ -59,12 +59,8 @@ public class FormDaoImpl
 
             for (FormField entity : source.getFormFields()) {
                 FormFieldVO field = new FormFieldVO();
-                field.setForm(target);
-                //field.setCreatedBy(entity);
-
-                field.setFieldName(entity.getFieldName());
-                field.setFieldType(entity.getFieldType());
-                field.setId(entity.getId());
+                formFieldDao.toFormFieldVO(entity, field);
+                target.getFormFields().add(field);
             }
         }
     }
@@ -126,6 +122,11 @@ public class FormDaoImpl
 
                 FormField entity = FormField.Factory.newInstance();
                 getFormFieldDao().formFieldVOToEntity(field, entity, copyIfNull);
+
+                if(entity.getId() == null) {
+                    entity.setForm(target);
+                    entity = formFieldDao.create(entity);
+                }
 
                 fields.add(entity);
             }

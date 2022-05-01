@@ -4,11 +4,11 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as FormActions from './form.actions';
 import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
-import { FormFieldRestController } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller';
+import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
 
 @Injectable()
 export class FormEffects {
-  constructor(private actions$: Actions, private formRestController: FormRestControllerImpl, private fieldRestController: FormFieldRestController) {}
+  constructor(private actions$: Actions, private formRestController: FormRestControllerImpl, private fieldRestController: FormFieldRestControllerImpl) {}
 
   findById$ = createEffect(() =>
     this.actions$.pipe(
