@@ -120,15 +120,29 @@ public class FormDaoImpl
             Collection<FormField> fields = new ArrayList<>();
             for(FormFieldVO field : source.getFormFields()) {
 
-                FormField entity = FormField.Factory.newInstance();
-                getFormFieldDao().formFieldVOToEntity(field, entity, copyIfNull);
+                /**
+                 * here we are getting a form field that has not been saved
+                 * in our datastore. So we first save it before adding it to 
+                 * the fields.
+                 */
+                if(field.getId() == null) {
 
-                if(entity.getId() == null) {
+                    FormField entity = FormField.Factory.newInstance();
+                    getFormFieldDao().formFieldVOToEntity(field, entity, copyIfNull);
+    
                     entity.setForm(target);
                     entity = formFieldDao.create(entity);
-                }
+    
+                    fields.add(entity);
+                } else {
 
-                fields.add(entity);
+                    FormField entity = formFieldDao.load(field.getId());
+                        
+                    entity.setForm(target);
+                    entity = formFieldDao.create(entity);
+    
+                    fields.add(entity);
+                }
             }
 
             target.setFormFields(fields);
@@ -144,9 +158,12 @@ public class FormDaoImpl
             }
 
             for(LicenseTypeVO type : source.getLicenseTypes()) {
-                LicenseType entity = LicenseType.Factory.newInstance();
-                getLicenseTypeDao().licenseTypeVOToEntity(type, entity, copyIfNull);
-                target.getLicenseTypes().add(entity);
+
+                if(type.getId() != null) {
+                    LicenseType entity = getLicenseTypeDao().load(type.getId());
+                    target.getLicenseTypes().add(entity);
+                }
+
             }
         }
     }

@@ -15,6 +15,9 @@ import { EditFormAddFieldForm } from '@app/view/form/edit-form.component';
 import { AddNewFieldComponentImpl } from './add-new-field.component.impl';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
+import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/type/license-type-criteria';
+import * as LicenseTypeActions from '@app/store/type/license-type.actions';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-edit-form',
@@ -129,11 +132,15 @@ export class EditFormComponentImpl extends EditFormComponent {
 
   handleFormFormFieldsSearch(): void {}
 
-  handleFormLicenseTypesSearch(): void {}
+  handleFormLicenseTypesSearch(): void {
+    let criteria: LicenseTypeCriteria = new LicenseTypeCriteria();
+    criteria.typeSearch = this.formLicenseTypesSearchField.value;
+    this.store.dispatch(LicenseTypeActions.search({searchCriteria: criteria}));
+  }
 
-  handleFormLicenseTypesSelected(element: LicenseTypeVO, index: number): void {}
+  handleFormLicenseTypesSelected(event: MatCheckboxChange, element: LicenseTypeVO): void {}
 
-  handleFormFormFieldsSelected(element: FormFieldVO, index: number): void {}
+  handleFormFormFieldsSelected(event: MatCheckboxChange, element: FormFieldVO): void {}
 
   afterSetEditFormAddFieldForm(form: EditFormAddFieldForm): void {}
 

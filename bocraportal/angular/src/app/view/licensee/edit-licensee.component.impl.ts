@@ -15,6 +15,10 @@ import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
 import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
+import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/type/license-type-criteria';
+import * as LicenseTypeActions from '@app/store/type/license-type.actions';
+import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -27,6 +31,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
+    this.licenseTypes$ = this.store.pipe(select(LicenseTypeSelectors.selectLicenseTypes));
   }
 
   beforeOnInit() {}
@@ -103,12 +108,15 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   handleLicenseeUsersSearch(): void {
   }
 
-  handleLicenseeUsersSelected(element: UserVO, index: number): void {
+  handleLicenseeUsersSelected(event: MatCheckboxChange, element: UserVO): void {
   }
 
   handleLicenseeLicenseTypesSearch(): void {
+    let criteria: LicenseTypeCriteria = new LicenseTypeCriteria();
+    criteria.typeSearch = this.licenseeLicenseTypesSearchField.value;
+    this.store.dispatch(LicenseTypeActions.search({searchCriteria: criteria}));
   }
   
-  handleLicenseeLicenseTypesSelected(element: LicenseTypeVO, index: number): void {
+  handleLicenseeLicenseTypesSelected(event: MatCheckboxChange, element: LicenseTypeVO): void {
   }
 }

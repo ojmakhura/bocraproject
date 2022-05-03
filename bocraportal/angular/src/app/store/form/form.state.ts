@@ -10,6 +10,7 @@ export interface FormState {
   searchCriteria: FormCriteria | any;
   fieldType: FieldType | any;
   formFields: Array<FormFieldVO> | Array<any>;
+  formField: FormFieldVO | any;
   form: FormVO | any;
   required: Boolean | any;
   min: String | any;
@@ -26,6 +27,7 @@ export const initialState: FormState = {
   searchCriteria: null,
   fieldType: null,
   formFields: [],
+  formField: null,
   form: null,
   required: null,
   min: null,

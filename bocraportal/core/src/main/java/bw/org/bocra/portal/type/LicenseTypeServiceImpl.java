@@ -98,10 +98,10 @@ public class LicenseTypeServiceImpl
         Specification<LicenseType> specs = null;
 
         if(StringUtils.isNotBlank(searchCriteria.getTypeSearch())) {
-
+            System.out.println(searchCriteria);
             specs = LicenseTypeSpecifications.findByCodeContainingIgnoreCase(searchCriteria.getTypeSearch());
-            specs.or(LicenseTypeSpecifications.findByDescriptionContainingIgnoreCase(searchCriteria.getTypeSearch()));
-            specs.or(LicenseTypeSpecifications.findByNameContainingIgnoreCase(searchCriteria.getTypeSearch()));
+            //specs.or(LicenseTypeSpecifications.findByDescriptionContainingIgnoreCase(searchCriteria.getTypeSearch()));
+            //specs.or(LicenseTypeSpecifications.findByNameContainingIgnoreCase(searchCriteria.getTypeSearch()));
         }
 
         if(searchCriteria.getLicenseeId() != null) {

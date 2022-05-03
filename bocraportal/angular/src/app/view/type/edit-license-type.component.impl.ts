@@ -11,6 +11,7 @@ import { select } from '@ngrx/store';
 import * as LicenseSelectors from '@app/store/licensee/licensee.selectors';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-edit-license-type',
@@ -104,12 +105,12 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
   handleLicenseTypeLicenseesSearch(): void {
   }
 
-  handleLicenseTypeLicenseesSelected(element: LicenseeVO, index: number): void {
+  handleLicenseTypeLicenseesSelected(event: MatCheckboxChange, element: LicenseeVO): void {
   }
 
   handleLicenseTypeFormsSearch(): void {
   }
 
-  handleLicenseTypeFormsSelected(element: FormVO, index: number): void {
+  handleLicenseTypeFormsSelected(event: MatCheckboxChange, element: FormVO): void {
   }
 }
