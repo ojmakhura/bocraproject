@@ -68,6 +68,7 @@ public class LicenseTypeDaoImpl
                 lvo.setAddress(licensee.getAddress());
                 lvo.setLicenseeName(licensee.getLicenseeName());
                 lvo.setUin(licensee.getUin());
+                licensees.add(lvo);
             }
 
             target.setLicensees(licensees);
@@ -127,11 +128,10 @@ public class LicenseTypeDaoImpl
         if(source.getLicensees() != null) {
             Collection<Licensee> licensees = new ArrayList<>();
             for (LicenseeVO licensee : source.getLicensees()) {
-                Licensee lvo = Licensee.Factory.newInstance();
-                lvo.setId(licensee.getId());
-                lvo.setAddress(licensee.getAddress());
-                lvo.setLicenseeName(licensee.getLicenseeName());
-                lvo.setUin(licensee.getUin());
+                if(licensee.getId() != null) {
+                    Licensee entity = getLicenseeDao().load(licensee.getId());
+                    licensees.add(entity);
+                }
             }
 
             target.setLicensees(licensees);

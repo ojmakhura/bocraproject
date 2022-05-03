@@ -95,15 +95,13 @@ public class FormDataDaoImpl
         // TODO verify behavior of formDataVOToEntity
         super.formDataVOToEntity(source, target, copyIfNull);
 
-        if(source.getFormField() != null) {
-            FormField field = FormField.Factory.newInstance();
-            getFormFieldDao().formFieldVOToEntity(source.getFormField(), field, copyIfNull);
+        if(source.getFormField() != null && source.getFormField().getId() != null) {
+            FormField field = formFieldDao.load(source.getFormField().getId());
             target.setFormField(field);
         }
 
-        if(source.getFormSubmission() != null) {
-            FormSubmission submission = FormSubmission.Factory.newInstance();
-            getFormSubmissionDao().formSubmissionVOToEntity(source.getFormSubmission(), submission, copyIfNull);
+        if(source.getFormSubmission() != null && source.getFormSubmission().getId() != null) {
+            FormSubmission submission = formSubmissionDao.load(source.getFormSubmission().getId());
             target.setFormSubmission(submission);
         }
     }

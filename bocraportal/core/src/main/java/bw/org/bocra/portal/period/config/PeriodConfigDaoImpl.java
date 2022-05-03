@@ -8,6 +8,7 @@ package bw.org.bocra.portal.period.config;
 
 import java.util.Collection;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.period.Period;
@@ -35,11 +36,9 @@ public class PeriodConfigDaoImpl
         super.toPeriodConfigVO(source, target);
         // WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.Period to bw.org.bocra.portal.period.PeriodVO
 
-        // if(source.getPeriods() != null) {
-
-        //     Collection<PeriodVO> periods = getPeriodDao().toPeriodVOCollection(source.getPeriods());
-        //     target.set
-        // }
+        if(CollectionUtils.isNotEmpty(source.getPeriods())) {
+            //target.setPer
+        }
 
     }
 

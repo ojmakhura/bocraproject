@@ -12,6 +12,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.type.LicenseType;
+import bw.org.bocra.portal.type.LicenseTypeVO;
 
 /**
  * @see Licensee
@@ -34,7 +35,9 @@ public class LicenseeDaoImpl
             target.setLicenseTypes(new ArrayList<>());
 
             for(LicenseType entity : source.getLicenseTypes()) {
-                target.getLicenseTypes().add(licenseTypeDao.toLicenseTypeVO(entity));
+                LicenseTypeVO vo = new LicenseTypeVO();
+                licenseTypeDao.toLicenseTypeVO(entity, vo);
+                target.getLicenseTypes().add(vo);
             }
         }
 
@@ -93,6 +96,15 @@ public class LicenseeDaoImpl
 
         if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
             //target.setLicenseeGroups(new );
+            target.setLicenseTypes(new ArrayList<>());
+            for(LicenseTypeVO type : source.getLicenseTypes()) {
+                if(type.getId() != null) {
+                    LicenseType entity = licenseTypeDao.load(type.getId());
+                    if(entity != null && entity.getId() != null) {
+                        target.getLicenseTypes().add(entity);
+                    }
+                }
+            }
             
         }
     }

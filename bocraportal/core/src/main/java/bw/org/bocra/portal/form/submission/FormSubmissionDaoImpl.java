@@ -119,30 +119,30 @@ public class FormSubmissionDaoImpl
         // TODO verify behavior of formSubmissionVOToEntity
         super.formSubmissionVOToEntity(source, target, copyIfNull);
 
-        if(source.getForm() != null) {
-            Form form = Form.Factory.newInstance();
-            getFormDao().formVOToEntity(source.getForm(), form, copyIfNull);
+        if(source.getForm() != null && source.getForm().getId() != null) {
+            Form form = formDao.load(source.getForm().getId());
             target.setForm(form);
         }
 
-        if(source.getLicensee() != null) {
-            Licensee licensee = Licensee.Factory.newInstance();
-            getLicenseeDao().licenseeVOToEntity(source.getLicensee(), licensee, copyIfNull);
+        if(source.getLicensee() != null && source.getLicensee().getId() != null) {
+            Licensee licensee = getLicenseeDao().load(source.getLicensee().getId());
             target.setLicensee(licensee);
         }
 
-        if(source.getPeriod() != null) {
-            Period period = Period.Factory.newInstance();
-            getPeriodDao().periodVOToEntity(source.getPeriod(), period, copyIfNull);
+        if(source.getPeriod() != null && source.getPeriod().getId() != null) {
+
+            Period period = getPeriodDao().load(source.getPeriod().getId());
             target.setPeriod(period);
         }
 
         if(CollectionUtils.isNotEmpty(source.getFormDatas())) {
             Collection<FormData> datas = new HashSet<>();
             for (FormDataVO formData : source.getFormDatas()) {
-                FormData data = FormData.Factory.newInstance();
-                getFormDataDao().formDataVOToEntity(formData, data, copyIfNull);
-                datas.add(data);
+                if(formData.getId() != null){
+                    FormData data = getFormDataDao().load(formData.getId());
+                    if(data != null && data.getId() != null)
+                        datas.add(data);
+                }
             }
             target.setFormDatas(datas);
         }

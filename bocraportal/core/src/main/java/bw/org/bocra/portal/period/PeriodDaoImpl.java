@@ -8,6 +8,7 @@ package bw.org.bocra.portal.period;
 
 import java.util.Collection;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,10 @@ public class PeriodDaoImpl
     {
         // TODO verify behavior of toPeriodVO
         super.toPeriodVO(source, target);
+
+        // if(CollectionUtils.isNotEmpty(source.getFormSubmissions())) {
+            
+        // }
     }
 
     /**
