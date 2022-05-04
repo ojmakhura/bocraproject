@@ -38,7 +38,8 @@ export class LicenseTypeRestControllerImpl extends LicenseTypeRestController {
     }
 
     public search(searchCriteria: LicenseTypeCriteria): Observable<LicenseTypeVO[]> {
-
+        console.log(searchCriteria);
+        
         return this.http.post<LicenseTypeVO[]>(this.path + `/search`, searchCriteria);
 
     }

@@ -9,10 +9,13 @@ package bw.org.bocra.portal.type;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
@@ -46,7 +49,7 @@ public class LicenseTypeDaoImpl
             }
         }
 
-        return criteriaSpecs == null ? licenseTypeRepository.findAll() : licenseTypeRepository.findAll(criteriaSpecs);
+        return licenseTypeRepository.findAll(criteriaSpecs);
     }
 
     /**
@@ -60,7 +63,7 @@ public class LicenseTypeDaoImpl
         // TODO verify behavior of toLicenseTypeVO
         super.toLicenseTypeVO(source, target);
         // WARNING! No conversion for target.licensees (can't convert source.getLicensees():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
-        if(source.getLicensees() != null) {
+        if(CollectionUtils.isNotEmpty(source.getLicensees())) {
             ArrayList<LicenseeVO> licensees = new ArrayList<>();
             for (Licensee licensee : source.getLicensees()) {
                 LicenseeVO lvo = new LicenseeVO();
@@ -72,6 +75,23 @@ public class LicenseTypeDaoImpl
             }
 
             target.setLicensees(licensees);
+        }
+
+        if(CollectionUtils.isNotEmpty(source.getForms())) {
+            ArrayList<FormVO> forms = new ArrayList<>();
+            for(Form form : source.getForms()) {
+                FormVO vo = new FormVO();
+                vo.setId(form.getId());
+                vo.setCode(form.getCode());
+                vo.setFormName(form.getFormName());
+                vo.setCreatedBy(form.getCreatedBy());
+                vo.setCreatedDate(form.getCreatedDate());
+                vo.setUpdatedBy(form.getUpdatedBy());
+                vo.setUpdatedDate(form.getUpdatedDate());
+                forms.add(vo);
+            }
+
+            target.setForms(forms);
         }
     }
 
@@ -125,7 +145,7 @@ public class LicenseTypeDaoImpl
     {
         // TODO verify behavior of licenseTypeVOToEntity
         super.licenseTypeVOToEntity(source, target, copyIfNull);
-        if(source.getLicensees() != null) {
+        if(CollectionUtils.isNotEmpty(source.getLicensees())) {
             Collection<Licensee> licensees = new ArrayList<>();
             for (LicenseeVO licensee : source.getLicensees()) {
                 if(licensee.getId() != null) {
@@ -135,6 +155,20 @@ public class LicenseTypeDaoImpl
             }
 
             target.setLicensees(licensees);
+        }
+
+        if(CollectionUtils.isNotEmpty(source.getForms())) {
+            ArrayList<Form> forms = new ArrayList<>();
+
+            for(FormVO form : source.getForms()) {
+                if(form.getId() != null) {
+                    Form entity = getFormDao().load(form.getId());
+                    forms.add(entity);
+                }
+                
+            }
+
+            target.setForms(forms);
         }
     }
 }

@@ -7,6 +7,7 @@
 package bw.org.bocra.portal.licensee;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
@@ -31,7 +32,10 @@ public class LicenseeDaoImpl
     {
         super.toLicenseeVO(source, target);
 
-        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
+        logger.info(source.getLicenseTypes().toString());
+
+        if(CollectionUtils.isNotEmpty(source.getLicenseTypes())) {
+
             target.setLicenseTypes(new ArrayList<>());
 
             for(LicenseType entity : source.getLicenseTypes()) {
@@ -94,18 +98,23 @@ public class LicenseeDaoImpl
         // TODO verify behavior of licenseeVOToEntity
         super.licenseeVOToEntity(source, target, copyIfNull);
 
-        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
+        if(CollectionUtils.isNotEmpty(source.getLicenseTypes())) {
             //target.setLicenseeGroups(new );
+            Collection<LicenseType> types = new ArrayList<>();
             target.setLicenseTypes(new ArrayList<>());
             for(LicenseTypeVO type : source.getLicenseTypes()) {
+                logger.info("-----------> " + type.toString());
                 if(type.getId() != null) {
                     LicenseType entity = licenseTypeDao.load(type.getId());
+                    logger.info("============> " + entity.toString());
                     if(entity != null && entity.getId() != null) {
                         target.getLicenseTypes().add(entity);
                     }
                 }
             }
-            
+
+            logger.info(target.toString());    
+            logger.info(target.getLicenseTypes().toString());              
         }
     }
 }

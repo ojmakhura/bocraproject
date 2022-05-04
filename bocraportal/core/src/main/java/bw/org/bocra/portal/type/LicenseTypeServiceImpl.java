@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.type;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -100,8 +101,8 @@ public class LicenseTypeServiceImpl
         if(StringUtils.isNotBlank(searchCriteria.getTypeSearch())) {
             System.out.println(searchCriteria);
             specs = LicenseTypeSpecifications.findByCodeContainingIgnoreCase(searchCriteria.getTypeSearch());
-            //specs.or(LicenseTypeSpecifications.findByDescriptionContainingIgnoreCase(searchCriteria.getTypeSearch()));
-            //specs.or(LicenseTypeSpecifications.findByNameContainingIgnoreCase(searchCriteria.getTypeSearch()));
+            specs.or(LicenseTypeSpecifications.findByDescriptionContainingIgnoreCase(searchCriteria.getTypeSearch()));
+            specs.or(LicenseTypeSpecifications.findByNameContainingIgnoreCase(searchCriteria.getTypeSearch()));
         }
 
         if(searchCriteria.getLicenseeId() != null) {
@@ -115,8 +116,16 @@ public class LicenseTypeServiceImpl
         }
 
         Collection<LicenseType> entities = licenseTypeRepository.findAll(specs);
+        Collection<LicenseTypeVO> vos = new ArrayList<>();
+        logger.info(entities.toString());
 
-        return getLicenseTypeDao().toLicenseTypeVOCollection(entities);
+        for (LicenseType licenseType : entities) {
+            LicenseTypeVO vo = new LicenseTypeVO();
+            getLicenseTypeDao().toLicenseTypeVO(licenseType, vo);
+            vos.add(vo);
+        }
+
+        return vos;
     }
 
     @Override
