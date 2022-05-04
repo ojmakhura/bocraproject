@@ -10,6 +10,10 @@ package bw.org.bocra.portal.licensee;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,13 +50,14 @@ public class LicenseeServiceImpl
     protected  LicenseeVO handleSave(LicenseeVO licenseeVO)
         throws Exception
     {
+        Licensee entity = licenseeDao.licenseeVOToEntity(licenseeVO);
         
-        if(licenseeVO.getId() != null) {
-            licenseeDao.update(licenseeDao.licenseeVOToEntity(licenseeVO));
-            return licenseeVO;
+        if(licenseeVO.getId() == null) {
+            entity = licenseeDao.create(entity);
+        } else {
+            licenseeDao.update(entity);
         }
 
-        Licensee entity = licenseeRepository.save(getLicenseeDao().licenseeVOToEntity(licenseeVO));
         return getLicenseeDao().toLicenseeVO(entity);
 
     }
@@ -102,8 +107,16 @@ public class LicenseeServiceImpl
 
     @Override
     protected Collection<LicenseeVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        Collection<Licensee> licensees = null;
+
+        if(pageNumber < 0 || pageSize < 1) {
+            licensees = licenseeRepository.findAll();
+        } else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("uin").descending());
+            licensees = licenseeRepository.findAll(pageable).getContent();
+        }
+
+        return licensees == null ? null : getLicenseeDao().toLicenseeVOCollection(licensees);
     }
 
 }

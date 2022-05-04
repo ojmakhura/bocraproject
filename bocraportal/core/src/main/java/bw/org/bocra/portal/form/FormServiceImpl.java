@@ -49,7 +49,6 @@ public class FormServiceImpl
 
         if(formVO.getId() == null) {
             form = getFormDao().create(form);
-            logger.info(form.toString());
         } else {
             getFormDao().update(form);
         }

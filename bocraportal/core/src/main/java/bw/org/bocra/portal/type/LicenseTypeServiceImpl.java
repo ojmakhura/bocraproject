@@ -52,14 +52,14 @@ public class LicenseTypeServiceImpl
     protected  LicenseTypeVO handleSave(LicenseTypeVO licenseTypeVO)
         throws Exception
     {
+        LicenseType entity = getLicenseTypeDao().licenseTypeVOToEntity(licenseTypeVO);
         if(licenseTypeVO.getId() == null) {
 
-            LicenseType entity = getLicenseTypeDao().licenseTypeVOToEntity(licenseTypeVO);
             return (LicenseTypeVO) licenseTypeDao.create(LicenseTypeDao.TRANSFORM_LICENSETYPEVO, entity);
 
         } else {
 
-
+            licenseTypeDao.update(entity);
             return licenseTypeVO;
         }
     }

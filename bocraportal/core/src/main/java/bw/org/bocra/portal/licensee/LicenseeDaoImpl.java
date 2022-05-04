@@ -101,17 +101,19 @@ public class LicenseeDaoImpl
         if(CollectionUtils.isNotEmpty(source.getLicenseTypes())) {
             //target.setLicenseeGroups(new );
             Collection<LicenseType> types = new ArrayList<>();
-            target.setLicenseTypes(new ArrayList<>());
             for(LicenseTypeVO type : source.getLicenseTypes()) {
                 logger.info("-----------> " + type.toString());
                 if(type.getId() != null) {
                     LicenseType entity = licenseTypeDao.load(type.getId());
                     logger.info("============> " + entity.toString());
                     if(entity != null && entity.getId() != null) {
-                        target.getLicenseTypes().add(entity);
+                        logger.info("******************* Adding type " + entity.getCode());
+                        types.add(entity);
                     }
                 }
             }
+
+            target.setLicenseTypes(types);
 
             logger.info(target.toString());    
             logger.info(target.getLicenseTypes().toString());              
