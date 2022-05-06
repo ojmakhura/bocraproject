@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("url-authorisation")
+@RequestMapping("authorisation")
 @CrossOrigin()
 public class AuthorisationRestControllerImpl extends AuthorisationRestControllerBase {
 
-    protected static Logger log = LoggerFactory.getLogger(AuthorisationRestControllerImpl.class);
+    protected static Logger log = LoggerFactory.getLogger(AuthorisationRestController.class);
 
     @Override
     public ResponseEntity<AuthorisationVO> handleFindById(Long id) {

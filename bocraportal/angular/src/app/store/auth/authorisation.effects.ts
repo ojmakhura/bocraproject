@@ -15,7 +15,7 @@ export class AuthorisationEffects {
             ofType(AuthorisationActions.findById),
             mergeMap(({ id }) => this.authorisationRestController.findById(id).pipe(
                 map( authorisation => AuthorisationActions.findByIdSuccess({authorisation})),
-                catchError(({error}) => [AuthorisationActions.authorisationsFailure(error)])
+                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
             ))
         )
     );
@@ -25,7 +25,7 @@ export class AuthorisationEffects {
             ofType(AuthorisationActions.save),
             mergeMap(({ authorisation }) => this.authorisationRestController.save(authorisation).pipe(
                 map( authorisation => AuthorisationActions.saveSuccess({authorisation})),
-                catchError(({error}) => [AuthorisationActions.authorisationsFailure(error)])
+                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
             ))
         )
     );
@@ -35,7 +35,7 @@ export class AuthorisationEffects {
             ofType(AuthorisationActions.remove),
             mergeMap(({ id }) => this.authorisationRestController.remove(id).pipe(
                 map( removed => AuthorisationActions.removeSuccess({removed})),
-                catchError(({error}) => [AuthorisationActions.authorisationsFailure(error)])
+                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
             ))
         )
     );
@@ -45,7 +45,7 @@ export class AuthorisationEffects {
             ofType(AuthorisationActions.getAll),
             mergeMap(() => this.authorisationRestController.getAll().pipe(
                 map( authorisations => AuthorisationActions.getAllSuccess({authorisations})),
-                catchError(({error}) => [AuthorisationActions.authorisationsFailure(error)])
+                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
             ))
         )
     );
@@ -55,7 +55,7 @@ export class AuthorisationEffects {
             ofType(AuthorisationActions.search),
             mergeMap(({ criteria }) => this.authorisationRestController.search(criteria).pipe(
                 map( authorisations => AuthorisationActions.searchSuccess({authorisations})),
-                catchError(({error}) => [AuthorisationActions.authorisationsFailure(error)])
+                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
             ))
         )
     );
@@ -65,7 +65,7 @@ export class AuthorisationEffects {
             ofType(AuthorisationActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.authorisationRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( authorisations => AuthorisationActions.getAllPagedSuccess({authorisations})),
-                catchError(({error}) => [AuthorisationActions.authorisationsFailure(error)])
+                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
             ))
         )
     );

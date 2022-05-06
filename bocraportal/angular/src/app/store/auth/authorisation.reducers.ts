@@ -59,7 +59,7 @@ export const authorisationReducer = createReducer(
         removed: false, 
         error: null
     })),
-    on(AuthorisationActions.authorisationsReset, (state) => ({
+    on(AuthorisationActions.authorisationReset, (state) => ({
       ...state,
         authorisations: [], 
         searchCriteria: null, 
@@ -68,7 +68,7 @@ export const authorisationReducer = createReducer(
         removed: false, 
         error: null
     })),
-    on(AuthorisationActions.authorisationsFailure, (state, action) => ({
+    on(AuthorisationActions.authorisationFailure, (state, action) => ({
         ...state,
         error: action.error
     }))

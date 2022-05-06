@@ -45,7 +45,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   doNgAfterViewInit() {
     
     if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(FormActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
+      this.store.dispatch(FormActions.findFormById({ id: this.useCaseScope.pageVariables['id'] }));
     }
 
     this.form$.subscribe((form) => {
@@ -87,7 +87,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         form.form.createdBy = this.keycloakService.getUsername();
         form.form.createdDate = new Date();
       }
-      this.store.dispatch(FormActions.save({form: form.form}));
+      this.store.dispatch(FormActions.saveForm({form: form.form}));
     }
   }
 

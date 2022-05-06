@@ -3,7 +3,7 @@ import { Component, Injector } from '@angular/core';
 import { SearchLicenseesComponent } from '@app/view/licensee/search-licensees.component';
 import { SearchLicenseesSearchForm } from '@app/view/licensee/search-licensees.component';
 import { SearchLicenseesVarsForm } from '@app/view/licensee/search-licensees.component';
-import * as LicenseeActions from '@app/store/licensee/licensees.actions';
+import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 
 @Component({
   selector: 'app-search-licensees',

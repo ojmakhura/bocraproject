@@ -35,7 +35,7 @@ export const periodConfigReducer = createReducer(
         periodConfigs: action.periodConfigs,
         error: null
     })),
-    on(PeriodConfigActions.periodConfigsReset, (state) => ({
+    on(PeriodConfigActions.periodConfigReset, (state) => ({
       ...state,
         periodConfig: null, 
         searchCriteria: null, 
@@ -44,7 +44,7 @@ export const periodConfigReducer = createReducer(
         removed: false,
         error: null
     })),
-    on(PeriodConfigActions.periodConfigsFailure, (state, action) => ({
+    on(PeriodConfigActions.periodConfigFailure, (state, action) => ({
         ...state,
         error: action.error
     }))
