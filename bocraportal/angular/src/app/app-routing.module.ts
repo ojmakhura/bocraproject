@@ -16,35 +16,35 @@ const routes: Routes = [
       loadChildren: async () => (await import('./about/about.module')).AboutModule
     },
     {
-      path: 'licensee', 
+      path: 'licensees', 
       loadChildren: async () => (await import('@app/view/licensee/licensee.module')).LicenseeModule
     },
     {
-      path: 'licensetype', 
+      path: 'licensetypes', 
       loadChildren: async () => (await import('@app/view/type/license-type.module')).LicenseTypeModule
     },
     {
-      path: 'user', 
+      path: 'users', 
       loadChildren: async () => (await import('@app/view/user/user.module')).UserModule
     },
     {
-      path: 'guard', 
-      loadChildren: async () => (await import('@app/view/guard/guard.module')).GuardModule
+      path: 'authorisations', 
+      loadChildren: async () => (await import('@app/view/auth/authorisation.module')).AuthorisationModule
     },
     {
-      path: 'period', 
+      path: 'periods', 
       loadChildren: async () => (await import('@app/view/period/period.module')).PeriodModule
     },
     {
-      path: 'periodconfig', 
+      path: 'periodconfigs', 
       loadChildren: async () => (await import('@app/view/period/config/period-config.module')).PeriodConfigModule
     },
     {
-      path: 'form', 
+      path: 'forms', 
       loadChildren: async () => (await import('@app/view/form/form.module')).FormModule
     },
     {
-      path: 'formsubmission', 
+      path: 'formsubmissions', 
       loadChildren: async () => (await import('@app/view/form/submission/form-submission.module')).FormSubmissionModule
     },
   ]),

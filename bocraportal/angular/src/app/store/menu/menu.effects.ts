@@ -4,28 +4,28 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as MenuActions from './menu.actions';
 import { KeycloakService } from 'keycloak-angular';
-import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
-import { UrlGuardCriteria } from '@app/model/bw/org/bocra/portal/guard/url-guard-criteria';
-import { UrlGuardType } from '@app/model/bw/org/bocra/portal/guard/url-guard-type';
+import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
+import { AuthorisationCriteria } from '@app/model/bw/org/bocra/portal/auth/authorisation-criteria';
+import { AuthorisationType } from '@app/model/bw/org/bocra/portal/auth/authorisation-type';
 import * as nav from '@app/shell/navigation';
 
 @Injectable()
 export class MenuEffects {
-  constructor(private actions$: Actions, private keycloakService: KeycloakService, private urlGuardRestController: UrlGuardRestControllerImpl) {}
+  constructor(private actions$: Actions, private keycloakService: KeycloakService, private authorisationRestController: AuthorisationRestControllerImpl) {}
 
 //   getMenus$ = createEffect(() =>
 //   this.actions$.pipe(
 //     ofType(MenuActions.getMenus),
 //     mergeMap(() => {
-//       let criteria: UrlGuardCriteria = new UrlGuardCriteria();
-//       criteria.type = UrlGuardType.MENU;
+//       let criteria: AuthorisationCriteria = new AuthorisationCriteria();
+//       criteria.type = AuthorisationType.MENU;
 //       criteria.roles = this.keycloakService.getUserRoles();
 
-//       this.urlGuardRestController.search(criteria).pipe(
-//         map(({ guards }) => {
+//       this.authorisationRestController.search(criteria).pipe(
+//         map(({ authorisations }) => {
 //           nav.menuItems.forEach((value) => {
-//             guards.find((guard) => {
-//               if (guard.url === value.routerLink) {
+//             authorisations.find((authorisation) => {
+//               if (authorisation.url === value.routerLink) {
 //                 MenuActions.addMenu({menu: value})
 //               }
 //             });

@@ -4,90 +4,86 @@ import * as FormActions from './form.actions';
 import { formKey, initialState } from './form.state';
 
 export const formReducer = createReducer(
-  initialState,
-  on(FormActions.findByIdSuccess, (state, action) => ({
-    ...state,
-    searchCriteria: null,
-    forms: [],
-    form: action.form,
-    id: null,
-    removed: false,
-    error: null,
-  })),
-  on(FormActions.saveSuccess, (state, action) => ({
-    ...state,
-    searchCriteria: null,
-    forms: [],
-    form: action.form,
-    id: null,
-    removed: false,
-    error: null,
-  })),
-  on(FormActions.removeSuccess, (state, action) => ({
-    ...state,
-    searchCriteria: null,
-    forms: [],
-    form: null,
-    id: null,
-    removed: action.removed,
-    error: null,
-  })),
-  on(FormActions.addFormField, (state, action) => ({
-    ...state,
-    formFields: [...state.formFields, action.formField],
-    removed: false,
-    error: null,
-  })),
-  on(FormActions.setFormFields, (state, action) => ({
-    ...state,
-    formFields: action.formFields,
-    removed: false,
-    error: null,
-  })),
-  on(FormActions.getAllSuccess, (state, action) => ({
-    ...state,
-    searchCriteria: null,
-    forms: action.forms,
-    form: null,
-    id: null,
-    removed: false,
-    error: null,
-  })),
-  on(FormActions.searchSuccess, (state, action) => ({
-    ...state,
-    searchCriteria: null,
-    forms: action.forms,
-    form: null,
-    id: null,
-    removed: false,
-    error: null,
-  })),
-  on(FormActions.getAllPagedSuccess, (state, action) => ({
-    ...state,
-    searchCriteria: null,
-    forms: action.forms,
-    form: null,
-    id: null,
-    removed: false,
-    error: null,
-  })),
-  on(FormActions.formReset, (state) => ({
-    ...state,
-    searchCriteria: null,
-    forms: [],
-    formFields: [],
-    form: null,
-    id: null,
-    removed: false,
-    error: null,
-  })),
-  on(FormActions.formFailure, (state, action) => ({
-    ...state,
-    error: action.error,
-  }))
+    initialState,
+    on(FormActions.findFormByIdSuccess, (state, action) => ({
+        ...state,
+        form: action.form,
+        error: null
+    })),
+    on(FormActions.saveFormSuccess, (state, action) => ({
+        ...state,
+        form: action.form,
+        error: null
+    })),
+    on(FormActions.removeFormSuccess, (state, action) => ({
+        ...state,
+        removed: action.removed,
+        error: null
+    })),
+    on(FormActions.getAllFormsSuccess, (state, action) => ({
+        ...state,
+        forms: action.forms,
+        error: null
+    })),
+    on(FormActions.searchFormsSuccess, (state, action) => ({
+        ...state,
+        forms: action.forms,
+        error: null
+    })),
+    on(FormActions.getAllFormsPagedSuccess, (state, action) => ({
+        ...state,
+        forms: action.forms,
+        error: null
+    })),
+    on(FormActions.findFieldByIdSuccess, (state, action) => ({
+        ...state,
+        formField: action.formField,
+        error: null
+    })),
+    on(FormActions.saveFieldSuccess, (state, action) => ({
+        ...state,
+        formField: action.formField,
+        error: null
+    })),
+    on(FormActions.removeFieldSuccess, (state, action) => ({
+        ...state,
+        removed: action.removed,
+        error: null
+    })),
+    on(FormActions.getAllFieldsSuccess, (state, action) => ({
+        ...state,
+        formFields: action.formFields,
+        error: null
+    })),
+    on(FormActions.getAllFieldsPagedSuccess, (state, action) => ({
+        ...state,
+        formFields: action.formFields,
+        error: null
+    })),
+    on(FormActions.formReset, (state) => ({
+        ...state,
+        searchCriteria: null,
+        fieldType: null,
+        formFields: [],
+        formField: null,
+        form: null,
+        required: null,
+        min: null,
+        id: null,
+        fieldName: null,
+        forms: [],
+        max: null,
+        defaultValue: null,
+        removed: false,
+        error: null,
+    })),
+    on(FormActions.formFailure, (state, action) => ({
+        ...state,
+        error: action.error
+    }))
 );
 
 export const formFeature = createFeature({
-  name: formKey,
-  reducer: formReducer,
+    name: formKey,
+    reducer: formReducer
 });

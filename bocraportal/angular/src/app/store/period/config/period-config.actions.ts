@@ -16,8 +16,8 @@ export enum PeriodConfigActionType {
     SEARCH_SUCCESS = '[PeriodConfig] Search Success',
     GET_ALL_PAGED = '[PeriodConfig] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[PeriodConfig] Get All Paged Success',
-    PERIODCONFIG_RESET = '[PeriodConfig] PeriodConfig Reset',
-    PERIODCONFIG_FAILURE = '[PeriodConfig] PeriodConfig Action Failure'
+    PERIOD_CONFIG_RESET = '[PeriodConfig] PeriodConfig Reset',
+    PERIOD_CONFIG_FAILURE = '[PeriodConfig] PeriodConfig Action Failure'
 }
 
 export const findById = createAction(
@@ -79,9 +79,9 @@ export const getAllPagedSuccess = createAction(
     props<{ periodConfigs: PeriodConfigVO[] | any[] }>()
 );
 
-export const periodConfigReset = createAction(PeriodConfigActionType.PERIODCONFIG_RESET);
+export const periodConfigReset = createAction(PeriodConfigActionType.PERIOD_CONFIG_RESET);
 
 export const periodConfigFailure = createAction(
-    PeriodConfigActionType.PERIODCONFIG_FAILURE,
+    PeriodConfigActionType.PERIOD_CONFIG_FAILURE,
     props<{ error: any }>()
 );

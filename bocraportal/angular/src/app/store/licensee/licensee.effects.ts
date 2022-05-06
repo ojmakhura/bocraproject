@@ -15,7 +15,7 @@ export class LicenseeEffects {
             ofType(LicenseeActions.findById),
             mergeMap(({ id }) => this.licenseeRestController.findById(id).pipe(
                 map( licensee => LicenseeActions.findByIdSuccess({licensee})),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({error}) => [LicenseeActions.licenseesFailure(error)])
             ))
         )
     );
@@ -25,7 +25,7 @@ export class LicenseeEffects {
             ofType(LicenseeActions.save),
             mergeMap(({ licensee }) => this.licenseeRestController.save(licensee).pipe(
                 map( licensee => LicenseeActions.saveSuccess({licensee})),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({error}) => [LicenseeActions.licenseesFailure(error)])
             ))
         )
     );
@@ -35,7 +35,7 @@ export class LicenseeEffects {
             ofType(LicenseeActions.remove),
             mergeMap(({ id }) => this.licenseeRestController.remove(id).pipe(
                 map( removed => LicenseeActions.removeSuccess({removed})),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({error}) => [LicenseeActions.licenseesFailure(error)])
             ))
         )
     );
@@ -45,7 +45,7 @@ export class LicenseeEffects {
             ofType(LicenseeActions.getAll),
             mergeMap(() => this.licenseeRestController.getAll().pipe(
                 map( licensees => LicenseeActions.getAllSuccess({licensees})),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({error}) => [LicenseeActions.licenseesFailure(error)])
             ))
         )
     );
@@ -55,7 +55,7 @@ export class LicenseeEffects {
             ofType(LicenseeActions.searchLicensees),
             mergeMap(({ searchCriteria }) => this.licenseeRestController.searchLicensees(searchCriteria).pipe(
                 map( licensees => LicenseeActions.searchLicenseesSuccess({licensees})),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({error}) => [LicenseeActions.licenseesFailure(error)])
             ))
         )
     );
@@ -65,7 +65,7 @@ export class LicenseeEffects {
             ofType(LicenseeActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.licenseeRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( licensees => LicenseeActions.getAllPagedSuccess({licensees})),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({error}) => [LicenseeActions.licenseesFailure(error)])
             ))
         )
     );

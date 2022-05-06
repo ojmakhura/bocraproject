@@ -16,8 +16,8 @@ export enum LicenseTypeActionType {
     SEARCH_SUCCESS = '[LicenseType] Search Success',
     GET_ALL_PAGED = '[LicenseType] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[LicenseType] Get All Paged Success',
-    LICENSETYPE_RESET = '[LicenseType] LicenseType Reset',
-    LICENSETYPE_FAILURE = '[LicenseType] LicenseType Action Failure'
+    LICENSE_TYPE_RESET = '[LicenseType] LicenseType Reset',
+    LICENSE_TYPE_FAILURE = '[LicenseType] LicenseType Action Failure'
 }
 
 export const findById = createAction(
@@ -78,10 +78,9 @@ export const getAllPagedSuccess = createAction(
     props<{ licenseTypes: LicenseTypeVO[] | any[] }>()
 );
 
-
-export const licenseTypeReset = createAction(LicenseTypeActionType.LICENSETYPE_RESET);
+export const licenseTypeReset = createAction(LicenseTypeActionType.LICENSE_TYPE_RESET);
 
 export const licenseTypeFailure = createAction(
-    LicenseTypeActionType.LICENSETYPE_FAILURE,
+    LicenseTypeActionType.LICENSE_TYPE_FAILURE,
     props<{ error: any }>()
 );

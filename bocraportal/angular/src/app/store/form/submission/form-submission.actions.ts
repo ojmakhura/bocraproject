@@ -2,14 +2,14 @@
 import { createAction, props } from '@ngrx/store';
 
 export enum FormSubmissionActionType {
-    FORMSUBMISSION_RESET = '[FormSubmission] FormSubmission Reset',
-    FORMSUBMISSION_FAILURE = '[FormSubmission] FormSubmission Action Failure'
+    FORM_SUBMISSION_RESET = '[FormSubmission] FormSubmission Reset',
+    FORM_SUBMISSION_FAILURE = '[FormSubmission] FormSubmission Action Failure'
 }
 
 
-export const formSubmissionReset = createAction(FormSubmissionActionType.FORMSUBMISSION_RESET);
+export const formSubmissionReset = createAction(FormSubmissionActionType.FORM_SUBMISSION_RESET);
 
 export const formSubmissionFailure = createAction(
-    FormSubmissionActionType.FORMSUBMISSION_FAILURE,
+    FormSubmissionActionType.FORM_SUBMISSION_FAILURE,
     props<{ error: any }>()
 );

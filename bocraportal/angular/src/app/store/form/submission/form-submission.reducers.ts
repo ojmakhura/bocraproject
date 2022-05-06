@@ -7,10 +7,9 @@ export const formSubmissionReducer = createReducer(
     initialState,
     on(FormSubmissionActions.formSubmissionReset, (state) => ({
       ...state,
-        formField: null, 
-        searchCriteria: null, 
-        formSubmission: null, 
         submissions: [], 
+        formSubmission: null, 
+        searchCriteria: null, 
         id: null, 
         error: null
     })),

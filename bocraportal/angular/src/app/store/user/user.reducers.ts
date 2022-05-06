@@ -5,40 +5,94 @@ import {userKey, initialState} from './user.state';
 
 export const userReducer = createReducer(
     initialState,
-    // on(UserActions.createUserSuccess, (state, action) => ({
-    //     ...state,
-    //     searchCriteria: null, 
-    //     id: null, 
-    //     userId: null, 
-    //     userVO: null, 
-    //     users: [], 
-    //     error: action.error
-    // })),
-    // on(UserActions.updateUserNameSuccess, (state, action) => ({
-    //     ...state,
-    //     searchCriteria: null, 
-    //     id: null, 
-    //     userId: null, 
-    //     userVO: null, 
-    //     users: [], 
-    //     error: action.error
-    // })),
-    // on(UserActions.loadUsersSuccess, (state, action) => ({
-    //     ...state,
-    //     searchCriteria: null, 
-    //     id: null, 
-    //     userId: null, 
-    //     userVO: null, 
-    //     users: [], 
-    //     error: action.error
-    // })),
+    on(UserActions.findByIdSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        userId: null, 
+        users: [], 
+        id: null, 
+        user: null, 
+        error: null
+    })),
+    on(UserActions.saveSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        userId: null, 
+        users: [], 
+        id: null, 
+        user: null, 
+        error: null
+    })),
+    on(UserActions.removeSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        userId: null, 
+        users: [], 
+        id: null, 
+        user: null, 
+        error: null
+    })),
+    on(UserActions.getAllSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        userId: null, 
+        users: [], 
+        id: null, 
+        user: null, 
+        error: null
+    })),
+    on(UserActions.searchLicenseesSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        userId: null, 
+        users: [], 
+        id: null, 
+        user: null, 
+        error: null
+    })),
+    on(UserActions.getAllPagedSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        userId: null, 
+        users: [], 
+        id: null, 
+        user: null, 
+        error: null
+    })),
+    on(UserActions.createUserSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        userId: null, 
+        users: [], 
+        id: null, 
+        user: null, 
+        error: null
+    })),
+    on(UserActions.updateUserNameSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        userId: null, 
+        users: [], 
+        id: null, 
+        user: null, 
+        error: null
+    })),
+    on(UserActions.loadUsersSuccess, (state, action) => ({
+        ...state,
+        searchCriteria: null, 
+        userId: null, 
+        users: [], 
+        id: null, 
+        user: null, 
+        error: null
+    })),
     on(UserActions.userReset, (state) => ({
       ...state,
         searchCriteria: null, 
-        id: null, 
         userId: null, 
-        userVO: null, 
         users: [], 
+        id: null, 
+        user: null, 
         error: null
     })),
     on(UserActions.userFailure, (state, action) => ({

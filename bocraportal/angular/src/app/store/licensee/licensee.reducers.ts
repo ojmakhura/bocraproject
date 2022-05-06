@@ -59,7 +59,7 @@ export const licenseeReducer = createReducer(
         id: null, 
         error: null
     })),
-    on(LicenseeActions.licenseeReset, (state) => ({
+    on(LicenseeActions.licenseesReset, (state) => ({
       ...state,
         licensees: [], 
         licensee: null, 
@@ -68,7 +68,7 @@ export const licenseeReducer = createReducer(
         id: null, 
         error: null
     })),
-    on(LicenseeActions.licenseeFailure, (state, action) => ({
+    on(LicenseeActions.licenseesFailure, (state, action) => ({
         ...state,
         error: action.error
     }))

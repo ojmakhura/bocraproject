@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import * as FormSubmissionActions from './form-submission.actions';
+import * as FormSubmissionActions from './form-submissions.actions';
 
 @Injectable()
 export class FormSubmissionEffects {

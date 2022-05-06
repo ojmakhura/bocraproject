@@ -8,58 +8,34 @@ export const periodConfigReducer = createReducer(
     on(PeriodConfigActions.findByIdSuccess, (state, action) => ({
         ...state,
         periodConfig: action.periodConfig, 
-        searchCriteria: null, 
-        id: null, 
-        periodConfigs: [], 
-        removed: false,
         error: null
     })),
     on(PeriodConfigActions.saveSuccess, (state, action) => ({
         ...state,
         periodConfig: action.periodConfig, 
-        searchCriteria: null, 
-        id: null, 
-        periodConfigs: [], 
-        removed: false,
         error: null
     })),
     on(PeriodConfigActions.removeSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        searchCriteria: null, 
-        id: null, 
-        periodConfigs: [], 
         removed: action.removed,
         error: null
     })),
     on(PeriodConfigActions.getAllSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        searchCriteria: null, 
-        id: null, 
         periodConfigs: action.periodConfigs, 
-        removed: false,
         error: null
     })),
     on(PeriodConfigActions.searchSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        searchCriteria: null, 
-        id: null, 
         periodConfigs: action.periodConfigs, 
-        removed: false,
         error: null
     })),
     on(PeriodConfigActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        searchCriteria: null, 
-        id: null, 
-        periodConfigs: action.periodConfigs, 
-        removed: false,
+        periodConfigs: action.periodConfigs,
         error: null
     })),
-    on(PeriodConfigActions.periodConfigReset, (state) => ({
+    on(PeriodConfigActions.periodConfigsReset, (state) => ({
       ...state,
         periodConfig: null, 
         searchCriteria: null, 
@@ -68,7 +44,7 @@ export const periodConfigReducer = createReducer(
         removed: false,
         error: null
     })),
-    on(PeriodConfigActions.periodConfigFailure, (state, action) => ({
+    on(PeriodConfigActions.periodConfigsFailure, (state, action) => ({
         ...state,
         error: action.error
     }))

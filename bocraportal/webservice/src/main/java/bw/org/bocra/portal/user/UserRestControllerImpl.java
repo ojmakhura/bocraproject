@@ -124,7 +124,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
                 LicenseeUserVO licenseeUser = new LicenseeUserVO();
                 licenseeUser.setDateAdded(LocalDate.now());
                 licenseeUser.setUser(user);
-                licenseeUser.setOrganisation(user.getLicensee());
+                licenseeUser.setLicensee(user.getLicensee());
                 licenseeUser = licenseeUserService.save(licenseeUser);
             }
         }

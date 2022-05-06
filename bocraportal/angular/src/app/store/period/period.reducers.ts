@@ -7,56 +7,32 @@ export const periodReducer = createReducer(
     initialState,
     on(PeriodActions.findByIdSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        searchCriteria: null, 
         period: action.period, 
-        id: null, 
-        removed: false,
         error: null
     })),
     on(PeriodActions.saveSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        searchCriteria: null, 
         period: action.period, 
-        id: null, 
-        removed: false,
         error: null
     })),
     on(PeriodActions.removeSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        searchCriteria: null, 
-        period: null, 
-        id: null, 
         removed: action.removed,
         error: null
     })),
     on(PeriodActions.getAllSuccess, (state, action) => ({
         ...state,
         periods: action.periods, 
-        searchCriteria: null, 
-        period: null, 
-        id: null, 
-        removed: false,
         error: null
     })),
     on(PeriodActions.searchSuccess, (state, action) => ({
         ...state,
         periods: action.periods, 
-        searchCriteria: null, 
-        period: null, 
-        id: null, 
-        removed: false,
         error: null
     })),
     on(PeriodActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         periods: action.periods, 
-        searchCriteria: null, 
-        period: null, 
-        id: null, 
-        removed: false,
         error: null
     })),
     on(PeriodActions.periodReset, (state) => ({

@@ -8,55 +8,31 @@ export const licenseTypeReducer = createReducer(
     on(LicenseTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
         licenseType: action.licenseType, 
-        licenseTypes: [], 
-        searchCriteria: null, 
-        id: null, 
-        removed: false,
         error: null
     })),
     on(LicenseTypeActions.saveSuccess, (state, action) => ({
         ...state,
         licenseType: action.licenseType, 
-        licenseTypes: [], 
-        searchCriteria: null, 
-        id: null, 
-        removed: false,
         error: null
     })),
     on(LicenseTypeActions.removeSuccess, (state, action) => ({
         ...state,
-        licenseType: null, 
-        licenseTypes: [], 
-        searchCriteria: null, 
-        id: null, 
         removed: action.removed,
         error: null
     })),
     on(LicenseTypeActions.getAllSuccess, (state, action) => ({
         ...state,
-        licenseType: null, 
         licenseTypes: action.licenseTypes, 
-        searchCriteria: null, 
-        id: null, 
-        removed: false,
         error: null
     })),
     on(LicenseTypeActions.searchSuccess, (state, action) => ({
         ...state,
-        licenseType: null, 
         licenseTypes: action.licenseTypes, 
-        searchCriteria: null, 
-        id: null, 
-        removed: false,
         error: null
     })),
     on(LicenseTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        licenseType: null, 
         licenseTypes: action.licenseTypes, 
-        searchCriteria: null, 
-        id: null, 
-        removed: false,
         error:null
     })),
     on(LicenseTypeActions.licenseTypeReset, (state) => ({

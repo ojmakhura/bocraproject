@@ -28,7 +28,7 @@ public class LicenseeUserDaoImpl
         super.toLicenseeUserVO(source, target);
 
         if(source.getLicensee() != null) {
-            target.setOrganisation(licenseeDao.toLicenseeVO(source.getLicensee()));
+            target.setLicensee(licenseeDao.toLicenseeVO(source.getLicensee()));
         }
 
         if(StringUtils.isNotBlank(source.getUserId())) {
@@ -88,8 +88,8 @@ public class LicenseeUserDaoImpl
         // TODO verify behavior of LicenseeUserVOToEntity
         super.licenseeUserVOToEntity(source, target, copyIfNull);
 
-        if(source.getOrganisation() != null) {
-            target.setLicensee(licenseeDao.licenseeVOToEntity(source.getOrganisation()));
+        if(source.getLicensee() != null) {
+            target.setLicensee(licenseeDao.licenseeVOToEntity(source.getLicensee()));
         }
 
         if(source.getUser() != null) {

@@ -34,8 +34,8 @@ import { LicenseTypeModule } from '@app/view/type/license-type.module';
 import { LicenseTypeControllerImpl } from '@app/controller/type/license-type-controller.impl';
 import { UserModule } from '@app/view/user/user.module';
 import { UserControllerImpl } from '@app/controller/user/user-controller.impl';
-import { GuardModule } from '@app/view/guard/guard.module';
-import { GuardControllerImpl } from '@app/controller/guard/guard-controller.impl';
+import { AuthorisationModule } from '@app/view/auth/authorisation.module';
+import { AuthorisationControllerImpl } from '@app/controller/auth/authorisation-controller.impl';
 import { PeriodModule } from '@app/view/period/period.module';
 import { PeriodControllerImpl } from '@app/controller/period/period-controller.impl';
 import { PeriodConfigModule } from '@app/view/period/config/period-config.module';
@@ -45,14 +45,14 @@ import { FormControllerImpl } from '@app/controller/form/form-controller.impl';
 import { FormSubmissionModule } from '@app/view/form/submission/form-submission.module';
 import { FormSubmissionControllerImpl } from '@app/controller/form/submission/form-submission-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
-import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
+import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
+import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
 import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
 import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
-import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
 import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
+import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
-import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -78,7 +78,7 @@ true
         LicenseeModule,
         LicenseTypeModule,
         UserModule,
-        GuardModule,
+        AuthorisationModule,
         PeriodModule,
         PeriodConfigModule,
         FormModule,
@@ -90,18 +90,18 @@ true
     ],
     providers: [
         UseCaseScope,
-        LicenseeRestControllerImpl,
-        FormRestControllerImpl,
+        PeriodConfigRestControllerImpl,
+        AuthorisationRestControllerImpl,
         UserRestControllerImpl,
         LicenseTypeRestControllerImpl,
-        PeriodConfigRestControllerImpl,
         PeriodRestControllerImpl,
+        FormRestControllerImpl,
+        LicenseeRestControllerImpl,
         FormFieldRestControllerImpl,
-        UrlGuardRestControllerImpl,
         LicenseeControllerImpl,
         LicenseTypeControllerImpl,
         UserControllerImpl,
-        GuardControllerImpl,
+        AuthorisationControllerImpl,
         PeriodControllerImpl,
         PeriodConfigControllerImpl,
         FormControllerImpl,
