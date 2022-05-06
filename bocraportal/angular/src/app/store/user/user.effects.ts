@@ -10,15 +10,15 @@ export class UserEffects {
 
     constructor(private actions$: Actions, private userRestController: UserRestControllerImpl) {}
 
-    // createUser$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(UserActions.createUser),
-    //         mergeMap(({ userVO }) => this.userRestController.createUser(userVO).pipe(
-    //             map( results => UserActions.createUserSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
-    //         ))
-    //     )
-    // );
+    createUser$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(UserActions.createUser),
+            mergeMap(({ userVO }) => this.userRestController.createUser(userVO).pipe(
+                map( results => UserActions.createUserSuccess({results})),
+                catchError(({error}) => [UserActions.userFailure(error)])
+            ))
+        )
+    );
 
     // updateUserName$ = createEffect(() => 
     //      this.actions$.pipe(

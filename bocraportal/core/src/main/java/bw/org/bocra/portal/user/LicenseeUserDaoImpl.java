@@ -31,8 +31,9 @@ public class LicenseeUserDaoImpl
             target.setOrganisation(licenseeDao.toLicenseeVO(source.getLicensee()));
         }
 
-        if(!StringUtils.isNotBlank(source.getUserId())) {
+        if(StringUtils.isNotBlank(source.getUserId())) {
             //target.setUser(value);
+            
         }
     }
 

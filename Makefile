@@ -1,29 +1,32 @@
 include ./Makefile.dev
 
-mvn_build_mda:
+build_mda:
 	cd bocraportal/mda && mvn install -Dmaven.test.skip=true -o
 
-mvn_build_core:
+build_common:
+	mvn install -f bocraportal/common -Dmaven.test.skip=true -o
+
+build_core:
 	cd bocraportal/core && mvn install -Dmaven.test.skip=true -o
 
-mvn_build_api:
+build_api:
 	cd bocraportal/webservice && mvn install -Dmaven.test.skip=true -o
 
-mvn_build_web:
+build_web:
 	cd bocraportal && mvn install -f angular -Dmaven.test.skip=true -o
 
-mvn_build_all: 
+build_all: 
 	cd bocraportal &&  mvn install -Dmaven.test.skip=true -o
 
-mvn_clean_build: gen_local_env mvn_clean_all mvn_build_all
+clean_build: gen_local_env clean_all build_all
 
-mvn_clean_all:
+clean_all:
 	cd bocraportal && mvn clean -o
 
 ##
 ## Building and running on the local platform
 ##
-build_local_api: gen_docker_env mvn_build_api
+build_local_api: gen_docker_env build_api
 	docker-compose -f docker-compose-local.yml build api
 
 build_local_web: gen_docker_env 
@@ -38,7 +41,7 @@ build_local_keycloak: gen_docker_env
 build_local_proxy: gen_docker_env
 	docker-compose -f docker-compose-local.yml build proxy
 
-build_local_images: gen_docker_env mvn_build_all
+build_local_images: gen_docker_env build_all
 	docker-compose -f docker-compose-local.yml build
 
 up_local_app: rm_env gen_docker_env
@@ -73,7 +76,7 @@ run_local_app: build_local_images up_local_app
 run_api_local: rm_env gen_local_env
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/webservice && mvn spring-boot:run
 
-local_web_deps: rm_env gen_local_env mvn_build_web
+local_web_deps: rm_env gen_local_env build_web
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm i
 
 run_web_local: rm_env gen_local_env
@@ -101,13 +104,13 @@ gen_docker_env: rm_env
 ##
 ## Building and running on the test platform
 ##
-build_live_api: gen_live_env mvn_build_api
+build_live_api: gen_live_env build_api
 	docker-compose build api
 
-build_live_web: gen_live_env mvn_build_api
+build_live_web: gen_live_env build_api
 	docker-compose build web
 
-build_live_images: gen_live_env mvn_build_all
+build_live_images: gen_live_env build_all
 	docker-compose build
 
 up_live_app: 
