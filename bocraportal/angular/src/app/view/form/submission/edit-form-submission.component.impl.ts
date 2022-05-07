@@ -5,99 +5,150 @@ import { EditFormSubmissionSaveForm } from '@app/view/form/submission/edit-form-
 import { EditFormSubmissionDeleteForm } from '@app/view/form/submission/edit-form-submission.component';
 import { EditFormSubmissionSearchForm } from '@app/view/form/submission/edit-form-submission.component';
 import { EditFormSubmissionVarsForm } from '@app/view/form/submission/edit-form-submission.component';
+import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
+import * as SubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
+import * as FormActions from '@app/store/form/form.actions';
+import * as FormSelectors from '@app/store/form/form.selectors';
+import { KeycloakService } from 'keycloak-angular';
+import { Observable } from 'rxjs';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { select } from '@ngrx/store';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { SelectItem } from '@app/utils/select-item';
+import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
+import { SanitizeHtml } from '@app/pipe/sanitize-html.pipe';
 
 @Component({
   selector: 'app-edit-form-submission',
   templateUrl: './edit-form-submission.component.html',
-  styleUrls: ['./edit-form-submission.component.scss']
+  styleUrls: ['./edit-form-submission.component.scss'],
 })
 export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent {
 
-    constructor(private injector: Injector) {
-        super(injector);
+  protected keycloakService: KeycloakService;
+  formSubmissions$: Observable<FormSubmissionVO[]>;
+  forms$: Observable<FormVO[]>;
+
+  constructor(private injector: Injector) {
+    super(injector);
+    this.keycloakService = injector.get(KeycloakService);
+    this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
+    this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
+  }
+
+  beforeOnInit() {}
+
+  afterOnInit() {}
+
+  doNgAfterViewInit() {
+    this.store.dispatch(FormActions.getAllForms());
+    this.forms$.subscribe(forms => {
+      forms.forEach(form => {
+        let item: SelectItem = new SelectItem();
+        item.label = form.formName;
+        item.value = form;
+        this.formSubmissionFormBackingList.push(item);
+      });
+    });
+  }
+
+  doNgOnDestroy() {}
+
+  handleFormChanges(change: any) {
+    console.log(change);
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  afterSetEditFormSubmissionVarsForm(form: EditFormSubmissionVarsForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  afterSetEditFormSubmissionSaveForm(form: EditFormSubmissionSaveForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
+    if (form.formSubmission?.id) {
+      form.formSubmission.updatedBy = this.keycloakService.getUsername();
+      form.formSubmission.updatedDate = new Date();
+    } else {
+      form.formSubmission.createdBy = this.keycloakService.getUsername();
+      form.formSubmission.createdDate = new Date();
     }
 
-    beforeOnInit(){
+    this.store.dispatch(SubmissionActions.save({ formSubmission: form.formSubmission }));
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  afterEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  afterSetEditFormSubmissionDeleteForm(form: EditFormSubmissionDeleteForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  afterEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  afterSetEditFormSubmissionSearchForm(form: EditFormSubmissionSearchForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  beforeEditFormSubmissionSearch(form: EditFormSubmissionSearchForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  afterEditFormSubmissionSearch(form: EditFormSubmissionSearchForm): void {}
+
+  getType(type: string): string {
+    return type.toLowerCase()
+  }
+
+  isInputHidden(type: string): boolean {
+    return type.toLowerCase() === "hidden";
+  }
+
+  getFieldInput(field: FormFieldVO): string {
+
+    let input = '<input class="form-control" id="' + field.form.formName + field.fieldName + '" type=\"' + this.getType(field.fieldType) + '\">\n';
+    let type = this.getType(field.fieldType);
+    if(type === 'select') {
+      input = `<select class="form-select" aria-label="Default select example">
+        <option selected>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>`
     }
-	
-    afterOnInit() {
-    }
 
-    doNgAfterViewInit() {
-    }
+    return input;
 
-    doNgOnDestroy(){}
+  }
 
-    handleFormChanges(change: any) {
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditFormSubmissionVarsForm(form: EditFormSubmissionVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditFormSubmissionSaveForm(form: EditFormSubmissionSaveForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
-
-    }
+  getFieldHtml(field: FormFieldVO) {
     
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditFormSubmissionDeleteForm(form: EditFormSubmissionDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditFormSubmissionSearchForm(form: EditFormSubmissionSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditFormSubmissionSearch(form: EditFormSubmissionSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditFormSubmissionSearch(form: EditFormSubmissionSearchForm): void {
-
-    }    
+    let html: string = '<div class="mb-3">\n';
+    html = html + '<label for"' + field.form.formName + field.fieldName + '" class="col-sm-2 col-form-label">' + field.fieldName + '</label> ';
+    html = html + '\t<input class="form-control" id="' + field.form.formName + field.fieldName + '" type=\"' + this.getType(field.fieldType) + '\">\n';
+    html = html + '</div>';
+    return html;
+  }
 }

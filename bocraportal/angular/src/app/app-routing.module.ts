@@ -44,7 +44,7 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/form/form.module')).FormModule
     },
     {
-      path: 'form/submissions', 
+      path: 'form/submission', 
       loadChildren: async () => (await import('@app/view/form/submission/form-submission.module')).FormSubmissionModule
     },
   ]),

@@ -17,6 +17,7 @@ export const licenseTypeReducer = createReducer(
     })),
     on(LicenseTypeActions.removeSuccess, (state, action) => ({
         ...state,
+        licenseType: null, 
         removed: action.removed,
         error: null
     })),

@@ -95,7 +95,9 @@ export class EditLicenseTypeComponentImpl extends EditLicenseTypeComponent {
 
   afterSetEditLicenseTypeDeleteForm(form: EditLicenseTypeDeleteForm): void {}
 
-  beforeEditLicenseTypeDelete(form: EditLicenseTypeDeleteForm): void {}
+  beforeEditLicenseTypeDelete(form: EditLicenseTypeDeleteForm): void {
+    this.store.dispatch(licenseTypeActions.remove({id: form?.licenseTypeId}));
+  }
 
   afterEditLicenseTypeDelete(form: EditLicenseTypeDeleteForm): void {}
 

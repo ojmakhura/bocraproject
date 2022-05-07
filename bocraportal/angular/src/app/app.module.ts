@@ -22,7 +22,7 @@ import { HomeModule } from './home/home.module';
 import { ShellModule } from './shell/shell.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SanitizeHtml } from './pipe/SanitizeHtml';
+import { SanitizeHtml } from './pipe/sanitize-html.pipe';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
@@ -46,13 +46,14 @@ import { FormSubmissionModule } from '@app/view/form/submission/form-submission.
 import { FormSubmissionControllerImpl } from '@app/controller/form/submission/form-submission-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
 import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
-import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
-import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
-import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
-import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
+import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
 import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
+import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
+import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
+import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
+import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -91,13 +92,14 @@ true
     providers: [
         UseCaseScope,
         FormRestControllerImpl,
-        UserRestControllerImpl,
-        PeriodRestControllerImpl,
-        AuthorisationRestControllerImpl,
-        LicenseeRestControllerImpl,
-        LicenseTypeRestControllerImpl,
-        FormFieldRestControllerImpl,
+        SubmissionRestControllerImpl,
         PeriodConfigRestControllerImpl,
+        FormFieldRestControllerImpl,
+        AuthorisationRestControllerImpl,
+        LicenseTypeRestControllerImpl,
+        LicenseeRestControllerImpl,
+        PeriodRestControllerImpl,
+        UserRestControllerImpl,
         LicenseeControllerImpl,
         LicenseTypeControllerImpl,
         UserControllerImpl,

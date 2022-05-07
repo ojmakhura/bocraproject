@@ -5,12 +5,43 @@ import {formSubmissionKey, initialState} from './form-submission.state';
 
 export const formSubmissionReducer = createReducer(
     initialState,
+    on(FormSubmissionActions.findByIdSuccess, (state, action) => ({
+        ...state,
+        formSubmission: action.formSubmission,
+        error: null
+    })),
+    on(FormSubmissionActions.saveSuccess, (state, action) => ({
+        ...state,
+        formSubmission: action.formSubmission, 
+        error: null
+    })),
+    on(FormSubmissionActions.removeSuccess, (state, action) => ({
+        ...state,
+        removed: action.removed, 
+        error: null
+    })),
+    on(FormSubmissionActions.getAllSuccess, (state, action) => ({
+        ...state,
+        formSubmissions: action.formSubmissions, 
+        error: null
+    })),
+    on(FormSubmissionActions.searchSuccess, (state, action) => ({
+        ...state,
+        formSubmissions: action.formSubmissions, 
+        error: null
+    })),
+    on(FormSubmissionActions.getAllPagedSuccess, (state, action) => ({
+        ...state,
+        formSubmissions: action.formSubmissions, 
+        error: null
+    })),
     on(FormSubmissionActions.formSubmissionReset, (state) => ({
       ...state,
-        submissions: [], 
-        formSubmission: null, 
         searchCriteria: null, 
         id: null, 
+        formSubmission: null, 
+        formSubmissions: [], 
+        removed: false, 
         error: null
     })),
     on(FormSubmissionActions.formSubmissionFailure, (state, action) => ({

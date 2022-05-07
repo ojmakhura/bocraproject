@@ -3,10 +3,71 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as FormSubmissionActions from './form-submission.actions';
+import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
 
 @Injectable()
 export class FormSubmissionEffects {
 
-    constructor(private actions$: Actions) {}
+    constructor(private actions$: Actions, private submissionRestController: SubmissionRestControllerImpl) {}
+
+    findById$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormSubmissionActions.findById),
+            mergeMap(({ id }) => this.submissionRestController.findById(id).pipe(
+                map( formSubmission => FormSubmissionActions.findByIdSuccess({formSubmission})),
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+            ))
+        )
+    );
+
+    save$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormSubmissionActions.save),
+            mergeMap(({ formSubmission }) => this.submissionRestController.save(formSubmission).pipe(
+                map( formSubmission => FormSubmissionActions.saveSuccess({ formSubmission })),
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+            ))
+        )
+    );
+
+    remove$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormSubmissionActions.remove),
+            mergeMap(({ id }) => this.submissionRestController.remove(id).pipe(
+                map( removed => FormSubmissionActions.removeSuccess({ removed })),
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+            ))
+        )
+    );
+
+    getAll$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormSubmissionActions.getAll),
+            mergeMap(() => this.submissionRestController.getAll().pipe(
+                map( formSubmissions => FormSubmissionActions.getAllSuccess({ formSubmissions })),
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+            ))
+        )
+    );
+
+    search$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormSubmissionActions.search),
+            mergeMap(({ criteria }) => this.submissionRestController.search(criteria).pipe(
+                map( formSubmissions => FormSubmissionActions.searchSuccess({ formSubmissions })),
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+            ))
+        )
+    );
+
+    getAllPaged$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormSubmissionActions.getAllPaged),
+            mergeMap(({ pageNumber, pageSize }) => this.submissionRestController.getAllPaged(pageNumber, pageSize).pipe(
+                map( formSubmissions => FormSubmissionActions.getAllPagedSuccess({formSubmissions})),
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+            ))
+        )
+    );
 
 }

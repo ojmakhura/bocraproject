@@ -10,6 +10,7 @@ export interface LicenseTypeState {
     licenseTypes: Array<LicenseTypeVO> | Array<any>,
     searchCriteria: LicenseTypeCriteria | any,
     removed: boolean,
+    licenseTypeId: number | any,
     error: any
 }
 
@@ -19,5 +20,6 @@ export const initialState: LicenseTypeState = {
     licenseTypes: [],
     searchCriteria: null,
     removed: false,
+    licenseTypeId: null,
     error: null
 };

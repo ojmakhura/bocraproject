@@ -81,12 +81,10 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     @Override
     public ResponseEntity<FormVO> handleSave(FormVO formVO) {
-        log.info(formVO.toString());
         Optional<FormVO> data = Optional.of(formService.save(formVO));
         ResponseEntity<FormVO> response;
 
         if(data.isPresent()) {
-            log.info(data.get().toString());
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
