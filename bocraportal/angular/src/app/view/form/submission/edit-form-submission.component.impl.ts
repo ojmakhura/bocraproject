@@ -17,6 +17,30 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { SelectItem } from '@app/utils/select-item';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { SanitizeHtml } from '@app/pipe/sanitize-html.pipe';
+import { FormDataVO } from '@app/model/bw/org/bocra/portal/form/submission/data/form-data-vo';
+import { FormGroup } from '@angular/forms';
+
+// <div formArrayName="formDatas">
+// 					<div *ngFor="let formData of formSubmissionFormDatas.controls; let i = index"  [formGroupName]='i'>
+// 						<div class="mb-3" *ngIf="isButton(formData.value)">
+// 							<input type="button" class="btn btn-primary" value="{{getDataValue(formData.value)}}">
+// 						</div>
+// 						<div class="mb-3" *ngIf="!isHidden(formData.value) && isSimpleType(formData.value)">
+// 							<label  class="form-label">{{getDataValue(formData.value)}}</label>
+// 							<input class="form-control" type="{{this.getType(formData.value)}}"
+// 									formControlName="value" *ngIf="!isTextArea(formData.value)
+// 												&& !isSelect(formData.value) && !isRange(formData.value)">
+// 							<textarea class="form-control" formControlName="value" *ngIf="isTextArea(formData.value)"></textarea>
+// 							<select class="form-select" aria-label="Default select example" formControlName="value" *ngIf="isSelect(formData.value)">
+// 								<option selected></option>
+// 								<option value="1">One</option>
+// 								<option value="2">Two</option>
+// 								<option value="3">Three</option>
+// 							</select>
+// 							<input type="range" class="form-range" min="{{formData.value.formField.min}}" max="{{formData.value.formField.max}}" *ngIf="isRange(formData.value)">
+// 						</div>
+// 					</div>
+// 				</div>
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -24,10 +48,10 @@ import { SanitizeHtml } from '@app/pipe/sanitize-html.pipe';
   styleUrls: ['./edit-form-submission.component.scss'],
 })
 export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent {
-
   protected keycloakService: KeycloakService;
   formSubmissions$: Observable<FormSubmissionVO[]>;
   forms$: Observable<FormVO[]>;
+  _forms: FormVO[] = [];
 
   constructor(private injector: Injector) {
     super(injector);
@@ -42,20 +66,35 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   doNgAfterViewInit() {
     this.store.dispatch(FormActions.getAllForms());
-    this.forms$.subscribe(forms => {
-      forms.forEach(form => {
+    this.forms$.subscribe((forms) => {
+      forms.forEach((form) => {
         let item: SelectItem = new SelectItem();
         item.label = form.formName;
-        item.value = form;
+        item.value = form.id;
         this.formSubmissionFormBackingList.push(item);
+        this._forms.push(form);
       });
+    });
+
+    this.formSubmissionForm.get('id')?.valueChanges.subscribe((id) => {
+      let item: FormVO | undefined = this._forms.find((form) => '' + form.id === id);
+      console.log(item);
+      if (item) {
+        this.formSubmissionForm.patchValue(item);
+        item?.formFields.forEach((field: FormFieldVO) => {
+          let data: FormDataVO = new FormDataVO();
+          data.formField = field;
+          data.value = '';
+          this.formSubmissionFormDatas.push(this.createFormDataVOGroup(data));
+        });
+      }
     });
   }
 
   doNgOnDestroy() {}
 
   handleFormChanges(change: any) {
-    console.log(change);
+    //console.log(change);
   }
 
   /**
@@ -79,8 +118,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       form.formSubmission.createdBy = this.keycloakService.getUsername();
       form.formSubmission.createdDate = new Date();
     }
-
-    this.store.dispatch(SubmissionActions.save({ formSubmission: form.formSubmission }));
+    console.log(this.formSubmission);
+    //this.store.dispatch(SubmissionActions.save({ formSubmission: form.formSubmission }));
   }
 
   /**
@@ -118,37 +157,84 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
    */
   afterEditFormSubmissionSearch(form: EditFormSubmissionSearchForm): void {}
 
-  getType(type: string): string {
-    return type.toLowerCase()
+  getFormObject(form: string) {
+    return JSON.parse(form);
+  }
+
+  isSimpleType(data: FormDataVO): boolean {
+    const type = data.formField.fieldType;
+
+    return (
+      type === 'TEXT' ||
+      type === 'TEXTAREA' ||
+      type === 'PASSWORD' ||
+      type === 'LINK' ||
+      type === 'EMAIL' ||
+      type === 'RANGE' ||
+      type === 'NUMBER' ||
+      type === 'PLAINTEXT' ||
+      type === 'DATE' ||
+      type === 'MONTH' ||
+      type === 'SEARCH' ||
+      type === 'SELECT'
+    );
+  }
+
+  isRange(data: FormDataVO): boolean {
+    return data.formField.fieldType === 'RANGE';
+  }
+
+  isSelect(data: FormDataVO): boolean {
+    return data.formField.fieldType === 'SELECT';
+  }
+
+  isHidden(data: FormDataVO) {
+    return data.formField.fieldType === 'HIDDEN';
+  }
+
+  getType(data: FormDataVO): string {
+    return data.formField.fieldType.toLowerCase();
+  }
+
+  isTextArea(data: FormDataVO): boolean {
+    return data.formField.fieldType === 'TEXTAREA';
+  }
+
+  isButton(data: FormDataVO): boolean {
+    return data.formField.fieldType === 'BUTTON';
   }
 
   isInputHidden(type: string): boolean {
-    return type.toLowerCase() === "hidden";
+    return type === 'HIDDEN';
   }
 
-  getFieldInput(field: FormFieldVO): string {
-
-    let input = '<input class="form-control" id="' + field.form.formName + field.fieldName + '" type=\"' + this.getType(field.fieldType) + '\">\n';
-    let type = this.getType(field.fieldType);
-    if(type === 'select') {
-      input = `<select class="form-select" aria-label="Default select example">
-        <option selected>Open this select menu</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-      </select>`
-    }
-
-    return input;
-
+  createFormFieldForm(formField: FormFieldVO): FormGroup {
+    return this.formBuilder.group({
+      id: [formField?.id ? formField.id : null],
+      createdBy: [formField?.createdBy ? formField.createdBy : null],
+      updatedBy: [formField?.updatedBy ? formField.updatedBy : null],
+      createdDate: [formField?.createdDate ? formField.createdDate : null],
+      updatedDate: [formField?.updatedDate ? formField.updatedDate : null],
+      fieldType: [formField?.fieldType ? formField.fieldType : null],
+      fieldName: [formField?.fieldName ? formField.fieldName : null],
+      defaultValue: [formField?.defaultValue ? formField.defaultValue : null],
+      required: [formField?.required ? formField.required : null],
+      min: [formField?.min ? formField.min : null],
+      max: [formField?.max ? formField.max : null],
+      options: this.formBuilder.array(formField?.options ? formField.options : []),
+      tableColumns: this.formBuilder.array(formField?.tableColumns ? formField.tableColumns : []),
+    });
   }
 
-  getFieldHtml(field: FormFieldVO) {
-    
-    let html: string = '<div class="mb-3">\n';
-    html = html + '<label for"' + field.form.formName + field.fieldName + '" class="col-sm-2 col-form-label">' + field.fieldName + '</label> ';
-    html = html + '\t<input class="form-control" id="' + field.form.formName + field.fieldName + '" type=\"' + this.getType(field.fieldType) + '\">\n';
-    html = html + '</div>';
-    return html;
+  override createFormDataVOGroup(value: FormDataVO): FormGroup {
+    return this.formBuilder.group({
+      id: [value?.id],
+      formField: this.createFormFieldForm(value?.formField),
+      value: [value?.value],
+    });
+  }
+
+  getDataValue(data: FormDataVO) {
+    return `${data.formField.fieldName}`;
   }
 }
