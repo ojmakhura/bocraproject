@@ -26,10 +26,10 @@ clean_all:
 ##
 ## Building and running on the local platform
 ##
-build_local_api: gen_docker_env build_api
+build_local_api: gen_docker_env build_api build_api
 	docker-compose -f docker-compose-local.yml build api
 
-build_local_web: gen_docker_env 
+build_local_web: gen_docker_env build_web 
 	docker-compose -f docker-compose-local.yml build web
 
 build_local_db: gen_docker_env
