@@ -47,6 +47,10 @@ const routes: Routes = [
       path: 'form/submission', 
       loadChildren: async () => (await import('@app/view/form/submission/form-submission.module')).FormSubmissionModule
     },
+    {
+      path: 'dashboard', 
+      loadChildren: async () => (await import('@app/view/dashboard/dashboard.module')).DashboardModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 

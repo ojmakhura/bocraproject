@@ -10,7 +10,7 @@ build_core:
 	cd bocraportal/core && mvn install -Dmaven.test.skip=true -o
 
 build_api:
-	cd bocraportal/webservice && mvn install -Dmaven.test.skip=true -o
+	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/webservice && mvn install -o
 
 build_web:
 	cd bocraportal && mvn install -f angular -Dmaven.test.skip=true -o
