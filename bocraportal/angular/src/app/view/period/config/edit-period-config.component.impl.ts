@@ -25,9 +25,8 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
     }
 
     beforeOnInit(){
-      this.periodConfigEndDayBackingList = days;
+      this.periodConfigFinalDayBackingList = days;
       this.periodConfigStartDayBackingList = days;
-      this.periodConfigEndMonthBackingList = months;
       this.periodConfigStartMonthBackingList = months;
     }
 	
@@ -60,6 +59,12 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
      * This method may be overwritten
      */
     afterSetEditPeriodConfigSaveForm(form: EditPeriodConfigSaveForm): void {
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    beforeEditPeriodConfigSave(form: EditPeriodConfigSaveForm): void {
       if(this.periodConfig.valid) {
         if(form.periodConfig.id) {
           form.periodConfig.updatedBy = this.keycloakService.getUsername();
@@ -71,12 +76,6 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
         }
         this.store.dispatch(PeriodConfigActions.save({ periodConfig: form.periodConfig }));
       }
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditPeriodConfigSave(form: EditPeriodConfigSaveForm): void {
 
     }
 
