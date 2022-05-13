@@ -2,7 +2,7 @@
 import { Component, Injector } from '@angular/core';
 import { SearchLicenseTypesComponent, SearchLicenseTypesVarsForm } from '@app/view/type/search-license-types.component';
 import { SearchLicenseTypesSearchForm } from '@app/view/type/search-license-types.component';
-import * as licenseTypeActions from '@app/store/type/license-type.actions';
+import * as licenseTypeActions from '@app/store/licence/type/license-type.actions';
 
 @Component({
   selector: 'app-search-license-types',

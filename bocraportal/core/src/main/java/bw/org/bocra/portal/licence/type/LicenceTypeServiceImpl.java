@@ -6,7 +6,7 @@
  * MODEL CLASS: bocraportal::backend::bw.org.bocra.portal::type::LicenseTypeService
  * STEREOTYPE:  Service
  */
-package bw.org.bocra.portal.type;
+package bw.org.bocra.portal.licence.type;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,18 +22,18 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @see bw.org.bocra.portal.type.LicenseTypeService
+ * @see bw.org.bocra.portal.licence.type.LicenseTypeService
  */
-@Service("licenseTypeService")
-public class LicenseTypeServiceImpl
-    extends LicenseTypeServiceBase
+@Service("licenceTypeService")
+public class LicenceTypeServiceImpl
+    extends LicenceTypeServiceBase
 {
 
     /**
-     * @see bw.org.bocra.portal.type.LicenseTypeService#findById(Long)
+     * @see bw.org.bocra.portal.licence.type.LicenseTypeService#findById(Long)
      */
     @Override
-    protected  LicenseTypeVO handleFindById(Long id)
+    protected  LicenceTypeVO handleFindById(Long id)
         throws Exception
     {
         if(id == null) {
@@ -42,30 +42,30 @@ public class LicenseTypeServiceImpl
 
         LicenseType type = licenseTypeRepository.getById(id);
 
-        return licenseTypeDao.toLicenseTypeVO(type);
+        return licenseTypeDao.toLicenceTypeVO(type);
     }
 
     /**
-     * @see bw.org.bocra.portal.type.LicenseTypeService#save(LicenseTypeVO)
+     * @see bw.org.bocra.portal.licence.type.LicenseTypeService#save(LicenceTypeVO)
      */
     @Override
-    protected  LicenseTypeVO handleSave(LicenseTypeVO licenseTypeVO)
+    protected  LicenceTypeVO handleSave(LicenceTypeVO LicenceTypeVO)
         throws Exception
     {
-        LicenseType entity = getLicenseTypeDao().licenseTypeVOToEntity(licenseTypeVO);
-        if(licenseTypeVO.getId() == null) {
+        LicenseType entity = getLicenseTypeDao().LicenceTypeVOToEntity(LicenceTypeVO);
+        if(LicenceTypeVO.getId() == null) {
 
-            return (LicenseTypeVO) licenseTypeDao.create(LicenseTypeDao.TRANSFORM_LICENSETYPEVO, entity);
+            return (LicenceTypeVO) licenseTypeDao.create(LicenseTypeDao.TRANSFORM_LicenceTypeVO, entity);
 
         } else {
 
             licenseTypeDao.update(entity);
-            return licenseTypeVO;
+            return LicenceTypeVO;
         }
     }
 
     /**
-     * @see bw.org.bocra.portal.type.LicenseTypeService#remove(Long)
+     * @see bw.org.bocra.portal.licence.type.LicenseTypeService#remove(Long)
      */
     @Override
     protected  boolean handleRemove(Long id)
@@ -80,20 +80,20 @@ public class LicenseTypeServiceImpl
     }
 
     /**
-     * @see bw.org.bocra.portal.type.LicenseTypeService#getAll()
+     * @see bw.org.bocra.portal.licence.type.LicenseTypeService#getAll()
      */
     @Override
-    protected  Collection<LicenseTypeVO> handleGetAll()
+    protected  Collection<LicenceTypeVO> handleGetAll()
         throws Exception
     {
-        return (Collection<LicenseTypeVO>) this.licenseTypeDao.loadAll(LicenseTypeDao.TRANSFORM_LICENSETYPEVO);
+        return (Collection<LicenceTypeVO>) this.licenseTypeDao.loadAll(LicenseTypeDao.TRANSFORM_LicenceTypeVO);
     }
 
     /**
-     * @see bw.org.bocra.portal.type.LicenseTypeService#search(LicenseTypeCriteria)
+     * @see bw.org.bocra.portal.licence.type.LicenseTypeService#search(LicenseTypeCriteria)
      */
     @Override
-    protected  Collection<LicenseTypeVO> handleSearch(LicenseTypeCriteria searchCriteria)
+    protected  Collection<LicenceTypeVO> handleSearch(LicenseTypeCriteria searchCriteria)
         throws Exception
     {
         Specification<LicenseType> specs = null;
@@ -116,12 +116,12 @@ public class LicenseTypeServiceImpl
         }
 
         Collection<LicenseType> entities = licenseTypeRepository.findAll(specs);
-        Collection<LicenseTypeVO> vos = new ArrayList<>();
+        Collection<LicenceTypeVO> vos = new ArrayList<>();
         logger.info(entities.toString());
 
         for (LicenseType licenseType : entities) {
-            LicenseTypeVO vo = new LicenseTypeVO();
-            getLicenseTypeDao().toLicenseTypeVO(licenseType, vo);
+            LicenceTypeVO vo = new LicenceTypeVO();
+            getLicenseTypeDao().toLicenceTypeVO(licenseType, vo);
             vos.add(vo);
         }
 
@@ -129,7 +129,7 @@ public class LicenseTypeServiceImpl
     }
 
     @Override
-    protected Collection<LicenseTypeVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
+    protected Collection<LicenceTypeVO> handleGetAll(Integer pageNumber, Integer pageSize) throws Exception {
         
         Collection<LicenseType> types = null;
 
@@ -140,7 +140,7 @@ public class LicenseTypeServiceImpl
             types = licenseTypeRepository.findAll(pageable).getContent();
         }
 
-        return types == null ? null : getLicenseTypeDao().toLicenseTypeVOCollection(types);
+        return types == null ? null : getLicenseTypeDao().toLicenceTypeVOCollection(types);
     }
 
 }

@@ -14,9 +14,9 @@ import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo'
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
-import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
-import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/type/license-type-criteria';
-import * as LicenseTypeActions from '@app/store/type/license-type.actions';
+import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/license-type-vo';
+import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/license-type-criteria';
+import * as LicenseTypeActions from '@app/store/licence/type/license-type.actions';
 import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 

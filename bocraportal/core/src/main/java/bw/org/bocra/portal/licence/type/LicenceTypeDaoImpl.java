@@ -4,7 +4,7 @@
  * This is only generated once! It will never be overwritten.
  * You can (and have to!) safely modify it by hand.
  */
-package bw.org.bocra.portal.type;
+package bw.org.bocra.portal.licence.type;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,25 +20,25 @@ import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
 /**
- * @see LicenseType
+ * @see LicenceType
  */
-@Repository("licenseTypeDao")
-public class LicenseTypeDaoImpl
-    extends LicenseTypeDaoBase
+@Repository("licenceTypeDao")
+public class LicenceTypeDaoImpl
+    extends LicenceTypeDaoBase
 {
     /**
      * {@inheritDoc}
      */
     @Override
-    protected Collection<LicenseType> handleFindByCriteria(LicenseTypeCriteria criteria)
+    protected Collection<LicenceType> handleFindByCriteria(LicenceTypeCriteria criteria)
     {
-        Specification<LicenseType> criteriaSpecs =  null;
+        Specification<LicenceType> criteriaSpecs =  null;
 
         if(StringUtils.isNotBlank(criteria.getTypeSearch())) {
 
-            criteriaSpecs = LicenseTypeSpecifications.findByCodeLikeIgnoreCase(criteria.getTypeSearch());
-            criteriaSpecs.and(LicenseTypeSpecifications.findByNameLikeIgnoreCase(criteria.getTypeSearch()));
-            criteriaSpecs.and(LicenseTypeSpecifications.findByDescriptionLikeIgnoreCase(criteria.getTypeSearch()));
+            criteriaSpecs = LicenceTypeSpecifications.findByCodeLikeIgnoreCase(criteria.getTypeSearch());
+            criteriaSpecs.and(LicenceTypeSpecifications.findByNameLikeIgnoreCase(criteria.getTypeSearch()));
+            criteriaSpecs.and(LicenceTypeSpecifications.findByDescriptionLikeIgnoreCase(criteria.getTypeSearch()));
         }
 
         if(criteria.getLicenseeId() != null) {
@@ -49,19 +49,19 @@ public class LicenseTypeDaoImpl
             }
         }
 
-        return licenseTypeRepository.findAll(criteriaSpecs);
+        return LicenceTypeRepository.findAll(criteriaSpecs);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void toLicenseTypeVO(
-        LicenseType source,
-        LicenseTypeVO target)
+    public void toLicenceTypeVO(
+        LicenceType source,
+        LicenceTypeVO target)
     {
-        // TODO verify behavior of toLicenseTypeVO
-        super.toLicenseTypeVO(source, target);
+        // TODO verify behavior of toLicenceTypeVO
+        super.toLicenceTypeVO(source, target);
         // WARNING! No conversion for target.licensees (can't convert source.getLicensees():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
         if(CollectionUtils.isNotEmpty(source.getLicensees())) {
             ArrayList<LicenseeVO> licensees = new ArrayList<>();
@@ -99,10 +99,10 @@ public class LicenseTypeDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public LicenseTypeVO toLicenseTypeVO(final LicenseType entity)
+    public LicenceTypeVO toLicenceTypeVO(final LicenceType entity)
     {
-        // TODO verify behavior of toLicenseTypeVO
-        return super.toLicenseTypeVO(entity);
+        // TODO verify behavior of toLicenceTypeVO
+        return super.toLicenceTypeVO(entity);
     }
 
     /**
@@ -110,27 +110,27 @@ public class LicenseTypeDaoImpl
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private LicenseType loadLicenseTypeFromLicenseTypeVO(LicenseTypeVO licenseTypeVO)
+    private LicenceType loadLicenceTypeFromLicenceTypeVO(LicenceTypeVO LicenceTypeVO)
     {
 
-        if (licenseTypeVO.getId() == null)
+        if (LicenceTypeVO.getId() == null)
         {
-            return  LicenseType.Factory.newInstance();
+            return  LicenceType.Factory.newInstance();
         }
         else
         {
-            return this.load(licenseTypeVO.getId());
+            return this.load(LicenceTypeVO.getId());
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public LicenseType licenseTypeVOToEntity(LicenseTypeVO licenseTypeVO)
+    public LicenceType LicenceTypeVOToEntity(LicenceTypeVO LicenceTypeVO)
     {
-        // TODO verify behavior of licenseTypeVOToEntity
-        LicenseType entity = this.loadLicenseTypeFromLicenseTypeVO(licenseTypeVO);
-        this.licenseTypeVOToEntity(licenseTypeVO, entity, true);
+        // TODO verify behavior of LicenceTypeVOToEntity
+        LicenceType entity = this.loadLicenceTypeFromLicenceTypeVO(LicenceTypeVO);
+        this.LicenceTypeVOToEntity(LicenceTypeVO, entity, true);
         return entity;
     }
 
@@ -138,13 +138,13 @@ public class LicenseTypeDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public void licenseTypeVOToEntity(
-        LicenseTypeVO source,
-        LicenseType target,
+    public void LicenceTypeVOToEntity(
+        LicenceTypeVO source,
+        LicenceType target,
         boolean copyIfNull)
     {
-        // TODO verify behavior of licenseTypeVOToEntity
-        super.licenseTypeVOToEntity(source, target, copyIfNull);
+        // TODO verify behavior of LicenceTypeVOToEntity
+        super.LicenceTypeVOToEntity(source, target, copyIfNull);
         if(CollectionUtils.isNotEmpty(source.getLicensees())) {
             Collection<Licensee> licensees = new ArrayList<>();
             for (LicenseeVO licensee : source.getLicensees()) {

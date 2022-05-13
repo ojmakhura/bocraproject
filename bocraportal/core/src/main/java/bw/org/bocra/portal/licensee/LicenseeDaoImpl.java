@@ -12,8 +12,8 @@ import java.util.Collection;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
-import bw.org.bocra.portal.type.LicenseType;
-import bw.org.bocra.portal.type.LicenseTypeVO;
+import bw.org.bocra.portal.licence.type.LicenseType;
+import bw.org.bocra.portal.licence.type.LicenseTypeVO;
 
 /**
  * @see Licensee

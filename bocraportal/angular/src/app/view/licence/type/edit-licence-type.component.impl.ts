@@ -4,11 +4,11 @@ import {
   EditLicenseTypeComponent,
   EditLicenseTypeDeleteForm,
   EditLicenseTypeVarsForm,
-} from '@app/view/type/edit-license-type.component';
+} from '@app/view/licence/type/edit-license-type.component';
 import { EditLicenseTypeSaveForm } from '@app/view/type/edit-license-type.component';
 import { EditLicenseTypeSearchForm } from '@app/view/type/edit-license-type.component';
-import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
-import * as licenseTypeActions from '@app/store/type/license-type.actions';
+import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/license-type-vo';
+import * as licenseTypeActions from '@app/store/licence/type/license-type.actions';
 import { Observable } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 import { select } from '@ngrx/store';

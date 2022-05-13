@@ -31,7 +31,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LicenseeModule } from '@app/view/licensee/licensee.module';
 import { LicenseeControllerImpl } from '@app/controller/licensee/licensee-controller.impl';
 import { LicenseTypeModule } from '@app/view/type/license-type.module';
-import { LicenseTypeControllerImpl } from '@app/controller/type/license-type-controller.impl';
+import { LicenseTypeControllerImpl } from '@app/controller/licence/type/license-type-controller.impl';
 import { UserModule } from '@app/view/user/user.module';
 import { UserControllerImpl } from '@app/controller/user/user-controller.impl';
 import { AuthorisationModule } from '@app/view/auth/authorisation.module';
@@ -54,7 +54,7 @@ import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/us
 import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
 import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
 import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
-import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/type/license-type-rest-controller.impl';
+import { LicenseTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/type/license-type-rest-controller.impl';
 import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
 import { AuthModule } from './auth';
 true

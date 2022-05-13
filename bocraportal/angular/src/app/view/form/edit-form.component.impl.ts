@@ -9,14 +9,14 @@ import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
 import * as FormActions from '@app/store/form/form.actions';
 import * as FormSelectors from '@app/store/form/form.selectors';
 import { select } from '@ngrx/store';
-import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
+import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/license-type-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { EditFormAddFieldForm } from '@app/view/form/edit-form.component';
 import { AddNewFieldComponentImpl } from './add-new-field.component.impl';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
-import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/type/license-type-criteria';
-import * as LicenseTypeActions from '@app/store/type/license-type.actions';
+import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/license-type-criteria';
+import * as LicenseTypeActions from '@app/store/licence/type/license-type.actions';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
