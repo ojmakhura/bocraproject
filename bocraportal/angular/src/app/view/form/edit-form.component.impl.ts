@@ -5,18 +5,18 @@ import { EditFormSaveForm } from '@app/view/form/edit-form.component';
 import { EditFormDeleteForm } from '@app/view/form/edit-form.component';
 import { EditFormSearchForm } from '@app/view/form/edit-form.component';
 import { EditFormVarsForm } from '@app/view/form/edit-form.component';
-import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
+import * as LicenceTypeSelectors from '@app/store/licence/type/licence-type.selectors';
 import * as FormActions from '@app/store/form/form.actions';
 import * as FormSelectors from '@app/store/form/form.selectors';
 import { select } from '@ngrx/store';
-import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/license-type-vo';
+import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { EditFormAddFieldForm } from '@app/view/form/edit-form.component';
 import { AddNewFieldComponentImpl } from './add-new-field.component.impl';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
-import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/license-type-criteria';
-import * as LicenseTypeActions from '@app/store/licence/type/license-type.actions';
+import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
+import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
@@ -30,7 +30,7 @@ export class EditFormComponentImpl extends EditFormComponent {
 
   constructor(private injector: Injector) {
     super(injector);
-    this.licenseTypes$ = this.store.pipe(select(LicenseTypeSelectors.selectLicenseTypes));
+    this.licenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
     this.keycloakService = injector.get(KeycloakService);
     this.formFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
   }
@@ -126,19 +126,19 @@ export class EditFormComponentImpl extends EditFormComponent {
    */
   afterEditFormSearch(form: EditFormSearchForm): void {}
 
-  handleFormLicenseTypesAddDialog(): void {}
+  handleFormLicenceTypesAddDialog(): void {}
 
   handleFormFormFieldsAddDialog(): void {}
 
   handleFormFormFieldsSearch(): void {}
 
-  handleFormLicenseTypesSearch(): void {
-    let criteria: LicenseTypeCriteria = new LicenseTypeCriteria();
-    criteria.typeSearch = this.formLicenseTypesSearchField.value;
-    this.store.dispatch(LicenseTypeActions.search({searchCriteria: criteria}));
+  handleFormLicenceTypesSearch(): void {
+    let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
+    criteria.typeSearch = this.formLicenceTypesSearchField.value;
+    this.store.dispatch(LicenceTypeActions.search({criteria: criteria}));
   }
 
-  handleFormLicenseTypesSelected(event: MatCheckboxChange, element: LicenseTypeVO): void {}
+  handleFormLicenceTypesSelected(event: MatCheckboxChange, element: LicenceTypeVO): void {}
 
   handleFormFormFieldsSelected(event: MatCheckboxChange, element: FormFieldVO): void {}
 
@@ -162,5 +162,17 @@ export class EditFormComponentImpl extends EditFormComponent {
         this.addToFormFormFields(result.dialogData);
       } 
     });
+  }
+
+  handleFormLicenseesAddDialog() {
+
+  }
+
+  handleFormLicenseesSearch() {
+
+  }
+
+  handleFormLicenseesSelected() {
+    
   }
 }

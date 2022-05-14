@@ -26,9 +26,9 @@ export const selectForms = createSelector(
     (state: FormState) => state.forms
 );
 
-export const selectSearchCriteria = createSelector(
+export const selectCriteria = createSelector(
     selectFormState,
-    (state: FormState) => state.searchCriteria
+    (state: FormState) => state.criteria
 );
 
 export const selectDefaultValue = createSelector(

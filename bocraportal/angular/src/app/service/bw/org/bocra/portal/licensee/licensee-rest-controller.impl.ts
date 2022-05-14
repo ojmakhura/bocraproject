@@ -37,9 +37,9 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
 
     }
 
-    public searchLicensees(searchCriteria: LicenseeCriteria): Observable<LicenseeVO[]> {
+    public search(criteria: LicenseeCriteria): Observable<LicenseeVO[]> {
 
-        return this.http.post<LicenseeVO[]>(this.path + `/search`, searchCriteria);
+        return this.http.post<LicenseeVO[]>(this.path + `/search`, criteria);
 
     }
 

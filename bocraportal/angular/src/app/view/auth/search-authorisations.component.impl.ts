@@ -36,7 +36,7 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
         item.label = val['description'];
         item.value = val['name'];
 
-        this.searchCriteriaRolesBackingList.push(item);
+        this.criteriaRolesBackingList.push(item);
       });
     });
 
@@ -46,7 +46,7 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
         item.label = val['description'];
         item.value = val['name'];
 
-        this.searchCriteriaRolesBackingList.push(item);
+        this.criteriaRolesBackingList.push(item);
       });
     });
   }
@@ -72,7 +72,7 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
    * This method may be overwritten
    */
   beforeSearchAuthorisationsSearch(form: SearchAuthorisationsSearchForm): void {
-    this.store.dispatch(authorisationActions.search({criteria: form.searchCriteria}));
+    this.store.dispatch(authorisationActions.search({criteria: form.criteria}));
     
   }
 

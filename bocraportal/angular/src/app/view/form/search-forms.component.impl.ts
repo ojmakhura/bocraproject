@@ -42,7 +42,7 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
    * This method may be overwritten
    */
   beforeSearchFormsSearch(form: SearchFormsSearchForm): void {
-    this.store.dispatch(FormActions.searchForms({ criteria: form.searchCriteria }));
+    this.store.dispatch(FormActions.searchForms({ criteria: form.criteria }));
   }
 
   /**

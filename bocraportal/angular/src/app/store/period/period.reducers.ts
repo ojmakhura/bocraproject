@@ -38,7 +38,7 @@ export const periodReducer = createReducer(
     on(PeriodActions.periodReset, (state) => ({
       ...state,
         periods: [], 
-        searchCriteria: null, 
+        criteria: null, 
         period: null, 
         id: null, 
         removed: false,

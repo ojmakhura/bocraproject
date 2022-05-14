@@ -43,9 +43,9 @@ export class PeriodConfigRestControllerImpl extends PeriodConfigRestController {
 
     }
 
-    public search(searchCriteria: PeriodConfigCriteria): Observable<PeriodConfigVO[]> {
+    public search(criteria: PeriodConfigCriteria): Observable<PeriodConfigVO[]> {
 
-        return this.http.post<PeriodConfigVO[]>(this.path + `/search`, searchCriteria);
+        return this.http.post<PeriodConfigVO[]>(this.path + `/search`, criteria);
 
     }
 

@@ -92,11 +92,11 @@ public class PeriodConfigServiceImpl
      * @see bw.org.bocra.portal.period.config.PeriodConfigService#search(PeriodCriteria)
      */
     @Override
-    protected  Collection<PeriodConfigVO> handleSearch(PeriodConfigCriteria searchCriteria)
+    protected  Collection<PeriodConfigVO> handleSearch(PeriodConfigCriteria criteria)
         throws Exception
     {
 
-        return (Collection<PeriodConfigVO>) getPeriodConfigDao().findByCriteria(PeriodConfigDao.TRANSFORM_PERIODCONFIGVO, searchCriteria);
+        return (Collection<PeriodConfigVO>) getPeriodConfigDao().findByCriteria(PeriodConfigDao.TRANSFORM_PERIODCONFIGVO, criteria);
     }
 
     @Override

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as LicenceTypeActions from './licence-type.actions';
-import { LicenceTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/type/license-type-rest-controller.impl';
+import { LicenceTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/type/licence-type-rest-controller.impl';
 
 @Injectable()
 export class LicenceTypeEffects {
@@ -14,8 +14,8 @@ export class LicenceTypeEffects {
          this.actions$.pipe(
             ofType(LicenceTypeActions.findById),
             mergeMap(({ id }) => this.LicenceTypeRestController.findById(id).pipe(
-                map( LicenceType => LicenceTypeActions.findByIdSuccess({LicenceType})),
-                catchError(({error}) => [LicenceTypeActions.LicenceTypeFailure(error)])
+                map( licenceType => LicenceTypeActions.findByIdSuccess({licenceType})),
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
             ))
         )
     );
@@ -23,9 +23,9 @@ export class LicenceTypeEffects {
     save$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenceTypeActions.save),
-            mergeMap(({ LicenceType }) => this.LicenceTypeRestController.save(LicenceType).pipe(
-                map( LicenceType => LicenceTypeActions.saveSuccess({LicenceType})),
-                catchError(({error}) => [LicenceTypeActions.LicenceTypeFailure(error)])
+            mergeMap(({ licenceType }) => this.LicenceTypeRestController.save(licenceType).pipe(
+                map( licenceType => LicenceTypeActions.saveSuccess({licenceType})),
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
             ))
         )
     );
@@ -35,7 +35,7 @@ export class LicenceTypeEffects {
             ofType(LicenceTypeActions.remove),
             mergeMap(({ id }) => this.LicenceTypeRestController.remove(id).pipe(
                 map( removed => LicenceTypeActions.removeSuccess({removed})),
-                catchError(({error}) => [LicenceTypeActions.LicenceTypeFailure(error)])
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
             ))
         )
     );
@@ -44,8 +44,8 @@ export class LicenceTypeEffects {
          this.actions$.pipe(
             ofType(LicenceTypeActions.getAll),
             mergeMap(() => this.LicenceTypeRestController.getAll().pipe(
-                map( LicenceTypes => LicenceTypeActions.getAllSuccess({LicenceTypes})),
-                catchError(({error}) => [LicenceTypeActions.LicenceTypeFailure(error)])
+                map( licenceTypes => LicenceTypeActions.getAllSuccess({licenceTypes})),
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
             ))
         )
     );
@@ -53,9 +53,9 @@ export class LicenceTypeEffects {
     search$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenceTypeActions.search),
-            mergeMap(({ searchCriteria }) => this.LicenceTypeRestController.search(searchCriteria).pipe(
-                map( LicenceTypes => LicenceTypeActions.searchSuccess({LicenceTypes})),
-                catchError(({error}) => [LicenceTypeActions.LicenceTypeFailure(error)])
+            mergeMap(({ criteria }) => this.LicenceTypeRestController.search(criteria).pipe(
+                map( licenceTypes => LicenceTypeActions.searchSuccess({licenceTypes})),
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
             ))
         )
     );
@@ -64,8 +64,8 @@ export class LicenceTypeEffects {
          this.actions$.pipe(
             ofType(LicenceTypeActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.LicenceTypeRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( LicenceTypes => LicenceTypeActions.getAllPagedSuccess({LicenceTypes})),
-                catchError(({error}) => [LicenceTypeActions.LicenceTypeFailure(error)])
+                map( licenceTypes => LicenceTypeActions.getAllPagedSuccess({licenceTypes})),
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
             ))
         )
     );

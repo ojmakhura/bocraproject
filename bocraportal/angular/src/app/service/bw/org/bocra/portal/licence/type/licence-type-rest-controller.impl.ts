@@ -2,9 +2,9 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LicenceTypeRestController } from '@app/service/bw/org/bocra/portal/licence/type/license-type-rest-controller';
-import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/license-type-vo';
-import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/license-type-criteria';
+import { LicenceTypeRestController } from '@app/service/bw/org/bocra/portal/licence/type/licence-type-rest-controller';
+import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
+import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
 
 @Injectable()
 export class LicenceTypeRestControllerImpl extends LicenceTypeRestController {
@@ -37,10 +37,10 @@ export class LicenceTypeRestControllerImpl extends LicenceTypeRestController {
 
     }
 
-    public search(searchCriteria: LicenceTypeCriteria): Observable<LicenceTypeVO[]> {
-        console.log(searchCriteria);
+    public search(criteria: LicenceTypeCriteria): Observable<LicenceTypeVO[]> {
+        console.log(criteria);
         
-        return this.http.post<LicenceTypeVO[]>(this.path + `/search`, searchCriteria);
+        return this.http.post<LicenceTypeVO[]>(this.path + `/search`, criteria);
 
     }
 

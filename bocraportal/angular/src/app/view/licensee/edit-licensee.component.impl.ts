@@ -3,6 +3,9 @@ import { Component, Injector } from '@angular/core';
 import {
   EditLicenseeComponent,
   EditLicenseeDeleteForm,
+  EditLicenseeDocumentsForm,
+  EditLicenseeNewDocumentForm,
+  EditLicenseeNewShareholderForm,
   EditLicenseeVarsForm,
 } from '@app/view/licensee/edit-licensee.component';
 import { EditLicenseeSaveForm } from '@app/view/licensee/edit-licensee.component';
@@ -14,11 +17,13 @@ import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo'
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
-import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/license-type-vo';
-import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/license-type-criteria';
-import * as LicenseTypeActions from '@app/store/licence/type/license-type.actions';
-import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
+import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
+import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
+import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
+import * as LicenceTypeSelectors from '@app/store/licence/type/licence-type.selectors';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -31,7 +36,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.licenseTypes$ = this.store.pipe(select(LicenseTypeSelectors.selectLicenseTypes));
+    this.licenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
   }
 
   beforeOnInit() {}
@@ -101,7 +106,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   afterSetEditLicenseeVarsForm(form: EditLicenseeVarsForm): void {}
 
-  handleLicenseeLicenseTypesAddDialog(): void {}
+  handleLicenseeLicenceTypesAddDialog(): void {}
 
   handleLicenseeUsersAddDialog(): void {}
 
@@ -111,12 +116,57 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   handleLicenseeUsersSelected(event: MatCheckboxChange, element: UserVO): void {
   }
 
-  handleLicenseeLicenseTypesSearch(): void {
-    let criteria: LicenseTypeCriteria = new LicenseTypeCriteria();
-    criteria.typeSearch = this.licenseeLicenseTypesSearchField.value;
-    this.store.dispatch(LicenseTypeActions.search({searchCriteria: criteria}));
+  handleLicenseeLicenceTypesSearch(): void {
+    let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
+    criteria.typeSearch = this.licenseeLicenceTypesSearchField.value;
+    this.store.dispatch(LicenceTypeActions.search({criteria: criteria}));
   }
   
-  handleLicenseeLicenseTypesSelected(event: MatCheckboxChange, element: LicenseTypeVO): void {
+  handleLicenseeLicenceTypesSelected(event: MatCheckboxChange, element: LicenceTypeVO): void {
+  }
+
+  afterSetEditLicenseeDocumentsForm(form: EditLicenseeDocumentsForm): void {
+  }
+
+  beforeEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {
+  }
+
+  afterEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {
+  }
+
+  afterSetEditLicenseeNewShareholderForm(form: EditLicenseeNewShareholderForm): void {
+  }
+
+  beforeEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm): void {
+  }
+
+  afterEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm): void {
+  }
+
+  afterSetEditLicenseeNewDocumentForm(form: EditLicenseeNewDocumentForm): void {
+  }
+
+  beforeEditLicenseeNewDocument(): void {
+  }
+
+  afterEditLicenseeNewDocument(): void {
+  }
+
+  handleLicenseeLicencesAddDialog(): void {
+  }
+
+  handleLicenseeLicencesSearch(): void {
+  }
+
+  handleLicenseeLicencesSelected(event: MatCheckboxChange, data: LicenceVO): void {
+  }
+
+  handleLicenseeDocumentsAddDialog(): void {
+  }
+
+  handleLicenseeDocumentsSearch(): void {
+  }
+
+  handleLicenseeDocumentsSelected(event: MatCheckboxChange, data: DocumentVO): void {
   }
 }

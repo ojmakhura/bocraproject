@@ -7,7 +7,7 @@ import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-fiel
 export const formKey = 'form';
 
 export interface FormState {
-  searchCriteria: FormCriteria | any;
+  criteria: FormCriteria | any;
   fieldType: FieldType | any;
   formFields: Array<FormFieldVO> | Array<any>;
   formField: FormFieldVO | any;
@@ -24,7 +24,7 @@ export interface FormState {
 }
 
 export const initialState: FormState = {
-  searchCriteria: null,
+  criteria: null,
   fieldType: null,
   formFields: [],
   formField: null,

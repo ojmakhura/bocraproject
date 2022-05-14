@@ -40,7 +40,7 @@ export const licenceTypeReducer = createReducer(
       ...state,
       licenceType: null, 
       licenceTypes: [], 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         removed: false,
         error: null

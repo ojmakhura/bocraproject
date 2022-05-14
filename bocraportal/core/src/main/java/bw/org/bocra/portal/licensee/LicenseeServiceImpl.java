@@ -92,11 +92,11 @@ public class LicenseeServiceImpl
      * @see bw.org.bocra.portal.licensee.LicenseeService#search(LicenseeCriteria)
      */
     @Override
-    protected  Collection<LicenseeVO> handleSearch(LicenseeCriteria searchCriteria)
+    protected  Collection<LicenseeVO> handleSearch(LicenseeCriteria criteria)
         throws Exception
     {
 
-        Collection<Licensee> licenses = this.licenseeDao.findByCriteria(searchCriteria);
+        Collection<Licensee> licenses = this.licenseeDao.findByCriteria(criteria);
         Collection<LicenseeVO> vos = new ArrayList<>();
 
         for (Licensee entity : licenses) {

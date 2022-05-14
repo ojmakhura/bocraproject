@@ -67,7 +67,7 @@ export const getAllSuccess = createAction(
 
 export const searchLicensees = createAction(
     UserActionType.SEARCH_LICENSEES,
-    props<{ searchCriteria: LicenseeCriteria | any  }>()
+    props<{ criteria: LicenseeCriteria | any  }>()
 );
 
 export const searchLicenseesSuccess = createAction(

@@ -80,8 +80,8 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<LicenseeVO>> handleSearchLicensees(LicenseeCriteria searchCriteria) {
-        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.search(searchCriteria)); // TODO: Add custom code here;
+    public ResponseEntity<Collection<LicenseeVO>> handleSearch(LicenseeCriteria criteria) {
+        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.search(criteria)); // TODO: Add custom code here;
         ResponseEntity<Collection<LicenseeVO>> response;
 
         if(data.isPresent()) {

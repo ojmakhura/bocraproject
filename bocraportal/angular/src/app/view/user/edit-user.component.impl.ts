@@ -66,7 +66,7 @@ export class EditUserComponentImpl extends EditUserComponent {
 
   afterOnInit() {
     // if (this.useCaseScope.pageVariables['id']) {
-    //   this.store.dispatch(licenseTypeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
+    //   this.store.dispatch(licenceTypeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
     // }
 
     this.user$.subscribe((user) => {

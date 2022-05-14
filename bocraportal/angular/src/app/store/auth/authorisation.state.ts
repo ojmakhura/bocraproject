@@ -7,7 +7,7 @@ export const authorisationKey = "authorisation";
 export interface AuthorisationState {
     authorisation: AuthorisationVO | any,
     id: number | any,
-    searchCriteria: AuthorisationCriteria | any,
+    criteria: AuthorisationCriteria | any,
     authorisations: Array<AuthorisationVO> | Array<any>,
     removed: boolean,
     error: any
@@ -16,7 +16,7 @@ export interface AuthorisationState {
 export const initialState: AuthorisationState = {
     authorisation: null,
     id: null,
-    searchCriteria: null,
+    criteria: null,
     authorisations: [],
     removed: false,
     error: null

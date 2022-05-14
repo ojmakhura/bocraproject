@@ -6,9 +6,9 @@ export const selectFormSubmissionState = createFeatureSelector<FormSubmissionSta
     formSubmissionKey
 );
 
-export const selectSearchCriteria = createSelector(
+export const selectCriteria = createSelector(
     selectFormSubmissionState,
-    (state: FormSubmissionState) => state.searchCriteria
+    (state: FormSubmissionState) => state.criteria
 );
 
 export const selectId = createSelector(

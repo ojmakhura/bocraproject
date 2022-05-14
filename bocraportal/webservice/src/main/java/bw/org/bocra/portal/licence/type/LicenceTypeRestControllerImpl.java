@@ -29,7 +29,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
 
     @Override
     public ResponseEntity<LicenceTypeVO> handleFindById(Long id) {
-        Optional<LicenceTypeVO> data = Optional.of(this.LicenceTypeService.findById(id)); 
+        Optional<LicenceTypeVO> data = Optional.of(this.licenceTypeService.findById(id)); 
         ResponseEntity<LicenceTypeVO> response;
 
         if(data.isPresent()) {
@@ -43,7 +43,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
 
     @Override
     public ResponseEntity<Collection<LicenceTypeVO>> handleGetAll() {
-        Optional<Collection<LicenceTypeVO>> data = Optional.of(this.LicenceTypeService.getAll()); 
+        Optional<Collection<LicenceTypeVO>> data = Optional.of(this.licenceTypeService.getAll()); 
         ResponseEntity<Collection<LicenceTypeVO>> response;
 
         if(data.isPresent()) {
@@ -57,7 +57,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
 
     @Override
     public ResponseEntity<Boolean> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(this.LicenceTypeService.remove(id));
+        Optional<Boolean> data = Optional.of(this.licenceTypeService.remove(id));
         ResponseEntity<Boolean> response;
 
         if(data.isPresent()) {
@@ -71,7 +71,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
 
     @Override
     public ResponseEntity<LicenceTypeVO> handleSave(LicenceTypeVO LicenceTypeVO) {
-        Optional<LicenceTypeVO> data = Optional.of(this.LicenceTypeService.save(LicenceTypeVO));
+        Optional<LicenceTypeVO> data = Optional.of(this.licenceTypeService.save(LicenceTypeVO));
         ResponseEntity<LicenceTypeVO> response;
 
         if(data.isPresent()) {
@@ -84,8 +84,8 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     }
 
     @Override
-    public ResponseEntity<Collection<LicenceTypeVO>> handleSearch(LicenceTypeCriteria searchCriteria) {
-        Optional<Collection<LicenceTypeVO>> data = Optional.of(this.LicenceTypeService.search(searchCriteria));
+    public ResponseEntity<Collection<LicenceTypeVO>> handleSearch(LicenceTypeCriteria criteria) {
+        Optional<Collection<LicenceTypeVO>> data = Optional.of(this.licenceTypeService.search(criteria));
         ResponseEntity<Collection<LicenceTypeVO>> response;
 
         if(data.isPresent()) {
@@ -99,7 +99,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
 
     @Override
     public ResponseEntity<Collection<LicenceTypeVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<LicenceTypeVO>> data = Optional.of(this.LicenceTypeService.getAll(pageNumber, pageSize));
+        Optional<Collection<LicenceTypeVO>> data = Optional.of(this.licenceTypeService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<LicenceTypeVO>> response;
 
         if(data.isPresent()) {

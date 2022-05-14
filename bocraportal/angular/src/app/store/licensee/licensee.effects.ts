@@ -4,11 +4,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as LicenseeActions from './licensee.actions';
 import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { DocumentRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/document-rest-controller.impl';
 
 @Injectable()
 export class LicenseeEffects {
 
-    constructor(private actions$: Actions, private licenseeRestController: LicenseeRestControllerImpl) {}
+    constructor(private actions$: Actions, private licenseeRestController: LicenseeRestControllerImpl, private documentRestController: DocumentRestControllerImpl) {}
 
     findById$ = createEffect(() => 
          this.actions$.pipe(
@@ -50,11 +51,11 @@ export class LicenseeEffects {
         )
     );
 
-    searchLicensees$ = createEffect(() => 
+    search$ = createEffect(() => 
          this.actions$.pipe(
-            ofType(LicenseeActions.searchLicensees),
-            mergeMap(({ searchCriteria }) => this.licenseeRestController.searchLicensees(searchCriteria).pipe(
-                map( licensees => LicenseeActions.searchLicenseesSuccess({licensees})),
+            ofType(LicenseeActions.search),
+            mergeMap(({ criteria }) => this.licenseeRestController.search(criteria).pipe(
+                map( licensees => LicenseeActions.searchSuccess({licensees})),
                 catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
             ))
         )
@@ -65,6 +66,16 @@ export class LicenseeEffects {
             ofType(LicenseeActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.licenseeRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( licensees => LicenseeActions.getAllPagedSuccess({licensees})),
+                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+            ))
+        )
+    );
+
+    getDocuments$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(LicenseeActions.getDocuments),
+            mergeMap(({ licenseeId }) => this.documentRestController.getLicenceDocuments(licenseeId).pipe(
+                map( documents => LicenseeActions.getDocumentsSuccess({documents})),
                 catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
             ))
         )

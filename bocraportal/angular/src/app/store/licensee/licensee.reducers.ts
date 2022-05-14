@@ -7,64 +7,47 @@ export const licenseeReducer = createReducer(
     initialState,
     on(LicenseeActions.findByIdSuccess, (state, action) => ({
         ...state,
-        licensees: [], 
         licensee: action.licensee, 
-        searchCriteria: null, 
-        removed: false,
-        id: null, 
         error: null
     })),
     on(LicenseeActions.saveSuccess, (state, action) => ({
         ...state,
-        licensees: [], 
         licensee: action.licensee, 
-        searchCriteria: null, 
-        removed: false,
-        id: null, 
         error: null
     })),
     on(LicenseeActions.removeSuccess, (state, action) => ({
         ...state,
-        licensees: [], 
-        licensee: null, 
-        searchCriteria: null, 
         removed: action.removed,
-        id: null, 
         error: null
     })),
     on(LicenseeActions.getAllSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
-        licensee: null, 
-        searchCriteria: null, 
-        removed: false,
-        id: null, 
         error: null
     })),
-    on(LicenseeActions.searchLicenseesSuccess, (state, action) => ({
+    on(LicenseeActions.searchSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
-        licensee: null, 
-        searchCriteria: null, 
-        removed: false,
-        id: null, 
+        error: null
+    })),
+    on(LicenseeActions.getDocumentsSuccess, (state, action) => ({
+        ...state,
+        documents: action.documents, 
         error: null
     })),
     on(LicenseeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
-        licensee: null, 
-        searchCriteria: null, 
-        removed: false,
-        id: null, 
         error: null
     })),
     on(LicenseeActions.licenseeReset, (state) => ({
       ...state,
         licensees: [], 
         licensee: null, 
-        searchCriteria: null, 
+        criteria: null, 
         removed: false,
+        shareholder: null,
+        shareholders: [],
         id: null, 
         error: null
     })),

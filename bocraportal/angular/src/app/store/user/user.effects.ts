@@ -54,7 +54,7 @@ export class UserEffects {
 //     searchLicensees$ = createEffect(() => 
 //          this.actions$.pipe(
 //             ofType(UserActions.searchLicensees),
-//             mergeMap(({ searchCriteria }) => this.licenseeRestController.searchLicensees(searchCriteria).pipe(
+//             mergeMap(({ criteria }) => this.licenseeRestController.searchLicensees(criteria).pipe(
 // //                map( results => UserActions.searchLicenseesSuccess({results})),
 //                 catchError(({error}) => [UserActions.userFailure(error)])
 //             ))

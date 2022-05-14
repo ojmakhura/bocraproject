@@ -49,7 +49,7 @@ public class LicenceTypeDaoImpl
             }
         }
 
-        return LicenceTypeRepository.findAll(criteriaSpecs);
+        return licenceTypeRepository.findAll(criteriaSpecs);
     }
 
     /**
@@ -126,11 +126,11 @@ public class LicenceTypeDaoImpl
     /**
      * {@inheritDoc}
      */
-    public LicenceType LicenceTypeVOToEntity(LicenceTypeVO LicenceTypeVO)
+    public LicenceType licenceTypeVOToEntity(LicenceTypeVO LicenceTypeVO)
     {
         // TODO verify behavior of LicenceTypeVOToEntity
         LicenceType entity = this.loadLicenceTypeFromLicenceTypeVO(LicenceTypeVO);
-        this.LicenceTypeVOToEntity(LicenceTypeVO, entity, true);
+        this.licenceTypeVOToEntity(LicenceTypeVO, entity, true);
         return entity;
     }
 
@@ -138,13 +138,13 @@ public class LicenceTypeDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public void LicenceTypeVOToEntity(
+    public void licenceTypeVOToEntity(
         LicenceTypeVO source,
         LicenceType target,
         boolean copyIfNull)
     {
         // TODO verify behavior of LicenceTypeVOToEntity
-        super.LicenceTypeVOToEntity(source, target, copyIfNull);
+        super.licenceTypeVOToEntity(source, target, copyIfNull);
         if(CollectionUtils.isNotEmpty(source.getLicensees())) {
             Collection<Licensee> licensees = new ArrayList<>();
             for (LicenseeVO licensee : source.getLicensees()) {

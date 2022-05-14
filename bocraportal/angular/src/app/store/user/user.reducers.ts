@@ -7,7 +7,7 @@ export const userReducer = createReducer(
     initialState,
     on(UserActions.findByIdSuccess, (state, action) => ({
         ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 
@@ -16,7 +16,7 @@ export const userReducer = createReducer(
     })),
     on(UserActions.saveSuccess, (state, action) => ({
         ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 
@@ -25,7 +25,7 @@ export const userReducer = createReducer(
     })),
     on(UserActions.removeSuccess, (state, action) => ({
         ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 
@@ -34,7 +34,7 @@ export const userReducer = createReducer(
     })),
     on(UserActions.getAllSuccess, (state, action) => ({
         ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 
@@ -43,7 +43,7 @@ export const userReducer = createReducer(
     })),
     on(UserActions.searchLicenseesSuccess, (state, action) => ({
         ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 
@@ -52,7 +52,7 @@ export const userReducer = createReducer(
     })),
     on(UserActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 
@@ -61,7 +61,7 @@ export const userReducer = createReducer(
     })),
     on(UserActions.createUserSuccess, (state, action) => ({
         ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 
@@ -70,7 +70,7 @@ export const userReducer = createReducer(
     })),
     on(UserActions.updateUserNameSuccess, (state, action) => ({
         ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 
@@ -79,7 +79,7 @@ export const userReducer = createReducer(
     })),
     on(UserActions.loadUsersSuccess, (state, action) => ({
         ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 
@@ -88,7 +88,7 @@ export const userReducer = createReducer(
     })),
     on(UserActions.userReset, (state) => ({
       ...state,
-        searchCriteria: null, 
+        criteria: null, 
         userId: null, 
         users: [], 
         id: null, 

@@ -80,8 +80,8 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<PeriodVO>> handleSearch(PeriodCriteria searchCriteria) {
-        Optional<Collection<PeriodVO>> data = Optional.of(periodService.search(searchCriteria)); 
+    public ResponseEntity<Collection<PeriodVO>> handleSearch(PeriodCriteria criteria) {
+        Optional<Collection<PeriodVO>> data = Optional.of(periodService.search(criteria)); 
         ResponseEntity<Collection<PeriodVO>> response;
 
         if(data.isPresent()) {

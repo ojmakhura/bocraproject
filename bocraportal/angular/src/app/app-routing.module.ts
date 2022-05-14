@@ -20,10 +20,6 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/licensee/licensee.module')).LicenseeModule
     },
     {
-      path: 'license/type', 
-      loadChildren: async () => (await import('@app/view/type/license-type.module')).LicenseTypeModule
-    },
-    {
       path: 'user', 
       loadChildren: async () => (await import('@app/view/user/user.module')).UserModule
     },
@@ -50,6 +46,22 @@ const routes: Routes = [
     {
       path: 'dashboard', 
       loadChildren: async () => (await import('@app/view/dashboard/dashboard.module')).DashboardModule
+    },
+    {
+      path: 'licence/type', 
+      loadChildren: async () => (await import('@app/view/licence/type/licence-type.module')).LicenceTypeModule
+    },
+    {
+      path: 'licence', 
+      loadChildren: async () => (await import('@app/view/licence/licence.module')).LicenceModule
+    },
+    {
+      path: 'document/type', 
+      loadChildren: async () => (await import('@app/view/document/type/document-type.module')).DocumentTypeModule
+    },
+    {
+      path: 'document', 
+      loadChildren: async () => (await import('@app/view/document/document.module')).DocumentModule
     },
   ]),
   // Fallback when no prior route is matched

@@ -5,7 +5,7 @@ import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission
 export const formSubmissionKey = "formSubmission";
 
 export interface FormSubmissionState {
-    searchCriteria: FormSubmissionCriteria | any,
+    criteria: FormSubmissionCriteria | any,
     id: number | any,
     formSubmission: FormSubmissionVO | any,
     formSubmissions: Array<FormSubmissionVO> | Array<any>,
@@ -14,7 +14,7 @@ export interface FormSubmissionState {
 }
 
 export const initialState: FormSubmissionState = {
-    searchCriteria: null,
+    criteria: null,
     id: null,
     formSubmission: null,
     formSubmissions: [],

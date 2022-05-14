@@ -38,7 +38,7 @@ export const periodConfigReducer = createReducer(
     on(PeriodConfigActions.periodConfigReset, (state) => ({
       ...state,
         periodConfig: null, 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         periodConfigs: [], 
         removed: false,

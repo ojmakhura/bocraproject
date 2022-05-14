@@ -88,20 +88,20 @@ public class PeriodDaoImpl
     }
 
     @Override
-    protected Collection<Period> handleFindByCriteria(PeriodCriteria searchCriteria) throws Exception {
+    protected Collection<Period> handleFindByCriteria(PeriodCriteria criteria) throws Exception {
         
         Specification<Period> specs = null;
 
-        if(searchCriteria.getSearchDate() != null) {
-            specs = PeriodSpecifications.findByPeriodStartGreaterThanEqual(searchCriteria.getSearchDate());
-            specs = specs.and(PeriodSpecifications.findByPeriodEndLessThanEqual(searchCriteria.getSearchDate()));
+        if(criteria.getSearchDate() != null) {
+            specs = PeriodSpecifications.findByPeriodStartGreaterThanEqual(criteria.getSearchDate());
+            specs = specs.and(PeriodSpecifications.findByPeriodEndLessThanEqual(criteria.getSearchDate()));
         }
 
-        if(StringUtils.isNotBlank(searchCriteria.getPeriodName())){
+        if(StringUtils.isNotBlank(criteria.getPeriodName())){
             if(specs == null) {
-                specs = PeriodSpecifications.findByPeriodNameContainingIgnoreCase(searchCriteria.getPeriodName());
+                specs = PeriodSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName());
             } else {
-                specs = specs.and(PeriodSpecifications.findByPeriodNameContainingIgnoreCase(searchCriteria.getPeriodName()));
+                specs = specs.and(PeriodSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName()));
             }
         }
 

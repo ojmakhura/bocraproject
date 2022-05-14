@@ -8,7 +8,7 @@ export interface PeriodConfigState {
     periodConfigs: Array<PeriodConfigVO> | Array<any>,
     periodConfig: PeriodConfigVO | any,
     id: number | any,
-    searchCriteria: PeriodConfigCriteria | any,
+    criteria: PeriodConfigCriteria | any,
     removed: boolean,
     error: any
 }
@@ -17,7 +17,7 @@ export const initialState: PeriodConfigState = {
     periodConfigs: [],
     periodConfig: null,
     id: null,
-    searchCriteria: null,
+    criteria: null,
     removed: false,
     error: null
 };

@@ -53,7 +53,7 @@ export class PeriodEffects {
     search$ = createEffect(() => 
          this.actions$.pipe(
             ofType(PeriodActions.search),
-            mergeMap(({ searchCriteria }) => this.periodRestController.search(searchCriteria).pipe(
+            mergeMap(({ criteria }) => this.periodRestController.search(criteria).pipe(
                 map( periods => PeriodActions.searchSuccess({periods})),
                 catchError(({error}) => [PeriodActions.periodFailure(error)])
             ))

@@ -12,8 +12,8 @@ import java.util.Collection;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
-import bw.org.bocra.portal.licence.type.LicenseType;
-import bw.org.bocra.portal.licence.type.LicenseTypeVO;
+import bw.org.bocra.portal.licence.type.LicenceType;
+import bw.org.bocra.portal.licence.type.LicenceTypeVO;
 
 /**
  * @see Licensee
@@ -32,16 +32,16 @@ public class LicenseeDaoImpl
     {
         super.toLicenseeVO(source, target);
 
-        logger.info(source.getLicenseTypes().toString());
+        logger.info(source.getLicenceTypes().toString());
 
-        if(CollectionUtils.isNotEmpty(source.getLicenseTypes())) {
+        if(CollectionUtils.isNotEmpty(source.getLicenceTypes())) {
 
-            target.setLicenseTypes(new ArrayList<>());
+            target.setLicenceTypes(new ArrayList<>());
 
-            for(LicenseType entity : source.getLicenseTypes()) {
-                LicenseTypeVO vo = new LicenseTypeVO();
-                licenseTypeDao.toLicenseTypeVO(entity, vo);
-                target.getLicenseTypes().add(vo);
+            for(LicenceType entity : source.getLicenceTypes()) {
+                LicenceTypeVO vo = new LicenceTypeVO();
+                licenceTypeDao.toLicenceTypeVO(entity, vo);
+                target.getLicenceTypes().add(vo);
             }
         }
 
@@ -98,25 +98,21 @@ public class LicenseeDaoImpl
         // TODO verify behavior of licenseeVOToEntity
         super.licenseeVOToEntity(source, target, copyIfNull);
 
-        if(CollectionUtils.isNotEmpty(source.getLicenseTypes())) {
-            //target.setLicenseeGroups(new );
-            Collection<LicenseType> types = new ArrayList<>();
-            for(LicenseTypeVO type : source.getLicenseTypes()) {
-                logger.info("-----------> " + type.toString());
+        if(CollectionUtils.isNotEmpty(source.getLicenceTypes())) {
+            Collection<LicenceType> types = new ArrayList<>();
+            for(LicenceTypeVO type : source.getLicenceTypes()) {
                 if(type.getId() != null) {
-                    LicenseType entity = licenseTypeDao.load(type.getId());
-                    logger.info("============> " + entity.toString());
+                    LicenceType entity = licenceTypeDao.load(type.getId());
                     if(entity != null && entity.getId() != null) {
-                        logger.info("******************* Adding type " + entity.getCode());
                         types.add(entity);
                     }
                 }
             }
 
-            target.setLicenseTypes(types);
+            target.setLicenceTypes(types);
 
             logger.info(target.toString());    
-            logger.info(target.getLicenseTypes().toString());              
+            logger.info(target.getLicenceTypes().toString());              
         }
     }
 }

@@ -61,7 +61,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     PeriodActionType.SEARCH,
-    props<{ searchCriteria: PeriodCriteria | any  }>()
+    props<{ criteria: PeriodCriteria | any  }>()
 );
 
 export const searchSuccess = createAction(

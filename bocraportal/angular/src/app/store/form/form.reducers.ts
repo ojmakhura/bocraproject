@@ -62,7 +62,7 @@ export const formReducer = createReducer(
     })),
     on(FormActions.formReset, (state) => ({
         ...state,
-        searchCriteria: null,
+        criteria: null,
         fieldType: null,
         formFields: [],
         formField: null,

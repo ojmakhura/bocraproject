@@ -5,7 +5,7 @@ import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
 export const userKey = "user";
 
 export interface UserState {
-    searchCriteria: UserCriteria | any,
+    criteria: UserCriteria | any,
     userId: String | any,
     users: Array<UserVO> | Array<any>,
     id: number | any,
@@ -15,7 +15,7 @@ export interface UserState {
 }
 
 export const initialState: UserState = {
-    searchCriteria: null,
+    criteria: null,
     userId: null,
     users: [],
     id: null,

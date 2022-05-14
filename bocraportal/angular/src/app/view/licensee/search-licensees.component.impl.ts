@@ -42,7 +42,7 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
    * This method may be overwritten
    */
   beforeSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {
-    this.store.dispatch(LicenseeActions.searchLicensees({ searchCriteria: form.searchCriteria }));
+    this.store.dispatch(LicenseeActions.search({ criteria: form.criteria }));
   }
 
   /**

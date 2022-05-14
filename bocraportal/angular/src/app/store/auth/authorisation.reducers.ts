@@ -8,7 +8,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.findByIdSuccess, (state, action) => ({
         ...state,
         authorisations: [], 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         authorisation: action.authorisation, 
         removed: false, 
@@ -17,7 +17,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.saveSuccess, (state, action) => ({
         ...state,
         authorisations: [], 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         authorisation: action.authorisation, 
         removed: false, 
@@ -26,7 +26,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.removeSuccess, (state, action) => ({
         ...state,
         authorisations: [], 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         authorisation: null, 
         removed: action.removed, 
@@ -35,7 +35,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.getAllSuccess, (state, action) => ({
         ...state,
         authorisations: action.authorisations, 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         authorisation: null, 
         removed: false, 
@@ -44,7 +44,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.searchSuccess, (state, action) => ({
         ...state,
         authorisations: action.authorisations, 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         authorisation: null, 
         removed: false, 
@@ -53,7 +53,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         authorisations: action.authorisations, 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         authorisation: null, 
         removed: false, 
@@ -62,7 +62,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.authorisationReset, (state) => ({
       ...state,
         authorisations: [], 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         authorisation: null, 
         removed: false, 

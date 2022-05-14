@@ -81,8 +81,8 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<PeriodConfigVO>> handleSearch(PeriodConfigCriteria searchCriteria) {
-        Optional<Collection<PeriodConfigVO>> data = Optional.of(periodConfigService.search(searchCriteria));
+    public ResponseEntity<Collection<PeriodConfigVO>> handleSearch(PeriodConfigCriteria criteria) {
+        Optional<Collection<PeriodConfigVO>> data = Optional.of(periodConfigService.search(criteria));
         ResponseEntity<Collection<PeriodConfigVO>> response;
 
         if(data.isPresent()) {

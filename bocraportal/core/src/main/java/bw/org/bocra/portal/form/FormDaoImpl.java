@@ -14,8 +14,8 @@ import org.springframework.util.CollectionUtils;
 
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.field.FormFieldVO;
-import bw.org.bocra.portal.licence.type.LicenseType;
-import bw.org.bocra.portal.licence.type.LicenseTypeVO;
+import bw.org.bocra.portal.licence.type.LicenceType;
+import bw.org.bocra.portal.licence.type.LicenceTypeVO;
 
 /**
  * @see Form
@@ -35,20 +35,20 @@ public class FormDaoImpl
         // TODO verify behavior of toFormVO
         super.toFormVO(source, target);
 
-        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
+        if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
 
-            if(target.getLicenseTypes() == null) {
-                target.setLicenseTypes(new ArrayList<>());
+            if(target.getLicenceTypes() == null) {
+                target.setLicenceTypes(new ArrayList<>());
             }
             
-            for (LicenseType entity : source.getLicenseTypes()) {
-                LicenseTypeVO type = new LicenseTypeVO();
+            for (LicenceType entity : source.getLicenceTypes()) {
+                LicenceTypeVO type = new LicenceTypeVO();
                 type.setId(entity.getId());
                 type.setCode(entity.getCode());
                 type.setDescription(entity.getDescription());
                 type.setName(entity.getName());
                 
-                target.getLicenseTypes().add(type);
+                target.getLicenceTypes().add(type);
             }
         }
 
@@ -151,19 +151,19 @@ public class FormDaoImpl
 
         }
 
-        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
+        if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
 
-            target.setLicenseTypes(new ArrayList<>());
+            target.setLicenceTypes(new ArrayList<>());
 
-            for(LicenseTypeVO type : source.getLicenseTypes()) {
+            for(LicenceTypeVO type : source.getLicenceTypes()) {
 
                 System.out.println("-----------------------------------------------------------------");
                 System.out.println(type);
 
                 System.out.println("-----------------------------------------------------------------");
                 if(type.getId() != null) {
-                    LicenseType entity = getLicenseTypeDao().load(type.getId());
-                    target.getLicenseTypes().add(entity);
+                    LicenceType entity = getLicenceTypeDao().load(type.getId());
+                    target.getLicenceTypes().add(entity);
                 }
 
             }
