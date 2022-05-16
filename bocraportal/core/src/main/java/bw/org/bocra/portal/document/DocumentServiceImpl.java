@@ -68,10 +68,10 @@ public class DocumentServiceImpl
      * @see bw.org.bocra.portal.document.DocumentService#getAll()
      */
     @Override
-    protected  Collection<DocumentTypeVO> handleGetAll()
+    protected  Collection<DocumentVO> handleGetAll()
         throws Exception
     {
-        return (Collection<DocumentTypeVO>) documentDao.loadAll(DocumentDao.TRANSFORM_DOCUMENTVO);
+        return (Collection<DocumentVO>) documentDao.loadAll(DocumentDao.TRANSFORM_DOCUMENTVO);
     }
 
     /**
