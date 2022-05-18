@@ -7,44 +7,89 @@ export const documentTypeReducer = createReducer(
     initialState,
     on(DocumentTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
-        documentType: action.documentType, 
-        error: null
+        documentType: null, 
+        documentTypes: [], 
+        criteria: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(DocumentTypeActions.saveSuccess, (state, action) => ({
         ...state,
-        documentType: action.documentType, 
-        error: null
+        documentType: null, 
+        documentTypes: [], 
+        criteria: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(DocumentTypeActions.removeSuccess, (state, action) => ({
         ...state,
-        removed: action.removed, 
-        error: null
+        documentType: null, 
+        documentTypes: [], 
+        criteria: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(DocumentTypeActions.getAllSuccess, (state, action) => ({
         ...state,
-        documentTypes: action.documentTypes, 
-        error: null
+        documentType: null, 
+        documentTypes: [], 
+        criteria: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(DocumentTypeActions.searchSuccess, (state, action) => ({
         ...state,
-        documentTypes: action.documentTypes, 
-        error: null
+        documentType: null, 
+        documentTypes: [], 
+        criteria: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(DocumentTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        documentTypes: action.documentTypes, 
-        error: null
+        documentType: null, 
+        documentTypes: [], 
+        criteria: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(DocumentTypeActions.documentTypeReset, (state) => ({
       ...state,
+        documentType: null, 
         documentTypes: [], 
         criteria: null, 
-        documentType: null, 
         id: null, 
+        loading: false,
+        success: false,
         error: null
     })),
     on(DocumentTypeActions.documentTypeFailure, (state, action) => ({
         ...state,
+        loading: false,
+        success: false,
+        error: action.error
+    })),
+    on(DocumentTypeActions.documentTypeLoading, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: false
+    })),
+    on(DocumentTypeActions.documentTypeSuccess, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: action.success,
         error: action.error
     }))
 );

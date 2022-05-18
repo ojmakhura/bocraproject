@@ -7,46 +7,89 @@ export const licenceTypeReducer = createReducer(
     initialState,
     on(LicenceTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
-        licenceType: action.licenceType, 
-        error: null
+        criteria: null, 
+        licenceTypes: [], 
+        licenceType: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(LicenceTypeActions.saveSuccess, (state, action) => ({
         ...state,
-        licenceType: action.licenceType, 
-        error: null
+        criteria: null, 
+        licenceTypes: [], 
+        licenceType: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(LicenceTypeActions.removeSuccess, (state, action) => ({
         ...state,
+        criteria: null, 
+        licenceTypes: [], 
         licenceType: null, 
-        removed: action.removed,
-        error: null
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(LicenceTypeActions.getAllSuccess, (state, action) => ({
         ...state,
-        licenceTypes: action.licenceTypes, 
-        error: null
+        criteria: null, 
+        licenceTypes: [], 
+        licenceType: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(LicenceTypeActions.searchSuccess, (state, action) => ({
         ...state,
-        licenceTypes: action.licenceTypes, 
-        error: null
+        criteria: null, 
+        licenceTypes: [], 
+        licenceType: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(LicenceTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        licenceTypes: action.licenceTypes, 
-        error:null
+        criteria: null, 
+        licenceTypes: [], 
+        licenceType: null, 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(LicenceTypeActions.licenceTypeReset, (state) => ({
       ...state,
-      licenceType: null, 
-      licenceTypes: [], 
         criteria: null, 
+        licenceTypes: [], 
+        licenceType: null, 
         id: null, 
-        removed: false,
+        loading: false,
+        success: false,
         error: null
     })),
     on(LicenceTypeActions.licenceTypeFailure, (state, action) => ({
         ...state,
+        loading: false,
+        success: false,
+        error: action.error
+    })),
+    on(LicenceTypeActions.licenceTypeLoading, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: false
+    })),
+    on(LicenceTypeActions.licenceTypeSuccess, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: action.success,
         error: action.error
     }))
 );

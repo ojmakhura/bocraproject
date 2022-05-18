@@ -16,71 +16,85 @@ export enum DocumentTypeActionType {
     GET_ALL_PAGED = '[DocumentType] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[DocumentType] Get All Paged Success',
     DOCUMENT_TYPE_RESET = '[DocumentType] DocumentType Reset',
-    DOCUMENT_TYPE_FAILURE = '[DocumentType] DocumentType Action Failure'
+    DOCUMENT_TYPE_FAILURE = '[DocumentType] DocumentType Action Failure',
+    DOCUMENT_TYPE_LOADING = '[DocumentType] DocumentType Loading'
 }
 
 export const findById = createAction(
     DocumentTypeActionType.FIND_BY_ID,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.findById]
 export const findByIdSuccess = createAction(
     DocumentTypeActionType.FIND_BY_ID_SUCCESS,
-    props<{ documentType: DocumentTypeVO | any }>()
+    props<{ documentTypeVO | any: DocumentTypeVO | any, success: boolean}>()
 );
 
 export const save = createAction(
     DocumentTypeActionType.SAVE,
-    props<{ documentType: DocumentTypeVO | any  }>()
+    props<{ documentType: DocumentTypeVO | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.save]
 export const saveSuccess = createAction(
     DocumentTypeActionType.SAVE_SUCCESS,
-    props<{ documentType: DocumentTypeVO | any }>()
+    props<{ documentTypeVO | any: DocumentTypeVO | any, success: boolean}>()
 );
 
 export const remove = createAction(
     DocumentTypeActionType.REMOVE,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.remove]
 export const removeSuccess = createAction(
     DocumentTypeActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any }>()
+    props<{ boolean | any: boolean | any, success: boolean}>()
 );
 
 export const getAll = createAction(
-    DocumentTypeActionType.GET_ALL);
+    DocumentTypeActionType.GET_ALL,
+    props<{  loading: boolean }>()
+);
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.getAll]
 export const getAllSuccess = createAction(
     DocumentTypeActionType.GET_ALL_SUCCESS,
-    props<{ documentTypes: DocumentTypeVO[] | any[] }>()
+    props<{ documentTypeVO[] | any: DocumentTypeVO[] | any, success: boolean}>()
 );
 
 export const search = createAction(
     DocumentTypeActionType.SEARCH,
-    props<{ criteria: string | any  }>()
+    props<{ criteria: string | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.search]
 export const searchSuccess = createAction(
     DocumentTypeActionType.SEARCH_SUCCESS,
-    props<{ documentTypes: DocumentTypeVO[] | any[] }>()
+    props<{ documentTypeVO[] | any: DocumentTypeVO[] | any, success: boolean}>()
 );
 
 export const getAllPaged = createAction(
     DocumentTypeActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any  }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.getAllPaged]
 export const getAllPagedSuccess = createAction(
     DocumentTypeActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ documentTypes: DocumentTypeVO[] | any[] }>()
+    props<{ documentTypeVO[] | any: DocumentTypeVO[] | any, success: boolean}>()
 );
 
 
 export const documentTypeReset = createAction(DocumentTypeActionType.DOCUMENT_TYPE_RESET);
 
+export const documentTypeLoading = createAction(
+    DocumentTypeActionType.DOCUMENT_TYPE_LOADING,
+    props<{ loading: boolean, success: boolean, error: any }>()
+);
+
 export const documentTypeFailure = createAction(
     DocumentTypeActionType.DOCUMENT_TYPE_FAILURE,
-    props<{ error: any }>()
+    props<{ error: any, success: boolean, loading: boolean }>()
 );

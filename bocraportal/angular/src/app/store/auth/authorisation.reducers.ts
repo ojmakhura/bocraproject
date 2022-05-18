@@ -7,11 +7,8 @@ export const authorisationReducer = createReducer(
     initialState,
     on(AuthorisationActions.findByIdSuccess, (state, action) => ({
         ...state,
-        authorisations: [], 
-        criteria: null, 
-        id: null, 
         authorisation: action.authorisation, 
-        removed: false, 
+        success: action.success,
         error: null
     })),
     on(AuthorisationActions.saveSuccess, (state, action) => ({
@@ -20,7 +17,7 @@ export const authorisationReducer = createReducer(
         criteria: null, 
         id: null, 
         authorisation: action.authorisation, 
-        removed: false, 
+        success: action.success, 
         error: null
     })),
     on(AuthorisationActions.removeSuccess, (state, action) => ({
@@ -30,6 +27,7 @@ export const authorisationReducer = createReducer(
         id: null, 
         authorisation: null, 
         removed: action.removed, 
+        success: action.success, 
         error: null
     })),
     on(AuthorisationActions.getAllSuccess, (state, action) => ({
@@ -39,6 +37,7 @@ export const authorisationReducer = createReducer(
         id: null, 
         authorisation: null, 
         removed: false, 
+        success: action.success, 
         error: null
     })),
     on(AuthorisationActions.searchSuccess, (state, action) => ({
@@ -48,6 +47,7 @@ export const authorisationReducer = createReducer(
         id: null, 
         authorisation: null, 
         removed: false, 
+        success: action.success, 
         error: null
     })),
     on(AuthorisationActions.getAllPagedSuccess, (state, action) => ({
@@ -57,21 +57,36 @@ export const authorisationReducer = createReducer(
         id: null, 
         authorisation: null, 
         removed: false, 
+        success: action.success, 
         error: null
     })),
     on(AuthorisationActions.authorisationReset, (state) => ({
       ...state,
-        authorisations: [], 
         criteria: null, 
-        id: null, 
+        authorisations: [], 
         authorisation: null, 
-        removed: false, 
+        id: null, 
+        loading: false,
+        success: false,
         error: null
     })),
     on(AuthorisationActions.authorisationFailure, (state, action) => ({
         ...state,
+        loading: false,
+        success: false,
         error: action.error
-    }))
+    })),
+    on(AuthorisationActions.authorisationLoading, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: false
+    })),
+    // on(AuthorisationActions.authorisationSuccess, (state, action) => ({
+    //     ...state,
+    //     loading: action.loading,
+    //     success: action.success,
+    //     error: action.error
+    // }))
 );
 
 export const authorisationFeature = createFeature({

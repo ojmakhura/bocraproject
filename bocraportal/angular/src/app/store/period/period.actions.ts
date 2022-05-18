@@ -17,71 +17,85 @@ export enum PeriodActionType {
     GET_ALL_PAGED = '[Period] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[Period] Get All Paged Success',
     PERIOD_RESET = '[Period] Period Reset',
-    PERIOD_FAILURE = '[Period] Period Action Failure'
+    PERIOD_FAILURE = '[Period] Period Action Failure',
+    PERIOD_LOADING = '[Period] Period Loading'
 }
 
 export const findById = createAction(
     PeriodActionType.FIND_BY_ID,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.findById]
 export const findByIdSuccess = createAction(
     PeriodActionType.FIND_BY_ID_SUCCESS,
-    props<{ period: PeriodVO | any }>()
+    props<{ periodVO | any: PeriodVO | any, success: boolean}>()
 );
 
 export const save = createAction(
     PeriodActionType.SAVE,
-    props<{ period: PeriodVO | any  }>()
+    props<{ period: PeriodVO | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.save]
 export const saveSuccess = createAction(
     PeriodActionType.SAVE_SUCCESS,
-    props<{ period: PeriodVO | any }>()
+    props<{ periodVO | any: PeriodVO | any, success: boolean}>()
 );
 
 export const remove = createAction(
     PeriodActionType.REMOVE,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.remove]
 export const removeSuccess = createAction(
     PeriodActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any }>()
+    props<{ boolean | any: boolean | any, success: boolean}>()
 );
 
 export const getAll = createAction(
-    PeriodActionType.GET_ALL
+    PeriodActionType.GET_ALL,
+    props<{  loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.getAll]
 export const getAllSuccess = createAction(
     PeriodActionType.GET_ALL_SUCCESS,
-    props<{ periods: PeriodVO[] | any }>()
+    props<{ periodVO[] | any: PeriodVO[] | any, success: boolean}>()
 );
 
 export const search = createAction(
     PeriodActionType.SEARCH,
-    props<{ criteria: PeriodCriteria | any  }>()
+    props<{ criteria: PeriodCriteria | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.search]
 export const searchSuccess = createAction(
     PeriodActionType.SEARCH_SUCCESS,
-    props<{ periods: PeriodVO[] | any }>()
+    props<{ periodVO[] | any: PeriodVO[] | any, success: boolean}>()
 );
 
 export const getAllPaged = createAction(
     PeriodActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any  }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.getAllPaged]
 export const getAllPagedSuccess = createAction(
     PeriodActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ periods: PeriodVO[] | any[] }>()
+    props<{ periodVO[] | any: PeriodVO[] | any, success: boolean}>()
 );
+
 
 export const periodReset = createAction(PeriodActionType.PERIOD_RESET);
 
+export const periodLoading = createAction(
+    PeriodActionType.PERIOD_LOADING,
+    props<{ loading: boolean, success: boolean, error: any }>()
+);
+
 export const periodFailure = createAction(
     PeriodActionType.PERIOD_FAILURE,
-    props<{ error: any }>()
+    props<{ error: any, success: boolean, loading: boolean }>()
 );

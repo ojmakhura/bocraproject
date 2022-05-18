@@ -5,98 +5,121 @@ import {userKey, initialState} from './user.state';
 
 export const userReducer = createReducer(
     initialState,
-    on(UserActions.findByIdSuccess, (state, action) => ({
-        ...state,
-        criteria: null, 
-        userId: null, 
-        users: [], 
-        id: null, 
-        user: null, 
-        error: null
-    })),
-    on(UserActions.saveSuccess, (state, action) => ({
-        ...state,
-        criteria: null, 
-        userId: null, 
-        users: [], 
-        id: null, 
-        user: null, 
-        error: null
-    })),
-    on(UserActions.removeSuccess, (state, action) => ({
-        ...state,
-        criteria: null, 
-        userId: null, 
-        users: [], 
-        id: null, 
-        user: null, 
-        error: null
-    })),
-    on(UserActions.getAllSuccess, (state, action) => ({
-        ...state,
-        criteria: null, 
-        userId: null, 
-        users: [], 
-        id: null, 
-        user: null, 
-        error: null
-    })),
-    on(UserActions.searchLicenseesSuccess, (state, action) => ({
-        ...state,
-        criteria: null, 
-        userId: null, 
-        users: [], 
-        id: null, 
-        user: null, 
-        error: null
-    })),
-    on(UserActions.getAllPagedSuccess, (state, action) => ({
-        ...state,
-        criteria: null, 
-        userId: null, 
-        users: [], 
-        id: null, 
-        user: null, 
-        error: null
-    })),
     on(UserActions.createUserSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
         userId: null, 
-        users: [], 
-        id: null, 
         user: null, 
-        error: null
+        users: [], 
+        criteria: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(UserActions.updateUserNameSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
         userId: null, 
-        users: [], 
-        id: null, 
         user: null, 
-        error: null
+        users: [], 
+        criteria: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(UserActions.loadUsersSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
         userId: null, 
-        users: [], 
-        id: null, 
         user: null, 
-        error: null
+        users: [], 
+        criteria: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
+    })),
+    on(UserActions.findByIdSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: null, 
+        users: [], 
+        criteria: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
+    })),
+    on(UserActions.saveSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: null, 
+        users: [], 
+        criteria: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
+    })),
+    on(UserActions.removeSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: null, 
+        users: [], 
+        criteria: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
+    })),
+    on(UserActions.getAllSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: null, 
+        users: [], 
+        criteria: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
+    })),
+    on(UserActions.searchSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: null, 
+        users: [], 
+        criteria: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
+    })),
+    on(UserActions.getAllPagedSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: null, 
+        users: [], 
+        criteria: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(UserActions.userReset, (state) => ({
       ...state,
-        criteria: null, 
         userId: null, 
-        users: [], 
-        id: null, 
         user: null, 
+        users: [], 
+        criteria: null, 
+        loading: false,
+        success: false,
         error: null
     })),
     on(UserActions.userFailure, (state, action) => ({
         ...state,
+        loading: false,
+        success: false,
+        error: action.error
+    })),
+    on(UserActions.userLoading, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: false
+    })),
+    on(UserActions.userSuccess, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: action.success,
         error: action.error
     }))
 );

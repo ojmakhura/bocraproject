@@ -4,19 +4,21 @@ import { DocumentTypeVO } from '@app/model/bw/org/bocra/portal/document/type/doc
 export const documentTypeKey = "documentType";
 
 export interface DocumentTypeState {
+    documentType: DocumentTypeVO | any,
     documentTypes: Array<DocumentTypeVO> | Array<any>,
     criteria: String | any,
-    documentType: DocumentTypeVO | any,
     id: number | any,
-    removed: boolean,
+    loading: boolean,
+    success: boolean,
     error: any
 }
 
 export const initialState: DocumentTypeState = {
+    documentType: null,
     documentTypes: [],
     criteria: null,
-    documentType: null,
     id: null,
-    removed: false,
+    loading: false,
+    success: false,
     error: null
 };

@@ -14,7 +14,7 @@ export class FormSubmissionEffects {
          this.actions$.pipe(
             ofType(FormSubmissionActions.findById),
             mergeMap(({ id }) => this.submissionRestController.findById(id).pipe(
-                map( formSubmission => FormSubmissionActions.findByIdSuccess({formSubmission})),
+                map( results => FormSubmissionActions.findByIdSuccess({results})),
                 catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
             ))
         )
@@ -23,8 +23,8 @@ export class FormSubmissionEffects {
     save$ = createEffect(() => 
          this.actions$.pipe(
             ofType(FormSubmissionActions.save),
-            mergeMap(({ formSubmission }) => this.submissionRestController.save(formSubmission).pipe(
-                map( formSubmission => FormSubmissionActions.saveSuccess({ formSubmission })),
+            mergeMap(({ formSubmissionVO }) => this.submissionRestController.save(formSubmissionVO).pipe(
+                map( results => FormSubmissionActions.saveSuccess({results})),
                 catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
             ))
         )
@@ -34,7 +34,7 @@ export class FormSubmissionEffects {
          this.actions$.pipe(
             ofType(FormSubmissionActions.remove),
             mergeMap(({ id }) => this.submissionRestController.remove(id).pipe(
-                map( removed => FormSubmissionActions.removeSuccess({ removed })),
+                map( results => FormSubmissionActions.removeSuccess({results})),
                 catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
             ))
         )
@@ -44,7 +44,7 @@ export class FormSubmissionEffects {
          this.actions$.pipe(
             ofType(FormSubmissionActions.getAll),
             mergeMap(() => this.submissionRestController.getAll().pipe(
-                map( formSubmissions => FormSubmissionActions.getAllSuccess({ formSubmissions })),
+                map( results => FormSubmissionActions.getAllSuccess({results})),
                 catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
             ))
         )
@@ -54,7 +54,7 @@ export class FormSubmissionEffects {
          this.actions$.pipe(
             ofType(FormSubmissionActions.search),
             mergeMap(({ criteria }) => this.submissionRestController.search(criteria).pipe(
-                map( formSubmissions => FormSubmissionActions.searchSuccess({ formSubmissions })),
+                map( results => FormSubmissionActions.searchSuccess({results})),
                 catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
             ))
         )
@@ -64,7 +64,7 @@ export class FormSubmissionEffects {
          this.actions$.pipe(
             ofType(FormSubmissionActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.submissionRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( formSubmissions => FormSubmissionActions.getAllPagedSuccess({formSubmissions})),
+                map( results => FormSubmissionActions.getAllPagedSuccess({results})),
                 catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
             ))
         )

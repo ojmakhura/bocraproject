@@ -10,6 +10,8 @@ export interface PeriodState {
     periods: Array<PeriodVO> | Array<any>,
     period: PeriodVO | any,
     removed: boolean,
+    sucess: boolean;
+    loading: boolean;
     error: any
 }
 
@@ -19,5 +21,7 @@ export const initialState: PeriodState = {
     periods: [],
     period: null,
     removed: false,
+    sucess: false,
+    loading: false,
     error: null
 };

@@ -7,10 +7,25 @@ export const dashboardReducer = createReducer(
     initialState,
     on(DashboardActions.dashboardReset, (state) => ({
       ...state,
+        loading: false,
+        success: false,
         error: null
     })),
     on(DashboardActions.dashboardFailure, (state, action) => ({
         ...state,
+        loading: false,
+        success: false,
+        error: action.error
+    })),
+    on(DashboardActions.dashboardLoading, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: false
+    })),
+    on(DashboardActions.dashboardSuccess, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: action.success,
         error: action.error
     }))
 );

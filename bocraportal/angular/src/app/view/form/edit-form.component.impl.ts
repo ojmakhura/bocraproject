@@ -150,7 +150,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     const dialogRef = this.dialog.open(AddNewFieldComponentImpl, {});
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.dialogData) {
-        let field: FormFieldVO = result.dialogData;
+        let field: FormFieldVO = result.dialogData.formField;
         if(field.id) {
           field.updatedBy = this.keycloakService.getUsername();
           field.updatedDate = new Date();
@@ -159,7 +159,7 @@ export class EditFormComponentImpl extends EditFormComponent {
           field.createdDate = new Date();
           field.form = this.form.value
         }
-        this.addToFormFormFields(result.dialogData);
+        this.addToFormFormFields(field);
       } 
     });
   }

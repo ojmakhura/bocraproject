@@ -14,7 +14,7 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.findById),
             mergeMap(({ id }) => this.periodRestController.findById(id).pipe(
-                map( period => PeriodActions.findByIdSuccess({period})),
+                map( results => PeriodActions.findByIdSuccess({results})),
                 catchError(({error}) => [PeriodActions.periodFailure(error)])
             ))
         )
@@ -24,7 +24,7 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.save),
             mergeMap(({ period }) => this.periodRestController.save(period).pipe(
-                map( period => PeriodActions.saveSuccess({period})),
+                map( results => PeriodActions.saveSuccess({results})),
                 catchError(({error}) => [PeriodActions.periodFailure(error)])
             ))
         )
@@ -34,7 +34,7 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.remove),
             mergeMap(({ id }) => this.periodRestController.remove(id).pipe(
-                map( removed => PeriodActions.removeSuccess({removed})),
+                map( results => PeriodActions.removeSuccess({results})),
                 catchError(({error}) => [PeriodActions.periodFailure(error)])
             ))
         )
@@ -44,7 +44,7 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.getAll),
             mergeMap(() => this.periodRestController.getAll().pipe(
-                map( periods => PeriodActions.getAllSuccess({periods})),
+                map( results => PeriodActions.getAllSuccess({results})),
                 catchError(({error}) => [PeriodActions.periodFailure(error)])
             ))
         )
@@ -54,7 +54,7 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.search),
             mergeMap(({ criteria }) => this.periodRestController.search(criteria).pipe(
-                map( periods => PeriodActions.searchSuccess({periods})),
+                map( results => PeriodActions.searchSuccess({results})),
                 catchError(({error}) => [PeriodActions.periodFailure(error)])
             ))
         )
@@ -64,7 +64,7 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.periodRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( periods => PeriodActions.getAllPagedSuccess({periods})),
+                map( results => PeriodActions.getAllPagedSuccess({results})),
                 catchError(({error}) => [PeriodActions.periodFailure(error)])
             ))
         )

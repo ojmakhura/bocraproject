@@ -3,119 +3,119 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as FormActions from './form.actions';
-import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
 import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
+import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
 
 @Injectable()
 export class FormEffects {
 
-    constructor(private actions$: Actions, private formRestController: FormRestControllerImpl, private formFieldRestController: FormFieldRestControllerImpl) {}
+    constructor(private actions$: Actions, private formFieldRestController: FormFieldRestControllerImpl, private formRestController: FormRestControllerImpl) {}
 
-    findFormById$ = createEffect(() => 
+    findById$ = createEffect(() => 
          this.actions$.pipe(
-            ofType(FormActions.findFormById),
-            mergeMap(({ id }) => this.formRestController.findById(id).pipe(
-                map( form => FormActions.findFormByIdSuccess({form})),
-                catchError(({error}) => [FormActions.formFailure(error)])
-            ))
-        )
-    );
-
-    saveForm$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(FormActions.saveForm),
-            mergeMap(({ form }) => this.formRestController.save(form).pipe(
-                map( form => FormActions.saveFormSuccess({form})),
-                catchError(({error}) => [FormActions.formFailure(error)])
-            ))
-        )
-    );
-
-    removeForm$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(FormActions.removeForm),
-            mergeMap(({ id }) => this.formRestController.remove(id).pipe(
-                map( removed => FormActions.removeFormSuccess({removed})),
-                catchError(({error}) => [FormActions.formFailure(error)])
-            ))
-        )
-    );
-
-    getAllForms$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(FormActions.getAllForms),
-            mergeMap(() => this.formRestController.getAll().pipe(
-                map( forms => FormActions.getAllFormsSuccess({forms})),
-                catchError(({error}) => [FormActions.formFailure(error)])
-            ))
-        )
-    );
-
-    searchForms$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(FormActions.searchForms),
-            mergeMap(({ criteria }) => this.formRestController.search(criteria).pipe(
-                map( forms => FormActions.searchFormsSuccess({forms})),
-                catchError(({error}) => [FormActions.formFailure(error)])
-            ))
-        )
-    );
-
-    getAllFormsPaged$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(FormActions.getAllFormsPaged),
-            mergeMap(({ pageNumber, pageSize }) => this.formRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( forms => FormActions.getAllFormsPagedSuccess({forms})),
-                catchError(({error}) => [FormActions.formFailure(error)])
-            ))
-        )
-    );
-
-    findFieldById$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(FormActions.findFieldById),
+            ofType(FormActions.findById),
             mergeMap(({ id }) => this.formFieldRestController.findById(id).pipe(
-                map( formField => FormActions.findFieldByIdSuccess({formField})),
+                map( results => FormActions.findByIdSuccess({results})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
     );
 
-    saveField$ = createEffect(() => 
+    save$ = createEffect(() => 
          this.actions$.pipe(
-            ofType(FormActions.saveField),
+            ofType(FormActions.save),
             mergeMap(({ formField }) => this.formFieldRestController.save(formField).pipe(
-                map( formField => FormActions.saveFieldSuccess({formField})),
+                map( results => FormActions.saveSuccess({results})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
     );
 
-    removeField$ = createEffect(() => 
+    remove$ = createEffect(() => 
          this.actions$.pipe(
-            ofType(FormActions.removeField),
+            ofType(FormActions.remove),
             mergeMap(({ id }) => this.formFieldRestController.remove(id).pipe(
-                map( removed => FormActions.removeFieldSuccess({removed})),
+                map( results => FormActions.removeSuccess({results})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
     );
 
-    getAllFields$ = createEffect(() => 
+    getAll$ = createEffect(() => 
          this.actions$.pipe(
-            ofType(FormActions.getAllFields),
+            ofType(FormActions.getAll),
             mergeMap(() => this.formFieldRestController.getAll().pipe(
-                map( formFields => FormActions.getAllFieldsSuccess({formFields})),
+                map( results => FormActions.getAllSuccess({results})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
     );
 
-    getAllFieldsPaged$ = createEffect(() => 
+    getAllPaged$ = createEffect(() => 
          this.actions$.pipe(
-            ofType(FormActions.getAllFieldsPaged),
+            ofType(FormActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.formFieldRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( formFields => FormActions.getAllFieldsPagedSuccess({formFields})),
+                map( results => FormActions.getAllPagedSuccess({results})),
+                catchError(({error}) => [FormActions.formFailure(error)])
+            ))
+        )
+    );
+
+    findById$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormActions.findById),
+            mergeMap(({ id }) => this.formRestController.findById(id).pipe(
+                map( results => FormActions.findByIdSuccess({results})),
+                catchError(({error}) => [FormActions.formFailure(error)])
+            ))
+        )
+    );
+
+    save$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormActions.save),
+            mergeMap(({ formVO }) => this.formRestController.save(formVO).pipe(
+                map( results => FormActions.saveSuccess({results})),
+                catchError(({error}) => [FormActions.formFailure(error)])
+            ))
+        )
+    );
+
+    remove$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormActions.remove),
+            mergeMap(({ id }) => this.formRestController.remove(id).pipe(
+                map( results => FormActions.removeSuccess({results})),
+                catchError(({error}) => [FormActions.formFailure(error)])
+            ))
+        )
+    );
+
+    getAll$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormActions.getAll),
+            mergeMap(() => this.formRestController.getAll().pipe(
+                map( results => FormActions.getAllSuccess({results})),
+                catchError(({error}) => [FormActions.formFailure(error)])
+            ))
+        )
+    );
+
+    search$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormActions.search),
+            mergeMap(({ criteria }) => this.formRestController.search(criteria).pipe(
+                map( results => FormActions.searchSuccess({results})),
+                catchError(({error}) => [FormActions.formFailure(error)])
+            ))
+        )
+    );
+
+    getAllPaged$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormActions.getAllPaged),
+            mergeMap(({ pageNumber, pageSize }) => this.formRestController.getAllPaged(pageNumber, pageSize).pipe(
+                map( results => FormActions.getAllPagedSuccess({results})),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )

@@ -3,9 +3,13 @@
 export const dashboardKey = "dashboard";
 
 export interface DashboardState {
+    loading: boolean,
+    success: boolean,
     error: any
 }
 
 export const initialState: DashboardState = {
+    loading: false,
+    success: false,
     error: null
 };

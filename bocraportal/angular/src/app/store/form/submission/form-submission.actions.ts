@@ -17,70 +17,85 @@ export enum FormSubmissionActionType {
     GET_ALL_PAGED = '[FormSubmission] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[FormSubmission] Get All Paged Success',
     FORM_SUBMISSION_RESET = '[FormSubmission] FormSubmission Reset',
-    FORM_SUBMISSION_FAILURE = '[FormSubmission] FormSubmission Action Failure'
+    FORM_SUBMISSION_FAILURE = '[FormSubmission] FormSubmission Action Failure',
+    FORM_SUBMISSION_LOADING = '[FormSubmission] FormSubmission Loading'
 }
 
 export const findById = createAction(
     FormSubmissionActionType.FIND_BY_ID,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.findById]
 export const findByIdSuccess = createAction(
     FormSubmissionActionType.FIND_BY_ID_SUCCESS,
-    props<{ formSubmission: FormSubmissionVO | any }>()
+    props<{ formSubmissionVO | any: FormSubmissionVO | any, success: boolean}>()
 );
 
 export const save = createAction(
     FormSubmissionActionType.SAVE,
-    props<{ formSubmission: FormSubmissionVO | any  }>()
+    props<{ formSubmissionVO: FormSubmissionVO | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.save]
 export const saveSuccess = createAction(
     FormSubmissionActionType.SAVE_SUCCESS,
-    props<{ formSubmission: FormSubmissionVO | any }>()
+    props<{ formSubmissionVO | any: FormSubmissionVO | any, success: boolean}>()
 );
 
 export const remove = createAction(
     FormSubmissionActionType.REMOVE,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.remove]
 export const removeSuccess = createAction(
     FormSubmissionActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any }>()
+    props<{ boolean | any: boolean | any, success: boolean}>()
 );
 
 export const getAll = createAction(
-    FormSubmissionActionType.GET_ALL);
+    FormSubmissionActionType.GET_ALL,
+    props<{  loading: boolean }>()
+);
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.getAll]
 export const getAllSuccess = createAction(
     FormSubmissionActionType.GET_ALL_SUCCESS,
-    props<{ formSubmissions: FormSubmissionVO[] | any[] }>()
+    props<{ formSubmissionVO[] | any: FormSubmissionVO[] | any, success: boolean}>()
 );
 
 export const search = createAction(
     FormSubmissionActionType.SEARCH,
-    props<{ criteria: FormSubmissionCriteria | any  }>()
+    props<{ criteria: FormSubmissionCriteria | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.search]
 export const searchSuccess = createAction(
     FormSubmissionActionType.SEARCH_SUCCESS,
-    props<{ formSubmissions: FormSubmissionVO[] | any[] }>()
+    props<{ formSubmissionVO[] | any: FormSubmissionVO[] | any, success: boolean}>()
 );
 
 export const getAllPaged = createAction(
     FormSubmissionActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any  }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.getAllPaged]
 export const getAllPagedSuccess = createAction(
     FormSubmissionActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ formSubmissions: FormSubmissionVO[] | any[] }>()
+    props<{ formSubmissionVO[] | any: FormSubmissionVO[] | any, success: boolean}>()
 );
+
 
 export const formSubmissionReset = createAction(FormSubmissionActionType.FORM_SUBMISSION_RESET);
 
+export const formSubmissionLoading = createAction(
+    FormSubmissionActionType.FORM_SUBMISSION_LOADING,
+    props<{ loading: boolean, success: boolean, error: any }>()
+);
+
 export const formSubmissionFailure = createAction(
     FormSubmissionActionType.FORM_SUBMISSION_FAILURE,
-    props<{ error: any }>()
+    props<{ error: any, success: boolean, loading: boolean }>()
 );

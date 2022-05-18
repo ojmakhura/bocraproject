@@ -10,6 +10,8 @@ export interface FormSubmissionState {
     formSubmission: FormSubmissionVO | any,
     formSubmissions: Array<FormSubmissionVO> | Array<any>,
     removed: boolean,
+    sucess: boolean;
+    loading: boolean;
     error: any
 }
 
@@ -19,5 +21,7 @@ export const initialState: FormSubmissionState = {
     formSubmission: null,
     formSubmissions: [],
     removed: false,
+    sucess: false,
+    loading: false,
     error: null
 };

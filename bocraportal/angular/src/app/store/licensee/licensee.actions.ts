@@ -2,7 +2,6 @@
 import { createAction, props } from '@ngrx/store';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
-import { Documents } from '@app/view/document/documents.component';
 
 export enum LicenseeActionType {
     FIND_BY_ID = '[Licensee] Find By Id',
@@ -13,87 +12,90 @@ export enum LicenseeActionType {
     REMOVE_SUCCESS = '[Licensee] Remove Success',
     GET_ALL = '[Licensee] Get All',
     GET_ALL_SUCCESS = '[Licensee] Get All Success',
-    SEARCH = '[Licensee] Search Licensees',
-    SEARCH_SUCCESS = '[Licensee] Search Licensees Success',
+    SEARCH = '[Licensee] Search',
+    SEARCH_SUCCESS = '[Licensee] Search Success',
     GET_ALL_PAGED = '[Licensee] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[Licensee] Get All Paged Success',
-    GET_DOCUMENTS = '[Licensee] Get Documents',
-    GET_DOCUMENTS_SUCCESS = '[Licensee] Get Documents Success',
     LICENSEE_RESET = '[Licensee] Licensee Reset',
-    LICENSEE_FAILURE = '[Licensee] Licensee Action Failure'
+    LICENSEE_FAILURE = '[Licensee] Licensee Action Failure',
+    LICENSEE_LOADING = '[Licensee] Licensee Loading'
 }
 
 export const findById = createAction(
     LicenseeActionType.FIND_BY_ID,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.licensee.LicenseeRestController.findById]
 export const findByIdSuccess = createAction(
     LicenseeActionType.FIND_BY_ID_SUCCESS,
-    props<{ licensee: LicenseeVO | any }>()
+    props<{ licenseeVO | any: LicenseeVO | any, success: boolean}>()
 );
 
 export const save = createAction(
     LicenseeActionType.SAVE,
-    props<{ licensee: LicenseeVO | any  }>()
+    props<{ licensee: LicenseeVO | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.licensee.LicenseeRestController.save]
 export const saveSuccess = createAction(
     LicenseeActionType.SAVE_SUCCESS,
-    props<{ licensee: LicenseeVO | any }>()
+    props<{ licenseeVO | any: LicenseeVO | any, success: boolean}>()
 );
 
 export const remove = createAction(
     LicenseeActionType.REMOVE,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.licensee.LicenseeRestController.remove]
 export const removeSuccess = createAction(
     LicenseeActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any }>()
+    props<{ boolean | any: boolean | any, success: boolean}>()
 );
 
 export const getAll = createAction(
-    LicenseeActionType.GET_ALL);
+    LicenseeActionType.GET_ALL,
+    props<{  loading: boolean }>()
+);
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.licensee.LicenseeRestController.getAll]
 export const getAllSuccess = createAction(
     LicenseeActionType.GET_ALL_SUCCESS,
-    props<{ licensees: LicenseeVO[] | any }>()
+    props<{ licenseeVO[] | any: LicenseeVO[] | any, success: boolean}>()
 );
 
 export const search = createAction(
     LicenseeActionType.SEARCH,
-    props<{ criteria: LicenseeCriteria | any  }>()
+    props<{ criteria: LicenseeCriteria | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.licensee.LicenseeRestController.search]
 export const searchSuccess = createAction(
     LicenseeActionType.SEARCH_SUCCESS,
-    props<{ licensees: LicenseeVO[] | any }>()
-);
-
-export const getDocuments = createAction(
-    LicenseeActionType.GET_DOCUMENTS,
-    props<{ licenseeId: number | any  }>()
-);
-
-export const getDocumentsSuccess = createAction(
-    LicenseeActionType.GET_DOCUMENTS_SUCCESS,
-    props<{ documents: Documents[] | any }>()
+    props<{ licenseeVO[] | any: LicenseeVO[] | any, success: boolean}>()
 );
 
 export const getAllPaged = createAction(
     LicenseeActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any  }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
 );
 
+// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.licensee.LicenseeRestController.getAllPaged]
 export const getAllPagedSuccess = createAction(
     LicenseeActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ licensees: LicenseeVO[] | any }>()
+    props<{ licenseeVO[] | any: LicenseeVO[] | any, success: boolean}>()
 );
+
 
 export const licenseeReset = createAction(LicenseeActionType.LICENSEE_RESET);
 
+export const licenseeLoading = createAction(
+    LicenseeActionType.LICENSEE_LOADING,
+    props<{ loading: boolean, success: boolean, error: any }>()
+);
+
 export const licenseeFailure = createAction(
     LicenseeActionType.LICENSEE_FAILURE,
-    props<{ error: any }>()
+    props<{ error: any, success: boolean, loading: boolean }>()
 );

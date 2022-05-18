@@ -66,6 +66,16 @@ export const selectRequired = createSelector(
     (state: FormState) => state.required
 );
 
+export const selectLoading = createSelector(
+    selectFormState,
+    (state: FormState) => state.loading
+);
+
+export const selectSuccess = createSelector(
+    selectFormState,
+    (state: FormState) => state.success
+);
+
 export const selectError = createSelector(
     selectFormState,
     (state: FormState) => state.error

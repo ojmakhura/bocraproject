@@ -11,6 +11,8 @@ export interface LicenceTypeState {
     criteria: LicenceTypeCriteria | any,
     removed: boolean,
     licenceTypeId: number | any,
+    sucess: boolean;
+    loading: boolean;
     error: any
 }
 
@@ -21,5 +23,7 @@ export const initialState: LicenceTypeState = {
     criteria: null,
     removed: false,
     licenceTypeId: null,
+    sucess: false,
+    loading: false,
     error: null
 };

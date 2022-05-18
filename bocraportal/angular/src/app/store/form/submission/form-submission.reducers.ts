@@ -7,45 +7,89 @@ export const formSubmissionReducer = createReducer(
     initialState,
     on(FormSubmissionActions.findByIdSuccess, (state, action) => ({
         ...state,
-        formSubmission: action.formSubmission,
-        error: null
+        formSubmission: null, 
+        criteria: null, 
+        formSubmissions: [], 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(FormSubmissionActions.saveSuccess, (state, action) => ({
         ...state,
-        formSubmission: action.formSubmission, 
-        error: null
+        formSubmission: null, 
+        criteria: null, 
+        formSubmissions: [], 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(FormSubmissionActions.removeSuccess, (state, action) => ({
         ...state,
-        removed: action.removed, 
-        error: null
+        formSubmission: null, 
+        criteria: null, 
+        formSubmissions: [], 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(FormSubmissionActions.getAllSuccess, (state, action) => ({
         ...state,
-        formSubmissions: action.formSubmissions, 
-        error: null
+        formSubmission: null, 
+        criteria: null, 
+        formSubmissions: [], 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(FormSubmissionActions.searchSuccess, (state, action) => ({
         ...state,
-        formSubmissions: action.formSubmissions, 
-        error: null
+        formSubmission: null, 
+        criteria: null, 
+        formSubmissions: [], 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(FormSubmissionActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        formSubmissions: action.formSubmissions, 
-        error: null
+        formSubmission: null, 
+        criteria: null, 
+        formSubmissions: [], 
+        id: null, 
+        loading: action.loading,
+        success: action.success,
+        error: action.error
     })),
     on(FormSubmissionActions.formSubmissionReset, (state) => ({
       ...state,
-        criteria: null, 
-        id: null, 
         formSubmission: null, 
+        criteria: null, 
         formSubmissions: [], 
-        removed: false, 
+        id: null, 
+        loading: false,
+        success: false,
         error: null
     })),
     on(FormSubmissionActions.formSubmissionFailure, (state, action) => ({
         ...state,
+        loading: false,
+        success: false,
+        error: action.error
+    })),
+    on(FormSubmissionActions.formSubmissionLoading, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: false
+    })),
+    on(FormSubmissionActions.formSubmissionSuccess, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: action.success,
         error: action.error
     }))
 );

@@ -18,70 +18,76 @@ export enum PeriodConfigActionType {
     GET_ALL_PAGED_SUCCESS = '[PeriodConfig] Get All Paged Success',
     PERIOD_CONFIG_RESET = '[PeriodConfig] PeriodConfig Reset',
     PERIOD_CONFIG_FAILURE = '[PeriodConfig] PeriodConfig Action Failure'
+    PERIOD_CONFIG_LOADING = '[PeriodConfig] PeriodConfig Loading'
 }
 
 export const findById = createAction(
     PeriodConfigActionType.FIND_BY_ID,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , success: boolean, loading: boolean, error: any }>()
 );
 
 export const findByIdSuccess = createAction(
     PeriodConfigActionType.FIND_BY_ID_SUCCESS,
-    props<{ periodConfig: PeriodConfigVO | any }>()
+    props<{ results: PeriodConfigVO | any, success: boolean, loading: boolean, error: any }>()
 );
 
 export const save = createAction(
     PeriodConfigActionType.SAVE,
-    props<{ periodConfig: PeriodConfigVO | any  }>()
+    props<{ periodConfig: PeriodConfigVO | any , success: boolean, loading: boolean, error: any }>()
 );
 
 export const saveSuccess = createAction(
     PeriodConfigActionType.SAVE_SUCCESS,
-    props<{ periodConfig: PeriodConfigVO | any }>()
+    props<{ results: PeriodConfigVO | any, success: boolean, loading: boolean, error: any }>()
 );
 
 export const remove = createAction(
     PeriodConfigActionType.REMOVE,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , success: boolean, loading: boolean, error: any }>()
 );
 
 export const removeSuccess = createAction(
     PeriodConfigActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any }>()
+    props<{ results: boolean | any, success: boolean, loading: boolean, error: any }>()
 );
 
 export const getAll = createAction(
-    PeriodConfigActionType.GET_ALL
-);
+    PeriodConfigActionType.GET_ALL);
 
 export const getAllSuccess = createAction(
     PeriodConfigActionType.GET_ALL_SUCCESS,
-    props<{ periodConfigs: PeriodConfigVO[] | any[] }>()
+    props<{ results: PeriodConfigVO[] | any, success: boolean, loading: boolean, error: any }>()
 );
 
 export const search = createAction(
     PeriodConfigActionType.SEARCH,
-    props<{ criteria: PeriodConfigCriteria | any  }>()
+    props<{ criteria: PeriodConfigCriteria | any , success: boolean, loading: boolean, error: any }>()
 );
 
 export const searchSuccess = createAction(
     PeriodConfigActionType.SEARCH_SUCCESS,
-    props<{ periodConfigs: PeriodConfigVO[] | any[] }>()
+    props<{ results: PeriodConfigVO[] | any, success: boolean, loading: boolean, error: any }>()
 );
 
 export const getAllPaged = createAction(
     PeriodConfigActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any  }>()
+    props<{ pageNumber: number | any , pageSize: number | any , success: boolean, loading: boolean, error: any }>()
 );
 
 export const getAllPagedSuccess = createAction(
     PeriodConfigActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ periodConfigs: PeriodConfigVO[] | any[] }>()
+    props<{ results: PeriodConfigVO[] | any, success: boolean, loading: boolean, error: any }>()
 );
+
 
 export const periodConfigReset = createAction(PeriodConfigActionType.PERIOD_CONFIG_RESET);
 
+export const periodConfigLoading = createAction(
+    PeriodConfigActionType.PERIOD_CONFIG_LOADING,
+    props<{ loading: boolean, success: boolean, error: any }>()
+);
+
 export const periodConfigFailure = createAction(
     PeriodConfigActionType.PERIOD_CONFIG_FAILURE,
-    props<{ error: any }>()
+    props<{ error: any, success: boolean, loading: boolean }>()
 );
