@@ -33,7 +33,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     FormSubmissionActionType.SAVE,
-    props<{ formSubmissionVO: FormSubmissionVO | any , loading: boolean }>()
+    props<{ formSubmission: FormSubmissionVO | any , loading: boolean }>()
 );
 
 export const saveSuccess = createAction(

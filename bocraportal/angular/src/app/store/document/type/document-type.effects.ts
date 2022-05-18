@@ -14,7 +14,10 @@ export class DocumentTypeEffects {
          this.actions$.pipe(
             ofType(DocumentTypeActions.findById),
             mergeMap(({ id }) => this.documentTypeRestController.findById(id).pipe(
-                map( documentType => DocumentTypeActions.findByIdSuccess({documentType})),
+                map( documentType => DocumentTypeActions.findByIdSuccess({
+                    documentType,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
             ))
         )
@@ -24,7 +27,10 @@ export class DocumentTypeEffects {
          this.actions$.pipe(
             ofType(DocumentTypeActions.save),
             mergeMap(({ documentType }) => this.documentTypeRestController.save(documentType).pipe(
-                map( documentType => DocumentTypeActions.saveSuccess({documentType})),
+                map( documentType => DocumentTypeActions.saveSuccess({
+                    documentType,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
             ))
         )
@@ -34,7 +40,10 @@ export class DocumentTypeEffects {
          this.actions$.pipe(
             ofType(DocumentTypeActions.remove),
             mergeMap(({ id }) => this.documentTypeRestController.remove(id).pipe(
-                map( removed => DocumentTypeActions.removeSuccess({removed})),
+                map( removed => DocumentTypeActions.removeSuccess({
+                    removed,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
             ))
         )
@@ -44,7 +53,10 @@ export class DocumentTypeEffects {
          this.actions$.pipe(
             ofType(DocumentTypeActions.getAll),
             mergeMap(() => this.documentTypeRestController.getAll().pipe(
-                map( documentTypes => DocumentTypeActions.getAllSuccess({documentTypes})),
+                map( documentTypes => DocumentTypeActions.getAllSuccess({
+                    documentTypes,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
             ))
         )
@@ -54,7 +66,10 @@ export class DocumentTypeEffects {
          this.actions$.pipe(
             ofType(DocumentTypeActions.search),
             mergeMap(({ criteria }) => this.documentTypeRestController.search(criteria).pipe(
-                map( documentTypes => DocumentTypeActions.searchSuccess({documentTypes})),
+                map( documentTypes => DocumentTypeActions.searchSuccess({
+                    documentTypes,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
             ))
         )
@@ -64,7 +79,10 @@ export class DocumentTypeEffects {
          this.actions$.pipe(
             ofType(DocumentTypeActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.documentTypeRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( documentTypes => DocumentTypeActions.getAllPagedSuccess({documentTypes})),
+                map( documentTypes => DocumentTypeActions.getAllPagedSuccess({
+                    documentTypes,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
             ))
         )

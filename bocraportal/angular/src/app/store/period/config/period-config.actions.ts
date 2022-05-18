@@ -28,7 +28,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     PeriodConfigActionType.FIND_BY_ID_SUCCESS,
-    props<{ periodConfig: PeriodConfigVO | any, loading: boolean }>()
+    props<{ periodConfig: PeriodConfigVO | any, success: boolean }>()
 );
 
 export const save = createAction(
@@ -38,7 +38,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     PeriodConfigActionType.SAVE_SUCCESS,
-    props<{ periodConfig: PeriodConfigVO | any, loading: boolean }>()
+    props<{ periodConfig: PeriodConfigVO | any, success: boolean }>()
 );
 
 export const remove = createAction(
@@ -48,15 +48,17 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     PeriodConfigActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean, loading: boolean }>()
+    props<{ removed: boolean, success: boolean }>()
 );
 
 export const getAll = createAction(
-    PeriodConfigActionType.GET_ALL);
+    PeriodConfigActionType.GET_ALL,
+    props<{ loading: boolean }>()
+);
 
 export const getAllSuccess = createAction(
     PeriodConfigActionType.GET_ALL_SUCCESS,
-    props<{ periodConfigs: PeriodConfigVO[] | any[], loading: boolean }>()
+    props<{ periodConfigs: PeriodConfigVO[] | any[], success: boolean }>()
 );
 
 export const search = createAction(
@@ -66,7 +68,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     PeriodConfigActionType.SEARCH_SUCCESS,
-    props<{ periodConfigs: PeriodConfigVO[] | any[], loading: boolean }>()
+    props<{ periodConfigs: PeriodConfigVO[] | any[], success: boolean }>()
 );
 
 export const getAllPaged = createAction(
@@ -76,7 +78,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     PeriodConfigActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ periodConfigs: PeriodConfigVO[] | any[], loading: boolean }>()
+    props<{ periodConfigs: PeriodConfigVO[] | any[], success: boolean }>()
 );
 
 export const periodConfigReset = createAction(PeriodConfigActionType.PERIOD_CONFIG_RESET);

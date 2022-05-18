@@ -3,6 +3,7 @@ import { createAction, props } from '@ngrx/store';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
 
 export enum LicenceActionType {
     FIND_BY_ID = '[Licence] Find By Id',
@@ -33,17 +34,17 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     LicenceActionType.FIND_BY_ID_SUCCESS,
-    props<{ licensee: LicenseeVO | any, success: boolean}>()
+    props<{ licence: LicenseeVO | any, success: boolean}>()
 );
 
 export const save = createAction(
     LicenceActionType.SAVE,
-    props<{ licensee: LicenseeVO | any , loading: boolean }>()
+    props<{ licence: LicenseeVO | any , loading: boolean }>()
 );
 
 export const saveSuccess = createAction(
     LicenceActionType.SAVE_SUCCESS,
-    props<{ licensee: LicenseeVO | any, success: boolean}>()
+    props<{ licence: LicenseeVO | any, success: boolean}>()
 );
 
 export const remove = createAction(
@@ -63,7 +64,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     LicenceActionType.GET_ALL_SUCCESS,
-    props<{ licensees: LicenseeVO[] | any[], success: boolean}>()
+    props<{ licences: LicenceVO[] | any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -73,7 +74,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     LicenceActionType.SEARCH_SUCCESS,
-    props<{ licensees: LicenseeVO[] | any[], success: boolean}>()
+    props<{ licences: LicenceVO[] | any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -83,7 +84,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     LicenceActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ licensees: LicenseeVO[] | any[], success: boolean}>()
+    props<{ licences: LicenceVO[] | any[], success: boolean}>()
 );
 
 export const getLicenseeDocuments = createAction(

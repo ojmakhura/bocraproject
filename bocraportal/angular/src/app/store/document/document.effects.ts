@@ -14,7 +14,10 @@ export class DocumentEffects {
          this.actions$.pipe(
             ofType(DocumentActions.findById),
             mergeMap(({ id }) => this.documentRestController.findById(id).pipe(
-                map( document => DocumentActions.findByIdSuccess({document})),
+                map( document => DocumentActions.findByIdSuccess({
+                    document,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentActions.documentFailure(error)])
             ))
         )
@@ -24,7 +27,10 @@ export class DocumentEffects {
          this.actions$.pipe(
             ofType(DocumentActions.save),
             mergeMap(({ document }) => this.documentRestController.save(document).pipe(
-                map( document => DocumentActions.saveSuccess({document})),
+                map( document => DocumentActions.saveSuccess({
+                    document,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentActions.documentFailure(error)])
             ))
         )
@@ -34,7 +40,10 @@ export class DocumentEffects {
          this.actions$.pipe(
             ofType(DocumentActions.remove),
             mergeMap(({ id }) => this.documentRestController.remove(id).pipe(
-                map( removed => DocumentActions.removeSuccess({removed})),
+                map( removed => DocumentActions.removeSuccess({
+                    removed,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentActions.documentFailure(error)])
             ))
         )
@@ -44,7 +53,10 @@ export class DocumentEffects {
          this.actions$.pipe(
             ofType(DocumentActions.getAll),
             mergeMap(() => this.documentRestController.getAll().pipe(
-                map( documents => DocumentActions.getAllSuccess({documents})),
+                map( documents => DocumentActions.getAllSuccess({
+                    documents,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentActions.documentFailure(error)])
             ))
         )
@@ -54,7 +66,10 @@ export class DocumentEffects {
          this.actions$.pipe(
             ofType(DocumentActions.search),
             mergeMap(({ criteria }) => this.documentRestController.search(criteria).pipe(
-                map( documents => DocumentActions.searchSuccess({documents})),
+                map( documents => DocumentActions.searchSuccess({
+                    documents,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentActions.documentFailure(error)])
             ))
         )
@@ -64,7 +79,10 @@ export class DocumentEffects {
          this.actions$.pipe(
             ofType(DocumentActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.documentRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( documents => DocumentActions.getAllPagedSuccess({documents})),
+                map( documents => DocumentActions.getAllPagedSuccess({
+                    documents,
+                    success: true
+                })),
                 catchError(({error}) => [DocumentActions.documentFailure(error)])
             ))
         )
@@ -74,7 +92,10 @@ export class DocumentEffects {
          this.actions$.pipe(
             ofType(DocumentActions.getLicenseeDocuments),
             mergeMap(({ licenseeId }) => this.documentRestController.getLicenseeDocuments(licenseeId).pipe(
-                map( documents => DocumentActions.getLicenseeDocumentsSuccess({documents})),
+                map( documents => DocumentActions.getLicenseeDocumentsSuccess({
+                    documents,
+                    success: false
+                })),
                 catchError(({error}) => [DocumentActions.documentFailure(error)])
             ))
         )
@@ -84,7 +105,10 @@ export class DocumentEffects {
          this.actions$.pipe(
             ofType(DocumentActions.getLicenceDocuments),
             mergeMap(({ licenceId }) => this.documentRestController.getLicenceDocuments(licenceId).pipe(
-                map( documents => DocumentActions.getLicenceDocumentsSuccess({documents})),
+                map( documents => DocumentActions.getLicenceDocumentsSuccess({
+                    documents,
+                    success: false
+                })),
                 catchError(({error}) => [DocumentActions.documentFailure(error)])
             ))
         )

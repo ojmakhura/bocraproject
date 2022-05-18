@@ -35,75 +35,77 @@ export enum FormActionType {
 
 export const findFormById = createAction(
     FormActionType.FIND_FORM_BY_ID,
-    props<{ id: number | any  }>()
+    props<{ id: number | any, loading: boolean }>()
 );
 
 export const findFormByIdSuccess = createAction(
     FormActionType.FIND_FORM_BY_ID_SUCCESS,
-    props<{ form: FormVO | any }>()
+    props<{ form: FormVO | any, success: boolean }>()
 );
 
 export const saveForm = createAction(
     FormActionType.SAVE_FORM,
-    props<{ form: FormVO | any  }>()
+    props<{ form: FormVO | any, loading: boolean }>()
 );
 
 export const saveFormSuccess = createAction(
     FormActionType.SAVE_FORM_SUCCESS,
-    props<{ form: FormVO | any }>()
+    props<{ form: FormVO | any, success: boolean }>()
 );
 
 export const removeForm = createAction(
     FormActionType.REMOVE_FORM,
-    props<{ id: number | any  }>()
+    props<{ id: number | any, loading: boolean  }>()
 );
 
 export const removeFormSuccess = createAction(
     FormActionType.REMOVE_FORM_SUCCESS,
-    props<{ removed: boolean | any }>()
+    props<{ removed: boolean | any, success: boolean }>()
 );
 
 export const getAllForms = createAction(
-    FormActionType.GET_ALL_FORMS);
+    FormActionType.GET_ALL_FORMS,
+    props<{ loading: boolean }>()
+);
 
 export const getAllFormsSuccess = createAction(
     FormActionType.GET_ALL_FORMS_SUCCESS,
-    props<{ forms: FormVO[] | any }>()
+    props<{ forms: FormVO[] | any[], success: boolean }>()
 );
 
 export const searchForms = createAction(
     FormActionType.SEARCH_FORMS,
-    props<{ criteria: FormCriteria | any  }>()
+    props<{ criteria: FormCriteria | any , loading: boolean }>()
 );
 
 export const searchFormsSuccess = createAction(
     FormActionType.SEARCH_FORMS_SUCCESS,
-    props<{ forms: FormVO[] | any }>()
+    props<{ forms: FormVO[] | any[], success: boolean }>()
 );
 
 export const getAllFormsPaged = createAction(
     FormActionType.GET_ALL_FORMS_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any  }>()
+    props<{ pageNumber: number | any , pageSize: number | any, loading: boolean }>()
 );
 
 export const getAllFormsPagedSuccess = createAction(
     FormActionType.GET_ALL_FORMS_PAGED_SUCCESS,
-    props<{ forms: FormVO[] | any }>()
+    props<{ forms: FormVO[] | any[], success: boolean }>()
 );
 
 export const findFieldById = createAction(
     FormActionType.FIND_FIELD_BY_ID,
-    props<{ id: number | any  }>()
+    props<{ id: number | any, loading: boolean }>()
 );
 
 export const findFieldByIdSuccess = createAction(
     FormActionType.FIND_FIELD_BY_ID_SUCCESS,
-    props<{ formField: FormFieldVO | any }>()
+    props<{ formField: FormFieldVO | any, success: boolean }>()
 );
 
 export const saveField = createAction(
     FormActionType.SAVE_FIELD,
-    props<{ formField: FormFieldVO | any  }>()
+    props<{ formField: FormFieldVO | any, loading: boolean }>()
 );
 
 export const saveFieldSuccess = createAction(
@@ -113,7 +115,7 @@ export const saveFieldSuccess = createAction(
 
 export const removeField = createAction(
     FormActionType.REMOVE_FIELD,
-    props<{ id: number | any  }>()
+    props<{ id: number | any, loading: boolean }>()
 );
 
 export const removeFieldSuccess = createAction(
@@ -122,7 +124,9 @@ export const removeFieldSuccess = createAction(
 );
 
 export const getAllFields = createAction(
-    FormActionType.GET_ALL_FIELDS);
+    FormActionType.GET_ALL_FIELDS,
+    props<{ loading: boolean }>()
+);
 
 export const getAllFieldsSuccess = createAction(
     FormActionType.GET_ALL_FIELDS_SUCCESS,
@@ -131,7 +135,7 @@ export const getAllFieldsSuccess = createAction(
 
 export const getAllFieldsPaged = createAction(
     FormActionType.GET_ALL_FIELDS_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any  }>()
+    props<{ pageNumber: number | any , pageSize: number | any, loading: boolean }>()
 );
 
 export const getAllFieldsPagedSuccess = createAction(

@@ -15,7 +15,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.findFormById),
             mergeMap(({ id }) => this.formRestController.findById(id).pipe(
-                map( form => FormActions.findFormByIdSuccess({form})),
+                map( form => FormActions.findFormByIdSuccess({
+                    form,
+                    success: true
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -25,7 +28,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.saveForm),
             mergeMap(({ form }) => this.formRestController.save(form).pipe(
-                map( form => FormActions.saveFormSuccess({form})),
+                map( form => FormActions.saveFormSuccess({
+                    form,
+                    success: true
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -35,7 +41,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.removeForm),
             mergeMap(({ id }) => this.formRestController.remove(id).pipe(
-                map( removed => FormActions.removeFormSuccess({removed})),
+                map( removed => FormActions.removeFormSuccess({
+                    removed,
+                    success: true
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -45,7 +54,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.getAllForms),
             mergeMap(() => this.formRestController.getAll().pipe(
-                map( forms => FormActions.getAllFormsSuccess({forms})),
+                map( forms => FormActions.getAllFormsSuccess({
+                    forms,
+                    success: true
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -55,7 +67,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.searchForms),
             mergeMap(({ criteria }) => this.formRestController.search(criteria).pipe(
-                map( forms => FormActions.searchFormsSuccess({forms})),
+                map( forms => FormActions.searchFormsSuccess({
+                    forms,
+                    success: true
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -65,7 +80,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.getAllFormsPaged),
             mergeMap(({ pageNumber, pageSize }) => this.formRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( forms => FormActions.getAllFormsPagedSuccess({forms})),
+                map( forms => FormActions.getAllFormsPagedSuccess({
+                    forms,
+                    success: true
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -75,7 +93,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.findFieldById),
             mergeMap(({ id }) => this.formFieldRestController.findById(id).pipe(
-                map( formField => FormActions.findFieldByIdSuccess({formField})),
+                map( formField => FormActions.findFieldByIdSuccess({
+                    formField,
+                    success: true
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -85,7 +106,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.saveField),
             mergeMap(({ formField }) => this.formFieldRestController.save(formField).pipe(
-                map( formField => FormActions.saveFieldSuccess({formField})),
+                map( formField => FormActions.saveFieldSuccess({
+                    formField,
+                    success: true
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -95,7 +119,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.removeField),
             mergeMap(({ id }) => this.formFieldRestController.remove(id).pipe(
-                map( removed => FormActions.removeFieldSuccess({removed})),
+                map( removed => FormActions.removeFieldSuccess({
+                    removed,
+                    success: true
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -105,7 +132,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.getAllFields),
             mergeMap(() => this.formFieldRestController.getAll().pipe(
-                map( formFields => FormActions.getAllFieldsSuccess({formFields})),
+                map( formFields => FormActions.getAllFieldsSuccess({
+                    formFields,
+                    success: false
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
@@ -115,7 +145,10 @@ export class FormEffects {
          this.actions$.pipe(
             ofType(FormActions.getAllFieldsPaged),
             mergeMap(({ pageNumber, pageSize }) => this.formFieldRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( formFields => FormActions.getAllFieldsPagedSuccess({formFields})),
+                map( formFields => FormActions.getAllFieldsPagedSuccess({
+                    formFields,
+                    success: false
+                })),
                 catchError(({error}) => [FormActions.formFailure(error)])
             ))
         )
