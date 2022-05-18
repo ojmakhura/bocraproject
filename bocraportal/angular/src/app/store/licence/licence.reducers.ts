@@ -7,169 +7,66 @@ export const licenceReducer = createReducer(
     initialState,
     on(LicenceActions.findByIdSuccess, (state, action) => ({
         ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
+        licence: action.licence, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceActions.saveSuccess, (state, action) => ({
         ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
+        licence: action.licence, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceActions.removeSuccess, (state, action) => ({
         ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
+        removed: true,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceActions.getAllSuccess, (state, action) => ({
         ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
+        licences: action.licences, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceActions.searchSuccess, (state, action) => ({
         ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
+        licences: action.licences, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
+        licences: action.licences,
+        loading: false,
         success: action.success,
-        error: action.error
-    })),
-    on(LicenceActions.findByIdSuccess, (state, action) => ({
-        ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    })),
-    on(LicenceActions.saveSuccess, (state, action) => ({
-        ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    })),
-    on(LicenceActions.removeSuccess, (state, action) => ({
-        ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    })),
-    on(LicenceActions.getAllSuccess, (state, action) => ({
-        ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    })),
-    on(LicenceActions.searchSuccess, (state, action) => ({
-        ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    })),
-    on(LicenceActions.getAllPagedSuccess, (state, action) => ({
-        ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    })),
-    on(LicenceActions.getLicenseeDocumentsSuccess, (state, action) => ({
-        ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
-        success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceActions.getLicenceDocumentsSuccess, (state, action) => ({
         ...state,
-        id: null, 
-        licences: [], 
-        licence: null, 
-        criteria: null, 
-        loading: action.loading,
+        documents: action.documents, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceActions.licenceReset, (state) => ({
       ...state,
-        id: null, 
-        licences: [], 
         licence: null, 
-        criteria: null, 
+        licences: [], 
+        id: null, 
+        criteria: null,
+        documents: [],
         loading: false,
         success: false,
         error: null
     })),
     on(LicenceActions.licenceFailure, (state, action) => ({
         ...state,
-        loading: false,
-        success: false,
-        error: action.error
-    })),
-    on(LicenceActions.licenceLoading, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: false
-    })),
-    on(LicenceActions.licenceSuccess, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: action.success,
         error: action.error
     }))
 );

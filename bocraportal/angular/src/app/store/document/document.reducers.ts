@@ -7,83 +7,59 @@ export const documentReducer = createReducer(
     initialState,
     on(DocumentActions.findByIdSuccess, (state, action) => ({
         ...state,
-        documents: [], 
-        criteria: null, 
-        id: null, 
-        document: null, 
-        loading: action.loading,
+        document: action.document, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(DocumentActions.saveSuccess, (state, action) => ({
         ...state,
-        documents: [], 
-        criteria: null, 
-        id: null, 
-        document: null, 
-        loading: action.loading,
+        document: action.document, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(DocumentActions.removeSuccess, (state, action) => ({
         ...state,
-        documents: [], 
-        criteria: null, 
-        id: null, 
-        document: null, 
-        loading: action.loading,
+        removed: action.removed, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(DocumentActions.getAllSuccess, (state, action) => ({
         ...state,
-        documents: [], 
-        criteria: null, 
-        id: null, 
-        document: null, 
-        loading: action.loading,
+        documents: action.documents, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(DocumentActions.searchSuccess, (state, action) => ({
         ...state,
-        documents: [], 
-        criteria: null, 
-        id: null, 
-        document: null, 
-        loading: action.loading,
+        documents: action.documents, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(DocumentActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        documents: [], 
-        criteria: null, 
-        id: null, 
-        document: null, 
-        loading: action.loading,
+        documents: action.documents, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(DocumentActions.getLicenseeDocumentsSuccess, (state, action) => ({
         ...state,
-        documents: [], 
-        criteria: null, 
-        id: null, 
-        document: null, 
-        loading: action.loading,
+        documents: action.documents, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(DocumentActions.getLicenceDocumentsSuccess, (state, action) => ({
         ...state,
-        documents: [], 
-        criteria: null, 
-        id: null, 
-        document: null, 
-        loading: action.loading,
+        documents: action.documents, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(DocumentActions.documentReset, (state) => ({
       ...state,
@@ -106,12 +82,12 @@ export const documentReducer = createReducer(
         loading: action.loading,
         success: false
     })),
-    on(DocumentActions.documentSuccess, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    }))
+    // on(DocumentActions.documentSuccess, (state, action) => ({
+    //     ...state,
+    //     loading: action.loading,
+    //     success: action.success,
+    //     error: action.error
+    // }))
 );
 
 export const documentFeature = createFeature({

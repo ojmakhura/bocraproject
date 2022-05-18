@@ -5,163 +5,153 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 
 export enum FormActionType {
-    FIND_BY_ID = '[Form] Find By Id',
-    FIND_BY_ID_SUCCESS = '[Form] Find By Id Success',
-    SAVE = '[Form] Save',
-    SAVE_SUCCESS = '[Form] Save Success',
-    REMOVE = '[Form] Remove',
-    REMOVE_SUCCESS = '[Form] Remove Success',
-    GET_ALL = '[Form] Get All',
-    GET_ALL_SUCCESS = '[Form] Get All Success',
-    GET_ALL_PAGED = '[Form] Get All Paged',
-    GET_ALL_PAGED_SUCCESS = '[Form] Get All Paged Success',
-    FIND_BY_ID = '[Form] Find By Id',
-    FIND_BY_ID_SUCCESS = '[Form] Find By Id Success',
-    SAVE = '[Form] Save',
-    SAVE_SUCCESS = '[Form] Save Success',
-    REMOVE = '[Form] Remove',
-    REMOVE_SUCCESS = '[Form] Remove Success',
-    GET_ALL = '[Form] Get All',
-    GET_ALL_SUCCESS = '[Form] Get All Success',
-    SEARCH = '[Form] Search',
-    SEARCH_SUCCESS = '[Form] Search Success',
-    GET_ALL_PAGED = '[Form] Get All Paged',
-    GET_ALL_PAGED_SUCCESS = '[Form] Get All Paged Success',
+    FIND_FORM_BY_ID = '[Form] Find Form By Id',
+    FIND_FORM_BY_ID_SUCCESS = '[Form] Form Find By Id Success',
+    SAVE_FORM = '[Form] Save Form',
+    SAVE_FORM_SUCCESS = '[Form] Save Form Success',
+    REMOVE_FORM = '[Form] Remove Form',
+    REMOVE_FORM_SUCCESS = '[Form] Remove Form Success',
+    GET_ALL_FORMS = '[Form] Get All Forms',
+    GET_ALL_FORMS_SUCCESS = '[Form] Get All Forms Success',
+    SEARCH_FORMS = '[Form] Search Forms',
+    SEARCH_FORMS_SUCCESS = '[Form] Search Forms Success',
+    GET_ALL_FORMS_PAGED = '[Form] Get All Forms Paged',
+    GET_ALL_FORMS_PAGED_SUCCESS = '[Form] Get All Forms Paged Success',
+    FIND_FIELD_BY_ID = '[Form] Find Field By Id',
+    FIND_FIELD_BY_ID_SUCCESS = '[Form] Find Field By Id Success',
+    SAVE_FIELD = '[Form] Save Field',
+    SAVE_FIELD_SUCCESS = '[Form] Save Field Success',
+    REMOVE_FIELD = '[Form] Remove Field',
+    REMOVE_FIELD_SUCCESS = '[Form] Remove Field Success',
+    GET_ALL_FIELDS = '[Form] Get All Fields',
+    GET_ALL_FIELDS_SUCCESS = '[Form] Get All Fields Success',
+    GET_ALL_FIELDS_PAGED = '[Form] Get All Fields Paged',
+    GET_ALL_FIELDS_PAGED_SUCCESS = '[Form] Get All Fields Paged Success',
+    FORM_LOADING = '[Form] Form Loading',
+    FORM_SUCCESS = '[Form] Form Success',
     FORM_RESET = '[Form] Form Reset',
-    FORM_FAILURE = '[Form] Form Action Failure',
-    FORM_LOADING = '[Form] Form Loading'
+    FORM_FAILURE = '[Form] Form Action Failure'
 }
 
-export const findById = createAction(
-    FormActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+export const findFormById = createAction(
+    FormActionType.FIND_FORM_BY_ID,
+    props<{ id: number | any  }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.field.FormFieldRestController.findById]
-export const findByIdSuccess = createAction(
-    FormActionType.FIND_BY_ID_SUCCESS,
-    props<{ formFieldVO | any: FormFieldVO | any, success: boolean}>()
+export const findFormByIdSuccess = createAction(
+    FormActionType.FIND_FORM_BY_ID_SUCCESS,
+    props<{ form: FormVO | any }>()
 );
 
-export const save = createAction(
-    FormActionType.SAVE,
-    props<{ formField: FormFieldVO | any , loading: boolean }>()
+export const saveForm = createAction(
+    FormActionType.SAVE_FORM,
+    props<{ form: FormVO | any  }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.field.FormFieldRestController.save]
-export const saveSuccess = createAction(
-    FormActionType.SAVE_SUCCESS,
-    props<{ formFieldVO | any: FormFieldVO | any, success: boolean}>()
+export const saveFormSuccess = createAction(
+    FormActionType.SAVE_FORM_SUCCESS,
+    props<{ form: FormVO | any }>()
 );
 
-export const remove = createAction(
-    FormActionType.REMOVE,
-    props<{ id: number | any , loading: boolean }>()
+export const removeForm = createAction(
+    FormActionType.REMOVE_FORM,
+    props<{ id: number | any  }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.field.FormFieldRestController.remove]
-export const removeSuccess = createAction(
-    FormActionType.REMOVE_SUCCESS,
-    props<{ boolean | any: boolean | any, success: boolean}>()
+export const removeFormSuccess = createAction(
+    FormActionType.REMOVE_FORM_SUCCESS,
+    props<{ removed: boolean | any }>()
 );
 
-export const getAll = createAction(
-    FormActionType.GET_ALL,
-    props<{  loading: boolean }>()
+export const getAllForms = createAction(
+    FormActionType.GET_ALL_FORMS);
+
+export const getAllFormsSuccess = createAction(
+    FormActionType.GET_ALL_FORMS_SUCCESS,
+    props<{ forms: FormVO[] | any }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.field.FormFieldRestController.getAll]
-export const getAllSuccess = createAction(
-    FormActionType.GET_ALL_SUCCESS,
-    props<{ formFieldVO[] | any: FormFieldVO[] | any, success: boolean}>()
+export const searchForms = createAction(
+    FormActionType.SEARCH_FORMS,
+    props<{ criteria: FormCriteria | any  }>()
 );
 
-export const getAllPaged = createAction(
-    FormActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
+export const searchFormsSuccess = createAction(
+    FormActionType.SEARCH_FORMS_SUCCESS,
+    props<{ forms: FormVO[] | any }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.field.FormFieldRestController.getAllPaged]
-export const getAllPagedSuccess = createAction(
-    FormActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ formFieldVO[] | any: FormFieldVO[] | any, success: boolean}>()
+export const getAllFormsPaged = createAction(
+    FormActionType.GET_ALL_FORMS_PAGED,
+    props<{ pageNumber: number | any , pageSize: number | any  }>()
 );
 
-export const findById = createAction(
-    FormActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+export const getAllFormsPagedSuccess = createAction(
+    FormActionType.GET_ALL_FORMS_PAGED_SUCCESS,
+    props<{ forms: FormVO[] | any }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.FormRestController.findById]
-export const findByIdSuccess = createAction(
-    FormActionType.FIND_BY_ID_SUCCESS,
-    props<{ formVO | any: FormVO | any, success: boolean}>()
+export const findFieldById = createAction(
+    FormActionType.FIND_FIELD_BY_ID,
+    props<{ id: number | any  }>()
 );
 
-export const save = createAction(
-    FormActionType.SAVE,
-    props<{ formVO: FormVO | any , loading: boolean }>()
+export const findFieldByIdSuccess = createAction(
+    FormActionType.FIND_FIELD_BY_ID_SUCCESS,
+    props<{ formField: FormFieldVO | any }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.FormRestController.save]
-export const saveSuccess = createAction(
-    FormActionType.SAVE_SUCCESS,
-    props<{ formVO | any: FormVO | any, success: boolean}>()
+export const saveField = createAction(
+    FormActionType.SAVE_FIELD,
+    props<{ formField: FormFieldVO | any  }>()
 );
 
-export const remove = createAction(
-    FormActionType.REMOVE,
-    props<{ id: number | any , loading: boolean }>()
+export const saveFieldSuccess = createAction(
+    FormActionType.SAVE_FIELD_SUCCESS,
+    props<{ formField: FormFieldVO | any, success: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.FormRestController.remove]
-export const removeSuccess = createAction(
-    FormActionType.REMOVE_SUCCESS,
-    props<{ boolean | any: boolean | any, success: boolean}>()
+export const removeField = createAction(
+    FormActionType.REMOVE_FIELD,
+    props<{ id: number | any  }>()
 );
 
-export const getAll = createAction(
-    FormActionType.GET_ALL,
-    props<{  loading: boolean }>()
+export const removeFieldSuccess = createAction(
+    FormActionType.REMOVE_FIELD_SUCCESS,
+    props<{ removed: boolean | any, success: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.FormRestController.getAll]
-export const getAllSuccess = createAction(
-    FormActionType.GET_ALL_SUCCESS,
-    props<{ formVO[] | any: FormVO[] | any, success: boolean}>()
+export const getAllFields = createAction(
+    FormActionType.GET_ALL_FIELDS);
+
+export const getAllFieldsSuccess = createAction(
+    FormActionType.GET_ALL_FIELDS_SUCCESS,
+    props<{ formFields: FormFieldVO[] | any, success: boolean }>()
 );
 
-export const search = createAction(
-    FormActionType.SEARCH,
-    props<{ criteria: FormCriteria | any , loading: boolean }>()
+export const getAllFieldsPaged = createAction(
+    FormActionType.GET_ALL_FIELDS_PAGED,
+    props<{ pageNumber: number | any , pageSize: number | any  }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.FormRestController.search]
-export const searchSuccess = createAction(
-    FormActionType.SEARCH_SUCCESS,
-    props<{ formVO[] | any: FormVO[] | any, success: boolean}>()
+export const getAllFieldsPagedSuccess = createAction(
+    FormActionType.GET_ALL_FIELDS_PAGED_SUCCESS,
+    props<{ formFields: FormFieldVO[] | any, success: boolean }>()
 );
-
-export const getAllPaged = createAction(
-    FormActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
-);
-
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.FormRestController.getAllPaged]
-export const getAllPagedSuccess = createAction(
-    FormActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ formVO[] | any: FormVO[] | any, success: boolean}>()
-);
-
 
 export const formReset = createAction(FormActionType.FORM_RESET);
 
 export const formLoading = createAction(
     FormActionType.FORM_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ error: any, success: boolean, loading: boolean }>()
+);
+
+export const formSuccess = createAction(
+    FormActionType.FORM_SUCCESS,
+    props<{ error: any, success: boolean, loading: boolean }>()
 );
 
 export const formFailure = createAction(
     FormActionType.FORM_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ error: any }>()
 );

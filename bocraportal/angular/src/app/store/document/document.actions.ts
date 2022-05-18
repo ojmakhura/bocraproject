@@ -29,10 +29,9 @@ export const findById = createAction(
     props<{ id: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.DocumentRestController.findById]
 export const findByIdSuccess = createAction(
     DocumentActionType.FIND_BY_ID_SUCCESS,
-    props<{ documentVO | any: DocumentVO | any, success: boolean}>()
+    props<{ document: DocumentVO | any, success: boolean}>()
 );
 
 export const save = createAction(
@@ -40,10 +39,9 @@ export const save = createAction(
     props<{ document: DocumentVO | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.DocumentRestController.save]
 export const saveSuccess = createAction(
     DocumentActionType.SAVE_SUCCESS,
-    props<{ documentVO | any: DocumentVO | any, success: boolean}>()
+    props<{ document: DocumentVO | any, success: boolean}>()
 );
 
 export const remove = createAction(
@@ -51,10 +49,9 @@ export const remove = createAction(
     props<{ id: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.DocumentRestController.remove]
 export const removeSuccess = createAction(
     DocumentActionType.REMOVE_SUCCESS,
-    props<{ boolean | any: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -62,10 +59,9 @@ export const getAll = createAction(
     props<{  loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.DocumentRestController.getAll]
 export const getAllSuccess = createAction(
     DocumentActionType.GET_ALL_SUCCESS,
-    props<{ documentVO[] | any: DocumentVO[] | any, success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -73,10 +69,9 @@ export const search = createAction(
     props<{ criteria: string | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.DocumentRestController.search]
 export const searchSuccess = createAction(
     DocumentActionType.SEARCH_SUCCESS,
-    props<{ documentVO[] | any: DocumentVO[] | any, success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -84,10 +79,9 @@ export const getAllPaged = createAction(
     props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.DocumentRestController.getAllPaged]
 export const getAllPagedSuccess = createAction(
     DocumentActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ documentVO[] | any: DocumentVO[] | any, success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], success: boolean}>()
 );
 
 export const getLicenseeDocuments = createAction(
@@ -95,10 +89,9 @@ export const getLicenseeDocuments = createAction(
     props<{ licenseeId: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.DocumentRestController.getLicenseeDocuments]
 export const getLicenseeDocumentsSuccess = createAction(
     DocumentActionType.GET_LICENSEE_DOCUMENTS_SUCCESS,
-    props<{ documentVO[] | any: DocumentVO[] | any, success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], success: boolean}>()
 );
 
 export const getLicenceDocuments = createAction(
@@ -106,10 +99,9 @@ export const getLicenceDocuments = createAction(
     props<{ licenceId: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.DocumentRestController.getLicenceDocuments]
 export const getLicenceDocumentsSuccess = createAction(
     DocumentActionType.GET_LICENCE_DOCUMENTS_SUCCESS,
-    props<{ documentVO[] | any: DocumentVO[] | any, success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], success: boolean}>()
 );
 
 

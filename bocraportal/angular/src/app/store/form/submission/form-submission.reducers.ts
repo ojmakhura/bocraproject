@@ -7,63 +7,45 @@ export const formSubmissionReducer = createReducer(
     initialState,
     on(FormSubmissionActions.findByIdSuccess, (state, action) => ({
         ...state,
-        formSubmission: null, 
-        criteria: null, 
-        formSubmissions: [], 
-        id: null, 
-        loading: action.loading,
+        formSubmission: action.formSubmission,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(FormSubmissionActions.saveSuccess, (state, action) => ({
         ...state,
-        formSubmission: null, 
-        criteria: null, 
-        formSubmissions: [], 
-        id: null, 
-        loading: action.loading,
+        formSubmission: action.formSubmission, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(FormSubmissionActions.removeSuccess, (state, action) => ({
         ...state,
-        formSubmission: null, 
-        criteria: null, 
-        formSubmissions: [], 
-        id: null, 
-        loading: action.loading,
+        removed: action.removed, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(FormSubmissionActions.getAllSuccess, (state, action) => ({
         ...state,
-        formSubmission: null, 
-        criteria: null, 
-        formSubmissions: [], 
-        id: null, 
-        loading: action.loading,
+        formSubmissions: action.formSubmissions, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(FormSubmissionActions.searchSuccess, (state, action) => ({
         ...state,
-        formSubmission: null, 
-        criteria: null, 
-        formSubmissions: [], 
-        id: null, 
-        loading: action.loading,
+        formSubmissions: action.formSubmissions, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(FormSubmissionActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        formSubmission: null, 
-        criteria: null, 
-        formSubmissions: [], 
-        id: null, 
-        loading: action.loading,
+        formSubmissions: action.formSubmissions, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(FormSubmissionActions.formSubmissionReset, (state) => ({
       ...state,
@@ -86,12 +68,12 @@ export const formSubmissionReducer = createReducer(
         loading: action.loading,
         success: false
     })),
-    on(FormSubmissionActions.formSubmissionSuccess, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    }))
+    // on(FormSubmissionActions.formSubmissionSuccess, (state, action) => ({
+    //     ...state,
+    //     loading: action.loading,
+    //     success: action.success,
+    //     error: action.error
+    // }))
 );
 
 export const formSubmissionFeature = createFeature({

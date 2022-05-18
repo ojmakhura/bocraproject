@@ -25,10 +25,9 @@ export const findById = createAction(
     props<{ id: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.findById]
 export const findByIdSuccess = createAction(
     DocumentTypeActionType.FIND_BY_ID_SUCCESS,
-    props<{ documentTypeVO | any: DocumentTypeVO | any, success: boolean}>()
+    props<{ documentType: DocumentTypeVO | any, success: boolean}>()
 );
 
 export const save = createAction(
@@ -36,10 +35,9 @@ export const save = createAction(
     props<{ documentType: DocumentTypeVO | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.save]
 export const saveSuccess = createAction(
     DocumentTypeActionType.SAVE_SUCCESS,
-    props<{ documentTypeVO | any: DocumentTypeVO | any, success: boolean}>()
+    props<{ documentType: DocumentTypeVO | any, success: boolean}>()
 );
 
 export const remove = createAction(
@@ -47,10 +45,9 @@ export const remove = createAction(
     props<{ id: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.remove]
 export const removeSuccess = createAction(
     DocumentTypeActionType.REMOVE_SUCCESS,
-    props<{ boolean | any: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -58,10 +55,9 @@ export const getAll = createAction(
     props<{  loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.getAll]
 export const getAllSuccess = createAction(
     DocumentTypeActionType.GET_ALL_SUCCESS,
-    props<{ documentTypeVO[] | any: DocumentTypeVO[] | any, success: boolean}>()
+    props<{ documentTypes: DocumentTypeVO[] | any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -69,10 +65,9 @@ export const search = createAction(
     props<{ criteria: string | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.search]
 export const searchSuccess = createAction(
     DocumentTypeActionType.SEARCH_SUCCESS,
-    props<{ documentTypeVO[] | any: DocumentTypeVO[] | any, success: boolean}>()
+    props<{ documentTypes: DocumentTypeVO[] | any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -80,10 +75,9 @@ export const getAllPaged = createAction(
     props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.document.type.DocumentTypeRestController.getAllPaged]
 export const getAllPagedSuccess = createAction(
     DocumentTypeActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ documentTypeVO[] | any: DocumentTypeVO[] | any, success: boolean}>()
+    props<{ documentTypes: DocumentTypeVO[] | any[], success: boolean}>()
 );
 
 

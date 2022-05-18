@@ -86,12 +86,12 @@ export const documentTypeReducer = createReducer(
         loading: action.loading,
         success: false
     })),
-    on(DocumentTypeActions.documentTypeSuccess, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    }))
+    // on(DocumentTypeActions.documentTypeSuccess, (state, action) => ({
+    //     ...state,
+    //     loading: action.loading,
+    //     success: action.success,
+    //     error: action.error
+    // }))
 );
 
 export const documentTypeFeature = createFeature({

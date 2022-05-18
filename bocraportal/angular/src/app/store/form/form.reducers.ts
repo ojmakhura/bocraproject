@@ -5,126 +5,82 @@ import {formKey, initialState} from './form.state';
 
 export const formReducer = createReducer(
     initialState,
-    on(FormActions.findByIdSuccess, (state, action) => ({
+    on(FormActions.findFormByIdSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        form: action.form,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.saveSuccess, (state, action) => ({
+    on(FormActions.saveFormSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        form: action.form,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.removeSuccess, (state, action) => ({
+    on(FormActions.removeFormSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        removed: action.removed,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.getAllSuccess, (state, action) => ({
+    on(FormActions.getAllFormsSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        forms: action.forms,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.getAllPagedSuccess, (state, action) => ({
+    on(FormActions.searchFormsSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        forms: action.forms,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.findByIdSuccess, (state, action) => ({
+    on(FormActions.getAllFormsPagedSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        forms: action.forms,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.saveSuccess, (state, action) => ({
+    on(FormActions.findFieldByIdSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        formField: action.formField,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.removeSuccess, (state, action) => ({
+    on(FormActions.saveFieldSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        formField: action.formField,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.getAllSuccess, (state, action) => ({
+    on(FormActions.removeFieldSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        removed: action.removed,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.searchSuccess, (state, action) => ({
+    on(FormActions.getAllFieldsSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        formFields: action.formFields,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
-    on(FormActions.getAllPagedSuccess, (state, action) => ({
+    on(FormActions.getAllFieldsPagedSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        form: null, 
-        id: null, 
-        formField: null, 
-        forms: [], 
-        loading: action.loading,
+        formFields: action.formFields,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(FormActions.formReset, (state) => ({
       ...state,

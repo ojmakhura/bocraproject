@@ -26,10 +26,9 @@ export const findById = createAction(
     props<{ id: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.findById]
 export const findByIdSuccess = createAction(
     PeriodActionType.FIND_BY_ID_SUCCESS,
-    props<{ periodVO | any: PeriodVO | any, success: boolean}>()
+    props<{ period: PeriodVO | any, success: boolean}>()
 );
 
 export const save = createAction(
@@ -37,10 +36,9 @@ export const save = createAction(
     props<{ period: PeriodVO | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.save]
 export const saveSuccess = createAction(
     PeriodActionType.SAVE_SUCCESS,
-    props<{ periodVO | any: PeriodVO | any, success: boolean}>()
+    props<{ period: PeriodVO | any, success: boolean}>()
 );
 
 export const remove = createAction(
@@ -48,10 +46,9 @@ export const remove = createAction(
     props<{ id: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.remove]
 export const removeSuccess = createAction(
     PeriodActionType.REMOVE_SUCCESS,
-    props<{ boolean | any: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -59,10 +56,9 @@ export const getAll = createAction(
     props<{  loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.getAll]
 export const getAllSuccess = createAction(
     PeriodActionType.GET_ALL_SUCCESS,
-    props<{ periodVO[] | any: PeriodVO[] | any, success: boolean}>()
+    props<{ periods: PeriodVO[] | any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -70,10 +66,9 @@ export const search = createAction(
     props<{ criteria: PeriodCriteria | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.search]
 export const searchSuccess = createAction(
     PeriodActionType.SEARCH_SUCCESS,
-    props<{ periodVO[] | any: PeriodVO[] | any, success: boolean}>()
+    props<{ periods: PeriodVO[] | any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -81,10 +76,9 @@ export const getAllPaged = createAction(
     props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.period.PeriodRestController.getAllPaged]
 export const getAllPagedSuccess = createAction(
     PeriodActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ periodVO[] | any: PeriodVO[] | any, success: boolean}>()
+    props<{ periods: PeriodVO[] | any[], success: boolean}>()
 );
 
 

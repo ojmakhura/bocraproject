@@ -9,54 +9,41 @@ export const authorisationReducer = createReducer(
         ...state,
         authorisation: action.authorisation, 
         success: action.success,
+        loading: false, 
         error: null
     })),
     on(AuthorisationActions.saveSuccess, (state, action) => ({
         ...state,
-        authorisations: [], 
-        criteria: null, 
-        id: null, 
+        loading: false, 
         authorisation: action.authorisation, 
         success: action.success, 
         error: null
     })),
     on(AuthorisationActions.removeSuccess, (state, action) => ({
         ...state,
-        authorisations: [], 
-        criteria: null, 
-        id: null, 
-        authorisation: null, 
         removed: action.removed, 
+        loading: false, 
         success: action.success, 
         error: null
     })),
     on(AuthorisationActions.getAllSuccess, (state, action) => ({
         ...state,
         authorisations: action.authorisations, 
-        criteria: null, 
-        id: null, 
-        authorisation: null, 
-        removed: false, 
+        loading: false, 
         success: action.success, 
         error: null
     })),
     on(AuthorisationActions.searchSuccess, (state, action) => ({
         ...state,
         authorisations: action.authorisations, 
-        criteria: null, 
-        id: null, 
-        authorisation: null, 
-        removed: false, 
+        loading: false, 
         success: action.success, 
         error: null
     })),
     on(AuthorisationActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         authorisations: action.authorisations, 
-        criteria: null, 
-        id: null, 
-        authorisation: null, 
-        removed: false, 
+        loading: false, 
         success: action.success, 
         error: null
     })),

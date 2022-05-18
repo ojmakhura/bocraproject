@@ -22,12 +22,12 @@ export const dashboardReducer = createReducer(
         loading: action.loading,
         success: false
     })),
-    on(DashboardActions.dashboardSuccess, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: action.success,
-        error: action.error
-    }))
+    // on(DashboardActions.dashboardSuccess, (state, action) => ({
+    //     ...state,
+    //     loading: action.loading,
+    //     success: action.success,
+    //     error: action.error
+    // }))
 );
 
 export const dashboardFeature = createFeature({

@@ -7,89 +7,59 @@ export const periodConfigReducer = createReducer(
     initialState,
     on(PeriodConfigActions.findByIdSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        criteria: null, 
-        periodConfigs: [], 
-        id: null, 
-        loading: action.loading,
+        periodConfig: action.periodConfig, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodConfigActions.saveSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        criteria: null, 
-        periodConfigs: [], 
-        id: null, 
-        loading: action.loading,
+        periodConfig: action.periodConfig, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodConfigActions.removeSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        criteria: null, 
-        periodConfigs: [], 
-        id: null, 
-        loading: action.loading,
+        removed: action.removed,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodConfigActions.getAllSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        criteria: null, 
-        periodConfigs: [], 
-        id: null, 
-        loading: action.loading,
+        periodConfigs: action.periodConfigs, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodConfigActions.searchSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        criteria: null, 
-        periodConfigs: [], 
-        id: null, 
-        loading: action.loading,
+        periodConfigs: action.periodConfigs, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodConfigActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        criteria: null, 
-        periodConfigs: [], 
-        id: null, 
-        loading: action.loading,
+        periodConfigs: action.periodConfigs,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodConfigActions.periodConfigReset, (state) => ({
       ...state,
         periodConfig: null, 
         criteria: null, 
-        periodConfigs: [], 
         id: null, 
+        periodConfigs: [], 
         loading: false,
         success: false,
+        removed: false,
         error: null
     })),
     on(PeriodConfigActions.periodConfigFailure, (state, action) => ({
         ...state,
-        loading: false,
-        success: false,
-        error: action.error
-    })),
-    on(PeriodConfigActions.periodConfigLoading, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: false
-    })),
-    on(PeriodConfigActions.periodConfigSuccess, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: action.success,
         error: action.error
     }))
 );

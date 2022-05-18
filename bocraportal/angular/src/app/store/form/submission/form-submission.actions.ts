@@ -16,9 +16,9 @@ export enum FormSubmissionActionType {
     SEARCH_SUCCESS = '[FormSubmission] Search Success',
     GET_ALL_PAGED = '[FormSubmission] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[FormSubmission] Get All Paged Success',
-    FORM_SUBMISSION_RESET = '[FormSubmission] FormSubmission Reset',
-    FORM_SUBMISSION_FAILURE = '[FormSubmission] FormSubmission Action Failure',
-    FORM_SUBMISSION_LOADING = '[FormSubmission] FormSubmission Loading'
+    FORM_SUBMISSION_RESET = '[FormSubmission] Form Submission Reset',
+    FORM_SUBMISSION_FAILURE = '[FormSubmission] Form Submission Action Failure',
+    FORM_SUBMISSION_LOADING = '[FormSubmission] Form Submission Loading'
 }
 
 export const findById = createAction(
@@ -26,10 +26,9 @@ export const findById = createAction(
     props<{ id: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.findById]
 export const findByIdSuccess = createAction(
     FormSubmissionActionType.FIND_BY_ID_SUCCESS,
-    props<{ formSubmissionVO | any: FormSubmissionVO | any, success: boolean}>()
+    props<{ formSubmission: FormSubmissionVO | any, success: boolean}>()
 );
 
 export const save = createAction(
@@ -37,10 +36,9 @@ export const save = createAction(
     props<{ formSubmissionVO: FormSubmissionVO | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.save]
 export const saveSuccess = createAction(
     FormSubmissionActionType.SAVE_SUCCESS,
-    props<{ formSubmissionVO | any: FormSubmissionVO | any, success: boolean}>()
+    props<{ formSubmission: FormSubmissionVO | any, success: boolean}>()
 );
 
 export const remove = createAction(
@@ -48,10 +46,9 @@ export const remove = createAction(
     props<{ id: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.remove]
 export const removeSuccess = createAction(
     FormSubmissionActionType.REMOVE_SUCCESS,
-    props<{ boolean | any: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -59,10 +56,9 @@ export const getAll = createAction(
     props<{  loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.getAll]
 export const getAllSuccess = createAction(
     FormSubmissionActionType.GET_ALL_SUCCESS,
-    props<{ formSubmissionVO[] | any: FormSubmissionVO[] | any, success: boolean}>()
+    props<{ formSubmissions: FormSubmissionVO[] | any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -70,10 +66,9 @@ export const search = createAction(
     props<{ criteria: FormSubmissionCriteria | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.search]
 export const searchSuccess = createAction(
     FormSubmissionActionType.SEARCH_SUCCESS,
-    props<{ formSubmissionVO[] | any: FormSubmissionVO[] | any, success: boolean}>()
+    props<{ formSubmissions: FormSubmissionVO[] | any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -81,10 +76,9 @@ export const getAllPaged = createAction(
     props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
 );
 
-// org.andromda.cartridges.angular.metafacades.AngularServiceOperationLogicImpl[bw.org.bocra.portal.form.submission.SubmissionRestController.getAllPaged]
 export const getAllPagedSuccess = createAction(
     FormSubmissionActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ formSubmissionVO[] | any: FormSubmissionVO[] | any, success: boolean}>()
+    props<{ formSubmissions: FormSubmissionVO[] | any[], success: boolean}>()
 );
 
 

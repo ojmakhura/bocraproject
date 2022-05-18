@@ -7,70 +7,53 @@ export const periodReducer = createReducer(
     initialState,
     on(PeriodActions.findByIdSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        period: null, 
-        criteria: null, 
-        id: null, 
-        loading: action.loading,
+        period: action.period, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodActions.saveSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        period: null, 
-        criteria: null, 
-        id: null, 
-        loading: action.loading,
+        period: action.period, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodActions.removeSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        period: null, 
-        criteria: null, 
-        id: null, 
-        loading: action.loading,
+        removed: action.removed,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodActions.getAllSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        period: null, 
-        criteria: null, 
-        id: null, 
-        loading: action.loading,
+        periods: action.periods, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodActions.searchSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        period: null, 
-        criteria: null, 
-        id: null, 
-        loading: action.loading,
+        periods: action.periods, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        period: null, 
-        criteria: null, 
-        id: null, 
-        loading: action.loading,
+        periods: action.periods, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(PeriodActions.periodReset, (state) => ({
       ...state,
         periods: [], 
-        period: null, 
         criteria: null, 
+        period: null, 
         id: null, 
+        removed: false,
         loading: false,
         success: false,
         error: null
@@ -79,17 +62,6 @@ export const periodReducer = createReducer(
         ...state,
         loading: false,
         success: false,
-        error: action.error
-    })),
-    on(PeriodActions.periodLoading, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: false
-    })),
-    on(PeriodActions.periodSuccess, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: action.success,
         error: action.error
     }))
 );

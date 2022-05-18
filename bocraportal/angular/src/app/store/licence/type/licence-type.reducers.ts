@@ -7,89 +7,58 @@ export const licenceTypeReducer = createReducer(
     initialState,
     on(LicenceTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        licenceTypes: [], 
-        licenceType: null, 
-        id: null, 
-        loading: action.loading,
+        licenceType: action.licenceType, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceTypeActions.saveSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        licenceTypes: [], 
-        licenceType: null, 
-        id: null, 
-        loading: action.loading,
+        licenceType: action.licenceType, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceTypeActions.removeSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        licenceTypes: [], 
         licenceType: null, 
-        id: null, 
-        loading: action.loading,
+        removed: action.removed,
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceTypeActions.getAllSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        licenceTypes: [], 
-        licenceType: null, 
-        id: null, 
-        loading: action.loading,
+        licenceTypes: action.licenceTypes, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceTypeActions.searchSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        licenceTypes: [], 
-        licenceType: null, 
-        id: null, 
-        loading: action.loading,
+        licenceTypes: action.licenceTypes, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(LicenceTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        licenceTypes: [], 
-        licenceType: null, 
-        id: null, 
-        loading: action.loading,
+        licenceTypes: action.licenceTypes, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error:null
     })),
     on(LicenceTypeActions.licenceTypeReset, (state) => ({
       ...state,
+      licenceType: null, 
+      licenceTypes: [], 
         criteria: null, 
-        licenceTypes: [], 
-        licenceType: null, 
         id: null, 
-        loading: false,
-        success: false,
+        removed: false,
         error: null
     })),
     on(LicenceTypeActions.licenceTypeFailure, (state, action) => ({
         ...state,
-        loading: false,
-        success: false,
-        error: action.error
-    })),
-    on(LicenceTypeActions.licenceTypeLoading, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: false
-    })),
-    on(LicenceTypeActions.licenceTypeSuccess, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        success: action.success,
         error: action.error
     }))
 );
