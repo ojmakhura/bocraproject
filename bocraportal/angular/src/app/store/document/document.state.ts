@@ -9,8 +9,8 @@ export interface DocumentState {
     id: number | any,
     documents: Array<DocumentVO> | Array<any>,
     removed: boolean,
-    sucess: boolean;
-    loading: boolean;
+    success: boolean,
+    loading: boolean,
     error: any
 }
 
@@ -20,7 +20,7 @@ export const initialState: DocumentState = {
     id: null,
     documents: [],
     removed: false,
-    sucess: false,
+    success: false,
     loading: false,
     error: null
 };

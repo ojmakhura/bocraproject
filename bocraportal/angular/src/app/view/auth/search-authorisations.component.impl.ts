@@ -72,7 +72,10 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
    * This method may be overwritten
    */
   beforeSearchAuthorisationsSearch(form: SearchAuthorisationsSearchForm): void {
-    this.store.dispatch(authorisationActions.search({criteria: form.criteria}));
+    this.store.dispatch(authorisationActions.search({
+      criteria: form.criteria,
+      loading: true
+    }));
     
   }
 

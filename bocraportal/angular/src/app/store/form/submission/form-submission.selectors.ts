@@ -26,6 +26,16 @@ export const selectFormSubmissions = createSelector(
     (state: FormSubmissionState) => state.formSubmissions
 );
 
+export const selectLoading = createSelector(
+    selectFormSubmissionState,
+    (state: FormSubmissionState) => state.loading
+);
+
+export const selectSuccess = createSelector(
+    selectFormSubmissionState,
+    (state: FormSubmissionState) => state.success
+);
+
 export const selectError = createSelector(
     selectFormSubmissionState,
     (state: FormSubmissionState) => state.error

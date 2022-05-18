@@ -43,7 +43,10 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   afterOnInit() {
     if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(licenseeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
+      this.store.dispatch(licenseeActions.findById({
+        id: this.useCaseScope.pageVariables['id'],
+        loading: true
+      }));
     }
 
     this.licensee$.subscribe((licensee) => {
@@ -75,7 +78,10 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       form.licensee.createdDate = new Date();
     }
     
-    this.store.dispatch(licenseeActions.save({ licensee: form.licensee }));
+    this.store.dispatch(licenseeActions.save({
+      licensee: form.licensee,
+      loading: true
+    }));
   }
 
   /**
@@ -119,7 +125,10 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   handleLicenseeLicenceTypesSearch(): void {
     let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
     criteria.typeSearch = this.licenseeLicenceTypesSearchField.value;
-    this.store.dispatch(LicenceTypeActions.search({criteria: criteria}));
+    this.store.dispatch(LicenceTypeActions.search({
+      criteria: criteria,
+      loading: true
+    }));
   }
   
   handleLicenseeLicenceTypesSelected(event: MatCheckboxChange, element: LicenceTypeVO): void {

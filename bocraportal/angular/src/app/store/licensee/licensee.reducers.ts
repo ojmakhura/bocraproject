@@ -40,13 +40,13 @@ export const licenseeReducer = createReducer(
         success: action.success,
         error: null
     })),
-    on(LicenseeActions.getDocumentsSuccess, (state, action) => ({
-        ...state,
-        documents: action.documents, 
-        loading: false,
-        success: action.success,
-        error: null
-    })),
+    // on(LicenseeActions.getDocumentsSuccess, (state, action) => ({
+    //     ...state,
+    //     documents: action.documents, 
+    //     loading: false,
+    //     success: action.success,
+    //     error: null
+    // })),
     on(LicenseeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 

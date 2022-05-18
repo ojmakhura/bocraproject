@@ -11,7 +11,7 @@ export interface UserState {
     id: number | any,
     user: UserVO | any,
     removed: boolean,
-    sucess: boolean;
+    success: boolean;
     loading: boolean;
     error: any
 }
@@ -23,7 +23,7 @@ export const initialState: UserState = {
     id: null,
     user: null,
     removed: false,
-    sucess: false,
+    success: false,
     loading: false,
     error: null
 };

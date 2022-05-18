@@ -10,6 +10,8 @@ export interface AuthorisationState {
     criteria: AuthorisationCriteria | any,
     authorisations: Array<AuthorisationVO> | Array<any>,
     removed: boolean,
+    success: boolean,
+    loading: boolean,    
     error: any
 }
 
@@ -19,5 +21,7 @@ export const initialState: AuthorisationState = {
     criteria: null,
     authorisations: [],
     removed: false,
+    success: false,
+    loading: false,
     error: null
 };

@@ -23,7 +23,7 @@ export enum LicenceTypeActionType {
 
 export const findById = createAction(
     LicenceTypeActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any, loading: boolean }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -33,7 +33,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     LicenceTypeActionType.SAVE,
-    props<{ licenseType: LicenceTypeVO | any , loading: boolean }>()
+    props<{ licenceType: LicenceTypeVO | any , loading: boolean }>()
 );
 
 export const saveSuccess = createAction(
@@ -63,7 +63,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     LicenceTypeActionType.SEARCH,
-    props<{ searchCriteria: LicenceTypeCriteria | any , loading: boolean }>()
+    props<{ criteria: LicenceTypeCriteria | any , loading: boolean }>()
 );
 
 export const searchSuccess = createAction(

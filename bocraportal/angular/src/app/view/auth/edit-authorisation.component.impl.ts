@@ -58,7 +58,10 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     afterOnInit() {
 
       if(this.useCaseScope.pageVariables['id']) {
-        this.store.dispatch(authorisationActions.findById({id: this.useCaseScope.pageVariables['id']}));
+        this.store.dispatch(authorisationActions.findById({
+          id: this.useCaseScope.pageVariables['id'],
+          loading: false
+        }));
       }
   
       this.authorisation$.subscribe(authorisation => {
@@ -91,7 +94,10 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
         form.authorisation.createdBy = this.keycloakService.getUsername();
         form.authorisation.createdDate = new Date();
       }
-      this.store.dispatch(authorisationActions.save({authorisation: form.authorisation}));
+      this.store.dispatch(authorisationActions.save({
+        authorisation: form.authorisation,
+        loading: true
+      }));
     }
 
     doNgOnDestroy(){}
@@ -129,7 +135,10 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
   }
 
   beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
-    this.store.dispatch(authorisationActions.remove({id: form?.authorisation?.id}));
+    this.store.dispatch(authorisationActions.remove({
+      id: form?.authorisation?.id,
+      loading: false
+    }));
   }
 
   afterEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {

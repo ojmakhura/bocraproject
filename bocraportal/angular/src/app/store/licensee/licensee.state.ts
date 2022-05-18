@@ -13,8 +13,8 @@ export interface LicenseeState {
     shareholders: ShareholderVO[] | any[],
     shareholder: ShareholderVO | any,
     removed: boolean,
-    sucess: boolean;
-    loading: boolean;
+    success: boolean,
+    loading: boolean,
     error: any
 }
 
@@ -26,7 +26,7 @@ export const initialState: LicenseeState = {
     shareholder: null,
     licensee: null,
     removed: false,
-    sucess: false,
+    success: false,
     loading: false,
     error: null
 };

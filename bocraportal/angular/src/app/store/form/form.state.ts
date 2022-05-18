@@ -20,7 +20,7 @@ export interface FormState {
   max: String | any;
   defaultValue: String | any;
   removed: boolean;
-  sucess: boolean;
+  success: boolean;
   loading: boolean;
   error: any;
 }
@@ -39,7 +39,7 @@ export const initialState: FormState = {
   max: null,
   defaultValue: null,
   removed: false,
-  sucess: false,
+  success: false,
   loading: false,
   error: null,
 };

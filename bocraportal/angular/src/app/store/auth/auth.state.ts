@@ -14,7 +14,7 @@ export interface AuthState {
   lastName: string | any;
   licensee: LicenseeVO | any;
   loggedIn: boolean;
-  sucess: boolean;
+  success: boolean;
   loading: boolean;
   error: any;
 }
@@ -28,7 +28,7 @@ export const initialState: AuthState = {
   lastName: null,
   licensee: null,
   loggedIn: false,
-  sucess: false,
+  success: false,
   loading: false,
   error: null,
 };

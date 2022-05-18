@@ -23,7 +23,7 @@ export enum PeriodConfigActionType {
 
 export const findById = createAction(
     PeriodConfigActionType.FIND_BY_ID,
-    props<{ id: number | any , success: boolean, loading: boolean, error: any }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
 export const findByIdSuccess = createAction(

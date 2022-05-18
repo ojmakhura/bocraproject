@@ -29,7 +29,10 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
 	
     afterOnInit() {
       if (this.useCaseScope.pageVariables['id']) {
-        this.store.dispatch(DocumentActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
+        this.store.dispatch(DocumentActions.findById({
+          id: this.useCaseScope.pageVariables['id'],
+          loading: true
+        }));
       }
   
       this.document$.subscribe((document) => {
@@ -72,7 +75,10 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
         form.document.createdDate = new Date();
       }
       
-      this.store.dispatch(DocumentActions.save({ document: form.document }));
+      this.store.dispatch(DocumentActions.save({
+        document: form.document,
+        loading: false
+      }));
     }
 
     /**

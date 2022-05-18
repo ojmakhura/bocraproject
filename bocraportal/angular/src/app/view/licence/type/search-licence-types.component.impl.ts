@@ -10,7 +10,6 @@ import * as licenceTypeActions from '@app/store/licence/type/licence-type.action
   styleUrls: ['./search-licence-types.component.scss']
 })
 export class SearchLicenceTypesComponentImpl extends SearchLicenceTypesComponent {
-
     
     constructor(private injector: Injector) {
         super(injector);
@@ -44,7 +43,10 @@ export class SearchLicenceTypesComponentImpl extends SearchLicenceTypesComponent
      * This method may be overwritten
      */
     beforeSearchLicenceTypesSearch(form: SearchLicenceTypesSearchForm): void {
-        this.store.dispatch(licenceTypeActions.search({ criteria: form.criteria }));
+        this.store.dispatch(licenceTypeActions.search({
+            criteria: form.criteria,
+            loading: true
+        }));
     }
 
     /**

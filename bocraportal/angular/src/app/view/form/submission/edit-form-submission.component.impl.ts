@@ -65,7 +65,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   afterOnInit() {}
 
   doNgAfterViewInit() {
-    this.store.dispatch(FormActions.getAllForms());
+    this.store.dispatch(FormActions.getAllForms({loading: true}));
     this.forms$.subscribe((forms) => {
       forms.forEach((form) => {
         let item: SelectItem = new SelectItem();

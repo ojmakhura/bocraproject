@@ -35,7 +35,10 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
 
     doNgAfterViewInit() {
       if (this.useCaseScope.pageVariables['id']) {
-        this.store.dispatch(PeriodConfigActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
+        this.store.dispatch(PeriodConfigActions.findById({
+          id: this.useCaseScope.pageVariables['id'],
+          loading: true
+        }));
       }
   
       this.periodConfig$.subscribe((periodConfig) => {
@@ -74,7 +77,10 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
           form.periodConfig.createdBy = this.keycloakService.getUsername();
           form.periodConfig.createdDate = new Date();
         }
-        this.store.dispatch(PeriodConfigActions.save({ periodConfig: form.periodConfig }));
+        this.store.dispatch(PeriodConfigActions.save({
+          periodConfig: form.periodConfig,
+          loading: true
+        }));
       }
 
     }

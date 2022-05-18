@@ -39,7 +39,10 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
 
   afterOnInit() {
     if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(licenceTypeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
+      this.store.dispatch(licenceTypeActions.findById({
+        id: this.useCaseScope.pageVariables['id'],
+        loading: true
+      }));
     }
 
     this.licenceType$.subscribe((licenceType) => {
@@ -70,7 +73,10 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
       form.licenceType.createdDate = new Date();
     }
 
-    this.store.dispatch(licenceTypeActions.save({ licenceType: form.licenceType }));
+    this.store.dispatch(licenceTypeActions.save({
+      licenceType: form.licenceType,
+      loading: true
+    }));
   }
 
   /**
@@ -96,7 +102,10 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   afterSetEditLicenceTypeDeleteForm(form: EditLicenceTypeDeleteForm): void {}
 
   beforeEditLicenceTypeDelete(form: EditLicenceTypeDeleteForm): void {
-    this.store.dispatch(licenceTypeActions.remove({id: form?.licenceType?.id}));
+    this.store.dispatch(licenceTypeActions.remove({
+      id: form?.licenceType?.id,
+      loading: true
+    }));
   }
 
   afterEditLicenceTypeDelete(form: EditLicenceTypeDeleteForm): void {}
@@ -110,7 +119,10 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   handleLicenceTypeLicenseesSearch(): void {
     let criteria: LicenseeCriteria = new  LicenseeCriteria();
     criteria.licenseeName = this.licenceTypeLicenseesSearchField.value;
-    this.store.dispatch(LicenseeActions.search({criteria}));
+    this.store.dispatch(LicenseeActions.search({
+      criteria,
+      loading: true
+    }));
   }
 
   handleLicenceTypeLicenseesSelected(event: MatCheckboxChange, element: LicenseeVO): void {}
@@ -120,7 +132,10 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
     let criteria: FormCriteria = new  FormCriteria();
     criteria.code = this.licenceTypeFormsSearchField.value;
     criteria.formName = this.licenceTypeFormsSearchField.value;
-    this.store.dispatch(LicenseeActions.search({criteria}));
+    this.store.dispatch(LicenseeActions.search({
+      criteria,
+      loading: true
+    }));
   }
 
   handleLicenceTypeFormsSelected(event: MatCheckboxChange, element: FormVO): void {}
