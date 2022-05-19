@@ -20,6 +20,7 @@ import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo'
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
 
 @Component({
   selector: 'app-edit-licence-type',
@@ -32,7 +33,7 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.licensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
+    this.licenceTypeLicensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
   }
 
   beforeOnInit() {}
@@ -139,4 +140,13 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   }
 
   handleLicenceTypeFormsSelected(event: MatCheckboxChange, element: FormVO): void {}
+
+  handleLicenceTypeLicencesAddDialog(): void {
+  }
+  
+  handleLicenceTypeLicencesSearch(): void {
+  }
+
+  handleLicenceTypeLicencesSelected(event: MatCheckboxChange, data: LicenceVO): void {
+  }
 }

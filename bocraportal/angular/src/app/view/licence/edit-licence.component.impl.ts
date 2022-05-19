@@ -11,6 +11,9 @@ import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import * as LicenceActions from '@app/store/licence/licence.actions';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
+import { MatRadioChange } from '@angular/material/radio';
+import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 
 @Component({
   selector: 'app-edit-licence',
@@ -18,7 +21,7 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
   styleUrls: ['./edit-licence.component.scss']
 })
 export class EditLicenceComponentImpl extends EditLicenceComponent {
-
+    
     constructor(private injector: Injector) {
         super(injector);
     }
@@ -140,4 +143,21 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
 
     }
     
+    handleLicenceLicenseeAddDialog(): void {
+    }
+
+    handleLicenceLicenseeSearch(): void {
+    }
+
+    handleLicenceLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {
+    }
+
+    handleLicenceLicenceTypeAddDialog(): void {
+    }
+
+    handleLicenceLicenceTypeSearch(): void {
+    }
+
+    handleLicenceLicenceTypeSelected(event: MatRadioChange, data: LicenceTypeVO): void {
+    }
 }

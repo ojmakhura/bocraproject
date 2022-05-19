@@ -3,18 +3,18 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as LicenceActions from './licence.actions';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { DocumentRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/document-rest-controller.impl';
+import { LicenceRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/licence-rest-controller.impl';
 
 @Injectable()
 export class LicenceEffects {
 
-    constructor(private actions$: Actions, private licenseeRestController: LicenseeRestControllerImpl, private documentRestController: DocumentRestControllerImpl) {}
+    constructor(private actions$: Actions, private licenceRestController: LicenceRestControllerImpl, private documentRestController: DocumentRestControllerImpl) {}
 
     findById$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenceActions.findById),
-            mergeMap(({ id }) => this.licenseeRestController.findById(id).pipe(
+            mergeMap(({ id }) => this.licenceRestController.findById(id).pipe(
                 map( licence => LicenceActions.findByIdSuccess({
                     licence,
                     success: true
@@ -27,7 +27,7 @@ export class LicenceEffects {
     save$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenceActions.save),
-            mergeMap(({ licence }) => this.licenseeRestController.save(licence).pipe(
+            mergeMap(({ licence }) => this.licenceRestController.save(licence).pipe(
                 map( licence => LicenceActions.saveSuccess({
                     licence,
                     success: true
@@ -40,7 +40,7 @@ export class LicenceEffects {
     remove$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenceActions.remove),
-            mergeMap(({ id }) => this.licenseeRestController.remove(id).pipe(
+            mergeMap(({ id }) => this.licenceRestController.remove(id).pipe(
                 map( removed => LicenceActions.removeSuccess({
                     removed,
                     success: true
@@ -53,7 +53,7 @@ export class LicenceEffects {
     getAll$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenceActions.getAll),
-            mergeMap(() => this.licenseeRestController.getAll().pipe(
+            mergeMap(() => this.licenceRestController.getAll().pipe(
                 map( licences => LicenceActions.getAllSuccess({
                     licences,
                     success: true
@@ -66,7 +66,7 @@ export class LicenceEffects {
     search$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenceActions.search),
-            mergeMap(({ criteria }) => this.licenseeRestController.search(criteria).pipe(
+            mergeMap(({ criteria }) => this.licenceRestController.search(criteria).pipe(
                 map( licences => LicenceActions.searchSuccess({
                     licences,
                     success: true
@@ -79,7 +79,7 @@ export class LicenceEffects {
     getAllPaged$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenceActions.getAllPaged),
-            mergeMap(({ pageNumber, pageSize }) => this.licenseeRestController.getAllPaged(pageNumber, pageSize).pipe(
+            mergeMap(({ pageNumber, pageSize }) => this.licenceRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( licences => LicenceActions.getAllPagedSuccess({
                     licences,
                     success: true

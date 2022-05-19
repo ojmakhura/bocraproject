@@ -5,10 +5,16 @@ import { EditDocumentSaveForm } from '@app/view/document/edit-document.component
 import { EditDocumentSearchForm } from '@app/view/document/edit-document.component';
 import { EditDocumentDeleteForm } from '@app/view/document/edit-document.component';
 import { EditDocumentVarsForm } from '@app/view/document/edit-document.component';
-import { DocumentState } from '@app/store/document/document.state';
 import * as DocumentSelectors from '@app/store/document/document.selectors';
 import * as DocumentActions from '@app/store/document/document.actions';
+import * as LicenceActions from '@app/store/licence/licence.actions';
+import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import { KeycloakService } from 'keycloak-angular';
+import { MatRadioChange } from '@angular/material/radio';
+import { DocumentTypeVO } from '@app/model/bw/org/bocra/portal/document/type/document-type-vo';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-document',
@@ -18,10 +24,12 @@ import { KeycloakService } from 'keycloak-angular';
 export class EditDocumentComponentImpl extends EditDocumentComponent {
 
     protected keycloakService: KeycloakService;
+    licences$: Observable<LicenceVO[]>
 
     constructor(private injector: Injector) {
         super(injector);
         this.keycloakService = injector.get(KeycloakService);
+        this.licences$ = this.store.select(LicenceSelectors.selectLicences);
     }
 
     beforeOnInit(){     
@@ -130,4 +138,22 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
 
     }
     
+    handleDocumentLicenceAddDialog(): void {
+    }
+    handleDocumentLicenceSearch(): void {
+    }
+    handleDocumentLicenceSelected(event: MatRadioChange, data: LicenceVO): void {
+    }
+    handleDocumentLicenseeAddDialog(): void {
+    }
+    handleDocumentLicenseeSearch(): void {
+    }
+    handleDocumentLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {
+    }
+    handleDocumentDocumentTypeAddDialog(): void {
+    }
+    handleDocumentDocumentTypeSearch(): void {
+    }
+    handleDocumentDocumentTypeSelected(event: MatRadioChange, data: DocumentTypeVO): void {
+    }
 }

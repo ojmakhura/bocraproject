@@ -2,6 +2,9 @@
 import { Component, Injector } from '@angular/core';
 import { AddNewFieldComponent } from '@app/view/form/add-new-field.component';
 import { AddNewFieldVarsForm } from '@app/view/form/add-new-field.component';
+import { MatRadioChange } from '@angular/material/radio';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 
 @Component({
   selector: 'app-add-new-field',
@@ -42,5 +45,14 @@ export class AddNewFieldComponentImpl extends AddNewFieldComponent {
 
     handleDialogDone(data: any): any {
         return data;
+    }
+
+    handleFormFieldFormAddDialog(): void {
+    }
+
+    handleFormFieldFormSearch(): void {
+    }
+
+    handleFormFieldFormSelected(event: MatRadioChange, data: FormVO): void {
     }
 }

@@ -30,9 +30,9 @@ export class EditFormComponentImpl extends EditFormComponent {
 
   constructor(private injector: Injector) {
     super(injector);
-    this.licenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
+    this.formLicenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
     this.keycloakService = injector.get(KeycloakService);
-    this.formFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
+    this.formFormFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
   }
 
   beforeOnInit() {
@@ -55,7 +55,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       this.setEditFormSaveForm({ form: form } as EditFormSaveForm);
     });
 
-    this.formFields$.subscribe(data => {
+    this.formFormFields$.subscribe(data => {
       console.log(data);
     });
   }

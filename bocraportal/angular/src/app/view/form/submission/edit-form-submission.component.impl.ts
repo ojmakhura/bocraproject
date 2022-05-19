@@ -9,6 +9,8 @@ import * as SubmissionActions from '@app/store/form/submission/form-submission.a
 import * as SubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
 import * as FormActions from '@app/store/form/form.actions';
 import * as FormSelectors from '@app/store/form/form.selectors';
+import * as LicenseeActions from '@app/store/licensee/licensee.actions';
+import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
@@ -19,6 +21,9 @@ import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-fiel
 import { SanitizeHtml } from '@app/pipe/sanitize-html.pipe';
 import { FormDataVO } from '@app/model/bw/org/bocra/portal/form/submission/data/form-data-vo';
 import { FormGroup } from '@angular/forms';
+import { MatRadioChange } from '@angular/material/radio';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 
 // <div formArrayName="formDatas">
 // 					<div *ngFor="let formData of formSubmissionFormDatas.controls; let i = index"  [formGroupName]='i'>
@@ -58,6 +63,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.keycloakService = injector.get(KeycloakService);
     this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
     this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
+    this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
   }
 
   beforeOnInit() {}
@@ -236,5 +242,24 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   getDataValue(data: FormDataVO) {
     return `${data.formField.fieldName}`;
+  }
+
+  handleFormSubmissionLicenseeAddDialog(): void {
+  }
+
+  handleFormSubmissionLicenseeSearch(): void {
+    this.store.dispatch(LicenseeActions.getAll({loading: true}))
+  }
+
+  handleFormSubmissionLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {
+  }
+
+  handleFormSubmissionFormDatasAddDialog(): void {
+  }
+
+  handleFormSubmissionFormDatasSearch(): void {
+  }
+
+  handleFormSubmissionFormDatasSelected(event: MatCheckboxChange, data: FormDataVO): void {
   }
 }
