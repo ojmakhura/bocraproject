@@ -21,6 +21,8 @@ export enum FormActionType {
     FIND_FIELD_BY_ID_SUCCESS = '[Form] Find Field By Id Success',
     SAVE_FIELD = '[Form] Save Field',
     SAVE_FIELD_SUCCESS = '[Form] Save Field Success',
+    ADD_SECTION = '[Form] Add Section',
+    ADD_SECTION_SUCCESS = '[Form] Add Section Success',
     REMOVE_FIELD = '[Form] Remove Field',
     REMOVE_FIELD_SUCCESS = '[Form] Remove Field Success',
     GET_ALL_FIELDS = '[Form] Get All Fields',
@@ -111,6 +113,16 @@ export const saveField = createAction(
 export const saveFieldSuccess = createAction(
     FormActionType.SAVE_FIELD_SUCCESS,
     props<{ formField: FormFieldVO | any, success: boolean }>()
+);
+
+export const addSection = createAction(
+    FormActionType.ADD_SECTION,
+    props<{ section: string | any, loading: boolean }>()
+);
+
+export const addSectionSuccess = createAction(
+    FormActionType.ADD_SECTION_SUCCESS,
+    props<{ section: string | any, success: boolean }>()
 );
 
 export const removeField = createAction(

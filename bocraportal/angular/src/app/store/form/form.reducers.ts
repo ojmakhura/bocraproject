@@ -61,6 +61,13 @@ export const formReducer = createReducer(
         success: action.success,
         error: null
     })),
+    on(FormActions.addSectionSuccess, (state, action) => ({
+        ...state,
+        sections: [...state.sections, action.section],
+        loading: false,
+        success: action.success,
+        error: null
+    })),
     on(FormActions.removeFieldSuccess, (state, action) => ({
         ...state,
         removed: action.removed,

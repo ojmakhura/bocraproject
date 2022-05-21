@@ -11,6 +11,8 @@ export interface FormState {
   fieldType: FieldType | any;
   formFields: Array<FormFieldVO> | Array<any>;
   formField: FormFieldVO | any;
+  section: string | any;
+  sections: Array<string> | Array<any>;
   form: FormVO | any;
   required: Boolean | any;
   min: String | any;
@@ -30,6 +32,8 @@ export const initialState: FormState = {
   fieldType: null,
   formFields: [],
   formField: null,
+  section: null,
+  sections: [],
   form: null,
   required: null,
   min: null,
