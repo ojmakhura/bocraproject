@@ -157,10 +157,6 @@ public class FormDaoImpl
 
             for(LicenceTypeVO type : source.getLicenceTypes()) {
 
-                System.out.println("-----------------------------------------------------------------");
-                System.out.println(type);
-
-                System.out.println("-----------------------------------------------------------------");
                 if(type.getId() != null) {
                     LicenceType entity = getLicenceTypeDao().load(type.getId());
                     target.getLicenceTypes().add(entity);
