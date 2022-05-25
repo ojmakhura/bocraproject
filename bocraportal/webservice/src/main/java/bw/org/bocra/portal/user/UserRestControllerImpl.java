@@ -6,9 +6,12 @@
 package bw.org.bocra.portal.user;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.ws.rs.core.Response;
@@ -97,19 +100,56 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         return keycloak.realm(context.getRealm()).users();
     }
 
-    @Override
-    public ResponseEntity<UserVO> handleCreateUser(UserVO user) {
-        
-        UsersResource usersResource = getUsersResource();
+    private UserRepresentation userVOUserRepresentation(UserVO user) {
+
         UserRepresentation userRepresentation = new UserRepresentation();
+
         userRepresentation.setUsername(user.getUsername());
         userRepresentation.setEmail(user.getEmail());
         userRepresentation.setFirstName(user.getFirstName());
         userRepresentation.setLastName(user.getLastName());
-        userRepresentation.setEnabled(true);
+        userRepresentation.setEnabled(user.getEnabled());
         userRepresentation.setEmailVerified(false);
         userRepresentation.setRequiredActions(Collections.singletonList("VERIFY_EMAIL"));
         userRepresentation.setCredentials(Collections.singletonList(createCredential(CredentialRepresentation.PASSWORD, user.getPassword(), true)));
+        
+        if(user.getLicensee() != null && user.getLicensee().getId() != null) {
+            Map<String, List<String>> attributes = new HashMap<>();
+            List<String> licenseeAttributes = new ArrayList<>();
+            licenseeAttributes.add("id:" + user.getLicensee().getId());
+            licenseeAttributes.add("licenseeName:" + user.getLicensee().getLicenseeName());
+            attributes.put("licensee", licenseeAttributes);
+
+            userRepresentation.setAttributes(attributes);
+        }
+
+        if(CollectionUtils.isNotEmpty(user.getRoles())) {
+            //userRepresentation.getClientRoles();
+        }
+
+        return userRepresentation;
+    }
+
+    private UserVO userRepresentationUserVO(UserRepresentation userRepresentation) {
+        UserVO user = new UserVO();
+
+        user.setUserId(userRepresentation.getId());
+        user.setEmail(userRepresentation.getEmail());
+        user.setEnabled(userRepresentation.isEnabled());
+        user.setFirstName(userRepresentation.getFirstName());
+        user.setUsername(userRepresentation.getUsername());
+        //user.setRoles(userRepresentation.getClientRoles());
+
+
+
+        return user;
+    }
+
+    @Override
+    public ResponseEntity<UserVO> handleCreateUser(UserVO user) {
+        
+        UsersResource usersResource = getUsersResource();
+        UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
         
         Response res = usersResource.create(userRepresentation);
         
@@ -145,8 +185,16 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     public ResponseEntity<Collection<UserVO>> handleLoadUsers() {
         
         UsersResource usersResource = getUsersResource();
-        //usersResource.
-        Optional<Collection<UserVO>> data = Optional.empty(); // TODO: Add custom code here;
+
+        List<UserRepresentation> userRep = usersResource.list();
+        Collection<UserVO> users = new ArrayList<>();
+
+        for (UserRepresentation user : userRep) {
+            UserVO vo = this.userRepresentationUserVO(user);
+            users.add(vo);
+        }
+
+        Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
         ResponseEntity<Collection<UserVO>> response;
 
         if(data.isPresent()) {

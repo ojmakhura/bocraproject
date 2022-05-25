@@ -61,14 +61,14 @@ export const selectMax = createSelector(
     (state: FormState) => state.max
 );
 
-export const selectSection = createSelector(
+export const selectFormSection = createSelector(
     selectFormState,
-    (state: FormState) => state.section
+    (state: FormState) => state.formSection
 );
 
-export const selectSections = createSelector(
+export const selectFormSections = createSelector(
     selectFormState,
-    (state: FormState) => state.sections
+    (state: FormState) => state.formSections
 );
 
 export const selectRequired = createSelector(

@@ -14,6 +14,7 @@ import * as UserActions from '@app/store/user/user.actions';
 import { select } from '@ngrx/store';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { Observable } from 'rxjs';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'app-edit-user',
@@ -52,15 +53,15 @@ export class EditUserComponentImpl extends EditUserComponent {
       });
     });
 
-    this.store.dispatch(LicenseeActions.getAll({loading: true}));
-    this.licensees$.forEach(licensees => {
-      licensees.forEach(licensee => {
-        let item: SelectItem = new SelectItem();
-        item.label = licensee.licenseeName;
-        item.value = licensee;
-        this.userLicenseeBackingList.push(item);
-      });
-    });
+    // this.store.dispatch(LicenseeActions.getAll({loading: true}));
+    // this.licensees$.forEach(licensees => {
+    //   licensees.forEach(licensee => {
+    //     let item: SelectItem = new SelectItem();
+    //     item.label = licensee.licenseeName;
+    //     item.value = licensee;
+    //     this.userLicenseeBackingList.push(item);
+    //   });
+    // });
     
   }
 
@@ -137,4 +138,13 @@ export class EditUserComponentImpl extends EditUserComponent {
    * This method may be overwritten
    */
   afterEditUserSearch(form: EditUserSearchForm): void {}
+
+  handleUserLicenseeAddDialog(): void {
+  }
+
+  handleUserLicenseeSearch(): void {
+  }
+
+  handleUserLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {
+  }
 }

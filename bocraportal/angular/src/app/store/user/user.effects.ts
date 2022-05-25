@@ -9,17 +9,21 @@ import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/lic
 @Injectable()
 export class UserEffects {
 
-    constructor(private actions$: Actions, private userRestController: UserRestControllerImpl, private licenseeRestController: LicenseeRestControllerImpl) {}
+    constructor(private actions$: Actions, private userRestController: UserRestControllerImpl, private licenseeRestController: LicenseeRestControllerImpl) { }
 
-    // createUser$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(UserActions.createUser),
-    //         mergeMap(({ user }) => this.userRestController.createUser(user).pipe(
-    //             map( results => UserActions.createUserSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
-    //         ))
-    //     )
-    // );
+
+    createUser$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(UserActions.createUser),
+            mergeMap(({ user }) => this.userRestController.createUser(user).pipe(
+                map(user => UserActions.createUserSuccess({
+                    user,
+                    success: true
+                })),
+                catchError(({ error }) => [UserActions.userFailure(error)])
+            ))
+        )
+    );
 
     // updateUserName$ = createEffect(() => 
     //      this.actions$.pipe(

@@ -6,41 +6,51 @@ import * as FormSelectors from '@app/store/form/form.selectors';
 import * as FormActions from '@app/store/form/form.actions';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 
 @Component({
   selector: 'app-add-new-section',
   templateUrl: './add-new-section.component.html',
-  styleUrls: ['./add-new-section.component.scss']
+  styleUrls: ['./add-new-section.component.scss'],
 })
 export class AddNewSectionComponentImpl extends AddNewSectionComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  beforeOnInit() {}
 
-    beforeOnInit(){     
-    }
-	
-    afterOnInit() {
-    }
+  afterOnInit() {}
 
-    doNgAfterViewInit() {
-    }
+  doNgAfterViewInit() {}
 
-    doNgOnDestroy(){}
+  doNgOnDestroy() {}
 
-    handleFormChanges(change: any) {
-    }
+  handleFormChanges(change: any) {}
 
+  handleCancelDialog(): void {}
 
-    handleCancelDialog(): void {
+  handleDialogDone(data: any): any {
+    return data;
+  }
 
-    }
+  afterSetAddNewSectionVarsForm(form: AddNewSectionVarsForm): void {}
+  handleFormSectionFormAddDialog(): void {
+  }
 
-    handleDialogDone(data: any): any {
-        return data;
-    }
-    
-    afterSetAddNewSectionVarsForm(form: AddNewSectionVarsForm): void {
-    }
+  handleFormSectionFormSearch(): void {
+  }
+
+  handleFormSectionFormSelected(event: MatRadioChange, data: FormVO): void {
+  }
+
+  handleFormSectionFormFieldsAddDialog(): void {
+  }
+
+  handleFormSectionFormFieldsSearch(): void {
+  }
+  
+  handleFormSectionFormFieldsSelected(event: MatCheckboxChange, data: FormFieldVO): void {
+  }
 }

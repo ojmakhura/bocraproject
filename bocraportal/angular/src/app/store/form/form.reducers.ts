@@ -63,7 +63,7 @@ export const formReducer = createReducer(
     })),
     on(FormActions.addSectionSuccess, (state, action) => ({
         ...state,
-        sections: [...state.sections, action.section],
+        sections: [...state.formSections, action.section],
         loading: false,
         success: action.success,
         error: null

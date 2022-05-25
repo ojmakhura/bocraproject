@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
 import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
 
 @Component({
   selector: 'app-edit-form',
@@ -25,7 +26,6 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./edit-form.component.scss'],
 })
 export class EditFormComponentImpl extends EditFormComponent {
-
   protected keycloakService: KeycloakService;
 
   constructor(private injector: Injector) {
@@ -35,34 +35,31 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.formFormFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
   }
 
-  beforeOnInit() {
-  }
+  beforeOnInit() {}
 
-  afterOnInit() {
-    
-  }
+  afterOnInit() {}
 
   doNgAfterViewInit() {
-    
     if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(FormActions.findFormById({
-        id: this.useCaseScope.pageVariables['id'],
-        loading: true
-      }));
+      this.store.dispatch(
+        FormActions.findFormById({
+          id: this.useCaseScope.pageVariables['id'],
+          loading: true,
+        })
+      );
     }
 
     this.form$.subscribe((form) => {
       this.setEditFormSaveForm({ form: form } as EditFormSaveForm);
     });
 
-    this.formFormFields$.subscribe(data => {
+    this.formFormFields$.subscribe((data) => {
       console.log(data);
     });
   }
 
   handleFormChanges(change: any) {
     console.log('chaning');
-    
   }
 
   doNgOnDestroy() {}
@@ -81,19 +78,20 @@ export class EditFormComponentImpl extends EditFormComponent {
    * This method may be overwritten
    */
   beforeEditFormSave(form: EditFormSaveForm): void {
-    if(this.form.valid) {
-      if(form.form.id) {
+    if (this.form.valid) {
+      if (form.form.id) {
         form.form.updatedBy = this.keycloakService.getUsername();
         form.form.updatedDate = new Date();
       } else {
-
         form.form.createdBy = this.keycloakService.getUsername();
         form.form.createdDate = new Date();
       }
-      this.store.dispatch(FormActions.saveForm({
-        form: form.form,
-        loading: true
-      }));
+      this.store.dispatch(
+        FormActions.saveForm({
+          form: form.form,
+          loading: true,
+        })
+      );
     }
   }
 
@@ -141,10 +139,12 @@ export class EditFormComponentImpl extends EditFormComponent {
   handleFormLicenceTypesSearch(): void {
     let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
     criteria.typeSearch = this.formLicenceTypesSearchField.value;
-    this.store.dispatch(LicenceTypeActions.search({
-      criteria: criteria,
-      loading: true
-    }));
+    this.store.dispatch(
+      LicenceTypeActions.search({
+        criteria: criteria,
+        loading: true,
+      })
+    );
   }
 
   handleFormLicenceTypesSelected(event: MatCheckboxChange, element: LicenceTypeVO): void {}
@@ -160,37 +160,37 @@ export class EditFormComponentImpl extends EditFormComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.dialogData) {
         let field: FormFieldVO = result.dialogData.formField;
-        if(field.id) {
+        if (field.id) {
           field.updatedBy = this.keycloakService.getUsername();
           field.updatedDate = new Date();
         } else {
           field.createdBy = this.keycloakService.getUsername();
           field.createdDate = new Date();
-          field.form = this.form.value
+          field.form = this.form.value;
         }
         this.addToFormFormFields(field);
-      } 
+      }
     });
   }
 
-  handleFormLicenseesAddDialog() {
+  handleFormLicenseesAddDialog() {}
 
+  handleFormLicenseesSearch() {}
+
+  handleFormLicenseesSelected() {}
+
+  afterSetEditFormAddSectionForm(form: EditFormAddSectionForm): void {}
+
+  beforeEditFormAddSection(): void {}
+
+  afterEditFormAddSection(): void {}
+
+  handleFormFormSectionsAddDialog(): void {
   }
 
-  handleFormLicenseesSearch() {
-
+  handleFormFormSectionsSearch(): void {
   }
 
-  handleFormLicenseesSelected() {
-    
-  }
-
-  afterSetEditFormAddSectionForm(form: EditFormAddSectionForm): void {
-  }
-
-  beforeEditFormAddSection(): void {
-  }
-  
-  afterEditFormAddSection(): void {
+  handleFormFormSectionsSelected(event: MatCheckboxChange, data: FormSectionVO): void {
   }
 }
