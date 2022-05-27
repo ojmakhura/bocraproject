@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/sector")
-//@org.springframework.web.bind.annotation.CrossOrigin()
 public class SectorRestControllerImpl extends SectorRestControllerBase {
 
 

@@ -82,7 +82,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
             .permitAll()
             .antMatchers("/auth/signin")
             .permitAll()
-            .antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**")
+            .antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v3/**", "/swagger-resources/**")
             .permitAll()
             .anyRequest().authenticated();
     }

@@ -59,7 +59,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     let criteria: string = '';
     criteria = this.sectorLicenseesSearchField.value;
     this.store.dispatch(LicenseeActions.search({
-      criteria: criteria,
+      criteria: {uin: criteria, licenseeName: criteria},
       loading: true
     }));
   }

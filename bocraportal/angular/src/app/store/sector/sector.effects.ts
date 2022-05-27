@@ -14,7 +14,10 @@ export class SectorEffects {
          this.actions$.pipe(
             ofType(SectorActions.findById),
             mergeMap(({ id }) => this.sectorRestController.findById(id).pipe(
-                map( sector => SectorActions.findByIdSuccess({sector})),
+                map( sector => SectorActions.findByIdSuccess({
+                    sector,
+                    success: true
+                })),
                 catchError(({error}) => [SectorActions.sectorFailure(error)])
             ))
         )
@@ -24,7 +27,10 @@ export class SectorEffects {
          this.actions$.pipe(
             ofType(SectorActions.save),
             mergeMap(({ sector }) => this.sectorRestController.save(sector).pipe(
-                map( sector => SectorActions.saveSuccess({sector})),
+                map( sector => SectorActions.saveSuccess({
+                    sector,
+                    success: true
+                })),
                 catchError(({error}) => [SectorActions.sectorFailure(error)])
             ))
         )
@@ -34,7 +40,10 @@ export class SectorEffects {
          this.actions$.pipe(
             ofType(SectorActions.remove),
             mergeMap(({ id }) => this.sectorRestController.remove(id).pipe(
-                map( removed => SectorActions.removeSuccess({removed})),
+                map( removed => SectorActions.removeSuccess({
+                    removed,
+                    success: true
+                })),
                 catchError(({error}) => [SectorActions.sectorFailure(error)])
             ))
         )
@@ -44,7 +53,10 @@ export class SectorEffects {
          this.actions$.pipe(
             ofType(SectorActions.getAll),
             mergeMap(() => this.sectorRestController.getAll().pipe(
-                map( sectors => SectorActions.getAllSuccess({sectors})),
+                map( sectors => SectorActions.getAllSuccess({
+                    sectors,
+                    success: true
+                })),
                 catchError(({error}) => [SectorActions.sectorFailure(error)])
             ))
         )
@@ -54,7 +66,10 @@ export class SectorEffects {
          this.actions$.pipe(
             ofType(SectorActions.search),
             mergeMap(({ criteria }) => this.sectorRestController.search(criteria).pipe(
-                map( sectors => SectorActions.searchSuccess({sectors})),
+                map( sectors => SectorActions.searchSuccess({
+                    sectors,
+                    success: true
+                })),
                 catchError(({error}) => [SectorActions.sectorFailure(error)])
             ))
         )
@@ -64,7 +79,10 @@ export class SectorEffects {
          this.actions$.pipe(
             ofType(SectorActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.sectorRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( sectors => SectorActions.getAllPagedSuccess({sectors})),
+                map( sectors => SectorActions.getAllPagedSuccess({
+                    sectors,
+                    success: true
+                })),
                 catchError(({error}) => [SectorActions.sectorFailure(error)])
             ))
         )

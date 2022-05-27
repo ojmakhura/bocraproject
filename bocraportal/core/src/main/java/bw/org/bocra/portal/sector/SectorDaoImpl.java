@@ -104,8 +104,8 @@ public class SectorDaoImpl
             Collection<Licensee> licensees = new ArrayList<>();
 
             for(LicenseeVO lvo : source.getLicensees()) {
-                Licensee l = Licensee.Factory.newInstance();
-                getLicenseeDao().licenseeVOToEntity(lvo, l, copyIfNull);
+                Licensee l = getLicenseeDao().get(lvo.getId());
+                // getLicenseeDao().licenseeVOToEntity(lvo, l, copyIfNull);
                 licensees.add(l);
             }
 
