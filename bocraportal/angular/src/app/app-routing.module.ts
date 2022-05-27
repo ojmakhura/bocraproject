@@ -63,6 +63,10 @@ const routes: Routes = [
       path: 'document', 
       loadChildren: async () => (await import('@app/view/document/document.module')).DocumentModule
     },
+    {
+      path: 'sector', 
+      loadChildren: async () => (await import('@app/view/sector/sector.module')).SectorModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 

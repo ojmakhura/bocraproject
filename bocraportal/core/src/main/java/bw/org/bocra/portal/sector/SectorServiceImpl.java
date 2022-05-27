@@ -1,0 +1,114 @@
+// license-header java merge-point
+/**
+ * This is only generated once! It will never be overwritten.
+ * You can (and have to!) safely modify it by hand.
+ * TEMPLATE:    SpringServiceImpl.vsl in andromda-spring cartridge
+ * MODEL CLASS: bocraportal::backend::bw.org.bocra.portal::sector::SectorService
+ * STEREOTYPE:  Service
+ */
+package bw.org.bocra.portal.sector;
+
+import java.util.Collection;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+/**
+ * @see bw.org.bocra.portal.sector.SectorService
+ */
+@Service("sectorService")
+public class SectorServiceImpl
+    extends SectorServiceBase
+{
+
+    /**
+     * @see bw.org.bocra.portal.sector.SectorService#findById(Long)
+     */
+    @Override
+    protected  SectorVO handleFindById(Long id)
+        throws Exception
+    {
+        return (SectorVO) getSectorDao().load(SectorDao.TRANSFORM_SECTORVO, id);
+    }
+
+    /**
+     * @see bw.org.bocra.portal.sector.SectorService#save(SectorVO)
+     */
+    @Override
+    protected  SectorVO handleSave(SectorVO sector)
+        throws Exception
+    {
+        Sector sec = getSectorDao().sectorVOToEntity(sector);
+
+        if(sec.getId() == null) {
+
+            sec = getSectorDao().create(sec);
+            return getSectorDao().toSectorVO(sec);
+
+        } else {
+            getSectorDao().update(sec);
+            return sector;
+        }
+
+    }
+
+    /**
+     * @see bw.org.bocra.portal.sector.SectorService#remove(Long)
+     */
+    @Override
+    protected  boolean handleRemove(Long id)
+        throws Exception
+    {
+        try {
+            this.sectorRepository.deleteById(id);
+            return true;
+        } catch(Exception e) {
+
+            return false;
+        }
+    }
+
+    /**
+     * @see bw.org.bocra.portal.sector.SectorService#getAll()
+     */
+    @Override
+    protected  Collection<SectorVO> handleGetAll()
+        throws Exception
+    {
+        return (Collection<SectorVO>) getSectorDao().loadAll(SectorDao.TRANSFORM_SECTORVO);
+    }
+
+    /**
+     * @see bw.org.bocra.portal.sector.SectorService#search(String)
+     */
+    @Override
+    protected  Collection<SectorVO> handleSearch(String criteria)
+        throws Exception
+    {
+        Collection<Sector> sectors = getSectorDao().findByCriteria(criteria);
+
+        return getSectorDao().toSectorVOCollection(sectors);
+    }
+
+    /**
+     * @see bw.org.bocra.portal.sector.SectorService#getAll(Integer, Integer)
+     */
+    @Override
+    protected  Collection<SectorVO> handleGetAll(Integer pageNumber, Integer pageSize)
+        throws Exception
+    {
+        Collection<Sector> sectors = null;
+
+        if(pageNumber < 0 || pageSize < 1) {
+            sectors = sectorRepository.findAll();
+        } else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("name").descending());
+            sectors = sectorRepository.findAll(pageable).getContent();
+        }
+
+        return sectors == null ? null : getSectorDao().toSectorVOCollection(sectors);
+    }
+
+}
