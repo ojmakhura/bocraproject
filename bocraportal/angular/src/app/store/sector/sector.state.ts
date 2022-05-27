@@ -10,6 +10,7 @@ export interface SectorState {
     sector: SectorVO | any,
     loading: boolean,
     success: boolean,
+    removed: boolean;
     error: any
 }
 
@@ -20,5 +21,6 @@ export const initialState: SectorState = {
     sector: null,
     loading: false,
     success: false,
+    removed: false,
     error: null
 };

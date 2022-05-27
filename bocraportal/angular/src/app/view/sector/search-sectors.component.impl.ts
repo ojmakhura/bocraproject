@@ -10,9 +10,9 @@ import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'app-search-sectors',
-  templateUrl: './search-sectors.component.html',
-  styleUrls: ['./search-sectors.component.scss']
+    selector: 'app-search-sectors',
+    templateUrl: './search-sectors.component.html',
+    styleUrls: ['./search-sectors.component.scss']
 })
 export class SearchSectorsComponentImpl extends SearchSectorsComponent {
 
@@ -20,9 +20,9 @@ export class SearchSectorsComponentImpl extends SearchSectorsComponent {
         super(injector);
     }
 
-    beforeOnInit(){     
+    beforeOnInit() {
     }
-	
+
     afterOnInit() {
         //this.addSectorsDummyData();
     }
@@ -30,7 +30,7 @@ export class SearchSectorsComponentImpl extends SearchSectorsComponent {
     doNgAfterViewInit() {
     }
 
-    doNgOnDestroy(){}
+    doNgOnDestroy() { }
 
     handleFormChanges(change: any) {
     }
@@ -53,7 +53,12 @@ export class SearchSectorsComponentImpl extends SearchSectorsComponent {
      * This method may be overwritten
      */
     beforeSearchSectorsSearch(form: SearchSectorsSearchForm): void {
-
+        this.store.dispatch(
+            SectorActions.search({
+                criteria: form.criteria,
+                loading: true,
+            })
+        );
     }
 
     /**
@@ -62,5 +67,5 @@ export class SearchSectorsComponentImpl extends SearchSectorsComponent {
     afterSearchSectorsSearch(form: SearchSectorsSearchForm): void {
 
     }
-    
+
 }

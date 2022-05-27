@@ -7,63 +7,45 @@ export const sectorReducer = createReducer(
     initialState,
     on(SectorActions.findByIdSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        id: null, 
-        sectors: [], 
-        sector: null, 
-        loading: action.loading,
+        sector: action.sector, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(SectorActions.saveSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        id: null, 
-        sectors: [], 
-        sector: null, 
-        loading: action.loading,
+        sector: action.sector, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(SectorActions.removeSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        id: null, 
-        sectors: [], 
-        sector: null, 
-        loading: action.loading,
+        removed: action.removed, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(SectorActions.getAllSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        id: null, 
-        sectors: [], 
-        sector: null, 
-        loading: action.loading,
+        sectors: action.sectors, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(SectorActions.searchSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        id: null, 
-        sectors: [], 
-        sector: null, 
-        loading: action.loading,
+        sectors: action.sectors, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(SectorActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        criteria: null, 
-        id: null, 
-        sectors: [], 
-        sector: null, 
-        loading: action.loading,
+        sectors: action.sectors, 
+        loading: false,
         success: action.success,
-        error: action.error
+        error: null
     })),
     on(SectorActions.sectorReset, (state) => ({
       ...state,
@@ -73,6 +55,7 @@ export const sectorReducer = createReducer(
         sector: null, 
         loading: false,
         success: false,
+        removed: false,
         error: null
     })),
     on(SectorActions.sectorFailure, (state, action) => ({
