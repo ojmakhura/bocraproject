@@ -99,8 +99,10 @@ public class LicenseeServiceImpl
         Collection<Licensee> licenses = this.licenseeDao.findByCriteria(criteria);
         Collection<LicenseeVO> vos = new ArrayList<>();
 
-        for (Licensee entity : licenses) {
-            vos.add(licenseeDao.toLicenseeVO(entity));
+        for (Licensee licensee : licenses) {
+            LicenseeVO vo = new LicenseeVO();
+            getLicenseeDao().toLicenseeVO(licensee, vo);
+            vos.add(vo);
         }
         return vos;
     }
@@ -116,7 +118,15 @@ public class LicenseeServiceImpl
             licensees = licenseeRepository.findAll(pageable).getContent();
         }
 
-        return licensees == null ? null : getLicenseeDao().toLicenseeVOCollection(licensees);
+        Collection<LicenseeVO> vos = new ArrayList<>();
+
+        for (Licensee licensee : licensees) {
+            LicenseeVO vo = new LicenseeVO();
+            getLicenseeDao().toLicenseeVO(licensee, vo);
+            vos.add(vo);
+        }
+
+        return vos;
     }
 
 }

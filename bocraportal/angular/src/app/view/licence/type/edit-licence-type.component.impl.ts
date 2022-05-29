@@ -7,9 +7,7 @@ import {
 } from '@app/view/licence/type/edit-licence-type.component';
 import { EditLicenceTypeSaveForm } from '@app/view/licence/type/edit-licence-type.component';
 import { EditLicenceTypeSearchForm } from '@app/view/licence/type/edit-licence-type.component';
-import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
 import * as licenceTypeActions from '@app/store/licence/type/licence-type.actions';
-import { Observable } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 import { select } from '@ngrx/store';
 import * as LicenseSelectors from '@app/store/licensee/licensee.selectors';
@@ -33,7 +31,6 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.licenceTypeLicensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
   }
 
   beforeOnInit() {}
@@ -113,20 +110,8 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
 
   afterSetEditLicenceTypeVarsForm(form: EditLicenceTypeVarsForm): void {}
 
-  handleLicenceTypeLicenseesAddDialog(): void {}
 
   handleLicenceTypeFormsAddDialog(): void {}
-
-  handleLicenceTypeLicenseesSearch(): void {
-    let criteria: LicenseeCriteria = new  LicenseeCriteria();
-    criteria.licenseeName = this.licenceTypeLicenseesSearchField.value;
-    this.store.dispatch(LicenseeActions.search({
-      criteria,
-      loading: true
-    }));
-  }
-
-  handleLicenceTypeLicenseesSelected(event: MatCheckboxChange, element: LicenseeVO): void {}
 
   handleLicenceTypeFormsSearch(): void {
 

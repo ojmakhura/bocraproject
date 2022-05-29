@@ -149,7 +149,8 @@ public class LicenceTypeDaoImpl
             Collection<Licensee> licensees = new ArrayList<>();
             for (LicenseeVO licensee : source.getLicensees()) {
                 if(licensee.getId() != null) {
-                    Licensee entity = getLicenseeDao().load(licensee.getId());
+                    Licensee entity = Licensee.Factory.newInstance();
+                    getLicenseeDao().licenseeVOToEntity(licensee, entity, copyIfNull);;
                     licensees.add(entity);
                 }
             }
@@ -162,7 +163,8 @@ public class LicenceTypeDaoImpl
 
             for(FormVO form : source.getForms()) {
                 if(form.getId() != null) {
-                    Form entity = getFormDao().load(form.getId());
+                    Form entity = Form.Factory.newInstance();
+                    getFormDao().formVOToEntity(form, entity, copyIfNull);
                     forms.add(entity);
                 }
                 

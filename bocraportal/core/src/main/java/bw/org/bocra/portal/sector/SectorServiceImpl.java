@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.sector;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.data.domain.PageRequest;
@@ -70,6 +71,18 @@ public class SectorServiceImpl
         }
     }
 
+    private Collection<SectorVO> convertToVOs(Collection<Sector> entities) {
+        Collection<SectorVO> vos = new ArrayList<>();
+
+        for (Sector sector : entities) {
+            SectorVO vo = new SectorVO();
+            getSectorDao().toSectorVO(sector, vo);
+            vos.add(vo);
+        }
+
+        return vos;
+    }
+
     /**
      * @see bw.org.bocra.portal.sector.SectorService#getAll()
      */
@@ -77,7 +90,7 @@ public class SectorServiceImpl
     protected  Collection<SectorVO> handleGetAll()
         throws Exception
     {
-        return (Collection<SectorVO>) getSectorDao().loadAll(SectorDao.TRANSFORM_SECTORVO);
+        return this.convertToVOs(getSectorDao().loadAll());
     }
 
     /**
@@ -89,7 +102,7 @@ public class SectorServiceImpl
     {
         Collection<Sector> sectors = getSectorDao().findByCriteria(criteria);
 
-        return getSectorDao().toSectorVOCollection(sectors);
+        return this.convertToVOs(sectors);
     }
 
     /**
@@ -108,7 +121,7 @@ public class SectorServiceImpl
             sectors = sectorRepository.findAll(pageable).getContent();
         }
 
-        return sectors == null ? null : getSectorDao().toSectorVOCollection(sectors);
+        return sectors == null ? null : this.convertToVOs(sectors);
     }
 
 }

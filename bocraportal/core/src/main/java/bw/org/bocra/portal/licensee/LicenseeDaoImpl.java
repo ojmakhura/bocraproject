@@ -32,8 +32,6 @@ public class LicenseeDaoImpl
     {
         super.toLicenseeVO(source, target);
 
-        logger.info(source.getLicenceTypes().toString());
-
         if(CollectionUtils.isNotEmpty(source.getLicenceTypes())) {
 
             target.setLicenceTypes(new ArrayList<>());
@@ -102,17 +100,14 @@ public class LicenseeDaoImpl
             Collection<LicenceType> types = new ArrayList<>();
             for(LicenceTypeVO type : source.getLicenceTypes()) {
                 if(type.getId() != null) {
-                    LicenceType entity = licenceTypeDao.load(type.getId());
-                    if(entity != null && entity.getId() != null) {
-                        types.add(entity);
-                    }
+                    LicenceType entity = LicenceType.Factory.newInstance();
+                    licenceTypeDao.licenceTypeVOToEntity(type, entity, copyIfNull);;
+                    types.add(entity);
                 }
             }
 
             target.setLicenceTypes(types);
 
-            logger.info(target.toString());    
-            logger.info(target.getLicenceTypes().toString());              
         }
     }
 }

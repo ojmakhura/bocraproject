@@ -10,15 +10,12 @@ import {
 } from '@app/view/licensee/edit-licensee.component';
 import { EditLicenseeSaveForm } from '@app/view/licensee/edit-licensee.component';
 import { EditLicenseeSearchForm } from '@app/view/licensee/edit-licensee.component';
-import * as licenseeSelectors from '@app/store/licensee/licensee.selectors';
-import * as licenseeActions from '@app/store/licensee/licensee.actions';
+import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
+import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import { Observable } from 'rxjs';
-import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
-import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
-import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
 import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
 import * as LicenceTypeSelectors from '@app/store/licence/type/licence-type.selectors';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -37,14 +34,13 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.licenseeLicenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
   }
 
   beforeOnInit() {}
 
   afterOnInit() {
     if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(licenseeActions.findById({
+      this.store.dispatch(LicenseeActions.findById({
         id: this.useCaseScope.pageVariables['id'],
         loading: true
       }));
@@ -79,7 +75,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       form.licensee.createdDate = new Date();
     }
     
-    this.store.dispatch(licenseeActions.save({
+    this.store.dispatch(LicenseeActions.save({
       licensee: form.licensee,
       loading: true
     }));
@@ -113,26 +109,12 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   afterSetEditLicenseeVarsForm(form: EditLicenseeVarsForm): void {}
 
-  handleLicenseeLicenceTypesAddDialog(): void {}
-
   handleLicenseeUsersAddDialog(): void {}
 
   handleLicenseeUsersSearch(): void {
   }
 
   handleLicenseeUsersSelected(event: MatCheckboxChange, element: UserVO): void {
-  }
-
-  handleLicenseeLicenceTypesSearch(): void {
-    let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
-    criteria.typeSearch = this.licenseeLicenceTypesSearchField.value;
-    this.store.dispatch(LicenceTypeActions.search({
-      criteria: criteria,
-      loading: true
-    }));
-  }
-  
-  handleLicenseeLicenceTypesSelected(event: MatCheckboxChange, element: LicenceTypeVO): void {
   }
 
   afterSetEditLicenseeDocumentsForm(form: EditLicenseeDocumentsForm): void {
