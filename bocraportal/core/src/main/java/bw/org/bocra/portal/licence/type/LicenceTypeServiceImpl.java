@@ -105,13 +105,13 @@ public class LicenceTypeServiceImpl
             specs.or(LicenceTypeSpecifications.findByNameContainingIgnoreCase(criteria.getTypeSearch()));
         }
 
-        if(criteria.getLicenseeId() != null) {
-            Specification<LicenceType> licenseeSpec = LicenceTypeSpecifications.findByLicenseesIdIn(Arrays.asList(criteria.getLicenseeId()));
+        if(criteria.getLicence() != null) {
+            Specification<LicenceType> licenceSpec = LicenceTypeSpecifications.findByLicencesIdIn(Arrays.asList(criteria.getLicence()));
 
             if(specs == null) {
-                specs = licenseeSpec;
+                specs = licenceSpec;
             } else {
-                specs.and(licenseeSpec);
+                specs.and(licenceSpec);
             }
         }
 

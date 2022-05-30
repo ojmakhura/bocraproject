@@ -22,6 +22,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -29,6 +30,7 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
   styleUrls: ['./edit-licensee.component.scss'],
 })
 export class EditLicenseeComponentImpl extends EditLicenseeComponent {
+
   protected keycloakService: KeycloakService;
 
   constructor(private injector: Injector) {
@@ -40,10 +42,12 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   afterOnInit() {
     if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(LicenseeActions.findById({
-        id: this.useCaseScope.pageVariables['id'],
-        loading: true
-      }));
+      this.store.dispatch(
+        LicenseeActions.findById({
+          id: this.useCaseScope.pageVariables['id'],
+          loading: true,
+        })
+      );
     }
 
     this.licensee$.subscribe((licensee) => {
@@ -55,7 +59,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   handleFormChanges(change: any) {}
 
-  doNgOnDestroy(){}
+  doNgOnDestroy() {}
 
   /**
    * This method may be overwritten
@@ -66,19 +70,20 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
    * This method may be overwritten
    */
   beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
-    if(form.licensee?.id) {
-
+    if (form.licensee?.id) {
       form.licensee.updatedBy = this.keycloakService.getUsername();
       form.licensee.updatedDate = new Date();
     } else {
       form.licensee.createdBy = this.keycloakService.getUsername();
       form.licensee.createdDate = new Date();
     }
-    
-    this.store.dispatch(LicenseeActions.save({
-      licensee: form.licensee,
-      loading: true
-    }));
+
+    this.store.dispatch(
+      LicenseeActions.save({
+        licensee: form.licensee,
+        loading: true,
+      })
+    );
   }
 
   /**
@@ -111,60 +116,48 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   handleLicenseeUsersAddDialog(): void {}
 
-  handleLicenseeUsersSearch(): void {
-  }
+  handleLicenseeUsersSearch(): void {}
 
-  handleLicenseeUsersSelected(event: MatCheckboxChange, element: UserVO): void {
-  }
+  handleLicenseeUsersSelected(event: MatCheckboxChange, element: UserVO): void {}
 
-  afterSetEditLicenseeDocumentsForm(form: EditLicenseeDocumentsForm): void {
-  }
+  afterSetEditLicenseeDocumentsForm(form: EditLicenseeDocumentsForm): void {}
 
-  beforeEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {
-  }
+  beforeEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {}
 
-  afterEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {
-  }
+  afterEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {}
 
-  afterSetEditLicenseeNewShareholderForm(form: EditLicenseeNewShareholderForm): void {
-  }
+  afterSetEditLicenseeNewShareholderForm(form: EditLicenseeNewShareholderForm): void {}
 
-  beforeEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm): void {
-  }
+  beforeEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm): void {}
 
-  afterEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm): void {
-  }
+  afterEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm): void {}
 
-  afterSetEditLicenseeNewDocumentForm(form: EditLicenseeNewDocumentForm): void {
-  }
+  afterSetEditLicenseeNewDocumentForm(form: EditLicenseeNewDocumentForm): void {}
 
-  beforeEditLicenseeNewDocument(): void {
-  }
+  beforeEditLicenseeNewDocument(): void {}
 
-  afterEditLicenseeNewDocument(): void {
-  }
+  afterEditLicenseeNewDocument(): void {}
 
-  handleLicenseeLicencesAddDialog(): void {
-  }
+  handleLicenseeLicencesAddDialog(): void {}
 
-  handleLicenseeLicencesSearch(): void {
-  }
+  handleLicenseeLicencesSearch(): void {}
 
-  handleLicenseeLicencesSelected(event: MatCheckboxChange, data: LicenceVO): void {
-  }
+  handleLicenseeLicencesSelected(event: MatCheckboxChange, data: LicenceVO): void {}
 
-  handleLicenseeDocumentsAddDialog(): void {
-  }
+  handleLicenseeDocumentsAddDialog(): void {}
 
-  handleLicenseeDocumentsSearch(): void {
-  }
+  handleLicenseeDocumentsSearch(): void {}
 
-  handleLicenseeDocumentsSelected(event: MatCheckboxChange, data: DocumentVO): void {
-  }
+  handleLicenseeDocumentsSelected(event: MatCheckboxChange, data: DocumentVO): void {}
 
-  handleLicenseeFormsAddDialog(): void {
-  }
-  handleLicenseeFormsSearch(): void {
-  }
+  handleLicenseeFormsAddDialog(): void {}
+  handleLicenseeFormsSearch(): void {}
   handleLicenseeFormsSelected(event: MatCheckboxChange, data: FormVO): void {}
+
+  handleLicenseeSectorsAddDialog(): void {
+  }
+  handleLicenseeSectorsSearch(): void {
+  }
+  handleLicenseeSectorsSelected(event: MatCheckboxChange, data: SectorVO): void {
+  }
 }

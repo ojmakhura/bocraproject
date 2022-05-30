@@ -16,8 +16,11 @@ import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.licence.Licence;
+import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.report.config.ReportConfigVO;
 
 /**
  * @see LicenceType
@@ -41,7 +44,7 @@ public class LicenceTypeDaoImpl
             criteriaSpecs.and(LicenceTypeSpecifications.findByDescriptionLikeIgnoreCase(criteria.getTypeSearch()));
         }
 
-        if(criteria.getLicenseeId() != null) {
+        if(criteria.getLicence() != null) {
             if(criteriaSpecs == null) {
 
             } else {
@@ -63,19 +66,23 @@ public class LicenceTypeDaoImpl
         // TODO verify behavior of toLicenceTypeVO
         super.toLicenceTypeVO(source, target);
         // WARNING! No conversion for target.licensees (can't convert source.getLicensees():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
-        if(CollectionUtils.isNotEmpty(source.getLicensees())) {
-            ArrayList<LicenseeVO> licensees = new ArrayList<>();
-            for (Licensee licensee : source.getLicensees()) {
-                LicenseeVO lvo = new LicenseeVO();
-                lvo.setId(licensee.getId());
-                lvo.setAddress(licensee.getAddress());
-                lvo.setLicenseeName(licensee.getLicenseeName());
-                lvo.setUin(licensee.getUin());
-                licensees.add(lvo);
+        if(CollectionUtils.isNotEmpty(source.getLicences())) {
+            ArrayList<LicenceVO> licences = new ArrayList<>();
+
+            for(Licence licence : source.getLicences()) {
+                LicenceVO vo = new LicenceVO();
+                getLicenceDao().toLicenceVO(licence, vo);
+                licences.add(vo);
             }
 
-            target.setLicensees(licensees);
+            target.setLicences(licences);
         }
+
+        // if(CollectionUtils.isNotEmpty(source.getReportConfigs())) {
+        //     Collection<ReportConfigVO> configs = new ArrayList<>();
+
+        //     target.setrep
+        // }
 
         if(CollectionUtils.isNotEmpty(source.getForms())) {
             ArrayList<FormVO> forms = new ArrayList<>();
@@ -145,17 +152,17 @@ public class LicenceTypeDaoImpl
     {
         // TODO verify behavior of LicenceTypeVOToEntity
         super.licenceTypeVOToEntity(source, target, copyIfNull);
-        if(CollectionUtils.isNotEmpty(source.getLicensees())) {
-            Collection<Licensee> licensees = new ArrayList<>();
-            for (LicenseeVO licensee : source.getLicensees()) {
-                if(licensee.getId() != null) {
-                    Licensee entity = Licensee.Factory.newInstance();
-                    getLicenseeDao().licenseeVOToEntity(licensee, entity, copyIfNull);;
-                    licensees.add(entity);
+        if(CollectionUtils.isNotEmpty(source.getLicences())) {
+            Collection<Licence> licences = new ArrayList<>();
+            for (LicenceVO licence : source.getLicences()) {
+                if(licence.getId() != null) {
+                    Licence entity = Licence.Factory.newInstance();
+                    getLicenceDao().licenceVOToEntity(licence, entity, copyIfNull);;
+                    licences.add(entity);
                 }
             }
 
-            target.setLicensees(licensees);
+            target.setLicences(licences);
         }
 
         if(CollectionUtils.isNotEmpty(source.getForms())) {

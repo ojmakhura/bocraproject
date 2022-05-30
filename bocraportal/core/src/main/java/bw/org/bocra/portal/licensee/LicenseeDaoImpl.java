@@ -12,8 +12,12 @@ import java.util.Collection;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.licence.Licence;
+import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licence.type.LicenceType;
 import bw.org.bocra.portal.licence.type.LicenceTypeVO;
+import bw.org.bocra.portal.sector.Sector;
+import bw.org.bocra.portal.sector.SectorVO;
 
 /**
  * @see Licensee
@@ -32,16 +36,38 @@ public class LicenseeDaoImpl
     {
         super.toLicenseeVO(source, target);
 
-        if(CollectionUtils.isNotEmpty(source.getLicenceTypes())) {
+        if(CollectionUtils.isNotEmpty(source.getLicences())) {
 
-            target.setLicenceTypes(new ArrayList<>());
+            target.setLicences(new ArrayList<>());
 
-            for(LicenceType entity : source.getLicenceTypes()) {
-                LicenceTypeVO vo = new LicenceTypeVO();
-                licenceTypeDao.toLicenceTypeVO(entity, vo);
-                target.getLicenceTypes().add(vo);
+            for(Licence entity : source.getLicences()) {
+                LicenceVO vo = new LicenceVO();
+                licenceDao.toLicenceVO(entity, vo);
+                target.getLicences().add(vo);
             }
         }
+
+        // if(CollectionUtils.isNotEmpty(source.getSectors())) {
+
+        //     target.setSectors(new ArrayList<>());
+
+        //     for(Sector entity : source.getSectors()) {
+        //         SectorVO vo = new SectorVO();
+        //         sectorDao.toSectorVO(entity, vo);
+        //         target.getSectors().add(vo);
+        //     }
+        // }
+
+        // if(CollectionUtils.isNotEmpty(source.get)) {
+
+        //     target.setSectors(new ArrayList<>());
+
+        //     for(Sector entity : source.getSectors()) {
+        //         SectorVO vo = new SectorVO();
+        //         sectorDao.toSectorVO(entity, vo);
+        //         target.getSectors().add(vo);
+        //     }
+        // }
 
         // TODO: read users from keycloak
     }
@@ -96,17 +122,17 @@ public class LicenseeDaoImpl
         // TODO verify behavior of licenseeVOToEntity
         super.licenseeVOToEntity(source, target, copyIfNull);
 
-        if(CollectionUtils.isNotEmpty(source.getLicenceTypes())) {
-            Collection<LicenceType> types = new ArrayList<>();
-            for(LicenceTypeVO type : source.getLicenceTypes()) {
-                if(type.getId() != null) {
-                    LicenceType entity = LicenceType.Factory.newInstance();
-                    licenceTypeDao.licenceTypeVOToEntity(type, entity, copyIfNull);;
+        if(CollectionUtils.isNotEmpty(source.getLicences())) {
+            Collection<Licence> types = new ArrayList<>();
+            for(LicenceVO licence : source.getLicences()) {
+                if(licence.getId() != null) {
+                    Licence entity = Licence.Factory.newInstance();
+                    licenceDao.licenceVOToEntity(licence, entity, copyIfNull);;
                     types.add(entity);
                 }
             }
 
-            target.setLicenceTypes(types);
+            target.setLicences(types);
 
         }
     }
