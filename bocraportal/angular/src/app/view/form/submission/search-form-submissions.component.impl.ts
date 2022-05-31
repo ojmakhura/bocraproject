@@ -3,6 +3,7 @@ import { Component, Injector } from '@angular/core';
 import { SearchFormSubmissionsComponent } from '@app/view/form/submission/search-form-submissions.component';
 import { SearchFormSubmissionsSearchForm } from '@app/view/form/submission/search-form-submissions.component';
 import { SearchFormSubmissionsVarsForm } from '@app/view/form/submission/search-form-submissions.component';
+import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
 
 @Component({
   selector: 'app-search-form-submissions',
@@ -48,6 +49,10 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
      */
     beforeSearchFormSubmissionsSearch(form: SearchFormSubmissionsSearchForm): void {
 
+      this.store.dispatch(SubmissionActions.search({
+        criteria: form.criteria,
+        loading: true
+      }));
     }
 
     /**

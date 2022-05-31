@@ -51,6 +51,10 @@ export class SearchLicencesComponentImpl extends SearchLicencesComponent {
      */
     beforeSearchLicencesSearch(form: SearchLicencesSearchForm): void {
 
+      this.store.dispatch(LicenceActions.search({
+        criteria: form.criteria,
+        loading: true
+      }));
     }
 
     /**

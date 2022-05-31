@@ -50,7 +50,10 @@ export class SearchDocumentTypesComponentImpl extends SearchDocumentTypesCompone
      * This method may be overwritten
      */
     beforeSearchDocumentTypesSearch(form: SearchDocumentTypesSearchForm): void {
-
+      this.store.dispatch(DocumentTypeActions.search({
+        criteria: form.criteria,
+        loading: true
+      }));
     }
 
     /**

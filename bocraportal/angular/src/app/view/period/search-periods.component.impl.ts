@@ -3,6 +3,7 @@ import { Component, Injector } from '@angular/core';
 import { SearchPeriodsComponent } from '@app/view/period/search-periods.component';
 import { SearchPeriodsSearchForm } from '@app/view/period/search-periods.component';
 import { SearchPeriodsVarsForm } from '@app/view/period/search-periods.component';
+import * as PeriodActions from '@app/store/period/period.actions';
 
 @Component({
   selector: 'app-search-periods',
@@ -48,7 +49,10 @@ export class SearchPeriodsComponentImpl extends SearchPeriodsComponent {
      * This method may be overwritten
      */
     beforeSearchPeriodsSearch(form: SearchPeriodsSearchForm): void {
-
+        this.store.dispatch(PeriodActions.search({
+            criteria: form.criteria,
+            loading: true
+        }));
     }
 
     /**

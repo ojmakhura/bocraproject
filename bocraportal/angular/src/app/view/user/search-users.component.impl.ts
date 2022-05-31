@@ -3,6 +3,7 @@ import { Component, Injector } from '@angular/core';
 import { SearchUsersComponent } from '@app/view/user/search-users.component';
 import { SearchUsersSearchForm } from '@app/view/user/search-users.component';
 import { SearchUsersVarsForm } from '@app/view/user/search-users.component';
+import * as UserActions from '@app/store/user/user.actions';
 
 @Component({
   selector: 'app-search-users',
@@ -48,7 +49,10 @@ export class SearchUsersComponentImpl extends SearchUsersComponent {
      * This method may be overwritten
      */
     beforeSearchUsersSearch(form: SearchUsersSearchForm): void {
-
+        this.store.dispatch(UserActions.search({
+            criteria: form.criteria,
+            loading: true
+        }));
     }
 
     /**

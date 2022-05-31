@@ -7,6 +7,8 @@ import { EditPeriodSearchForm } from '@app/view/period/edit-period.component';
 import { EditPeriodDeleteForm } from '@app/view/period/edit-period.component';
 import { EditPeriodVarsForm } from '@app/view/period/edit-period.component';
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
+import { KeycloakService } from 'keycloak-angular/public_api';
+import * as PeriodActions from '@app/store/period/period.actions';
 
 @Component({
   selector: 'app-edit-period',
@@ -15,8 +17,11 @@ import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
 })
 export class EditPeriodComponentImpl extends EditPeriodComponent {
 
+    protected keycloakService: KeycloakService;
+
     constructor(private injector: Injector) {
         super(injector);
+        this.keycloakService = injector.get(KeycloakService);
     }
 
     beforeOnInit(){
@@ -28,6 +33,16 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     doNgOnDestroy(){}
 
     doNgAfterViewInit() {
+      if (this.useCaseScope.pageVariables['id']) {
+        this.store.dispatch(PeriodActions.findById({
+          id: this.useCaseScope.pageVariables['id'],
+          loading: true
+        }));
+      }
+  
+      this.period$.subscribe((period) => {
+        this.setEditPeriodSaveForm({ period: period } as EditPeriodSaveForm);
+      });
     }
 
     handleFormChanges(change: any) {
@@ -51,6 +66,20 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
      * This method may be overwritten
      */
     beforeEditPeriodSave(form: EditPeriodSaveForm): void {
+      if(this.period.valid) {
+        if(form.period.id) {
+          form.period.updatedBy = this.keycloakService.getUsername();
+          form.period.updatedDate = new Date();
+        } else {
+  
+          form.period.createdBy = this.keycloakService.getUsername();
+          form.period.createdDate = new Date();
+        }
+        this.store.dispatch(PeriodActions.save({
+          period: form.period,
+          loading: true
+        }));
+      }
 
     }
 

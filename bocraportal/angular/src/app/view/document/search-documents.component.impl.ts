@@ -50,7 +50,10 @@ export class SearchDocumentsComponentImpl extends SearchDocumentsComponent {
      * This method may be overwritten
      */
     beforeSearchDocumentsSearch(form: SearchDocumentsSearchForm): void {
-
+      this.store.dispatch(DocumentActions.search({
+        criteria: form.criteria,
+        loading: true
+      }));
     }
 
     /**

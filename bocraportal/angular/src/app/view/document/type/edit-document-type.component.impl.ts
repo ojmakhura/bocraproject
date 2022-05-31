@@ -7,7 +7,8 @@ import { EditDocumentTypeSearchForm } from '@app/view/document/type/edit-documen
 import { EditDocumentTypeVarsForm } from '@app/view/document/type/edit-document-type.component';
 import { DocumentTypeState } from '@app/store/document/type/document-type.state';
 import * as DocumentTypeSelectors from '@app/store/document/type/document-type.selectors';
-import * as DocumentTypesActions from '@app/store/document/type/document-type.actions';
+import * as DocumentTypeActions from '@app/store/document/type/document-type.actions';
+import { KeycloakService } from 'keycloak-angular/public_api';
 
 @Component({
   selector: 'app-edit-document-type',
@@ -16,14 +17,26 @@ import * as DocumentTypesActions from '@app/store/document/type/document-type.ac
 })
 export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
 
+    protected keycloakService: KeycloakService;
     constructor(private injector: Injector) {
         super(injector);
+        this.keycloakService = injector.get(KeycloakService);
     }
 
     beforeOnInit(){     
     }
 	
     afterOnInit() {
+      if (this.useCaseScope.pageVariables['id']) {
+        this.store.dispatch(DocumentTypeActions.findById({
+          id: this.useCaseScope.pageVariables['id'],
+          loading: true
+        }));
+      }
+  
+      this.documentType$.subscribe((documentType) => {
+        this.setEditDocumentTypeSaveForm({ documentType: documentType } as EditDocumentTypeSaveForm);
+      });
     }
 
     doNgAfterViewInit() {
@@ -52,7 +65,19 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
      * This method may be overwritten
      */
     beforeEditDocumentTypeSave(form: EditDocumentTypeSaveForm): void {
+      if(form.documentType?.id) {
 
+        form.documentType.updatedBy = this.keycloakService.getUsername();
+        form.documentType.updatedDate = new Date();
+      } else {
+        form.documentType.createdBy = this.keycloakService.getUsername();
+        form.documentType.createdDate = new Date();
+      }
+      
+      this.store.dispatch(DocumentTypeActions.save({
+        documentType: form.documentType,
+        loading: false
+      }));
     }
 
     /**
