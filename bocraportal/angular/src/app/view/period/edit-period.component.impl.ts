@@ -7,7 +7,7 @@ import { EditPeriodSearchForm } from '@app/view/period/edit-period.component';
 import { EditPeriodDeleteForm } from '@app/view/period/edit-period.component';
 import { EditPeriodVarsForm } from '@app/view/period/edit-period.component';
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
-import { KeycloakService } from 'keycloak-angular/public_api';
+import { KeycloakService } from 'keycloak-angular';
 import * as PeriodActions from '@app/store/period/period.actions';
 
 @Component({

@@ -8,7 +8,7 @@ import { EditDocumentTypeVarsForm } from '@app/view/document/type/edit-document-
 import { DocumentTypeState } from '@app/store/document/type/document-type.state';
 import * as DocumentTypeSelectors from '@app/store/document/type/document-type.selectors';
 import * as DocumentTypeActions from '@app/store/document/type/document-type.actions';
-import { KeycloakService } from 'keycloak-angular/public_api';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-edit-document-type',

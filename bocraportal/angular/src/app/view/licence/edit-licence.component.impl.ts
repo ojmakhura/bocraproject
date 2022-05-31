@@ -14,6 +14,7 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
 import { MatRadioChange } from '@angular/material/radio';
 import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-edit-licence',
@@ -22,14 +23,28 @@ import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo'
 })
 export class EditLicenceComponentImpl extends EditLicenceComponent {
     
+    protected keycloakService: KeycloakService;
     constructor(private injector: Injector) {
         super(injector);
+        this.keycloakService = injector.get(KeycloakService);
     }
 
     beforeOnInit(){     
     }
 	
     afterOnInit() {
+      if (this.useCaseScope.pageVariables['id']) {
+        this.store.dispatch(
+          LicenceActions.findById({
+            id: this.useCaseScope.pageVariables['id'],
+            loading: true,
+          })
+        );
+      }
+  
+      this.licence$.subscribe((licence) => {
+        this.setEditLicenceSaveForm({ licence: licence } as EditLicenceSaveForm);
+      });
     }
 
     doNgAfterViewInit() {
@@ -70,7 +85,20 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
      * This method may be overwritten
      */
     beforeEditLicenceSave(form: EditLicenceSaveForm): void {
-
+      if (form.licence?.id) {
+        form.licence.updatedBy = this.keycloakService.getUsername();
+        form.licence.updatedDate = new Date();
+      } else {
+        form.licence.createdBy = this.keycloakService.getUsername();
+        form.licence.createdDate = new Date();
+      }
+  
+      this.store.dispatch(
+        LicenceActions.save({
+          licence: form.licence,
+          loading: true,
+        })
+      );
     }
 
     /**
