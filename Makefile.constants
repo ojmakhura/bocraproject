@@ -11,10 +11,13 @@ DEV_IMAGE_VERSION=latest
 LIVE_IMAGE_VERSION=1.0
 TEST_IMAGE_VERSION=0.1
 
+BOCRA_DATA=${HOME}/bocra
+BOCRA_DATA_LOCAL=${HOME}/bocra
+
 TEST_REDIRECT_URI=https://test.bocra.org.bw
 LOCAL_REDIRECT_URI=http://bocra.localhost
 LIVE_REDIRECT_URI=https://bocra.org.bw
-ACME_STORAGE=/bocra/traefik/acme.json
+ACME_STORAGE=${BOCRA_DATA}/traefik/acme.json
 
 TRAEFIK_PUBLIC_NETWORK=traefik-public
 TRAEFIK_TAG=bocra.org.bw
@@ -29,8 +32,6 @@ TEST_SMTP_HOST=smtp.hostinger.co.uk
 DOCKER_IMAGE_BACKEND=backend
 DOCKER_IMAGE_CELERYWORKER=celeryworker
 DOCKER_IMAGE_FRONTEND=frontend
-
-BOCRA_DATA=/bocra
 
 BOCRA_PROXY_ADDRESS=192.168.57.2
 BOCRA_KEYCLOAK_ADDRESS=192.168.57.3

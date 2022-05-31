@@ -45,7 +45,6 @@ COMMON_DOCKER_VARS = "EMAIL=${TEST_EMAIL}"\
 
 COMMON_LOCAL_VARS = "export EMAIL=${TEST_EMAIL}"\
     "export STACK_NAME=${STACK_NAME}"\
-    "export BOCRA_DATA=${BOCRA_DATA}"\
     "export BOCRA_PGADMIN_ADDRESS=${BOCRA_PGADMIN_ADDRESS}"\
     "export BOCRA_DB_ADDRESS=${BOCRA_DB_ADDRESS}"\
     "export BOCRA_API_ADDRESS=${BOCRA_API_ADDRESS}"\
@@ -132,6 +131,7 @@ LIVE_DOCKER_ENV = printf "%s\n" \
     
 LOCAL_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
+    "export BOCRA_DATA=~"\
     "export IMAGE_VERSION=${DEV_IMAGE_VERSION}"\
     "export DOMAIN=${LOCAL_DOMAIN}"\
     "export DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${LOCAL_DOMAIN}"\
