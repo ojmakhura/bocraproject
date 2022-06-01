@@ -47,16 +47,16 @@ public class LicenseeDaoImpl
             }
         }
 
-        // if(CollectionUtils.isNotEmpty(source.getSectors())) {
+        if(CollectionUtils.isNotEmpty(source.getSectors())) {
 
-        //     target.setSectors(new ArrayList<>());
+            target.setSectors(new ArrayList<>());
 
-        //     for(Sector entity : source.getSectors()) {
-        //         SectorVO vo = new SectorVO();
-        //         sectorDao.toSectorVO(entity, vo);
-        //         target.getSectors().add(vo);
-        //     }
-        // }
+            for(Sector entity : source.getSectors()) {
+                SectorVO vo = new SectorVO();
+                sectorDao.toSectorVO(entity, vo);
+                target.getSectors().add(vo);
+            }
+        }
 
         // if(CollectionUtils.isNotEmpty(source.get)) {
 
@@ -133,6 +133,20 @@ public class LicenseeDaoImpl
             }
 
             target.setLicences(types);
+
+        }
+
+        if(CollectionUtils.isNotEmpty(source.getSectors())) {
+            Collection<Sector> sectors = new ArrayList<>();
+            for(SectorVO sector : source.getSectors()) {
+                if(sector.getId() != null) {
+                    Sector entity = Sector.Factory.newInstance();
+                    sectorDao.sectorVOToEntity(sector, entity, copyIfNull);;
+                    sectors.add(entity);
+                }
+            }
+
+            target.setSectors(sectors);
 
         }
     }
