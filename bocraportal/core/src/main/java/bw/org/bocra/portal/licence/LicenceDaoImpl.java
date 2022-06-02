@@ -97,15 +97,13 @@ public class LicenceDaoImpl
         super.licenceVOToEntity(source, target, copyIfNull);
         // WARNING! No conversion for target.licensee (can't convert source.getLicensee():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
         if(source.getLicensee() != null && source.getLicensee().getId() != null) {
-            Licensee licensee = Licensee.Factory.newInstance();
-            getLicenseeDao().licenseeVOToEntity(source.getLicensee(), licensee, copyIfNull);
+            Licensee licensee = getLicenseeDao().load(source.getLicensee().getId());
             target.setLicensee(licensee);
         }
 
         // WARNING! No conversion for target.documents (can't convert source.getDocuments():bw.org.bocra.portal.document.Document to bw.org.bocra.portal.document.DocumentVO
         if(source.getLicenceType() != null) {
-            LicenceType type = LicenceType.Factory.newInstance();
-            getLicenceTypeDao().licenceTypeVOToEntity(source.getLicenceType(), type, copyIfNull);
+            LicenceType type = licenceTypeRepository.getById(source.getLicenceType().getId());
             target.setLicenceType(type);
         }
     }

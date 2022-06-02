@@ -5,6 +5,8 @@ import { NewShareholderVarsForm } from '@app/view/licensee/new-shareholder.compo
 import { LicenseeState } from '@app/store/licensee/licensee.state';
 import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 
 @Component({
   selector: 'app-new-shareholder',
@@ -12,7 +14,7 @@ import * as LicenseeActions from '@app/store/licensee/licensee.actions';
   styleUrls: ['./new-shareholder.component.scss']
 })
 export class NewShareholderComponentImpl extends NewShareholderComponent {
-
+    
     constructor(private injector: Injector) {
         super(injector);
     }
@@ -45,5 +47,18 @@ export class NewShareholderComponentImpl extends NewShareholderComponent {
 
     handleDialogDone(data: any): any {
         return data;
+    }
+
+    handleShareholderLicenseesAddDialog(): void {
+    }
+    handleShareholderLicenseesSearch(): void {
+        // let criteria: string = '';
+        // criteria = this.shareholderLicenseesSearchField.value;
+        // this.store.dispatch(LicenseeActions.search({
+        // criteria:  criteria,
+        // loading: true
+        // }));
+    }
+    handleShareholderLicenseesSelected(event: MatCheckboxChange, data: LicenseeVO): void {
     }
 }

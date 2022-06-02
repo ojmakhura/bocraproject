@@ -41,7 +41,12 @@ public class SectorDaoImpl
 
             for(Licensee l : source.getLicensees()) {
                 LicenseeVO lvo = new LicenseeVO();
-                getLicenseeDao().toLicenseeVO(l, lvo);
+                lvo.setId(l.getId());
+                lvo.setCreatedBy(l.getCreatedBy());
+                lvo.setCreatedDate(l.getCreatedDate());
+                lvo.setLicenseeName(l.getLicenseeName());
+                lvo.setStatus(l.getStatus());
+                lvo.setUin(l.getUin());
                 licensees.add(lvo);
             }
 

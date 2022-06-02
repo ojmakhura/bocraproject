@@ -126,8 +126,7 @@ public class LicenseeDaoImpl
             Collection<Licence> types = new ArrayList<>();
             for(LicenceVO licence : source.getLicences()) {
                 if(licence.getId() != null) {
-                    Licence entity = Licence.Factory.newInstance();
-                    licenceDao.licenceVOToEntity(licence, entity, copyIfNull);;
+                    Licence entity = licenceRepository.getById(licence.getId());
                     types.add(entity);
                 }
             }
@@ -140,14 +139,12 @@ public class LicenseeDaoImpl
             Collection<Sector> sectors = new ArrayList<>();
             for(SectorVO sector : source.getSectors()) {
                 if(sector.getId() != null) {
-                    Sector entity = Sector.Factory.newInstance();
-                    sectorDao.sectorVOToEntity(sector, entity, copyIfNull);;
+                    Sector entity = sectorDao.load(sector.getId());
                     sectors.add(entity);
                 }
             }
 
             target.setSectors(sectors);
-
         }
     }
 }

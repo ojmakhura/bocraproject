@@ -91,12 +91,21 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         return null;
     }
 
+    private String getAuthClient(){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication.getCredentials();
+
+        return context.getToken().issuedFor;
+    }
+
     private UsersResource getUsersResource() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication.getCredentials();
 
         Keycloak keycloak = getKeycloak(context.getTokenString(), context.getDeployment().getAuthServerBaseUrl());
+        
         return keycloak.realm(context.getRealm()).users();
     }
 
@@ -123,8 +132,13 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             userRepresentation.setAttributes(attributes);
         }
 
+        System.out.println(user);
+
         if(CollectionUtils.isNotEmpty(user.getRoles())) {
-            //userRepresentation.getClientRoles();
+            userRepresentation.getClientRoles();
+            Map<String, List<String>> roles = new HashMap<>();
+            roles.put(this.getAuthClient(), (List<String>) user.getRoles());
+            userRepresentation.setClientRoles(roles);
         }
 
         return userRepresentation;
@@ -138,9 +152,11 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         user.setEnabled(userRepresentation.isEnabled());
         user.setFirstName(userRepresentation.getFirstName());
         user.setUsername(userRepresentation.getUsername());
+        user.setRoles(new ArrayList<>());
         //user.setRoles(userRepresentation.getClientRoles());
-
-
+        for(Map.Entry<String, List<String>> entry : userRepresentation.getClientRoles().entrySet()) {
+            user.getRoles().addAll(entry.getValue());
+        }
 
         return user;
     }
@@ -152,9 +168,8 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
         
         Response res = usersResource.create(userRepresentation);
-        
         System.out.println(res.getEntity());
-        System.out.println(res.getStatus());
+        
         List<UserRepresentation> users = usersResource.search(user.getUsername(), true);
         if(CollectionUtils.isNotEmpty(users)) {
     
@@ -165,20 +180,13 @@ public class UserRestControllerImpl extends UserRestControllerBase {
                 licenseeUser.setDateAdded(LocalDate.now());
                 licenseeUser.setUser(user);
                 licenseeUser.setLicensee(user.getLicensee());
-                licenseeUser = licenseeUserService.save(licenseeUser);
+                //licenseeUser = licenseeUserService.save(licenseeUser);
             }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         
-        Optional<UserVO> data = Optional.empty();
-        ResponseEntity<UserVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return response;
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @Override

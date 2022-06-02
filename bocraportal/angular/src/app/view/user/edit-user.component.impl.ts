@@ -143,6 +143,12 @@ export class EditUserComponentImpl extends EditUserComponent {
   }
 
   handleUserLicenseeSearch(): void {
+    let criteria: string = '';
+    criteria = this.userLicenseeSearchField.value;
+    this.store.dispatch(LicenseeActions.search({
+      criteria: {uin: criteria, licenseeName: criteria},
+      loading: true
+    }));
   }
 
   handleUserLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {

@@ -16,8 +16,14 @@ import { Observable } from 'rxjs';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
-import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
-import * as LicenceTypeSelectors from '@app/store/licence/type/licence-type.selectors';
+import * as SectorActions from '@app/store/sector/sector.actions';
+import * as SectorSelectors from '@app/store/sector/sector.selectors';
+import * as DocumentActions from '@app/store/document/document.actions';
+import * as DocumentSelectors from '@app/store/document/document.selectors';
+import * as LicenceActions from '@app/store/licence/licence.actions';
+import * as LicenceSelectors from '@app/store/licence/licence.selectors';
+import * as FormActions from '@app/store/form/form.actions';
+import * as FormSelectors from '@app/store/form/form.selectors';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
@@ -36,6 +42,9 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
+    this.licenseeSectors$ = this.store.pipe(select(SectorSelectors.selectSectors))
+    this.licenseeDocuments$ = this.store.pipe(select(DocumentSelectors.selectDocuments))
+    this.licenseeLicences$ = this.store.pipe(select(LicenceSelectors.selectLicences))
   }
 
   beforeOnInit() {}
@@ -140,23 +149,54 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   handleLicenseeLicencesAddDialog(): void {}
 
-  handleLicenseeLicencesSearch(): void {}
+  handleLicenseeLicencesSearch(): void {
+
+    let criteria: string = '';
+    criteria = this.licenseeLicencesSearchField.value;
+    this.store.dispatch(LicenceActions.search({
+      criteria: { licenceNumber: criteria },
+      loading: true
+    }));
+  }
 
   handleLicenseeLicencesSelected(event: MatCheckboxChange, data: LicenceVO): void {}
 
   handleLicenseeDocumentsAddDialog(): void {}
 
-  handleLicenseeDocumentsSearch(): void {}
+  handleLicenseeDocumentsSearch(): void {
+
+    let criteria: string = '';
+    criteria = this.licenseeDocumentsSearchField.value;
+    this.store.dispatch(DocumentActions.search({
+      criteria:  criteria,
+      loading: true
+    }));
+  }
 
   handleLicenseeDocumentsSelected(event: MatCheckboxChange, data: DocumentVO): void {}
 
   handleLicenseeFormsAddDialog(): void {}
-  handleLicenseeFormsSearch(): void {}
+  handleLicenseeFormsSearch(): void {
+
+    let criteria: string = '';
+    criteria = this.licenseeFormsSearchField.value;
+    this.store.dispatch(FormActions.searchForms({
+      criteria: {code: criteria, formName: criteria},
+      loading: true
+    }));
+  }
   handleLicenseeFormsSelected(event: MatCheckboxChange, data: FormVO): void {}
 
   handleLicenseeSectorsAddDialog(): void {
   }
   handleLicenseeSectorsSearch(): void {
+
+    let criteria: string = '';
+    criteria = this.licenseeSectorsSearchField.value;
+    this.store.dispatch(SectorActions.search({
+      criteria: criteria,
+      loading: true
+    }));
   }
   handleLicenseeSectorsSelected(event: MatCheckboxChange, data: SectorVO): void {
   }

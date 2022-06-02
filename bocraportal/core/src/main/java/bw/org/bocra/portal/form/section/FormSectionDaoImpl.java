@@ -108,8 +108,7 @@ public class FormSectionDaoImpl
         super.formSectionVOToEntity(source, target, copyIfNull);
         // WARNING! No conversion for target.form (can't convert source.getForm():bw.org.bocra.portal.form.Form to bw.org.bocra.portal.form.FormVO
         if(source.getForm() != null) {
-            Form form = Form.Factory.newInstance();
-            getFormDao().formVOToEntity(source.getForm(), form, copyIfNull);
+            Form form = getFormDao().load(source.getForm().getId());
             target.setForm(form);
         }
 
@@ -117,8 +116,7 @@ public class FormSectionDaoImpl
         if(CollectionUtils.isNotEmpty(source.getFormFields())) {
             Collection<FormField> fields = new ArrayList<>();
             for(FormFieldVO field : source.getFormFields()) {
-                FormField f = FormField.Factory.newInstance();
-                getFormFieldDao().formFieldVOToEntity(field, f, copyIfNull);
+                FormField f = getFormFieldDao().get(field.getId());
                 fields.add(f);
             }
 
