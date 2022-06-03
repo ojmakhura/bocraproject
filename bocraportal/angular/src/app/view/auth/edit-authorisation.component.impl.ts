@@ -12,6 +12,7 @@ import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
 import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 import { select } from '@ngrx/store';
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-edit-authorisation',
@@ -33,19 +34,6 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
       this.http.get<any[]>(environment.keycloakClientRoleUrl)
       .subscribe(role => {
         role.forEach(val => {
-          
-          let item = new SelectItem();
-          item.label = val['description'];
-          item.value = val['name'];
-          
-          this.authorisationRolesBackingList.push(item);
-        })
-      });
-
-      this.http.get<any[]>(environment.keycloakRealmRoleUrl)
-      .subscribe(role => {
-        role.forEach(val => {
-          
           let item = new SelectItem();
           item.label = val['description'];
           item.value = val['name'];

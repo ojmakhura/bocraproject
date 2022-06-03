@@ -15,6 +15,7 @@ import * as AuthSelectors from '@app/store/auth/auth.selectors';
 import * as AuthActions from '@app/store/auth/auth.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
 import * as MenuActions from '@app/store/menu/menu.actions';
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-shell',
@@ -56,6 +57,11 @@ export class ShellComponent implements OnInit, AfterViewInit {
       let menuItems = nav.menuItems.filter(menu => authorisations.some(authorisation => authorisation.url === menu.routerLink))
       this.store.dispatch(MenuActions.getMenusSuccess({ menus: menuItems}));
       
+    });
+
+    this.keycloakService.getToken().then(token => {
+      var decoded = jwt_decode(token);
+      console.log(decoded.resource_access);
     });
   }
 

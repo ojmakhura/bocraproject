@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,8 +23,11 @@ import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.RolesResource;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +61,13 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     @Value("${keycloak.resource}")
     private String clientId;
 
-    private Keycloak getKeycloak(String realm, String authUrl) {
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication.getCredentials();
-        Keycloak keycloak = Keycloak.getInstance(authUrl, realm, clientId, realm);
+    private Keycloak getKeycloak() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication
+                .getCredentials();
+        Keycloak keycloak = Keycloak.getInstance(
+                context.getDeployment().getAuthServerBaseUrl(), realm,
+                getAuthClient(), context.getTokenString());
 
         return keycloak;
     }
@@ -81,20 +88,11 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         return (RefreshableKeycloakSecurityContext) authentication.getCredentials();
     }
 
-    private UserRepresentation getLoggedInUser() {
+    private String getAuthClient() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getPrincipal());
-        System.out.println(authentication.getCredentials());
-        System.out.println(authentication.getDetails());
-
-        return null;
-    }
-
-    private String getAuthClient(){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication.getCredentials();
+        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication
+                .getCredentials();
 
         return context.getToken().issuedFor;
     }
@@ -102,11 +100,23 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     private UsersResource getUsersResource() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication.getCredentials();
+        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication
+                .getCredentials();
 
-        Keycloak keycloak = getKeycloak(context.getTokenString(), context.getDeployment().getAuthServerBaseUrl());
-        
+        Keycloak keycloak = getKeycloak();
+
         return keycloak.realm(context.getRealm()).users();
+    }
+
+    private RolesResource getRolesResource() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication
+                .getCredentials();
+
+        Keycloak keycloak = getKeycloak();
+
+        return keycloak.realm(context.getRealm()).roles();
     }
 
     private UserRepresentation userVOUserRepresentation(UserVO user) {
@@ -120,9 +130,10 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         userRepresentation.setEnabled(user.getEnabled());
         userRepresentation.setEmailVerified(false);
         userRepresentation.setRequiredActions(Collections.singletonList("VERIFY_EMAIL"));
-        userRepresentation.setCredentials(Collections.singletonList(createCredential(CredentialRepresentation.PASSWORD, user.getPassword(), true)));
-        
-        if(user.getLicensee() != null && user.getLicensee().getId() != null) {
+        userRepresentation.setCredentials(Collections
+                .singletonList(createCredential(CredentialRepresentation.PASSWORD, user.getPassword(), true)));
+
+        if (user.getLicensee() != null && user.getLicensee().getId() != null) {
             Map<String, List<String>> attributes = new HashMap<>();
             List<String> licenseeAttributes = new ArrayList<>();
             licenseeAttributes.add("id:" + user.getLicensee().getId());
@@ -132,14 +143,14 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             userRepresentation.setAttributes(attributes);
         }
 
-        System.out.println(user);
+        // System.out.println(user);
 
-        if(CollectionUtils.isNotEmpty(user.getRoles())) {
-            userRepresentation.getClientRoles();
-            Map<String, List<String>> roles = new HashMap<>();
-            roles.put(this.getAuthClient(), (List<String>) user.getRoles());
-            userRepresentation.setClientRoles(roles);
-        }
+        // if(CollectionUtils.isNotEmpty(user.getRoles())) {
+        // userRepresentation.getClientRoles();
+        // Map<String, List<String>> roles = new HashMap<>();
+        // roles.put(this.getAuthClient(), (List<String>) user.getRoles());
+        // userRepresentation.setClientRoles(roles);
+        // }
 
         return userRepresentation;
     }
@@ -153,8 +164,8 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         user.setFirstName(userRepresentation.getFirstName());
         user.setUsername(userRepresentation.getUsername());
         user.setRoles(new ArrayList<>());
-        //user.setRoles(userRepresentation.getClientRoles());
-        for(Map.Entry<String, List<String>> entry : userRepresentation.getClientRoles().entrySet()) {
+        // user.setRoles(userRepresentation.getClientRoles());
+        for (Map.Entry<String, List<String>> entry : userRepresentation.getClientRoles().entrySet()) {
             user.getRoles().addAll(entry.getValue());
         }
 
@@ -163,35 +174,48 @@ public class UserRestControllerImpl extends UserRestControllerBase {
 
     @Override
     public ResponseEntity<UserVO> handleCreateUser(UserVO user) {
-        
+
         UsersResource usersResource = getUsersResource();
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
-        
+
         Response res = usersResource.create(userRepresentation);
         System.out.println(res.getEntity());
-        
+
         List<UserRepresentation> users = usersResource.search(user.getUsername(), true);
-        if(CollectionUtils.isNotEmpty(users)) {
-    
+        if (CollectionUtils.isNotEmpty(users)) {
+
             UserRepresentation rep = users.get(0);
-            if(StringUtils.isNotBlank(rep.getId())) {
+            
+            if (StringUtils.isNotBlank(rep.getId())) {
                 user.setUserId(rep.getId());
                 LicenseeUserVO licenseeUser = new LicenseeUserVO();
                 licenseeUser.setDateAdded(LocalDate.now());
                 licenseeUser.setUser(user);
                 licenseeUser.setLicensee(user.getLicensee());
-                //licenseeUser = licenseeUserService.save(licenseeUser);
+                // licenseeUser = licenseeUserService.save(licenseeUser);
+
+                // List<RoleRepresentation> roleToAdd = new LinkedList<>();
+                // for (String role : user.getRoles()) {
+                //     getRolesResource().get(role);
+                //     roleToAdd.add(getRolesResource()
+                //             .get(role)
+                //             .toRepresentation());
+                // }
+
+                // UserResource userResource = usersResource.get(rep.getId());
+
+                // userResource.roles().clientLevel(getAuthClient()).add(roleToAdd);
             }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        
+
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @Override
     public ResponseEntity<Collection<UserVO>> handleLoadUsers() {
-        
+
         UsersResource usersResource = getUsersResource();
 
         List<UserRepresentation> userRep = usersResource.list();
@@ -205,7 +229,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
         ResponseEntity<Collection<UserVO>> response;
 
-        if(data.isPresent()) {
+        if (data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -219,7 +243,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
-        if(data.isPresent()) {
+        if (data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
