@@ -4,7 +4,6 @@ import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FormSectionRestController } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
-import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 
 @Injectable()
 export class FormSectionRestControllerImpl extends FormSectionRestController {
@@ -13,9 +12,9 @@ export class FormSectionRestControllerImpl extends FormSectionRestController {
         super(injector);
     }
 
-    public findById(id: number | any ): Observable<FormVO | any> {
+    public findById(id: number | any ): Observable<FormSectionVO | any> {
 
-        return this.http.get<FormVO | any>(this.path + `//id/${id}`);
+        return this.http.get<FormSectionVO | any>(this.path + `/${id}`);
 
     }
 
@@ -27,19 +26,19 @@ export class FormSectionRestControllerImpl extends FormSectionRestController {
 
     public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<FormSectionVO[] | any> {
 
-        return this.http.get<FormSectionVO[] | any>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+        return this.http.get<FormSectionVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
 
-        return this.http.delete<boolean | any>(this.path + `//id/${id}`);
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
 
     }
 
     public save(formSection: FormSectionVO | any ): Observable<FormSectionVO | any> {
 
-        return this.http.post<FormSectionVO | any>(this.path + `/`, formSection);
+        return this.http.post<FormSectionVO | any>(this.path, formSection);
 
     }
 

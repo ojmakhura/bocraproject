@@ -36,22 +36,22 @@ public class SectorDaoImpl
         // TODO verify behavior of toSectorVO
         super.toSectorVO(source, target);
 
-        if(CollectionUtils.isNotEmpty(source.getLicensees())) {
-            Collection<LicenseeVO> licensees = new ArrayList<>();
+        // if(CollectionUtils.isNotEmpty(source.getLicensees())) {
+        //     Collection<LicenseeVO> licensees = new ArrayList<>();
 
-            for(Licensee l : source.getLicensees()) {
-                LicenseeVO lvo = new LicenseeVO();
-                lvo.setId(l.getId());
-                lvo.setCreatedBy(l.getCreatedBy());
-                lvo.setCreatedDate(l.getCreatedDate());
-                lvo.setLicenseeName(l.getLicenseeName());
-                lvo.setStatus(l.getStatus());
-                lvo.setUin(l.getUin());
-                licensees.add(lvo);
-            }
+        //     for(Licensee l : source.getLicensees()) {
+        //         LicenseeVO lvo = new LicenseeVO();
+        //         lvo.setId(l.getId());
+        //         lvo.setCreatedBy(l.getCreatedBy());
+        //         lvo.setCreatedDate(l.getCreatedDate());
+        //         lvo.setLicenseeName(l.getLicenseeName());
+        //         lvo.setStatus(l.getStatus());
+        //         lvo.setUin(l.getUin());
+        //         licensees.add(lvo);
+        //     }
 
-            target.setLicensees(licensees);
-        }
+        //     target.setLicensees(licensees);
+        // }
     }
 
     /**
@@ -105,17 +105,17 @@ public class SectorDaoImpl
         super.sectorVOToEntity(source, target, copyIfNull);
 
 
-        if(CollectionUtils.isNotEmpty(source.getLicensees())) {
-            Collection<Licensee> licensees = new ArrayList<>();
+        // if(CollectionUtils.isNotEmpty(source.getLicensees())) {
+        //     Collection<Licensee> licensees = new ArrayList<>();
 
-            for(LicenseeVO lvo : source.getLicensees()) {
-                Licensee l = getLicenseeDao().get(lvo.getId());
-                // getLicenseeDao().licenseeVOToEntity(lvo, l, copyIfNull);
-                licensees.add(l);
-            }
+        //     for(LicenseeVO lvo : source.getLicensees()) {
+        //         Licensee l = getLicenseeDao().get(lvo.getId());
+        //         // getLicenseeDao().licenseeVOToEntity(lvo, l, copyIfNull);
+        //         licensees.add(l);
+        //     }
 
-            target.setLicensees(licensees);
-        }
+        //     target.setLicensees(licensees);
+        // }
     }
 
     @Override

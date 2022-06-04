@@ -14,7 +14,7 @@ export class DocumentRestControllerImpl extends DocumentRestController {
 
     public findById(id: number | any ): Observable<DocumentVO | any> {
 
-        return this.http.get<DocumentVO | any>(this.path + `//id/${id}`);
+        return this.http.get<DocumentVO | any>(this.path + `/${id}`);
 
     }
 
@@ -26,31 +26,19 @@ export class DocumentRestControllerImpl extends DocumentRestController {
 
     public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<DocumentVO[] | any> {
 
-        return this.http.get<DocumentVO[] | any>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
-
-    }
-
-    public getLicenceDocuments(licenceId: number | any ): Observable<DocumentVO | any> {
-
-        return this.http.get<DocumentVO | any>(this.path + `/`);
-
-    }
-
-    public getLicenseeDocuments(licenseeId: number | any ): Observable<DocumentVO | any> {
-
-        return this.http.get<DocumentVO | any>(this.path + `//licenseeId/${licenseeId}`);
+        return this.http.get<DocumentVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
 
-        return this.http.delete<boolean | any>(this.path + `//id/${id}`);
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
 
     }
 
     public save(document: DocumentVO | any ): Observable<DocumentVO | any> {
 
-        return this.http.post<DocumentVO | any>(this.path + `/`, document);
+        return this.http.post<DocumentVO | any>(this.path, document);
 
     }
 

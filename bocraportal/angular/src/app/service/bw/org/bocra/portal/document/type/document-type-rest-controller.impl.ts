@@ -14,7 +14,7 @@ export class DocumentTypeRestControllerImpl extends DocumentTypeRestController {
 
     public findById(id: number | any ): Observable<DocumentTypeVO | any> {
 
-        return this.http.get<DocumentTypeVO | any>(this.path + `//id/${id}`);
+        return this.http.get<DocumentTypeVO | any>(this.path + `/${id}`);
 
     }
 
@@ -26,19 +26,19 @@ export class DocumentTypeRestControllerImpl extends DocumentTypeRestController {
 
     public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<DocumentTypeVO[] | any> {
 
-        return this.http.get<DocumentTypeVO[] | any>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+        return this.http.get<DocumentTypeVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
 
-        return this.http.delete<boolean | any>(this.path + `//id/${id}`);
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
 
     }
 
     public save(documentType: DocumentTypeVO | any ): Observable<DocumentTypeVO | any> {
 
-        return this.http.post<DocumentTypeVO | any>(this.path + `/`, documentType);
+        return this.http.post<DocumentTypeVO | any>(this.path, documentType);
 
     }
 

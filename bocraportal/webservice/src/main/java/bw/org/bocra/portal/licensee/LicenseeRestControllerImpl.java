@@ -7,6 +7,8 @@ package bw.org.bocra.portal.licensee;
 
 import java.util.Collection;
 import java.util.Optional;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,9 +17,18 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.submission.FormSubmissionVO;
+import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.shares.ShareholderVO;
+import bw.org.bocra.portal.report.ReportVO;
+import bw.org.bocra.portal.report.config.ReportConfigVO;
+import bw.org.bocra.portal.sector.SectorVO;
+
 @RestController
 @RequestMapping("/licensee")
-@CrossOrigin()
+// @CrossOrigin()
 public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
     protected static Logger log = LoggerFactory.getLogger(LicenseeRestControllerImpl.class);
@@ -105,6 +116,95 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
         }
 
         return response;
+    }
+
+    @Override
+    public ResponseEntity<Collection<DocumentVO>> handleGetDocuments(Long id) {
+        Collection<DocumentVO> docs = licenseeService.getDocuments(id);
+
+        if(CollectionUtils.isEmpty(docs)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(docs);
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<Collection<FormVO>> handleGetForms(Long id) {
+        Collection<FormVO> vos = licenseeService.getForms(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Collection<FormSubmissionVO>> handleGetFormSubmissions(Long id) {
+        Collection<FormSubmissionVO> vos = licenseeService.getFormSubmissions(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Collection<LicenceVO>> handleGetLicences(Long id) {
+        Collection<LicenceVO> vos = licenseeService.getLicences(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Collection<ReportConfigVO>> handleGetReportConfigurations(Long id) {
+        Collection<ReportConfigVO> vos = licenseeService.getReportConfigurations(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Collection<ReportVO>> handleGetReports(Long id) {
+        Collection<ReportVO> vos = licenseeService.getReports(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Collection<SectorVO>> handleGetSectors(Long id) {
+        Collection<SectorVO> vos = licenseeService.getSectors(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Collection<ShareholderVO>> handleGetShareholders(Long id) {
+        Collection<ShareholderVO> vos = licenseeService.getShareholders(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
     }
 
     // @Override

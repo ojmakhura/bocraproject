@@ -3,8 +3,8 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LicenceTypeRestController } from '@app/service/bw/org/bocra/portal/licence/type/licence-type-rest-controller';
-import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
 import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
+import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
 
 @Injectable()
 export class LicenceTypeRestControllerImpl extends LicenceTypeRestController {
@@ -13,39 +13,40 @@ export class LicenceTypeRestControllerImpl extends LicenceTypeRestController {
         super(injector);
     }
 
-    public findById(id: number): Observable<LicenceTypeVO> {
+    public findById(id: number | any ): Observable<LicenceTypeVO | any> {
 
-        return this.http.get<LicenceTypeVO>(this.path + `/id/${id}`);
-
-    }
-
-    public getAll(): Observable<LicenceTypeVO[]> {
-
-        return this.http.get<LicenceTypeVO[]>(this.path + `/all`);
+        return this.http.get<LicenceTypeVO | any>(this.path + `/${id}`);
 
     }
 
-    public remove(id: number): Observable<boolean> {
+    public getAll(): Observable<LicenceTypeVO[] | any> {
 
-        return this.http.delete<boolean>(this.path + `/id/${id}`);
-
-    }
-
-    public save(LicenceTypeVO: LicenceTypeVO): Observable<LicenceTypeVO> {
-
-        return this.http.post<LicenceTypeVO>(this.path, LicenceTypeVO);
+        return this.http.get<LicenceTypeVO[] | any>(this.path + `/all`);
 
     }
 
-    public search(criteria: LicenceTypeCriteria): Observable<LicenceTypeVO[]> {
-        console.log(criteria);
-        
-        return this.http.post<LicenceTypeVO[]>(this.path + `/search`, criteria);
+    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<LicenceTypeVO[] | any> {
+
+        return this.http.get<LicenceTypeVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
-    public getAllPaged(pageNumber: number, pageSize: number): Observable<LicenceTypeVO[]> {
-      return this.http.get<LicenceTypeVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+    public remove(id: number | any ): Observable<boolean | any> {
+
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
+
+    }
+
+    public save(licenseType: LicenceTypeVO | any ): Observable<LicenceTypeVO | any> {
+
+        return this.http.post<LicenceTypeVO | any>(this.path, licenseType);
+
+    }
+
+    public search(searchCriteria: LicenceTypeCriteria | any ): Observable<LicenceTypeVO[] | any> {
+
+        return this.http.post<LicenceTypeVO[] | any>(this.path + `/search`, searchCriteria);
+
     }
 
 }

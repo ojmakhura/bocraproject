@@ -3,8 +3,8 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
-import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 
 @Injectable()
 export class SubmissionRestControllerImpl extends SubmissionRestController {
@@ -15,7 +15,7 @@ export class SubmissionRestControllerImpl extends SubmissionRestController {
 
     public findById(id: number | any ): Observable<FormSubmissionVO | any> {
 
-        return this.http.get<FormSubmissionVO | any>(this.path + `/id/${id}`);
+        return this.http.get<FormSubmissionVO | any>(this.path + `/${id}`);
 
     }
 
@@ -27,13 +27,13 @@ export class SubmissionRestControllerImpl extends SubmissionRestController {
 
     public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<FormSubmissionVO[] | any> {
 
-        return this.http.get<FormSubmissionVO[] | any>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+        return this.http.get<FormSubmissionVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
 
-        return this.http.delete<boolean | any>(this.path + `/id/${id}`);
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
 
     }
 

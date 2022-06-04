@@ -14,7 +14,7 @@ export class SectorRestControllerImpl extends SectorRestController {
 
     public findById(id: number | any ): Observable<SectorVO | any> {
 
-        return this.http.get<SectorVO | any>(this.path + `//id/${id}`);
+        return this.http.get<SectorVO | any>(this.path + `/${id}`);
 
     }
 
@@ -26,19 +26,19 @@ export class SectorRestControllerImpl extends SectorRestController {
 
     public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<SectorVO[] | any> {
 
-        return this.http.get<SectorVO[] | any>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+        return this.http.get<SectorVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
 
-        return this.http.delete<boolean | any>(this.path + `//id/${id}`);
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
 
     }
 
     public save(sector: SectorVO | any ): Observable<SectorVO | any> {
 
-        return this.http.post<SectorVO | any>(this.path + `/`, sector);
+        return this.http.post<SectorVO | any>(this.path, sector);
 
     }
 

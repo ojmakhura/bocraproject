@@ -13,38 +13,40 @@ export class PeriodRestControllerImpl extends PeriodRestController {
         super(injector);
     }
 
-    public findById(id: number): Observable<PeriodVO> {
+    public findById(id: number | any ): Observable<PeriodVO | any> {
 
-        return this.http.get<PeriodVO>(this.path + `/id/${id}`);
-
-    }
-
-    public getAll(): Observable<PeriodVO[]> {
-
-        return this.http.get<PeriodVO[]>(this.path + `/all`);
+        return this.http.get<PeriodVO | any>(this.path + `/${id}`);
 
     }
 
-    public remove(id: number): Observable<boolean> {
+    public getAll(): Observable<PeriodVO[] | any> {
 
-        return this.http.delete<boolean>(this.path + `/id/${id}`);
-
-    }
-
-    public save(periodVO: PeriodVO): Observable<PeriodVO> {
-
-        return this.http.post<PeriodVO>(this.path, periodVO);
+        return this.http.get<PeriodVO[] | any>(this.path + `/all`);
 
     }
 
-    public search(criteria: PeriodCriteria): Observable<PeriodVO[]> {
+    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<PeriodVO[] | any> {
 
-        return this.http.post<PeriodVO[]>(this.path + `/search`, criteria);
+        return this.http.get<PeriodVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
-    public getAllPaged(pageNumber: number, pageSize: number): Observable<PeriodVO[]> {
-      return this.http.get<PeriodVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+    public remove(id: number | any ): Observable<boolean | any> {
+
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
+
+    }
+
+    public save(period: PeriodVO | any ): Observable<PeriodVO | any> {
+
+        return this.http.post<PeriodVO | any>(this.path, period);
+
+    }
+
+    public search(criteria: PeriodCriteria | any ): Observable<PeriodVO[] | any> {
+
+        return this.http.post<PeriodVO[] | any>(this.path + `/search`, criteria);
+
     }
 
 }

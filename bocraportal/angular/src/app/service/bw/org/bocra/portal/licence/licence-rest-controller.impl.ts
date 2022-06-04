@@ -15,7 +15,7 @@ export class LicenceRestControllerImpl extends LicenceRestController {
 
     public findById(id: number | any ): Observable<LicenceVO | any> {
 
-        return this.http.get<LicenceVO | any>(this.path + `//id/${id}`);
+        return this.http.get<LicenceVO | any>(this.path + `/${id}`);
 
     }
 
@@ -27,19 +27,19 @@ export class LicenceRestControllerImpl extends LicenceRestController {
 
     public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<LicenceVO[] | any> {
 
-        return this.http.get<LicenceVO[] | any>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
+        return this.http.get<LicenceVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
 
-        return this.http.delete<boolean | any>(this.path + `//id/${id}`);
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
 
     }
 
     public save(licence: LicenceVO | any ): Observable<LicenceVO | any> {
 
-        return this.http.post<LicenceVO | any>(this.path + `/`, licence);
+        return this.http.post<LicenceVO | any>(this.path, licence);
 
     }
 

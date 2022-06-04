@@ -84,22 +84,22 @@ public class LicenceTypeDaoImpl
         //     target.setrep
         // }
 
-        if(CollectionUtils.isNotEmpty(source.getForms())) {
-            ArrayList<FormVO> forms = new ArrayList<>();
-            for(Form form : source.getForms()) {
-                FormVO vo = new FormVO();
-                vo.setId(form.getId());
-                vo.setCode(form.getCode());
-                vo.setFormName(form.getFormName());
-                vo.setCreatedBy(form.getCreatedBy());
-                vo.setCreatedDate(form.getCreatedDate());
-                vo.setUpdatedBy(form.getUpdatedBy());
-                vo.setUpdatedDate(form.getUpdatedDate());
-                forms.add(vo);
-            }
+        // if(CollectionUtils.isNotEmpty(source.getForms())) {
+        //     ArrayList<FormVO> forms = new ArrayList<>();
+        //     for(Form form : source.getForms()) {
+        //         FormVO vo = new FormVO();
+        //         vo.setId(form.getId());
+        //         vo.setCode(form.getCode());
+        //         vo.setFormName(form.getFormName());
+        //         vo.setCreatedBy(form.getCreatedBy());
+        //         vo.setCreatedDate(form.getCreatedDate());
+        //         vo.setUpdatedBy(form.getUpdatedBy());
+        //         vo.setUpdatedDate(form.getUpdatedDate());
+        //         forms.add(vo);
+        //     }
 
-            target.setForms(forms);
-        }
+        //     target.setForms(forms);
+        // }
     }
 
     /**
@@ -164,18 +164,18 @@ public class LicenceTypeDaoImpl
             target.setLicences(licences);
         }
 
-        if(CollectionUtils.isNotEmpty(source.getForms())) {
-            ArrayList<Form> forms = new ArrayList<>();
+        // if(CollectionUtils.isNotEmpty(source.getForms())) {
+        //     ArrayList<LicenceTypeForm> forms = new ArrayList<>();
 
-            for(FormVO form : source.getForms()) {
-                if(form.getId() != null) {
-                    Form entity = getFormDao().get(form.getId());
-                    forms.add(entity);
-                }
+        //     for(FormVO form : source.getForms()) {
+        //         if(form.getId() != null) {
+        //             Form entity = getFormDao().get(form.getId());
+        //             forms.add(entity);
+        //         }
                 
-            }
+        //     }
 
-            target.setForms(forms);
-        }
+        //     target.setLicenceTypeForms(forms);
+        // }
     }
 }

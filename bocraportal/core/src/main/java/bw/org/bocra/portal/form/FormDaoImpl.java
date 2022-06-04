@@ -35,22 +35,22 @@ public class FormDaoImpl
         // TODO verify behavior of toFormVO
         super.toFormVO(source, target);
 
-        if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
+        // if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
 
-            if(target.getLicenceTypes() == null) {
-                target.setLicenceTypes(new ArrayList<>());
-            }
+        //     if(target.getLicenceTypes() == null) {
+        //         target.setLicenceTypes(new ArrayList<>());
+        //     }
             
-            for (LicenceType entity : source.getLicenceTypes()) {
-                LicenceTypeVO type = new LicenceTypeVO();
-                type.setId(entity.getId());
-                type.setCode(entity.getCode());
-                type.setDescription(entity.getDescription());
-                type.setName(entity.getName());
+        //     for (LicenceType entity : source.getLicenceTypes()) {
+        //         LicenceTypeVO type = new LicenceTypeVO();
+        //         type.setId(entity.getId());
+        //         type.setCode(entity.getCode());
+        //         type.setDescription(entity.getDescription());
+        //         type.setName(entity.getName());
                 
-                target.getLicenceTypes().add(type);
-            }
-        }
+        //         target.getLicenceTypes().add(type);
+        //     }
+        // }
 
         if(!CollectionUtils.isEmpty(source.getFormFields())) {
             if(target.getFormFields() == null) {
@@ -151,19 +151,19 @@ public class FormDaoImpl
 
         }
 
-        if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
+        // if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
 
-            target.setLicenceTypes(new ArrayList<>());
+        //     target.setLicenceTypes(new ArrayList<>());
 
-            for(LicenceTypeVO type : source.getLicenceTypes()) {
+        //     for(LicenceTypeVO type : source.getLicenceTypes()) {
 
-                if(type.getId() != null) {
-                    LicenceType entity = getLicenceTypeDao().load(type.getId());
-                    target.getLicenceTypes().add(entity);
-                }
+        //         if(type.getId() != null) {
+        //             LicenceType entity = getLicenceTypeDao().load(type.getId());
+        //             target.getLicenceTypes().add(entity);
+        //         }
 
-            }
-        }
+        //     }
+        // }
     }
 
 }

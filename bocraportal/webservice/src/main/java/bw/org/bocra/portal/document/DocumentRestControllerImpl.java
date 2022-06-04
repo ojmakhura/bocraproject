@@ -60,33 +60,33 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
         return response;
     }
 
-    @Override
-    public ResponseEntity<Collection<DocumentVO>> handleGetLicenceDocuments(Long licenceId) {
-        Optional<Collection<DocumentVO>> data = Optional.of(documentService.getLicenceDocuments(licenceId)); // TODO: Add custom code here;
-        ResponseEntity<Collection<DocumentVO>> response;
+    // @Override
+    // public ResponseEntity<Collection<DocumentVO>> handleGetLicenceDocuments(Long licenceId) {
+    //     Optional<Collection<DocumentVO>> data = Optional.of(documentService.getLicenceDocuments(licenceId)); // TODO: Add custom code here;
+    //     ResponseEntity<Collection<DocumentVO>> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    //     if(data.isPresent()) {
+    //         response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+    //     } else {
+    //         response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    //     }
 
-        return response;
-    }
+    //     return response;
+    // }
 
-    @Override
-    public ResponseEntity<Collection<DocumentVO>> handleGetLicenseeDocuments(Long licenseeId) {
-        Optional<Collection<DocumentVO>> data = Optional.of(documentService.getLicenseeDocuments(licenseeId)); // TODO: Add custom code here;
-        ResponseEntity<Collection<DocumentVO>> response;
+    // @Override
+    // public ResponseEntity<Collection<DocumentVO>> handleGetLicenseeDocuments(Long licenseeId) {
+    //     Optional<Collection<DocumentVO>> data = Optional.of(documentService.getLicenseeDocuments(licenseeId)); // TODO: Add custom code here;
+    //     ResponseEntity<Collection<DocumentVO>> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    //     if(data.isPresent()) {
+    //         response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+    //     } else {
+    //         response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    //     }
 
-        return response;
-    }
+    //     return response;
+    // }
 
     @Override
     public ResponseEntity<Boolean> handleRemove(Long id) {

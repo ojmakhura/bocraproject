@@ -4,7 +4,15 @@ import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LicenseeRestController } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
+import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
+import { ReportVO } from '@app/model/bw/org/bocra/portal/report/report-vo';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
+import { ShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/shareholder-vo';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { ReportConfigVO } from '@app/model/bw/org/bocra/portal/report/config/report-config-vo';
 
 @Injectable()
 export class LicenseeRestControllerImpl extends LicenseeRestController {
@@ -13,37 +21,88 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
         super(injector);
     }
 
-    public findById(id: number): Observable<LicenseeVO> {
+    public findById(id: number | any ): Observable<LicenseeVO | any> {
 
-        return this.http.get<LicenseeVO>(this.path + `/id/${id}`);
-
-    }
-
-    public getAll(): Observable<LicenseeVO[]> {
-
-        return this.http.get<LicenseeVO[]>(this.path + `/all`);
+        return this.http.get<LicenseeVO | any>(this.path + `/${id}`);
 
     }
 
-    public remove(id: number): Observable<boolean> {
+    public getAll(): Observable<LicenseeVO[] | any> {
 
-        return this.http.delete<boolean>(this.path + `/id/${id}`);
-
-    }
-
-    public save(licenseeVO: LicenseeVO): Observable<LicenseeVO> {
-
-        return this.http.post<LicenseeVO>(this.path, licenseeVO);
+        return this.http.get<LicenseeVO[] | any>(this.path + `/all`);
 
     }
 
-    public search(criteria: LicenseeCriteria): Observable<LicenseeVO[]> {
+    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<LicenseeVO[] | any> {
 
-        return this.http.post<LicenseeVO[]>(this.path + `/search`, criteria);
+        return this.http.get<LicenseeVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
-    public getAllPaged(pageNumber: number, pageSize: number): Observable<LicenseeVO[]> {
-        return this.http.get<LicenseeVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
-      }
+    public getDocuments(id: number | any ): Observable<DocumentVO[] | any> {
+
+        return this.http.get<DocumentVO[] | any>(this.path + `/${id}/documents`);
+
+    }
+
+    public getForms(id: number | any ): Observable<FormVO[] | any> {
+
+        return this.http.get<FormVO[] | any>(this.path + `/${id}/forms`);
+
+    }
+
+    public getFormSubmissions(id: number | any ): Observable<FormSubmissionVO[] | any> {
+
+        return this.http.get<FormSubmissionVO[] | any>(this.path + `/${id}/submissions`);
+
+    }
+
+    public getLicences(id: number | any ): Observable<LicenceVO[] | any> {
+
+        return this.http.get<LicenceVO[] | any>(this.path + `/${id}/licences`);
+
+    }
+
+    public getReportConfigurations(id: number | any ): Observable<ReportConfigVO[] | any> {
+
+        return this.http.get<ReportConfigVO[] | any>(this.path + `/${id}/report/configs`);
+
+    }
+
+    public getReports(id: number | any ): Observable<ReportVO[] | any> {
+
+        return this.http.get<ReportVO[] | any>(this.path + `/${id}/reports`);
+
+    }
+
+    public getSectors(id: number | any ): Observable<SectorVO[] | any> {
+
+        return this.http.get<SectorVO[] | any>(this.path + `/${id}/sectors`);
+
+    }
+
+    public getShareholders(id: number | any ): Observable<ShareholderVO[] | any> {
+
+        return this.http.get<ShareholderVO[] | any>(this.path + `/${id}/shareholders`);
+
+    }
+
+    public remove(id: number | any ): Observable<boolean | any> {
+
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
+
+    }
+
+    public save(licensee: LicenseeVO | any ): Observable<LicenseeVO | any> {
+
+        return this.http.post<LicenseeVO | any>(this.path, licensee);
+
+    }
+
+    public search(criteria: LicenseeCriteria | any ): Observable<LicenseeVO[] | any> {
+
+        return this.http.post<LicenseeVO[] | any>(this.path + `/search`, criteria);
+
+    }
+
 }

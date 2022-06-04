@@ -12,6 +12,7 @@ import java.util.Collection;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.licence.Licence;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licence.type.LicenceType;
@@ -47,27 +48,30 @@ public class LicenseeDaoImpl
             }
         }
 
-        if(CollectionUtils.isNotEmpty(source.getSectors())) {
+        if(CollectionUtils.isNotEmpty(source.getLicenseeSectors())) {
 
             target.setSectors(new ArrayList<>());
 
-            for(Sector entity : source.getSectors()) {
+            for(LicenseeSector entity : source.getLicenseeSectors()) {
                 SectorVO vo = new SectorVO();
-                sectorDao.toSectorVO(entity, vo);
+                sectorDao.toSectorVO(entity.getSector(), vo);
                 target.getSectors().add(vo);
             }
         }
 
-        // if(CollectionUtils.isNotEmpty(source.get)) {
+        if(CollectionUtils.isNotEmpty(source.getLicenseeForms())) {
 
-        //     target.setSectors(new ArrayList<>());
+            target.setSectors(new ArrayList<>());
 
-        //     for(Sector entity : source.getSectors()) {
-        //         SectorVO vo = new SectorVO();
-        //         sectorDao.toSectorVO(entity, vo);
-        //         target.getSectors().add(vo);
-        //     }
-        // }
+            for(LicenseeForm entity : source.getLicenseeForms()) {
+                FormVO vo = new FormVO();
+                formDao.toFormVO(entity.getForm(), vo);
+                target.getForms().add(vo);
+            }
+        }
+
+        //source.get
+
 
         // TODO: read users from keycloak
     }
@@ -135,16 +139,16 @@ public class LicenseeDaoImpl
 
         }
 
-        if(CollectionUtils.isNotEmpty(source.getSectors())) {
-            Collection<Sector> sectors = new ArrayList<>();
-            for(SectorVO sector : source.getSectors()) {
-                if(sector.getId() != null) {
-                    Sector entity = sectorDao.load(sector.getId());
-                    sectors.add(entity);
-                }
-            }
+        // if(CollectionUtils.isNotEmpty(source.getSectors())) {
+        //     Collection<Sector> sectors = new ArrayList<>();
+        //     for(SectorVO sector : source.getSectors()) {
+        //         if(sector.getId() != null) {
+        //             Sector entity = sectorDao.load(sector.getId());
+        //             sectors.add(entity);
+        //         }
+        //     }
 
-            target.setSectors(sectors);
-        }
+        //     target.setSectors(sectors);
+        // }
     }
 }
