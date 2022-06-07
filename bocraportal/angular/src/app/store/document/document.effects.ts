@@ -88,30 +88,30 @@ export class DocumentEffects {
         )
     );
 
-    getLicenseeDocuments$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DocumentActions.getLicenseeDocuments),
-            mergeMap(({ licenseeId }) => this.documentRestController.getLicenseeDocuments(licenseeId).pipe(
-                map( documents => DocumentActions.getLicenseeDocumentsSuccess({
-                    documents,
-                    success: false
-                })),
-                catchError(({error}) => [DocumentActions.documentFailure(error)])
-            ))
-        )
-    );
+    // getLicenseeDocuments$ = createEffect(() => 
+    //      this.actions$.pipe(
+    //         ofType(DocumentActions.getLicenseeDocuments),
+    //         mergeMap(({ licenseeId }) => this.documentRestController.getLicenseeDocuments(licenseeId).pipe(
+    //             map( documents => DocumentActions.getLicenseeDocumentsSuccess({
+    //                 documents,
+    //                 success: false
+    //             })),
+    //             catchError(({error}) => [DocumentActions.documentFailure(error)])
+    //         ))
+    //     )
+    // );
 
-    getLicenceDocuments$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DocumentActions.getLicenceDocuments),
-            mergeMap(({ licenceId }) => this.documentRestController.getLicenceDocuments(licenceId).pipe(
-                map( documents => DocumentActions.getLicenceDocumentsSuccess({
-                    documents,
-                    success: false
-                })),
-                catchError(({error}) => [DocumentActions.documentFailure(error)])
-            ))
-        )
-    );
+    // getLicenceDocuments$ = createEffect(() => 
+    //      this.actions$.pipe(
+    //         ofType(DocumentActions.getLicenceDocuments),
+    //         mergeMap(({ licenceId }) => this.documentRestController.getLicenceDocuments(licenceId).pipe(
+    //             map( documents => DocumentActions.getLicenceDocumentsSuccess({
+    //                 documents,
+    //                 success: false
+    //             })),
+    //             catchError(({error}) => [DocumentActions.documentFailure(error)])
+    //         ))
+    //     )
+    // );
 
 }

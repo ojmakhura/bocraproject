@@ -89,18 +89,17 @@ export class LicenceEffects {
         )
     );
 
-
-    getLicenceDocuments$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(LicenceActions.getLicenceDocuments),
-            mergeMap(({ licenceId }) => this.documentRestController.getLicenceDocuments(licenceId).pipe(
-                map( documents => LicenceActions.getLicenceDocumentsSuccess({
-                    documents,
-                    success: true
-                })),
-                catchError(({error}) => [LicenceActions.licenceFailure(error)])
-            ))
-        )
-    );
+    // getLicenceDocuments$ = createEffect(() => 
+    //      this.actions$.pipe(
+    //         ofType(LicenceActions.getLicenceDocuments),
+    //         mergeMap(({ licenceId }) => this.documentRestController.getLicenceDocuments(licenceId).pipe(
+    //             map( documents => LicenceActions.getLicenceDocumentsSuccess({
+    //                 documents,
+    //                 success: true
+    //             })),
+    //             catchError(({error}) => [LicenceActions.licenceFailure(error)])
+    //         ))
+    //     )
+    // );
 
 }

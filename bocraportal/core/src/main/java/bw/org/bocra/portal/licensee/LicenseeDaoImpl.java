@@ -139,16 +139,16 @@ public class LicenseeDaoImpl
 
         }
 
-        // if(CollectionUtils.isNotEmpty(source.getSectors())) {
-        //     Collection<Sector> sectors = new ArrayList<>();
-        //     for(SectorVO sector : source.getSectors()) {
-        //         if(sector.getId() != null) {
-        //             Sector entity = sectorDao.load(sector.getId());
-        //             sectors.add(entity);
-        //         }
-        //     }
+        if(CollectionUtils.isNotEmpty(source.getSectors())) {
+            Collection<Sector> sectors = new ArrayList<>();
+            for(SectorVO sector : source.getSectors()) {
+                if(sector.getId() != null) {
+                    Sector entity = sectorDao.load(sector.getId());
+                    sectors.add(entity);
+                }
+            }
 
-        //     target.setSectors(sectors);
-        // }
+            //target.setSectors(sectors);
+        }
     }
 }

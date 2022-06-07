@@ -15,7 +15,8 @@ import * as AuthSelectors from '@app/store/auth/auth.selectors';
 import * as AuthActions from '@app/store/auth/auth.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
 import * as MenuActions from '@app/store/menu/menu.actions';
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
+import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 
 @Component({
   selector: 'app-shell',
@@ -46,21 +47,21 @@ export class ShellComponent implements OnInit, AfterViewInit {
     criteria.type = AuthorisationType.MENU;
     criteria.roles = this.keycloakService.getUserRoles();
 
-    this.keycloakService.isLoggedIn().then(loggedIn => {
-      if(loggedIn) {
+    this.keycloakService.isLoggedIn().then((loggedIn) => {
+      if (loggedIn) {
         this.store.dispatch(AuthActions.setUsername({ username: this.keycloakService.getUsername() }));
       }
     });
 
     this.authorisationRestController.search(criteria).subscribe((authorisations) => {
-
-      let menuItems = nav.menuItems.filter(menu => authorisations.some(authorisation => authorisation.url === menu.routerLink))
-      this.store.dispatch(MenuActions.getMenusSuccess({ menus: menuItems}));
-      
+      let menuItems = nav.menuItems.filter((menu) =>
+        authorisations.some((authorisation: AuthorisationVO) => authorisation.url === menu.routerLink)
+      );
+      this.store.dispatch(MenuActions.getMenusSuccess({ menus: menuItems }));
     });
 
-    this.keycloakService.getToken().then(token => {
-      var decoded = jwt_decode(token);
+    this.keycloakService.getToken().then((token) => {
+      var decoded: any = jwt_decode(token);
       console.log(decoded.resource_access);
     });
   }
