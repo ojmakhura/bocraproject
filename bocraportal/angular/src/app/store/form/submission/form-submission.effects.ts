@@ -18,7 +18,7 @@ export class FormSubmissionEffects {
                     formSubmission,
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
             ))
         )
     );
@@ -31,7 +31,7 @@ export class FormSubmissionEffects {
                     formSubmission,
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
             ))
         )
     );
@@ -44,7 +44,7 @@ export class FormSubmissionEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
             ))
         )
     );
@@ -57,7 +57,7 @@ export class FormSubmissionEffects {
                     formSubmissions,
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
             ))
         )
     );
@@ -70,7 +70,7 @@ export class FormSubmissionEffects {
                     formSubmissions,
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
             ))
         )
     );
@@ -83,7 +83,7 @@ export class FormSubmissionEffects {
                     formSubmissions,
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure(error)])
+                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
             ))
         )
     );

@@ -19,7 +19,7 @@ export class FormEffects {
                     form,
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -32,7 +32,7 @@ export class FormEffects {
                     form,
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -45,7 +45,7 @@ export class FormEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -58,7 +58,7 @@ export class FormEffects {
                     forms,
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -71,7 +71,7 @@ export class FormEffects {
                     forms,
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -84,7 +84,7 @@ export class FormEffects {
                     forms,
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -97,7 +97,7 @@ export class FormEffects {
                     formField,
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -110,7 +110,7 @@ export class FormEffects {
                     formField,
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -123,7 +123,7 @@ export class FormEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -136,7 +136,7 @@ export class FormEffects {
                     formFields,
                     success: false
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );
@@ -149,7 +149,7 @@ export class FormEffects {
                     formFields,
                     success: false
                 })),
-                catchError(({error}) => [FormActions.formFailure(error)])
+                catchError(({errors}) => [FormActions.formFailure(errors)])
             ))
         )
     );

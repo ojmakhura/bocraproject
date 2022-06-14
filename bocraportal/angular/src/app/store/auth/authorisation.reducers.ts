@@ -10,42 +10,42 @@ export const authorisationReducer = createReducer(
         authorisation: action.authorisation, 
         success: action.success,
         loading: false, 
-        error: null
+        errors: []
     })),
     on(AuthorisationActions.saveSuccess, (state, action) => ({
         ...state,
         loading: false, 
         authorisation: action.authorisation, 
         success: action.success, 
-        error: null
+        errors: []
     })),
     on(AuthorisationActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 
         loading: false, 
         success: action.success, 
-        error: null
+        errors: []
     })),
     on(AuthorisationActions.getAllSuccess, (state, action) => ({
         ...state,
         authorisations: action.authorisations, 
         loading: false, 
         success: action.success, 
-        error: null
+        errors: []
     })),
     on(AuthorisationActions.searchSuccess, (state, action) => ({
         ...state,
         authorisations: action.authorisations, 
         loading: false, 
         success: action.success, 
-        error: null
+        errors: []
     })),
     on(AuthorisationActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         authorisations: action.authorisations, 
         loading: false, 
         success: action.success, 
-        error: null
+        errors: []
     })),
     on(AuthorisationActions.authorisationReset, (state) => ({
       ...state,
@@ -55,13 +55,13 @@ export const authorisationReducer = createReducer(
         id: null, 
         loading: false,
         success: false,
-        error: null
+        errors: []
     })),
     on(AuthorisationActions.authorisationFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        error: action.error
+        errors: action.errors
     })),
     on(AuthorisationActions.authorisationLoading, (state, action) => ({
         ...state,
@@ -72,7 +72,7 @@ export const authorisationReducer = createReducer(
     //     ...state,
     //     loading: action.loading,
     //     success: action.success,
-    //     error: action.error
+    //     errors: action.errors
     // }))
 );
 

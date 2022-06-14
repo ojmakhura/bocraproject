@@ -159,15 +159,15 @@ export const formReset = createAction(FormActionType.FORM_RESET);
 
 export const formLoading = createAction(
     FormActionType.FORM_LOADING,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );
 
 export const formSuccess = createAction(
     FormActionType.FORM_SUCCESS,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );
 
 export const formFailure = createAction(
     FormActionType.FORM_FAILURE,
-    props<{ error: any }>()
+    props<{ errors: any[] }>()
 );

@@ -18,7 +18,7 @@ export class LicenceTypeEffects {
                     licenceType,
                     success: true
                 })),
-                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
+                catchError(({errors}) => [LicenceTypeActions.licenceTypeFailure(errors)])
             ))
         )
     );
@@ -31,7 +31,7 @@ export class LicenceTypeEffects {
                     licenceType,
                     success: true
                 })),
-                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
+                catchError(({errors}) => [LicenceTypeActions.licenceTypeFailure(errors)])
             ))
         )
     );
@@ -44,7 +44,7 @@ export class LicenceTypeEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
+                catchError(({errors}) => [LicenceTypeActions.licenceTypeFailure(errors)])
             ))
         )
     );
@@ -57,7 +57,7 @@ export class LicenceTypeEffects {
                     licenceTypes,
                     success: true
                 })),
-                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
+                catchError(({errors}) => [LicenceTypeActions.licenceTypeFailure(errors)])
             ))
         )
     );
@@ -70,7 +70,7 @@ export class LicenceTypeEffects {
                     licenceTypes,
                     success: true
                 })),
-                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
+                catchError(({errors}) => [LicenceTypeActions.licenceTypeFailure(errors)])
             ))
         )
     );
@@ -83,7 +83,7 @@ export class LicenceTypeEffects {
                     licenceTypes,
                     success: true
                 })),
-                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure(error)])
+                catchError(({errors}) => [LicenceTypeActions.licenceTypeFailure(errors)])
             ))
         )
     );

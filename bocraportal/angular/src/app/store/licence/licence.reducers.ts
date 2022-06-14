@@ -10,49 +10,49 @@ export const licenceReducer = createReducer(
         licence: action.licence, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenceActions.saveSuccess, (state, action) => ({
         ...state,
         licence: action.licence, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenceActions.removeSuccess, (state, action) => ({
         ...state,
         removed: true,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenceActions.getAllSuccess, (state, action) => ({
         ...state,
         licences: action.licences, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenceActions.searchSuccess, (state, action) => ({
         ...state,
         licences: action.licences, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenceActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licences: action.licences,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenceActions.getLicenceDocumentsSuccess, (state, action) => ({
         ...state,
         documents: action.documents, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenceActions.licenceReset, (state) => ({
       ...state,
@@ -63,11 +63,11 @@ export const licenceReducer = createReducer(
         documents: [],
         loading: false,
         success: false,
-        error: null
+        errors: []
     })),
     on(LicenceActions.licenceFailure, (state, action) => ({
         ...state,
-        error: action.error
+        errors: action.errors
     }))
 );
 

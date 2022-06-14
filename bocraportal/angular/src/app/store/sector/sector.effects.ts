@@ -18,7 +18,7 @@ export class SectorEffects {
                     sector,
                     success: true
                 })),
-                catchError(({error}) => [SectorActions.sectorFailure(error)])
+                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
             ))
         )
     );
@@ -31,7 +31,7 @@ export class SectorEffects {
                     sector,
                     success: true
                 })),
-                catchError(({error}) => [SectorActions.sectorFailure(error)])
+                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
             ))
         )
     );
@@ -44,7 +44,7 @@ export class SectorEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [SectorActions.sectorFailure(error)])
+                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
             ))
         )
     );
@@ -57,7 +57,7 @@ export class SectorEffects {
                     sectors,
                     success: true
                 })),
-                catchError(({error}) => [SectorActions.sectorFailure(error)])
+                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
             ))
         )
     );
@@ -70,7 +70,7 @@ export class SectorEffects {
                     sectors,
                     success: true
                 })),
-                catchError(({error}) => [SectorActions.sectorFailure(error)])
+                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
             ))
         )
     );
@@ -83,7 +83,7 @@ export class SectorEffects {
                     sectors,
                     success: true
                 })),
-                catchError(({error}) => [SectorActions.sectorFailure(error)])
+                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
             ))
         )
     );

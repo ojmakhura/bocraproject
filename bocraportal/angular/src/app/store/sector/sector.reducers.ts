@@ -10,42 +10,42 @@ export const sectorReducer = createReducer(
         sector: action.sector, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(SectorActions.saveSuccess, (state, action) => ({
         ...state,
         sector: action.sector, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(SectorActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(SectorActions.getAllSuccess, (state, action) => ({
         ...state,
         sectors: action.sectors, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(SectorActions.searchSuccess, (state, action) => ({
         ...state,
         sectors: action.sectors, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(SectorActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         sectors: action.sectors, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(SectorActions.sectorReset, (state) => ({
       ...state,
@@ -56,13 +56,13 @@ export const sectorReducer = createReducer(
         loading: false,
         success: false,
         removed: false,
-        error: null
+        errors: []
     })),
     on(SectorActions.sectorFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        error: action.error
+        errors: action.errors
     })),
     on(SectorActions.sectorLoading, (state, action) => ({
         ...state,

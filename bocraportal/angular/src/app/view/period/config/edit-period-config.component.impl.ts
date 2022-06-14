@@ -68,7 +68,7 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
      * This method may be overwritten
      */
     beforeEditPeriodConfigSave(form: EditPeriodConfigSaveForm): void {
-      if(this.periodConfig.valid) {
+      if(this.periodConfigControl.valid) {
         if(form.periodConfig.id) {
           form.periodConfig.updatedBy = this.keycloakService.getUsername();
           form.periodConfig.updatedDate = new Date();

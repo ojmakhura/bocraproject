@@ -86,10 +86,10 @@ export const periodReset = createAction(PeriodActionType.PERIOD_RESET);
 
 export const periodLoading = createAction(
     PeriodActionType.PERIOD_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ loading: boolean, success: boolean, errors: any[] }>()
 );
 
 export const periodFailure = createAction(
     PeriodActionType.PERIOD_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );

@@ -18,7 +18,7 @@ export class PeriodConfigEffects {
                     periodConfig,
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
+                catchError(({errors}) => [PeriodConfigActions.periodConfigFailure(errors)])
             ))
         )
     );
@@ -31,7 +31,7 @@ export class PeriodConfigEffects {
                     periodConfig,
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
+                catchError(({errors}) => [PeriodConfigActions.periodConfigFailure(errors)])
             ))
         )
     );
@@ -44,7 +44,7 @@ export class PeriodConfigEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
+                catchError(({errors}) => [PeriodConfigActions.periodConfigFailure(errors)])
             ))
         )
     );
@@ -57,7 +57,7 @@ export class PeriodConfigEffects {
                     periodConfigs,
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
+                catchError(({errors}) => [PeriodConfigActions.periodConfigFailure(errors)])
             ))
         )
     );
@@ -70,7 +70,7 @@ export class PeriodConfigEffects {
                     periodConfigs,
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
+                catchError(({errors}) => [PeriodConfigActions.periodConfigFailure(errors)])
             ))
         )
     );
@@ -83,7 +83,7 @@ export class PeriodConfigEffects {
                     periodConfigs,
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure(error)])
+                catchError(({errors}) => [PeriodConfigActions.periodConfigFailure(errors)])
             ))
         )
     );

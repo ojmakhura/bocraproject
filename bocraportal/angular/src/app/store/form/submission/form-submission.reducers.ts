@@ -10,42 +10,42 @@ export const formSubmissionReducer = createReducer(
         formSubmission: action.formSubmission,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormSubmissionActions.saveSuccess, (state, action) => ({
         ...state,
         formSubmission: action.formSubmission, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormSubmissionActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormSubmissionActions.getAllSuccess, (state, action) => ({
         ...state,
         formSubmissions: action.formSubmissions, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormSubmissionActions.searchSuccess, (state, action) => ({
         ...state,
         formSubmissions: action.formSubmissions, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormSubmissionActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         formSubmissions: action.formSubmissions, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormSubmissionActions.formSubmissionReset, (state) => ({
       ...state,
@@ -55,13 +55,13 @@ export const formSubmissionReducer = createReducer(
         id: null, 
         loading: false,
         success: false,
-        error: null
+        errors: []
     })),
     on(FormSubmissionActions.formSubmissionFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        error: action.error
+        errors: action.errors
     })),
     on(FormSubmissionActions.formSubmissionLoading, (state, action) => ({
         ...state,
@@ -72,7 +72,7 @@ export const formSubmissionReducer = createReducer(
     //     ...state,
     //     loading: action.loading,
     //     success: action.success,
-    //     error: action.error
+    //     errors: action.errors
     // }))
 );
 

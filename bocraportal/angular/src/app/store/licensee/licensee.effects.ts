@@ -19,7 +19,7 @@ export class LicenseeEffects {
                     licensee,
                     success: true
                 })),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
             ))
         )
     );
@@ -32,7 +32,7 @@ export class LicenseeEffects {
                     licensee,
                     success: true
                 })),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
             ))
         )
     );
@@ -45,7 +45,7 @@ export class LicenseeEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
             ))
         )
     );
@@ -58,7 +58,7 @@ export class LicenseeEffects {
                     licensees,
                     success: true
                 })),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
             ))
         )
     );
@@ -71,7 +71,7 @@ export class LicenseeEffects {
                     licensees,
                     success: true
                 })),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
             ))
         )
     );
@@ -84,7 +84,7 @@ export class LicenseeEffects {
                     licensees,
                     success: true
                 })),
-                catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
             ))
         )
     );
@@ -94,7 +94,7 @@ export class LicenseeEffects {
     //         ofType(LicenseeActions.getDocuments),
     //         mergeMap(({ licenseeId }) => this.documentRestController.getLicenceDocuments(licenseeId).pipe(
     //             map( documents => LicenseeActions.getDocumentsSuccess({documents})),
-    //             catchError(({error}) => [LicenseeActions.licenseeFailure(error)])
+    //             catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
     //         ))
     //     )
     // );

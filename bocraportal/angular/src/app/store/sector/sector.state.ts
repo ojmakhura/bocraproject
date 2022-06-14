@@ -11,7 +11,7 @@ export interface SectorState {
     loading: boolean,
     success: boolean,
     removed: boolean;
-    error: any
+    errors: any[]
 }
 
 export const initialState: SectorState = {
@@ -22,5 +22,5 @@ export const initialState: SectorState = {
     loading: false,
     success: false,
     removed: false,
-    error: null
+    errors: []
 };

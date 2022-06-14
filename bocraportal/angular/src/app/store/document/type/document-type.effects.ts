@@ -18,7 +18,7 @@ export class DocumentTypeEffects {
                     documentType,
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
+                catchError(({errors}) => [DocumentTypeActions.documentTypeFailure(errors)])
             ))
         )
     );
@@ -31,7 +31,7 @@ export class DocumentTypeEffects {
                     documentType,
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
+                catchError(({errors}) => [DocumentTypeActions.documentTypeFailure(errors)])
             ))
         )
     );
@@ -44,7 +44,7 @@ export class DocumentTypeEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
+                catchError(({errors}) => [DocumentTypeActions.documentTypeFailure(errors)])
             ))
         )
     );
@@ -57,7 +57,7 @@ export class DocumentTypeEffects {
                     documentTypes,
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
+                catchError(({errors}) => [DocumentTypeActions.documentTypeFailure(errors)])
             ))
         )
     );
@@ -70,7 +70,7 @@ export class DocumentTypeEffects {
                     documentTypes,
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
+                catchError(({errors}) => [DocumentTypeActions.documentTypeFailure(errors)])
             ))
         )
     );
@@ -83,7 +83,7 @@ export class DocumentTypeEffects {
                     documentTypes,
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure(error)])
+                catchError(({errors}) => [DocumentTypeActions.documentTypeFailure(errors)])
             ))
         )
     );

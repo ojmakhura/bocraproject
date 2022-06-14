@@ -25,7 +25,7 @@ export interface FormState {
   removed: boolean;
   success: boolean;
   loading: boolean;
-  error: any;
+  errors: any[];
 }
 
 export const initialState: FormState = {
@@ -46,5 +46,5 @@ export const initialState: FormState = {
   removed: false,
   success: false,
   loading: false,
-  error: null,
+  errors: [],
 };

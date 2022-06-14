@@ -66,7 +66,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
      * This method may be overwritten
      */
     beforeEditPeriodSave(form: EditPeriodSaveForm): void {
-      if(this.period.valid) {
+      if(this.periodControl.valid) {
         if(form.period.id) {
           form.period.updatedBy = this.keycloakService.getUsername();
           form.period.updatedDate = new Date();

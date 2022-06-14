@@ -85,10 +85,10 @@ export const authorisationReset = createAction(AuthorisationActionType.AUTHORISA
 
 export const authorisationLoading = createAction(
     AuthorisationActionType.AUTHORISATION_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ loading: boolean, success: boolean, errors: any[] }>()
 );
 
 export const authorisationFailure = createAction(
     AuthorisationActionType.AUTHORISATION_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );

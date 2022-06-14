@@ -82,16 +82,16 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       });
     });
 
-    this.formSubmissionForm.get('id')?.valueChanges.subscribe((id) => {
+    this.formSubmissionFormControl.get('id')?.valueChanges.subscribe((id) => {
       let item: FormVO | undefined = this._forms.find((form) => '' + form.id === id);
       console.log(item);
       if (item) {
-        this.formSubmissionForm.patchValue(item);
+        this.formSubmissionFormControl.patchValue(item);
         item?.formFields.forEach((field: FormFieldVO) => {
           let data: FormDataVO = new FormDataVO();
           data.formField = field;
           data.value = '';
-          this.formSubmissionFormDatas.push(this.createFormDataVOGroup(data));
+          this.formSubmissionFormDatasControl.push(this.createFormDataVOGroup(data));
         });
       }
     });

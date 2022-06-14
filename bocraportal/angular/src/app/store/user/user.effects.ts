@@ -20,7 +20,7 @@ export class UserEffects {
                     user,
                     success: true
                 })),
-                catchError(({ error }) => [UserActions.userFailure(error)])
+                catchError(({ errors }) => [UserActions.userFailure(errors)])
             ))
         )
     );
@@ -30,7 +30,7 @@ export class UserEffects {
     //         ofType(UserActions.updateUserName),
     //         mergeMap(({ username, userId }) => this.userRestController.updateUserName(username, userId).pipe(
     //             map( results => UserActions.updateUserNameSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({errors}) => [UserActions.userFailure(errors)])
     //         ))
     //     )
     // );
@@ -40,7 +40,7 @@ export class UserEffects {
     //         ofType(UserActions.loadUsers),
     //         mergeMap(() => this.userRestController.loadUsers().pipe(
     //             map( results => UserActions.loadUsersSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({errors}) => [UserActions.userFailure(errors)])
     //         ))
     //     )
     // );
@@ -50,7 +50,7 @@ export class UserEffects {
     //         ofType(UserActions.findById),
     //         mergeMap(({ id }) => this.licenseeRestController.findById(id).pipe(
     //             map( results => UserActions.findByIdSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({errors}) => [UserActions.userFailure(errors)])
     //         ))
     //     )
     // );
@@ -60,7 +60,7 @@ export class UserEffects {
     //         ofType(UserActions.save),
     //         mergeMap(({ licensee }) => this.licenseeRestController.save(licensee).pipe(
     //             map( results => UserActions.saveSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({errors}) => [UserActions.userFailure(errors)])
     //         ))
     //     )
     // );
@@ -70,7 +70,7 @@ export class UserEffects {
     //         ofType(UserActions.remove),
     //         mergeMap(({ id }) => this.licenseeRestController.remove(id).pipe(
     //             map( results => UserActions.removeSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({errors}) => [UserActions.userFailure(errors)])
     //         ))
     //     )
     // );
@@ -80,7 +80,7 @@ export class UserEffects {
     //         ofType(UserActions.getAll),
     //         mergeMap(() => this.licenseeRestController.getAll().pipe(
     //             map( results => UserActions.getAllSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({errors}) => [UserActions.userFailure(errors)])
     //         ))
     //     )
     // );
@@ -90,7 +90,7 @@ export class UserEffects {
     //         ofType(UserActions.search),
     //         mergeMap(({ criteria }) => this.licenseeRestController.search(criteria).pipe(
     //             map( results => UserActions.searchSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({errors}) => [UserActions.userFailure(errors)])
     //         ))
     //     )
     // );
@@ -100,7 +100,7 @@ export class UserEffects {
     //         ofType(UserActions.getAllPaged),
     //         mergeMap(({ pageNumber, pageSize }) => this.licenseeRestController.getAllPaged(pageNumber, pageSize).pipe(
     //             map( results => UserActions.getAllPagedSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({errors}) => [UserActions.userFailure(errors)])
     //         ))
     //     )
     // );

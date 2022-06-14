@@ -86,10 +86,10 @@ export const licenseeReset = createAction(LicenseeActionType.LICENSEE_RESET);
 
 export const licenseeLoading = createAction(
     LicenseeActionType.LICENSEE_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ loading: boolean, success: boolean, errors: any[] }>()
 );
 
 export const licenseeFailure = createAction(
     LicenseeActionType.LICENSEE_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );

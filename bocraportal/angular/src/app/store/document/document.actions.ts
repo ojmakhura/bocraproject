@@ -109,10 +109,10 @@ export const documentReset = createAction(DocumentActionType.DOCUMENT_RESET);
 
 export const documentLoading = createAction(
     DocumentActionType.DOCUMENT_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ loading: boolean, success: boolean, errors: any[] }>()
 );
 
 export const documentFailure = createAction(
     DocumentActionType.DOCUMENT_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );

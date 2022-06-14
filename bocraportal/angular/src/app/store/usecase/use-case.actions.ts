@@ -22,4 +22,4 @@ export const setUseCaseInDialog = createAction(UseCaseScopeActionType.SET_USECAS
 
 export const reset = createAction(UseCaseScopeActionType.RESET_USECASE);
 
-export const useCaseActionFailure = createAction(UseCaseScopeActionType.ACTION_FAILURE, props<{ error: any }>());
+export const useCaseActionFailure = createAction(UseCaseScopeActionType.ACTION_FAILURE, props<{ errors: any[] }>());

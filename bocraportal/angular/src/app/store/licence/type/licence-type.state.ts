@@ -13,7 +13,7 @@ export interface LicenceTypeState {
     licenceTypeId: number | any,
     success: boolean;
     loading: boolean;
-    error: any
+    errors: any[]
 }
 
 export const initialState: LicenceTypeState = {
@@ -25,5 +25,5 @@ export const initialState: LicenceTypeState = {
     licenceTypeId: null,
     success: false,
     loading: false,
-    error: null
+    errors: []
 };

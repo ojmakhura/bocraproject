@@ -85,10 +85,10 @@ export const periodConfigReset = createAction(PeriodConfigActionType.PERIOD_CONF
 
 export const periodConfigLoading = createAction(
     PeriodConfigActionType.PERIOD_CONFIG_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ loading: boolean, success: boolean, errors: any[] }>()
 );
 
 export const periodConfigFailure = createAction(
     PeriodConfigActionType.PERIOD_CONFIG_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );

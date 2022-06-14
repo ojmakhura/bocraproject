@@ -111,10 +111,10 @@ export const licenceReset = createAction(LicenceActionType.LICENCE_RESET);
 
 export const licenceLoading = createAction(
     LicenceActionType.LICENCE_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ loading: boolean, success: boolean, errors: any[] }>()
 );
 
 export const licenceFailure = createAction(
     LicenceActionType.LICENCE_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );

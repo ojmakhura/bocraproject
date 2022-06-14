@@ -123,10 +123,10 @@ export const userReset = createAction(UserActionType.USER_RESET);
 
 export const userLoading = createAction(
     UserActionType.USER_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ loading: boolean, success: boolean, errors: any[] }>()
 );
 
 export const userFailure = createAction(
     UserActionType.USER_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );

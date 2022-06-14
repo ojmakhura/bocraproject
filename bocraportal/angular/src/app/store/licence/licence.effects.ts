@@ -19,7 +19,7 @@ export class LicenceEffects {
                     licence,
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure(error)])
+                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
             ))
         )
     );
@@ -32,7 +32,7 @@ export class LicenceEffects {
                     licence,
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure(error)])
+                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
             ))
         )
     );
@@ -45,7 +45,7 @@ export class LicenceEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure(error)])
+                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
             ))
         )
     );
@@ -58,7 +58,7 @@ export class LicenceEffects {
                     licences,
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure(error)])
+                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
             ))
         )
     );
@@ -71,7 +71,7 @@ export class LicenceEffects {
                     licences,
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure(error)])
+                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
             ))
         )
     );
@@ -84,7 +84,7 @@ export class LicenceEffects {
                     licences,
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure(error)])
+                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
             ))
         )
     );
@@ -97,7 +97,7 @@ export class LicenceEffects {
     //                 documents,
     //                 success: true
     //             })),
-    //             catchError(({error}) => [LicenceActions.licenceFailure(error)])
+    //             catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
     //         ))
     //     )
     // );

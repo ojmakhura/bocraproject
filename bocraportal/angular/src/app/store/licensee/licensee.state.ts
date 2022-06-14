@@ -15,7 +15,7 @@ export interface LicenseeState {
     removed: boolean,
     success: boolean,
     loading: boolean,
-    error: any
+    errors: any[]
 }
 
 export const initialState: LicenseeState = {
@@ -28,5 +28,5 @@ export const initialState: LicenseeState = {
     removed: false,
     success: false,
     loading: false,
-    error: null
+    errors: []
 };

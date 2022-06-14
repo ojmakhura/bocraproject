@@ -19,6 +19,7 @@ import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type
 import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
+import { AddNewSectionComponentImpl } from './add-new-section.component.impl';
 
 @Component({
   selector: 'app-edit-form',
@@ -78,7 +79,7 @@ export class EditFormComponentImpl extends EditFormComponent {
    * This method may be overwritten
    */
   beforeEditFormSave(form: EditFormSaveForm): void {
-    if (this.form.valid) {
+    if (this.formControl.valid) {
       if (form.form.id) {
         form.form.updatedBy = this.keycloakService.getUsername();
         form.form.updatedDate = new Date();
@@ -138,7 +139,7 @@ export class EditFormComponentImpl extends EditFormComponent {
 
   handleFormLicenceTypesSearch(): void {
     let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
-    criteria.typeSearch = this.formLicenceTypesSearchField.value;
+    criteria.typeSearch = this.formLicenceTypesSearchField;
     this.store.dispatch(
       LicenceTypeActions.search({
         criteria: criteria,
@@ -166,7 +167,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         } else {
           field.createdBy = this.keycloakService.getUsername();
           field.createdDate = new Date();
-          field.form = this.form.value;
+          field.form = this.form;
         }
         this.addToFormFormFields(field);
       }
@@ -179,11 +180,29 @@ export class EditFormComponentImpl extends EditFormComponent {
 
   handleFormLicenseesSelected() {}
 
-  afterSetEditFormAddSectionForm(form: EditFormAddSectionForm): void {}
+  afterSetEditFormAddSectionForm(form: EditFormAddSectionForm): void {
+  }
 
   beforeEditFormAddSection(): void {}
 
-  afterEditFormAddSection(): void {}
+  afterEditFormAddSection(): void {
+    const dialogRef = this.dialog.open(AddNewSectionComponentImpl, {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.dialogData) {
+        let section: FormSectionVO = result.dialogData.formSection;
+        if (section.id) {
+          section.updatedBy = this.keycloakService.getUsername();
+          section.updatedDate = new Date();
+        } else {
+          section.createdBy = this.keycloakService.getUsername();
+          section.createdDate = new Date();
+          section.form = this.form;
+        }
+
+        this.addToFormFormSections(section);
+      }
+    });
+  }
 
   handleFormFormSectionsAddDialog(): void {
   }

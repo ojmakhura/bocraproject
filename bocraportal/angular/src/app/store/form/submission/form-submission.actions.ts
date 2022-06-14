@@ -86,10 +86,10 @@ export const formSubmissionReset = createAction(FormSubmissionActionType.FORM_SU
 
 export const formSubmissionLoading = createAction(
     FormSubmissionActionType.FORM_SUBMISSION_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ loading: boolean, success: boolean, errors: any[] }>()
 );
 
 export const formSubmissionFailure = createAction(
     FormSubmissionActionType.FORM_SUBMISSION_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );

@@ -10,56 +10,56 @@ export const documentReducer = createReducer(
         document: action.document, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(DocumentActions.saveSuccess, (state, action) => ({
         ...state,
         document: action.document, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(DocumentActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(DocumentActions.getAllSuccess, (state, action) => ({
         ...state,
         documents: action.documents, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(DocumentActions.searchSuccess, (state, action) => ({
         ...state,
         documents: action.documents, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(DocumentActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         documents: action.documents, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(DocumentActions.getLicenseeDocumentsSuccess, (state, action) => ({
         ...state,
         documents: action.documents, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(DocumentActions.getLicenceDocumentsSuccess, (state, action) => ({
         ...state,
         documents: action.documents, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(DocumentActions.documentReset, (state) => ({
       ...state,
@@ -69,13 +69,13 @@ export const documentReducer = createReducer(
         document: null, 
         loading: false,
         success: false,
-        error: null
+        errors: []
     })),
     on(DocumentActions.documentFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        error: action.error
+        errors: action.errors
     })),
     on(DocumentActions.documentLoading, (state, action) => ({
         ...state,
@@ -86,7 +86,7 @@ export const documentReducer = createReducer(
     //     ...state,
     //     loading: action.loading,
     //     success: action.success,
-    //     error: action.error
+    //     errors: action.errors
     // }))
 );
 

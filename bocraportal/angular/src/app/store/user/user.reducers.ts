@@ -13,7 +13,7 @@ export const userReducer = createReducer(
         criteria: null, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(UserActions.updateUserNameSuccess, (state, action) => ({
         ...state,
@@ -23,7 +23,7 @@ export const userReducer = createReducer(
         criteria: null, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(UserActions.loadUsersSuccess, (state, action) => ({
         ...state,
@@ -33,7 +33,7 @@ export const userReducer = createReducer(
         criteria: null, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     // on(UserActions.findByIdSuccess, (state, action) => ({
     //     ...state,
@@ -43,7 +43,7 @@ export const userReducer = createReducer(
     //     criteria: null, 
     //     loading: false,
     //     success: action.success,
-    //     error: null
+    //     errors: []
     // })),
     // on(UserActions.saveSuccess, (state, action) => ({
     //     ...state,
@@ -53,7 +53,7 @@ export const userReducer = createReducer(
     //     criteria: null, 
     //     loading: false,
     //     success: action.success,
-    //     error: null
+    //     errors: []
     // })),
     // on(UserActions.removeSuccess, (state, action) => ({
     //     ...state,
@@ -63,7 +63,7 @@ export const userReducer = createReducer(
     //     criteria: null, 
     //     loading: false,
     //     success: action.success,
-    //     error: null
+    //     errors: []
     // })),
     // on(UserActions.getAllSuccess, (state, action) => ({
     //     ...state,
@@ -73,7 +73,7 @@ export const userReducer = createReducer(
     //     criteria: null, 
     //     loading: false,
     //     success: action.success,
-    //     error: null
+    //     errors: []
     // })),
     // on(UserActions.searchSuccess, (state, action) => ({
     //     ...state,
@@ -83,7 +83,7 @@ export const userReducer = createReducer(
     //     criteria: null, 
     //     loading: false,
     //     success: action.success,
-    //     error: null
+    //     errors: []
     // })),
     // on(UserActions.getAllPagedSuccess, (state, action) => ({
     //     ...state,
@@ -93,7 +93,7 @@ export const userReducer = createReducer(
     //     criteria: null, 
     //     loading: false,
     //     success: action.success,
-    //     error: null
+    //     errors: []
     // })),
     on(UserActions.userReset, (state) => ({
       ...state,
@@ -103,13 +103,13 @@ export const userReducer = createReducer(
         criteria: null, 
         loading: false,
         success: false,
-        error: null
+        errors: []
     })),
     on(UserActions.userFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        error: action.error
+        errors: action.errors
     })),
     on(UserActions.userLoading, (state, action) => ({
         ...state,

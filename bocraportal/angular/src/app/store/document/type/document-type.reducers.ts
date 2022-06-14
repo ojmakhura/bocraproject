@@ -61,13 +61,13 @@ export const documentTypeReducer = createReducer(
         id: null, 
         loading: false,
         success: false,
-        error: null
+        errors: []
     })),
     on(DocumentTypeActions.documentTypeFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        error: action.error
+        errors: action.errors
     })),
     on(DocumentTypeActions.documentTypeLoading, (state, action) => ({
         ...state,
@@ -78,7 +78,7 @@ export const documentTypeReducer = createReducer(
     //     ...state,
     //     loading: action.loading,
     //     success: action.success,
-    //     error: action.error
+    //     errors: action.errors
     // }))
 );
 

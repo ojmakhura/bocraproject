@@ -18,7 +18,7 @@ export class PeriodEffects {
                     period,
                     success: true
                 })),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
             ))
         )
     );
@@ -31,7 +31,7 @@ export class PeriodEffects {
                     period,
                     success: true
                 })),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
             ))
         )
     );
@@ -44,7 +44,7 @@ export class PeriodEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
             ))
         )
     );
@@ -57,7 +57,7 @@ export class PeriodEffects {
                     periods,
                     success: true
                 })),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
             ))
         )
     );
@@ -70,7 +70,7 @@ export class PeriodEffects {
                     periods,
                     success: true
                 })),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
             ))
         )
     );
@@ -83,7 +83,7 @@ export class PeriodEffects {
                     periods,
                     success: true
                 })),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
             ))
         )
     );

@@ -12,7 +12,7 @@ export interface PeriodState {
     removed: boolean,
     success: boolean,
     loading: boolean,
-    error: any
+    errors: any[]
 }
 
 export const initialState: PeriodState = {
@@ -23,5 +23,5 @@ export const initialState: PeriodState = {
     removed: false,
     success: false,
     loading: false,
-    error: null
+    errors: []
 };

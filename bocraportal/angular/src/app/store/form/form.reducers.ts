@@ -10,84 +10,84 @@ export const formReducer = createReducer(
         form: action.form,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.saveFormSuccess, (state, action) => ({
         ...state,
         form: action.form,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.removeFormSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.getAllFormsSuccess, (state, action) => ({
         ...state,
         forms: action.forms,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.searchFormsSuccess, (state, action) => ({
         ...state,
         forms: action.forms,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.getAllFormsPagedSuccess, (state, action) => ({
         ...state,
         forms: action.forms,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.findFieldByIdSuccess, (state, action) => ({
         ...state,
         formField: action.formField,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.saveFieldSuccess, (state, action) => ({
         ...state,
         formField: action.formField,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.addSectionSuccess, (state, action) => ({
         ...state,
         sections: [...state.formSections, action.section],
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.removeFieldSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.getAllFieldsSuccess, (state, action) => ({
         ...state,
         formFields: action.formFields,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.getAllFieldsPagedSuccess, (state, action) => ({
         ...state,
         formFields: action.formFields,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(FormActions.formReset, (state) => ({
       ...state,
@@ -98,13 +98,13 @@ export const formReducer = createReducer(
         forms: [], 
         loading: false,
         success: false,
-        error: null
+        errors: []
     })),
     on(FormActions.formFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        error: action.error
+        errors: action.errors
     })),
     on(FormActions.formLoading, (state, action) => ({
         ...state,
@@ -115,7 +115,7 @@ export const formReducer = createReducer(
         ...state,
         loading: action.loading,
         success: action.success,
-        error: action.error
+        errors: action.errors
     }))
 );
 

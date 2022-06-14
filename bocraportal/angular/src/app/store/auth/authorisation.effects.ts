@@ -15,7 +15,7 @@ export class AuthorisationEffects {
             ofType(AuthorisationActions.findById),
             mergeMap(({ id }) => this.authorisationRestController.findById(id).pipe(
                 map( authorisation => AuthorisationActions.findByIdSuccess({authorisation, success: true})),
-                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
+                catchError(({errors}) => [AuthorisationActions.authorisationFailure(errors)])
             ))
         )
     );
@@ -25,7 +25,7 @@ export class AuthorisationEffects {
             ofType(AuthorisationActions.save),
             mergeMap(({ authorisation }) => this.authorisationRestController.save(authorisation).pipe(
                 map( authorisation => AuthorisationActions.saveSuccess({authorisation, success: true})),
-                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
+                catchError(({errors}) => [AuthorisationActions.authorisationFailure(errors)])
             ))
         )
     );
@@ -38,7 +38,7 @@ export class AuthorisationEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
+                catchError(({errors}) => [AuthorisationActions.authorisationFailure(errors)])
             ))
         )
     );
@@ -51,7 +51,7 @@ export class AuthorisationEffects {
                     authorisations,
                     success: true
                 })),
-                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
+                catchError(({errors}) => [AuthorisationActions.authorisationFailure(errors)])
             ))
         )
     );
@@ -64,7 +64,7 @@ export class AuthorisationEffects {
                     authorisations,
                     success: true
                 })),
-                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
+                catchError(({errors}) => [AuthorisationActions.authorisationFailure(errors)])
             ))
         )
     );
@@ -77,7 +77,7 @@ export class AuthorisationEffects {
                     authorisations,
                     success: true
                 })),
-                catchError(({error}) => [AuthorisationActions.authorisationFailure(error)])
+                catchError(({errors}) => [AuthorisationActions.authorisationFailure(errors)])
             ))
         )
     );

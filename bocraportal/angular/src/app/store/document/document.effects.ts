@@ -18,7 +18,7 @@ export class DocumentEffects {
                     document,
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure(error)])
+                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
             ))
         )
     );
@@ -31,7 +31,7 @@ export class DocumentEffects {
                     document,
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure(error)])
+                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
             ))
         )
     );
@@ -44,7 +44,7 @@ export class DocumentEffects {
                     removed,
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure(error)])
+                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
             ))
         )
     );
@@ -57,7 +57,7 @@ export class DocumentEffects {
                     documents,
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure(error)])
+                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
             ))
         )
     );
@@ -70,7 +70,7 @@ export class DocumentEffects {
                     documents,
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure(error)])
+                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
             ))
         )
     );
@@ -83,7 +83,7 @@ export class DocumentEffects {
                     documents,
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure(error)])
+                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
             ))
         )
     );
@@ -96,7 +96,7 @@ export class DocumentEffects {
     //                 documents,
     //                 success: false
     //             })),
-    //             catchError(({error}) => [DocumentActions.documentFailure(error)])
+    //             catchError(({errors}) => [DocumentActions.documentFailure(errors)])
     //         ))
     //     )
     // );
@@ -109,7 +109,7 @@ export class DocumentEffects {
     //                 documents,
     //                 success: false
     //             })),
-    //             catchError(({error}) => [DocumentActions.documentFailure(error)])
+    //             catchError(({errors}) => [DocumentActions.documentFailure(errors)])
     //         ))
     //     )
     // );

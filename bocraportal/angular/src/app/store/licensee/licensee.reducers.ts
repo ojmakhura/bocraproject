@@ -10,49 +10,49 @@ export const licenseeReducer = createReducer(
         licensee: action.licensee, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenseeActions.saveSuccess, (state, action) => ({
         ...state,
         licensee: action.licensee, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenseeActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenseeActions.getAllSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenseeActions.searchSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     // on(LicenseeActions.getDocumentsSuccess, (state, action) => ({
     //     ...state,
     //     documents: action.documents, 
     //     loading: false,
     //     success: action.success,
-    //     error: null
+    //     errors: []
     // })),
     on(LicenseeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
         loading: false,
         success: action.success,
-        error: null
+        errors: []
     })),
     on(LicenseeActions.licenseeReset, (state) => ({
       ...state,
@@ -65,11 +65,11 @@ export const licenseeReducer = createReducer(
         id: null, 
         loading: false,
         success: false,
-        error: null
+        errors: []
     })),
     on(LicenseeActions.licenseeFailure, (state, action) => ({
         ...state,
-        error: action.error
+        errors: action.errors
     }))
 );
 

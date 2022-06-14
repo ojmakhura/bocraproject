@@ -42,8 +42,8 @@ export class LoginComponent implements OnInit {
     //   log.debug(`${credentials.username} successfully logged in`);
     //   this.router.navigate([ this.route.snapshot.queryParams['redirect'] || '/'], { replaceUrl: true });
     // }, error => {
-    //   log.debug(`Login error: ${error}`);
-    //   this.error = error;
+    //   log.debug(`Login error: ${errors}`);
+    //   this.errors = error;
     // });
   }
 

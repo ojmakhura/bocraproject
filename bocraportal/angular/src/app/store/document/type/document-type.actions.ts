@@ -85,10 +85,10 @@ export const documentTypeReset = createAction(DocumentTypeActionType.DOCUMENT_TY
 
 export const documentTypeLoading = createAction(
     DocumentTypeActionType.DOCUMENT_TYPE_LOADING,
-    props<{ loading: boolean, success: boolean, error: any }>()
+    props<{ loading: boolean, success: boolean, errors: any[] }>()
 );
 
 export const documentTypeFailure = createAction(
     DocumentTypeActionType.DOCUMENT_TYPE_FAILURE,
-    props<{ error: any, success: boolean, loading: boolean }>()
+    props<{ errors: any[], success: boolean, loading: boolean }>()
 );
