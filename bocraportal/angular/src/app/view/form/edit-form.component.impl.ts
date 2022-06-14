@@ -20,6 +20,7 @@ import * as LicenceTypeActions from '@app/store/licence/type/licence-type.action
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
 import { AddNewSectionComponentImpl } from './add-new-section.component.impl';
+import { MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-form',
@@ -157,6 +158,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   beforeEditFormAddField(form: EditFormAddFieldForm): void {}
 
   afterEditFormAddField(form: EditFormAddFieldForm): void {
+    
     const dialogRef = this.dialog.open(AddNewFieldComponentImpl, {});
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.dialogData) {
@@ -186,7 +188,13 @@ export class EditFormComponentImpl extends EditFormComponent {
   beforeEditFormAddSection(): void {}
 
   afterEditFormAddSection(): void {
-    const dialogRef = this.dialog.open(AddNewSectionComponentImpl, {});
+    const dialogConfig = new MatDialogConfig();
+    console.log(this.form);
+    dialogConfig.data = {
+      form: this.form
+    };
+
+    const dialogRef = this.dialog.open(AddNewSectionComponentImpl, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.dialogData) {
         let section: FormSectionVO = result.dialogData.formSection;
