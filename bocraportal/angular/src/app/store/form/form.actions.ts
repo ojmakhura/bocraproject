@@ -3,6 +3,8 @@ import { createAction, props } from '@ngrx/store';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
+import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
+import { ExpressionVO } from '@model/bw/org/bocra/portal/expression/expression-vo';
 
 export enum FormActionType {
     FIND_FORM_BY_ID = '[Form] Find Form By Id',
@@ -21,8 +23,13 @@ export enum FormActionType {
     FIND_FIELD_BY_ID_SUCCESS = '[Form] Find Field By Id Success',
     SAVE_FIELD = '[Form] Save Field',
     SAVE_FIELD_SUCCESS = '[Form] Save Field Success',
-    ADD_SECTION = '[Form] Add Section',
-    ADD_SECTION_SUCCESS = '[Form] Add Section Success',
+    SAVE_SECTION = '[Form] Save Section',
+    SAVE_SECTION_SUCCESS = '[Form] Save Section Success',
+    SAVE_EXPRESSION = '[Form] Save Expression',
+    SAVE_EXPRESSION_SUCCESS = '[Form] Save Expression Success',
+    SET_SECTIONS = '[Form] Set Sections',
+    REMOVE_SECTION = '[Form] Remove Section',
+    REMOVE_SECTION_SUCCESS = '[Form] Remove Section Success',
     REMOVE_FIELD = '[Form] Remove Field',
     REMOVE_FIELD_SUCCESS = '[Form] Remove Field Success',
     GET_ALL_FIELDS = '[Form] Get All Fields',
@@ -115,14 +122,39 @@ export const saveFieldSuccess = createAction(
     props<{ formField: FormFieldVO | any, success: boolean }>()
 );
 
-export const addSection = createAction(
-    FormActionType.ADD_SECTION,
-    props<{ section: string | any, loading: boolean }>()
+export const saveSection = createAction(
+    FormActionType.SAVE_SECTION,
+    props<{ formSection: FormSectionVO | any, loading: boolean }>()
 );
 
-export const addSectionSuccess = createAction(
-    FormActionType.ADD_SECTION_SUCCESS,
-    props<{ section: string | any, success: boolean }>()
+export const saveSectionSuccess = createAction(
+    FormActionType.SAVE_SECTION_SUCCESS,
+    props<{ formSection: FormSectionVO | any, success: boolean }>()
+);
+
+export const saveExpression = createAction(
+    FormActionType.SAVE_EXPRESSION,
+    props<{ expression: ExpressionVO | any, loading: boolean }>()
+);
+
+export const saveExpressionSuccess = createAction(
+    FormActionType.SAVE_EXPRESSION_SUCCESS,
+    props<{ expression: ExpressionVO | any, success: boolean }>()
+);
+
+export const setSections = createAction(
+    FormActionType.SET_SECTIONS,
+    props<{ formSections: FormSectionVO[] }>()
+);
+
+export const removeSection = createAction(
+    FormActionType.REMOVE_SECTION,
+    props<{ id: number | any, loading: boolean }>()
+);
+
+export const removeSectionSuccess = createAction(
+    FormActionType.REMOVE_SECTION_SUCCESS,
+    props<{ removed: boolean | any, success: boolean }>()
 );
 
 export const removeField = createAction(

@@ -40,7 +40,16 @@ public class FormSectionDaoImpl
         // WARNING! No conversion for target.form (can't convert source.getForm():bw.org.bocra.portal.form.Form to bw.org.bocra.portal.form.FormVO
         if(source.getForm() != null) {
             FormVO form = new FormVO();
-            getFormDao().toFormVO(source.getForm(), form);
+
+            form.setCode(source.getForm().getCode());
+            form.setCreatedBy(source.getForm().getCreatedBy());
+            form.setCreatedDate(source.getForm().getCreatedDate());
+            form.setUpdatedBy(source.getForm().getUpdatedBy());
+            form.setUpdatedDate(source.getForm().getUpdatedDate());
+            form.setEntryType(source.getForm().getEntryType());
+            form.setFormName(source.getForm().getFormName());
+            form.setId(source.getForm().getId());
+
             target.setForm(form);
         }
 
@@ -49,7 +58,11 @@ public class FormSectionDaoImpl
             Collection<FormFieldVO> fields = new ArrayList<>();
             for(FormField field : source.getFormFields()) {
                 FormFieldVO f = new FormFieldVO();
-                getFormFieldDao().toFormFieldVO(field, f);
+                f.setId(field.getId());
+                f.setFieldId(field.getFieldId());
+                f.setFieldName(field.getFieldName());
+                f.setFieldType(field.getFieldType());
+                f.setFieldValueType(field.getFieldValueType());
                 fields.add(f);
             }
 

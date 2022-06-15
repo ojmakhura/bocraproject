@@ -77,6 +77,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
 
     @Override
     public ResponseEntity<FormSectionVO> handleSave(FormSectionVO formSection) {
+        System.out.println(formSection.toString());
         Optional<FormSectionVO> data = Optional.of(formSectionService.save(formSection));
         ResponseEntity<FormSectionVO> response;
 

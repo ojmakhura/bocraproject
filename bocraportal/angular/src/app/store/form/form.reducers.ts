@@ -61,11 +61,25 @@ export const formReducer = createReducer(
         success: action.success,
         errors: []
     })),
-    on(FormActions.addSectionSuccess, (state, action) => ({
+    on(FormActions.saveSectionSuccess, (state, action) => ({
         ...state,
-        sections: [...state.formSections, action.section],
+        formSections: [...state.formSections, action.formSection],
+        formSection: action.formSection,
         loading: false,
         success: action.success,
+        errors: []
+    })),
+    on(FormActions.saveExpressionSuccess, (state, action) => ({
+        ...state,
+        expression: action.expression,
+        loading: false,
+        success: action.success,
+        errors: []
+    })),
+    on(FormActions.setSections, (state, action) => ({
+        ...state,
+        formSections: action.formSections,
+        loading: false,
         errors: []
     })),
     on(FormActions.removeFieldSuccess, (state, action) => ({
@@ -95,6 +109,9 @@ export const formReducer = createReducer(
         form: null, 
         id: null, 
         formField: null, 
+        formFields: [], 
+        formSection: null, 
+        formSections: [], 
         forms: [], 
         loading: false,
         success: false,

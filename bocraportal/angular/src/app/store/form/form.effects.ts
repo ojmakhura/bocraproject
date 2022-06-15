@@ -5,11 +5,18 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as FormActions from './form.actions';
 import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
 import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
+import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller.impl';
 
 @Injectable()
 export class FormEffects {
 
-    constructor(private actions$: Actions, private formFieldRestController: FormFieldRestControllerImpl, private formRestController: FormRestControllerImpl) {}
+    constructor(
+        private actions$: Actions, 
+        private formFieldRestController: FormFieldRestControllerImpl, 
+        private formRestController: FormRestControllerImpl,
+        private formSectionRestController: FormSectionRestControllerImpl) {
+        
+    }
 
     findFormById$ = createEffect(() => 
          this.actions$.pipe(
@@ -108,6 +115,32 @@ export class FormEffects {
             mergeMap(({ formField }) => this.formFieldRestController.save(formField).pipe(
                 map( formField => FormActions.saveFieldSuccess({
                     formField,
+                    success: true
+                })),
+                catchError(({errors}) => [FormActions.formFailure(errors)])
+            ))
+        )
+    );
+
+    saveSection$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormActions.saveSection),
+            mergeMap(({ formSection }) => this.formSectionRestController.save(formSection).pipe(
+                map( formSection => FormActions.saveSectionSuccess({
+                    formSection,
+                    success: true
+                })),
+                catchError(({errors}) => [FormActions.formFailure(errors)])
+            ))
+        )
+    );
+
+    saveExpression$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormActions.saveExpression),
+            mergeMap(({ expression }) => this.formSectionRestController.save(expression).pipe(
+                map( expression => FormActions.saveExpressionSuccess({
+                    expression,
                     success: true
                 })),
                 catchError(({errors}) => [FormActions.formFailure(errors)])

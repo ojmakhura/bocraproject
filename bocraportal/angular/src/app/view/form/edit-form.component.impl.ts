@@ -29,12 +29,17 @@ import { MatDialogConfig } from '@angular/material/dialog';
 })
 export class EditFormComponentImpl extends EditFormComponent {
   protected keycloakService: KeycloakService;
+  private formSection$: Observable<FormSectionVO>;
+  private formField$: Observable<FormFieldVO>;
 
   constructor(private injector: Injector) {
     super(injector);
     this.formLicenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
     this.keycloakService = injector.get(KeycloakService);
     this.formFormFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
+    this.formField$ = this.store.pipe(select(FormSelectors.selectFormField));
+    this.formSection$ = this.store.pipe(select(FormSelectors.selectFormSection));
+    this.formFormSections$ = this.store.pipe(select(FormSelectors.selectFormSections));
   }
 
   beforeOnInit() {}
@@ -52,19 +57,30 @@ export class EditFormComponentImpl extends EditFormComponent {
     }
 
     this.form$.subscribe((form) => {
+      if (form?.formSections) {
+        this.store.dispatch(
+          FormActions.setSections({
+            formSections: form?.formSections
+          })
+        );
+      }
       this.setEditFormSaveForm({ form: form } as EditFormSaveForm);
     });
 
-    this.formFormFields$.subscribe((data) => {
-      console.log(data);
+    this.formSection$.subscribe((section) => {
+      this.addToFormFormSections(section);
+    });
+
+    this.formField$.subscribe((field) => {
+      this.addToFormFormFields(field);
     });
   }
 
   handleFormChanges(change: any) {
-    console.log('chaning');
   }
 
-  doNgOnDestroy() {}
+  doNgOnDestroy() {
+  }
 
   /**
    * This method may be overwritten
@@ -93,6 +109,10 @@ export class EditFormComponentImpl extends EditFormComponent {
           form: form.form,
           loading: true,
         })
+      );
+    } else {
+      this.store.dispatch(
+        FormActions.formFailure({errors: ["Form has and error!"]})
       );
     }
   }
@@ -158,8 +178,12 @@ export class EditFormComponentImpl extends EditFormComponent {
   beforeEditFormAddField(form: EditFormAddFieldForm): void {}
 
   afterEditFormAddField(form: EditFormAddFieldForm): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      formSections: this.form.formSections
+    };
     
-    const dialogRef = this.dialog.open(AddNewFieldComponentImpl, {});
+    const dialogRef = this.dialog.open(AddNewFieldComponentImpl, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.dialogData) {
         let field: FormFieldVO = result.dialogData.formField;
@@ -171,7 +195,13 @@ export class EditFormComponentImpl extends EditFormComponent {
           field.createdDate = new Date();
           field.form = this.form;
         }
-        this.addToFormFormFields(field);
+
+        this.store.dispatch(
+          FormActions.saveField({
+            formField: field,
+            loading: true
+          })
+        );
       }
     });
   }
@@ -189,7 +219,6 @@ export class EditFormComponentImpl extends EditFormComponent {
 
   afterEditFormAddSection(): void {
     const dialogConfig = new MatDialogConfig();
-    console.log(this.form);
     dialogConfig.data = {
       form: this.form
     };
@@ -207,7 +236,12 @@ export class EditFormComponentImpl extends EditFormComponent {
           section.form = this.form;
         }
 
-        this.addToFormFormSections(section);
+        this.store.dispatch(
+          FormActions.saveSection({
+            formSection: section, 
+            loading: true
+          })
+        );
       }
     });
   }

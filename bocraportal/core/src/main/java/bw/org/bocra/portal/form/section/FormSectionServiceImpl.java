@@ -8,8 +8,13 @@
  */
 package bw.org.bocra.portal.form.section;
 
+import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormVO;
+
+import java.util.ArrayList;
 import java.util.Collection;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,9 +45,16 @@ public class FormSectionServiceImpl
         FormSection section = getFormSectionDao().formSectionVOToEntity(formSection);
 
         if(formSection.getId() == null) {
+            section = this.formSectionDao.create(section);
+            Form form = section.getForm();
+            if(CollectionUtils.isEmpty(form.getFormSections())){
+                form.setFormSections(new ArrayList<>());
+            }
 
+            form.getFormSections().add(section);
+            getFormDao().update(form);
         } else {
-
+            this.formSectionDao.update(section);
         }
 
         return getFormSectionDao().toFormSectionVO(section);
