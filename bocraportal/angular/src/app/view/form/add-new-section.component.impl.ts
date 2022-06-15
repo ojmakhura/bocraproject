@@ -24,7 +24,9 @@ export class AddNewSectionComponentImpl extends AddNewSectionComponent {
     this.form = data?.form;
   }
 
-  beforeOnInit() {}
+  beforeOnInit(form: AddNewSectionVarsForm): AddNewSectionVarsForm {
+    return form;
+  }
 
   afterOnInit() {}
 

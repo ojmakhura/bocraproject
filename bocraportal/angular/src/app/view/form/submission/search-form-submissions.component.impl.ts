@@ -16,7 +16,8 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
         super(injector);
     }
 
-    beforeOnInit(){
+    beforeOnInit(form: SearchFormSubmissionsVarsForm): SearchFormSubmissionsVarsForm {
+      return form;
     }
 	
     afterOnInit() {

@@ -23,7 +23,8 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
         this.keycloakService = injector.get(KeycloakService);
     }
 
-    beforeOnInit(){     
+    beforeOnInit(form: EditDocumentTypeVarsForm): EditDocumentTypeVarsForm {   
+      return form;  
     }
 	
     afterOnInit() {

@@ -32,7 +32,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     this.licensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
   }
 
-  beforeOnInit() {
+  beforeOnInit(form: EditUserVarsForm): EditUserVarsForm {
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
       role.forEach((val) => {
         let item = new SelectItem();
@@ -62,7 +62,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     //     this.userLicenseeBackingList.push(item);
     //   });
     // });
-    
+    return form;
   }
 
   afterOnInit() {

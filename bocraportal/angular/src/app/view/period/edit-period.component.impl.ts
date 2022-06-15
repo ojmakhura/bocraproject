@@ -24,7 +24,8 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         this.keycloakService = injector.get(KeycloakService);
     }
 
-    beforeOnInit(){
+    beforeOnInit(form: EditPeriodVarsForm): EditPeriodVarsForm {
+      return form;
     }
 	
     afterOnInit() {

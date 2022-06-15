@@ -42,7 +42,9 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.formFormSections$ = this.store.pipe(select(FormSelectors.selectFormSections));
   }
 
-  beforeOnInit() {}
+  beforeOnInit(form: EditFormVarsForm): EditFormVarsForm {
+    return form;
+  }
 
   afterOnInit() {}
 
@@ -178,32 +180,34 @@ export class EditFormComponentImpl extends EditFormComponent {
   beforeEditFormAddField(form: EditFormAddFieldForm): void {}
 
   afterEditFormAddField(form: EditFormAddFieldForm): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = {
-      formSections: this.form.formSections
-    };
-    
-    const dialogRef = this.dialog.open(AddNewFieldComponentImpl, dialogConfig);
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.dialogData) {
-        let field: FormFieldVO = result.dialogData.formField;
-        if (field.id) {
-          field.updatedBy = this.keycloakService.getUsername();
-          field.updatedDate = new Date();
-        } else {
-          field.createdBy = this.keycloakService.getUsername();
-          field.createdDate = new Date();
-          field.form = this.form;
-        }
+    this.useCaseScope.pageVariables['form'] = this.form;
 
-        this.store.dispatch(
-          FormActions.saveField({
-            formField: field,
-            loading: true
-          })
-        );
-      }
-    });
+    // const dialogConfig = new MatDialogConfig();
+    // dialogConfig.data = {
+    //   formSections: this.form.formSections
+    // };
+    
+    // const dialogRef = this.dialog.open(AddNewFieldComponentImpl, dialogConfig);
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result?.dialogData) {
+    //     let field: FormFieldVO = result.dialogData.formField;
+    //     if (field.id) {
+    //       field.updatedBy = this.keycloakService.getUsername();
+    //       field.updatedDate = new Date();
+    //     } else {
+    //       field.createdBy = this.keycloakService.getUsername();
+    //       field.createdDate = new Date();
+    //       field.form = this.form;
+    //     }
+
+    //     this.store.dispatch(
+    //       FormActions.saveField({
+    //         formField: field,
+    //         loading: true
+    //       })
+    //     );
+    //   }
+    // });
   }
 
   handleFormLicenseesAddDialog() {}

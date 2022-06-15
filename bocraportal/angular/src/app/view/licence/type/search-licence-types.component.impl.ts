@@ -15,7 +15,8 @@ export class SearchLicenceTypesComponentImpl extends SearchLicenceTypesComponent
         super(injector);
     }
 
-    beforeOnInit(){
+    beforeOnInit(form: SearchLicenceTypesVarsForm): SearchLicenceTypesVarsForm {
+        return form;
     }
 	
     afterOnInit() {

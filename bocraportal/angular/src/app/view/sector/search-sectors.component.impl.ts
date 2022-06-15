@@ -20,7 +20,9 @@ export class SearchSectorsComponentImpl extends SearchSectorsComponent {
         super(injector);
     }
 
-    beforeOnInit() {
+    beforeOnInit(form: SearchSectorsVarsForm): SearchSectorsVarsForm {
+
+        return form;
     }
 
     afterOnInit() {

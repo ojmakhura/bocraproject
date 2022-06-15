@@ -27,7 +27,7 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
     this.http = this._injector.get(HttpClient);
   }
 
-  beforeOnInit() {
+  beforeOnInit(form: SearchAuthorisationsVarsForm): SearchAuthorisationsVarsForm {
     this.store.dispatch(authorisationActions.authorisationReset());
 
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
@@ -49,6 +49,8 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
         this.criteriaRolesBackingList.push(item);
       });
     });
+    
+    return form;
   }
 
   afterOnInit() {}

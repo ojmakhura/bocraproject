@@ -16,7 +16,8 @@ export class SearchPeriodsComponentImpl extends SearchPeriodsComponent {
         super(injector);
     }
 
-    beforeOnInit(){
+    beforeOnInit(form: SearchPeriodsVarsForm): SearchPeriodsVarsForm {
+        return form;
     }
 	
     afterOnInit() {

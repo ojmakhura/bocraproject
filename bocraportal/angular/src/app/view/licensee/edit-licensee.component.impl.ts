@@ -47,7 +47,9 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     this.licenseeLicences$ = this.store.pipe(select(LicenceSelectors.selectLicences))
   }
 
-  beforeOnInit() {}
+  beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
+    return form;
+  }
 
   afterOnInit() {
     if (this.useCaseScope.pageVariables['id']) {

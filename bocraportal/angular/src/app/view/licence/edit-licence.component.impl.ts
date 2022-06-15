@@ -29,7 +29,8 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
         this.keycloakService = injector.get(KeycloakService);
     }
 
-    beforeOnInit(){     
+    beforeOnInit(form: EditLicenceVarsForm): EditLicenceVarsForm {    
+      return form; 
     }
 	
     afterOnInit() {

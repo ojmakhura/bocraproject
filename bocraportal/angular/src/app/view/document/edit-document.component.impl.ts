@@ -32,7 +32,8 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
         this.licences$ = this.store.select(LicenceSelectors.selectLicences);
     }
 
-    beforeOnInit(){     
+    beforeOnInit(form: EditDocumentVarsForm): EditDocumentVarsForm {  
+      return form;   
     }
 	
     afterOnInit() {

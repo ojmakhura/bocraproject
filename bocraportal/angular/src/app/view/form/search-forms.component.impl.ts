@@ -15,7 +15,8 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
     super(injector);
   }
 
-  beforeOnInit() {
+  beforeOnInit(form: SearchFormsVarsForm): SearchFormsVarsForm {
+    return form;
 
     this.store.dispatch(FormActions.formReset());
   }

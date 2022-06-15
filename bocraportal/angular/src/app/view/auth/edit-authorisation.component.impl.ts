@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 import { select } from '@ngrx/store';
 import jwt_decode from "jwt-decode";
+import { SearchAuthorisationsVarsForm } from '@view/auth/search-authorisations.component';
 
 @Component({
   selector: 'app-edit-authorisation',
@@ -30,7 +31,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     this.keycloakService = this._injector.get(KeycloakService);
   }
 
-    beforeOnInit(){
+    beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
       this.http.get<any[]>(environment.keycloakClientRoleUrl)
       .subscribe(role => {
         role.forEach(val => {
@@ -41,6 +42,8 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
           this.authorisationRolesBackingList.push(item);
         })
       });
+
+      return form;
     }
 	
     afterOnInit() {

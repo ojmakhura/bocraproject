@@ -31,7 +31,9 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     this.sectorLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees))
   }
 
-  beforeOnInit() {}
+  beforeOnInit(form: EditSectorVarsForm): EditSectorVarsForm {
+    return form;
+  }
 
   afterOnInit() {
     if (this.useCaseScope.pageVariables['id']) {

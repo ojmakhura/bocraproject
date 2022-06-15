@@ -33,7 +33,9 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
     this.keycloakService = injector.get(KeycloakService);
   }
 
-  beforeOnInit() {}
+  beforeOnInit(form: EditLicenceTypeVarsForm): EditLicenceTypeVarsForm {
+    return form;
+  }
 
   afterOnInit() {
     if (this.useCaseScope.pageVariables['id']) {

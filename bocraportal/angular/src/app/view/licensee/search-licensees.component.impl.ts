@@ -15,9 +15,10 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
     super(injector);
   }
 
-  beforeOnInit() {
+  beforeOnInit(form: SearchLicenseesVarsForm): SearchLicenseesVarsForm {
 
     this.store.dispatch(LicenseeActions.licenseeReset());
+    return form;
   }
 
   afterOnInit() {}

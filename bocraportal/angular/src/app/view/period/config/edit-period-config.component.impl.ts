@@ -24,10 +24,12 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
         this.keycloakService = injector.get(KeycloakService);
     }
 
-    beforeOnInit(){
+    beforeOnInit(form: EditPeriodConfigVarsForm){
       this.periodConfigFinalDayBackingList = days;
       this.periodConfigStartDayBackingList = days;
       this.periodConfigStartMonthBackingList = months;
+
+      return form;
     }
 	
     afterOnInit() {

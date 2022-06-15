@@ -16,7 +16,9 @@ export class SearchUsersComponentImpl extends SearchUsersComponent {
         super(injector);
     }
 
-    beforeOnInit(){
+    beforeOnInit(form: SearchUsersVarsForm): SearchUsersVarsForm{
+
+        return form;
     }
 	
     afterOnInit() {

@@ -22,7 +22,8 @@ export class AddNewExpressionComponentImpl extends AddNewExpressionComponent {
         super(injector);
     }
 
-    beforeOnInit(){     
+    beforeOnInit(form: AddNewExpressionVarsForm): AddNewExpressionVarsForm {     
+        return form;
     }
 	
     afterOnInit() {

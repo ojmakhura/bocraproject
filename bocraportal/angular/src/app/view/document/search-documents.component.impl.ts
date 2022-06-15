@@ -18,7 +18,8 @@ export class SearchDocumentsComponentImpl extends SearchDocumentsComponent {
         super(injector);
     }
 
-    beforeOnInit(){     
+    beforeOnInit(form: SearchDocumentsVarsForm): SearchDocumentsVarsForm {     
+      return form;
     }
 	
     afterOnInit() {

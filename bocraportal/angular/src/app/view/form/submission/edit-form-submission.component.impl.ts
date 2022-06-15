@@ -66,7 +66,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
   }
 
-  beforeOnInit() {}
+  beforeOnInit(form: EditFormSubmissionVarsForm): EditFormSubmissionVarsForm {
+    return form;
+  }
 
   afterOnInit() {}
 

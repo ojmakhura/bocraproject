@@ -13,6 +13,8 @@ import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ExpressionVO } from '@app/model/bw/org/bocra/portal/expression/expression-vo';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
+import { SelectItem } from '@app/utils/select-item';
 
 @Component({
   selector: 'app-add-new-field',
@@ -23,9 +25,22 @@ export class AddNewFieldComponentImpl extends AddNewFieldComponent {
 
     constructor(private injector: Injector) {
         super(injector);
+        
+        if(this.useCaseScope?.pageVariables['form']) {
+          const form: FormVO = this.useCaseScope?.pageVariables['form'];
+
+          form?.formSections?.forEach((element: FormSectionVO) => {
+            let item: SelectItem = new SelectItem();
+            item.label = element.sectionName;
+            item.value = element;
+
+            this.formFieldFormSectionBackingList.push(item);
+        });
+        }
     }
 
-    beforeOnInit(){     
+    beforeOnInit(form: AddNewFieldVarsForm): AddNewFieldVarsForm {     
+      return form;
     }
 	
     afterOnInit() {

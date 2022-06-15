@@ -19,7 +19,8 @@ export class NewShareholderComponentImpl extends NewShareholderComponent {
         super(injector);
     }
 
-    beforeOnInit(){     
+    beforeOnInit(form: NewShareholderVarsForm): NewShareholderVarsForm {
+        return form;
     }
 	
     afterOnInit() {
