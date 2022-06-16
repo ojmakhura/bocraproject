@@ -16,51 +16,20 @@ export class SearchPeriodsComponentImpl extends SearchPeriodsComponent {
         super(injector);
     }
 
-    beforeOnInit(form: SearchPeriodsVarsForm): SearchPeriodsVarsForm {
+    override beforeOnInit(form: SearchPeriodsVarsForm): SearchPeriodsVarsForm {
         return form;
     }
 	
-    afterOnInit() {
-        // this.addPeriodsDummyData();
-    }
-
-    doNgAfterViewInit() {
-    }
-
-    handleFormChanges(change: any) {
-    }
-
-    doNgOnDestroy(){}
+    override doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetSearchPeriodsVarsForm(form: SearchPeriodsVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchPeriodsSearchForm(form: SearchPeriodsSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchPeriodsSearch(form: SearchPeriodsSearchForm): void {
+    override beforeSearchPeriodsSearch(form: SearchPeriodsSearchForm): void {
         this.store.dispatch(PeriodActions.search({
             criteria: form.criteria,
             loading: true
         }));
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchPeriodsSearch(form: SearchPeriodsSearchForm): void {
-
     }
     
 }

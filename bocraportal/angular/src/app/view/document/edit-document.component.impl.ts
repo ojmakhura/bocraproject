@@ -19,142 +19,54 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-edit-document',
   templateUrl: './edit-document.component.html',
-  styleUrls: ['./edit-document.component.scss']
+  styleUrls: ['./edit-document.component.scss'],
 })
 export class EditDocumentComponentImpl extends EditDocumentComponent {
+  protected keycloakService: KeycloakService;
+  licences$: Observable<LicenceVO[]>;
 
-    protected keycloakService: KeycloakService;
-    licences$: Observable<LicenceVO[]>
+  constructor(private injector: Injector) {
+    super(injector);
+    this.keycloakService = injector.get(KeycloakService);
+    this.licences$ = this.store.select(LicenceSelectors.selectLicences);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-        this.keycloakService = injector.get(KeycloakService);
-        this.licences$ = this.store.select(LicenceSelectors.selectLicences);
-    }
+  override beforeOnInit(form: EditDocumentVarsForm): EditDocumentVarsForm {
+    return form;
+  }
 
-    beforeOnInit(form: EditDocumentVarsForm): EditDocumentVarsForm {  
-      return form;   
-    }
-	
-    afterOnInit() {
-      if (this.useCaseScope.pageVariables['id']) {
-        this.store.dispatch(DocumentActions.findById({
+  override afterOnInit() {
+    if (this.useCaseScope.pageVariables['id']) {
+      this.store.dispatch(
+        DocumentActions.findById({
           id: this.useCaseScope.pageVariables['id'],
-          loading: true
-        }));
-      }
-  
-      this.document$.subscribe((document) => {
-        this.setEditDocumentSaveForm({ document: document } as EditDocumentSaveForm);
-      });
+          loading: true,
+        })
+      );
     }
 
-    doNgAfterViewInit() {
+    this.document$.subscribe((document) => {});
+  }
+
+  override doNgOnDestroy() {}
+
+  /**
+   * This method may be overwritten
+   */
+  override beforeEditDocumentSave(form: EditDocumentSaveForm): void {
+    if (form.document?.id) {
+      form.document.updatedBy = this.keycloakService.getUsername();
+      form.document.updatedDate = new Date();
+    } else {
+      form.document.createdBy = this.keycloakService.getUsername();
+      form.document.createdDate = new Date();
     }
 
-    doNgOnDestroy(){}
-
-    handleFormChanges(change: any) {
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditDocumentVarsForm(form: EditDocumentVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditDocumentSaveForm(form: EditDocumentSaveForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditDocumentSave(form: EditDocumentSaveForm): void {
-      if(form.document?.id) {
-
-        form.document.updatedBy = this.keycloakService.getUsername();
-        form.document.updatedDate = new Date();
-      } else {
-        form.document.createdBy = this.keycloakService.getUsername();
-        form.document.createdDate = new Date();
-      }
-      
-      this.store.dispatch(DocumentActions.save({
+    this.store.dispatch(
+      DocumentActions.save({
         document: form.document,
-        loading: false
-      }));
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditDocumentSave(form: EditDocumentSaveForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditDocumentSearchForm(form: EditDocumentSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditDocumentSearch(form: EditDocumentSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditDocumentSearch(form: EditDocumentSearchForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditDocumentDeleteForm(form: EditDocumentDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditDocumentDelete(form: EditDocumentDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditDocumentDelete(form: EditDocumentDeleteForm): void {
-
-    }
-    
-    handleDocumentLicenceAddDialog(): void {
-    }
-    handleDocumentLicenceSearch(): void {
-    }
-    handleDocumentLicenceSelected(event: MatRadioChange, data: LicenceVO): void {
-    }
-    handleDocumentLicenseeAddDialog(): void {
-    }
-    handleDocumentLicenseeSearch(): void {
-    }
-    handleDocumentLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {
-    }
-    handleDocumentDocumentTypeAddDialog(): void {
-    }
-    handleDocumentDocumentTypeSearch(): void {
-    }
-    handleDocumentDocumentTypeSelected(event: MatRadioChange, data: DocumentTypeVO): void {
-    }
+        loading: false,
+      })
+    );
+  }
 }

@@ -13,18 +13,4 @@ export class SearchDocumentsDocumentsComponentImpl extends SearchDocumentsDocume
         super(injector);
     }
 
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
-  }
-  doNgOnDestroy(): void {}
-
-	doSearchDocumentsEdit(form: any): any {
-    return form;
-	}
 }

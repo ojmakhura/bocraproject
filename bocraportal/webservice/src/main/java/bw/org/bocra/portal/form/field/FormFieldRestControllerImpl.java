@@ -81,6 +81,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
 
     @Override
     public ResponseEntity<FormFieldVO> handleSave(FormFieldVO formFieldVO) {
+        System.out.println(formFieldVO);
         Optional<FormFieldVO> data = Optional.of(formFieldService.save(formFieldVO));
         ResponseEntity<FormFieldVO> response;
 

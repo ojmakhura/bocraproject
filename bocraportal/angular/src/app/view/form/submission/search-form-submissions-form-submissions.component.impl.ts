@@ -9,21 +9,7 @@ import { SearchFormSubmissionsFormSubmissionsComponent } from '@app/view/form/su
 })
 export class SearchFormSubmissionsFormSubmissionsComponentImpl extends SearchFormSubmissionsFormSubmissionsComponent {
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
-
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
-  }
-  doNgOnDestroy(): void {}
-
-  doSearchFormSubmissionsEdit(form: any) {
+  constructor(private injector: Injector) {
+    super(injector);
   }
 }

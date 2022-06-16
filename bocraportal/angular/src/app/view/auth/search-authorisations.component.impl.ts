@@ -2,11 +2,8 @@
 import { Component, Injector } from '@angular/core';
 import { SearchAuthorisationsComponent, SearchAuthorisationsVarsForm } from '@app/view/auth/search-authorisations.component';
 import { SearchAuthorisationsSearchForm } from '@app/view/auth/search-authorisations.component';
-import { Observable } from 'rxjs/internal/Observable';
-import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 import * as authorisationSelectors from '@app/store/auth/authorisation.selectors';
 import * as authorisationActions from '@app/store/auth/authorisation.actions';
-import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
@@ -53,39 +50,16 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
     return form;
   }
 
-  afterOnInit() {}
-
-  doNgAfterViewInit() {
-    // this.authorisations$.subscribe((authorisations) => {
-    //   this.setAuthorisations(authorisations);
-    // });
-  }
-
-  doNgOnDestroy(){}
-
-  handleFormChanges(change: any) {}
+  override doNgOnDestroy(){}
 
   /**
    * This method may be overwritten
    */
-  afterSetSearchAuthorisationsSearchForm(form: SearchAuthorisationsSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeSearchAuthorisationsSearch(form: SearchAuthorisationsSearchForm): void {
+  override beforeSearchAuthorisationsSearch(form: SearchAuthorisationsSearchForm): void {
     this.store.dispatch(authorisationActions.search({
       criteria: form.criteria,
       loading: true
     }));
     
-  }
-
-  /**
-   * This method may be overwritten
-   */
-  afterSearchAuthorisationsSearch(form: SearchAuthorisationsSearchForm): void {}
-
-  afterSetSearchAuthorisationsVarsForm(form: SearchAuthorisationsVarsForm): void {
   }
 }

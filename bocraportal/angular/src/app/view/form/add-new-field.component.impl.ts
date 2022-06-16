@@ -18,181 +18,128 @@ import { FormFieldVO } from '@model/bw/org/bocra/portal/form/field/form-field-vo
 import { SelectItem } from '@app/utils/select-item';
 import { Observable } from 'rxjs';
 import { select } from '@ngrx/store';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-add-new-field',
   templateUrl: './add-new-field.component.html',
-  styleUrls: ['./add-new-field.component.scss']
+  styleUrls: ['./add-new-field.component.scss'],
 })
 export class AddNewFieldComponentImpl extends AddNewFieldComponent {
 
-    form$: Observable<FormVO>;
-    constructor(private injector: Injector) {
-        super(injector);
-        this.form$ = this.store.pipe(select(FormSelectors.selectForm));
-    }
+  form$: Observable<FormVO>;
+  protected keycloakService: KeycloakService;
 
-    beforeOnInit(form: AddNewFieldVarsForm): AddNewFieldVarsForm {     
-      if (this.useCaseScope?.pageVariables['form']) {
-        const f: FormVO = this.useCaseScope?.pageVariables['form'];
-  
-        f?.formSections?.forEach((element: FormSectionVO) => {
-          let item: SelectItem = new SelectItem();
-          item.label = element.sectionName;
-          item.value = element;
-  
-          this.formFieldFormSectionBackingList.push(item);
-        });
-  
-        if(!form?.formField) {
-          form.formField = new FormFieldVO();
-        }
-  
-        form.formField.form = f;
-      } 
+  constructor(private injector: Injector) {
+    super(injector);
+    this.form$ = this.store.pipe(select(FormSelectors.selectForm));
+    this.keycloakService = injector.get(KeycloakService);
+  }
 
-      return form;
-    }
-	
-    afterOnInit() {
-    }
+  override beforeOnInit(form: AddNewFieldVarsForm): AddNewFieldVarsForm {
+    if (this.useCaseScope?.pageVariables['form']) {
+      const f: FormVO = this.useCaseScope?.pageVariables['form'];
 
-    doNgAfterViewInit() {
-      console.log(this.formController.getPageVariables())
-      this.route.queryParams.subscribe((queryParams: any) => {
+      f?.formSections?.forEach((element: FormSectionVO) => {
+        let item: SelectItem = new SelectItem();
+        item.label = element.sectionName;
+        item.value = element;
 
-        if(queryParams?.id) {
-          this.store.dispatch(
-            FormActions.findFieldById({id: queryParams.id, loading: true})
-          );
-
-          this.form$.subscribe(f => {
-            this.formFieldFormControl.patchValue(f);
-            
-          });
-        } else {
-          if(queryParams?.formId) {
-            this.store.dispatch(
-              FormActions.findFormById({id: queryParams.formId, loading: true})
-            );
-
-            this.form$.subscribe(f => {
-              this.formFieldFormControl.patchValue(f);
-              
-            });
-          }
-        }
+        this.formFieldFormSectionBackingList.push(item);
       });
+
+      if (!form?.formField) {
+        form.formField = new FormFieldVO();
+      }
+
+      form.formField.form = f;
     }
 
-    doNgOnDestroy(){}
+    return form;
+  }
 
-    handleFormChanges(change: any) {
-    }
+  override doNgOnDestroy(): void {
+  }
 
-    handleFormFieldFormAddDialog(): void {}
+  override doNgAfterViewInit() {
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.id) {
+        this.store.dispatch(FormActions.findFieldById({ id: queryParams.id, loading: true }));
 
-    handleFormFieldFormSearch(): void {}
+        this.form$.subscribe((f) => {
+          this.formFieldFormControl.patchValue(f);
+          this.formFieldFormSectionBackingList = [];
+          f?.formSections?.forEach((element: FormSectionVO) => {
+            let item: SelectItem = new SelectItem();
+            item.label = element.sectionName;
+            item.value = element;
     
-    handleFormFieldFormSelected(event: MatRadioChange, data: FormVO): void {}
+            this.formFieldFormSectionBackingList.push(item);
+          });
+        });
+      } else {
+        if (queryParams?.formId) {
+          this.store.dispatch(FormActions.findFormById({ id: queryParams.formId, loading: true }));
+          
+          this.form$.subscribe((f) => {
+            this.formFieldFormControl.patchValue(f);
+            this.formFieldFormSectionBackingList = []
+            f?.formSections?.forEach((element: FormSectionVO) => {
+              let item: SelectItem = new SelectItem();
+              item.label = element.sectionName;
+              item.value = element;
+      
+              this.formFieldFormSectionBackingList.push(item);
+            });
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  override beforeAddNewFieldCancel(form: AddNewFieldCancelForm): void {
+    this.useCaseScope.pageVariables['form'] = form.formFieldForm;
+    this.useCaseScope.queryParams['id'] = form.formFieldForm.id;
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  override beforeAddNewFieldDone(form: AddNewFieldDoneForm): void {
+    this.useCaseScope.pageVariables['form'] = this.formFieldForm;
+    this.useCaseScope.queryParams['id'] = this.formFieldForm.id;
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  override beforeAddNewFieldSave(form: AddNewFieldSaveForm): void {
     
-    handleFormFieldExpressionAddDialog(): void {}
+    if(this.formFieldControl.dirty && this.formFieldControl.valid){
 
-    handleFormFieldExpressionSearch(): void {}
-    
-    handleFormFieldExpressionSelected(event: MatRadioChange, data: ExpressionVO): void {}
-    
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetAddNewFieldVarsForm(form: AddNewFieldVarsForm): void {
-
+      console.log(this.formField);
     }
 
-    /**
-     * This method may be overwritten
-     */
-    afterSetAddNewFieldAddExpressionForm(form: AddNewFieldAddExpressionForm): void {
+    if (this.formFieldControl.dirty && this.formFieldControl.valid) {
+      if (this.formField.id) {
+        this.formField.updatedBy = this.keycloakService.getUsername();
+        this.formField.updatedDate = new Date();
+      } else {
+        this.formField.createdBy = this.keycloakService.getUsername();
+        this.formField.createdDate = new Date();
+      }
 
+      this.store.dispatch(
+        FormActions.saveField({
+          formField: this.formField,
+          loading: true,
+        })
+      );
+    } else {
+      this.store.dispatch(FormActions.formFailure({ errors: ['Form has and error!'] }));
     }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeAddNewFieldAddExpression(form: AddNewFieldAddExpressionForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterAddNewFieldAddExpression(form: AddNewFieldAddExpressionForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetAddNewFieldCancelForm(form: AddNewFieldCancelForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeAddNewFieldCancel(form: AddNewFieldCancelForm): void {
-      console.log(form);
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterAddNewFieldCancel(form: AddNewFieldCancelForm): void {
-      console.log(form);
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetAddNewFieldDoneForm(form: AddNewFieldDoneForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeAddNewFieldDone(form: AddNewFieldDoneForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterAddNewFieldDone(form: AddNewFieldDoneForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetAddNewFieldSaveForm(form: AddNewFieldSaveForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeAddNewFieldSave(form: AddNewFieldSaveForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterAddNewFieldSave(form: AddNewFieldSaveForm): void {
-
-    }
-    
+  }
 }

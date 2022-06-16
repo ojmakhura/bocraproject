@@ -24,16 +24,13 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         this.keycloakService = injector.get(KeycloakService);
     }
 
-    beforeOnInit(form: EditPeriodVarsForm): EditPeriodVarsForm {
+    override beforeOnInit(form: EditPeriodVarsForm): EditPeriodVarsForm {
       return form;
     }
-	
-    afterOnInit() {
-    }
 
-    doNgOnDestroy(){}
+    override doNgOnDestroy(){}
 
-    doNgAfterViewInit() {
+    override doNgAfterViewInit() {
       if (this.useCaseScope.pageVariables['id']) {
         this.store.dispatch(PeriodActions.findById({
           id: this.useCaseScope.pageVariables['id'],
@@ -42,31 +39,13 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
       }
   
       this.period$.subscribe((period) => {
-        this.setEditPeriodSaveForm({ period: period } as EditPeriodSaveForm);
       });
     }
 
-    handleFormChanges(change: any) {
-    }
-
     /**
      * This method may be overwritten
      */
-    afterSetEditPeriodVarsForm(form: EditPeriodVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditPeriodSaveForm(form: EditPeriodSaveForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditPeriodSave(form: EditPeriodSaveForm): void {
+    override beforeEditPeriodSave(form: EditPeriodSaveForm): void {
       if(this.periodControl.valid) {
         if(form.period.id) {
           form.period.updatedBy = this.keycloakService.getUsername();
@@ -82,72 +61,5 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         }));
       }
 
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditPeriodSave(form: EditPeriodSaveForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditPeriodSearchForm(form: EditPeriodSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditPeriodSearch(form: EditPeriodSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditPeriodSearch(form: EditPeriodSearchForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditPeriodDeleteForm(form: EditPeriodDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditPeriodDelete(form: EditPeriodDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditPeriodDelete(form: EditPeriodDeleteForm): void {
-
-    }
-        
-    handlePeriodNextAddDialog(): void {
-    }
-    
-    handlePeriodNextSearch(): void {
-    }
-
-    handlePeriodNextSelected(event: MatRadioChange, data: PeriodVO): void {
-    }
-
-    handlePeriodPreviousAddDialog(): void {
-    }
-
-    handlePeriodPreviousSearch(): void {
-    }
-
-    handlePeriodPreviousSelected(event: MatRadioChange, data: PeriodVO): void {
     }
 }

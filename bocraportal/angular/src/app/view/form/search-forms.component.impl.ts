@@ -15,42 +15,21 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
     super(injector);
   }
 
-  beforeOnInit(form: SearchFormsVarsForm): SearchFormsVarsForm {
+  override beforeOnInit(form: SearchFormsVarsForm): SearchFormsVarsForm {
     return form;
 
     this.store.dispatch(FormActions.formReset());
   }
 
-  afterOnInit() {}
-
-  doNgAfterViewInit() {}
-
-  handleFormChanges(change: any) {}
-
-  doNgOnDestroy() {}
+  override doNgOnDestroy() {}
 
   /**
    * This method may be overwritten
    */
-  afterSetSearchFormsVarsForm(form: SearchFormsVarsForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetSearchFormsSearchForm(form: SearchFormsSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeSearchFormsSearch(form: SearchFormsSearchForm): void {
+  override beforeSearchFormsSearch(form: SearchFormsSearchForm): void {
     this.store.dispatch(FormActions.searchForms({
       criteria: form.criteria,
       loading: true
     }));
   }
-
-  /**
-   * This method may be overwritten
-   */
-  afterSearchFormsSearch(form: SearchFormsSearchForm): void {}
 }

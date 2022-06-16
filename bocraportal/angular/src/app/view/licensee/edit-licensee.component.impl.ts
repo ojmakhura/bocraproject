@@ -12,10 +12,8 @@ import { EditLicenseeSaveForm } from '@app/view/licensee/edit-licensee.component
 import { EditLicenseeSearchForm } from '@app/view/licensee/edit-licensee.component';
 import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
-import { Observable } from 'rxjs';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
-import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
 import * as SectorActions from '@app/store/sector/sector.actions';
 import * as SectorSelectors from '@app/store/sector/sector.selectors';
 import * as DocumentActions from '@app/store/document/document.actions';
@@ -23,12 +21,6 @@ import * as DocumentSelectors from '@app/store/document/document.selectors';
 import * as LicenceActions from '@app/store/licence/licence.actions';
 import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import * as FormActions from '@app/store/form/form.actions';
-import * as FormSelectors from '@app/store/form/form.selectors';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
-import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
-import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
-import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -51,7 +43,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     return form;
   }
 
-  afterOnInit() {
+  override afterOnInit() {
     if (this.useCaseScope.pageVariables['id']) {
       this.store.dispatch(
         LicenseeActions.findById({
@@ -62,13 +54,9 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     }
 
     this.licensee$.subscribe((licensee) => {
-      this.setEditLicenseeSaveForm({ licensee: licensee } as EditLicenseeSaveForm);
+      
     });
   }
-
-  doNgAfterViewInit() {}
-
-  handleFormChanges(change: any) {}
 
   doNgOnDestroy() {}
 
@@ -80,7 +68,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   /**
    * This method may be overwritten
    */
-  beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
+  override beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
     if (form.licensee?.id) {
       form.licensee.updatedBy = this.keycloakService.getUsername();
       form.licensee.updatedDate = new Date();
@@ -97,61 +85,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     );
   }
 
-  /**
-   * This method may be overwritten
-   */
-  afterEditLicenseeSave(form: EditLicenseeSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditLicenseeSearchForm(form: EditLicenseeSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditLicenseeSearch(form: EditLicenseeSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditLicenseeSearch(form: EditLicenseeSearchForm): void {}
-
-  afterSetEditLicenseeDeleteForm(form: EditLicenseeDeleteForm): void {}
-
-  beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {}
-
-  afterEditLicenseeDelete(form: EditLicenseeDeleteForm): void {}
-
-  afterSetEditLicenseeVarsForm(form: EditLicenseeVarsForm): void {}
-
-  handleLicenseeUsersAddDialog(): void {}
-
-  handleLicenseeUsersSearch(): void {}
-
-  handleLicenseeUsersSelected(event: MatCheckboxChange, element: UserVO): void {}
-
-  afterSetEditLicenseeDocumentsForm(form: EditLicenseeDocumentsForm): void {}
-
-  beforeEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {}
-
-  afterEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {}
-
-  afterSetEditLicenseeNewShareholderForm(form: EditLicenseeNewShareholderForm): void {}
-
-  beforeEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm): void {}
-
-  afterEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm): void {}
-
-  afterSetEditLicenseeNewDocumentForm(form: EditLicenseeNewDocumentForm): void {}
-
-  beforeEditLicenseeNewDocument(): void {}
-
-  afterEditLicenseeNewDocument(): void {}
-
-  handleLicenseeLicencesAddDialog(): void {}
-
-  handleLicenseeLicencesSearch(): void {
+  override handleLicenseeLicencesSearch(): void {
 
     let criteria: string = '';
     criteria = this.licenseeLicencesSearchField.value;
@@ -161,11 +95,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     }));
   }
 
-  handleLicenseeLicencesSelected(event: MatCheckboxChange, data: LicenceVO): void {}
-
-  handleLicenseeDocumentsAddDialog(): void {}
-
-  handleLicenseeDocumentsSearch(): void {
+  override handleLicenseeDocumentsSearch(): void {
 
     let criteria: string = '';
     criteria = this.licenseeDocumentsSearchField.value;
@@ -175,10 +105,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     }));
   }
 
-  handleLicenseeDocumentsSelected(event: MatCheckboxChange, data: DocumentVO): void {}
-
-  handleLicenseeFormsAddDialog(): void {}
-  handleLicenseeFormsSearch(): void {
+  override handleLicenseeFormsSearch(): void {
 
     let criteria: string = '';
     criteria = this.licenseeFormsSearchField.value;
@@ -187,11 +114,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       loading: true
     }));
   }
-  handleLicenseeFormsSelected(event: MatCheckboxChange, data: FormVO): void {}
-
-  handleLicenseeSectorsAddDialog(): void {
-  }
-  handleLicenseeSectorsSearch(): void {
+  
+  override handleLicenseeSectorsSearch(): void {
 
     let criteria: string = '';
     criteria = this.licenseeSectorsSearchField.value;
@@ -199,7 +123,5 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       criteria: criteria,
       loading: true
     }));
-  }
-  handleLicenseeSectorsSelected(event: MatCheckboxChange, data: SectorVO): void {
   }
 }

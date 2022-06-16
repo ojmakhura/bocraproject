@@ -16,52 +16,20 @@ export class SearchPeriodConfigsComponentImpl extends SearchPeriodConfigsCompone
         super(injector);
     }
 
-    beforeOnInit(form: SearchPeriodConfigsVarsForm){
+    override beforeOnInit(form: SearchPeriodConfigsVarsForm){
         return form;
     }
 	
-    afterOnInit() {
-        // this.addPeriodConfigsDummyData();
-    }
-
-    doNgOnDestroy(){}
-
-    doNgAfterViewInit() {
-    }
-
-    handleFormChanges(change: any) {
-    }
+    override doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetSearchPeriodConfigsVarsForm(form: SearchPeriodConfigsVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchPeriodConfigsSearchForm(form: SearchPeriodConfigsSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchPeriodConfigsSearch(form: SearchPeriodConfigsSearchForm): void {
+    override beforeSearchPeriodConfigsSearch(form: SearchPeriodConfigsSearchForm): void {
 
         this.store.dispatch(PeriodConfigActions.search({
             criteria: form.criteria,
             loading: true
         }));
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchPeriodConfigsSearch(form: SearchPeriodConfigsSearchForm): void {
-
-    }
-    
+    }    
 }

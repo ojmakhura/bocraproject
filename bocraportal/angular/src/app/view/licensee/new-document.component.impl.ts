@@ -16,26 +16,8 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
         super(injector);
     }
 
-    beforeOnInit(){     
-    }
-	
-    afterOnInit() {
+    override beforeOnInit(){     
     }
 
-    doNgAfterViewInit() {
-    }
-
-    doNgOnDestroy(){}
-
-    handleFormChanges(change: any) {
-    }
-
-
-    handleCancelDialog(): void {
-
-    }
-
-    handleDialogDone(data: any): any {
-        return data;
-    }
+    override doNgOnDestroy(){}
 }

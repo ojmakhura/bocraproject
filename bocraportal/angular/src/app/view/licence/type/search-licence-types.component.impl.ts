@@ -19,44 +19,15 @@ export class SearchLicenceTypesComponentImpl extends SearchLicenceTypesComponent
         return form;
     }
 	
-    afterOnInit() {
-        // this.licenceTypes$.subscribe(licenceTypes => {
-        //     this.setLicenceTypes(licenceTypes);
-        // });
-    }
-
-    doNgAfterViewInit() {
-    }
-
-    handleFormChanges(change: any) {
-    }
-
     doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetSearchLicenceTypesSearchForm(form: SearchLicenceTypesSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchLicenceTypesSearch(form: SearchLicenceTypesSearchForm): void {
+    override beforeSearchLicenceTypesSearch(form: SearchLicenceTypesSearchForm): void {
         this.store.dispatch(licenceTypeActions.search({
             criteria: form.criteria,
             loading: true
         }));
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchLicenceTypesSearch(form: SearchLicenceTypesSearchForm): void {
-
-    }
-
-    afterSetSearchLicenceTypesVarsForm(form: SearchLicenceTypesVarsForm): void {
     }
 }

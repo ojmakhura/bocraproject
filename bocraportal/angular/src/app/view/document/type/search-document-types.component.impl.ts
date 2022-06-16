@@ -10,58 +10,28 @@ import * as DocumentTypeActions from '@app/store/document/type/document-type.act
 @Component({
   selector: 'app-search-document-types',
   templateUrl: './search-document-types.component.html',
-  styleUrls: ['./search-document-types.component.scss']
+  styleUrls: ['./search-document-types.component.scss'],
 })
 export class SearchDocumentTypesComponentImpl extends SearchDocumentTypesComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: SearchDocumentTypesVarsForm): SearchDocumentTypesVarsForm {
+    return form;
+  }
 
-    beforeOnInit(form: SearchDocumentTypesVarsForm): SearchDocumentTypesVarsForm {     
-      return form;
-    }
-	
-    afterOnInit() {
-    }
+  override doNgOnDestroy() {}
 
-    doNgAfterViewInit() {
-    }
-
-    doNgOnDestroy(){}
-
-    handleFormChanges(change: any) {
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchDocumentTypesVarsForm(form: SearchDocumentTypesVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchDocumentTypesSearchForm(form: SearchDocumentTypesSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchDocumentTypesSearch(form: SearchDocumentTypesSearchForm): void {
-      this.store.dispatch(DocumentTypeActions.search({
+  /**
+   * This method may be overwritten
+   */
+  override beforeSearchDocumentTypesSearch(form: SearchDocumentTypesSearchForm): void {
+    this.store.dispatch(
+      DocumentTypeActions.search({
         criteria: form.criteria,
-        loading: true
-      }));
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchDocumentTypesSearch(form: SearchDocumentTypesSearchForm): void {
-
-    }
-    
+        loading: true,
+      })
+    );
+  }
 }

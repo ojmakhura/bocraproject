@@ -42,15 +42,17 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.formFormSections$ = this.store.pipe(select(FormSelectors.selectFormSections));
   }
 
-  beforeOnInit(form: EditFormVarsForm): EditFormVarsForm {
+  override beforeOnInit(form: EditFormVarsForm): EditFormVarsForm {
     return form;
   }
 
-  afterOnInit() {}
+  override doNgOnDestroy(): void {
+  }
 
-  doNgAfterViewInit() {
+  override afterOnInit() {}
+
+  override doNgAfterViewInit() {
     this.route.queryParams.subscribe((queryParams: any) => {
-    
       if (queryParams?.id) {
         this.store.dispatch(
           FormActions.findFormById({
@@ -65,10 +67,11 @@ export class EditFormComponentImpl extends EditFormComponent {
       if (form?.formSections) {
         this.store.dispatch(
           FormActions.setSections({
-            formSections: form?.formSections
+            formSections: form?.formSections,
           })
         );
       }
+      console.log(form);
       this.setEditFormFormValue({ form: form });
     });
 
@@ -81,26 +84,10 @@ export class EditFormComponentImpl extends EditFormComponent {
     });
   }
 
-  handleFormChanges(change: any) {
-  }
-
-  doNgOnDestroy() {
-  }
-
   /**
    * This method may be overwritten
    */
-  afterSetEditFormVarsForm(form: EditFormVarsForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditFormSaveForm(form: EditFormSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditFormSave(form: EditFormSaveForm): void {
+  override beforeEditFormSave(form: EditFormSaveForm): void {
     if (this.formControl.valid) {
       if (form.form.id) {
         form.form.updatedBy = this.keycloakService.getUsername();
@@ -116,54 +103,11 @@ export class EditFormComponentImpl extends EditFormComponent {
         })
       );
     } else {
-      this.store.dispatch(
-        FormActions.formFailure({errors: ["Form has and error!"]})
-      );
+      this.store.dispatch(FormActions.formFailure({ errors: ['Form has and error!'] }));
     }
   }
 
-  /**
-   * This method may be overwritten
-   */
-  afterEditFormSave(form: EditFormSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditFormDeleteForm(form: EditFormDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditFormDelete(form: EditFormDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditFormDelete(form: EditFormDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditFormSearchForm(form: EditFormSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditFormSearch(form: EditFormSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditFormSearch(form: EditFormSearchForm): void {}
-
-  handleFormLicenceTypesAddDialog(): void {}
-
-  handleFormFormFieldsAddDialog(): void {}
-
-  handleFormFormFieldsSearch(): void {}
-
-  handleFormLicenceTypesSearch(): void {
+  override handleFormLicenceTypesSearch(): void {
     let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
     criteria.typeSearch = this.formLicenceTypesSearchField;
     this.store.dispatch(
@@ -174,60 +118,16 @@ export class EditFormComponentImpl extends EditFormComponent {
     );
   }
 
-  handleFormLicenceTypesSelected(event: MatCheckboxChange, element: LicenceTypeVO): void {}
+  override beforeEditFormAddField(form: EditFormAddFieldForm): void {
 
-  handleFormFormFieldsSelected(event: MatCheckboxChange, element: FormFieldVO): void {}
-
-  afterSetEditFormAddFieldForm(form: EditFormAddFieldForm): void {}
-
-  beforeEditFormAddField(form: EditFormAddFieldForm): void {}
-
-  afterEditFormAddField(form: EditFormAddFieldForm): void {
     this.useCaseScope.pageVariables['form'] = this.form;
-
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.data = {
-    //   formSections: this.form.formSections
-    // };
-    
-    // const dialogRef = this.dialog.open(AddNewFieldComponentImpl, dialogConfig);
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   if (result?.dialogData) {
-    //     let field: FormFieldVO = result.dialogData.formField;
-    //     if (field.id) {
-    //       field.updatedBy = this.keycloakService.getUsername();
-    //       field.updatedDate = new Date();
-    //     } else {
-    //       field.createdBy = this.keycloakService.getUsername();
-    //       field.createdDate = new Date();
-    //       field.form = this.form;
-    //     }
-
-    //     this.store.dispatch(
-    //       FormActions.saveField({
-    //         formField: field,
-    //         loading: true
-    //       })
-    //     );
-    //   }
-    // });
+    this.useCaseScope.queryParams['formId'] = this.form.id;
   }
 
-  handleFormLicenseesAddDialog() {}
-
-  handleFormLicenseesSearch() {}
-
-  handleFormLicenseesSelected() {}
-
-  afterSetEditFormAddSectionForm(form: EditFormAddSectionForm): void {
-  }
-
-  beforeEditFormAddSection(): void {}
-
-  afterEditFormAddSection(): void {
+  override afterEditFormAddSection(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      form: this.form
+      form: this.form,
     };
 
     const dialogRef = this.dialog.open(AddNewSectionComponentImpl, dialogConfig);
@@ -245,20 +145,11 @@ export class EditFormComponentImpl extends EditFormComponent {
 
         this.store.dispatch(
           FormActions.saveSection({
-            formSection: section, 
-            loading: true
+            formSection: section,
+            loading: true,
           })
         );
       }
     });
-  }
-
-  handleFormFormSectionsAddDialog(): void {
-  }
-
-  handleFormFormSectionsSearch(): void {
-  }
-
-  handleFormFormSectionsSelected(event: MatCheckboxChange, data: FormSectionVO): void {
   }
 }

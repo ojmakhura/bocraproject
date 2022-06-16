@@ -12,19 +12,4 @@ export class SearchLicencesLicencesComponentImpl extends SearchLicencesLicencesC
     constructor(private injector: Injector) {
         super(injector);
     }
-
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
-  }
-  doNgOnDestroy(): void {}
-
-	doSearchLicencesEdit(form: any): any {
-    return form;
-	}
 }

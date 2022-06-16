@@ -24,7 +24,7 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
         this.keycloakService = injector.get(KeycloakService);
     }
 
-    beforeOnInit(form: EditPeriodConfigVarsForm){
+    override beforeOnInit(form: EditPeriodConfigVarsForm){
       this.periodConfigFinalDayBackingList = days;
       this.periodConfigStartDayBackingList = days;
       this.periodConfigStartMonthBackingList = months;
@@ -32,10 +32,7 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
       return form;
     }
 	
-    afterOnInit() {
-    }
-
-    doNgAfterViewInit() {
+    override doNgAfterViewInit() {
       if (this.useCaseScope.pageVariables['id']) {
         this.store.dispatch(PeriodConfigActions.findById({
           id: this.useCaseScope.pageVariables['id'],
@@ -44,32 +41,15 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
       }
   
       this.periodConfig$.subscribe((periodConfig) => {
-        this.setEditPeriodConfigSaveForm({ periodConfig: periodConfig } as EditPeriodConfigSaveForm);
       });
     }
 
-    handleFormChanges(change: any) {
-    }
-
-    doNgOnDestroy(){}
+    override doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetEditPeriodConfigVarsForm(form: EditPeriodConfigVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditPeriodConfigSaveForm(form: EditPeriodConfigSaveForm): void {
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditPeriodConfigSave(form: EditPeriodConfigSaveForm): void {
+    override beforeEditPeriodConfigSave(form: EditPeriodConfigSaveForm): void {
       if(this.periodConfigControl.valid) {
         if(form.periodConfig.id) {
           form.periodConfig.updatedBy = this.keycloakService.getUsername();
@@ -85,55 +65,5 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
         }));
       }
 
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditPeriodConfigSave(form: EditPeriodConfigSaveForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditPeriodConfigSearchForm(form: EditPeriodConfigSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditPeriodConfigSearch(form: EditPeriodConfigSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditPeriodConfigSearch(form: EditPeriodConfigSearchForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditPeriodConfigDeleteForm(form: EditPeriodConfigDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditPeriodConfigDelete(form: EditPeriodConfigDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditPeriodConfigDelete(form: EditPeriodConfigDeleteForm): void {
-
-    }
-    
+    }    
 }

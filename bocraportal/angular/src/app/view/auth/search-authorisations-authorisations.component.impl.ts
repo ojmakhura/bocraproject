@@ -5,26 +5,14 @@ import { SearchAuthorisationsAuthorisationsComponent } from '@app/view/auth/sear
 @Component({
   selector: 'search-authorisations-authorisations',
   templateUrl: './search-authorisations-authorisations.component.html',
-  styleUrls: [ './search-authorisations-authorisations.component.scss' ]
+  styleUrls: ['./search-authorisations-authorisations.component.scss'],
 })
 export class SearchAuthorisationsAuthorisationsComponentImpl extends SearchAuthorisationsAuthorisationsComponent {
-
-    constructor(private injector: Injector) {
-        super(injector);
-    }
-
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
+  constructor(private injector: Injector) {
+    super(injector);
   }
-  doNgOnDestroy(): void {}
 
-
-	doSearchAuthorisationsEdit(form: any): any {
-    return form;	}
+  override doSearchAuthorisationsEdit(form: any): any {
+    return form;
+  }
 }

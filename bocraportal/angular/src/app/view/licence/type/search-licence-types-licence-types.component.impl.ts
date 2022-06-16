@@ -13,18 +13,4 @@ export class SearchLicenceTypesLicenceTypesComponentImpl extends SearchLicenceTy
         super(injector);
     }
 
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
-  }
-  doNgOnDestroy(): void {}
-
-	doSearchLicenceTypesEdit(form: any): any {
-    return form;
-	}
 }

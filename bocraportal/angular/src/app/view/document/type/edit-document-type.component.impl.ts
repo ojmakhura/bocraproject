@@ -2,8 +2,6 @@
 import { Component, Injector } from '@angular/core';
 import { EditDocumentTypeComponent } from '@app/view/document/type/edit-document-type.component';
 import { EditDocumentTypeSaveForm } from '@app/view/document/type/edit-document-type.component';
-import { EditDocumentTypeDeleteForm } from '@app/view/document/type/edit-document-type.component';
-import { EditDocumentTypeSearchForm } from '@app/view/document/type/edit-document-type.component';
 import { EditDocumentTypeVarsForm } from '@app/view/document/type/edit-document-type.component';
 import { DocumentTypeState } from '@app/store/document/type/document-type.state';
 import * as DocumentTypeSelectors from '@app/store/document/type/document-type.selectors';
@@ -27,7 +25,7 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
       return form;  
     }
 	
-    afterOnInit() {
+    override afterOnInit() {
       if (this.useCaseScope.pageVariables['id']) {
         this.store.dispatch(DocumentTypeActions.findById({
           id: this.useCaseScope.pageVariables['id'],
@@ -36,36 +34,15 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
       }
   
       this.documentType$.subscribe((documentType) => {
-        this.setEditDocumentTypeSaveForm({ documentType: documentType } as EditDocumentTypeSaveForm);
       });
     }
 
-    doNgAfterViewInit() {
-    }
-
-    doNgOnDestroy(){}
-
-    handleFormChanges(change: any) {
-    }
+    override doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetEditDocumentTypeVarsForm(form: EditDocumentTypeVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditDocumentTypeSaveForm(form: EditDocumentTypeSaveForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditDocumentTypeSave(form: EditDocumentTypeSaveForm): void {
+    override beforeEditDocumentTypeSave(form: EditDocumentTypeSaveForm): void {
       if(form.documentType?.id) {
 
         form.documentType.updatedBy = this.keycloakService.getUsername();
@@ -79,55 +56,5 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
         documentType: form.documentType,
         loading: false
       }));
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditDocumentTypeSave(form: EditDocumentTypeSaveForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditDocumentTypeDeleteForm(form: EditDocumentTypeDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditDocumentTypeDelete(form: EditDocumentTypeDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditDocumentTypeDelete(form: EditDocumentTypeDeleteForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditDocumentTypeSearchForm(form: EditDocumentTypeSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditDocumentTypeSearch(form: EditDocumentTypeSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditDocumentTypeSearch(form: EditDocumentTypeSearchForm): void {
-
-    }
-    
+    }   
 }

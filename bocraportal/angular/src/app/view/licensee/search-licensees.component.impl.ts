@@ -15,42 +15,21 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
     super(injector);
   }
 
-  beforeOnInit(form: SearchLicenseesVarsForm): SearchLicenseesVarsForm {
+  override beforeOnInit(form: SearchLicenseesVarsForm): SearchLicenseesVarsForm {
 
     this.store.dispatch(LicenseeActions.licenseeReset());
     return form;
   }
 
-  afterOnInit() {}
-
-  doNgAfterViewInit() {}
-
-  handleFormChanges(change: any) {}
-
-  doNgOnDestroy() {}
+  override doNgOnDestroy() {}
 
   /**
    * This method may be overwritten
    */
-  afterSetSearchLicenseesVarsForm(form: SearchLicenseesVarsForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetSearchLicenseesSearchForm(form: SearchLicenseesSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {
+  override beforeSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {
     this.store.dispatch(LicenseeActions.search({
       criteria: form.criteria,
       loading: true
     }));
   }
-
-  /**
-   * This method may be overwritten
-   */
-  afterSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {}
 }

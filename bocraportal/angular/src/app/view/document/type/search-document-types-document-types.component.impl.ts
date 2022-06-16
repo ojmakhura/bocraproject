@@ -9,22 +9,7 @@ import { SearchDocumentTypesDocumentTypesComponent } from '@app/view/document/ty
 })
 export class SearchDocumentTypesDocumentTypesComponentImpl extends SearchDocumentTypesDocumentTypesComponent {
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
-
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
+  constructor(private injector: Injector) {
+    super(injector);
   }
-  doNgOnDestroy(): void {}
-
-	doSearchDocumentTypesEdit(form: any): any {
-    return form;
-	}
 }

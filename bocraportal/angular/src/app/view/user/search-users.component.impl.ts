@@ -16,52 +16,21 @@ export class SearchUsersComponentImpl extends SearchUsersComponent {
         super(injector);
     }
 
-    beforeOnInit(form: SearchUsersVarsForm): SearchUsersVarsForm{
+    override beforeOnInit(form: SearchUsersVarsForm): SearchUsersVarsForm{
 
         return form;
     }
 	
-    afterOnInit() {
-        // this.addUsersDummyData();
-    }
-
-    doNgAfterViewInit() {
-    }
-
-    handleFormChanges(change: any) {
-    }
-
-    doNgOnDestroy(){}
+    override doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetSearchUsersVarsForm(form: SearchUsersVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchUsersSearchForm(form: SearchUsersSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchUsersSearch(form: SearchUsersSearchForm): void {
+    override beforeSearchUsersSearch(form: SearchUsersSearchForm): void {
         this.store.dispatch(UserActions.search({
             criteria: form.criteria,
             loading: true
         }));
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchUsersSearch(form: SearchUsersSearchForm): void {
-
     }
     
 }

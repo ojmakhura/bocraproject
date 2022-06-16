@@ -19,47 +19,9 @@ export class NewShareholderComponentImpl extends NewShareholderComponent {
         super(injector);
     }
 
-    beforeOnInit(form: NewShareholderVarsForm): NewShareholderVarsForm {
+    override beforeOnInit(form: NewShareholderVarsForm): NewShareholderVarsForm {
         return form;
     }
 	
-    afterOnInit() {
-    }
-
-    doNgAfterViewInit() {
-    }
-
-    doNgOnDestroy(){}
-
-    handleFormChanges(change: any) {
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetNewShareholderVarsForm(form: NewShareholderVarsForm): void {
-
-    }
-
-
-    handleCancelDialog(): void {
-
-    }
-
-    handleDialogDone(data: any): any {
-        return data;
-    }
-
-    handleShareholderLicenseesAddDialog(): void {
-    }
-    handleShareholderLicenseesSearch(): void {
-        // let criteria: string = '';
-        // criteria = this.shareholderLicenseesSearchField.value;
-        // this.store.dispatch(LicenseeActions.search({
-        // criteria:  criteria,
-        // loading: true
-        // }));
-    }
-    handleShareholderLicenseesSelected(event: MatCheckboxChange, data: LicenseeVO): void {
-    }
+    override doNgOnDestroy(){}
 }

@@ -18,50 +18,20 @@ export class SearchDocumentsComponentImpl extends SearchDocumentsComponent {
         super(injector);
     }
 
-    beforeOnInit(form: SearchDocumentsVarsForm): SearchDocumentsVarsForm {     
+    override beforeOnInit(form: SearchDocumentsVarsForm): SearchDocumentsVarsForm {     
       return form;
     }
 	
-    afterOnInit() {
-    }
-
-    doNgAfterViewInit() {
-    }
-
-    doNgOnDestroy(){}
-
-    handleFormChanges(change: any) {
-    }
+    override doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetSearchDocumentsVarsForm(form: SearchDocumentsVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchDocumentsSearchForm(form: SearchDocumentsSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchDocumentsSearch(form: SearchDocumentsSearchForm): void {
+    override beforeSearchDocumentsSearch(form: SearchDocumentsSearchForm): void {
       this.store.dispatch(DocumentActions.search({
         criteria: form.criteria,
         loading: true
       }));
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchDocumentsSearch(form: SearchDocumentsSearchForm): void {
-
     }
     
 }

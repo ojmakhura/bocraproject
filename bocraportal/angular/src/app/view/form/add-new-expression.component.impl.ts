@@ -17,89 +17,13 @@ import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-fiel
 })
 export class AddNewExpressionComponentImpl extends AddNewExpressionComponent {
     
-
     constructor(private injector: Injector) {
         super(injector);
     }
 
-    beforeOnInit(form: AddNewExpressionVarsForm): AddNewExpressionVarsForm {     
+    override beforeOnInit(form: AddNewExpressionVarsForm): AddNewExpressionVarsForm {     
         return form;
     }
 	
-    afterOnInit() {
-    }
-
-    doNgAfterViewInit() {
-    }
-
-    doNgOnDestroy(){}
-
-    handleFormChanges(change: any) {
-    }
-
-    handleExpressionFormFieldAddDialog(): void {}
-
-    handleExpressionFormFieldSearch(): void {}
-    
-    handleExpressionFormFieldSelected(event: MatRadioChange, data: FormFieldVO): void {}
-    
-    handleExpressionRootAddDialog(): void {}
-
-    handleExpressionRootSearch(): void {}
-    
-    handleExpressionRootSelected(event: MatRadioChange, data: FormFieldVO): void {}
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetAddNewExpressionCancelForm(form: AddNewExpressionCancelForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeAddNewExpressionCancel(form: AddNewExpressionCancelForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterAddNewExpressionCancel(form: AddNewExpressionCancelForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetAddNewExpressionDoneForm(form: AddNewExpressionDoneForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeAddNewExpressionDone(form: AddNewExpressionDoneForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterAddNewExpressionDone(form: AddNewExpressionDoneForm): void {
-
-    }
-    
-
-    handleCancelDialog(): void {
-
-    }
-
-    handleDialogDone(data: any): any {
-        return data;
-    }
-
-    afterSetAddNewExpressionVarsForm(form: AddNewExpressionVarsForm): void {
-    }
+    override doNgOnDestroy(){}
 }

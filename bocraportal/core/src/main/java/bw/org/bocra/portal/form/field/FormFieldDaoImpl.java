@@ -89,15 +89,9 @@ public class FormFieldDaoImpl
         // TODO verify behavior of formFieldVOToEntity
         super.formFieldVOToEntity(source, target, copyIfNull);
 
-        if(source.getForm() != null) {
+        if(source.getForm() != null && source.getForm().getId() != null) {
 
-            Form form = Form.Factory.newInstance();
-            formDao.formVOToEntity(source.getForm(), form, copyIfNull);
-            
-            if(form.getId() == null) {
-                form = formDao.create(form);
-            }
-
+            Form form = formDao.load(source.getForm().getId());
             target.setForm(form);
         } 
 

@@ -32,7 +32,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     this.licensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
   }
 
-  beforeOnInit(form: EditUserVarsForm): EditUserVarsForm {
+  override beforeOnInit(form: EditUserVarsForm): EditUserVarsForm {
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
       role.forEach((val) => {
         let item = new SelectItem();
@@ -65,38 +65,24 @@ export class EditUserComponentImpl extends EditUserComponent {
     return form;
   }
 
-  afterOnInit() {
+  override afterOnInit() {
     // if (this.useCaseScope.pageVariables['id']) {
     //   this.store.dispatch(licenceTypeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
     // }
 
     this.user$.subscribe((user) => {
-      this.setEditUserSaveForm({ user: user } as EditUserSaveForm);
     });
   }
 
-  doNgAfterViewInit() {}
 
-  handleFormChanges(change: any) {}
-
-  doNgOnDestroy() {
+  override doNgOnDestroy() {
     this.store.dispatch(LicenseeActions.licenseeReset());
   }
 
   /**
    * This method may be overwritten
    */
-  afterSetEditUserVarsForm(form: EditUserVarsForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditUserSaveForm(form: EditUserSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditUserSave(form: EditUserSaveForm): void {
+  override beforeEditUserSave(form: EditUserSaveForm): void {
     console.log(form.user)
     this.store.dispatch(UserActions.createUser({
       user: form.user,
@@ -104,53 +90,12 @@ export class EditUserComponentImpl extends EditUserComponent {
     }));
   }
 
-  /**
-   * This method may be overwritten
-   */
-  afterEditUserSave(form: EditUserSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditUserDeleteForm(form: EditUserDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditUserDelete(form: EditUserDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditUserDelete(form: EditUserDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditUserSearchForm(form: EditUserSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditUserSearch(form: EditUserSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditUserSearch(form: EditUserSearchForm): void {}
-
-  handleUserLicenseeAddDialog(): void {
-  }
-
-  handleUserLicenseeSearch(): void {
+  override handleUserLicenseeSearch(): void {
     let criteria: string = '';
     criteria = this.userLicenseeSearchField.value;
     this.store.dispatch(LicenseeActions.search({
       criteria: {uin: criteria, licenseeName: criteria},
       loading: true
     }));
-  }
-
-  handleUserLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {
   }
 }

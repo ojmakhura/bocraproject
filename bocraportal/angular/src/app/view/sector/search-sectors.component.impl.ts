@@ -20,41 +20,17 @@ export class SearchSectorsComponentImpl extends SearchSectorsComponent {
         super(injector);
     }
 
-    beforeOnInit(form: SearchSectorsVarsForm): SearchSectorsVarsForm {
+    override beforeOnInit(form: SearchSectorsVarsForm): SearchSectorsVarsForm {
 
         return form;
     }
 
-    afterOnInit() {
-        //this.addSectorsDummyData();
-    }
-
-    doNgAfterViewInit() {
-    }
-
-    doNgOnDestroy() { }
-
-    handleFormChanges(change: any) {
-    }
+    override doNgOnDestroy() { }
 
     /**
      * This method may be overwritten
      */
-    afterSetSearchSectorsVarsForm(form: SearchSectorsVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchSectorsSearchForm(form: SearchSectorsSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchSectorsSearch(form: SearchSectorsSearchForm): void {
+    override beforeSearchSectorsSearch(form: SearchSectorsSearchForm): void {
         this.store.dispatch(
             SectorActions.search({
                 criteria: form.criteria,
@@ -62,12 +38,4 @@ export class SearchSectorsComponentImpl extends SearchSectorsComponent {
             })
         );
     }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchSectorsSearch(form: SearchSectorsSearchForm): void {
-
-    }
-
 }

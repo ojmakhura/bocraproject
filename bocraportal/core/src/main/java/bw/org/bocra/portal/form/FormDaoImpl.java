@@ -67,7 +67,8 @@ public class FormDaoImpl
                 field.setUpdatedBy(entity.getUpdatedBy());
                 field.setUpdatedDate(entity.getUpdatedDate());
                 field.setFieldId(entity.getFieldId());
-                //field.set
+                field.setFieldName(entity.getFieldName());
+                field.setFieldType(entity.getFieldType());
 
                 target.getFormFields().add(field);
             }

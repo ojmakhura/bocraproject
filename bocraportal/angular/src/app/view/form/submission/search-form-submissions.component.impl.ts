@@ -16,51 +16,20 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
         super(injector);
     }
 
-    beforeOnInit(form: SearchFormSubmissionsVarsForm): SearchFormSubmissionsVarsForm {
+    override beforeOnInit(form: SearchFormSubmissionsVarsForm): SearchFormSubmissionsVarsForm {
       return form;
     }
 	
-    afterOnInit() {
-    }
-
-    doNgAfterViewInit() {
-    }
-
-    doNgOnDestroy(){}
-
-    handleFormChanges(change: any) {
-    }
+    override doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetSearchFormSubmissionsVarsForm(form: SearchFormSubmissionsVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchFormSubmissionsSearchForm(form: SearchFormSubmissionsSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchFormSubmissionsSearch(form: SearchFormSubmissionsSearchForm): void {
+    override beforeSearchFormSubmissionsSearch(form: SearchFormSubmissionsSearchForm): void {
 
       this.store.dispatch(SubmissionActions.search({
         criteria: form.criteria,
         loading: true
       }));
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchFormSubmissionsSearch(form: SearchFormSubmissionsSearchForm): void {
-
-    }
-    
+    }    
 }

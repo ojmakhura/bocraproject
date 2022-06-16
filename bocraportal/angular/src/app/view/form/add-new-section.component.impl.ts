@@ -24,42 +24,10 @@ export class AddNewSectionComponentImpl extends AddNewSectionComponent {
     this.form = data?.form;
   }
 
-  beforeOnInit(form: AddNewSectionVarsForm): AddNewSectionVarsForm {
+  override beforeOnInit(form: AddNewSectionVarsForm): AddNewSectionVarsForm {
     return form;
   }
 
-  afterOnInit() {}
+  override doNgOnDestroy() {}
 
-  doNgAfterViewInit() {
-    this.formSectionControl.patchValue({form: this.form});
-  }
-
-  doNgOnDestroy() {}
-
-  handleFormChanges(change: any) {}
-
-  handleCancelDialog(): void {}
-
-  handleDialogDone(data: any): any {
-    return data;
-  }
-
-  afterSetAddNewSectionVarsForm(form: AddNewSectionVarsForm): void {}
-  handleFormSectionFormAddDialog(): void {
-  }
-
-  handleFormSectionFormSearch(): void {
-  }
-
-  handleFormSectionFormSelected(event: MatRadioChange, data: FormVO): void {
-  }
-
-  handleFormSectionFormFieldsAddDialog(): void {
-  }
-
-  handleFormSectionFormFieldsSearch(): void {
-  }
-  
-  handleFormSectionFormFieldsSelected(event: MatCheckboxChange, data: FormFieldVO): void {
-  }
 }

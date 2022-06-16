@@ -31,11 +31,11 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     this.sectorLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees))
   }
 
-  beforeOnInit(form: EditSectorVarsForm): EditSectorVarsForm {
+  override beforeOnInit(form: EditSectorVarsForm): EditSectorVarsForm {
     return form;
   }
 
-  afterOnInit() {
+  override afterOnInit() {
     if (this.useCaseScope.pageVariables['id']) {
       this.store.dispatch(SectorActions.findById({
         id: this.useCaseScope.pageVariables['id'],
@@ -44,19 +44,12 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     }
 
     this.sector$.subscribe((sector) => {
-      this.setEditSectorSaveForm({ sector } as EditSectorSaveForm);
     });
   }
 
-  doNgAfterViewInit() {}
+  override doNgOnDestroy() {}
 
-  doNgOnDestroy() {}
-
-  handleFormChanges(change: any) {}
-
-  handleSectorLicenseesAddDialog(): void {}
-
-  handleSectorLicenseesSearch(): void {
+  override handleSectorLicenseesSearch(): void {
 
     let criteria: string = '';
     criteria = this.sectorLicenseesSearchField.value;
@@ -66,22 +59,10 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     }));
   }
 
-  handleSectorLicenseesSelected(event: MatCheckboxChange, data: LicenseeVO): void {}
-
   /**
    * This method may be overwritten
    */
-  afterSetEditSectorVarsForm(form: EditSectorVarsForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditSectorSaveForm(form: EditSectorSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditSectorSave(form: EditSectorSaveForm): void {
+  override beforeEditSectorSave(form: EditSectorSaveForm): void {
 
     if(form.sector?.id) {
 
@@ -97,39 +78,4 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       loading: true
     }));
   }
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditSectorSave(form: EditSectorSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditSectorSearchForm(form: EditSectorSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditSectorSearch(form: EditSectorSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditSectorSearch(form: EditSectorSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditSectorDeleteForm(form: EditSectorDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditSectorDelete(form: EditSectorDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditSectorDelete(form: EditSectorDeleteForm): void {}
 }

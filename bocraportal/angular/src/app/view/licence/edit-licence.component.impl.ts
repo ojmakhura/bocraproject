@@ -2,191 +2,60 @@
 import { Component, Injector } from '@angular/core';
 import { EditLicenceComponent } from '@app/view/licence/edit-licence.component';
 import { EditLicenceSaveForm } from '@app/view/licence/edit-licence.component';
-import { EditLicenceSearchForm } from '@app/view/licence/edit-licence.component';
-import { EditLicenceDeleteForm } from '@app/view/licence/edit-licence.component';
-import { EditLicenceDocumentsForm } from '@app/view/licence/edit-licence.component';
 import { EditLicenceVarsForm } from '@app/view/licence/edit-licence.component';
 import { LicenceState } from '@app/store/licence/licence.state';
 import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import * as LicenceActions from '@app/store/licence/licence.actions';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
-import { MatRadioChange } from '@angular/material/radio';
-import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
-import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-edit-licence',
   templateUrl: './edit-licence.component.html',
-  styleUrls: ['./edit-licence.component.scss']
+  styleUrls: ['./edit-licence.component.scss'],
 })
 export class EditLicenceComponentImpl extends EditLicenceComponent {
-    
-    protected keycloakService: KeycloakService;
-    constructor(private injector: Injector) {
-        super(injector);
-        this.keycloakService = injector.get(KeycloakService);
-    }
+  protected keycloakService: KeycloakService;
+  constructor(private injector: Injector) {
+    super(injector);
+    this.keycloakService = injector.get(KeycloakService);
+  }
 
-    beforeOnInit(form: EditLicenceVarsForm): EditLicenceVarsForm {    
-      return form; 
-    }
-	
-    afterOnInit() {
-      if (this.useCaseScope.pageVariables['id']) {
-        this.store.dispatch(
-          LicenceActions.findById({
-            id: this.useCaseScope.pageVariables['id'],
-            loading: true,
-          })
-        );
-      }
-  
-      this.licence$.subscribe((licence) => {
-        this.setEditLicenceSaveForm({ licence: licence } as EditLicenceSaveForm);
-      });
-    }
+  override beforeOnInit(form: EditLicenceVarsForm): EditLicenceVarsForm {
+    return form;
+  }
 
-    doNgAfterViewInit() {
-    }
-
-    doNgOnDestroy(){}
-
-    handleFormChanges(change: any) {
-    }
-
-    handleLicenceDocumentsAddDialog(): void {
-
-    }
-
-    handleLicenceDocumentsSearch(): void {
-        
-    }
-
-    handleLicenceDocumentsSelected(event: MatCheckboxChange, data: DocumentVO): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditLicenceVarsForm(form: EditLicenceVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditLicenceSaveForm(form: EditLicenceSaveForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditLicenceSave(form: EditLicenceSaveForm): void {
-      if (form.licence?.id) {
-        form.licence.updatedBy = this.keycloakService.getUsername();
-        form.licence.updatedDate = new Date();
-      } else {
-        form.licence.createdBy = this.keycloakService.getUsername();
-        form.licence.createdDate = new Date();
-      }
-  
+  override afterOnInit() {
+    if (this.useCaseScope.pageVariables['id']) {
       this.store.dispatch(
-        LicenceActions.save({
-          licence: form.licence,
+        LicenceActions.findById({
+          id: this.useCaseScope.pageVariables['id'],
           loading: true,
         })
       );
     }
 
-    /**
-     * This method may be overwritten
-     */
-    afterEditLicenceSave(form: EditLicenceSaveForm): void {
+    this.licence$.subscribe((licence) => {});
+  }
 
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditLicenceSearchForm(form: EditLicenceSearchForm): void {
+  override doNgOnDestroy() {}
 
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditLicenceSearch(form: EditLicenceSearchForm): void {
-
+  /**
+   * This method may be overwritten
+   */
+  override beforeEditLicenceSave(form: EditLicenceSaveForm): void {
+    if (form.licence?.id) {
+      form.licence.updatedBy = this.keycloakService.getUsername();
+      form.licence.updatedDate = new Date();
+    } else {
+      form.licence.createdBy = this.keycloakService.getUsername();
+      form.licence.createdDate = new Date();
     }
 
-    /**
-     * This method may be overwritten
-     */
-    afterEditLicenceSearch(form: EditLicenceSearchForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditLicenceDeleteForm(form: EditLicenceDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditLicenceDelete(form: EditLicenceDeleteForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditLicenceDelete(form: EditLicenceDeleteForm): void {
-
-    }
-    
-    /**
-     * This method may be overwritten
-     */
-    afterSetEditLicenceDocumentsForm(form: EditLicenceDocumentsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeEditLicenceDocuments(form: EditLicenceDocumentsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterEditLicenceDocuments(form: EditLicenceDocumentsForm): void {
-
-    }
-    
-    handleLicenceLicenseeAddDialog(): void {
-    }
-
-    handleLicenceLicenseeSearch(): void {
-    }
-
-    handleLicenceLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {
-    }
-
-    handleLicenceLicenceTypeAddDialog(): void {
-    }
-
-    handleLicenceLicenceTypeSearch(): void {
-    }
-
-    handleLicenceLicenceTypeSelected(event: MatRadioChange, data: LicenceTypeVO): void {
-    }
+    this.store.dispatch(
+      LicenceActions.save({
+        licence: form.licence,
+        loading: true,
+      })
+    );
+  }
 }

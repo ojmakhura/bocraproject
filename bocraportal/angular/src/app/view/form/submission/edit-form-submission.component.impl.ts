@@ -66,13 +66,11 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
   }
 
-  beforeOnInit(form: EditFormSubmissionVarsForm): EditFormSubmissionVarsForm {
+  override beforeOnInit(form: EditFormSubmissionVarsForm): EditFormSubmissionVarsForm {
     return form;
   }
 
-  afterOnInit() {}
-
-  doNgAfterViewInit() {
+  override doNgAfterViewInit() {
     this.store.dispatch(FormActions.getAllForms({loading: true}));
     this.forms$.subscribe((forms) => {
       forms.forEach((form) => {
@@ -101,24 +99,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   doNgOnDestroy() {}
 
-  handleFormChanges(change: any) {
-    //console.log(change);
-  }
-
   /**
    * This method may be overwritten
    */
-  afterSetEditFormSubmissionVarsForm(form: EditFormSubmissionVarsForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditFormSubmissionSaveForm(form: EditFormSubmissionSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
+   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
     if (form.formSubmission?.id) {
       form.formSubmission.updatedBy = this.keycloakService.getUsername();
       form.formSubmission.updatedDate = new Date();
@@ -129,41 +113,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     console.log(this.formSubmission);
     //this.store.dispatch(SubmissionActions.save({ formSubmission: form.formSubmission }));
   }
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditFormSubmissionDeleteForm(form: EditFormSubmissionDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditFormSubmissionSearchForm(form: EditFormSubmissionSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditFormSubmissionSearch(form: EditFormSubmissionSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditFormSubmissionSearch(form: EditFormSubmissionSearchForm): void {}
 
   getFormObject(form: string) {
     return JSON.parse(form);
@@ -244,24 +193,5 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   getDataValue(data: FormDataVO) {
     return `${data.formField.fieldName}`;
-  }
-
-  handleFormSubmissionLicenseeAddDialog(): void {
-  }
-
-  handleFormSubmissionLicenseeSearch(): void {
-    this.store.dispatch(LicenseeActions.getAll({loading: true}))
-  }
-
-  handleFormSubmissionLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {
-  }
-
-  handleFormSubmissionFormDatasAddDialog(): void {
-  }
-
-  handleFormSubmissionFormDatasSearch(): void {
-  }
-
-  handleFormSubmissionFormDatasSelected(event: MatCheckboxChange, data: FormDataVO): void {
   }
 }

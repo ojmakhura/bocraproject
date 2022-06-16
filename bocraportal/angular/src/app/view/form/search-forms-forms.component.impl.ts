@@ -13,18 +13,4 @@ export class SearchFormsFormsComponentImpl extends SearchFormsFormsComponent {
         super(injector);
     }
 
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
-  }
-  doNgOnDestroy(): void {}
-
-
-	doSearchFormsEdit(form: any): any {
-    return form;	}
 }

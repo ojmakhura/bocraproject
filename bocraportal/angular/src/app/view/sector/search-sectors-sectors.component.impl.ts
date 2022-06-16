@@ -12,19 +12,4 @@ export class SearchSectorsSectorsComponentImpl extends SearchSectorsSectorsCompo
     constructor(private injector: Injector) {
         super(injector);
     }
-
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
-  }
-  doNgOnDestroy(): void {}
-
-	doSearchSectorsEdit(form: any): any {
-    return form;
-	}
 }
