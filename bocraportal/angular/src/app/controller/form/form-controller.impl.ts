@@ -49,4 +49,7 @@ export class FormControllerImpl extends FormController {
 	public doAddExpressionDone(form: any): void {
 	}
 
+	public doAddFieldCancelled(form: any): void {
+	}
+
 }

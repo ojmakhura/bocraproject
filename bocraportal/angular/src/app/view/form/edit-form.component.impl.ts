@@ -49,14 +49,17 @@ export class EditFormComponentImpl extends EditFormComponent {
   afterOnInit() {}
 
   doNgAfterViewInit() {
-    if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(
-        FormActions.findFormById({
-          id: this.useCaseScope.pageVariables['id'],
-          loading: true,
-        })
-      );
-    }
+    this.route.queryParams.subscribe((queryParams: any) => {
+    
+      if (queryParams?.id) {
+        this.store.dispatch(
+          FormActions.findFormById({
+            id: queryParams.id,
+            loading: true,
+          })
+        );
+      }
+    });
 
     this.form$.subscribe((form) => {
       if (form?.formSections) {
@@ -66,7 +69,7 @@ export class EditFormComponentImpl extends EditFormComponent {
           })
         );
       }
-      this.setEditFormSaveForm({ form: form } as EditFormSaveForm);
+      this.setEditFormFormValue({ form: form });
     });
 
     this.formSection$.subscribe((section) => {

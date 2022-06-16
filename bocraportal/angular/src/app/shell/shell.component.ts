@@ -62,7 +62,6 @@ export class ShellComponent implements OnInit, AfterViewInit {
 
     this.keycloakService.getToken().then((token) => {
       var decoded: any = jwt_decode(token);
-      console.log(decoded.resource_access);
     });
   }
 

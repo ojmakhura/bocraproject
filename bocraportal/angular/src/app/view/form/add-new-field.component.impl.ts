@@ -14,7 +14,10 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ExpressionVO } from '@app/model/bw/org/bocra/portal/expression/expression-vo';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
+import { FormFieldVO } from '@model/bw/org/bocra/portal/form/field/form-field-vo';
 import { SelectItem } from '@app/utils/select-item';
+import { Observable } from 'rxjs';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-add-new-field',
@@ -23,23 +26,31 @@ import { SelectItem } from '@app/utils/select-item';
 })
 export class AddNewFieldComponentImpl extends AddNewFieldComponent {
 
+    form$: Observable<FormVO>;
     constructor(private injector: Injector) {
         super(injector);
-        
-        if(this.useCaseScope?.pageVariables['form']) {
-          const form: FormVO = this.useCaseScope?.pageVariables['form'];
-
-          form?.formSections?.forEach((element: FormSectionVO) => {
-            let item: SelectItem = new SelectItem();
-            item.label = element.sectionName;
-            item.value = element;
-
-            this.formFieldFormSectionBackingList.push(item);
-        });
-        }
+        this.form$ = this.store.pipe(select(FormSelectors.selectForm));
     }
 
     beforeOnInit(form: AddNewFieldVarsForm): AddNewFieldVarsForm {     
+      if (this.useCaseScope?.pageVariables['form']) {
+        const f: FormVO = this.useCaseScope?.pageVariables['form'];
+  
+        f?.formSections?.forEach((element: FormSectionVO) => {
+          let item: SelectItem = new SelectItem();
+          item.label = element.sectionName;
+          item.value = element;
+  
+          this.formFieldFormSectionBackingList.push(item);
+        });
+  
+        if(!form?.formField) {
+          form.formField = new FormFieldVO();
+        }
+  
+        form.formField.form = f;
+      } 
+
       return form;
     }
 	
@@ -47,6 +58,31 @@ export class AddNewFieldComponentImpl extends AddNewFieldComponent {
     }
 
     doNgAfterViewInit() {
+      console.log(this.formController.getPageVariables())
+      this.route.queryParams.subscribe((queryParams: any) => {
+
+        if(queryParams?.id) {
+          this.store.dispatch(
+            FormActions.findFieldById({id: queryParams.id, loading: true})
+          );
+
+          this.form$.subscribe(f => {
+            this.formFieldFormControl.patchValue(f);
+            
+          });
+        } else {
+          if(queryParams?.formId) {
+            this.store.dispatch(
+              FormActions.findFormById({id: queryParams.formId, loading: true})
+            );
+
+            this.form$.subscribe(f => {
+              this.formFieldFormControl.patchValue(f);
+              
+            });
+          }
+        }
+      });
     }
 
     doNgOnDestroy(){}
@@ -106,6 +142,7 @@ export class AddNewFieldComponentImpl extends AddNewFieldComponent {
      * This method may be overwritten
      */
     beforeAddNewFieldCancel(form: AddNewFieldCancelForm): void {
+      console.log(form);
 
     }
 
@@ -113,7 +150,7 @@ export class AddNewFieldComponentImpl extends AddNewFieldComponent {
      * This method may be overwritten
      */
     afterAddNewFieldCancel(form: AddNewFieldCancelForm): void {
-
+      console.log(form);
     }
     
     /**
