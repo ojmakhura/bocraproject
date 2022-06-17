@@ -8,8 +8,10 @@ package bw.org.bocra.portal.licensee;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.FormVO;
@@ -139,16 +141,30 @@ public class LicenseeDaoImpl
 
         }
 
-        if(CollectionUtils.isNotEmpty(source.getSectors())) {
-            Collection<Sector> sectors = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(source.getSectors()) && source.getId() != null) {
+            Collection<LicenseeSector> sectors = new ArrayList<>();
             for(SectorVO sector : source.getSectors()) {
-                if(sector.getId() != null) {
-                    Sector entity = sectorDao.load(sector.getId());
-                    sectors.add(entity);
+                if( sector.getId() != null) {
+                    Specification<LicenseeSector> spec = LicenseeSectorSpecifications.findByLicenseeId(source.getId());
+                    spec.and(LicenseeSectorSpecifications.findBySectorId(sector.getId()));
+                    
+                    List<LicenseeSector> s = licenseeSectorRepository.findAll(spec);
+                    if(CollectionUtils.isNotEmpty(s)) {
+                        sectors.add(s.get(0));
+                    } else {
+                        LicenseeSector ls = LicenseeSector.Factory.newInstance();
+                        Sector sc = sectorDao.load(sector.getId());
+                        ls.setSector(sc);
+                        ls.setLicensee(target);
+
+                        ls = licenseeSectorDao.create(ls);
+
+                        sectors.add(ls);
+                    }
                 }
             }
 
-            //target.setSectors(sectors);
+            target.setLicenseeSectors(sectors);
         }
     }
 }

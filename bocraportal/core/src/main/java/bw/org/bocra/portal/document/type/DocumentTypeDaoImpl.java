@@ -99,5 +99,7 @@ public class DocumentTypeDaoImpl
     {
         // TODO verify behavior of documentTypeVOToEntity
         super.documentTypeVOToEntity(source, target, copyIfNull);
+
+        
     }
 }

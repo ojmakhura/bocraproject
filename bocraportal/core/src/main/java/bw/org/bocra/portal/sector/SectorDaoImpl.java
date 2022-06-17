@@ -8,6 +8,7 @@ package bw.org.bocra.portal.sector;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeSector;
+import bw.org.bocra.portal.licensee.LicenseeSectorSpecifications;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
 /**
@@ -36,22 +39,22 @@ public class SectorDaoImpl
         // TODO verify behavior of toSectorVO
         super.toSectorVO(source, target);
 
-        // if(CollectionUtils.isNotEmpty(source.getLicensees())) {
-        //     Collection<LicenseeVO> licensees = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(source.getLicenseeSectors())) {
+            Collection<LicenseeVO> licensees = new ArrayList<>();
 
-        //     for(Licensee l : source.getLicensees()) {
-        //         LicenseeVO lvo = new LicenseeVO();
-        //         lvo.setId(l.getId());
-        //         lvo.setCreatedBy(l.getCreatedBy());
-        //         lvo.setCreatedDate(l.getCreatedDate());
-        //         lvo.setLicenseeName(l.getLicenseeName());
-        //         lvo.setStatus(l.getStatus());
-        //         lvo.setUin(l.getUin());
-        //         licensees.add(lvo);
-        //     }
+            for(LicenseeSector l : source.getLicenseeSectors()) {
+                LicenseeVO lvo = new LicenseeVO();
+                lvo.setId(l.getId());
+                lvo.setCreatedBy(l.getLicensee().getCreatedBy());
+                lvo.setCreatedDate(l.getLicensee().getCreatedDate());
+                lvo.setLicenseeName(l.getLicensee().getLicenseeName());
+                lvo.setStatus(l.getLicensee().getStatus());
+                lvo.setUin(l.getLicensee().getUin());
+                licensees.add(lvo);
+            }
 
-        //     target.setLicensees(licensees);
-        // }
+            target.setLicensees(licensees);
+        }
     }
 
     /**
@@ -105,17 +108,27 @@ public class SectorDaoImpl
         super.sectorVOToEntity(source, target, copyIfNull);
 
 
-        // if(CollectionUtils.isNotEmpty(source.getLicensees())) {
-        //     Collection<Licensee> licensees = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(source.getLicensees())) {
+            Collection<LicenseeSector> licensees = new ArrayList<>();
 
-        //     for(LicenseeVO lvo : source.getLicensees()) {
-        //         Licensee l = getLicenseeDao().get(lvo.getId());
-        //         // getLicenseeDao().licenseeVOToEntity(lvo, l, copyIfNull);
-        //         licensees.add(l);
-        //     }
+            for(LicenseeVO lvo : source.getLicensees()) {
 
-        //     target.setLicensees(licensees);
-        // }
+                if(lvo.getId() != null) {
+                    Specification<LicenseeSector> spec = LicenseeSectorSpecifications.findByLicenseeId(lvo.getId());
+                    spec.and(LicenseeSectorSpecifications.findBySectorId(source.getId()));
+
+                    List<LicenseeSector> s = licenseeSectorRepository.findAll(spec);
+                    if(CollectionUtils.isNotEmpty(s)) {
+                        licensees.add(s.get(0));
+                    } else {
+
+                        licensees.add(licenseeSectorDao.create(licenseeDao.get(lvo.getId()), target));
+                    }
+                }
+            }
+
+            target.setLicenseeSectors(licensees);
+        }
     }
 
     @Override

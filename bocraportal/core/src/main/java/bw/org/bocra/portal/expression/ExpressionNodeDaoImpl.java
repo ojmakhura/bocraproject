@@ -26,7 +26,23 @@ public class ExpressionNodeDaoImpl
         // TODO verify behavior of toExpressionNodeVO
         super.toExpressionNodeVO(source, target);
         // WARNING! No conversion for target.left (can't convert source.getLeft():ExpressionNode to ExpressionNodeVO
+        if(source.getLeft() != null && source.getLeft().getId() != null) {
+            ExpressionNodeVO left = new ExpressionNodeVO();
+            left.setId(source.getLeft().getId());
+            left.setType(source.getLeft().getType());
+            left.setValue(source.getLeft().getValue());
+            target.setLeft(left);
+        }
+
         // WARNING! No conversion for target.right (can't convert source.getRight():ExpressionNode to ExpressionNodeVO
+        if(source.getRight() != null && source.getRight().getId() != null) {
+            
+            ExpressionNodeVO right = new ExpressionNodeVO();
+            right.setId(source.getRight().getId());
+            right.setType(source.getRight().getType());
+            right.setValue(source.getRight().getValue());
+            target.setRight(right);
+        }
     }
 
     /**
@@ -46,10 +62,6 @@ public class ExpressionNodeDaoImpl
      */
     private ExpressionNode loadExpressionNodeFromExpressionNodeVO(ExpressionNodeVO expressionNodeVO)
     {
-        // TODO implement loadExpressionNodeFromExpressionNodeVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.expression.loadExpressionNodeFromExpressionNodeVO(ExpressionNodeVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (expressionNodeVO.getId() == null)
         {
             return  ExpressionNode.Factory.newInstance();
@@ -58,7 +70,6 @@ public class ExpressionNodeDaoImpl
         {
             return this.load(expressionNodeVO.getId());
         }
-        */
     }
 
     /**
@@ -83,5 +94,20 @@ public class ExpressionNodeDaoImpl
     {
         // TODO verify behavior of expressionNodeVOToEntity
         super.expressionNodeVOToEntity(source, target, copyIfNull);
+        // WARNING! No conversion for target.left (can't convert source.getLeft():ExpressionNode to ExpressionNodeVO
+        if(source.getLeft() != null && source.getLeft().getId() != null) {
+            //ExpressionNode left = ex;
+            //target.setLeft(left);
+        }
+
+        // WARNING! No conversion for target.right (can't convert source.getRight():ExpressionNode to ExpressionNodeVO
+        if(source.getRight() != null && source.getRight().getId() != null) {
+            
+            // ExpressionNodeVO right = new ExpressionNodeVO();
+            // right.setId(source.getRight().getId());
+            // right.setType(source.getRight().getType());
+            // right.setValue(source.getRight().getValue());
+            // target.setRight(right);
+        }
     }
 }
