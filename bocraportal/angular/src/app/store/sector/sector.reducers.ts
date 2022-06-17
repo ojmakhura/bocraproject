@@ -19,6 +19,13 @@ export const sectorReducer = createReducer(
         success: action.success,
         errors: []
     })),
+    on(SectorActions.addLicensee, (state, action) => ({
+        ...state,
+        licensee: action.licensee,
+        licensees: [...state.licensees, action.licensee],
+        loading: false,
+        errors: []
+    })),
     on(SectorActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 

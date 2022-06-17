@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeSector;
 import bw.org.bocra.portal.licensee.LicenseeSectorSpecifications;
+import bw.org.bocra.portal.licensee.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
 /**
@@ -40,13 +41,14 @@ public class SectorDaoImpl
         super.toSectorVO(source, target);
 
         if(CollectionUtils.isNotEmpty(source.getLicenseeSectors())) {
-            Collection<LicenseeVO> licensees = new ArrayList<>();
+            Collection<LicenseeSectorVO> licensees = new ArrayList<>();
 
             for(LicenseeSector l : source.getLicenseeSectors()) {
-                LicenseeVO lvo = new LicenseeVO();
-                lvo.setId(l.getId());
-                lvo.setCreatedBy(l.getLicensee().getCreatedBy());
-                lvo.setCreatedDate(l.getLicensee().getCreatedDate());
+                LicenseeSectorVO lvo = new LicenseeSectorVO();
+                lvo.setLicenseeSectorId(l.getId());
+                lvo.setId(l.getLicensee().getId());
+                //lvo.setCreatedBy(l.getLicensee().getCreatedBy());
+                //lvo.setCreatedDate(l.getLicensee().getCreatedDate());
                 lvo.setLicenseeName(l.getLicensee().getLicenseeName());
                 lvo.setStatus(l.getLicensee().getStatus());
                 lvo.setUin(l.getLicensee().getUin());
@@ -107,23 +109,17 @@ public class SectorDaoImpl
         // TODO verify behavior of sectorVOToEntity
         super.sectorVOToEntity(source, target, copyIfNull);
 
-
         if(CollectionUtils.isNotEmpty(source.getLicensees())) {
             Collection<LicenseeSector> licensees = new ArrayList<>();
 
-            for(LicenseeVO lvo : source.getLicensees()) {
+            for(LicenseeSectorVO lvo : source.getLicensees()) {
 
-                if(lvo.getId() != null) {
-                    Specification<LicenseeSector> spec = LicenseeSectorSpecifications.findByLicenseeId(lvo.getId());
-                    spec.and(LicenseeSectorSpecifications.findBySectorId(source.getId()));
+                if(lvo.getLicenseeSectorId() != null) {
+                    licensees.add(licenseeSectorRepository.getById(lvo.getLicenseeSectorId()));
 
-                    List<LicenseeSector> s = licenseeSectorRepository.findAll(spec);
-                    if(CollectionUtils.isNotEmpty(s)) {
-                        licensees.add(s.get(0));
-                    } else {
-
-                        licensees.add(licenseeSectorDao.create(licenseeDao.get(lvo.getId()), target));
-                    }
+                } else if(lvo.getId() != null) {
+                    LicenseeSector ls = LicenseeSector.Factory.newInstance(licenseeDao.load(lvo.getId()), target);
+                    licensees.add(licenseeSectorRepository.save(ls));
                 }
             }
 

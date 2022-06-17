@@ -17,10 +17,6 @@ import org.springframework.stereotype.Repository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.licence.Licence;
 import bw.org.bocra.portal.licence.LicenceVO;
-import bw.org.bocra.portal.licence.type.LicenceType;
-import bw.org.bocra.portal.licence.type.LicenceTypeVO;
-import bw.org.bocra.portal.sector.Sector;
-import bw.org.bocra.portal.sector.SectorVO;
 
 /**
  * @see Licensee
@@ -55,8 +51,11 @@ public class LicenseeDaoImpl
             target.setSectors(new ArrayList<>());
 
             for(LicenseeSector entity : source.getLicenseeSectors()) {
-                SectorVO vo = new SectorVO();
-                sectorDao.toSectorVO(entity.getSector(), vo);
+                LicenseeSectorVO vo = new LicenseeSectorVO();
+                vo.setLicenseeSectorId(entity.getId());
+                vo.setId(entity.getSector().getId());
+                vo.setCode(entity.getSector().getCode());
+                vo.setName(entity.getSector().getName());
                 target.getSectors().add(vo);
             }
         }
@@ -143,24 +142,12 @@ public class LicenseeDaoImpl
 
         if(CollectionUtils.isNotEmpty(source.getSectors()) && source.getId() != null) {
             Collection<LicenseeSector> sectors = new ArrayList<>();
-            for(SectorVO sector : source.getSectors()) {
-                if( sector.getId() != null) {
-                    Specification<LicenseeSector> spec = LicenseeSectorSpecifications.findByLicenseeId(source.getId());
-                    spec.and(LicenseeSectorSpecifications.findBySectorId(sector.getId()));
-                    
-                    List<LicenseeSector> s = licenseeSectorRepository.findAll(spec);
-                    if(CollectionUtils.isNotEmpty(s)) {
-                        sectors.add(s.get(0));
-                    } else {
-                        LicenseeSector ls = LicenseeSector.Factory.newInstance();
-                        Sector sc = sectorDao.load(sector.getId());
-                        ls.setSector(sc);
-                        ls.setLicensee(target);
+            for(LicenseeSectorVO sector : source.getSectors()) {
+                if( sector.getLicenseeSectorId() != null) {
+                    sectors.add(licenseeSectorRepository.getById(sector.getLicenseeSectorId()));
+                } else if(sector.getId() != null) {
 
-                        ls = licenseeSectorDao.create(ls);
-
-                        sectors.add(ls);
-                    }
+                    sectors.add(licenseeSectorDao.create(target, sectorDao.load(sector.getId())));
                 }
             }
 

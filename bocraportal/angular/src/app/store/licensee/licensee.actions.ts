@@ -2,10 +2,12 @@
 import { createAction, props } from '@ngrx/store';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
+import { LicenseeSectorVO } from '@model/bw/org/bocra/portal/licensee/licensee-sector-vo';
 
 export enum LicenseeActionType {
     FIND_BY_ID = '[Licensee] Find By Id',
     FIND_BY_ID_SUCCESS = '[Licensee] Find By Id Success',
+    ADD_SECTOR = '[Licensee] Add Sector',
     SAVE = '[Licensee] Save',
     SAVE_SUCCESS = '[Licensee] Save Success',
     REMOVE = '[Licensee] Remove',
@@ -34,6 +36,11 @@ export const findByIdSuccess = createAction(
 export const save = createAction(
     LicenseeActionType.SAVE,
     props<{ licensee: LicenseeVO | any , loading: boolean }>()
+);
+
+export const addSector = createAction(
+    LicenseeActionType.ADD_SECTOR,
+    props<{ sector: LicenseeSectorVO | any }>()
 );
 
 export const saveSuccess = createAction(

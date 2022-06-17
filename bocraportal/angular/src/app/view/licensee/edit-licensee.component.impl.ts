@@ -28,24 +28,20 @@ import * as FormActions from '@app/store/form/form.actions';
   styleUrls: ['./edit-licensee.component.scss'],
 })
 export class EditLicenseeComponentImpl extends EditLicenseeComponent {
-
   protected keycloakService: KeycloakService;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.licenseeSectors$ = this.store.pipe(select(SectorSelectors.selectSectors))
-    this.licenseeDocuments$ = this.store.pipe(select(DocumentSelectors.selectDocuments))
-    this.licenseeLicences$ = this.store.pipe(select(LicenceSelectors.selectLicences))
+    this.licenseeDocuments$ = this.store.pipe(select(DocumentSelectors.selectDocuments));
+    this.licenseeLicences$ = this.store.pipe(select(LicenceSelectors.selectLicences));
   }
 
   beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
     return form;
   }
 
-  override afterOnInit() {
-    
-  }
+  override afterOnInit() {}
 
   override doNgAfterViewInit(): void {
     this.route.queryParams.subscribe((queryParams: any) => {
@@ -60,7 +56,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     });
 
     this.licensee$.subscribe((licensee) => {
-      this.setEditLicenseeFormValue({licensee: licensee});
+      this.setEditLicenseeFormValue({ licensee: licensee });
     });
   }
 
@@ -92,42 +88,46 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override handleLicenseeLicencesSearch(): void {
-
     let criteria: string = '';
     criteria = this.licenseeLicencesSearchField.value;
-    this.store.dispatch(LicenceActions.search({
-      criteria: { licenceNumber: criteria },
-      loading: true
-    }));
+    this.store.dispatch(
+      LicenceActions.search({
+        criteria: { licenceNumber: criteria },
+        loading: true,
+      })
+    );
   }
 
   override handleLicenseeDocumentsSearch(): void {
-
     let criteria: string = '';
     criteria = this.licenseeDocumentsSearchField.value;
-    this.store.dispatch(DocumentActions.search({
-      criteria:  criteria,
-      loading: true
-    }));
+    this.store.dispatch(
+      DocumentActions.search({
+        criteria: criteria,
+        loading: true,
+      })
+    );
   }
 
   override handleLicenseeFormsSearch(): void {
-
     let criteria: string = '';
     criteria = this.licenseeFormsSearchField.value;
-    this.store.dispatch(FormActions.searchForms({
-      criteria: {code: criteria, formName: criteria},
-      loading: true
-    }));
+    this.store.dispatch(
+      FormActions.searchForms({
+        criteria: { code: criteria, formName: criteria },
+        loading: true,
+      })
+    );
   }
-  
-  override handleLicenseeSectorsSearch(): void {
 
+  override handleLicenseeSectorsSearch(): void {
     let criteria: string = '';
     criteria = this.licenseeSectorsSearchField.value;
-    this.store.dispatch(SectorActions.search({
-      criteria: criteria,
-      loading: true
-    }));
+    this.store.dispatch(
+      SectorActions.search({
+        criteria: criteria,
+        loading: true,
+      })
+    );
   }
 }
