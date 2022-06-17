@@ -44,17 +44,23 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override afterOnInit() {
-    if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(
-        LicenseeActions.findById({
-          id: this.useCaseScope.pageVariables['id'],
-          loading: true,
-        })
-      );
-    }
+    
+  }
+
+  override doNgAfterViewInit(): void {
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.id) {
+        this.store.dispatch(
+          LicenseeActions.findById({
+            id: queryParams?.id,
+            loading: true,
+          })
+        );
+      }
+    });
 
     this.licensee$.subscribe((licensee) => {
-      
+      this.setEditLicenseeFormValue({licensee: licensee});
     });
   }
 

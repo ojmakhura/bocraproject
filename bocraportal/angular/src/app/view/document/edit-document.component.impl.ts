@@ -36,16 +36,24 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
   }
 
   override afterOnInit() {
-    if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(
-        DocumentActions.findById({
-          id: this.useCaseScope.pageVariables['id'],
-          loading: true,
-        })
-      );
-    }
+    
+  }
 
-    this.document$.subscribe((document) => {});
+  override doNgAfterViewInit(): void {
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.id) {
+        this.store.dispatch(
+          DocumentActions.findById({
+            id: queryParams?.id,
+            loading: true,
+          })
+        );
+      }
+    });
+
+    this.document$.subscribe((document) => {
+      this.setEditDocumentFormValue({document: document});
+    });
   }
 
   override doNgOnDestroy() {}

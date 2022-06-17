@@ -118,11 +118,6 @@ export class AddNewFieldComponentImpl extends AddNewFieldComponent {
    */
   override beforeAddNewFieldSave(form: AddNewFieldSaveForm): void {
     
-    if(this.formFieldControl.dirty && this.formFieldControl.valid){
-
-      console.log(this.formField);
-    }
-
     if (this.formFieldControl.dirty && this.formFieldControl.valid) {
       if (this.formField.id) {
         this.formField.updatedBy = this.keycloakService.getUsername();

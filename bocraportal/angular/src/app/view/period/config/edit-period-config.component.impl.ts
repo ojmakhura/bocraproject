@@ -33,14 +33,20 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
     }
 	
     override doNgAfterViewInit() {
-      if (this.useCaseScope.pageVariables['id']) {
-        this.store.dispatch(PeriodConfigActions.findById({
-          id: this.useCaseScope.pageVariables['id'],
-          loading: true
-        }));
-      }
+      
+      this.route.queryParams.subscribe((queryParams: any) => {
+        if (queryParams?.id) {
+          this.store.dispatch(
+            PeriodConfigActions.findById({
+              id: queryParams?.id,
+              loading: true,
+            })
+          );
+        }
+      });
   
       this.periodConfig$.subscribe((periodConfig) => {
+        this.setEditPeriodConfigFormValue({periodConfig: periodConfig});
       });
     }
 

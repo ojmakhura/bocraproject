@@ -32,14 +32,22 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   }
 
   override afterOnInit() {
-    if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(licenceTypeActions.findById({
-        id: this.useCaseScope.pageVariables['id'],
-        loading: true
-      }));
-    }
+  }
+
+  override doNgAfterViewInit(): void {
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.id) {
+        this.store.dispatch(
+          licenceTypeActions.findById({
+            id: queryParams?.id,
+            loading: true,
+          })
+        );
+      }
+    });
 
     this.licenceType$.subscribe((licenceType) => {
+      this.setEditLicenceTypeFormValue({licenceType: licenceType});
     });
   }
 

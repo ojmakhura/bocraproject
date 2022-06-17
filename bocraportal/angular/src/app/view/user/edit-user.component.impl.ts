@@ -71,6 +71,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     // }
 
     this.user$.subscribe((user) => {
+      this.setEditUserFormValue({user: user});
     });
   }
 

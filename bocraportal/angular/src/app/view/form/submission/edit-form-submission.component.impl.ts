@@ -110,7 +110,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       form.formSubmission.createdBy = this.keycloakService.getUsername();
       form.formSubmission.createdDate = new Date();
     }
-    console.log(this.formSubmission);
     //this.store.dispatch(SubmissionActions.save({ formSubmission: form.formSubmission }));
   }
 

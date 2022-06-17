@@ -31,14 +31,20 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     override doNgOnDestroy(){}
 
     override doNgAfterViewInit() {
-      if (this.useCaseScope.pageVariables['id']) {
-        this.store.dispatch(PeriodActions.findById({
-          id: this.useCaseScope.pageVariables['id'],
-          loading: true
-        }));
-      }
+      
+      this.route.queryParams.subscribe((queryParams: any) => {
+        if (queryParams?.id) {
+          this.store.dispatch(
+            PeriodActions.findById({
+              id: queryParams?.id,
+              loading: true,
+            })
+          );
+        }
+      });
   
       this.period$.subscribe((period) => {
+        this.setEditPeriodFormValue({period: period});
       });
     }
 

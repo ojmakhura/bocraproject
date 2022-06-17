@@ -24,17 +24,21 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     return form;
   }
 
-  override afterOnInit() {
-    if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(
-        LicenceActions.findById({
-          id: this.useCaseScope.pageVariables['id'],
-          loading: true,
-        })
-      );
-    }
+  override doNgAfterViewInit(): void {
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.id) {
+        this.store.dispatch(
+          LicenceActions.findById({
+            id: queryParams?.id,
+            loading: true,
+          })
+        );
+      }
+    });
 
-    this.licence$.subscribe((licence) => {});
+    this.licence$.subscribe((licence) => {
+      this.setEditLicenceFormValue({licence: licence});
+    });
   }
 
   override doNgOnDestroy() {}

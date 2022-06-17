@@ -26,14 +26,23 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
     }
 	
     override afterOnInit() {
-      if (this.useCaseScope.pageVariables['id']) {
-        this.store.dispatch(DocumentTypeActions.findById({
-          id: this.useCaseScope.pageVariables['id'],
-          loading: true
-        }));
-      }
+      
+    }
+
+    override doNgAfterViewInit(): void {
+      this.route.queryParams.subscribe((queryParams: any) => {
+        if (queryParams?.id) {
+          this.store.dispatch(
+            DocumentTypeActions.findById({
+              id: queryParams?.id,
+              loading: false,
+            })
+          );
+        }
+      });
   
       this.documentType$.subscribe((documentType) => {
+        this.setEditDocumentTypeFormValue({documentType: documentType});
       });
     }
 

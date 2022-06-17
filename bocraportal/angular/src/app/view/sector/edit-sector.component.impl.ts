@@ -35,15 +35,21 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     return form;
   }
 
-  override afterOnInit() {
-    if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(SectorActions.findById({
-        id: this.useCaseScope.pageVariables['id'],
-        loading: true
-      }));
-    }
+  override doNgAfterViewInit() {
+      
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.id) {
+        this.store.dispatch(
+          SectorActions.findById({
+            id: queryParams?.id,
+            loading: true,
+          })
+        );
+      }
+    });
 
     this.sector$.subscribe((sector) => {
+      this.setEditSectorFormValue({sector: sector});
     });
   }
 

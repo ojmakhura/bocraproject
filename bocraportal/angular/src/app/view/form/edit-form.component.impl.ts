@@ -71,7 +71,6 @@ export class EditFormComponentImpl extends EditFormComponent {
           })
         );
       }
-      console.log(form);
       this.setEditFormFormValue({ form: form });
     });
 

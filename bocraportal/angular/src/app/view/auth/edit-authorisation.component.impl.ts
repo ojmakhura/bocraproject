@@ -43,16 +43,24 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
   }
 
   override afterOnInit() {
-    if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(
-        authorisationActions.findById({
-          id: this.useCaseScope.pageVariables['id'],
-          loading: false,
-        })
-      );
-    }
+    
+  }
 
-    this.authorisation$.subscribe((authorisation) => {});
+  override doNgAfterViewInit(): void {
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.id) {
+        this.store.dispatch(
+          authorisationActions.findById({
+            id: queryParams?.id,
+            loading: false,
+          })
+        );
+      }
+    });
+
+    this.authorisation$.subscribe((authorisation) => {
+      this.setEditAuthorisationFormValue({authorisation: authorisation});
+    });
   }
 
   /**
