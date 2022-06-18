@@ -19,7 +19,7 @@ export const licenseeReducer = createReducer(
         success: action.success,
         errors: []
     })),
-    on(LicenseeActions.addSector, (state, action) => ({
+    on(LicenseeActions.addSectorSuccess, (state, action) => ({
         ...state,
         sector: action.sector, 
         sectors: [...state.sectors, action.sector], 
@@ -47,13 +47,6 @@ export const licenseeReducer = createReducer(
         success: action.success,
         errors: []
     })),
-    // on(LicenseeActions.getDocumentsSuccess, (state, action) => ({
-    //     ...state,
-    //     documents: action.documents, 
-    //     loading: false,
-    //     success: action.success,
-    //     errors: []
-    // })),
     on(LicenseeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 

@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.licensee.LicenseeSectorVO;
+
 @RestController
 @RequestMapping("/sector")
 public class SectorRestControllerImpl extends SectorRestControllerBase {
@@ -99,5 +101,17 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         }
 
         return response;
+    }
+
+    @Override
+    public ResponseEntity<LicenseeSectorVO> handleAddLicensee(Long sectorId, Long licenseeId) {
+        LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
+
+        if(lvo == null || lvo.getId() == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        } else {
+            return ResponseEntity.ok().body(lvo);
+        }
     }
 }

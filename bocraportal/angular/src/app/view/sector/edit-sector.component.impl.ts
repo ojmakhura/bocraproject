@@ -15,6 +15,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { KeycloakService } from 'keycloak-angular';
 import { select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-sector-vo';
 
 @Component({
   selector: 'app-edit-sector',
@@ -24,11 +26,14 @@ import { select } from '@ngrx/store';
 export class EditSectorComponentImpl extends EditSectorComponent {
 
   protected keycloakService: KeycloakService;
+  protected licensee$: Observable<LicenseeVO[]>;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.sectorLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees))
+    this.sectorLicensees$ = this.store.pipe(select(SectorSelectors.selectLicensees));
+    this.licensee$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
+    
   }
 
   override beforeOnInit(form: EditSectorVarsForm): EditSectorVarsForm {
@@ -51,11 +56,26 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     this.sector$.subscribe((sector) => {
       this.setEditSectorFormValue({sector: sector});
     });
+
+    this.licensee$.subscribe(licensees => {
+      licensees.forEach(lc => {
+        let l: LicenseeSectorVO = new LicenseeSectorVO();
+        l.id = lc.id;
+        l.uin = lc.uin
+        l.licenseeName = lc.licenseeName
+        this.store.dispatch(SectorActions.addLicensee({licensee: l}));
+      });
+           
+    });
   }
 
   override doNgOnDestroy() {}
 
-  override handleSectorLicenseesSearch(): void {
+  override handleSectorLicenseesAddDialog(): void {
+    this.store.dispatch(SectorActions.setLicensees({licensees: []}));
+  }
+
+  override handleSectorLicenseesSearch(): void { 
 
     let criteria: string = '';
     criteria = this.sectorLicenseesSearchField.value;
@@ -70,18 +90,22 @@ export class EditSectorComponentImpl extends EditSectorComponent {
    */
   override beforeEditSectorSave(form: EditSectorSaveForm): void {
 
-    if(form.sector?.id) {
-
-      form.sector.updatedBy = this.keycloakService.getUsername();
-      form.sector.updatedDate = new Date();
+    if(this.editSectorForm.valid && this.editSectorForm.dirty) {
+      if(form.sector?.id) {
+  
+        form.sector.updatedBy = this.keycloakService.getUsername();
+        form.sector.updatedDate = new Date();
+      } else {
+        form.sector.createdBy = this.keycloakService.getUsername();
+        form.sector.createdDate = new Date();
+      }
+      
+      this.store.dispatch(SectorActions.save({
+        sector: form.sector,
+        loading: true
+      }));
     } else {
-      form.sector.createdBy = this.keycloakService.getUsername();
-      form.sector.createdDate = new Date();
+      this.store.dispatch(SectorActions.sectorFailure({ errors: ['Form has error!'], success: false, loading: false }));
     }
-    
-    this.store.dispatch(SectorActions.save({
-      sector: form.sector,
-      loading: true
-    }));
   }
 }

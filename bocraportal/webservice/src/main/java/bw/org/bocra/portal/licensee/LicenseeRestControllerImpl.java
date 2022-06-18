@@ -207,17 +207,17 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
         }
     }
 
-    // @Override
-    // public ResponseEntity<LicenseeVO> handleUpdateLicensee(LicenseeVO licenseeVO) {
-    //     Optional<LicenseeVO> data = Optional.empty(); // TODO: Add custom code here;
-    //     ResponseEntity<LicenseeVO> response;
+    @Override
+    public ResponseEntity<LicenseeSectorVO> handleAddSector(Long licenseeId, Long sectorId) {
 
-    //     if(data.isPresent()) {
-    //         response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-    //     } else {
-    //         response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    //     }
+        LicenseeSectorVO lvo = getLicenseeService().addSector(licenseeId, sectorId);
 
-    //     return response;
-    // }
+        if(lvo == null || lvo.getId() == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        } else {
+            return ResponseEntity.ok().body(lvo);
+        }
+
+    }
 }

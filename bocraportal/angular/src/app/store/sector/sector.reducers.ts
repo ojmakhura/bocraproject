@@ -19,10 +19,16 @@ export const sectorReducer = createReducer(
         success: action.success,
         errors: []
     })),
-    on(SectorActions.addLicensee, (state, action) => ({
+    on(SectorActions.addLicenseeSuccess, (state, action) => ({
         ...state,
         licensee: action.licensee,
         licensees: [...state.licensees, action.licensee],
+        loading: false,
+        errors: []
+    })),
+    on(SectorActions.setLicensees, (state, action) => ({
+        ...state,
+        licensees: action.licensees,
         loading: false,
         errors: []
     })),

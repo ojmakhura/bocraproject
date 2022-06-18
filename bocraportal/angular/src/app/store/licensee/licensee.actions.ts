@@ -8,6 +8,7 @@ export enum LicenseeActionType {
     FIND_BY_ID = '[Licensee] Find By Id',
     FIND_BY_ID_SUCCESS = '[Licensee] Find By Id Success',
     ADD_SECTOR = '[Licensee] Add Sector',
+    ADD_SECTOR_SUCCESS = '[Licensee] Add Sector Success',
     SAVE = '[Licensee] Save',
     SAVE_SUCCESS = '[Licensee] Save Success',
     REMOVE = '[Licensee] Remove',
@@ -35,12 +36,17 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     LicenseeActionType.SAVE,
-    props<{ licensee: LicenseeVO | any , loading: boolean }>()
+    props<{ licensee: LicenseeVO | any, loading: boolean }>()
 );
 
 export const addSector = createAction(
     LicenseeActionType.ADD_SECTOR,
-    props<{ sector: LicenseeSectorVO | any }>()
+    props<{ licenseeId: number, sectorId: number, loading: boolean }>()
+);
+
+export const addSectorSuccess = createAction(
+    LicenseeActionType.ADD_SECTOR_SUCCESS,
+    props<{ sector: LicenseeSectorVO | any, success: boolean }>()
 );
 
 export const saveSuccess = createAction(

@@ -4,6 +4,7 @@ import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SectorRestController } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller';
 import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
+import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-sector-vo';
 
 @Injectable()
 export class SectorRestControllerImpl extends SectorRestController {
@@ -12,37 +13,43 @@ export class SectorRestControllerImpl extends SectorRestController {
         super(injector);
     }
 
-    public findById(id: number | any ): Observable<SectorVO | any> {
+    public override addLicensee(sectorId: number | any , licenseeId: number | any ): Observable<LicenseeSectorVO | any> {
+
+        return this.http.get<LicenseeSectorVO | any>(this.path + `/${sectorId}/add/licensee/${licenseeId}`);
+
+    }
+
+    public override findById(id: number | any ): Observable<SectorVO | any> {
 
         return this.http.get<SectorVO | any>(this.path + `/${id}`);
 
     }
 
-    public getAll(): Observable<SectorVO[] | any> {
+    public override getAll(): Observable<SectorVO[] | any> {
 
         return this.http.get<SectorVO[] | any>(this.path + `/all`);
 
     }
 
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<SectorVO[] | any> {
+    public override getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<SectorVO[] | any> {
 
         return this.http.get<SectorVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
-    public remove(id: number | any ): Observable<boolean | any> {
+    public override remove(id: number | any ): Observable<boolean | any> {
 
         return this.http.delete<boolean | any>(this.path + `/${id}`);
 
     }
 
-    public save(sector: SectorVO | any ): Observable<SectorVO | any> {
+    public override save(sector: SectorVO | any ): Observable<SectorVO | any> {
 
         return this.http.post<SectorVO | any>(this.path, sector);
 
     }
 
-    public search(criteria: string | any ): Observable<SectorVO[] | any> {
+    public override search(criteria: string | any ): Observable<SectorVO[] | any> {
 
         return this.http.post<SectorVO[] | any>(this.path + `/search`, criteria);
 

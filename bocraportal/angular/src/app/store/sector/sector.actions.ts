@@ -9,6 +9,8 @@ export enum SectorActionType {
     SAVE = '[Sector] Save',
     SAVE_SUCCESS = '[Sector] Save Success',
     ADD_LICENSEE = '[Sector] Add Licensee',
+    ADD_LICENSEE_SUCCESS = '[Sector] Add Licensee Success',
+    SET_LICENSEES = '[Sector] Set Licensees',
     REMOVE = '[Sector] Remove',
     REMOVE_SUCCESS = '[Sector] Remove Success',
     GET_ALL = '[Sector] Get All',
@@ -44,7 +46,17 @@ export const saveSuccess = createAction(
 
 export const addLicensee = createAction(
     SectorActionType.ADD_LICENSEE,
-    props<{ licensee: LicenseeSectorVO | any }>()
+    props<{ sectorId: number, licenseeId: number, loading: boolean }>()
+);
+
+export const addLicenseeSuccess = createAction(
+    SectorActionType.ADD_LICENSEE_SUCCESS,
+    props<{ licensee: LicenseeSectorVO | any, success: boolean }>()
+);
+
+export const setLicensees = createAction(
+    SectorActionType.SET_LICENSEES,
+    props<{ licensees: LicenseeSectorVO[] | any[] }>()
 );
 
 export const remove = createAction(

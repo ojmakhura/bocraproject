@@ -4,6 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as SectorActions from './sector.actions';
 import { SectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller.impl';
+import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-sector-vo';
 
 @Injectable()
 export class SectorEffects {
@@ -29,6 +30,19 @@ export class SectorEffects {
             mergeMap(({ sector }) => this.sectorRestController.save(sector).pipe(
                 map( sector => SectorActions.saveSuccess({
                     sector,
+                    success: true
+                })),
+                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
+            ))
+        )
+    );
+
+    addLicensee$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(SectorActions.addLicensee),
+            mergeMap(({ sectorId, licenseeId }) => this.sectorRestController.addLicensee(sectorId, licenseeId).pipe(
+                map( licensee => SectorActions.addLicenseeSuccess({
+                    licensee,
                     success: true
                 })),
                 catchError(({errors}) => [SectorActions.sectorFailure(errors)])
