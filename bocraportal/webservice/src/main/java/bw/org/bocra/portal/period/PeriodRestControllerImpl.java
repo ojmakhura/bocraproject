@@ -67,6 +67,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
 
     @Override
     public ResponseEntity<PeriodVO> handleSave(PeriodVO periodVO) {
+        System.out.println(periodVO);
         Optional<PeriodVO> data = Optional.of(periodService.save(periodVO));
         ResponseEntity<PeriodVO> response;
 

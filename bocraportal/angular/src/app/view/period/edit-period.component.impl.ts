@@ -9,6 +9,12 @@ import { EditPeriodVarsForm } from '@app/view/period/edit-period.component';
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
 import { KeycloakService } from 'keycloak-angular';
 import * as PeriodActions from '@app/store/period/period.actions';
+import * as PeriodSelectors from '@app/store/period/period.selectors';
+import * as PeriodConfigActions from '@app/store/period/config/period-config.actions';
+import * as PeriodConfigSelectors from '@app/store/period/config/period-config.selectors';
+import { select } from '@ngrx/store';
+import { of } from 'rxjs';
+import { RepeatPeriod } from '@app/model/bw/org/bocra/portal/period/config/repeat-period';
 
 @Component({
   selector: 'app-edit-period',
@@ -22,6 +28,9 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     constructor(private injector: Injector) {
         super(injector);
         this.keycloakService = injector.get(KeycloakService);
+        this.periodPeriodConfigs$ = this.store.pipe(select(PeriodConfigSelectors.selectPeriodConfigs));
+        this.periodNexts$ = this.store.pipe(select(PeriodSelectors.selectPeriods));
+        this.periodPreviouses$ = this.store.pipe(select(PeriodSelectors.selectPeriods));
     }
 
     override beforeOnInit(form: EditPeriodVarsForm): EditPeriodVarsForm {
@@ -46,12 +55,35 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
       this.period$.subscribe((period) => {
         this.setEditPeriodFormValue({period: period});
       });
+
+      this.periodPeriodConfigControl.valueChanges.subscribe(change => {
+        
+        if(change?.id) {
+          let current  = new Date();
+          console.log(current.toISOString());
+
+          if(change.repeatPeriod === RepeatPeriod.DAYS) {
+            current.setDate(current.getDate() + 1);
+            console.log(current);
+          } else if(change.repeatPeriod === RepeatPeriod.WEEKS) {
+            current.setDate(current.getDate() + 7);
+          } else if(change.repeatPeriod === RepeatPeriod.MONTHS) {
+            current.setMonth(current.getMonth() + 1); 
+          } else if(change.repeatPeriod === RepeatPeriod.YEARS) {
+            current.setMonth(current.getMonth() + 12); 
+          }
+
+          let str = current.toLocaleString('en-bw',{month:'short', year:'numeric'})
+          this.periodPeriodNameControl.patchValue(change.periodConfigName + ': ' + str);
+        }
+      });
     }
 
     /**
      * This method may be overwritten
      */
     override beforeEditPeriodSave(form: EditPeriodSaveForm): void {
+      
       if(this.periodControl.valid) {
         if(form.period.id) {
           form.period.updatedBy = this.keycloakService.getUsername();
@@ -67,5 +99,11 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         }));
       }
 
+    }
+
+    override handlePeriodPeriodConfigSearch(): void {
+      this.store.dispatch(PeriodConfigActions.search({
+        criteria: {periodConfigName: this.periodPeriodConfigSearchField.value}, loading: true
+      }));
     }
 }

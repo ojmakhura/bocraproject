@@ -39,6 +39,7 @@ export class PeriodRestControllerImpl extends PeriodRestController {
 
     public save(period: PeriodVO | any ): Observable<PeriodVO | any> {
 
+        console.log(period);
         return this.http.post<PeriodVO | any>(this.path, period);
 
     }
