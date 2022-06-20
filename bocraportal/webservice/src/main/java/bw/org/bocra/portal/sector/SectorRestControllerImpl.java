@@ -18,7 +18,6 @@ import bw.org.bocra.portal.licensee.LicenseeSectorVO;
 @RequestMapping("/sector")
 public class SectorRestControllerImpl extends SectorRestControllerBase {
 
-
     @Override
     public ResponseEntity<SectorVO> handleFindById(Long id) {
         Optional<SectorVO> data = Optional.of(sectorService.findById(id)); // TODO: Add custom code here;
@@ -105,6 +104,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
 
     @Override
     public ResponseEntity<LicenseeSectorVO> handleAddLicensee(Long sectorId, Long licenseeId) {
+
         LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
 
         if(lvo == null || lvo.getId() == null) {

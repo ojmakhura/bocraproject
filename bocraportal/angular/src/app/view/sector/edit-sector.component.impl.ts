@@ -24,16 +24,18 @@ import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/licens
   styleUrls: ['./edit-sector.component.scss'],
 })
 export class EditSectorComponentImpl extends EditSectorComponent {
-
   protected keycloakService: KeycloakService;
-  protected licensee$: Observable<LicenseeVO[]>;
+  protected licensees$: Observable<LicenseeVO[]>;
+  protected licensee$: Observable<LicenseeVO>;
+  protected sectorLicensee$: Observable<LicenseeSectorVO>;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.sectorLicensees$ = this.store.pipe(select(SectorSelectors.selectLicensees));
-    this.licensee$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
-    
+    this.licensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
+    this.licensee$ = this.store.pipe(select(LicenseeSelectors.selectLicensee));
+    this.sectorLicensee$ = this.store.pipe(select(SectorSelectors.selectLicensee));
   }
 
   override beforeOnInit(form: EditSectorVarsForm): EditSectorVarsForm {
@@ -41,7 +43,6 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override doNgAfterViewInit() {
-      
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -54,56 +55,72 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     });
 
     this.sector$.subscribe((sector) => {
-      this.setEditSectorFormValue({sector: sector});
+      this.setEditSectorFormValue({ sector: sector });
     });
 
-    this.licensee$.subscribe(licensees => {
-      licensees.forEach(lc => {
-        let l: LicenseeSectorVO = new LicenseeSectorVO();
-        l.id = lc.id;
-        l.uin = lc.uin
-        l.licenseeName = lc.licenseeName
-        this.store.dispatch(SectorActions.addLicensee({licensee: l}));
-      });
-           
+    this.licensee$.subscribe((licensee) => {
+      console.log(licensee)
     });
+
+    this.licensees$.subscribe((licensees) => {
+      licensees.forEach((lc) => {
+        this.store.dispatch(SectorActions.addLicenseeSuccess({ licensee: lc, success: true }));
+      });
+    });
+  }
+
+  override addToSectorLicensees(licensee: LicenseeSectorVO) {
+    this.store.dispatch(SectorActions.addLicensee({sectorId: this.sectorId, licenseeId: licensee.id, loading: true}));
+    console.log(licensee);
+    console.log(this.sectorId);
+    let tmp: LicenseeSectorVO = new LicenseeSectorVO();
+    tmp.id = licensee.id;
+    tmp.address = licensee.address;
+    tmp.code = licensee.code;
+    tmp.licenseeName = licensee.licenseeName;
+    tmp.name = licensee.name;
+    tmp.uin = licensee.uin;
+    tmp.licenseeSectorId = this.sectorId;
+
+    this.sectorLicenseesControl.push(this.createLicenseeSectorVOGroup(tmp));
   }
 
   override doNgOnDestroy() {}
 
   override handleSectorLicenseesAddDialog(): void {
-    this.store.dispatch(SectorActions.setLicensees({licensees: []}));
+    this.store.dispatch(SectorActions.setLicensees({ licensees: [] }));
   }
 
-  override handleSectorLicenseesSearch(): void { 
-
+  override handleSectorLicenseesSearch(): void {
     let criteria: string = '';
     criteria = this.sectorLicenseesSearchField.value;
-    this.store.dispatch(LicenseeActions.search({
-      criteria: {uin: criteria, licenseeName: criteria},
-      loading: true
-    }));
+    this.store.dispatch(
+      LicenseeActions.search({
+        criteria: { uin: criteria, licenseeName: criteria },
+        loading: true,
+      })
+    );
   }
 
   /**
    * This method may be overwritten
    */
   override beforeEditSectorSave(form: EditSectorSaveForm): void {
-
-    if(this.editSectorForm.valid && this.editSectorForm.dirty) {
-      if(form.sector?.id) {
-  
+    if (this.editSectorForm.valid && this.editSectorForm.dirty) {
+      if (form.sector?.id) {
         form.sector.updatedBy = this.keycloakService.getUsername();
         form.sector.updatedDate = new Date();
       } else {
         form.sector.createdBy = this.keycloakService.getUsername();
         form.sector.createdDate = new Date();
       }
-      
-      this.store.dispatch(SectorActions.save({
-        sector: form.sector,
-        loading: true
-      }));
+
+      this.store.dispatch(
+        SectorActions.save({
+          sector: form.sector,
+          loading: true,
+        })
+      );
     } else {
       this.store.dispatch(SectorActions.sectorFailure({ errors: ['Form has error!'], success: false, loading: false }));
     }

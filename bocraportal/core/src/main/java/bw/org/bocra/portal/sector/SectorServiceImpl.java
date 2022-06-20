@@ -122,9 +122,9 @@ public class SectorServiceImpl
     }
 
     @Override
-    protected LicenseeSectorVO handleAddLicensee(Long licenseeId, Long sectorId) throws Exception {
+    protected LicenseeSectorVO handleAddLicensee(Long sectorId, Long licenseeId) throws Exception {
 
-        Sector sector = getSectorDao().load(sectorId);
+        Sector sector = getSectorDao().get(sectorId);
 
         if(sector == null) {
             return null;
