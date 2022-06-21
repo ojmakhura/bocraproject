@@ -17,9 +17,10 @@ export class LicenceEffects {
             mergeMap(({ id }) => this.licenceRestController.findById(id).pipe(
                 map( licence => LicenceActions.findByIdSuccess({
                     licence,
+                    messages: [`Licence ${licence.licenceNumber} found.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
+                catchError(({messages}) => [LicenceActions.licenceFailure(messages)])
             ))
         )
     );
@@ -30,9 +31,10 @@ export class LicenceEffects {
             mergeMap(({ licence }) => this.licenceRestController.save(licence).pipe(
                 map( licence => LicenceActions.saveSuccess({
                     licence,
+                    messages: [`Licence ${licence.licenceNumber} saved.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
+                catchError(({messages}) => [LicenceActions.licenceFailure(messages)])
             ))
         )
     );
@@ -43,9 +45,10 @@ export class LicenceEffects {
             mergeMap(({ id }) => this.licenceRestController.remove(id).pipe(
                 map( removed => LicenceActions.removeSuccess({
                     removed,
+                    messages: [`Licence ${id} removed.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
+                catchError(({messages}) => [LicenceActions.licenceFailure(messages)])
             ))
         )
     );
@@ -56,9 +59,10 @@ export class LicenceEffects {
             mergeMap(() => this.licenceRestController.getAll().pipe(
                 map( licences => LicenceActions.getAllSuccess({
                     licences,
+                    messages: [`${licences.length} licences found.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
+                catchError(({messages}) => [LicenceActions.licenceFailure(messages)])
             ))
         )
     );
@@ -69,9 +73,10 @@ export class LicenceEffects {
             mergeMap(({ criteria }) => this.licenceRestController.search(criteria).pipe(
                 map( licences => LicenceActions.searchSuccess({
                     licences,
+                    messages: [`${licences.length} licences found.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
+                catchError(({messages}) => [LicenceActions.licenceFailure(messages)])
             ))
         )
     );
@@ -82,9 +87,10 @@ export class LicenceEffects {
             mergeMap(({ pageNumber, pageSize }) => this.licenceRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( licences => LicenceActions.getAllPagedSuccess({
                     licences,
+                    messages: [`Page ${pageNumber} found with ${licences.length} licences.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
+                catchError(({messages}) => [LicenceActions.licenceFailure(messages)])
             ))
         )
     );
@@ -97,7 +103,7 @@ export class LicenceEffects {
     //                 documents,
     //                 success: true
     //             })),
-    //             catchError(({errors}) => [LicenceActions.licenceFailure(errors)])
+    //             catchError(({messages}) => [LicenceActions.licenceFailure(messages)])
     //         ))
     //     )
     // );

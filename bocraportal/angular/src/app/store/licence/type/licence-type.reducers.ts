@@ -10,14 +10,14 @@ export const licenceTypeReducer = createReducer(
         licenceType: action.licenceType, 
         loading: false,
         success: action.success,
-        errors: []
+        messages:  action.messages
     })),
     on(LicenceTypeActions.saveSuccess, (state, action) => ({
         ...state,
         licenceType: action.licenceType, 
         loading: false,
         success: action.success,
-        errors: []
+        messages:  action.messages
     })),
     on(LicenceTypeActions.removeSuccess, (state, action) => ({
         ...state,
@@ -25,41 +25,43 @@ export const licenceTypeReducer = createReducer(
         removed: action.removed,
         loading: false,
         success: action.success,
-        errors: []
+        messages:  action.messages
     })),
     on(LicenceTypeActions.getAllSuccess, (state, action) => ({
         ...state,
         licenceTypes: action.licenceTypes, 
         loading: false,
         success: action.success,
-        errors: []
+        messages:  action.messages
     })),
     on(LicenceTypeActions.searchSuccess, (state, action) => ({
         ...state,
         licenceTypes: action.licenceTypes, 
         loading: false,
         success: action.success,
-        errors: []
+        messages:  action.messages
     })),
     on(LicenceTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licenceTypes: action.licenceTypes, 
         loading: false,
         success: action.success,
-        error:null
+        message:  action.messages
     })),
     on(LicenceTypeActions.licenceTypeReset, (state) => ({
-      ...state,
-      licenceType: null, 
-      licenceTypes: [], 
+        ...state,
+        licenceType: null, 
+        licenceTypes: [], 
         criteria: null, 
         id: null, 
         removed: false,
-        errors: []
+        error: false,
+        messages: []
     })),
     on(LicenceTypeActions.licenceTypeFailure, (state, action) => ({
         ...state,
-        errors: action.errors
+        messages: action.messages,
+        error: true,
     }))
 );
 

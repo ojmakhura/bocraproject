@@ -41,9 +41,9 @@ export const selectSectors = createSelector(
     (state: LicenseeState) => state.sectors
 );
 
-export const selectErrors = createSelector(
+export const selectMessages = createSelector(
     selectLicenseeState,
-    (state: LicenseeState) => state.errors
+    (state: LicenseeState) => state.messages
 );
 
 export const selectSuccess = createSelector(
@@ -54,4 +54,9 @@ export const selectSuccess = createSelector(
 export const selectLoading = createSelector(
     selectLicenseeState,
     (state: LicenseeState) => state.loading
+);
+
+export const selectError = createSelector(
+    selectLicenseeState,
+    (state: LicenseeState) => state.error
 );

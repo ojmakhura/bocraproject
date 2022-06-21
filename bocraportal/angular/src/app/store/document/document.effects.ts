@@ -16,9 +16,10 @@ export class DocumentEffects {
             mergeMap(({ id }) => this.documentRestController.findById(id).pipe(
                 map( document => DocumentActions.findByIdSuccess({
                     document,
+                    messages: [`Document ${document.documentName} found.`],
                     success: true
                 })),
-                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
+                catchError(({messages}) => [DocumentActions.documentFailure(messages)])
             ))
         )
     );
@@ -29,9 +30,10 @@ export class DocumentEffects {
             mergeMap(({ document }) => this.documentRestController.save(document).pipe(
                 map( document => DocumentActions.saveSuccess({
                     document,
+                    messages: [`Document ${document.documentName} saved.`],
                     success: true
                 })),
-                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
+                catchError(({messages}) => [DocumentActions.documentFailure(messages)])
             ))
         )
     );
@@ -42,9 +44,10 @@ export class DocumentEffects {
             mergeMap(({ id }) => this.documentRestController.remove(id).pipe(
                 map( removed => DocumentActions.removeSuccess({
                     removed,
+                    messages: [`Document ${id} removed.`],
                     success: true
                 })),
-                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
+                catchError(({messages}) => [DocumentActions.documentFailure(messages)])
             ))
         )
     );
@@ -55,9 +58,10 @@ export class DocumentEffects {
             mergeMap(() => this.documentRestController.getAll().pipe(
                 map( documents => DocumentActions.getAllSuccess({
                     documents,
+                    messages: [`${documents.length} document found.`],
                     success: true
                 })),
-                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
+                catchError(({messages}) => [DocumentActions.documentFailure(messages)])
             ))
         )
     );
@@ -68,9 +72,10 @@ export class DocumentEffects {
             mergeMap(({ criteria }) => this.documentRestController.search(criteria).pipe(
                 map( documents => DocumentActions.searchSuccess({
                     documents,
+                    messages: [`${documents.length} document found.`],
                     success: true
                 })),
-                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
+                catchError(({messages}) => [DocumentActions.documentFailure(messages)])
             ))
         )
     );
@@ -81,9 +86,10 @@ export class DocumentEffects {
             mergeMap(({ pageNumber, pageSize }) => this.documentRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( documents => DocumentActions.getAllPagedSuccess({
                     documents,
+                    messages: [`Page ${pageNumber} found with ${documents.length} documents.`],
                     success: true
                 })),
-                catchError(({errors}) => [DocumentActions.documentFailure(errors)])
+                catchError(({messages}) => [DocumentActions.documentFailure(messages)])
             ))
         )
     );
@@ -96,7 +102,7 @@ export class DocumentEffects {
     //                 documents,
     //                 success: false
     //             })),
-    //             catchError(({errors}) => [DocumentActions.documentFailure(errors)])
+    //             catchError(({messages}) => [DocumentActions.documentFailure(messages)])
     //         ))
     //     )
     // );
@@ -109,7 +115,7 @@ export class DocumentEffects {
     //                 documents,
     //                 success: false
     //             })),
-    //             catchError(({errors}) => [DocumentActions.documentFailure(errors)])
+    //             catchError(({messages}) => [DocumentActions.documentFailure(messages)])
     //         ))
     //     )
     // );

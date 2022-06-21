@@ -36,9 +36,9 @@ export const selectId = createSelector(
     (state: SectorState) => state.id
 );
 
-export const selectErrors = createSelector(
+export const selectMessages = createSelector(
     selectSectorState,
-    (state: SectorState) => state.errors
+    (state: SectorState) => state.messages
 );
 
 export const selectSuccess = createSelector(
@@ -49,4 +49,9 @@ export const selectSuccess = createSelector(
 export const selectLoading = createSelector(
     selectSectorState,
     (state: SectorState) => state.loading
+);
+
+export const selectError = createSelector(
+    selectSectorState,
+    (state: SectorState) => state.error
 );

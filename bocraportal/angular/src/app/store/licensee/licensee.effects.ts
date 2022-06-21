@@ -17,9 +17,10 @@ export class LicenseeEffects {
             mergeMap(({ id }) => this.licenseeRestController.findById(id).pipe(
                 map( licensee => LicenseeActions.findByIdSuccess({
                     licensee,
+                    messages: [`Licensee ${licensee.licenseeName} found.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
+                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
             ))
         )
     );
@@ -30,9 +31,10 @@ export class LicenseeEffects {
             mergeMap(({ licensee }) => this.licenseeRestController.save(licensee).pipe(
                 map( licensee => LicenseeActions.saveSuccess({
                     licensee,
+                    messages: [`Licensee ${licensee.licenseeName} saved.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
+                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
             ))
         )
     );
@@ -43,9 +45,10 @@ export class LicenseeEffects {
             mergeMap(({ id }) => this.licenseeRestController.remove(id).pipe(
                 map( removed => LicenseeActions.removeSuccess({
                     removed,
+                    messages: [`Licensee ${id} removed.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
+                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
             ))
         )
     );
@@ -56,9 +59,10 @@ export class LicenseeEffects {
             mergeMap(() => this.licenseeRestController.getAll().pipe(
                 map( licensees => LicenseeActions.getAllSuccess({
                     licensees,
+                    messages: [`${licensees.length} licensees found.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
+                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
             ))
         )
     );
@@ -69,9 +73,10 @@ export class LicenseeEffects {
             mergeMap(({ criteria }) => this.licenseeRestController.search(criteria).pipe(
                 map( licensees => LicenseeActions.searchSuccess({
                     licensees,
+                    messages: [`${licensees.length} licensees found.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
+                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
             ))
         )
     );
@@ -82,9 +87,10 @@ export class LicenseeEffects {
             mergeMap(({ pageNumber, pageSize }) => this.licenseeRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( licensees => LicenseeActions.getAllPagedSuccess({
                     licensees,
+                    messages: [`Page ${pageNumber} found with ${licensees.length} licensees.`],
                     success: true
                 })),
-                catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
+                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
             ))
         )
     );
@@ -94,7 +100,7 @@ export class LicenseeEffects {
     //         ofType(LicenseeActions.getDocuments),
     //         mergeMap(({ licenseeId }) => this.documentRestController.getLicenceDocuments(licenseeId).pipe(
     //             map( documents => LicenseeActions.getDocumentsSuccess({documents})),
-    //             catchError(({errors}) => [LicenseeActions.licenseeFailure(errors)])
+    //             catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
     //         ))
     //     )
     // );

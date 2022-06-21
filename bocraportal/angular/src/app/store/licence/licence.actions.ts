@@ -33,7 +33,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     LicenceActionType.FIND_BY_ID_SUCCESS,
-    props<{ licence: LicenceVO | any, success: boolean}>()
+    props<{ licence: LicenceVO | any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(
@@ -43,7 +43,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     LicenceActionType.SAVE_SUCCESS,
-    props<{ licence: LicenceVO | any, success: boolean}>()
+    props<{ licence: LicenceVO | any, messages: any[], success: boolean}>()
 );
 
 export const remove = createAction(
@@ -53,7 +53,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     LicenceActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -63,7 +63,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     LicenceActionType.GET_ALL_SUCCESS,
-    props<{ licences: LicenceVO[] | any[], success: boolean}>()
+    props<{ licences: LicenceVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -73,7 +73,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     LicenceActionType.SEARCH_SUCCESS,
-    props<{ licences: LicenceVO[] | any[], success: boolean}>()
+    props<{ licences: LicenceVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -83,7 +83,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     LicenceActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ licences: LicenceVO[] | any[], success: boolean}>()
+    props<{ licences: LicenceVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getLicenseeDocuments = createAction(
@@ -93,7 +93,7 @@ export const getLicenseeDocuments = createAction(
 
 export const getLicenseeDocumentsSuccess = createAction(
     LicenceActionType.GET_LICENSEE_DOCUMENTS_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getLicenceDocuments = createAction(
@@ -103,7 +103,7 @@ export const getLicenceDocuments = createAction(
 
 export const getLicenceDocumentsSuccess = createAction(
     LicenceActionType.GET_LICENCE_DOCUMENTS_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
 );
 
 
@@ -111,10 +111,10 @@ export const licenceReset = createAction(LicenceActionType.LICENCE_RESET);
 
 export const licenceLoading = createAction(
     LicenceActionType.LICENCE_LOADING,
-    props<{ loading: boolean, success: boolean, errors: any[] }>()
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
 );
 
 export const licenceFailure = createAction(
     LicenceActionType.LICENCE_FAILURE,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );

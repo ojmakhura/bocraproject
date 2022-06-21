@@ -22,7 +22,7 @@ export class AuthEffects {
   //             AuthActions.getRolesSuccess({roles: this.keycloakService.getUserRoles()});
   //           }
   //         }),
-  //         catchError(({ errors }) => [AuthActions.authFailure(errors)])
+  //         catchError(({ messages }) => [AuthActions.authFailure(messages)])
   //       )
   //     )
   //   )
@@ -34,7 +34,7 @@ export class AuthEffects {
   //     mergeMap(() =>
   //       this.keycloakService.logout().then(
   //         map(() => AuthActions.authReset()),
-  //         catchError(({ errors }) => [AuthActions.authFailure(errors)])
+  //         catchError(({ messages }) => [AuthActions.authFailure(messages)])
   //       )
   //     )
   //   )

@@ -16,9 +16,10 @@ export class FormSubmissionEffects {
             mergeMap(({ id }) => this.submissionRestController.findById(id).pipe(
                 map( formSubmission => FormSubmissionActions.findByIdSuccess({
                     formSubmission,
+                    messages: [`Submission ${formSubmission?.form?.formName} found.`],
                     success: true
                 })),
-                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
+                catchError(({messages}) => [FormSubmissionActions.formSubmissionFailure(messages)])
             ))
         )
     );
@@ -29,9 +30,10 @@ export class FormSubmissionEffects {
             mergeMap(({ formSubmission }) => this.submissionRestController.save(formSubmission).pipe(
                 map( formSubmission => FormSubmissionActions.saveSuccess({
                     formSubmission,
+                    messages: [`Submission ${formSubmission?.form?.formName} saved.`],
                     success: true
                 })),
-                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
+                catchError(({messages}) => [FormSubmissionActions.formSubmissionFailure(messages)])
             ))
         )
     );
@@ -42,9 +44,10 @@ export class FormSubmissionEffects {
             mergeMap(({ id }) => this.submissionRestController.remove(id).pipe(
                 map( removed => FormSubmissionActions.removeSuccess({
                     removed,
+                    messages: [`Submission ${id} removed.`],
                     success: true
                 })),
-                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
+                catchError(({messages}) => [FormSubmissionActions.formSubmissionFailure(messages)])
             ))
         )
     );
@@ -55,9 +58,10 @@ export class FormSubmissionEffects {
             mergeMap(() => this.submissionRestController.getAll().pipe(
                 map( formSubmissions => FormSubmissionActions.getAllSuccess({
                     formSubmissions,
+                    messages: [`${formSubmissions.length} submissions found.`],
                     success: true
                 })),
-                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
+                catchError(({messages}) => [FormSubmissionActions.formSubmissionFailure(messages)])
             ))
         )
     );
@@ -68,9 +72,10 @@ export class FormSubmissionEffects {
             mergeMap(({ criteria }) => this.submissionRestController.search(criteria).pipe(
                 map( formSubmissions => FormSubmissionActions.searchSuccess({
                     formSubmissions,
+                    messages: [`${formSubmissions.length} submissions found.`],
                     success: true
                 })),
-                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
+                catchError(({messages}) => [FormSubmissionActions.formSubmissionFailure(messages)])
             ))
         )
     );
@@ -81,9 +86,10 @@ export class FormSubmissionEffects {
             mergeMap(({ pageNumber, pageSize }) => this.submissionRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( formSubmissions => FormSubmissionActions.getAllPagedSuccess({
                     formSubmissions,
+                    messages: [`Page ${pageNumber} found with ${formSubmissions.length} documents.`],
                     success: true
                 })),
-                catchError(({errors}) => [FormSubmissionActions.formSubmissionFailure(errors)])
+                catchError(({messages}) => [FormSubmissionActions.formSubmissionFailure(messages)])
             ))
         )
     );

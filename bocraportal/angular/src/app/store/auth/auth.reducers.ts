@@ -8,27 +8,27 @@ export const authReducer = createReducer(
   on(AuthActions.setId, (state, action) => ({
     ...state,
     id: action.id,
-    errors: [],
+    messages: [],
   })),
   on(AuthActions.setUsername, (state, action) => ({
     ...state,
     username: action.username,
-    errors: [],
+    messages: [],
   })),
   on(AuthActions.setEmail, (state, action) => ({
     ...state,
     email: action.email,
-    errors: [],
+    messages: [],
   })),
   on(AuthActions.setLastName, (state, action) => ({
     ...state,
     lastName: action.lastName,
-    errors: [],
+    messages: [],
   })),
   on(AuthActions.setFirstName, (state, action) => ({
     ...state,
     firstName: action.firstName,
-    errors: [],
+    messages: [],
   })),
   on(AuthActions.authReset, (state) => ({
     ...state,
@@ -40,11 +40,11 @@ export const authReducer = createReducer(
     lastName: null,
     firstName: null,
     loggedIn: false,
-    errors: [],
+    messages: [],
   })),
   on(AuthActions.authFailure, (state, action) => ({
     ...state,
-    errors: action.errors,
+    messages: action.messages,
   }))
 );
 

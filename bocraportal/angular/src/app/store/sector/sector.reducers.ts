@@ -10,55 +10,55 @@ export const sectorReducer = createReducer(
         sector: action.sector, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: []
     })),
     on(SectorActions.saveSuccess, (state, action) => ({
         ...state,
         sector: action.sector, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: []
     })),
     on(SectorActions.addLicenseeSuccess, (state, action) => ({
         ...state,
         licensee: action.licensee,
         licensees: [...state.licensees, action.licensee],
         loading: false,
-        errors: []
+        messages: []
     })),
     on(SectorActions.setLicensees, (state, action) => ({
         ...state,
         licensees: action.licensees,
         loading: false,
-        errors: []
+        messages: []
     })),
     on(SectorActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: []
     })),
     on(SectorActions.getAllSuccess, (state, action) => ({
         ...state,
         sectors: action.sectors, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: []
     })),
     on(SectorActions.searchSuccess, (state, action) => ({
         ...state,
         sectors: action.sectors, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: []
     })),
     on(SectorActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         sectors: action.sectors, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: []
     })),
     on(SectorActions.sectorReset, (state) => ({
       ...state,
@@ -69,13 +69,15 @@ export const sectorReducer = createReducer(
         loading: false,
         success: false,
         removed: false,
-        errors: []
+        error: false,
+        messages: []
     })),
     on(SectorActions.sectorFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        errors: action.errors
+        error: true,
+        messages: action.messages
     })),
     on(SectorActions.sectorLoading, (state, action) => ({
         ...state,

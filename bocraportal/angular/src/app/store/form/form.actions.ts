@@ -49,7 +49,7 @@ export const findFormById = createAction(
 
 export const findFormByIdSuccess = createAction(
     FormActionType.FIND_FORM_BY_ID_SUCCESS,
-    props<{ form: FormVO | any, success: boolean }>()
+    props<{ form: FormVO | any, messages: any[], success: boolean }>()
 );
 
 export const saveForm = createAction(
@@ -59,7 +59,7 @@ export const saveForm = createAction(
 
 export const saveFormSuccess = createAction(
     FormActionType.SAVE_FORM_SUCCESS,
-    props<{ form: FormVO | any, success: boolean }>()
+    props<{ form: FormVO | any, messages: any[], success: boolean }>()
 );
 
 export const removeForm = createAction(
@@ -69,7 +69,7 @@ export const removeForm = createAction(
 
 export const removeFormSuccess = createAction(
     FormActionType.REMOVE_FORM_SUCCESS,
-    props<{ removed: boolean | any, success: boolean }>()
+    props<{ removed: boolean | any, messages: any[], success: boolean }>()
 );
 
 export const getAllForms = createAction(
@@ -79,7 +79,7 @@ export const getAllForms = createAction(
 
 export const getAllFormsSuccess = createAction(
     FormActionType.GET_ALL_FORMS_SUCCESS,
-    props<{ forms: FormVO[] | any[], success: boolean }>()
+    props<{ forms: FormVO[] | any[], messages: any[], success: boolean }>()
 );
 
 export const searchForms = createAction(
@@ -89,7 +89,7 @@ export const searchForms = createAction(
 
 export const searchFormsSuccess = createAction(
     FormActionType.SEARCH_FORMS_SUCCESS,
-    props<{ forms: FormVO[] | any[], success: boolean }>()
+    props<{ forms: FormVO[] | any[], messages: any[], success: boolean }>()
 );
 
 export const getAllFormsPaged = createAction(
@@ -99,7 +99,7 @@ export const getAllFormsPaged = createAction(
 
 export const getAllFormsPagedSuccess = createAction(
     FormActionType.GET_ALL_FORMS_PAGED_SUCCESS,
-    props<{ forms: FormVO[] | any[], success: boolean }>()
+    props<{ forms: FormVO[] | any[], messages: any[], success: boolean }>()
 );
 
 export const findFieldById = createAction(
@@ -109,7 +109,7 @@ export const findFieldById = createAction(
 
 export const findFieldByIdSuccess = createAction(
     FormActionType.FIND_FIELD_BY_ID_SUCCESS,
-    props<{ formField: FormFieldVO | any, success: boolean }>()
+    props<{ formField: FormFieldVO | any, messages: any[], success: boolean }>()
 );
 
 export const saveField = createAction(
@@ -119,7 +119,7 @@ export const saveField = createAction(
 
 export const saveFieldSuccess = createAction(
     FormActionType.SAVE_FIELD_SUCCESS,
-    props<{ formField: FormFieldVO | any, success: boolean }>()
+    props<{ formField: FormFieldVO | any, messages: any[], success: boolean }>()
 );
 
 export const saveSection = createAction(
@@ -129,7 +129,7 @@ export const saveSection = createAction(
 
 export const saveSectionSuccess = createAction(
     FormActionType.SAVE_SECTION_SUCCESS,
-    props<{ formSection: FormSectionVO | any, success: boolean }>()
+    props<{ formSection: FormSectionVO | any, messages: any[], success: boolean }>()
 );
 
 export const saveExpression = createAction(
@@ -139,7 +139,7 @@ export const saveExpression = createAction(
 
 export const saveExpressionSuccess = createAction(
     FormActionType.SAVE_EXPRESSION_SUCCESS,
-    props<{ expression: ExpressionVO | any, success: boolean }>()
+    props<{ expression: ExpressionVO | any, messages: any[], success: boolean }>()
 );
 
 export const setSections = createAction(
@@ -154,7 +154,7 @@ export const removeSection = createAction(
 
 export const removeSectionSuccess = createAction(
     FormActionType.REMOVE_SECTION_SUCCESS,
-    props<{ removed: boolean | any, success: boolean }>()
+    props<{ removed: boolean | any, messages: any[], success: boolean }>()
 );
 
 export const removeField = createAction(
@@ -164,7 +164,7 @@ export const removeField = createAction(
 
 export const removeFieldSuccess = createAction(
     FormActionType.REMOVE_FIELD_SUCCESS,
-    props<{ removed: boolean | any, success: boolean }>()
+    props<{ removed: boolean | any, messages: any[], success: boolean }>()
 );
 
 export const getAllFields = createAction(
@@ -174,7 +174,7 @@ export const getAllFields = createAction(
 
 export const getAllFieldsSuccess = createAction(
     FormActionType.GET_ALL_FIELDS_SUCCESS,
-    props<{ formFields: FormFieldVO[] | any, success: boolean }>()
+    props<{ formFields: FormFieldVO[] | any, messages: any[], success: boolean }>()
 );
 
 export const getAllFieldsPaged = createAction(
@@ -184,22 +184,22 @@ export const getAllFieldsPaged = createAction(
 
 export const getAllFieldsPagedSuccess = createAction(
     FormActionType.GET_ALL_FIELDS_PAGED_SUCCESS,
-    props<{ formFields: FormFieldVO[] | any, success: boolean }>()
+    props<{ formFields: FormFieldVO[] | any, messages: any[], success: boolean }>()
 );
 
 export const formReset = createAction(FormActionType.FORM_RESET);
 
 export const formLoading = createAction(
     FormActionType.FORM_LOADING,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );
 
 export const formSuccess = createAction(
     FormActionType.FORM_SUCCESS,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );
 
 export const formFailure = createAction(
     FormActionType.FORM_FAILURE,
-    props<{ errors: any[] }>()
+    props<{ messages: any[] }>()
 );

@@ -19,7 +19,7 @@ export class SectorEffects {
                     sector,
                     success: true
                 })),
-                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
+                catchError(({messages}) => [SectorActions.sectorFailure(messages)])
             ))
         )
     );
@@ -32,7 +32,7 @@ export class SectorEffects {
                     sector,
                     success: true
                 })),
-                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
+                catchError(({messages}) => [SectorActions.sectorFailure(messages)])
             ))
         )
     );
@@ -45,7 +45,7 @@ export class SectorEffects {
                     licensee,
                     success: true
                 })),
-                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
+                catchError(({messages}) => [SectorActions.sectorFailure(messages)])
             ))
         )
     );
@@ -58,7 +58,7 @@ export class SectorEffects {
                     removed,
                     success: true
                 })),
-                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
+                catchError(({messages}) => [SectorActions.sectorFailure(messages)])
             ))
         )
     );
@@ -71,7 +71,7 @@ export class SectorEffects {
                     sectors,
                     success: true
                 })),
-                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
+                catchError(({messages}) => [SectorActions.sectorFailure(messages)])
             ))
         )
     );
@@ -84,7 +84,7 @@ export class SectorEffects {
                     sectors,
                     success: true
                 })),
-                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
+                catchError(({messages}) => [SectorActions.sectorFailure(messages)])
             ))
         )
     );
@@ -97,7 +97,7 @@ export class SectorEffects {
                     sectors,
                     success: true
                 })),
-                catchError(({errors}) => [SectorActions.sectorFailure(errors)])
+                catchError(({messages}) => [SectorActions.sectorFailure(messages)])
             ))
         )
     );

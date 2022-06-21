@@ -102,7 +102,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         })
       );
     } else {
-      this.store.dispatch(FormActions.formFailure({ errors: ['Form has and error!'] }));
+      this.store.dispatch(FormActions.formFailure({ messages: ['Form has and error!'] }));
     }
   }
 

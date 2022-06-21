@@ -134,7 +134,7 @@ export class AddNewFieldComponentImpl extends AddNewFieldComponent {
         })
       );
     } else {
-      this.store.dispatch(FormActions.formFailure({ errors: ['Form has and error!'] }));
+      this.store.dispatch(FormActions.formFailure({ messages: ['Form has and error!'] }));
     }
   }
 }

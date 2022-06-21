@@ -31,7 +31,7 @@ export class MenuEffects {
 //             });
 //           });
 //         }),
-//         catchError(({ errors }) => [MenuActions.authFailure(errors)])
+//         catchError(({ errors }) => [MenuActions.authFailure(messages)])
 //       )
 //     })
 //   )

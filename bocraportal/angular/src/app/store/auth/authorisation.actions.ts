@@ -28,7 +28,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     AuthorisationActionType.FIND_BY_ID_SUCCESS,
-    props<{ authorisation: AuthorisationVO | any, success: boolean}>()
+    props<{ authorisation: AuthorisationVO | any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(
@@ -38,7 +38,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     AuthorisationActionType.SAVE_SUCCESS,
-    props<{ authorisation: AuthorisationVO | any, success: boolean}>()
+    props<{ authorisation: AuthorisationVO | any, messages: any[], success: boolean}>()
 );
 
 export const remove = createAction(
@@ -48,7 +48,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     AuthorisationActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -58,17 +58,17 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     AuthorisationActionType.GET_ALL_SUCCESS,
-    props<{ authorisations: AuthorisationVO[] | any[], success: boolean}>()
+    props<{ authorisations: AuthorisationVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const search = createAction(
     AuthorisationActionType.SEARCH,
-    props<{ criteria: AuthorisationCriteria | any , loading: boolean }>()
+    props<{ criteria: AuthorisationCriteria | any, loading: boolean }>()
 );
 
 export const searchSuccess = createAction(
     AuthorisationActionType.SEARCH_SUCCESS,
-    props<{ authorisations: AuthorisationVO[] | any[], success: boolean}>()
+    props<{ authorisations: AuthorisationVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -78,17 +78,17 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     AuthorisationActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ authorisations: AuthorisationVO[] | any[], success: boolean}>()
+    props<{ authorisations: AuthorisationVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const authorisationReset = createAction(AuthorisationActionType.AUTHORISATION_RESET);
 
 export const authorisationLoading = createAction(
     AuthorisationActionType.AUTHORISATION_LOADING,
-    props<{ loading: boolean, success: boolean, errors: any[] }>()
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
 );
 
 export const authorisationFailure = createAction(
     AuthorisationActionType.AUTHORISATION_FAILURE,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );

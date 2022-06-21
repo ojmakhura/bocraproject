@@ -36,8 +36,13 @@ export const selectSuccess = createSelector(
     (state: FormSubmissionState) => state.success
 );
 
-export const selectErrors = createSelector(
+export const selectMessages = createSelector(
     selectFormSubmissionState,
-    (state: FormSubmissionState) => state.errors
+    (state: FormSubmissionState) => state.messages
+);
+
+export const selectError = createSelector(
+    selectFormSubmissionState,
+    (state: FormSubmissionState) => state.error
 );
 

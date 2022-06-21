@@ -16,9 +16,10 @@ export class PeriodEffects {
             mergeMap(({ id }) => this.periodRestController.findById(id).pipe(
                 map( period => PeriodActions.findByIdSuccess({
                     period,
+                    messages: [`Period ${period.periodName} found.`],
                     success: true
                 })),
-                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
+                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
             ))
         )
     );
@@ -29,9 +30,10 @@ export class PeriodEffects {
             mergeMap(({ period }) => this.periodRestController.save(period).pipe(
                 map( period => PeriodActions.saveSuccess({
                     period,
+                    messages: [`Period ${period.periodName} saved.`],
                     success: true
                 })),
-                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
+                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
             ))
         )
     );
@@ -42,9 +44,10 @@ export class PeriodEffects {
             mergeMap(({ id }) => this.periodRestController.remove(id).pipe(
                 map( removed => PeriodActions.removeSuccess({
                     removed,
+                    messages: [`Period ${id} removed.`],
                     success: true
                 })),
-                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
+                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
             ))
         )
     );
@@ -55,9 +58,10 @@ export class PeriodEffects {
             mergeMap(() => this.periodRestController.getAll().pipe(
                 map( periods => PeriodActions.getAllSuccess({
                     periods,
+                    messages: [`${periods.length} periods found.`],
                     success: true
                 })),
-                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
+                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
             ))
         )
     );
@@ -68,9 +72,10 @@ export class PeriodEffects {
             mergeMap(({ criteria }) => this.periodRestController.search(criteria).pipe(
                 map( periods => PeriodActions.searchSuccess({
                     periods,
+                    messages: [`${periods.length} periods found.`],
                     success: true
                 })),
-                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
+                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
             ))
         )
     );
@@ -81,9 +86,10 @@ export class PeriodEffects {
             mergeMap(({ pageNumber, pageSize }) => this.periodRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( periods => PeriodActions.getAllPagedSuccess({
                     periods,
+                    messages: [`Page ${pageNumber} found with ${periods.length} periods.`],
                     success: true
                 })),
-                catchError(({errors}) => [PeriodActions.periodFailure(errors)])
+                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
             ))
         )
     );

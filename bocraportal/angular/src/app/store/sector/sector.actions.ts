@@ -103,10 +103,10 @@ export const sectorReset = createAction(SectorActionType.SECTOR_RESET);
 
 export const sectorLoading = createAction(
     SectorActionType.SECTOR_LOADING,
-    props<{ loading: boolean, success: boolean, errors: any[] }>()
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
 );
 
 export const sectorFailure = createAction(
     SectorActionType.SECTOR_FAILURE,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );

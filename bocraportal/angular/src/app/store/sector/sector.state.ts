@@ -14,7 +14,8 @@ export interface SectorState {
   loading: boolean;
   success: boolean;
   removed: boolean;
-  errors: any[];
+  error: boolean,
+  messages: any[];
 }
 
 export const initialState: SectorState = {
@@ -27,5 +28,6 @@ export const initialState: SectorState = {
   loading: false,
   success: false,
   removed: false,
-  errors: [],
+  error: false,
+  messages: [],
 };

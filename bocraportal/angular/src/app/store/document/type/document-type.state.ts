@@ -10,7 +10,8 @@ export interface DocumentTypeState {
     id: number | any,
     loading: boolean,
     success: boolean,
-    errors: any[]
+    error: boolean,
+    messages: any[]
 }
 
 export const initialState: DocumentTypeState = {
@@ -20,5 +21,6 @@ export const initialState: DocumentTypeState = {
     id: null,
     loading: false,
     success: false,
-    errors: []
+    error: false,
+    messages: []
 };

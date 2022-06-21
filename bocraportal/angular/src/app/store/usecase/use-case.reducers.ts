@@ -11,7 +11,7 @@ export interface UseCaseScopeState {
   useCaseParameters: any;
   useCaseReturnValues: any;
   useCaseInDialog: boolean;
-  errors: any[];
+  messages: any[];
 }
 
 export const initialState: UseCaseScopeState = {
@@ -19,7 +19,7 @@ export const initialState: UseCaseScopeState = {
   useCaseParameters: {},
   useCaseReturnValues: {},
   useCaseInDialog: false,
-  errors: [],
+  messages: [],
 };
 
 export const useCaseReducer = createReducer(
@@ -46,11 +46,11 @@ export const useCaseReducer = createReducer(
     useCaseParameters: {},
     useCaseReturnValues: {},
     useCaseInDialog: false,
-    errors: [],
+    messages: [],
   })),
   on(UseCaseActions.useCaseActionFailure, (state, action) => ({
     ...state,
-    errors: action.errors,
+    messages: action.messages,
   }))
 );
 

@@ -35,7 +35,7 @@ export const createUser = createAction(
 
 export const createUserSuccess = createAction(
     UserActionType.CREATE_USER_SUCCESS,
-    props<{ user: UserVO | any, success: boolean}>()
+    props<{ user: UserVO | any, messages: any[], success: boolean}>()
 );
 
 export const updateUserName = createAction(
@@ -45,7 +45,7 @@ export const updateUserName = createAction(
 
 export const updateUserNameSuccess = createAction(
     UserActionType.UPDATE_USER_NAME_SUCCESS,
-    props<{ updated: Boolean | any, success: boolean}>()
+    props<{ updated: Boolean | any, messages: any[], success: boolean}>()
 );
 
 export const loadUsers = createAction(
@@ -55,7 +55,7 @@ export const loadUsers = createAction(
 
 export const loadUsersSuccess = createAction(
     UserActionType.LOAD_USERS_SUCCESS,
-    props<{ users: UserVO[] | any, success: boolean}>()
+    props<{ users: UserVO[] | any, messages: any[], success: boolean}>()
 );
 
 export const findById = createAction(
@@ -123,10 +123,10 @@ export const userReset = createAction(UserActionType.USER_RESET);
 
 export const userLoading = createAction(
     UserActionType.USER_LOADING,
-    props<{ loading: boolean, success: boolean, errors: any[] }>()
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
 );
 
 export const userFailure = createAction(
     UserActionType.USER_FAILURE,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );

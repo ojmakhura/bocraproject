@@ -28,7 +28,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     LicenceTypeActionType.FIND_BY_ID_SUCCESS,
-    props<{ licenceType: LicenceTypeVO | any, success: boolean}>()
+    props<{ licenceType: LicenceTypeVO | any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(
@@ -38,7 +38,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     LicenceTypeActionType.SAVE_SUCCESS,
-    props<{ licenceType: LicenceTypeVO | any, success: boolean}>()
+    props<{ licenceType: LicenceTypeVO | any, messages: any[], success: boolean}>()
 );
 
 export const remove = createAction(
@@ -48,7 +48,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     LicenceTypeActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -58,7 +58,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     LicenceTypeActionType.GET_ALL_SUCCESS,
-    props<{ licenceTypes: LicenceTypeVO[] | any[], success: boolean}>()
+    props<{ licenceTypes: LicenceTypeVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -68,7 +68,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     LicenceTypeActionType.SEARCH_SUCCESS,
-    props<{ licenceTypes: LicenceTypeVO[] | any[], success: boolean}>()
+    props<{ licenceTypes: LicenceTypeVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -78,17 +78,17 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     LicenceTypeActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ licenceTypes: LicenceTypeVO[] | any[], success: boolean}>()
+    props<{ licenceTypes: LicenceTypeVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const licenceTypeReset = createAction(LicenceTypeActionType.LICENCE_TYPE_RESET);
 
 export const licenceTypeLoading = createAction(
     LicenceTypeActionType.LICENCE_TYPE_LOADING,
-    props<{ loading: boolean, success: boolean, errors: any[] }>()
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
 );
 
 export const licenceTypeFailure = createAction(
     LicenceTypeActionType.LICENCE_TYPE_FAILURE,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );

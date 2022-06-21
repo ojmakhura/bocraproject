@@ -91,8 +91,13 @@ export const selectSuccess = createSelector(
     (state: FormState) => state.success
 );
 
-export const selectErrors = createSelector(
+export const selectMessages = createSelector(
     selectFormState,
-    (state: FormState) => state.errors
+    (state: FormState) => state.messages
+);
+
+export const selectError = createSelector(
+    selectFormState,
+    (state: FormState) => state.error
 );
 

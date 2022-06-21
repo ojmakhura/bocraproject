@@ -31,7 +31,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     LicenseeActionType.FIND_BY_ID_SUCCESS,
-    props<{ licensee: LicenseeVO | any, success: boolean}>()
+    props<{ licensee: LicenseeVO | any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(
@@ -46,12 +46,12 @@ export const addSector = createAction(
 
 export const addSectorSuccess = createAction(
     LicenseeActionType.ADD_SECTOR_SUCCESS,
-    props<{ sector: LicenseeSectorVO | any, success: boolean }>()
+    props<{ sector: LicenseeSectorVO | any, messages: any[], success: boolean }>()
 );
 
 export const saveSuccess = createAction(
     LicenseeActionType.SAVE_SUCCESS,
-    props<{ licensee: LicenseeVO | any, success: boolean}>()
+    props<{ licensee: LicenseeVO | any, messages: any[], success: boolean}>()
 );
 
 export const remove = createAction(
@@ -61,7 +61,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     LicenseeActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -71,7 +71,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     LicenseeActionType.GET_ALL_SUCCESS,
-    props<{ licensees: LicenseeVO[] | any, success: boolean}>()
+    props<{ licensees: LicenseeVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -81,7 +81,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     LicenseeActionType.SEARCH_SUCCESS,
-    props<{ licensees: LicenseeVO[] | any[], success: boolean}>()
+    props<{ licensees: LicenseeVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -91,7 +91,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     LicenseeActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ licensees: LicenseeVO[] | any[], success: boolean}>()
+    props<{ licensees: LicenseeVO[] | any[], messages: any[], success: boolean}>()
 );
 
 
@@ -99,10 +99,10 @@ export const licenseeReset = createAction(LicenseeActionType.LICENSEE_RESET);
 
 export const licenseeLoading = createAction(
     LicenseeActionType.LICENSEE_LOADING,
-    props<{ loading: boolean, success: boolean, errors: any[] }>()
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
 );
 
 export const licenseeFailure = createAction(
     LicenseeActionType.LICENSEE_FAILURE,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );

@@ -6,4 +6,4 @@ export const selectMenuState = createFeatureSelector<MenuState>(menuKey);
 
 export const selectMenus = createSelector(selectMenuState, (state: MenuState) => state.menus);
 
-export const selectErrors = createSelector(selectMenuState, (state: MenuState) => state.errors);
+export const selectMessages = createSelector(selectMenuState, (state: MenuState) => state.messages);

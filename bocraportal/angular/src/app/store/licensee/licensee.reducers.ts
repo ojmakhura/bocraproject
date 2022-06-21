@@ -10,49 +10,49 @@ export const licenseeReducer = createReducer(
         licensee: action.licensee, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenseeActions.saveSuccess, (state, action) => ({
         ...state,
         licensee: action.licensee, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenseeActions.addSectorSuccess, (state, action) => ({
         ...state,
         sector: action.sector, 
         sectors: [...state.sectors, action.sector], 
         loading: false,
-        errors: []
+        messages: action.messages
     })),
     on(LicenseeActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenseeActions.getAllSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenseeActions.searchSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenseeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenseeActions.licenseeReset, (state) => ({
       ...state,
@@ -65,11 +65,15 @@ export const licenseeReducer = createReducer(
         id: null, 
         loading: false,
         success: false,
-        errors: []
+        error: false,
+        messages: []
     })),
     on(LicenseeActions.licenseeFailure, (state, action) => ({
         ...state,
-        errors: action.errors
+        messages: action.messages,
+        error: true,
+        loading: false,
+        success: false,
     }))
 );
 

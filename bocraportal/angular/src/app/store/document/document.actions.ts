@@ -31,7 +31,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     DocumentActionType.FIND_BY_ID_SUCCESS,
-    props<{ document: DocumentVO | any, success: boolean}>()
+    props<{ document: DocumentVO | any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(
@@ -41,7 +41,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     DocumentActionType.SAVE_SUCCESS,
-    props<{ document: DocumentVO | any, success: boolean}>()
+    props<{ document: DocumentVO | any, messages: any[], success: boolean}>()
 );
 
 export const remove = createAction(
@@ -51,7 +51,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     DocumentActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -61,7 +61,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     DocumentActionType.GET_ALL_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -71,7 +71,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     DocumentActionType.SEARCH_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -81,7 +81,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     DocumentActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getLicenseeDocuments = createAction(
@@ -91,7 +91,7 @@ export const getLicenseeDocuments = createAction(
 
 export const getLicenseeDocumentsSuccess = createAction(
     DocumentActionType.GET_LICENSEE_DOCUMENTS_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getLicenceDocuments = createAction(
@@ -101,7 +101,7 @@ export const getLicenceDocuments = createAction(
 
 export const getLicenceDocumentsSuccess = createAction(
     DocumentActionType.GET_LICENCE_DOCUMENTS_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], success: boolean}>()
+    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
 );
 
 
@@ -109,10 +109,10 @@ export const documentReset = createAction(DocumentActionType.DOCUMENT_RESET);
 
 export const documentLoading = createAction(
     DocumentActionType.DOCUMENT_LOADING,
-    props<{ loading: boolean, success: boolean, errors: any[] }>()
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
 );
 
 export const documentFailure = createAction(
     DocumentActionType.DOCUMENT_FAILURE,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );

@@ -13,7 +13,8 @@ export interface UserState {
     removed: boolean,
     success: boolean;
     loading: boolean;
-    errors: any[]
+    error: boolean,
+    messages: any[]
 }
 
 export const initialState: UserState = {
@@ -25,5 +26,6 @@ export const initialState: UserState = {
     removed: false,
     success: false,
     loading: false,
-    errors: []
+    error: true,
+    messages: []
 };

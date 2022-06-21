@@ -10,56 +10,56 @@ export const formReducer = createReducer(
         form: action.form,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.saveFormSuccess, (state, action) => ({
         ...state,
         form: action.form,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.removeFormSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.getAllFormsSuccess, (state, action) => ({
         ...state,
         forms: action.forms,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.searchFormsSuccess, (state, action) => ({
         ...state,
         forms: action.forms,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.getAllFormsPagedSuccess, (state, action) => ({
         ...state,
         forms: action.forms,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.findFieldByIdSuccess, (state, action) => ({
         ...state,
         formField: action.formField,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.saveFieldSuccess, (state, action) => ({
         ...state,
         formField: action.formField,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.saveSectionSuccess, (state, action) => ({
         ...state,
@@ -67,41 +67,41 @@ export const formReducer = createReducer(
         formSection: action.formSection,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.saveExpressionSuccess, (state, action) => ({
         ...state,
         expression: action.expression,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.setSections, (state, action) => ({
         ...state,
         formSections: action.formSections,
         loading: false,
-        errors: []
+        messages: []
     })),
     on(FormActions.removeFieldSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.getAllFieldsSuccess, (state, action) => ({
         ...state,
         formFields: action.formFields,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.getAllFieldsPagedSuccess, (state, action) => ({
         ...state,
         formFields: action.formFields,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(FormActions.formReset, (state) => ({
       ...state,
@@ -115,13 +115,15 @@ export const formReducer = createReducer(
         forms: [], 
         loading: false,
         success: false,
-        errors: []
+        error: false,
+        messages: []
     })),
     on(FormActions.formFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        errors: action.errors
+        error: true,
+        messages: action.messages
     })),
     on(FormActions.formLoading, (state, action) => ({
         ...state,
@@ -132,7 +134,7 @@ export const formReducer = createReducer(
         ...state,
         loading: action.loading,
         success: action.success,
-        errors: action.errors
+        messages: action.messages
     }))
 );
 

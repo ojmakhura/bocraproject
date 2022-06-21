@@ -12,6 +12,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        messages: action.messages
     })),
     on(DocumentTypeActions.saveSuccess, (state, action) => ({
         ...state,
@@ -20,6 +21,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        messages: action.messages
     })),
     on(DocumentTypeActions.removeSuccess, (state, action) => ({
         ...state,
@@ -28,6 +30,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        messages: action.messages
     })),
     on(DocumentTypeActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -36,6 +39,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        messages: action.messages
     })),
     on(DocumentTypeActions.searchSuccess, (state, action) => ({
         ...state,
@@ -44,6 +48,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        messages: action.messages
     })),
     on(DocumentTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -52,6 +57,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        messages: action.messages
     })),
     on(DocumentTypeActions.documentTypeReset, (state) => ({
       ...state,
@@ -61,13 +67,15 @@ export const documentTypeReducer = createReducer(
         id: null, 
         loading: false,
         success: false,
-        errors: []
+        error: false,
+        messages: []
     })),
     on(DocumentTypeActions.documentTypeFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
-        errors: action.errors
+        error: true,
+        messages: action.messages
     })),
     on(DocumentTypeActions.documentTypeLoading, (state, action) => ({
         ...state,
@@ -78,7 +86,7 @@ export const documentTypeReducer = createReducer(
     //     ...state,
     //     loading: action.loading,
     //     success: action.success,
-    //     errors: action.errors
+    //     messages: action.messages
     // }))
 );
 

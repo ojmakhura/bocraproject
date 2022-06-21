@@ -10,42 +10,42 @@ export const periodConfigReducer = createReducer(
         periodConfig: action.periodConfig, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(PeriodConfigActions.saveSuccess, (state, action) => ({
         ...state,
         periodConfig: action.periodConfig, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(PeriodConfigActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(PeriodConfigActions.getAllSuccess, (state, action) => ({
         ...state,
         periodConfigs: action.periodConfigs, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(PeriodConfigActions.searchSuccess, (state, action) => ({
         ...state,
         periodConfigs: action.periodConfigs, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(PeriodConfigActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         periodConfigs: action.periodConfigs,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(PeriodConfigActions.periodConfigReset, (state) => ({
       ...state,
@@ -56,11 +56,15 @@ export const periodConfigReducer = createReducer(
         loading: false,
         success: false,
         removed: false,
-        errors: []
+        error: false,
+        messages: []
     })),
     on(PeriodConfigActions.periodConfigFailure, (state, action) => ({
         ...state,
-        errors: action.errors
+        loading: false,
+        success: false,
+        error: true,
+        messages: action.messages
     }))
 );
 

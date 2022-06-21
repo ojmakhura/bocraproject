@@ -10,49 +10,49 @@ export const licenceReducer = createReducer(
         licence: action.licence, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenceActions.saveSuccess, (state, action) => ({
         ...state,
         licence: action.licence, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenceActions.removeSuccess, (state, action) => ({
         ...state,
         removed: true,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenceActions.getAllSuccess, (state, action) => ({
         ...state,
         licences: action.licences, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenceActions.searchSuccess, (state, action) => ({
         ...state,
         licences: action.licences, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenceActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licences: action.licences,
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenceActions.getLicenceDocumentsSuccess, (state, action) => ({
         ...state,
         documents: action.documents, 
         loading: false,
         success: action.success,
-        errors: []
+        messages: action.messages
     })),
     on(LicenceActions.licenceReset, (state) => ({
       ...state,
@@ -63,11 +63,15 @@ export const licenceReducer = createReducer(
         documents: [],
         loading: false,
         success: false,
-        errors: []
+        error: false,
+        messages: []
     })),
     on(LicenceActions.licenceFailure, (state, action) => ({
         ...state,
-        errors: action.errors
+        messages: action.messages,
+        error: true,
+        loading: false,
+        success: false
     }))
 );
 

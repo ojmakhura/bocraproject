@@ -27,7 +27,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     DocumentTypeActionType.FIND_BY_ID_SUCCESS,
-    props<{ documentType: DocumentTypeVO | any, success: boolean}>()
+    props<{ documentType: DocumentTypeVO | any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(
@@ -37,7 +37,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     DocumentTypeActionType.SAVE_SUCCESS,
-    props<{ documentType: DocumentTypeVO | any, success: boolean}>()
+    props<{ documentType: DocumentTypeVO | any, messages: any[], success: boolean}>()
 );
 
 export const remove = createAction(
@@ -47,7 +47,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     DocumentTypeActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -57,7 +57,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     DocumentTypeActionType.GET_ALL_SUCCESS,
-    props<{ documentTypes: DocumentTypeVO[] | any[], success: boolean}>()
+    props<{ documentTypes: DocumentTypeVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -67,7 +67,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     DocumentTypeActionType.SEARCH_SUCCESS,
-    props<{ documentTypes: DocumentTypeVO[] | any[], success: boolean}>()
+    props<{ documentTypes: DocumentTypeVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -77,7 +77,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     DocumentTypeActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ documentTypes: DocumentTypeVO[] | any[], success: boolean}>()
+    props<{ documentTypes: DocumentTypeVO[] | any[], messages: any[], success: boolean}>()
 );
 
 
@@ -85,10 +85,10 @@ export const documentTypeReset = createAction(DocumentTypeActionType.DOCUMENT_TY
 
 export const documentTypeLoading = createAction(
     DocumentTypeActionType.DOCUMENT_TYPE_LOADING,
-    props<{ loading: boolean, success: boolean, errors: any[] }>()
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
 );
 
 export const documentTypeFailure = createAction(
     DocumentTypeActionType.DOCUMENT_TYPE_FAILURE,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );

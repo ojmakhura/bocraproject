@@ -12,7 +12,8 @@ export interface FormSubmissionState {
     removed: boolean,
     success: boolean,
     loading: boolean,
-    errors: any[]
+    error: boolean,
+    messages: any[]
 }
 
 export const initialState: FormSubmissionState = {
@@ -23,5 +24,6 @@ export const initialState: FormSubmissionState = {
     removed: false,
     success: false,
     loading: false,
-    errors: []
+    error: false,
+    messages: []
 };

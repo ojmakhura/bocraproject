@@ -28,7 +28,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     FormSubmissionActionType.FIND_BY_ID_SUCCESS,
-    props<{ formSubmission: FormSubmissionVO | any, success: boolean}>()
+    props<{ formSubmission: FormSubmissionVO | any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(
@@ -38,7 +38,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     FormSubmissionActionType.SAVE_SUCCESS,
-    props<{ formSubmission: FormSubmissionVO | any, success: boolean}>()
+    props<{ formSubmission: FormSubmissionVO | any, messages: any[], success: boolean}>()
 );
 
 export const remove = createAction(
@@ -48,7 +48,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     FormSubmissionActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -58,7 +58,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     FormSubmissionActionType.GET_ALL_SUCCESS,
-    props<{ formSubmissions: FormSubmissionVO[] | any[], success: boolean}>()
+    props<{ formSubmissions: FormSubmissionVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -68,7 +68,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     FormSubmissionActionType.SEARCH_SUCCESS,
-    props<{ formSubmissions: FormSubmissionVO[] | any[], success: boolean}>()
+    props<{ formSubmissions: FormSubmissionVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -78,7 +78,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     FormSubmissionActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ formSubmissions: FormSubmissionVO[] | any[], success: boolean}>()
+    props<{ formSubmissions: FormSubmissionVO[] | any[], messages: any[], success: boolean}>()
 );
 
 
@@ -86,10 +86,10 @@ export const formSubmissionReset = createAction(FormSubmissionActionType.FORM_SU
 
 export const formSubmissionLoading = createAction(
     FormSubmissionActionType.FORM_SUBMISSION_LOADING,
-    props<{ loading: boolean, success: boolean, errors: any[] }>()
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
 );
 
 export const formSubmissionFailure = createAction(
     FormSubmissionActionType.FORM_SUBMISSION_FAILURE,
-    props<{ errors: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean }>()
 );

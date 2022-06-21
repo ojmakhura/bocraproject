@@ -11,8 +11,9 @@ export interface AuthorisationState {
     authorisations: Array<AuthorisationVO> | Array<any>,
     removed: boolean,
     success: boolean,
-    loading: boolean,    
-    errors: any[]
+    loading: boolean,   
+    error: boolean, 
+    messages: any[]
 }
 
 export const initialState: AuthorisationState = {
@@ -23,5 +24,6 @@ export const initialState: AuthorisationState = {
     removed: false,
     success: false,
     loading: false,
-    errors: []
+    error: false,
+    messages: []
 };

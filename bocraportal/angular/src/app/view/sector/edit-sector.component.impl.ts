@@ -122,7 +122,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
         })
       );
     } else {
-      this.store.dispatch(SectorActions.sectorFailure({ errors: ['Form has error!'], success: false, loading: false }));
+      this.store.dispatch(SectorActions.sectorFailure({ messages: ['Form has error!'], success: false, loading: false }));
     }
   }
 }

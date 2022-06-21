@@ -16,7 +16,7 @@ export interface AuthState {
   loggedIn: boolean;
   success: boolean;
   loading: boolean;
-  errors: any[];
+  messages: any[];
 }
 
 export const initialState: AuthState = {
@@ -30,5 +30,5 @@ export const initialState: AuthState = {
   loggedIn: false,
   success: false,
   loading: false,
-  errors: [],
+  messages: [],
 };
