@@ -90,5 +90,5 @@ export const authorisationLoading = createAction(
 
 export const authorisationFailure = createAction(
     AuthorisationActionType.AUTHORISATION_FAILURE,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[] }>()
 );

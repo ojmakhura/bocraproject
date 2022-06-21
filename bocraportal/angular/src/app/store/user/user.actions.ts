@@ -128,5 +128,5 @@ export const userLoading = createAction(
 
 export const userFailure = createAction(
     UserActionType.USER_FAILURE,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[] }>()
 );

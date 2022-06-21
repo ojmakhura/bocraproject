@@ -19,7 +19,7 @@ export class LicenceTypeEffects {
                     messages: [`Licence type ${licenceType.name} found.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenceTypeActions.licenceTypeFailure(messages)])
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure({messages: [error]})])
             ))
         )
     );
@@ -33,7 +33,7 @@ export class LicenceTypeEffects {
                     messages: [`Licence type ${licenceType.name} saved.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenceTypeActions.licenceTypeFailure(messages)])
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure({messages: [error]})])
             ))
         )
     );
@@ -47,7 +47,7 @@ export class LicenceTypeEffects {
                     messages: [`Licence type ${id} removed.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenceTypeActions.licenceTypeFailure(messages)])
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure({messages: [error]})])
             ))
         )
     );
@@ -61,7 +61,7 @@ export class LicenceTypeEffects {
                     messages: [`${licenceTypes.length} licence types found.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenceTypeActions.licenceTypeFailure(messages)])
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure({messages: [error]})])
             ))
         )
     );
@@ -75,7 +75,7 @@ export class LicenceTypeEffects {
                     messages: [`${licenceTypes.length} licence types found.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenceTypeActions.licenceTypeFailure(messages)])
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure({messages: [error]})])
             ))
         )
     );
@@ -89,7 +89,7 @@ export class LicenceTypeEffects {
                     messages: [`Page ${pageNumber} found with ${licenceTypes.length} licence types.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenceTypeActions.licenceTypeFailure(messages)])
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure({messages: [error]})])
             ))
         )
     );

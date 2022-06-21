@@ -19,15 +19,11 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
-import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RolesResource;
-import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,7 +169,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<UserVO> handleCreateUser(UserVO user) {
+    public ResponseEntity<?> handleCreateUser(UserVO user) {
 
         UsersResource usersResource = getUsersResource();
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
@@ -214,7 +210,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<UserVO>> handleLoadUsers() {
+    public ResponseEntity<?> handleLoadUsers() {
 
         UsersResource usersResource = getUsersResource();
 
@@ -239,7 +235,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Boolean> handleUpdateUserName(String username, String userId) {
+    public ResponseEntity<?> handleUpdateUserName(String username, String userId) {
         Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 

@@ -21,7 +21,7 @@ export class UserEffects {
                     messages: [`User ${user.username} created.`],
                     success: true
                 })),
-                catchError(({ messages }) => [UserActions.userFailure(messages)])
+                catchError(({ error }) => [UserActions.userFailure({messages: [error]})])
             ))
         )
     );
@@ -31,7 +31,7 @@ export class UserEffects {
     //         ofType(UserActions.updateUserName),
     //         mergeMap(({ username, userId }) => this.userRestController.updateUserName(username, userId).pipe(
     //             map( results => UserActions.updateUserNameSuccess({results})),
-    //             catchError(({messages}) => [UserActions.userFailure(messages)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );
@@ -41,7 +41,7 @@ export class UserEffects {
     //         ofType(UserActions.loadUsers),
     //         mergeMap(() => this.userRestController.loadUsers().pipe(
     //             map( results => UserActions.loadUsersSuccess({results})),
-    //             catchError(({messages}) => [UserActions.userFailure(messages)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );
@@ -51,7 +51,7 @@ export class UserEffects {
     //         ofType(UserActions.findById),
     //         mergeMap(({ id }) => this.licenseeRestController.findById(id).pipe(
     //             map( results => UserActions.findByIdSuccess({results})),
-    //             catchError(({messages}) => [UserActions.userFailure(messages)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );
@@ -61,7 +61,7 @@ export class UserEffects {
     //         ofType(UserActions.save),
     //         mergeMap(({ licensee }) => this.licenseeRestController.save(licensee).pipe(
     //             map( results => UserActions.saveSuccess({results})),
-    //             catchError(({messages}) => [UserActions.userFailure(messages)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );
@@ -71,7 +71,7 @@ export class UserEffects {
     //         ofType(UserActions.remove),
     //         mergeMap(({ id }) => this.licenseeRestController.remove(id).pipe(
     //             map( results => UserActions.removeSuccess({results})),
-    //             catchError(({messages}) => [UserActions.userFailure(messages)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );
@@ -81,7 +81,7 @@ export class UserEffects {
     //         ofType(UserActions.getAll),
     //         mergeMap(() => this.licenseeRestController.getAll().pipe(
     //             map( results => UserActions.getAllSuccess({results})),
-    //             catchError(({messages}) => [UserActions.userFailure(messages)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );
@@ -91,7 +91,7 @@ export class UserEffects {
     //         ofType(UserActions.search),
     //         mergeMap(({ criteria }) => this.licenseeRestController.search(criteria).pipe(
     //             map( results => UserActions.searchSuccess({results})),
-    //             catchError(({messages}) => [UserActions.userFailure(messages)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );
@@ -101,7 +101,7 @@ export class UserEffects {
     //         ofType(UserActions.getAllPaged),
     //         mergeMap(({ pageNumber, pageSize }) => this.licenseeRestController.getAllPaged(pageNumber, pageSize).pipe(
     //             map( results => UserActions.getAllPagedSuccess({results})),
-    //             catchError(({messages}) => [UserActions.userFailure(messages)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );

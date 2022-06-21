@@ -16,20 +16,22 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
   }
 
   override beforeOnInit(form: SearchLicenseesVarsForm): SearchLicenseesVarsForm {
-
-    this.store.dispatch(LicenseeActions.licenseeReset());
     return form;
   }
 
-  override doNgOnDestroy() {}
+  override doNgOnDestroy() {
+    this.store.dispatch(LicenseeActions.licenseeReset());
+  }
 
   /**
    * This method may be overwritten
    */
   override beforeSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {
-    this.store.dispatch(LicenseeActions.search({
-      criteria: form.criteria,
-      loading: true
-    }));
+    this.store.dispatch(
+      LicenseeActions.search({
+        criteria: form.criteria,
+        loading: true,
+      })
+    );
   }
 }

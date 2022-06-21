@@ -27,7 +27,7 @@ export class FormEffects {
                     messages: [`Form ${form.formName} found.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -41,7 +41,7 @@ export class FormEffects {
                     messages: [`Form ${form.formName} saved.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -55,7 +55,7 @@ export class FormEffects {
                     messages: [`Form ${id} removed.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -69,7 +69,7 @@ export class FormEffects {
                     messages: [`${forms.length} forms found.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -83,7 +83,7 @@ export class FormEffects {
                     messages: [`${forms.length} forms found.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -97,7 +97,7 @@ export class FormEffects {
                     messages: [`Page ${pageNumber} found with ${forms.length} forms.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -111,7 +111,7 @@ export class FormEffects {
                     messages: [`Form field  ${formField.fieldName} found.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -125,7 +125,7 @@ export class FormEffects {
                     messages: [`Form field ${formField.fieldName} saved.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -139,7 +139,7 @@ export class FormEffects {
                     messages: [`Form section ${formSection.sectionName} saved.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -153,7 +153,7 @@ export class FormEffects {
                     messages: [`Expression saved.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -167,7 +167,7 @@ export class FormEffects {
                     messages: [`Form field ${id} removed.`],
                     success: true
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -181,7 +181,7 @@ export class FormEffects {
                     messages: [`${formFields.length} form fields found.`],
                     success: false
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );
@@ -195,7 +195,7 @@ export class FormEffects {
                     messages: [`Page ${pageNumber} found with ${formFields.length} form fields.`],
                     success: false
                 })),
-                catchError(({messages}) => [FormActions.formFailure(messages)])
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
             ))
         )
     );

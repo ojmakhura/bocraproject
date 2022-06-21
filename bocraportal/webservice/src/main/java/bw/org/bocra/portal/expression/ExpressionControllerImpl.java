@@ -18,7 +18,7 @@ public class ExpressionControllerImpl extends ExpressionControllerBase {
 
 
     @Override
-    public ResponseEntity<ExpressionVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<ExpressionVO> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<ExpressionVO> response;
 
@@ -32,7 +32,7 @@ public class ExpressionControllerImpl extends ExpressionControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<ExpressionVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<ExpressionVO>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<ExpressionVO>> response;
 
@@ -46,7 +46,7 @@ public class ExpressionControllerImpl extends ExpressionControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<ExpressionVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<ExpressionVO>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<ExpressionVO>> response;
 
@@ -60,7 +60,7 @@ public class ExpressionControllerImpl extends ExpressionControllerBase {
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
@@ -74,7 +74,7 @@ public class ExpressionControllerImpl extends ExpressionControllerBase {
     }
 
     @Override
-    public ResponseEntity<ExpressionVO> handleSave(ExpressionVO expression) {
+    public ResponseEntity<?> handleSave(ExpressionVO expression) {
         Optional<ExpressionVO> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<ExpressionVO> response;
 

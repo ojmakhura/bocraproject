@@ -23,87 +23,122 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     protected static Logger log = LoggerFactory.getLogger(AuthorisationRestController.class);
 
     @Override
-    public ResponseEntity<AuthorisationVO> handleFindById(Long id) {
-        Optional<AuthorisationVO> data = Optional.of(this.authorisationService.findById(id)); // TODO: Add custom code here;
-        ResponseEntity<AuthorisationVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<?> handleFindById(Long id) {
+        try {
+            Optional<AuthorisationVO> data = Optional.of(this.authorisationService.findById(id)); // TODO: Add custom code here;
+            ResponseEntity<AuthorisationVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.FOUND).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
-    public ResponseEntity<Collection<AuthorisationVO>> handleGetAll() {
-        Optional<Collection<AuthorisationVO>> data = Optional.of(this.authorisationService.getAll()); // TODO: Add custom code here;
-        ResponseEntity<Collection<AuthorisationVO>> response;
+    public ResponseEntity<?> handleGetAll() {
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+
+            Optional<Collection<AuthorisationVO>> data = Optional.of(this.authorisationService.getAll()); // TODO: Add custom code here;
+            ResponseEntity<Collection<AuthorisationVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(this.authorisationService.remove(id)); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
+    public ResponseEntity<?> handleRemove(Long id) {
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+            Optional<Boolean> data = Optional.of(this.authorisationService.remove(id)); // TODO: Add custom code here;
+            ResponseEntity<Boolean> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
-    public ResponseEntity<AuthorisationVO> handleSave(AuthorisationVO authorisationVO) {
-        log.info(authorisationVO.toString());
-        Optional<AuthorisationVO> data = Optional.of(authorisationService.save(authorisationVO)); // TODO: Add custom code here;
-        ResponseEntity<AuthorisationVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<?> handleSave(AuthorisationVO authorisationVO) {
+       
+        try {
+            Optional<AuthorisationVO> data = Optional.of(authorisationService.save(authorisationVO)); // TODO: Add custom code here;
+            ResponseEntity<AuthorisationVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
-    public ResponseEntity<Collection<AuthorisationVO>> handleSearch(AuthorisationCriteria criteria) {
-        Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.search(criteria)); // TODO: Add custom code here;
-        ResponseEntity<Collection<AuthorisationVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<?> handleSearch(AuthorisationCriteria criteria) {
+        try {
+            Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.search(criteria)); // TODO: Add custom code here;
+            ResponseEntity<Collection<AuthorisationVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
-    public ResponseEntity<Collection<AuthorisationVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
-        ResponseEntity<Collection<AuthorisationVO>> response;
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+            Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
+            ResponseEntity<Collection<AuthorisationVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
-        return response;
     }
 }

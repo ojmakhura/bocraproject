@@ -104,5 +104,5 @@ export const licenseeLoading = createAction(
 
 export const licenseeFailure = createAction(
     LicenseeActionType.LICENSEE_FAILURE,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[] }>()
 );

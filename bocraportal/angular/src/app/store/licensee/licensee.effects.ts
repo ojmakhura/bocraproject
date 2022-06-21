@@ -20,7 +20,7 @@ export class LicenseeEffects {
                     messages: [`Licensee ${licensee.licenseeName} found.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
+                catchError(({error}) => [LicenseeActions.licenseeFailure({messages: [error]})])
             ))
         )
     );
@@ -34,7 +34,7 @@ export class LicenseeEffects {
                     messages: [`Licensee ${licensee.licenseeName} saved.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
+                catchError(({error}) => [LicenseeActions.licenseeFailure({messages: [error]})])
             ))
         )
     );
@@ -48,7 +48,7 @@ export class LicenseeEffects {
                     messages: [`Licensee ${id} removed.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
+                catchError(({error}) => [LicenseeActions.licenseeFailure({messages: [error]})])
             ))
         )
     );
@@ -62,7 +62,7 @@ export class LicenseeEffects {
                     messages: [`${licensees.length} licensees found.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
+                catchError(({error}) => [LicenseeActions.licenseeFailure({messages: [error]})])
             ))
         )
     );
@@ -76,7 +76,7 @@ export class LicenseeEffects {
                     messages: [`${licensees.length} licensees found.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
+                catchError(({error}) => [LicenseeActions.licenseeFailure({messages: [error]})])
             ))
         )
     );
@@ -90,7 +90,7 @@ export class LicenseeEffects {
                     messages: [`Page ${pageNumber} found with ${licensees.length} licensees.`],
                     success: true
                 })),
-                catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
+                catchError(({error}) => [LicenseeActions.licenseeFailure({messages: [error]})])
             ))
         )
     );
@@ -100,7 +100,7 @@ export class LicenseeEffects {
     //         ofType(LicenseeActions.getDocuments),
     //         mergeMap(({ licenseeId }) => this.documentRestController.getLicenceDocuments(licenseeId).pipe(
     //             map( documents => LicenseeActions.getDocumentsSuccess({documents})),
-    //             catchError(({messages}) => [LicenseeActions.licenseeFailure(messages)])
+    //             catchError(({error}) => [LicenseeActions.licenseeFailure({messages: [error]})])
     //         ))
     //     )
     // );

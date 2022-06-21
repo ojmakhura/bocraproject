@@ -19,7 +19,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
 
 
     @Override
-    public ResponseEntity<DocumentTypeVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<DocumentTypeVO> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<DocumentTypeVO> response;
 
@@ -33,7 +33,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<DocumentTypeVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<DocumentTypeVO>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<DocumentTypeVO>> response;
 
@@ -47,7 +47,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<DocumentTypeVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<DocumentTypeVO>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<DocumentTypeVO>> response;
 
@@ -61,7 +61,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
@@ -75,7 +75,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     }
 
     @Override
-    public ResponseEntity<DocumentTypeVO> handleSave(DocumentTypeVO documentType) {
+    public ResponseEntity<?> handleSave(DocumentTypeVO documentType) {
         Optional<DocumentTypeVO> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<DocumentTypeVO> response;
 
@@ -89,7 +89,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<DocumentTypeVO>> handleSearch(String criteria) {
+    public ResponseEntity<?> handleSearch(String criteria) {
         Optional<Collection<DocumentTypeVO>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<DocumentTypeVO>> response;
 

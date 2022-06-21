@@ -17,5 +17,5 @@ export const dashboardLoading = createAction(
 
 export const dashboardFailure = createAction(
     DashboardActionType.DASHBOARD_FAILURE,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[] }>()
 );

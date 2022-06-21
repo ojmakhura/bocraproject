@@ -108,5 +108,5 @@ export const sectorLoading = createAction(
 
 export const sectorFailure = createAction(
     SectorActionType.SECTOR_FAILURE,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[] }>()
 );

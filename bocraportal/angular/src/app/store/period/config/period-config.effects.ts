@@ -19,7 +19,7 @@ export class PeriodConfigEffects {
                     messages: [`Period config ${periodConfig.periodName} found.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodConfigActions.periodConfigFailure(messages)])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error]})])
             ))
         )
     );
@@ -33,7 +33,7 @@ export class PeriodConfigEffects {
                     messages: [`Period config ${periodConfig.periodName} saved.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodConfigActions.periodConfigFailure(messages)])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error]})])
             ))
         )
     );
@@ -47,7 +47,7 @@ export class PeriodConfigEffects {
                     messages: [`Period config ${id} removed.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodConfigActions.periodConfigFailure(messages)])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error]})])
             ))
         )
     );
@@ -61,7 +61,7 @@ export class PeriodConfigEffects {
                     messages: [`${periodConfigs.length} period configs found.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodConfigActions.periodConfigFailure(messages)])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error]})])
             ))
         )
     );
@@ -75,7 +75,7 @@ export class PeriodConfigEffects {
                     messages: [`${periodConfigs.length} period configs found.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodConfigActions.periodConfigFailure(messages)])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error]})])
             ))
         )
     );
@@ -89,7 +89,7 @@ export class PeriodConfigEffects {
                     messages: [`Page ${pageNumber} found with ${periodConfigs.length} period configs.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodConfigActions.periodConfigFailure(messages)])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error]})])
             ))
         )
     );

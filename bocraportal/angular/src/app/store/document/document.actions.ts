@@ -114,5 +114,5 @@ export const documentLoading = createAction(
 
 export const documentFailure = createAction(
     DocumentActionType.DOCUMENT_FAILURE,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[] }>()
 );

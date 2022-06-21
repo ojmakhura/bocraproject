@@ -97,6 +97,8 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
           period: form.period,
           loading: true
         }));
+      } else {
+        this.store.dispatch(PeriodActions.periodFailure({messages: ['Form has errors.']}));
       }
 
     }

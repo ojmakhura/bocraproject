@@ -19,7 +19,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
 
 
     @Override
-    public ResponseEntity<DocumentVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<DocumentVO> data = Optional.of(documentService.findById(id)); // TODO: Add custom code here;
         ResponseEntity<DocumentVO> response;
 
@@ -33,7 +33,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<DocumentVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<DocumentVO>> data = Optional.of(documentService.getAll()); // TODO: Add custom code here;
         ResponseEntity<Collection<DocumentVO>> response;
 
@@ -47,7 +47,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<DocumentVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<DocumentVO>> data = Optional.of(documentService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
         ResponseEntity<Collection<DocumentVO>> response;
 
@@ -61,7 +61,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     }
 
     // @Override
-    // public ResponseEntity<Collection<DocumentVO>> handleGetLicenceDocuments(Long licenceId) {
+    // public ResponseEntity<?> handleGetLicenceDocuments(Long licenceId) {
     //     Optional<Collection<DocumentVO>> data = Optional.of(documentService.getLicenceDocuments(licenceId)); // TODO: Add custom code here;
     //     ResponseEntity<Collection<DocumentVO>> response;
 
@@ -75,7 +75,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     // }
 
     // @Override
-    // public ResponseEntity<Collection<DocumentVO>> handleGetLicenseeDocuments(Long licenseeId) {
+    // public ResponseEntity<?> handleGetLicenseeDocuments(Long licenseeId) {
     //     Optional<Collection<DocumentVO>> data = Optional.of(documentService.getLicenseeDocuments(licenseeId)); // TODO: Add custom code here;
     //     ResponseEntity<Collection<DocumentVO>> response;
 
@@ -89,7 +89,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     // }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(documentService.remove(id)); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
@@ -103,7 +103,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<DocumentVO> handleSave(DocumentVO document) {
+    public ResponseEntity<?> handleSave(DocumentVO document) {
         Optional<DocumentVO> data = Optional.of(documentService.save(document)); // TODO: Add custom code here;
         ResponseEntity<DocumentVO> response;
 
@@ -117,7 +117,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<DocumentVO>> handleSearch(String criteria) {
+    public ResponseEntity<?> handleSearch(String criteria) {
         Optional<Collection<DocumentVO>> data = Optional.of(documentService.search(criteria)); // TODO: Add custom code here;
         ResponseEntity<Collection<DocumentVO>> response;
 

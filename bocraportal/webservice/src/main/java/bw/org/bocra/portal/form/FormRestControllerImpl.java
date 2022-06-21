@@ -24,7 +24,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
 
     @Override
-    public ResponseEntity<FormVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<FormVO> data = Optional.of(formService.findById(id));
         ResponseEntity<FormVO> response;
 
@@ -38,7 +38,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<FormVO>> data = Optional.of(formService.getAll());
         ResponseEntity<Collection<FormVO>> response;
 
@@ -52,7 +52,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<FormVO>> data = Optional.of(formService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<FormVO>> response;
 
@@ -66,7 +66,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(formService.remove(id)); 
         ResponseEntity<Boolean> response;
 
@@ -80,7 +80,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<FormVO> handleSave(FormVO formVO) {
+    public ResponseEntity<?> handleSave(FormVO formVO) {
         Optional<FormVO> data = Optional.of(formService.save(formVO));
         ResponseEntity<FormVO> response;
 
@@ -94,7 +94,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormVO>> handleSearch(FormCriteria criteria) {
+    public ResponseEntity<?> handleSearch(FormCriteria criteria) {
         Optional<Collection<FormVO>> data = Optional.of(formService.search(criteria)); 
         ResponseEntity<Collection<FormVO>> response;
 

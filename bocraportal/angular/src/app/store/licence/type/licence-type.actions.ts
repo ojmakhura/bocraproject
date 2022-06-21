@@ -90,5 +90,5 @@ export const licenceTypeLoading = createAction(
 
 export const licenceTypeFailure = createAction(
     LicenceTypeActionType.LICENCE_TYPE_FAILURE,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[] }>()
 );

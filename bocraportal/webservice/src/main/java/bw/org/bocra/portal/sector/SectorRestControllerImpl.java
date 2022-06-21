@@ -19,7 +19,7 @@ import bw.org.bocra.portal.licensee.LicenseeSectorVO;
 public class SectorRestControllerImpl extends SectorRestControllerBase {
 
     @Override
-    public ResponseEntity<SectorVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<SectorVO> data = Optional.of(sectorService.findById(id)); // TODO: Add custom code here;
         ResponseEntity<SectorVO> response;
 
@@ -33,7 +33,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<SectorVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll()); // TODO: Add custom code here;
         ResponseEntity<Collection<SectorVO>> response;
 
@@ -47,7 +47,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<SectorVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
         ResponseEntity<Collection<SectorVO>> response;
 
@@ -61,7 +61,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(sectorService.remove(id)); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
@@ -75,7 +75,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<SectorVO> handleSave(SectorVO sector) {
+    public ResponseEntity<?> handleSave(SectorVO sector) {
         Optional<SectorVO> data = Optional.of(sectorService.save(sector)); // TODO: Add custom code here;
         ResponseEntity<SectorVO> response;
 
@@ -89,7 +89,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<SectorVO>> handleSearch(String criteria) {
+    public ResponseEntity<?> handleSearch(String criteria) {
         Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
         ResponseEntity<Collection<SectorVO>> response;
 
@@ -103,7 +103,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<LicenseeSectorVO> handleAddLicensee(Long sectorId, Long licenseeId) {
+    public ResponseEntity<?> handleAddLicensee(Long sectorId, Long licenseeId) {
 
         LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
 

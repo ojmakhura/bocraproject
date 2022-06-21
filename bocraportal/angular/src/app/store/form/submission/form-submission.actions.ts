@@ -91,5 +91,5 @@ export const formSubmissionLoading = createAction(
 
 export const formSubmissionFailure = createAction(
     FormSubmissionActionType.FORM_SUBMISSION_FAILURE,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[] }>()
 );

@@ -36,9 +36,9 @@ public class PeriodConfigDaoImpl
         super.toPeriodConfigVO(source, target);
         // WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.Period to bw.org.bocra.portal.period.PeriodVO
 
-        if(CollectionUtils.isNotEmpty(source.getPeriods())) {
+        //if(CollectionUtils.isNotEmpty(source.getPeriods())) {
             //target.setPer
-        }
+        //}
 
     }
 

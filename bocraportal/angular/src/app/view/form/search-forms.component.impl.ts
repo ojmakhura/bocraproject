@@ -16,9 +16,9 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
   }
 
   override beforeOnInit(form: SearchFormsVarsForm): SearchFormsVarsForm {
-    return form;
 
     this.store.dispatch(FormActions.formReset());
+    return form;
   }
 
   override doNgOnDestroy() {}

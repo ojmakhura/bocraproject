@@ -56,6 +56,7 @@ export const licenceTypeReducer = createReducer(
         id: null, 
         removed: false,
         error: false,
+        success: false,
         messages: []
     })),
     on(LicenceTypeActions.licenceTypeFailure, (state, action) => ({

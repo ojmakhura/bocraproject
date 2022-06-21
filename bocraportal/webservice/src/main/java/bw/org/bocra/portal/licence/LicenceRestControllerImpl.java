@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("license")
-//@org.springframework.web.bind.annotation.CrossOrigin()
 public class LicenceRestControllerImpl extends LicenceRestControllerBase {
 
 
     @Override
-    public ResponseEntity<LicenceVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<LicenceVO> data = Optional.of(licenceService.findById(id)); // TODO: Add custom code here;
         ResponseEntity<LicenceVO> response;
 
@@ -33,7 +32,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<LicenceVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<LicenceVO>> data = Optional.of(licenceService.getAll()); // TODO: Add custom code here;
         ResponseEntity<Collection<LicenceVO>> response;
 
@@ -47,7 +46,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<LicenceVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<LicenceVO>> data = Optional.of(licenceService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
         ResponseEntity<Collection<LicenceVO>> response;
 
@@ -61,7 +60,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(licenceService.remove(id)); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
@@ -75,7 +74,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<LicenceVO> handleSave(LicenceVO licence) {
+    public ResponseEntity<?> handleSave(LicenceVO licence) {
         Optional<LicenceVO> data = Optional.of(licenceService.save(licence)); // TODO: Add custom code here;
         ResponseEntity<LicenceVO> response;
 
@@ -89,7 +88,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<LicenceVO>> handleSearch(LicenceCriteria criteria) {
+    public ResponseEntity<?> handleSearch(LicenceCriteria criteria) {
         Optional<Collection<LicenceVO>> data = Optional.of(licenceService.search(criteria)); // TODO: Add custom code here;
         ResponseEntity<Collection<LicenceVO>> response;
 

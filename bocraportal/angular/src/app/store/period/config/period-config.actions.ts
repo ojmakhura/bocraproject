@@ -90,5 +90,5 @@ export const periodConfigLoading = createAction(
 
 export const periodConfigFailure = createAction(
     PeriodConfigActionType.PERIOD_CONFIG_FAILURE,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[] }>()
 );

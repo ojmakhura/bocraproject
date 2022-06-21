@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/report/config")
-//@org.springframework.web.bind.annotation.CrossOrigin()
 public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBase {
 
 
     @Override
-    public ResponseEntity<ReportConfigVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<ReportConfigVO> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<ReportConfigVO> response;
 
@@ -33,7 +32,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<ReportConfigVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<ReportConfigVO>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<ReportConfigVO>> response;
 
@@ -47,7 +46,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<ReportConfigVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<ReportConfigVO>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<ReportConfigVO>> response;
 
@@ -61,7 +60,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
@@ -75,7 +74,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<ReportConfigVO> handleSave(ReportConfigVO reportConfig) {
+    public ResponseEntity<?> handleSave(ReportConfigVO reportConfig) {
         Optional<ReportConfigVO> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<ReportConfigVO> response;
 
@@ -89,7 +88,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<ReportConfigVO>> handleSearch(ReportConfigCriteria criteria) {
+    public ResponseEntity<?> handleSearch(ReportConfigCriteria criteria) {
         Optional<Collection<ReportConfigVO>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<ReportConfigVO>> response;
 

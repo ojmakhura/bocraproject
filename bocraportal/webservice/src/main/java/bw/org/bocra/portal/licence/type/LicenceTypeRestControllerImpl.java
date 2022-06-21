@@ -15,10 +15,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bw.org.bocra.portal.licence.type.LicenceTypeCriteria;
-import bw.org.bocra.portal.licence.type.LicenceTypeRestControllerBase;
-import bw.org.bocra.portal.licence.type.LicenceTypeVO;
-
 @RestController
 @RequestMapping("licence/type")
 @CrossOrigin()
@@ -28,7 +24,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
 
 
     @Override
-    public ResponseEntity<LicenceTypeVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<LicenceTypeVO> data = Optional.of(this.licenceTypeService.findById(id)); 
         ResponseEntity<LicenceTypeVO> response;
 
@@ -42,7 +38,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     }
 
     @Override
-    public ResponseEntity<Collection<LicenceTypeVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<LicenceTypeVO>> data = Optional.of(this.licenceTypeService.getAll()); 
         ResponseEntity<Collection<LicenceTypeVO>> response;
 
@@ -56,7 +52,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(this.licenceTypeService.remove(id));
         ResponseEntity<Boolean> response;
 
@@ -70,7 +66,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     }
 
     @Override
-    public ResponseEntity<LicenceTypeVO> handleSave(LicenceTypeVO LicenceTypeVO) {
+    public ResponseEntity<?> handleSave(LicenceTypeVO LicenceTypeVO) {
         Optional<LicenceTypeVO> data = Optional.of(this.licenceTypeService.save(LicenceTypeVO));
         ResponseEntity<LicenceTypeVO> response;
 
@@ -84,7 +80,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     }
 
     @Override
-    public ResponseEntity<Collection<LicenceTypeVO>> handleSearch(LicenceTypeCriteria criteria) {
+    public ResponseEntity<?> handleSearch(LicenceTypeCriteria criteria) {
         Optional<Collection<LicenceTypeVO>> data = Optional.of(this.licenceTypeService.search(criteria));
         ResponseEntity<Collection<LicenceTypeVO>> response;
 
@@ -98,7 +94,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     }
 
     @Override
-    public ResponseEntity<Collection<LicenceTypeVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<LicenceTypeVO>> data = Optional.of(this.licenceTypeService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<LicenceTypeVO>> response;
 

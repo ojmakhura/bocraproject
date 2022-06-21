@@ -19,7 +19,7 @@ export class PeriodEffects {
                     messages: [`Period ${period.periodName} found.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error]})])
             ))
         )
     );
@@ -33,7 +33,7 @@ export class PeriodEffects {
                     messages: [`Period ${period.periodName} saved.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error]})])
             ))
         )
     );
@@ -47,7 +47,7 @@ export class PeriodEffects {
                     messages: [`Period ${id} removed.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error]})])
             ))
         )
     );
@@ -61,7 +61,7 @@ export class PeriodEffects {
                     messages: [`${periods.length} periods found.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error]})])
             ))
         )
     );
@@ -75,7 +75,7 @@ export class PeriodEffects {
                     messages: [`${periods.length} periods found.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error]})])
             ))
         )
     );
@@ -89,7 +89,7 @@ export class PeriodEffects {
                     messages: [`Page ${pageNumber} found with ${periods.length} periods.`],
                     success: true
                 })),
-                catchError(({messages}) => [PeriodActions.periodFailure(messages)])
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error]})])
             ))
         )
     );

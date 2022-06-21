@@ -15,12 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/form/section")
-//@org.springframework.web.bind.annotation.CrossOrigin()
 public class FormSectionRestControllerImpl extends FormSectionRestControllerBase {
 
 
     @Override
-    public ResponseEntity<FormSectionVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<FormSectionVO> data = Optional.of(formSectionService.findById(id));
         ResponseEntity<FormSectionVO> response;
 
@@ -34,7 +33,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     }
 
     @Override
-    public ResponseEntity<Collection<FormSectionVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll());
         ResponseEntity<Collection<FormSectionVO>> response;
 
@@ -48,7 +47,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     }
 
     @Override
-    public ResponseEntity<Collection<FormSectionVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<FormSectionVO>> response;
 
@@ -62,7 +61,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(formSectionService.remove(id));
         ResponseEntity<Boolean> response;
 
@@ -76,7 +75,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     }
 
     @Override
-    public ResponseEntity<FormSectionVO> handleSave(FormSectionVO formSection) {
+    public ResponseEntity<?> handleSave(FormSectionVO formSection) {
         System.out.println(formSection.toString());
         Optional<FormSectionVO> data = Optional.of(formSectionService.save(formSection));
         ResponseEntity<FormSectionVO> response;
@@ -91,7 +90,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     }
 
     @Override
-    public ResponseEntity<Collection<FormSectionVO>> handleSearch(String criteria) {
+    public ResponseEntity<?> handleSearch(String criteria) {
         Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.search(criteria));
         ResponseEntity<Collection<FormSectionVO>> response;
 

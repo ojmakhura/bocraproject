@@ -9,12 +9,14 @@ export const dashboardReducer = createReducer(
       ...state,
         loading: false,
         success: false,
+        error: false,
         messages: []
     })),
     on(DashboardActions.dashboardFailure, (state, action) => ({
         ...state,
         loading: false,
         success: false,
+        error: true,
         messages: action.messages
     })),
     on(DashboardActions.dashboardLoading, (state, action) => ({
