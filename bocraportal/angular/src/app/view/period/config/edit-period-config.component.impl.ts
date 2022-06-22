@@ -52,6 +52,15 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
 
     override doNgOnDestroy(){}
 
+    override afterEditPeriodConfigDelete(form: EditPeriodConfigDeleteForm): void {
+      if(form?.periodConfig?.id) {
+        if(confirm("Are you sure to delete the period configuration?")) {
+          this.store.dispatch(PeriodConfigActions.remove({id: form.periodConfig.id, loading: true}));
+          this.editPeriodConfigFormReset();
+        }
+      }
+    }
+
     /**
      * This method may be overwritten
      */
