@@ -12,14 +12,14 @@ import { select } from '@ngrx/store';
 import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { EditFormAddFieldForm } from '@app/view/form/edit-form.component';
-import { AddNewFieldComponentImpl } from './add-new-field.component.impl';
+import { EditFieldComponentImpl } from './edit-field.component.impl';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
 import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
 import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
-import { AddNewSectionComponentImpl } from './add-new-section.component.impl';
+import { EditSectionComponentImpl } from './edit-section.component.impl';
 import { MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
@@ -123,16 +123,17 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.useCaseScope.queryParams['formId'] = this.form.id;
   }
 
-  override afterEditFormAddSection(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = {
-      form: this.form,
-    };
+  override getEditFormAddSectionFormDialogConfig(): any {
+      return {
+        data: {form: this.form},
+        width: '800px'
+      };
+  }
 
-    const dialogRef = this.dialog.open(AddNewSectionComponentImpl, dialogConfig);
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.dialogData) {
-        let section: FormSectionVO = result.dialogData.formSection;
+  override afterEditFormAddSection(form: EditFormAddSectionForm, dialogData: any): void {
+    
+      if (dialogData) {
+        let section: FormSectionVO = dialogData.formSection;
         if (section.id) {
           section.updatedBy = this.keycloakService.getUsername();
           section.updatedDate = new Date();
@@ -149,6 +150,5 @@ export class EditFormComponentImpl extends EditFormComponent {
           })
         );
       }
-    });
   }
 }
