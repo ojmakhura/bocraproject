@@ -123,13 +123,6 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.useCaseScope.queryParams['formId'] = this.form.id;
   }
 
-  override getEditFormAddSectionFormDialogConfig(): any {
-      return {
-        data: {form: this.form},
-        width: '800px'
-      };
-  }
-
   override afterEditFormAddSection(form: EditFormAddSectionForm, dialogData: any): void {
     
       if (dialogData) {
