@@ -106,7 +106,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     }
   }
 
-  override handleFormLicenceTypesSearch(): void {
+  override formLicenceTypesSearch(): void {
     let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
     criteria.typeSearch = this.formLicenceTypesSearchField;
     this.store.dispatch(

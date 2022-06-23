@@ -87,11 +87,11 @@ export class EditSectorComponentImpl extends EditSectorComponent {
 
   override doNgOnDestroy() {}
 
-  override handleSectorLicenseesAddDialog(): void {
+  override sectorLicenseesAddDialog(): void {
     this.store.dispatch(SectorActions.setLicensees({ licensees: [] }));
   }
 
-  override handleSectorLicenseesSearch(): void {
+  override sectorLicenseesSearch(): void {
     let criteria: string = '';
     criteria = this.sectorLicenseesSearchField.value;
     this.store.dispatch(
@@ -122,7 +122,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
         })
       );
     } else {
-      this.store.dispatch(SectorActions.sectorFailure({ messages: ['Form has error!'] }));
+      this.store.dispatch(SectorActions.sectorFailure({ messages: ['Form has errors!'] }));
     }
   }
 }

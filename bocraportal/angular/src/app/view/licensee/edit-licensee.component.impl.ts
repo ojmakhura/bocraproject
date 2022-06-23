@@ -87,7 +87,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     );
   }
 
-  override handleLicenseeLicencesSearch(): void {
+  override licenseeLicencesSearch(): void {
     let criteria: string = '';
     criteria = this.licenseeLicencesSearchField.value;
     this.store.dispatch(
@@ -98,7 +98,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     );
   }
 
-  override handleLicenseeDocumentsSearch(): void {
+  override licenseeDocumentsSearch(): void {
     let criteria: string = '';
     criteria = this.licenseeDocumentsSearchField.value;
     this.store.dispatch(
@@ -109,7 +109,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     );
   }
 
-  override handleLicenseeFormsSearch(): void {
+  override licenseeFormsSearch(): void {
     let criteria: string = '';
     criteria = this.licenseeFormsSearchField.value;
     this.store.dispatch(
@@ -120,7 +120,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     );
   }
 
-  override handleLicenseeSectorsSearch(): void {
+  override licenseeSectorsSearch(): void {
     let criteria: string = '';
     criteria = this.licenseeSectorsSearchField.value;
     this.store.dispatch(

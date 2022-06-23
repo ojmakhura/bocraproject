@@ -103,7 +103,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
 
     }
 
-    override handlePeriodPeriodConfigSearch(): void {
+    override periodPeriodConfigSearch(): void {
       this.store.dispatch(PeriodConfigActions.search({
         criteria: {periodConfigName: this.periodPeriodConfigSearchField.value}, loading: true
       }));

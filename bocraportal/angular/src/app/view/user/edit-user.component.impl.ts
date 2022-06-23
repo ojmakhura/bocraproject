@@ -91,7 +91,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     }));
   }
 
-  override handleUserLicenseeSearch(): void {
+  override userLicenseeSearch(): void {
     let criteria: string = '';
     criteria = this.userLicenseeSearchField.value;
     this.store.dispatch(LicenseeActions.search({

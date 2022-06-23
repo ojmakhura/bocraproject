@@ -78,7 +78,7 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
     }));
   }
 
-  override handleLicenceTypeFormsSearch(): void {
+  override licenceTypeFormsSearch(): void {
 
     let criteria: FormCriteria = new  FormCriteria();
     criteria.code = this.licenceTypeFormsSearchField.value;
