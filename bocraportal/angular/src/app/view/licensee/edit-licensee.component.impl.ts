@@ -3,22 +3,24 @@ import { Component, Injector } from '@angular/core';
 import {
   EditLicenseeComponent,
   EditLicenseeDeleteForm,
+  EditLicenseeDocumentsForm,
+  EditLicenseeNewDocumentForm,
+  EditLicenseeNewShareholderForm,
   EditLicenseeVarsForm,
 } from '@app/view/licensee/edit-licensee.component';
 import { EditLicenseeSaveForm } from '@app/view/licensee/edit-licensee.component';
 import { EditLicenseeSearchForm } from '@app/view/licensee/edit-licensee.component';
-import * as licenseeSelectors from '@app/store/licensee/licensee.selectors';
-import * as licenseeActions from '@app/store/licensee/licensee.actions';
-import { Observable } from 'rxjs';
-import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
+import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
-import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
-import { LicenseTypeVO } from '@app/model/bw/org/bocra/portal/type/license-type-vo';
-import { LicenseTypeCriteria } from '@app/model/bw/org/bocra/portal/type/license-type-criteria';
-import * as LicenseTypeActions from '@app/store/type/license-type.actions';
-import * as LicenseTypeSelectors from '@app/store/type/license-type.selectors';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import * as SectorActions from '@app/store/sector/sector.actions';
+import * as SectorSelectors from '@app/store/sector/sector.selectors';
+import * as DocumentActions from '@app/store/document/document.actions';
+import * as DocumentSelectors from '@app/store/document/document.selectors';
+import * as LicenceActions from '@app/store/licence/licence.actions';
+import * as LicenceSelectors from '@app/store/licence/licence.selectors';
+import * as FormActions from '@app/store/form/form.actions';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -31,26 +33,43 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.licenseTypes$ = this.store.pipe(select(LicenseTypeSelectors.selectLicenseTypes));
+    this.licenseeDocuments$ = this.store.pipe(select(DocumentSelectors.selectDocuments));
+    this.licenseeLicences$ = this.store.pipe(select(LicenceSelectors.selectLicences));
   }
 
-  beforeOnInit() {}
+  beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
+    return form;
+  }
 
-  afterOnInit() {
-    if (this.useCaseScope.pageVariables['id']) {
-      this.store.dispatch(licenseeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
-    }
+  override afterOnInit() {}
+
+  override doNgAfterViewInit(): void {
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.id) {
+        this.store.dispatch(
+          LicenseeActions.findById({
+            id: queryParams?.id,
+            loading: true,
+          })
+        );
+      }
+    });
 
     this.licensee$.subscribe((licensee) => {
-      this.setEditLicenseeSaveForm({ licensee: licensee } as EditLicenseeSaveForm);
+      this.setEditLicenseeFormValue({ licensee: licensee });
     });
   }
 
-  doNgAfterViewInit() {}
+  doNgOnDestroy() {}
 
-  handleFormChanges(change: any) {}
-
-  doNgOnDestroy(){}
+  override afterEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
+    if(form?.licensee?.id) {
+      if(confirm("Are you sure to delete the licensee configuration?")) {
+        this.store.dispatch(LicenseeActions.remove({id: form.licensee.id, loading: true}));
+        this.editlicenseeFormReset();
+      }
+    }
+  }
 
   /**
    * This method may be overwritten
@@ -60,63 +79,64 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   /**
    * This method may be overwritten
    */
-  beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
-    if(form.licensee?.id) {
-
+  override beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
+    if (form.licensee?.id) {
       form.licensee.updatedBy = this.keycloakService.getUsername();
       form.licensee.updatedDate = new Date();
     } else {
       form.licensee.createdBy = this.keycloakService.getUsername();
       form.licensee.createdDate = new Date();
     }
-    
-    this.store.dispatch(licenseeActions.save({ licensee: form.licensee }));
+
+    this.store.dispatch(
+      LicenseeActions.save({
+        licensee: form.licensee,
+        loading: true,
+      })
+    );
   }
 
-  /**
-   * This method may be overwritten
-   */
-  afterEditLicenseeSave(form: EditLicenseeSaveForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterSetEditLicenseeSearchForm(form: EditLicenseeSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  beforeEditLicenseeSearch(form: EditLicenseeSearchForm): void {}
-
-  /**
-   * This method may be overwritten
-   */
-  afterEditLicenseeSearch(form: EditLicenseeSearchForm): void {}
-
-  afterSetEditLicenseeDeleteForm(form: EditLicenseeDeleteForm): void {}
-
-  beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {}
-
-  afterEditLicenseeDelete(form: EditLicenseeDeleteForm): void {}
-
-  afterSetEditLicenseeVarsForm(form: EditLicenseeVarsForm): void {}
-
-  handleLicenseeLicenseTypesAddDialog(): void {}
-
-  handleLicenseeUsersAddDialog(): void {}
-
-  handleLicenseeUsersSearch(): void {
+  override licenseeLicencesSearch(): void {
+    let criteria: string = '';
+    criteria = this.licenseeLicencesSearchField.value;
+    this.store.dispatch(
+      LicenceActions.search({
+        criteria: { licenceNumber: criteria },
+        loading: true,
+      })
+    );
   }
 
-  handleLicenseeUsersSelected(event: MatCheckboxChange, element: UserVO): void {
+  override licenseeDocumentsSearch(): void {
+    let criteria: string = '';
+    criteria = this.licenseeDocumentsSearchField.value;
+    this.store.dispatch(
+      DocumentActions.search({
+        criteria: criteria,
+        loading: true,
+      })
+    );
   }
 
-  handleLicenseeLicenseTypesSearch(): void {
-    let criteria: LicenseTypeCriteria = new LicenseTypeCriteria();
-    criteria.typeSearch = this.licenseeLicenseTypesSearchField.value;
-    this.store.dispatch(LicenseTypeActions.search({searchCriteria: criteria}));
+  override licenseeFormsSearch(): void {
+    let criteria: string = '';
+    criteria = this.licenseeFormsSearchField.value;
+    this.store.dispatch(
+      FormActions.searchForms({
+        criteria: { code: criteria, formName: criteria },
+        loading: true,
+      })
+    );
   }
-  
-  handleLicenseeLicenseTypesSelected(event: MatCheckboxChange, element: LicenseTypeVO): void {
+
+  override licenseeSectorsSearch(): void {
+    let criteria: string = '';
+    criteria = this.licenseeSectorsSearchField.value;
+    this.store.dispatch(
+      SectorActions.search({
+        criteria: criteria,
+        loading: true,
+      })
+    );
   }
 }

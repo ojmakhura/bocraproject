@@ -3,6 +3,7 @@ import { Component, Injector } from '@angular/core';
 import { SearchPeriodConfigsComponent } from '@app/view/period/config/search-period-configs.component';
 import { SearchPeriodConfigsSearchForm } from '@app/view/period/config/search-period-configs.component';
 import { SearchPeriodConfigsVarsForm } from '@app/view/period/config/search-period-configs.component';
+import * as PeriodConfigActions from '@app/store/period/config/period-config.actions';
 
 @Component({
   selector: 'app-search-period-configs',
@@ -15,47 +16,20 @@ export class SearchPeriodConfigsComponentImpl extends SearchPeriodConfigsCompone
         super(injector);
     }
 
-    beforeOnInit(){
+    override beforeOnInit(form: SearchPeriodConfigsVarsForm){
+        return form;
     }
 	
-    afterOnInit() {
-        // this.addPeriodConfigsDummyData();
-    }
-
-    doNgOnDestroy(){}
-
-    doNgAfterViewInit() {
-    }
-
-    handleFormChanges(change: any) {
-    }
+    override doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetSearchPeriodConfigsVarsForm(form: SearchPeriodConfigsVarsForm): void {
+    override beforeSearchPeriodConfigsSearch(form: SearchPeriodConfigsSearchForm): void {
 
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchPeriodConfigsSearchForm(form: SearchPeriodConfigsSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchPeriodConfigsSearch(form: SearchPeriodConfigsSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchPeriodConfigsSearch(form: SearchPeriodConfigsSearchForm): void {
-
-    }
-    
+        this.store.dispatch(PeriodConfigActions.search({
+            criteria: form.criteria,
+            loading: true
+        }));
+    }    
 }

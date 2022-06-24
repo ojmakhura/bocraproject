@@ -12,19 +12,4 @@ export class SearchPeriodConfigsPeriodConfigsComponentImpl extends SearchPeriodC
     constructor(private injector: Injector) {
         super(injector);
     }
-
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
-  }
-  doNgOnDestroy(): void {}
-
-
-	doSearchPeriodConfigsEdit(form: any): any {
-    return form;	}
 }

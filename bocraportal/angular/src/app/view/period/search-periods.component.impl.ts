@@ -3,6 +3,7 @@ import { Component, Injector } from '@angular/core';
 import { SearchPeriodsComponent } from '@app/view/period/search-periods.component';
 import { SearchPeriodsSearchForm } from '@app/view/period/search-periods.component';
 import { SearchPeriodsVarsForm } from '@app/view/period/search-periods.component';
+import * as PeriodActions from '@app/store/period/period.actions';
 
 @Component({
   selector: 'app-search-periods',
@@ -15,47 +16,20 @@ export class SearchPeriodsComponentImpl extends SearchPeriodsComponent {
         super(injector);
     }
 
-    beforeOnInit(){
+    override beforeOnInit(form: SearchPeriodsVarsForm): SearchPeriodsVarsForm {
+        return form;
     }
 	
-    afterOnInit() {
-        // this.addPeriodsDummyData();
-    }
-
-    doNgAfterViewInit() {
-    }
-
-    handleFormChanges(change: any) {
-    }
-
-    doNgOnDestroy(){}
+    override doNgOnDestroy(){}
 
     /**
      * This method may be overwritten
      */
-    afterSetSearchPeriodsVarsForm(form: SearchPeriodsVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchPeriodsSearchForm(form: SearchPeriodsSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchPeriodsSearch(form: SearchPeriodsSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchPeriodsSearch(form: SearchPeriodsSearchForm): void {
-
+    override beforeSearchPeriodsSearch(form: SearchPeriodsSearchForm): void {
+        this.store.dispatch(PeriodActions.search({
+            criteria: form.criteria,
+            loading: true
+        }));
     }
     
 }

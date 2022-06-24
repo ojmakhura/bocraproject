@@ -3,58 +3,35 @@ import { Component, Injector } from '@angular/core';
 import { SearchLicenseesComponent } from '@app/view/licensee/search-licensees.component';
 import { SearchLicenseesSearchForm } from '@app/view/licensee/search-licensees.component';
 import { SearchLicenseesVarsForm } from '@app/view/licensee/search-licensees.component';
+import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 
 @Component({
   selector: 'app-search-licensees',
   templateUrl: './search-licensees.component.html',
-  styleUrls: ['./search-licensees.component.scss']
+  styleUrls: ['./search-licensees.component.scss'],
 })
 export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: SearchLicenseesVarsForm): SearchLicenseesVarsForm {
+    return form;
+  }
 
-    beforeOnInit(){
-    }
-	
-    afterOnInit() {
-    }
+  override doNgOnDestroy() {
+    this.store.dispatch(LicenseeActions.licenseeReset());
+  }
 
-    doNgAfterViewInit() {
-    }
-
-    handleFormChanges(change: any) {
-    }
-
-    doNgOnDestroy(){}
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchLicenseesVarsForm(form: SearchLicenseesVarsForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSetSearchLicenseesSearchForm(form: SearchLicenseesSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    beforeSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {
-
-    }
-
-    /**
-     * This method may be overwritten
-     */
-    afterSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {
-
-    }
-    
+  /**
+   * This method may be overwritten
+   */
+  override beforeSearchLicenseesSearch(form: SearchLicenseesSearchForm): void {
+    this.store.dispatch(
+      LicenseeActions.search({
+        criteria: form.criteria,
+        loading: true,
+      })
+    );
+  }
 }

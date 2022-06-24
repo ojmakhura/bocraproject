@@ -13,18 +13,4 @@ export class SearchUsersUsersComponentImpl extends SearchUsersUsersComponent {
         super(injector);
     }
 
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
-  }
-  doNgOnDestroy(): void {}
-
-
-	doSearchUsersEdit(form: any): any {
-    return form;	}
 }
