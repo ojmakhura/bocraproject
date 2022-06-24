@@ -24,44 +24,56 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<PeriodVO> data = Optional.of(this.periodService.findById(id));
-        ResponseEntity<PeriodVO> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<PeriodVO> data = Optional.of(this.periodService.findById(id));
+            ResponseEntity<PeriodVO> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll());
-        ResponseEntity<Collection<PeriodVO>> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll());
+            ResponseEntity<Collection<PeriodVO>> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(periodService.remove(id));
-        ResponseEntity<Boolean> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Boolean> data = Optional.of(periodService.remove(id));
+            ResponseEntity<Boolean> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
@@ -85,29 +97,37 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleSearch(PeriodCriteria criteria) {
-        Optional<Collection<PeriodVO>> data = Optional.of(periodService.search(criteria));
-        ResponseEntity<Collection<PeriodVO>> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<PeriodVO>> data = Optional.of(periodService.search(criteria));
+            ResponseEntity<Collection<PeriodVO>> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll(pageNumber, pageSize));
-        ResponseEntity<Collection<PeriodVO>> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll(pageNumber, pageSize));
+            ResponseEntity<Collection<PeriodVO>> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 }

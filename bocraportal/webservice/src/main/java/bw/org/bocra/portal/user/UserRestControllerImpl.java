@@ -177,36 +177,42 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         Response res = usersResource.create(userRepresentation);
         System.out.println(res.getEntity());
 
-        List<UserRepresentation> users = usersResource.search(user.getUsername(), true);
-        if (CollectionUtils.isNotEmpty(users)) {
-
-            UserRepresentation rep = users.get(0);
-            
-            if (StringUtils.isNotBlank(rep.getId())) {
-                user.setUserId(rep.getId());
-                LicenseeUserVO licenseeUser = new LicenseeUserVO();
-                licenseeUser.setDateAdded(LocalDate.now());
-                licenseeUser.setUser(user);
-                licenseeUser.setLicensee(user.getLicensee());
-                // licenseeUser = licenseeUserService.save(licenseeUser);
-
-                // List<RoleRepresentation> roleToAdd = new LinkedList<>();
-                // for (String role : user.getRoles()) {
-                //     getRolesResource().get(role);
-                //     roleToAdd.add(getRolesResource()
-                //             .get(role)
-                //             .toRepresentation());
-                // }
-
-                // UserResource userResource = usersResource.get(rep.getId());
-
-                // userResource.roles().clientLevel(getAuthClient()).add(roleToAdd);
+        try{
+            List<UserRepresentation> users = usersResource.search(user.getUsername(), true);
+            if (CollectionUtils.isNotEmpty(users)) {
+    
+                UserRepresentation rep = users.get(0);
+                
+                if (StringUtils.isNotBlank(rep.getId())) {
+                    user.setUserId(rep.getId());
+                    LicenseeUserVO licenseeUser = new LicenseeUserVO();
+                    licenseeUser.setDateAdded(LocalDate.now());
+                    licenseeUser.setUser(user);
+                    licenseeUser.setLicensee(user.getLicensee());
+                    // licenseeUser = licenseeUserService.save(licenseeUser);
+    
+                    // List<RoleRepresentation> roleToAdd = new LinkedList<>();
+                    // for (String role : user.getRoles()) {
+                    //     getRolesResource().get(role);
+                    //     roleToAdd.add(getRolesResource()
+                    //             .get(role)
+                    //             .toRepresentation());
+                    // }
+    
+                    // UserResource userResource = usersResource.get(rep.getId());
+    
+                    // userResource.roles().clientLevel(getAuthClient()).add(roleToAdd);
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+
     }
 
     @Override
@@ -222,29 +228,37 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             users.add(vo);
         }
 
-        Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
-        ResponseEntity<Collection<UserVO>> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
+            ResponseEntity<Collection<UserVO>> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleUpdateUserName(String username, String userId) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<Boolean> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 }
