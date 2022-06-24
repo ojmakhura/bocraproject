@@ -28,6 +28,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
   override doNgOnDestroy(): void {
   }
 
+<<<<<<< HEAD
   override afterEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
     if(form?.dashboard?.id) {
       if(confirm("Are you sure to delete the new document configuration?")) {
@@ -37,6 +38,8 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     }
   }
 
+=======
+>>>>>>> origin/ojm-dev
   beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
       role.forEach((val) => {

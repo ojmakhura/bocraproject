@@ -17,71 +17,78 @@ export enum PeriodActionType {
     GET_ALL_PAGED = '[Period] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[Period] Get All Paged Success',
     PERIOD_RESET = '[Period] Period Reset',
-    PERIOD_FAILURE = '[Period] Period Action Failure'
+    PERIOD_FAILURE = '[Period] Period Action Failure',
+    PERIOD_LOADING = '[Period] Period Loading'
 }
 
 export const findById = createAction(
     PeriodActionType.FIND_BY_ID,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
 export const findByIdSuccess = createAction(
     PeriodActionType.FIND_BY_ID_SUCCESS,
-    props<{ period: PeriodVO | any }>()
+    props<{ period: PeriodVO | any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(
     PeriodActionType.SAVE,
-    props<{ period: PeriodVO | any  }>()
+    props<{ period: PeriodVO | any , loading: boolean }>()
 );
 
 export const saveSuccess = createAction(
     PeriodActionType.SAVE_SUCCESS,
-    props<{ period: PeriodVO | any }>()
+    props<{ period: PeriodVO | any, messages: any[], success: boolean}>()
 );
 
 export const remove = createAction(
     PeriodActionType.REMOVE,
-    props<{ id: number | any  }>()
+    props<{ id: number | any , loading: boolean }>()
 );
 
 export const removeSuccess = createAction(
     PeriodActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any }>()
+    props<{ removed: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const getAll = createAction(
-    PeriodActionType.GET_ALL
+    PeriodActionType.GET_ALL,
+    props<{  loading: boolean }>()
 );
 
 export const getAllSuccess = createAction(
     PeriodActionType.GET_ALL_SUCCESS,
-    props<{ periods: PeriodVO[] | any }>()
+    props<{ periods: PeriodVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const search = createAction(
     PeriodActionType.SEARCH,
-    props<{ searchCriteria: PeriodCriteria | any  }>()
+    props<{ criteria: PeriodCriteria | any , loading: boolean }>()
 );
 
 export const searchSuccess = createAction(
     PeriodActionType.SEARCH_SUCCESS,
-    props<{ periods: PeriodVO[] | any }>()
+    props<{ periods: PeriodVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
     PeriodActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any  }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
 );
 
 export const getAllPagedSuccess = createAction(
     PeriodActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ periods: PeriodVO[] | any[] }>()
+    props<{ periods: PeriodVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const periodReset = createAction(PeriodActionType.PERIOD_RESET);
 
+export const periodLoading = createAction(
+    PeriodActionType.PERIOD_LOADING,
+    props<{ loading: boolean, success: boolean, messages: any[] }>()
+);
+
 export const periodFailure = createAction(
     PeriodActionType.PERIOD_FAILURE,
-    props<{ error: any }>()
+    props<{ messages: any[] }>()
 );

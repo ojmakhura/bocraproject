@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("period/instance")
+@RequestMapping("period/config")
 @CrossOrigin()
 public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBase {
 
@@ -25,7 +25,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
 
 
     @Override
-    public ResponseEntity<PeriodConfigVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<PeriodConfigVO> data = Optional.of(periodConfigService.findById(id)); 
         ResponseEntity<PeriodConfigVO> response;
 
@@ -39,7 +39,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<PeriodConfigVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<PeriodConfigVO>> data = Optional.of(periodConfigService.getAll());
         ResponseEntity<Collection<PeriodConfigVO>> response;
 
@@ -53,7 +53,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(periodConfigService.remove(id)); 
         ResponseEntity<Boolean> response;
 
@@ -67,7 +67,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<PeriodConfigVO> handleSave(PeriodConfigVO periodConfigVO) {
+    public ResponseEntity<?> handleSave(PeriodConfigVO periodConfigVO) {
         Optional<PeriodConfigVO> data = Optional.of(periodConfigService.save(periodConfigVO)); 
         ResponseEntity<PeriodConfigVO> response;
 
@@ -81,8 +81,8 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<PeriodConfigVO>> handleSearch(PeriodConfigCriteria searchCriteria) {
-        Optional<Collection<PeriodConfigVO>> data = Optional.of(periodConfigService.search(searchCriteria));
+    public ResponseEntity<?> handleSearch(PeriodConfigCriteria criteria) {
+        Optional<Collection<PeriodConfigVO>> data = Optional.of(periodConfigService.search(criteria));
         ResponseEntity<Collection<PeriodConfigVO>> response;
 
         if(data.isPresent()) {
@@ -95,7 +95,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     }
 
     @Override
-    public ResponseEntity<Collection<PeriodConfigVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<PeriodConfigVO>> data = Optional.of(periodConfigService.getAll(pageNumber, pageSize)); 
         ResponseEntity<Collection<PeriodConfigVO>> response;
 

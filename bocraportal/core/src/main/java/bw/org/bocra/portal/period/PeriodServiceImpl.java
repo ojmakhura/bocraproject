@@ -48,12 +48,8 @@ public class PeriodServiceImpl
     protected  PeriodVO handleSave(PeriodVO periodVO)
         throws Exception
     {
-        if(periodVO.getId() != null) {
-
-            Period period = periodDao.periodVOToEntity(periodVO);
-            period = this.periodRepository.save(period);
-
-        }
+        Period period = periodDao.periodVOToEntity(periodVO);
+        period = this.periodRepository.save(period);
 
         return periodVO;
     }
@@ -90,10 +86,10 @@ public class PeriodServiceImpl
      * @see bw.org.bocra.portal.period.PeriodService#search(PeriodCriteria)
      */
     @Override
-    protected  Collection<PeriodVO> handleSearch(PeriodCriteria searchCriteria)
+    protected  Collection<PeriodVO> handleSearch(PeriodCriteria criteria)
         throws Exception
     {
-        Collection<Period> periods = getPeriodDao().findByCriteria(searchCriteria);
+        Collection<Period> periods = getPeriodDao().findByCriteria(criteria);
         return getPeriodDao().toPeriodVOCollection(periods);
     }
 

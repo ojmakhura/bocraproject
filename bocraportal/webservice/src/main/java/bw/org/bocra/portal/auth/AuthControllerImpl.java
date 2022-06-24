@@ -55,7 +55,7 @@ public class AuthControllerImpl extends AuthControllerBase {
     // }
 
     @Override
-    public ResponseEntity<String> handleGetAccessTokenString(String username, String password) {
+    public ResponseEntity<?> handleGetAccessTokenString(String username, String password) {
         Optional<String> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<String> response;
 
@@ -69,7 +69,7 @@ public class AuthControllerImpl extends AuthControllerBase {
     }
 
     @Override
-    public ResponseEntity<String> handleGetRealmUrl() {
+    public ResponseEntity<?> handleGetRealmUrl() {
         Optional<String> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<String> response;
 
@@ -83,7 +83,7 @@ public class AuthControllerImpl extends AuthControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<RoleRepresentation>> handleGetRoles() {
+    public ResponseEntity<?> handleGetRoles() {
 
         Optional<Collection<RoleRepresentation>> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<Collection<RoleRepresentation>> response;
@@ -98,7 +98,7 @@ public class AuthControllerImpl extends AuthControllerBase {
     }
 
     @Override
-    public ResponseEntity<String> handleGetUserInfo(String token) {
+    public ResponseEntity<?> handleGetUserInfo(String token) {
         Optional<String> data = Optional.empty(); // TODO: Add custom code here;
         ResponseEntity<String> response;
 
@@ -112,7 +112,7 @@ public class AuthControllerImpl extends AuthControllerBase {
     }
 
     @Override
-    public ResponseEntity<String> handleSignin(String username, String password) {
+    public ResponseEntity<?> handleSignin(String username, String password) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("username", username);
         map.add("password", password);

@@ -58,6 +58,7 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
 
   override doNgOnDestroy() {}
 
+<<<<<<< HEAD
   override afterEditDocumentDelete(form: EditDocumentDeleteForm): void {
     if(form?.Document?.id) {
       if(confirm("Are you sure to delete the document configuration?")) {
@@ -67,6 +68,8 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
     }
   }
 
+=======
+>>>>>>> origin/ojm-dev
   /**
    * This method may be overwritten
    */

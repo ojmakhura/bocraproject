@@ -3,16 +3,21 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 import { FieldType } from '@app/model/bw/org/bocra/portal/form/field/field-type';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
+import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
+import { ExpressionVO } from '@model/bw/org/bocra/portal/expression/expression-vo';
 
 export const formKey = 'form';
 
 export interface FormState {
-  searchCriteria: FormCriteria | any;
+  criteria: FormCriteria | any;
   fieldType: FieldType | any;
   formFields: Array<FormFieldVO> | Array<any>;
   formField: FormFieldVO | any;
+  formSection: FormSectionVO | any;
+  formSections: Array<FormSectionVO> | Array<any>;
   form: FormVO | any;
   required: Boolean | any;
+  expression: ExpressionVO;
   min: String | any;
   id: number | any;
   fieldName: String | any;
@@ -20,22 +25,31 @@ export interface FormState {
   max: String | any;
   defaultValue: String | any;
   removed: boolean;
-  error: any;
+  success: boolean;
+  loading: boolean;
+  error: boolean,
+  messages: any[];
 }
 
 export const initialState: FormState = {
-  searchCriteria: null,
+  criteria: null,
   fieldType: null,
   formFields: [],
   formField: null,
+  formSection: null,
+  formSections: [],
   form: null,
   required: null,
   min: null,
   id: null,
+  expression: null,
   fieldName: null,
   forms: [],
   max: null,
   defaultValue: null,
   removed: false,
-  error: null,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
 };

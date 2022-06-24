@@ -99,6 +99,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   doNgOnDestroy() {}
 
+<<<<<<< HEAD
   override afterEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
     if(form?.formSubmission?.id) {
       if(confirm("Are you sure to delete the form submission configuration?")) {
@@ -109,6 +110,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
   
 
+=======
+>>>>>>> origin/ojm-dev
   /**
    * This method may be overwritten
    */

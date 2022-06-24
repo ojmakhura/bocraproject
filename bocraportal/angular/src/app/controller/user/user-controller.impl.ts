@@ -10,9 +10,6 @@ export class UserControllerImpl extends UserController {
         super(injector);
     }
 
-	public doInitialiseEditScreen(form: any): void {
-	}
-
 	public doDelete(form: any): void {
 	}
 
@@ -26,6 +23,9 @@ export class UserControllerImpl extends UserController {
 	}
 
 	public doEditUser(form: any): void {
+	}
+
+	public doInitialiseEditScreen(form: any): void {
 	}
 
 }

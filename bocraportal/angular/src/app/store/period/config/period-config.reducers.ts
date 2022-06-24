@@ -8,69 +8,63 @@ export const periodConfigReducer = createReducer(
     on(PeriodConfigActions.findByIdSuccess, (state, action) => ({
         ...state,
         periodConfig: action.periodConfig, 
-        searchCriteria: null, 
-        id: null, 
-        periodConfigs: [], 
-        removed: false,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodConfigActions.saveSuccess, (state, action) => ({
         ...state,
         periodConfig: action.periodConfig, 
-        searchCriteria: null, 
-        id: null, 
-        periodConfigs: [], 
-        removed: false,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodConfigActions.removeSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        searchCriteria: null, 
-        id: null, 
-        periodConfigs: [], 
         removed: action.removed,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodConfigActions.getAllSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        searchCriteria: null, 
-        id: null, 
         periodConfigs: action.periodConfigs, 
-        removed: false,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodConfigActions.searchSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        searchCriteria: null, 
-        id: null, 
         periodConfigs: action.periodConfigs, 
-        removed: false,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodConfigActions.getAllPagedSuccess, (state, action) => ({
         ...state,
-        periodConfig: null, 
-        searchCriteria: null, 
-        id: null, 
-        periodConfigs: action.periodConfigs, 
-        removed: false,
-        error: null
+        periodConfigs: action.periodConfigs,
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodConfigActions.periodConfigReset, (state) => ({
       ...state,
         periodConfig: null, 
-        searchCriteria: null, 
+        criteria: null, 
         id: null, 
         periodConfigs: [], 
+        loading: false,
+        success: false,
         removed: false,
-        error: null
+        error: false,
+        messages: []
     })),
     on(PeriodConfigActions.periodConfigFailure, (state, action) => ({
         ...state,
-        error: action.error
+        loading: false,
+        success: false,
+        error: true,
+        messages: action.messages
     }))
 );
 

@@ -24,6 +24,7 @@ export class NewShareholderComponentImpl extends NewShareholderComponent {
     }
 	
     override doNgOnDestroy(){}
+<<<<<<< HEAD
 
     override afterEditNewShareholderDelete(form: EditNewShareholderDeleteForm): void {
         if(form?.newShareholder?.id) {
@@ -34,4 +35,6 @@ export class NewShareholderComponentImpl extends NewShareholderComponent {
         }
       }
     
+=======
+>>>>>>> origin/ojm-dev
 }

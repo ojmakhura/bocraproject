@@ -3,9 +3,9 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { KeycloakService } from 'keycloak-angular';
-import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
-import { UrlGuardCriteria } from '@app/model/bw/org/bocra/portal/guard/url-guard-criteria';
-import { UrlGuardType } from '@app/model/bw/org/bocra/portal/guard/url-guard-type';
+import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
+import { AuthorisationCriteria } from '@app/model/bw/org/bocra/portal/auth/authorisation-criteria';
+import { AuthorisationType } from '@app/model/bw/org/bocra/portal/auth/authorisation-type';
 import * as nav from './navigation';
 import { Observable } from 'rxjs';
 import { Menu } from '@app/model/menu/menu';
@@ -15,6 +15,8 @@ import * as AuthSelectors from '@app/store/auth/auth.selectors';
 import * as AuthActions from '@app/store/auth/auth.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
 import * as MenuActions from '@app/store/menu/menu.actions';
+import jwt_decode from 'jwt-decode';
+import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 
 @Component({
   selector: 'app-shell',
@@ -32,7 +34,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
     private keycloakService: KeycloakService,
     private store: Store<AuthState>,
     private breakpoint: BreakpointObserver,
-    private urlGuardRestController: UrlGuardRestControllerImpl
+    private authorisationRestController: AuthorisationRestControllerImpl
   ) {
     this.menus$ = this.store.pipe(select(MenuSelectors.selectMenus));
     this.username$ = this.store.pipe(select(AuthSelectors.selectUsername));
@@ -41,21 +43,25 @@ export class ShellComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit(): void {
-    let criteria: UrlGuardCriteria = new UrlGuardCriteria();
-    criteria.type = UrlGuardType.MENU;
+    let criteria: AuthorisationCriteria = new AuthorisationCriteria();
+    criteria.type = AuthorisationType.MENU;
     criteria.roles = this.keycloakService.getUserRoles();
 
-    this.keycloakService.isLoggedIn().then(loggedIn => {
-      if(loggedIn) {
+    this.keycloakService.isLoggedIn().then((loggedIn) => {
+      if (loggedIn) {
         this.store.dispatch(AuthActions.setUsername({ username: this.keycloakService.getUsername() }));
       }
     });
 
-    this.urlGuardRestController.search(criteria).subscribe((guards) => {
+    this.authorisationRestController.search(criteria).subscribe((authorisations) => {
+      let menuItems = nav.menuItems.filter((menu) =>
+        authorisations.some((authorisation: AuthorisationVO) => authorisation.url === menu.routerLink)
+      );
+      this.store.dispatch(MenuActions.getMenusSuccess({ menus: menuItems }));
+    });
 
-      let menuItems = nav.menuItems.filter(menu => guards.some(guard => guard.url === menu.routerLink))
-      this.store.dispatch(MenuActions.getMenusSuccess({ menus: menuItems}));
-      
+    this.keycloakService.getToken().then((token) => {
+      var decoded: any = jwt_decode(token);
     });
   }
 

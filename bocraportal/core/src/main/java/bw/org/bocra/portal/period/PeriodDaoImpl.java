@@ -13,6 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.period.config.PeriodConfig;
+import bw.org.bocra.portal.period.config.PeriodConfigVO;
+
 /**
  * @see Period
  */
@@ -31,9 +34,39 @@ public class PeriodDaoImpl
         // TODO verify behavior of toPeriodVO
         super.toPeriodVO(source, target);
 
-        // if(CollectionUtils.isNotEmpty(source.getFormSubmissions())) {
-            
-        // }
+        if(source.getPeriodConfig() != null && source.getPeriodConfig().getId() != null) {
+            PeriodConfigVO config = new PeriodConfigVO();
+            config.setId(source.getPeriodConfig().getId());
+            config.setPeriodConfigName(source.getPeriodConfig().getPeriodConfigName());
+            config.setStartDay(source.getPeriodConfig().getStartDay());
+            config.setStartMonth(source.getPeriodConfig().getStartDay());
+            config.setRepeat(source.getPeriodConfig().getRepeat());
+            config.setRepeatPeriod(source.getPeriodConfig().getRepeatPeriod());
+
+            target.setPeriodConfig(config);
+        }
+
+        if(source.getNext() != null) {
+
+            PeriodVO next = new PeriodVO();
+            next.setId(source.getNext().getId());
+            next.setPeriodName(source.getNext().getPeriodName());
+            next.setPeriodStart(source.getNext().getPeriodStart());
+            next.setPeriodEnd(source.getNext().getPeriodEnd());
+
+            target.setNext(next);
+        }
+
+        if(source.getPrevious() != null) {
+
+            PeriodVO prev = new PeriodVO();
+            prev.setId(source.getPrevious().getId());
+            prev.setPeriodName(source.getPrevious().getPeriodName());
+            prev.setPeriodStart(source.getPrevious().getPeriodStart());
+            prev.setPeriodEnd(source.getPrevious().getPeriodEnd());
+
+            target.setPrevious(prev);
+        }
     }
 
     /**
@@ -85,23 +118,38 @@ public class PeriodDaoImpl
     {
         // TODO verify behavior of periodVOToEntity
         super.periodVOToEntity(source, target, copyIfNull);
+
+        if(source.getPeriodConfig() != null && source.getPeriodConfig().getId() != null) {
+            PeriodConfig config = getPeriodConfigDao().load(source.getPeriodConfig().getId());
+            target.setPeriodConfig(config);
+        }
+
+        if(source.getNext() != null && source.getNext().getId() != null) {
+            Period next = get(source.getNext().getId());
+            target.setNext(next);
+        }
+
+        if(source.getPrevious() != null && source.getPrevious().getId() != null) {
+            Period prev = get(source.getPrevious().getId());
+            target.setPrevious(prev);
+        }
     }
 
     @Override
-    protected Collection<Period> handleFindByCriteria(PeriodCriteria searchCriteria) throws Exception {
+    protected Collection<Period> handleFindByCriteria(PeriodCriteria criteria) throws Exception {
         
         Specification<Period> specs = null;
 
-        if(searchCriteria.getSearchDate() != null) {
-            specs = PeriodSpecifications.findByPeriodStartGreaterThanEqual(searchCriteria.getSearchDate());
-            specs = specs.and(PeriodSpecifications.findByPeriodEndLessThanEqual(searchCriteria.getSearchDate()));
+        if(criteria.getSearchDate() != null) {
+            specs = PeriodSpecifications.findByPeriodStartGreaterThanEqual(criteria.getSearchDate());
+            specs = specs.and(PeriodSpecifications.findByPeriodEndLessThanEqual(criteria.getSearchDate()));
         }
 
-        if(StringUtils.isNotBlank(searchCriteria.getPeriodName())){
+        if(StringUtils.isNotBlank(criteria.getPeriodName())){
             if(specs == null) {
-                specs = PeriodSpecifications.findByPeriodNameContainingIgnoreCase(searchCriteria.getPeriodName());
+                specs = PeriodSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName());
             } else {
-                specs = specs.and(PeriodSpecifications.findByPeriodNameContainingIgnoreCase(searchCriteria.getPeriodName()));
+                specs = specs.and(PeriodSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName()));
             }
         }
 

@@ -28,4 +28,7 @@ export class LicenseeControllerImpl extends LicenseeController {
 	public doEdit(form: any): void {
 	}
 
+	public doLoadDocuments(form: any): void {
+	}
+
 }

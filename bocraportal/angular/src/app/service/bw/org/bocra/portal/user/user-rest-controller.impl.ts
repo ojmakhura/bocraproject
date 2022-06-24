@@ -12,21 +12,21 @@ export class UserRestControllerImpl extends UserRestController {
         super(injector);
     }
 
-    public createUser(userVO: UserVO): Observable<UserVO> {
+    public createUser(user: UserVO | any ): Observable<UserVO | any> {
 
-        return this.http.post<UserVO>(this.path + `/create`, userVO);
-
-    }
-
-    public loadUsers(): Observable<UserVO[]> {
-
-        return this.http.get<UserVO[]>(this.path);
+        return this.http.post<UserVO | any>(this.path + `/create`, user);
 
     }
 
-    public updateUserName(username: string, userId: string): Observable<boolean> {
+    public loadUsers(): Observable<UserVO[] | any> {
 
-        return this.http.patch<boolean>(this.path + `/username/userId/${userId}`, {username: username, userId: userId});
+        return this.http.get<UserVO[] | any>(this.path);
+
+    }
+
+    public updateUserName(userId: string | any , username: string | any ): Observable<Boolean | any> {
+
+        return this.http.patch<Boolean | any>(this.path + `/${userId}`, {userId: userId, username: username});
 
     }
 

@@ -53,6 +53,7 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
 
   override doNgOnDestroy() {}
 
+<<<<<<< HEAD
   override afterEditLicenceTypeDelete(form: EditLicenceTypeDeleteForm): void {
     if(form?.licenceType?.id) {
       if(confirm("Are you sure to delete the user configuration?")) {
@@ -62,6 +63,8 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
     }
   }
 
+=======
+>>>>>>> origin/ojm-dev
   /**
    * This method may be overwritten
    */

@@ -13,39 +13,39 @@ export class PeriodConfigRestControllerImpl extends PeriodConfigRestController {
         super(injector);
     }
 
-    public findById(id: number): Observable<PeriodConfigVO> {
+    public findById(id: number | any ): Observable<PeriodConfigVO | any> {
 
-        return this.http.get<PeriodConfigVO>(this.path + `/id/${id}`);
-
-    }
-
-    public getAll(): Observable<PeriodConfigVO[]> {
-
-        return this.http.get<PeriodConfigVO[]>(this.path + `/all`);
+        return this.http.get<PeriodConfigVO | any>(this.path + `/${id}`);
 
     }
 
-    public getAllPaged(pageNumber: number, pageSize: number): Observable<PeriodConfigVO[]> {
+    public getAll(): Observable<PeriodConfigVO[] | any> {
 
-        return this.http.get<PeriodConfigVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
-
-    }
-
-    public remove(id: number): Observable<boolean> {
-
-        return this.http.delete<boolean>(this.path + `/id/${id}`);
+        return this.http.get<PeriodConfigVO[] | any>(this.path + `/all`);
 
     }
 
-    public save(periodConfigVO: PeriodConfigVO): Observable<PeriodConfigVO> {
+    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<PeriodConfigVO[] | any> {
 
-        return this.http.post<PeriodConfigVO>(this.path, periodConfigVO);
+        return this.http.get<PeriodConfigVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
 
     }
 
-    public search(searchCriteria: PeriodConfigCriteria): Observable<PeriodConfigVO[]> {
+    public remove(id: number | any ): Observable<boolean | any> {
 
-        return this.http.post<PeriodConfigVO[]>(this.path + `/search`, searchCriteria);
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
+
+    }
+
+    public save(periodConfig: PeriodConfigVO | any ): Observable<PeriodConfigVO | any> {
+
+        return this.http.post<PeriodConfigVO | any>(this.path, periodConfig);
+
+    }
+
+    public search(criteria: PeriodConfigCriteria | any ): Observable<PeriodConfigVO[] | any> {
+
+        return this.http.post<PeriodConfigVO[] | any>(this.path + `/search`, criteria);
 
     }
 

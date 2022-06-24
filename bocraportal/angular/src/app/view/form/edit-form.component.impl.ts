@@ -49,6 +49,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   override doNgOnDestroy(): void {
   }
 
+<<<<<<< HEAD
   override afterEditFormDelete(form: EditFormDeleteForm): void {
     if(form?.form?.id) {
       if(confirm("Are you sure to delete the expression configuration?")) {
@@ -58,6 +59,8 @@ export class EditFormComponentImpl extends EditFormComponent {
     }
   }
 
+=======
+>>>>>>> origin/ojm-dev
   override afterOnInit() {}
 
   override doNgAfterViewInit() {
@@ -131,6 +134,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.useCaseScope.pageVariables['form'] = this.form;
     this.useCaseScope.queryParams['formId'] = this.form.id;
   }
+<<<<<<< HEAD
 
   override getEditFormAddSectionFormDialogConfig(): any {
       return {
@@ -138,6 +142,8 @@ export class EditFormComponentImpl extends EditFormComponent {
         width: '800px'
       };
   }
+=======
+>>>>>>> origin/ojm-dev
 
   override afterEditFormAddSection(form: EditFormAddSectionForm, dialogData: any): void {
     

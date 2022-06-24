@@ -4,28 +4,34 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as UserActions from './user.actions';
 import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
+import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 
 @Injectable()
 export class UserEffects {
 
-    constructor(private actions$: Actions, private userRestController: UserRestControllerImpl) {}
+    constructor(private actions$: Actions, private userRestController: UserRestControllerImpl, private licenseeRestController: LicenseeRestControllerImpl) { }
 
-    // createUser$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(UserActions.createUser),
-    //         mergeMap(({ userVO }) => this.userRestController.createUser(userVO).pipe(
-    //             map( results => UserActions.createUserSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
-    //         ))
-    //     )
-    // );
+
+    createUser$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(UserActions.createUser),
+            mergeMap(({ user }) => this.userRestController.createUser(user).pipe(
+                map(user => UserActions.createUserSuccess({
+                    user,
+                    messages: [`User ${user.username} created.`],
+                    success: true
+                })),
+                catchError(({ error }) => [UserActions.userFailure({messages: [error]})])
+            ))
+        )
+    );
 
     // updateUserName$ = createEffect(() => 
     //      this.actions$.pipe(
     //         ofType(UserActions.updateUserName),
     //         mergeMap(({ username, userId }) => this.userRestController.updateUserName(username, userId).pipe(
     //             map( results => UserActions.updateUserNameSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );
@@ -35,7 +41,67 @@ export class UserEffects {
     //         ofType(UserActions.loadUsers),
     //         mergeMap(() => this.userRestController.loadUsers().pipe(
     //             map( results => UserActions.loadUsersSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure(error)])
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
+    //         ))
+    //     )
+    // );
+
+    // findById$ = createEffect(() => 
+    //      this.actions$.pipe(
+    //         ofType(UserActions.findById),
+    //         mergeMap(({ id }) => this.licenseeRestController.findById(id).pipe(
+    //             map( results => UserActions.findByIdSuccess({results})),
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
+    //         ))
+    //     )
+    // );
+
+    // save$ = createEffect(() => 
+    //      this.actions$.pipe(
+    //         ofType(UserActions.save),
+    //         mergeMap(({ licensee }) => this.licenseeRestController.save(licensee).pipe(
+    //             map( results => UserActions.saveSuccess({results})),
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
+    //         ))
+    //     )
+    // );
+
+    // remove$ = createEffect(() => 
+    //      this.actions$.pipe(
+    //         ofType(UserActions.remove),
+    //         mergeMap(({ id }) => this.licenseeRestController.remove(id).pipe(
+    //             map( results => UserActions.removeSuccess({results})),
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
+    //         ))
+    //     )
+    // );
+
+    // getAll$ = createEffect(() => 
+    //      this.actions$.pipe(
+    //         ofType(UserActions.getAll),
+    //         mergeMap(() => this.licenseeRestController.getAll().pipe(
+    //             map( results => UserActions.getAllSuccess({results})),
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
+    //         ))
+    //     )
+    // );
+
+    // search$ = createEffect(() => 
+    //      this.actions$.pipe(
+    //         ofType(UserActions.search),
+    //         mergeMap(({ criteria }) => this.licenseeRestController.search(criteria).pipe(
+    //             map( results => UserActions.searchSuccess({results})),
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
+    //         ))
+    //     )
+    // );
+
+    // getAllPaged$ = createEffect(() => 
+    //      this.actions$.pipe(
+    //         ofType(UserActions.getAllPaged),
+    //         mergeMap(({ pageNumber, pageSize }) => this.licenseeRestController.getAllPaged(pageNumber, pageSize).pipe(
+    //             map( results => UserActions.getAllPagedSuccess({results})),
+    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
     //         ))
     //     )
     // );

@@ -11,37 +11,37 @@ export class AuthControllerImpl extends AuthController {
         super(injector);
     }
 
-    public getAccessTokenString(username: string, password: string): Observable<string> {
+    public getAccessTokenString(username: string | any , password: string | any ): Observable<string | any> {
 
-        return this.http.post<string>(this.path + `/token_string`, {username: username, password: password});
-
-    }
-
-    public getRealmUrl(): Observable<string> {
-
-        return this.http.get<string>(this.path);
+        return this.http.post<string | any>(this.path + `/token_string`, {username: username, password: password});
 
     }
 
-    public getRoles(): Observable<RoleRepresentation[]> {
+    public getRealmUrl(): Observable<string | any> {
 
-        return this.http.get<RoleRepresentation[]>(this.path + `/roles`);
-
-    }
-
-    public getUserInfo(token: string): Observable<string> {
-
-        return this.http.post<string>(this.path + `/info`, token);
+        return this.http.get<string | any>(this.path);
 
     }
 
-    public signin(username: string, password: string): Observable<string> {
+    public getRoles(): Observable<RoleRepresentation[] | any> {
 
-        return this.http.post<string>(this.path + `/signin`, {username: username, password: password});
+        return this.http.get<RoleRepresentation[] | any>(this.path + `/roles`);
 
     }
 
-    public signout(refreshToken: string): Observable<void> {
+    public getUserInfo(token: string | any ): Observable<string | any> {
+
+        return this.http.post<string | any>(this.path + `/info`, token);
+
+    }
+
+    public signin(username: string | any , password: string | any ): Observable<string | any> {
+
+        return this.http.post<string | any>(this.path + `/signin`, {username: username, password: password});
+
+    }
+
+    public signout(refreshToken: string | any ): Observable<void> {
 
         return this.http.post<void>(this.path + `/signout`, refreshToken);
 

@@ -5,45 +5,118 @@ import {userKey, initialState} from './user.state';
 
 export const userReducer = createReducer(
     initialState,
-    // on(UserActions.createUserSuccess, (state, action) => ({
+    on(UserActions.createUserSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: action.user, 
+        users: [], 
+        criteria: null, 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(UserActions.updateUserNameSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: null, 
+        users: [], 
+        criteria: null, 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(UserActions.loadUsersSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: null, 
+        users: [], 
+        criteria: null, 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    // on(UserActions.findByIdSuccess, (state, action) => ({
     //     ...state,
-    //     searchCriteria: null, 
-    //     id: null, 
     //     userId: null, 
-    //     userVO: null, 
+    //     user: null, 
     //     users: [], 
-    //     error: action.error
+    //     criteria: null, 
+    //     loading: false,
+    //     success: action.success,
+    //     messages: action.messages
     // })),
-    // on(UserActions.updateUserNameSuccess, (state, action) => ({
+    // on(UserActions.saveSuccess, (state, action) => ({
     //     ...state,
-    //     searchCriteria: null, 
-    //     id: null, 
     //     userId: null, 
-    //     userVO: null, 
+    //     user: null, 
     //     users: [], 
-    //     error: action.error
+    //     criteria: null, 
+    //     loading: false,
+    //     success: action.success,
+    //     messages: action.messages
     // })),
-    // on(UserActions.loadUsersSuccess, (state, action) => ({
+    // on(UserActions.removeSuccess, (state, action) => ({
     //     ...state,
-    //     searchCriteria: null, 
-    //     id: null, 
     //     userId: null, 
-    //     userVO: null, 
+    //     user: null, 
     //     users: [], 
-    //     error: action.error
+    //     criteria: null, 
+    //     loading: false,
+    //     success: action.success,
+    //     messages: action.messages
+    // })),
+    // on(UserActions.getAllSuccess, (state, action) => ({
+    //     ...state,
+    //     userId: null, 
+    //     user: null, 
+    //     users: [], 
+    //     criteria: null, 
+    //     loading: false,
+    //     success: action.success,
+    //     messages: action.messages
+    // })),
+    // on(UserActions.searchSuccess, (state, action) => ({
+    //     ...state,
+    //     userId: null, 
+    //     user: null, 
+    //     users: [], 
+    //     criteria: null, 
+    //     loading: false,
+    //     success: action.success,
+    //     messages: action.messages
+    // })),
+    // on(UserActions.getAllPagedSuccess, (state, action) => ({
+    //     ...state,
+    //     userId: null, 
+    //     user: null, 
+    //     users: [], 
+    //     criteria: null, 
+    //     loading: false,
+    //     success: action.success,
+    //     messages: action.messages
     // })),
     on(UserActions.userReset, (state) => ({
       ...state,
-        searchCriteria: null, 
-        id: null, 
         userId: null, 
-        userVO: null, 
+        user: null, 
         users: [], 
-        error: null
+        criteria: null, 
+        loading: false,
+        success: false,
+        error: false,
+        messages: []
     })),
     on(UserActions.userFailure, (state, action) => ({
         ...state,
-        error: action.error
+        loading: false,
+        success: false,
+        error: true,
+        messages: action.messages
+    })),
+    on(UserActions.userLoading, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: false
     }))
 );
 

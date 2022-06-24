@@ -26,9 +26,9 @@ export const selectForms = createSelector(
     (state: FormState) => state.forms
 );
 
-export const selectSearchCriteria = createSelector(
+export const selectCriteria = createSelector(
     selectFormState,
-    (state: FormState) => state.searchCriteria
+    (state: FormState) => state.criteria
 );
 
 export const selectDefaultValue = createSelector(
@@ -61,9 +61,39 @@ export const selectMax = createSelector(
     (state: FormState) => state.max
 );
 
+export const selectFormSection = createSelector(
+    selectFormState,
+    (state: FormState) => state.formSection
+);
+
+export const selectFormSections = createSelector(
+    selectFormState,
+    (state: FormState) => state.formSections
+);
+
+export const selectExpression = createSelector(
+    selectFormState,
+    (state: FormState) => state.expression
+);
+
 export const selectRequired = createSelector(
     selectFormState,
     (state: FormState) => state.required
+);
+
+export const selectLoading = createSelector(
+    selectFormState,
+    (state: FormState) => state.loading
+);
+
+export const selectSuccess = createSelector(
+    selectFormState,
+    (state: FormState) => state.success
+);
+
+export const selectMessages = createSelector(
+    selectFormState,
+    (state: FormState) => state.messages
 );
 
 export const selectError = createSelector(

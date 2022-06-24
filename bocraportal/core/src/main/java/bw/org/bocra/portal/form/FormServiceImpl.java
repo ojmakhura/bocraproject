@@ -8,9 +8,6 @@
  */
 package bw.org.bocra.portal.form;
 
-import bw.org.bocra.portal.guard.UrlGuardVO;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +46,6 @@ public class FormServiceImpl
 
         if(formVO.getId() == null) {
             form = getFormDao().create(form);
-            logger.info(form.toString());
         } else {
             getFormDao().update(form);
         }

@@ -20,6 +20,7 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
     }
 
     override doNgOnDestroy(){}
+<<<<<<< HEAD
 
     override afterEditNewDocumentDelete(form: EditNewDocumentDeleteForm): void {
       if(form?.NewDocument?.id) {
@@ -30,4 +31,6 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
       }
     }
 
+=======
+>>>>>>> origin/ojm-dev
 }

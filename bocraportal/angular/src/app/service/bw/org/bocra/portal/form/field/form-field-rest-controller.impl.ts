@@ -12,33 +12,33 @@ export class FormFieldRestControllerImpl extends FormFieldRestController {
         super(injector);
     }
 
-    public findById(id: number): Observable<FormFieldVO> {
+    public findById(id: number | any ): Observable<FormFieldVO | any> {
 
-        return this.http.get<FormFieldVO>(this.path + `/id/${id}`);
-
-    }
-
-    public getAll(): Observable<FormFieldVO[]> {
-
-        return this.http.get<FormFieldVO[]>(this.path + `/all`);
+        return this.http.get<FormFieldVO | any>(this.path + `/${id}`);
 
     }
 
-    public getAllPaged(pageNumber: number, pageSize: number): Observable<FormFieldVO[]> {
+    public getAll(): Observable<FormFieldVO[] | any> {
 
-        return this.http.get<FormFieldVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
-
-    }
-
-    public remove(id: number): Observable<boolean> {
-
-        return this.http.delete<boolean>(this.path + `/id/${id}`);
+        return this.http.get<FormFieldVO[] | any>(this.path + `/all`);
 
     }
 
-    public save(formFieldVO: FormFieldVO): Observable<FormFieldVO> {
-        
-        return this.http.post<FormFieldVO>(this.path, formFieldVO);
+    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<FormFieldVO[] | any> {
+
+        return this.http.get<FormFieldVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+
+    }
+
+    public remove(id: number | any ): Observable<boolean | any> {
+
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
+
+    }
+
+    public save(formField: FormFieldVO | any ): Observable<FormFieldVO | any> {
+
+        return this.http.post<FormFieldVO | any>(this.path, formField);
 
     }
 

@@ -87,6 +87,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
 
   override doNgOnDestroy() {}
 
+<<<<<<< HEAD
   override afterEditSectorDelete(form: EditSectorDeleteForm): void {
     if(form?.sector?.id) {
       if(confirm("Are you sure to delete the sector configuration?")) {
@@ -96,6 +97,8 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     }
   }
 
+=======
+>>>>>>> origin/ojm-dev
   override sectorLicenseesAddDialog(): void {
     this.store.dispatch(SectorActions.setLicensees({ licensees: [] }));
   }

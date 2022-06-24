@@ -24,6 +24,7 @@ export class EditExpressionComponentImpl extends EditExpressionComponent {
     }
 	
     override doNgOnDestroy(){}
+<<<<<<< HEAD
 
     override afterEditExpressionDelete(form: EditExpressionDeleteForm): void {
         if(form?.expression?.id) {
@@ -34,4 +35,6 @@ export class EditExpressionComponentImpl extends EditExpressionComponent {
         }
       }
     
+=======
+>>>>>>> origin/ojm-dev
 }

@@ -6,10 +6,10 @@ export const menuKey = 'menu';
 
 export interface MenuState {
   menus: Menu[] | any[];
-  error: any;
+  messages: any[];
 }
 
 export const initialState: MenuState = {
   menus: [],
-  error: null,
+  messages: [],
 };

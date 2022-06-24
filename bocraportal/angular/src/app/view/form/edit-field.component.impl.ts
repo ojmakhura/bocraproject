@@ -62,6 +62,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
   override doNgOnDestroy(): void {
   }
 
+<<<<<<< HEAD
   override afterEditFieldDelete(form: EditFieldDeleteForm): void {
     if(form?.field?.id) {
       if(confirm("Are you sure to delete the expression configuration?")) {
@@ -71,6 +72,8 @@ export class EditFieldComponentImpl extends EditFieldComponent {
     }
   }
 
+=======
+>>>>>>> origin/ojm-dev
   override doNgAfterViewInit() {
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {

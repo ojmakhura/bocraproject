@@ -35,6 +35,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
 
     override beforeOnInit(form: EditPeriodVarsForm): EditPeriodVarsForm {
       return form;
+<<<<<<< HEAD
     }
 
     override doNgOnDestroy(){}
@@ -48,6 +49,11 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
       }
     }
 
+=======
+    }
+
+    override doNgOnDestroy(){}
+>>>>>>> origin/ojm-dev
 
     override doNgAfterViewInit() {
       

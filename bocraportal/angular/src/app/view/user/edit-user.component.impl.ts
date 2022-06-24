@@ -80,6 +80,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     this.store.dispatch(LicenseeActions.licenseeReset());
   }
 
+<<<<<<< HEAD
   override afterEditUserDelete(form: EditUserDeleteForm): void {
     if(form?.user?.id) {
       if(confirm("Are you sure to delete the user configuration?")) {
@@ -89,6 +90,8 @@ export class EditUserComponentImpl extends EditUserComponent {
     }
   }
 
+=======
+>>>>>>> origin/ojm-dev
   /**
    * This method may be overwritten
    */

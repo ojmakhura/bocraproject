@@ -15,6 +15,7 @@ export class DashboardComponentImpl extends DashboardComponent {
   beforeOnInit() {}
 
   doNgOnDestroy() {}
+<<<<<<< HEAD
 
   override afterEditDashboardDelete(form: EditDashboardDeleteForm): void {
     if(form?.Dashboard?.id) {
@@ -24,4 +25,6 @@ export class DashboardComponentImpl extends DashboardComponent {
       }
     }
   }
+=======
+>>>>>>> origin/ojm-dev
 }

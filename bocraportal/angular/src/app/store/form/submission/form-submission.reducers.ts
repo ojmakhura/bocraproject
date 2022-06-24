@@ -5,19 +5,77 @@ import {formSubmissionKey, initialState} from './form-submission.state';
 
 export const formSubmissionReducer = createReducer(
     initialState,
+    on(FormSubmissionActions.findByIdSuccess, (state, action) => ({
+        ...state,
+        formSubmission: action.formSubmission,
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(FormSubmissionActions.saveSuccess, (state, action) => ({
+        ...state,
+        formSubmission: action.formSubmission, 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(FormSubmissionActions.removeSuccess, (state, action) => ({
+        ...state,
+        removed: action.removed, 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(FormSubmissionActions.getAllSuccess, (state, action) => ({
+        ...state,
+        formSubmissions: action.formSubmissions, 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(FormSubmissionActions.searchSuccess, (state, action) => ({
+        ...state,
+        formSubmissions: action.formSubmissions, 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(FormSubmissionActions.getAllPagedSuccess, (state, action) => ({
+        ...state,
+        formSubmissions: action.formSubmissions, 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
     on(FormSubmissionActions.formSubmissionReset, (state) => ({
       ...state,
-        formField: null, 
-        searchCriteria: null, 
         formSubmission: null, 
-        submissions: [], 
+        criteria: null, 
+        formSubmissions: [], 
         id: null, 
-        error: null
+        loading: false,
+        success: false,
+        error: false,
+        messages: []
     })),
     on(FormSubmissionActions.formSubmissionFailure, (state, action) => ({
         ...state,
-        error: action.error
-    }))
+        loading: false,
+        success: false,
+        error: true,
+        messages: action.messages
+    })),
+    on(FormSubmissionActions.formSubmissionLoading, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        success: false
+    })),
+    // on(FormSubmissionActions.formSubmissionSuccess, (state, action) => ({
+    //     ...state,
+    //     loading: action.loading,
+    //     success: action.success,
+    //     messages: action.messages
+    // }))
 );
 
 export const formSubmissionFeature = createFeature({

@@ -42,6 +42,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
   }
 
   override doNgOnDestroy() {}
+<<<<<<< HEAD
   
   override afterEditLicenceDelete(form: EditLicenceDeleteForm): void {
     if(form?.licence?.id) {
@@ -51,6 +52,9 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
       }
     }
   }
+=======
+
+>>>>>>> origin/ojm-dev
   /**
    * This method may be overwritten
    */

@@ -3,7 +3,16 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LicenseeRestController } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller';
+import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
+import { ReportConfigVO } from '@app/model/bw/org/bocra/portal/report/config/report-config-vo';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { ReportVO } from '@app/model/bw/org/bocra/portal/report/report-vo';
+import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { ShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/shareholder-vo';
+import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-sector-vo';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 
 @Injectable()
@@ -13,37 +22,94 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
         super(injector);
     }
 
-    public findById(id: number): Observable<LicenseeVO> {
+    public override addSector(licenseeId: number | any , sectorId: number | any ): Observable<LicenseeSectorVO | any> {
 
-        return this.http.get<LicenseeVO>(this.path + `/id/${id}`);
-
-    }
-
-    public getAll(): Observable<LicenseeVO[]> {
-
-        return this.http.get<LicenseeVO[]>(this.path + `/all`);
+        return this.http.get<LicenseeSectorVO | any>(this.path + `/${licenseeId}/add/sector/${sectorId}`);
 
     }
 
-    public remove(id: number): Observable<boolean> {
+    public override findById(id: number | any ): Observable<LicenseeVO | any> {
 
-        return this.http.delete<boolean>(this.path + `/id/${id}`);
-
-    }
-
-    public save(licenseeVO: LicenseeVO): Observable<LicenseeVO> {
-
-        return this.http.post<LicenseeVO>(this.path, licenseeVO);
+        return this.http.get<LicenseeVO | any>(this.path + `/${id}`);
 
     }
 
-    public searchLicensees(searchCriteria: LicenseeCriteria): Observable<LicenseeVO[]> {
+    public override getAll(): Observable<LicenseeVO[] | any> {
 
-        return this.http.post<LicenseeVO[]>(this.path + `/search`, searchCriteria);
+        return this.http.get<LicenseeVO[] | any>(this.path + `/all`);
 
     }
 
-    public getAllPaged(pageNumber: number, pageSize: number): Observable<LicenseeVO[]> {
-        return this.http.get<LicenseeVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
-      }
+    public override getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<LicenseeVO[] | any> {
+
+        return this.http.get<LicenseeVO[] | any>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+
+    }
+
+    public override getDocuments(id: number | any ): Observable<DocumentVO[] | any> {
+
+        return this.http.get<DocumentVO[] | any[]>(this.path + `/${id}/documents`);
+
+    }
+
+    public override getForms(id: number | any ): Observable<FormVO[] | any> {
+
+        return this.http.get<FormVO[] | any>(this.path + `/${id}/forms`);
+
+    }
+
+    public override getFormSubmissions(id: number | any ): Observable<FormSubmissionVO[] | any> {
+
+        return this.http.get<FormSubmissionVO[] | any>(this.path + `/${id}/submissions`);
+
+    }
+
+    public override getLicences(id: number | any ): Observable<LicenceVO[] | any> {
+
+        return this.http.get<LicenceVO[] | any>(this.path + `/${id}/licences`);
+
+    }
+
+    public override getReportConfigurations(id: number | any ): Observable<ReportConfigVO[] | any> {
+
+        return this.http.get<ReportConfigVO[] | any>(this.path + `/${id}/report/configs`);
+
+    }
+
+    public override getReports(id: number | any ): Observable<ReportVO[] | any> {
+
+        return this.http.get<ReportVO[] | any>(this.path + `/${id}/reports`);
+
+    }
+
+    public override getSectors(id: number | any ): Observable<SectorVO[] | any> {
+
+        return this.http.get<SectorVO[] | any>(this.path + `/${id}/sectors`);
+
+    }
+
+    public override getShareholders(id: number | any ): Observable<ShareholderVO[] | any> {
+
+        return this.http.get<ShareholderVO[] | any>(this.path + `/${id}/shareholders`);
+
+    }
+
+    public override remove(id: number | any ): Observable<boolean | any> {
+
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
+
+    }
+
+    public override save(licensee: LicenseeVO | any ): Observable<LicenseeVO | any> {
+
+        return this.http.post<LicenseeVO | any>(this.path, licensee);
+
+    }
+
+    public override search(criteria: LicenseeCriteria | any ): Observable<LicenseeVO[] | any> {
+
+        return this.http.post<LicenseeVO[] | any>(this.path + `/search`, criteria);
+
+    }
+
 }
