@@ -45,6 +45,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -63,6 +64,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -81,6 +83,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -99,6 +102,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -117,6 +121,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -135,6 +140,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -150,6 +156,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.ok().body(docs);
             }            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
@@ -166,6 +173,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.ok().body(vos);
             }            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -181,6 +189,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.ok().body(vos);
             }            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -196,6 +205,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.ok().body(vos);
             }            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -211,6 +221,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.ok().body(vos);
             }
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -226,6 +237,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.ok().body(vos);
             }
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -241,6 +253,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.ok().body(vos);
             }
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -256,6 +269,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.ok().body(vos);
             }
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -272,6 +286,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.ok().body(lvo);
             }
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 

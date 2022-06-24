@@ -37,6 +37,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -55,6 +56,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -73,6 +75,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -91,6 +94,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -109,6 +113,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -127,6 +132,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     
             return response;            
         } catch(Exception e){
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
