@@ -19,7 +19,7 @@ export class DocumentEffects {
                     messages: [`Document ${document.documentName} found.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
             ))
         )
     );
@@ -33,7 +33,7 @@ export class DocumentEffects {
                     messages: [`Document ${document.documentName} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
             ))
         )
     );
@@ -47,7 +47,7 @@ export class DocumentEffects {
                     messages: [`Document ${id} removed.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
             ))
         )
     );
@@ -61,7 +61,7 @@ export class DocumentEffects {
                     messages: [`${documents.length} document found.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
             ))
         )
     );
@@ -75,7 +75,7 @@ export class DocumentEffects {
                     messages: [`${documents.length} document found.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
             ))
         )
     );
@@ -89,7 +89,7 @@ export class DocumentEffects {
                     messages: [`Page ${pageNumber} found with ${documents.length} documents.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
             ))
         )
     );
@@ -102,7 +102,7 @@ export class DocumentEffects {
     //                 documents,
     //                 success: false
     //             })),
-    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
+    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
     //         ))
     //     )
     // );
@@ -115,7 +115,7 @@ export class DocumentEffects {
     //                 documents,
     //                 success: false
     //             })),
-    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
+    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
     //         ))
     //     )
     // );

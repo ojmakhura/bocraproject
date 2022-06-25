@@ -5,9 +5,15 @@ import { EditAuthorisationSaveForm, EditAuthorisationVarsForm } from '@app/view/
 import { EditAuthorisationComponent, EditAuthorisationDeleteForm } from '@app/view/auth/edit-authorisation.component';
 import { SelectItem } from '@app/utils/select-item';
 import { environment } from '@env/environment';
-import * as authorisationSelectors from '@app/store/auth/authorisation.selectors';
-import * as authorisationActions from '@app/store/auth/authorisation.actions';
+import * as AuthorisationActions from '@app/store/auth/authorisation.actions';
+import * as AccessPointSelectors from '@app/store/access/access-point.selectors';
+import * as AccessPointActions from '@app/store/access/access-point.actions';
+
 import { KeycloakService } from 'keycloak-angular';
+import { select } from '@ngrx/store';
+import { AccessPointCriteria } from '@app/model/bw/org/bocra/portal/access/access-point-criteria';
+import { FormGroup } from '@angular/forms';
+import { AccessPointVO } from '@app/model/bw/org/bocra/portal/access/access-point-vo';
 
 @Component({
   selector: 'app-edit-authorisation',
@@ -23,6 +29,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     super(injector);
     this.http = this._injector.get(HttpClient);
     this.keycloakService = this._injector.get(KeycloakService);
+    this.authorisationAccessPoints$ = this.store.pipe(select(AccessPointSelectors.selectAccessPoints));
   }
 
   override doNgOnDestroy(): void {
@@ -41,16 +48,36 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
 
     return form;
   }
+  
+  override handleFormChanges(change: any): void {
+  }
 
   override afterOnInit() {
     
   }
 
+  override createAccessPointVOGroup(value: AccessPointVO): FormGroup {
+    return this.formBuilder.group({
+        id: [value?.id],
+        createdBy: [value?.createdBy],
+        updatedBy: [value?.updatedBy],
+        createdDate: [value?.createdDate],
+        updatedDate: [value?.updatedDate],
+        name: [value?.name],
+        url: [value?.url],
+        accessPointType: this.formBuilder.group({
+            id: [value?.accessPointType?.id],
+            code: [value?.accessPointType?.code],
+            name: [value?.accessPointType?.name]
+        })
+    });
+}
+
   override doNgAfterViewInit(): void {
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
-          authorisationActions.findById({
+          AuthorisationActions.findById({
             id: queryParams?.id,
             loading: false,
           })
@@ -75,7 +102,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
       form.authorisation.createdDate = new Date();
     }
     this.store.dispatch(
-      authorisationActions.save({
+      AuthorisationActions.save({
         authorisation: form.authorisation,
         loading: true,
       })
@@ -84,10 +111,17 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
 
   override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
     this.store.dispatch(
-      authorisationActions.remove({
+      AuthorisationActions.remove({
         id: form?.authorisation?.id,
         loading: false,
       })
     );
+  }
+    
+  override authorisationAccessPointSearch(): void {
+    let criteria: AccessPointCriteria = new AccessPointCriteria();
+    criteria.name = this.authorisationAccessPointSearchField.value;
+    criteria.url = this.authorisationAccessPointSearchField.value;
+    this.store.dispatch(AccessPointActions.search({criteria: criteria, loading: true}));
   }
 }

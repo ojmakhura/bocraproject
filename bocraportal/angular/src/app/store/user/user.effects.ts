@@ -21,7 +21,7 @@ export class UserEffects {
                     messages: [`User ${user.username} created.`],
                     success: true
                 })),
-                catchError(({ error }) => [UserActions.userFailure({messages: [error]})])
+                catchError(({ error }) => [UserActions.userFailure({messages: [error.error]})])
             ))
         )
     );

@@ -19,7 +19,7 @@ export class FormSubmissionEffects {
                     messages: [`Submission ${formSubmission?.form?.formName} found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
             ))
         )
     );
@@ -33,7 +33,7 @@ export class FormSubmissionEffects {
                     messages: [`Submission ${formSubmission?.form?.formName} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
             ))
         )
     );
@@ -47,7 +47,7 @@ export class FormSubmissionEffects {
                     messages: [`Submission ${id} removed.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
             ))
         )
     );
@@ -61,7 +61,7 @@ export class FormSubmissionEffects {
                     messages: [`${formSubmissions.length} submissions found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
             ))
         )
     );
@@ -75,7 +75,7 @@ export class FormSubmissionEffects {
                     messages: [`${formSubmissions.length} submissions found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
             ))
         )
     );
@@ -89,7 +89,7 @@ export class FormSubmissionEffects {
                     messages: [`Page ${pageNumber} found with ${formSubmissions.length} documents.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
             ))
         )
     );

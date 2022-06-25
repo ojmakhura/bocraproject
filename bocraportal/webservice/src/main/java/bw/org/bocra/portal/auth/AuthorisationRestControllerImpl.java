@@ -29,7 +29,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             ResponseEntity<AuthorisationVO> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.FOUND).body(data.get());
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -37,6 +37,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -58,6 +59,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -78,6 +80,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -90,6 +93,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             ResponseEntity<AuthorisationVO> response;
     
             if(data.isPresent()) {
+                System.out.println(data.get());
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -98,6 +102,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -107,6 +112,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
         try {
             Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.search(criteria)); // TODO: Add custom code here;
             ResponseEntity<Collection<AuthorisationVO>> response;
+            System.out.println(data.get());
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
@@ -117,6 +123,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -137,6 +144,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 

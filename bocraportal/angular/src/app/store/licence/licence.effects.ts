@@ -20,7 +20,7 @@ export class LicenceEffects {
                     messages: [`Licence ${licence.licenceNumber} found.`],
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error]})])
+                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error.error]})])
             ))
         )
     );
@@ -34,7 +34,7 @@ export class LicenceEffects {
                     messages: [`Licence ${licence.licenceNumber} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error]})])
+                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error.error]})])
             ))
         )
     );
@@ -48,7 +48,7 @@ export class LicenceEffects {
                     messages: [`Licence ${id} removed.`],
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error]})])
+                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error.error]})])
             ))
         )
     );
@@ -62,7 +62,7 @@ export class LicenceEffects {
                     messages: [`${licences.length} licences found.`],
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error]})])
+                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error.error]})])
             ))
         )
     );
@@ -76,7 +76,7 @@ export class LicenceEffects {
                     messages: [`${licences.length} licences found.`],
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error]})])
+                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error.error]})])
             ))
         )
     );
@@ -90,7 +90,7 @@ export class LicenceEffects {
                     messages: [`Page ${pageNumber} found with ${licences.length} licences.`],
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error]})])
+                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error.error]})])
             ))
         )
     );
@@ -103,7 +103,7 @@ export class LicenceEffects {
     //                 documents,
     //                 success: true
     //             })),
-    //             catchError(({error}) => [LicenceActions.licenceFailure({messages: [error]})])
+    //             catchError(({error}) => [LicenceActions.licenceFailure({messages: [error.error]})])
     //         ))
     //     )
     // );

@@ -8,6 +8,10 @@ package bw.org.bocra.portal.auth;
 
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.access.AccessPoint;
+import bw.org.bocra.portal.access.AccessPointVO;
+import bw.org.bocra.portal.access.type.AccessPointTypeVO;
+
 /**
  * @see Authorisation
  */
@@ -23,8 +27,26 @@ public class AuthorisationDaoImpl
         Authorisation source,
         AuthorisationVO target)
     {
-        // TODO verify behavior of toAuthorisationVO
         super.toAuthorisationVO(source, target);
+
+        if(source.getAccessPoint() != null && source.getAccessPoint().getId() != null) {
+            AccessPointVO point = new AccessPointVO();
+            point.setId(source.getAccessPoint().getId());
+            point.setName(source.getAccessPoint().getName());
+            point.setUrl(source.getAccessPoint().getUrl());
+
+            if(point.getAccessPointType().getId() != null) {
+                AccessPointTypeVO type = new AccessPointTypeVO();
+                type.setCode(point.getAccessPointType().getCode());
+                type.setId(point.getAccessPointType().getId());
+                type.setName(point.getAccessPointType().getName());
+
+                point.setAccessPointType(type);
+            }
+
+            target.setAccessPoint(point);
+        }
+
     }
 
     /**
@@ -77,5 +99,10 @@ public class AuthorisationDaoImpl
         // TODO verify behavior of authorisationVOToEntity
         target.setRoles(new java.util.ArrayList<>());
         super.authorisationVOToEntity(source, target, copyIfNull);
+
+        if(source.getAccessPoint() != null && source.getAccessPoint().getId() != null) {
+            AccessPoint entity = getAccessPointDao().load(source.getAccessPoint().getId());
+            target.setAccessPoint(entity);
+        }
     }
 }

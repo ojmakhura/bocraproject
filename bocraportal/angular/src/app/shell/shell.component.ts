@@ -5,7 +5,6 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { KeycloakService } from 'keycloak-angular';
 import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
 import { AuthorisationCriteria } from '@app/model/bw/org/bocra/portal/auth/authorisation-criteria';
-import { AuthorisationType } from '@app/model/bw/org/bocra/portal/auth/authorisation-type';
 import * as nav from './navigation';
 import { Observable } from 'rxjs';
 import { Menu } from '@app/model/menu/menu';
@@ -44,7 +43,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     let criteria: AuthorisationCriteria = new AuthorisationCriteria();
-    criteria.type = AuthorisationType.MENU;
+    criteria.accessPointTypeCode = 'MENU'; // We expect an access point of type 'MENU' to be defined
     criteria.roles = this.keycloakService.getUserRoles();
 
     this.keycloakService.isLoggedIn().then((loggedIn) => {
@@ -55,7 +54,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
 
     this.authorisationRestController.search(criteria).subscribe((authorisations) => {
       let menuItems = nav.menuItems.filter((menu) =>
-        authorisations.some((authorisation: AuthorisationVO) => authorisation.url === menu.routerLink)
+        authorisations?.some((authorisation: AuthorisationVO) => authorisation.accessPoint.url === menu.routerLink)
       );
       this.store.dispatch(MenuActions.getMenusSuccess({ menus: menuItems }));
     });

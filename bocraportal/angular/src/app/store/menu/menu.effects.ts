@@ -5,8 +5,6 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as MenuActions from './menu.actions';
 import { KeycloakService } from 'keycloak-angular';
 import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
-import { AuthorisationCriteria } from '@app/model/bw/org/bocra/portal/auth/authorisation-criteria';
-import { AuthorisationType } from '@app/model/bw/org/bocra/portal/auth/authorisation-type';
 import * as nav from '@app/shell/navigation';
 
 @Injectable()
