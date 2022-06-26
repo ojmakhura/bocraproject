@@ -7,6 +7,8 @@ package bw.org.bocra.portal.auth;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -124,6 +126,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             
         } catch (Exception e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -148,5 +151,28 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
+    }
+
+    @Override
+    public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles, String accessPointTypeCode) {
+        System.out.println(roles);
+        System.out.println(accessPointTypeCode);
+        try {
+            Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.getAccessTypeCodeAuthorisations(roles, accessPointTypeCode)); // TODO: Add custom code here;
+            ResponseEntity<Collection<AuthorisationVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
     }
 }

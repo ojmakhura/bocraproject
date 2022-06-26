@@ -42,26 +42,26 @@ export class ShellComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit(): void {
-    let criteria: AuthorisationCriteria = new AuthorisationCriteria();
-    criteria.accessPointTypeCode = 'MENU'; // We expect an access point of type 'MENU' to be defined
-    criteria.roles = this.keycloakService.getUserRoles();
-
     this.keycloakService.isLoggedIn().then((loggedIn) => {
       if (loggedIn) {
         this.store.dispatch(AuthActions.setUsername({ username: this.keycloakService.getUsername() }));
       }
     });
 
-    this.authorisationRestController.search(criteria).subscribe((authorisations) => {
-      let menuItems = nav.menuItems.filter((menu) =>
-        authorisations?.some((authorisation: AuthorisationVO) => authorisation.accessPoint.url === menu.routerLink)
-      );
-      this.store.dispatch(MenuActions.getMenusSuccess({ menus: menuItems }));
+    let auths = new Set();
+
+    this.authorisationRestController.getAccessTypeCodeAuthorisations(this.keycloakService.getUserRoles(), 'MENU').subscribe((authorisations) => {
+      authorisations.forEach((authorisation: AuthorisationVO) => {
+        let menu: Menu = nav.menuItems.find((item) => authorisation.accessPoint.url === item.routerLink);
+        if (menu) {
+          this.store.dispatch(MenuActions.addMenu({ menu: menu }));
+        }
+      });
     });
 
-    this.keycloakService.getToken().then((token) => {
-      var decoded: any = jwt_decode(token);
-    });
+    // this.keycloakService.getToken().then((token) => {
+    //   var decoded: any = jwt_decode(token);
+    // });
   }
 
   logout() {

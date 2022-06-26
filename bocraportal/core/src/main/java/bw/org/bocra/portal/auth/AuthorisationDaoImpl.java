@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.access.AccessPoint;
 import bw.org.bocra.portal.access.AccessPointVO;
+import bw.org.bocra.portal.access.type.AccessPointType;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 
 /**
@@ -35,11 +36,13 @@ public class AuthorisationDaoImpl
             point.setName(source.getAccessPoint().getName());
             point.setUrl(source.getAccessPoint().getUrl());
 
-            if(point.getAccessPointType().getId() != null) {
+            AccessPointType typeEntity = source.getAccessPoint().getAccessPointType();
+
+            if(typeEntity != null && typeEntity.getId() != null) {
                 AccessPointTypeVO type = new AccessPointTypeVO();
-                type.setCode(point.getAccessPointType().getCode());
-                type.setId(point.getAccessPointType().getId());
-                type.setName(point.getAccessPointType().getName());
+                type.setCode(typeEntity.getCode());
+                type.setId(typeEntity.getId());
+                type.setName(typeEntity.getName());
 
                 point.setAccessPointType(type);
             }
@@ -105,4 +108,5 @@ public class AuthorisationDaoImpl
             target.setAccessPoint(entity);
         }
     }
+
 }

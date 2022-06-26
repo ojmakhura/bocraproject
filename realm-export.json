@@ -46,49 +46,6 @@
   "roles": {
     "realm": [
       {
-        "id": "5044452a-5bfc-446c-913f-a3a9f821ca90",
-        "name": "DEVELOPER",
-        "description": "Developer",
-        "composite": true,
-        "composites": {
-          "realm": [
-            "offline_access",
-            "uma_authorization",
-            "default-roles-bocra"
-          ],
-          "client": {
-            "realm-management": [
-              "realm-admin",
-              "manage-events",
-              "view-users",
-              "manage-authorization",
-              "query-clients",
-              "manage-identity-providers",
-              "manage-realm",
-              "query-users",
-              "create-client",
-              "manage-clients",
-              "view-identity-providers",
-              "query-realms",
-              "view-realm",
-              "view-authorization",
-              "manage-users",
-              "view-clients"
-            ],
-            "bocraportal-web": [
-              "PUBLIC_USER",
-              "LICENSEE_ADMIN",
-              "BOCRA_WEB_USER",
-              "LICENSEE_USER",
-              "BOCRA_WEB_ADMIN"
-            ]
-          }
-        },
-        "clientRole": false,
-        "containerId": "bocraportal",
-        "attributes": {}
-      },
-      {
         "id": "f64719b1-3987-4a82-827e-2ab802b032b5",
         "name": "offline_access",
         "description": "${role_offline-access}",
@@ -383,7 +340,31 @@
           "id": "5cf6bd2d-416d-4f83-8b51-ac2804a16b90",
           "name": "BOCRA_WEB_USER",
           "description": "BOCRA Web Client User",
-          "composite": false,
+          "composite": true,
+          "composites": {
+            "client": {
+              "bocraportal-web": [
+                "LICENSEE_USER"
+              ]
+            }
+          },
+          "clientRole": true,
+          "containerId": "5bf59357-eafb-4de3-baff-dc98f1d9bab7",
+          "attributes": {}
+        },
+        {
+          "id": "fef32c7f-5496-49bb-b41f-cfe2393b730a",
+          "name": "DEVELOPER",
+          "description": "Developer",
+          "composite": true,
+          "composites": {
+            "client": {
+              "bocraportal-web": [
+                "BOCRA_WEB_ADMIN",
+                "LICENSEE_ADMIN"
+              ]
+            }
+          },
           "clientRole": true,
           "containerId": "5bf59357-eafb-4de3-baff-dc98f1d9bab7",
           "attributes": {}
@@ -408,7 +389,23 @@
           "id": "b213c54a-b9c4-4743-9558-effdb6bb1929",
           "name": "BOCRA_WEB_ADMIN",
           "description": "BOCRA Web Administrator",
-          "composite": false,
+          "composite": true,
+          "composites": {
+            "client": {
+              "realm-management": [
+                "view-users",
+                "query-clients",
+                "query-users",
+                "manage-users",
+                "view-clients"
+              ],
+              "bocraportal-web": [
+                "PUBLIC_USER",
+                "BOCRA_WEB_USER",
+                "LICENSEE_ADMIN"
+              ]
+            }
+          },
           "clientRole": true,
           "containerId": "5bf59357-eafb-4de3-baff-dc98f1d9bab7",
           "attributes": {}

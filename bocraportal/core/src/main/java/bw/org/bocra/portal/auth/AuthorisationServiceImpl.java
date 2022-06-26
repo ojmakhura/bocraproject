@@ -9,6 +9,7 @@
 package bw.org.bocra.portal.auth;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -112,6 +113,13 @@ public class AuthorisationServiceImpl
         }
 
         return authorisations == null ? null : authorisationDao.toAuthorisationVOCollection(authorisations);
+    }
+
+    @Override
+    protected Collection<AuthorisationVO> handleGetAccessTypeCodeAuthorisations(Set<String> roles,
+            String accessPointTypeCode) throws Exception {
+        
+        return (Collection<AuthorisationVO>) this.authorisationDao.findAccessTypeCodeAuthorisations(AuthorisationDao.TRANSFORM_AUTHORISATIONVO, roles, accessPointTypeCode);
     }
 
 }
