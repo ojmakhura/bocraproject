@@ -26,7 +26,6 @@ import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-fiel
 })
 export class EditFieldComponentImpl extends EditFieldComponent {
 
-    
   form$: Observable<FormVO>;
   protected keycloakService: KeycloakService;
 
@@ -66,35 +65,37 @@ export class EditFieldComponentImpl extends EditFieldComponent {
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(FormActions.findFieldById({ id: queryParams.id, loading: true }));
-
-        this.form$.subscribe((f) => {
-          this.formFieldFormControl.patchValue(f);
-          this.formFieldFormSectionBackingList = [];
-          f?.formSections?.forEach((element: FormSectionVO) => {
-            let item: SelectItem = new SelectItem();
-            item.label = element.sectionName;
-            item.value = element;
-    
-            this.formFieldFormSectionBackingList.push(item);
-          });
-        });
       } else {
         if (queryParams?.formId) {
           this.store.dispatch(FormActions.findFormById({ id: queryParams.formId, loading: true }));
           
-          this.form$.subscribe((f) => {
-            this.formFieldFormControl.patchValue(f);
-            this.formFieldFormSectionBackingList = []
-            f?.formSections?.forEach((element: FormSectionVO) => {
-              let item: SelectItem = new SelectItem();
-              item.label = element.sectionName;
-              item.value = element;
-      
-              this.formFieldFormSectionBackingList.push(item);
-            });
-          });
         }
       }
+    });
+
+    this.formField$.subscribe(field => {
+      if(field) {
+        console.log(field)
+        if(field.form) {
+          this.store.dispatch(FormActions.findFormById({ id: field.form.id, loading: true }));
+        }
+
+        this.setEditFieldFormValue({formField: field});
+      }
+    });
+    
+    
+    this.form$.subscribe((f) => {
+      console.log(f)
+      this.formFieldFormControl.patchValue(f);
+      this.formFieldFormSectionBackingList = []
+      f?.formSections?.forEach((element: FormSectionVO) => {
+        let item: SelectItem = new SelectItem();
+        item.label = element.sectionName;
+        item.value = element.id;
+
+        this.formFieldFormSectionBackingList.push(item);
+      });
     });
   }
 
@@ -112,6 +113,11 @@ export class EditFieldComponentImpl extends EditFieldComponent {
   override beforeEditFieldDone(form: EditFieldDoneForm): void {
     this.useCaseScope.pageVariables['form'] = this.formFieldForm;
     this.useCaseScope.queryParams['id'] = this.formFieldForm.id;
+  }
+
+  override beforeEditFieldAddExpression(form: EditFieldAddExpressionForm): void {
+    console.log(this.formField);
+    this.useCaseScope.pageVariables['formField'] = this.formField;
   }
 
   /**

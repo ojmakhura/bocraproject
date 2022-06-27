@@ -49,7 +49,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   override doNgOnDestroy(): void {
   }
 
-  override afterOnInit() {}
+  override afterOnInit() { }
 
   override doNgAfterViewInit() {
     this.route.queryParams.subscribe((queryParams: any) => {
@@ -75,11 +75,15 @@ export class EditFormComponentImpl extends EditFormComponent {
     });
 
     this.formSection$.subscribe((section) => {
-      this.addToFormFormSections(section);
+      if (section) {
+        this.addToFormFormSections(section);
+      }
     });
 
     this.formField$.subscribe((field) => {
-      this.addToFormFormFields(field);
+      if (field) {
+        this.addToFormFormFields(field);
+      }
     });
   }
 
@@ -102,7 +106,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         })
       );
     } else {
-      this.store.dispatch(FormActions.formFailure({ messages: ['Form has and error!'] }));
+      this.store.dispatch(FormActions.formFailure({ messages: ['Form has an error!'] }));
     }
   }
 
@@ -124,24 +128,30 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   override afterEditFormAddSection(form: EditFormAddSectionForm, dialogData: any): void {
-    
-      if (dialogData) {
-        let section: FormSectionVO = dialogData.formSection;
-        if (section.id) {
-          section.updatedBy = this.keycloakService.getUsername();
-          section.updatedDate = new Date();
-        } else {
-          section.createdBy = this.keycloakService.getUsername();
-          section.createdDate = new Date();
-          section.form = this.form;
-        }
 
-        this.store.dispatch(
-          FormActions.saveSection({
-            formSection: section,
-            loading: true,
-          })
-        );
+    if (dialogData?.formSection) {
+      let section: FormSectionVO = dialogData.formSection;
+      if (section.id) {
+        section.updatedBy = this.keycloakService.getUsername();
+        section.updatedDate = new Date();
+      } else {
+        section.createdBy = this.keycloakService.getUsername();
+        section.createdDate = new Date();
+        section.form = this.form;
       }
+
+      this.store.dispatch(
+        FormActions.saveSection({
+          formSection: section,
+          loading: true,
+        })
+      );
+    }
+  }
+
+  override doEditFormFormFields(formField: any) {
+    this.formController.resetUseCaseScope();
+    this.useCaseScope.queryParams['id'] = formField.id;
+    this.router.navigate(['form/edit-field'], {queryParams: this.useCaseScope.queryParams})
   }
 }

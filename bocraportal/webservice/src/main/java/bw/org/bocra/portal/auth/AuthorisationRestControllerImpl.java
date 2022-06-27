@@ -155,8 +155,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
 
     @Override
     public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles, String accessPointTypeCode) {
-        System.out.println(roles);
-        System.out.println(accessPointTypeCode);
         try {
             Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.getAccessTypeCodeAuthorisations(roles, accessPointTypeCode)); // TODO: Add custom code here;
             ResponseEntity<Collection<AuthorisationVO>> response;

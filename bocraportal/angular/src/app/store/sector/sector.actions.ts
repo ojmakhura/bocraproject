@@ -31,7 +31,7 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     SectorActionType.FIND_BY_ID_SUCCESS,
-    props<{ sector: SectorVO | any, success: boolean}>()
+    props<{ sector: SectorVO | any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(
@@ -41,7 +41,7 @@ export const save = createAction(
 
 export const saveSuccess = createAction(
     SectorActionType.SAVE_SUCCESS,
-    props<{ sector: SectorVO | any, success: boolean}>()
+    props<{ sector: SectorVO | any, messages: any[], success: boolean}>()
 );
 
 export const addLicensee = createAction(
@@ -51,7 +51,7 @@ export const addLicensee = createAction(
 
 export const addLicenseeSuccess = createAction(
     SectorActionType.ADD_LICENSEE_SUCCESS,
-    props<{ licensee: LicenseeSectorVO | any, success: boolean }>()
+    props<{ licensee: LicenseeSectorVO | any, messages: any[], success: boolean }>()
 );
 
 export const setLicensees = createAction(
@@ -66,7 +66,7 @@ export const remove = createAction(
 
 export const removeSuccess = createAction(
     SectorActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, success: boolean}>()
+    props<{ removed: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const getAll = createAction(
@@ -76,7 +76,7 @@ export const getAll = createAction(
 
 export const getAllSuccess = createAction(
     SectorActionType.GET_ALL_SUCCESS,
-    props<{ sectors: SectorVO[] | any[], success: boolean}>()
+    props<{ sectors: SectorVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const search = createAction(
@@ -86,7 +86,7 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
     SectorActionType.SEARCH_SUCCESS,
-    props<{ sectors: SectorVO[] | any[], success: boolean}>()
+    props<{ sectors: SectorVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(
@@ -96,7 +96,7 @@ export const getAllPaged = createAction(
 
 export const getAllPagedSuccess = createAction(
     SectorActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ sectors: SectorVO[] | any[], success: boolean}>()
+    props<{ sectors: SectorVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const sectorReset = createAction(SectorActionType.SECTOR_RESET);

@@ -120,7 +120,4 @@ CREATE TABLE IF NOT EXISTS public.authorisation_roles
 
 TABLESPACE pg_default;
 
-
-
-
-create database keycloak;
+-- create database keycloak;

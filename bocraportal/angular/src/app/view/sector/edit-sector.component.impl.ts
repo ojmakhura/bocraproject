@@ -64,7 +64,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
 
     this.licensees$.subscribe((licensees) => {
       licensees.forEach((lc) => {
-        this.store.dispatch(SectorActions.addLicenseeSuccess({ licensee: lc, success: true }));
+        this.store.dispatch(SectorActions.addLicenseeSuccess({ licensee: lc, messages: [''],success: true }));
       });
     });
   }

@@ -8,6 +8,14 @@ import { SearchAuthorisationsAuthorisationsComponent } from '@app/view/auth/sear
   styleUrls: ['./search-authorisations-authorisations.component.scss'],
 })
 export class SearchAuthorisationsAuthorisationsComponentImpl extends SearchAuthorisationsAuthorisationsComponent {
+  
+  override authorisationsColumns = [
+    'id',
+    'accessPoint.name',
+    'accessPoint.url',
+    'actions'
+  ];
+
   constructor(private injector: Injector) {
     super(injector);
   }

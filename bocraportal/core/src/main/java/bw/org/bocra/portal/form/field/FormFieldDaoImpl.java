@@ -6,10 +6,13 @@
  */
 package bw.org.bocra.portal.form.field;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.section.FormSection;
+import bw.org.bocra.portal.form.section.FormSectionVO;
 
 /**
  * @see FormField
@@ -37,6 +40,22 @@ public class FormFieldDaoImpl
             
             target.setForm(form);
         }
+
+        if(source.getFormSection() != null) {
+            FormSection entity = source.getFormSection();
+            FormSectionVO section = new FormSectionVO();
+            section.setCreatedBy(entity.getCreatedBy());
+            section.setCreatedDate(entity.getCreatedDate());
+            section.setId(entity.getId());
+            section.setPosition(entity.getPosition());
+            section.setSectionName(entity.getSectionName());
+            section.setUpdatedBy(entity.getUpdatedBy());
+            section.setUpdatedDate(entity.getUpdatedDate());
+
+            target.setFormSection(section);
+        }
+
+        //if(CollectionUtils.isNotEmpty(source.getfor))
     }
 
     /**
@@ -93,7 +112,12 @@ public class FormFieldDaoImpl
 
             Form form = formDao.load(source.getForm().getId());
             target.setForm(form);
-        } 
+        }
 
+        if(source.getFormSection() != null && source.getFormSection().getId() != null) {
+            FormSection section = formSectionDao.load(source.getFormSection().getId());
+            target.setFormSection(section);
+        }
+        
     }
 }
