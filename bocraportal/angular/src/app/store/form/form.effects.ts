@@ -25,7 +25,7 @@ export class FormEffects {
                 map( form => FormActions.findFormByIdSuccess({
                     form,
                     messages: [`Form ${form.formName} found.`],
-                    success: true
+                    success: false
                 })),
                 catchError(({error}) => [FormActions.formFailure({messages: [error.error]})])
             ))

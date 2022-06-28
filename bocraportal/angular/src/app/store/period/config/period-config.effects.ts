@@ -16,8 +16,8 @@ export class PeriodConfigEffects {
             mergeMap(({ id }) => this.periodConfigRestController.findById(id).pipe(
                 map( periodConfig => PeriodConfigActions.findByIdSuccess({
                     periodConfig,
-                    messages: [`Period config ${periodConfig.periodName} found.`],
-                    success: true
+                    messages: [],
+                    success: false
                 })),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error.error]})])
             ))
@@ -30,7 +30,7 @@ export class PeriodConfigEffects {
             mergeMap(({ periodConfig }) => this.periodConfigRestController.save(periodConfig).pipe(
                 map( periodConfig => PeriodConfigActions.saveSuccess({
                     periodConfig,
-                    messages: [`Period config ${periodConfig.periodName} saved.`],
+                    messages: [`Period config ${periodConfig.periodConfigName} saved.`],
                     success: true
                 })),
                 catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error.error]})])

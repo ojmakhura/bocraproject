@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.period;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.context.MessageSource;
@@ -99,7 +100,13 @@ public class PeriodServiceImpl
         throws Exception
     {
         Collection<Period> periods = getPeriodDao().findByCriteria(criteria);
-        return getPeriodDao().toPeriodVOCollection(periods);
+        Collection<PeriodVO> vos = new ArrayList<>();
+
+        for(Period period : periods) {
+            vos.add(getPeriodDao().toPeriodVO(period));
+        }
+
+        return vos;
     }
 
     @Override

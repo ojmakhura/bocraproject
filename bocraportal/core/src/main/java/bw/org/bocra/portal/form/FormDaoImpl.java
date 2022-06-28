@@ -13,26 +13,16 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.field.FormField;
-import bw.org.bocra.portal.form.field.FormFieldDao;
 import bw.org.bocra.portal.form.field.FormFieldRepository;
 import bw.org.bocra.portal.form.field.FormFieldVO;
 import bw.org.bocra.portal.form.section.FormSection;
-import bw.org.bocra.portal.form.section.FormSectionDao;
 import bw.org.bocra.portal.form.section.FormSectionRepository;
 import bw.org.bocra.portal.form.section.FormSectionVO;
-import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
-import bw.org.bocra.portal.licence.type.LicenceType;
-import bw.org.bocra.portal.licence.type.LicenceTypeDao;
-import bw.org.bocra.portal.licence.type.LicenceTypeFormDao;
 import bw.org.bocra.portal.licence.type.LicenceTypeFormRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
-import bw.org.bocra.portal.licence.type.LicenceTypeVO;
-import bw.org.bocra.portal.licensee.LicenseeDao;
-import bw.org.bocra.portal.licensee.LicenseeFormDao;
 import bw.org.bocra.portal.licensee.LicenseeFormRepository;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
-import bw.org.bocra.portal.report.config.ReportConfigDao;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 
 /**

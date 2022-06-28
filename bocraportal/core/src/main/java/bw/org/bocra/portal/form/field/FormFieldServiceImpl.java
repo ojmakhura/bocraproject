@@ -69,12 +69,8 @@ public class FormFieldServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        if(id == null) {
-            return false;
-        }
-
+        
         formFieldRepository.deleteById(id);
-
         return true;
     }
 

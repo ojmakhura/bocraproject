@@ -37,7 +37,7 @@ export class AuthorisationEffects {
           map((authorisation) =>
             AuthorisationActions.saveSuccess({
               authorisation,
-              messages: [`Authorisation for ${authorisation.url} saved.`],
+              messages: [`Authorisation for ${authorisation?.accessPoint?.url} saved.`],
               success: true,
             })
           ),
