@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/notification")
 public class NotificationRestControllerImpl extends NotificationRestControllerBase {
 
+    public NotificationRestControllerImpl(NotificationService notificationService) {
+        super(notificationService);
+    }
+
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {

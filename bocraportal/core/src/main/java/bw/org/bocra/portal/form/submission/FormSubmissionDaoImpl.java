@@ -14,12 +14,20 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.data.FormData;
+import bw.org.bocra.portal.form.submission.data.FormDataDao;
+import bw.org.bocra.portal.form.submission.data.FormDataRepository;
 import bw.org.bocra.portal.form.submission.data.FormDataVO;
 import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodDao;
+import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
 
 /**
@@ -29,6 +37,14 @@ import bw.org.bocra.portal.period.PeriodVO;
 public class FormSubmissionDaoImpl
     extends FormSubmissionDaoBase
 {
+
+    public FormSubmissionDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
+            FormDataRepository formDataRepository, LicenseeRepository licenseeRepository,
+            FormSubmissionRepository formSubmissionRepository) {
+                
+        super(formRepository, periodRepository, formDataRepository, licenseeRepository, formSubmissionRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

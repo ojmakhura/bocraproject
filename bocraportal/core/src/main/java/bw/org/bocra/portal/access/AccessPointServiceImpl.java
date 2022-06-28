@@ -9,6 +9,8 @@
 package bw.org.bocra.portal.access;
 
 import java.util.Collection;
+
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccessPointServiceImpl
     extends AccessPointServiceBase
 {
+
+    public AccessPointServiceImpl(AccessPointDao accessPointDao, AccessPointRepository accessPointRepository,
+            MessageSource messageSource) {
+        super(accessPointDao, accessPointRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.access.AccessPointService#findById(Long)

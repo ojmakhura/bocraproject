@@ -11,13 +11,18 @@ package bw.org.bocra.portal.sector;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeSector;
+import bw.org.bocra.portal.licensee.LicenseeSectorDao;
+import bw.org.bocra.portal.licensee.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.LicenseeSectorVO;
 
 /**
@@ -26,6 +31,13 @@ import bw.org.bocra.portal.licensee.LicenseeSectorVO;
 @Service("sectorService")
 public class SectorServiceImpl
         extends SectorServiceBase {
+
+    public SectorServiceImpl(SectorDao sectorDao, SectorRepository sectorRepository,
+            LicenseeSectorDao licenseeSectorDao, LicenseeSectorRepository licenseeSectorRepository,
+            LicenseeDao licenseeDao, LicenseeRepository licenseeRepository, MessageSource messageSource) {
+        super(sectorDao, sectorRepository, licenseeSectorDao, licenseeSectorRepository, licenseeDao, licenseeRepository,
+                messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.sector.SectorService#findById(Long)

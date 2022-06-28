@@ -11,6 +11,7 @@ package bw.org.bocra.portal.document;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import java.util.Collection;
 
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,11 @@ import org.springframework.stereotype.Service;
 public class DocumentServiceImpl
     extends DocumentServiceBase
 {
+
+    public DocumentServiceImpl(DocumentDao documentDao, DocumentRepository documentRepository,
+            MessageSource messageSource) {
+        super(documentDao, documentRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.document.DocumentService#findById(Long)

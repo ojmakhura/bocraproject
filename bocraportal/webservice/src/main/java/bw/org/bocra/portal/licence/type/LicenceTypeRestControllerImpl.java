@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin()
 public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase {
 
+    public LicenceTypeRestControllerImpl(LicenceTypeService licenceTypeService) {
+        super(licenceTypeService);
+    }
+
     protected static Logger log = LoggerFactory.getLogger(LicenceTypeRestControllerImpl.class);
 
 

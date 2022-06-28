@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/form/section")
 public class FormSectionRestControllerImpl extends FormSectionRestControllerBase {
 
+    public FormSectionRestControllerImpl(FormSectionService formSectionService) {
+        super(formSectionService);
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {

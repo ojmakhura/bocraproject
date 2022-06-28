@@ -13,7 +13,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.form.submission.FormSubmissionDao;
+import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.period.config.PeriodConfig;
+import bw.org.bocra.portal.period.config.PeriodConfigDao;
+import bw.org.bocra.portal.period.config.PeriodConfigRepository;
 import bw.org.bocra.portal.period.config.PeriodConfigVO;
 
 /**
@@ -23,6 +27,13 @@ import bw.org.bocra.portal.period.config.PeriodConfigVO;
 public class PeriodDaoImpl
     extends PeriodDaoBase
 {
+
+    public PeriodDaoImpl(PeriodConfigRepository periodConfigRepository,
+            FormSubmissionRepository formSubmissionRepository, PeriodRepository periodRepository) {
+                
+        super(periodConfigRepository, formSubmissionRepository, periodRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

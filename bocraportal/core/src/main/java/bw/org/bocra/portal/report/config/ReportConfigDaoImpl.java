@@ -8,6 +8,19 @@ package bw.org.bocra.portal.report.config;
 
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormReportConfigDao;
+import bw.org.bocra.portal.form.FormReportConfigRepository;
+import bw.org.bocra.portal.form.FormRepository;
+import bw.org.bocra.portal.licence.type.LicenceTypeDao;
+import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeReportConfigDao;
+import bw.org.bocra.portal.licensee.LicenseeReportConfigRepository;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.report.ReportDao;
+import bw.org.bocra.portal.report.ReportRepository;
+
 /**
  * @see ReportConfig
  */
@@ -15,6 +28,18 @@ import org.springframework.stereotype.Repository;
 public class ReportConfigDaoImpl
     extends ReportConfigDaoBase
 {
+
+    public ReportConfigDaoImpl(LicenseeRepository licenseeRepository, LicenceTypeRepository licenceTypeRepository,
+            FormRepository formRepository, ReportRepository reportRepository,
+            FormReportConfigRepository formReportConfigRepository,
+            ReportConfigLicenceTypeRepository reportConfigLicenceTypeRepository,
+            LicenseeReportConfigRepository licenseeReportConfigRepository,
+            ReportConfigRepository reportConfigRepository) {
+
+        super(licenseeRepository, licenceTypeRepository, formRepository, reportRepository, formReportConfigRepository,
+                reportConfigLicenceTypeRepository, licenseeReportConfigRepository, reportConfigRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

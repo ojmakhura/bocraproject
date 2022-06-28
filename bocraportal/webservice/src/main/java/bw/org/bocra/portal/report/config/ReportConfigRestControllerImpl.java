@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/report/config")
 public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBase {
 
+    public ReportConfigRestControllerImpl(ReportConfigService reportConfigService) {
+        super(reportConfigService);
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {

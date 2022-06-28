@@ -9,7 +9,12 @@
 package bw.org.bocra.portal.form.submission;
 
 import java.util.Collection;
+
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
+import bw.org.bocra.portal.form.submission.data.FormDataDao;
+import bw.org.bocra.portal.form.submission.data.FormDataRepository;
 
 /**
  * @see bw.org.bocra.portal.form.submission.SubmissionService
@@ -18,6 +23,11 @@ import org.springframework.stereotype.Service;
 public class SubmissionServiceImpl
     extends SubmissionServiceBase
 {
+
+    public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
+            FormDataDao formDataDao, FormDataRepository formDataRepository, MessageSource messageSource) {
+        super(formSubmissionDao, formSubmissionRepository, formDataDao, formDataRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.form.submission.SubmissionService#findById(Long)

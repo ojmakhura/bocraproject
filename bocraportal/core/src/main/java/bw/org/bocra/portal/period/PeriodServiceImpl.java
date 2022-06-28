@@ -10,6 +10,7 @@ package bw.org.bocra.portal.period;
 
 import java.util.Collection;
 
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,10 @@ import org.springframework.stereotype.Service;
 public class PeriodServiceImpl
     extends PeriodServiceBase
 {
+
+    public PeriodServiceImpl(PeriodDao periodDao, PeriodRepository periodRepository, MessageSource messageSource) {
+        super(periodDao, periodRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.period.PeriodService#findById(Long)

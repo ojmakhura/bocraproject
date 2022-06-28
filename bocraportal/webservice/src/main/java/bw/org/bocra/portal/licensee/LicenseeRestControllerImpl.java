@@ -24,10 +24,15 @@ import bw.org.bocra.portal.licensee.shares.ShareholderVO;
 import bw.org.bocra.portal.report.ReportVO;
 import bw.org.bocra.portal.report.config.ReportConfigVO;
 import bw.org.bocra.portal.sector.SectorVO;
+import bw.org.bocra.portal.user.LicenseeUserService;
 
 @RestController
 @RequestMapping("/licensee")
 public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
+
+    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService) {
+        super(licenseeService, licenseeUserService);
+    }
 
     protected static Logger log = LoggerFactory.getLogger(LicenseeRestControllerImpl.class);
 

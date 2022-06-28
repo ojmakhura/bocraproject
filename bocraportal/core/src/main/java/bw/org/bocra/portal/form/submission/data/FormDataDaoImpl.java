@@ -9,8 +9,12 @@ package bw.org.bocra.portal.form.submission.data;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.field.FormField;
+import bw.org.bocra.portal.form.field.FormFieldDao;
+import bw.org.bocra.portal.form.field.FormFieldRepository;
 import bw.org.bocra.portal.form.field.FormFieldVO;
 import bw.org.bocra.portal.form.submission.FormSubmission;
+import bw.org.bocra.portal.form.submission.FormSubmissionDao;
+import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 
 /**
@@ -20,6 +24,13 @@ import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 public class FormDataDaoImpl
     extends FormDataDaoBase
 {
+
+    public FormDataDaoImpl(FormFieldRepository formFieldRepository, FormSubmissionRepository formSubmissionRepository,
+            FormDataRepository formDataRepository) {
+                
+        super(formFieldRepository, formSubmissionRepository, formDataRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

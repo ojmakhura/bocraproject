@@ -8,6 +8,7 @@ import * as FormActions from '@app/store/form/form.actions';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormSectionVO } from '@model/bw/org/bocra/portal/form/section/form-section-vo';
 
 @Component({
   selector: 'app-edit-section',

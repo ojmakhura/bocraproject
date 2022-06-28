@@ -13,10 +13,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.document.type.DocumentType;
+import bw.org.bocra.portal.document.type.DocumentTypeDao;
+import bw.org.bocra.portal.document.type.DocumentTypeRepository;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.licence.Licence;
+import bw.org.bocra.portal.licence.LicenceDao;
+import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
 /**
@@ -26,6 +32,12 @@ import bw.org.bocra.portal.licensee.LicenseeVO;
 public class DocumentDaoImpl
     extends DocumentDaoBase
 {
+
+    public DocumentDaoImpl(DocumentTypeRepository documentTypeRepository, LicenseeRepository licenseeRepository,
+            LicenceRepository licenceRepository, DocumentRepository documentRepository) {
+        super(documentTypeRepository, licenseeRepository, licenceRepository, documentRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

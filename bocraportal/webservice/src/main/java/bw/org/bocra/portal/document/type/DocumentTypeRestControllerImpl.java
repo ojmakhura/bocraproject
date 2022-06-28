@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 //@org.springframework.web.bind.annotation.CrossOrigin()
 public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBase {
 
+    public DocumentTypeRestControllerImpl(DocumentTypeService documentTypeService) {
+        super(documentTypeService);
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {

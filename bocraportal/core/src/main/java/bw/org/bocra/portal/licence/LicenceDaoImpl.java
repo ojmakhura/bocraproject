@@ -8,9 +8,15 @@ package bw.org.bocra.portal.licence;
 
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.document.DocumentDao;
+import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.licence.type.LicenceType;
+import bw.org.bocra.portal.licence.type.LicenceTypeDao;
+import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeVO;
 import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
 /**
@@ -20,6 +26,13 @@ import bw.org.bocra.portal.licensee.LicenseeVO;
 public class LicenceDaoImpl
     extends LicenceDaoBase
 {
+
+    public LicenceDaoImpl(LicenseeRepository licenseeRepository, LicenceTypeRepository licenceTypeRepository,
+            DocumentRepository documentRepository, LicenceRepository licenceRepository) {
+                
+        super(licenseeRepository, licenceTypeRepository, documentRepository, licenceRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

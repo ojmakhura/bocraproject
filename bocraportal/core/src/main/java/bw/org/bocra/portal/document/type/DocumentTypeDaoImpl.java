@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.document.DocumentDao;
+import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentSpecifications;
 
 /**
@@ -21,6 +23,11 @@ import bw.org.bocra.portal.document.DocumentSpecifications;
 public class DocumentTypeDaoImpl
     extends DocumentTypeDaoBase
 {
+
+    public DocumentTypeDaoImpl(DocumentRepository documentRepository, DocumentTypeRepository documentTypeRepository) {
+        super(documentRepository, documentTypeRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

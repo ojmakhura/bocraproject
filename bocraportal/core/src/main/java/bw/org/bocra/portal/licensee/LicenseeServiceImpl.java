@@ -11,6 +11,7 @@ package bw.org.bocra.portal.licensee;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,8 +25,12 @@ import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmission;
+import bw.org.bocra.portal.form.submission.FormSubmissionDao;
+import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.licence.Licence;
+import bw.org.bocra.portal.licence.LicenceDao;
+import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceSpecifications;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.shares.ShareholderVO;
@@ -33,6 +38,8 @@ import bw.org.bocra.portal.report.Report;
 import bw.org.bocra.portal.report.ReportVO;
 import bw.org.bocra.portal.report.config.ReportConfigVO;
 import bw.org.bocra.portal.sector.Sector;
+import bw.org.bocra.portal.sector.SectorDao;
+import bw.org.bocra.portal.sector.SectorRepository;
 import bw.org.bocra.portal.sector.SectorVO;
 
 /**
@@ -43,6 +50,18 @@ import bw.org.bocra.portal.sector.SectorVO;
 public class LicenseeServiceImpl
     extends LicenseeServiceBase
 {
+
+    public LicenseeServiceImpl(LicenseeDao licenseeDao, LicenseeRepository licenseeRepository,
+            LicenseeShareholderDao licenseeShareholderDao, LicenseeShareholderRepository licenseeShareholderRepository,
+            LicenseeFormDao licenseeFormDao, LicenseeFormRepository licenseeFormRepository,
+            LicenseeSectorDao licenseeSectorDao, LicenseeSectorRepository licenseeSectorRepository,
+            LicenceDao licenceDao, LicenceRepository licenceRepository, FormSubmissionDao formSubmissionDao,
+            FormSubmissionRepository formSubmissionRepository, SectorDao sectorDao, SectorRepository sectorRepository,
+            MessageSource messageSource) {
+        super(licenseeDao, licenseeRepository, licenseeShareholderDao, licenseeShareholderRepository, licenseeFormDao,
+                licenseeFormRepository, licenseeSectorDao, licenseeSectorRepository, licenceDao, licenceRepository,
+                formSubmissionDao, formSubmissionRepository, sectorDao, sectorRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.licensee.LicenseeService#findById(Long)

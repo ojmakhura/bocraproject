@@ -10,8 +10,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.section.FormSection;
+import bw.org.bocra.portal.form.section.FormSectionDao;
+import bw.org.bocra.portal.form.section.FormSectionRepository;
 import bw.org.bocra.portal.form.section.FormSectionVO;
 
 /**
@@ -21,6 +25,13 @@ import bw.org.bocra.portal.form.section.FormSectionVO;
 public class FormFieldDaoImpl
     extends FormFieldDaoBase
 {
+
+    public FormFieldDaoImpl(FormRepository formRepository, FormSectionRepository formSectionRepository,
+            FormFieldRepository formFieldRepository) {
+                
+        super(formRepository, formSectionRepository, formFieldRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

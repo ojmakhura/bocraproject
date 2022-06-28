@@ -71,11 +71,6 @@ export const selectFormSections = createSelector(
     (state: FormState) => state.formSections
 );
 
-export const selectExpression = createSelector(
-    selectFormState,
-    (state: FormState) => state.expression
-);
-
 export const selectRequired = createSelector(
     selectFormState,
     (state: FormState) => state.required

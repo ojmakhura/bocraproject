@@ -22,7 +22,7 @@ public class AuthorisationControllerTest {
     private AuthorisationRepository authorisationRepository;
 
 	@InjectMocks
-	private AuthorisationServiceImpl authorisationService = new AuthorisationServiceImpl();
+	private AuthorisationServiceImpl authorisationService;
 
 	@BeforeEach
     public void setupMock() {

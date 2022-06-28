@@ -22,6 +22,10 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
     protected static Logger logger = LoggerFactory.getLogger(SubmissionRestControllerImpl.class);
 
+    public SubmissionRestControllerImpl(SubmissionService submissionService) {
+        super(submissionService);
+    }
+
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         Optional<FormSubmissionVO> data = Optional.of(submissionService.findById(id));

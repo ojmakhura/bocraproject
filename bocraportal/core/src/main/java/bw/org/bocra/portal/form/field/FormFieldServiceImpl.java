@@ -9,7 +9,12 @@
 package bw.org.bocra.portal.form.field;
 
 import java.util.Collection;
+
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormRepository;
 
 /**
  * @see bw.org.bocra.portal.form.field.FormFieldService
@@ -18,6 +23,11 @@ import org.springframework.stereotype.Service;
 public class FormFieldServiceImpl
     extends FormFieldServiceBase
 {
+
+    public FormFieldServiceImpl(FormFieldDao formFieldDao, FormFieldRepository formFieldRepository, FormDao formDao,
+            FormRepository formRepository, MessageSource messageSource) {
+        super(formFieldDao, formFieldRepository, formDao, formRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.form.field.FormFieldService#findById(Long)

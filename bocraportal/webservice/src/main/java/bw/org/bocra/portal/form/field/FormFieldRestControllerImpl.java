@@ -7,8 +7,6 @@ package bw.org.bocra.portal.form.field;
 
 import java.util.Collection;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,8 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin()
 public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
 
-    protected static Logger log = LoggerFactory.getLogger(FormFieldRestControllerImpl.class);
-
+    public FormFieldRestControllerImpl(FormFieldService formFieldService) {
+        super(formFieldService);
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {

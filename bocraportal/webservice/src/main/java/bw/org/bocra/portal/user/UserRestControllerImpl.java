@@ -38,12 +38,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import bw.org.bocra.portal.licensee.LicenseeService;
+
 @RestController
 @RequestMapping("user")
 @CrossOrigin()
 public class UserRestControllerImpl extends UserRestControllerBase {
-
-    protected static Logger log = LoggerFactory.getLogger(UserRestControllerImpl.class);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -56,6 +56,10 @@ public class UserRestControllerImpl extends UserRestControllerBase {
 
     @Value("${keycloak.resource}")
     private String clientId;
+
+    public UserRestControllerImpl(LicenseeUserService licenseeUserService, LicenseeService licenseeService) {
+        super(licenseeUserService, licenseeService);
+    }
 
     private Keycloak getKeycloak() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

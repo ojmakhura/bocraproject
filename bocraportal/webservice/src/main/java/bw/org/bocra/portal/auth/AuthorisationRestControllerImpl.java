@@ -22,6 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin()
 public class AuthorisationRestControllerImpl extends AuthorisationRestControllerBase {
 
+    public AuthorisationRestControllerImpl(AuthorisationService authorisationService) {
+        super(authorisationService);
+    }
+
     protected static Logger log = LoggerFactory.getLogger(AuthorisationRestController.class);
 
     @Override

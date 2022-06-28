@@ -8,6 +8,11 @@ package bw.org.bocra.portal.notification;
 
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.sector.SectorDao;
+import bw.org.bocra.portal.sector.SectorRepository;
+
 /**
  * @see Notification
  */
@@ -15,6 +20,13 @@ import org.springframework.stereotype.Repository;
 public class NotificationDaoImpl
     extends NotificationDaoBase
 {
+
+    public NotificationDaoImpl(SectorRepository sectorRepository, LicenseeRepository licenseeRepository,
+            NotificationRepository notificationRepository) {
+                
+        super(sectorRepository, licenseeRepository, notificationRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

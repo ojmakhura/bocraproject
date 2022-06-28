@@ -9,6 +9,9 @@ package bw.org.bocra.portal.user;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
+
 /**
  * @see LicenseeUser
  */
@@ -16,6 +19,11 @@ import org.springframework.stereotype.Repository;
 public class LicenseeUserDaoImpl
     extends LicenseeUserDaoBase
 {
+    
+    public LicenseeUserDaoImpl(LicenseeRepository licenseeRepository, LicenseeUserRepository licenseeUserRepository) {
+        super(licenseeRepository, licenseeUserRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

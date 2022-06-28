@@ -8,6 +8,11 @@ package bw.org.bocra.portal.report;
 
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.report.config.ReportConfigDao;
+import bw.org.bocra.portal.report.config.ReportConfigRepository;
+
 /**
  * @see Report
  */
@@ -15,6 +20,13 @@ import org.springframework.stereotype.Repository;
 public class ReportDaoImpl
     extends ReportDaoBase
 {
+
+    public ReportDaoImpl(LicenseeRepository licenseeRepository, ReportConfigRepository reportConfigRepository,
+            ReportRepository reportRepository) {
+
+        super(licenseeRepository, reportConfigRepository, reportRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

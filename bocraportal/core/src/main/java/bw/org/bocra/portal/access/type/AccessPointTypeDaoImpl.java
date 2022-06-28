@@ -21,6 +21,10 @@ import org.springframework.stereotype.Repository;
 public class AccessPointTypeDaoImpl
     extends AccessPointTypeDaoBase
 {
+    public AccessPointTypeDaoImpl(AccessPointTypeRepository accessPointTypeRepository) {
+        super(accessPointTypeRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

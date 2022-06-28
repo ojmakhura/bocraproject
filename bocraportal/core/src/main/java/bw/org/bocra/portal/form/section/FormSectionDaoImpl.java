@@ -16,8 +16,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.field.FormField;
+import bw.org.bocra.portal.form.field.FormFieldDao;
+import bw.org.bocra.portal.form.field.FormFieldRepository;
 import bw.org.bocra.portal.form.field.FormFieldVO;
 
 /**
@@ -27,6 +31,13 @@ import bw.org.bocra.portal.form.field.FormFieldVO;
 public class FormSectionDaoImpl
     extends FormSectionDaoBase
 {
+
+    public FormSectionDaoImpl(FormRepository formRepository, FormFieldRepository formFieldRepository,
+            FormSectionRepository formSectionRepository) {
+                
+        super(formRepository, formFieldRepository, formSectionRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

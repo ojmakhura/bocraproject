@@ -69,13 +69,6 @@ export const formReducer = createReducer(
         success: action.success,
         messages: action.messages
     })),
-    on(FormActions.saveExpressionSuccess, (state, action) => ({
-        ...state,
-        expression: action.expression,
-        loading: false,
-        success: action.success,
-        messages: action.messages
-    })),
     on(FormActions.setSections, (state, action) => ({
         ...state,
         formSections: action.formSections,

@@ -17,10 +17,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeSector;
+import bw.org.bocra.portal.licensee.LicenseeSectorDao;
+import bw.org.bocra.portal.licensee.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.LicenseeSectorSpecifications;
 import bw.org.bocra.portal.licensee.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.notification.NotificationDao;
+import bw.org.bocra.portal.notification.NotificationRepository;
 
 /**
  * @see Sector
@@ -29,6 +35,13 @@ import bw.org.bocra.portal.licensee.LicenseeVO;
 public class SectorDaoImpl
     extends SectorDaoBase
 {
+
+    public SectorDaoImpl(LicenseeRepository licenseeRepository, LicenseeSectorRepository licenseeSectorRepository,
+            NotificationRepository notificationRepository, SectorRepository sectorRepository) {
+                
+        super(licenseeRepository, licenseeSectorRepository, notificationRepository, sectorRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

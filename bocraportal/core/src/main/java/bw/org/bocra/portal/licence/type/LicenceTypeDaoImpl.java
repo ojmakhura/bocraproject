@@ -15,11 +15,19 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.licence.Licence;
+import bw.org.bocra.portal.licence.LicenceDao;
+import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.report.config.ReportConfigDao;
+import bw.org.bocra.portal.report.config.ReportConfigLicenceTypeDao;
+import bw.org.bocra.portal.report.config.ReportConfigLicenceTypeRepository;
+import bw.org.bocra.portal.report.config.ReportConfigRepository;
 import bw.org.bocra.portal.report.config.ReportConfigVO;
 
 /**
@@ -29,6 +37,16 @@ import bw.org.bocra.portal.report.config.ReportConfigVO;
 public class LicenceTypeDaoImpl
     extends LicenceTypeDaoBase
 {
+
+    public LicenceTypeDaoImpl(FormRepository formRepository, LicenceRepository licenceRepository,
+            ReportConfigRepository reportConfigRepository, LicenceTypeFormRepository licenceTypeFormRepository,
+            ReportConfigLicenceTypeRepository reportConfigLicenceTypeRepository,
+            LicenceTypeRepository licenceTypeRepository) {
+                
+        super(formRepository, licenceRepository, reportConfigRepository, licenceTypeFormRepository,
+                reportConfigLicenceTypeRepository, licenceTypeRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -9,6 +9,8 @@
 package bw.org.bocra.portal.notification;
 
 import java.util.Collection;
+
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,6 +20,11 @@ import org.springframework.stereotype.Service;
 public class NotificationServiceImpl
     extends NotificationServiceBase
 {
+
+    public NotificationServiceImpl(NotificationDao notificationDao, NotificationRepository notificationRepository,
+            MessageSource messageSource) {
+        super(notificationDao, notificationRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.notification.NotificationService#findById(Long)

@@ -36,10 +36,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.user.LicenseeUserService;
+
 @RestController
 @RequestMapping("auth")
 @CrossOrigin()
 public class AuthControllerImpl extends AuthControllerBase {
+
+    public AuthControllerImpl(LicenseeUserService licenseeUserService) {
+        super(licenseeUserService);
+    }
 
     protected static Logger log = LoggerFactory.getLogger(AuthControllerImpl.class);
 

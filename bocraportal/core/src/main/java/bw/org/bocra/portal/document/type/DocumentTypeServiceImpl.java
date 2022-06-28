@@ -10,12 +10,14 @@ package bw.org.bocra.portal.document.type;
 
 import java.util.Collection;
 
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import bw.org.bocra.portal.document.DocumentDao;
+import bw.org.bocra.portal.document.DocumentRepository;
 
 /**
  * @see bw.org.bocra.portal.document.type.DocumentTypeService
@@ -24,6 +26,13 @@ import bw.org.bocra.portal.document.DocumentDao;
 public class DocumentTypeServiceImpl
     extends DocumentTypeServiceBase
 {
+
+    public DocumentTypeServiceImpl(DocumentDao documentDao, DocumentRepository documentRepository,
+            DocumentTypeDao documentTypeDao, DocumentTypeRepository documentTypeRepository,
+            MessageSource messageSource) {
+        super(documentDao, documentRepository, documentTypeDao, documentTypeRepository, messageSource);
+        //TODO Auto-generated constructor stub
+    }
 
     /**
      * @see bw.org.bocra.portal.document.type.DocumentTypeService#findById(Long)

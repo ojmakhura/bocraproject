@@ -144,20 +144,6 @@ export class FormEffects {
         )
     );
 
-    saveExpression$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(FormActions.saveExpression),
-            mergeMap(({ expression }) => this.formSectionRestController.save(expression).pipe(
-                map( expression => FormActions.saveExpressionSuccess({
-                    expression,
-                    messages: [`Expression saved.`],
-                    success: true
-                })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
-            ))
-        )
-    );
-
     removeField$ = createEffect(() => 
          this.actions$.pipe(
             ofType(FormActions.removeField),

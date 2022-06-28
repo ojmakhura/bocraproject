@@ -40,13 +40,7 @@ export class FormControllerImpl extends FormController {
 	public doAddSectionDone(form: any): void {
 	}
 
-	public doAddExpression(form: any): void {
-	}
-
 	public doSaveField(form: any): void {
-	}
-
-	public doAddExpressionDone(form: any): void {
 	}
 
 	public doAddFieldCancelled(form: any): void {

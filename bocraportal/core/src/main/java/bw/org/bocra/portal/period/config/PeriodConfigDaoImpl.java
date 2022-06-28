@@ -12,6 +12,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodDao;
+import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.period.config.PeriodConfig;
 import bw.org.bocra.portal.period.config.PeriodConfigDaoBase;
@@ -24,6 +26,12 @@ import bw.org.bocra.portal.period.config.PeriodConfigVO;
 public class PeriodConfigDaoImpl
     extends PeriodConfigDaoBase
 {
+
+    public PeriodConfigDaoImpl(PeriodRepository periodRepository, PeriodConfigRepository periodConfigRepository) {
+        
+        super(periodRepository, periodConfigRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

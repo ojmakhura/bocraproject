@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("license")
 public class LicenceRestControllerImpl extends LicenceRestControllerBase {
 
+    public LicenceRestControllerImpl(LicenceService licenceService) {
+        super(licenceService);
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {

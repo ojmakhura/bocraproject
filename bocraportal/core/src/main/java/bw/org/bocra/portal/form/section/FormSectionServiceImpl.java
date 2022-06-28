@@ -9,12 +9,15 @@
 package bw.org.bocra.portal.form.section;
 
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,6 +27,11 @@ import org.springframework.stereotype.Service;
 public class FormSectionServiceImpl
     extends FormSectionServiceBase
 {
+
+    public FormSectionServiceImpl(FormSectionDao formSectionDao, FormSectionRepository formSectionRepository,
+            FormDao formDao, FormRepository formRepository, MessageSource messageSource) {
+        super(formSectionDao, formSectionRepository, formDao, formRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.form.section.FormSectionService#findById(Long)

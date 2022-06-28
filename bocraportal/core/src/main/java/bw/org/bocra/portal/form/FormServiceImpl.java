@@ -9,6 +9,8 @@
 package bw.org.bocra.portal.form;
 
 import java.util.Collection;
+
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,6 +20,10 @@ import org.springframework.stereotype.Service;
 public class FormServiceImpl
     extends FormServiceBase
 {
+
+    public FormServiceImpl(FormDao formDao, FormRepository formRepository, MessageSource messageSource) {
+        super(formDao, formRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.form.FormService#findById(Long)

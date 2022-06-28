@@ -21,8 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin()
 public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBase {
 
-    protected static Logger log = LoggerFactory.getLogger(PeriodConfigRestControllerImpl.class);
-
+    public PeriodConfigRestControllerImpl(PeriodConfigService periodConfigService) {
+        super(periodConfigService);
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {

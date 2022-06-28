@@ -9,6 +9,8 @@
 package bw.org.bocra.portal.report.config;
 
 import java.util.Collection;
+
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,6 +20,11 @@ import org.springframework.stereotype.Service;
 public class ReportConfigServiceImpl
     extends ReportConfigServiceBase
 {
+
+    public ReportConfigServiceImpl(ReportConfigDao reportConfigDao, ReportConfigRepository reportConfigRepository,
+            MessageSource messageSource) {
+        super(reportConfigDao, reportConfigRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.report.config.ReportConfigService#findById(Long)

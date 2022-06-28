@@ -4,7 +4,6 @@ import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-fiel
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
-import { ExpressionVO } from '@model/bw/org/bocra/portal/expression/expression-vo';
 
 export enum FormActionType {
     FIND_FORM_BY_ID = '[Form] Find Form By Id',
@@ -25,8 +24,6 @@ export enum FormActionType {
     SAVE_FIELD_SUCCESS = '[Form] Save Field Success',
     SAVE_SECTION = '[Form] Save Section',
     SAVE_SECTION_SUCCESS = '[Form] Save Section Success',
-    SAVE_EXPRESSION = '[Form] Save Expression',
-    SAVE_EXPRESSION_SUCCESS = '[Form] Save Expression Success',
     SET_SECTIONS = '[Form] Set Sections',
     REMOVE_SECTION = '[Form] Remove Section',
     REMOVE_SECTION_SUCCESS = '[Form] Remove Section Success',
@@ -130,16 +127,6 @@ export const saveSection = createAction(
 export const saveSectionSuccess = createAction(
     FormActionType.SAVE_SECTION_SUCCESS,
     props<{ formSection: FormSectionVO | any, messages: any[], success: boolean }>()
-);
-
-export const saveExpression = createAction(
-    FormActionType.SAVE_EXPRESSION,
-    props<{ expression: ExpressionVO | any, loading: boolean }>()
-);
-
-export const saveExpressionSuccess = createAction(
-    FormActionType.SAVE_EXPRESSION_SUCCESS,
-    props<{ expression: ExpressionVO | any, messages: any[], success: boolean }>()
 );
 
 export const setSections = createAction(

@@ -9,8 +9,12 @@ package bw.org.bocra.portal.auth;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.access.AccessPoint;
+import bw.org.bocra.portal.access.AccessPointDao;
+import bw.org.bocra.portal.access.AccessPointRepository;
 import bw.org.bocra.portal.access.AccessPointVO;
 import bw.org.bocra.portal.access.type.AccessPointType;
+import bw.org.bocra.portal.access.type.AccessPointTypeDao;
+import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 
 /**
@@ -20,6 +24,13 @@ import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 public class AuthorisationDaoImpl
     extends AuthorisationDaoBase
 {
+
+    public AuthorisationDaoImpl(AccessPointRepository accessPointRepository,
+            AccessPointTypeRepository accessPointTypeRepository, AuthorisationRepository authorisationRepository) {
+                
+        super(accessPointRepository, accessPointTypeRepository, authorisationRepository);
+    }
+
     /**
      * {@inheritDoc}
      */

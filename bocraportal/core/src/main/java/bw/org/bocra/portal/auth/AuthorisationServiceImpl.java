@@ -11,6 +11,7 @@ package bw.org.bocra.portal.auth;
 import java.util.Collection;
 import java.util.Set;
 
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthorisationServiceImpl
     extends AuthorisationServiceBase
 {
+
+    public AuthorisationServiceImpl(AuthorisationDao authorisationDao, AuthorisationRepository authorisationRepository,
+            MessageSource messageSource) {
+        super(authorisationDao, authorisationRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.authorisation.AuthorisationService#findById(Long)

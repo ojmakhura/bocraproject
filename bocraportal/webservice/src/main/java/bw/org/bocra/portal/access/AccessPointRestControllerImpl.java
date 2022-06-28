@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/access")
 public class AccessPointRestControllerImpl extends AccessPointRestControllerBase {
 
+    public AccessPointRestControllerImpl(AccessPointService accessPointService) {
+        super(accessPointService);
+    }
+
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {

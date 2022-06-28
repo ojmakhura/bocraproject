@@ -22,6 +22,9 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     protected static Logger log = LoggerFactory.getLogger(FormRestControllerImpl.class);
 
+    public FormRestControllerImpl(FormService formService) {
+        super(formService);
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {

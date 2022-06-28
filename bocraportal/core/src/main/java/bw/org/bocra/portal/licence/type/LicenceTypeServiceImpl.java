@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,6 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class LicenceTypeServiceImpl
     extends LicenceTypeServiceBase
 {
+
+    public LicenceTypeServiceImpl(LicenceTypeDao licenceTypeDao, LicenceTypeRepository licenceTypeRepository,
+            MessageSource messageSource) {
+        super(licenceTypeDao, licenceTypeRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.licence.type.LicenceTypeService#findById(Long)
