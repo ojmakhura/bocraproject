@@ -21,6 +21,7 @@ import bw.org.bocra.portal.form.submission.data.FormData;
 import bw.org.bocra.portal.form.submission.data.FormDataDao;
 import bw.org.bocra.portal.form.submission.data.FormDataRepository;
 import bw.org.bocra.portal.form.submission.data.FormDataVO;
+import bw.org.bocra.portal.form.submission.note.NoteRepository;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
@@ -39,10 +40,10 @@ public class FormSubmissionDaoImpl
 {
 
     public FormSubmissionDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
-            FormDataRepository formDataRepository, LicenseeRepository licenseeRepository,
+            FormDataRepository formDataRepository, LicenseeRepository licenseeRepository, NoteRepository noteRepository,
             FormSubmissionRepository formSubmissionRepository) {
-                
-        super(formRepository, periodRepository, formDataRepository, licenseeRepository, formSubmissionRepository);
+        super(formRepository, periodRepository, formDataRepository, licenseeRepository, noteRepository,
+                formSubmissionRepository);
     }
 
     /**

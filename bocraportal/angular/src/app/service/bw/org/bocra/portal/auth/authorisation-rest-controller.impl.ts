@@ -38,6 +38,6 @@ export class AuthorisationRestControllerImpl extends AuthorisationRestController
   }
 
   public getAccessTypeCodeAuthorisations(roles: any, accessPointTypeCode: any): Observable<any[] | AuthorisationVO[]> {
-    return this.http.get<AuthorisationVO[] | any>(this.path + `/authorised?roles=${roles}&accessPointTypeCode=${accessPointTypeCode}`);
+    return this.http.get<AuthorisationVO[] | any>(this.path + `/authorised?roles=${roles}&accessPointTypeCodes=${accessPointTypeCode}`);
   }
 }

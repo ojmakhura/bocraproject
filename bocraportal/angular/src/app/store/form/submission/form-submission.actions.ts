@@ -2,12 +2,15 @@
 import { createAction, props } from '@ngrx/store';
 import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { NoteVO } from '@model/bw/org/bocra/portal/form/submission/note/note-vo';
 
 export enum FormSubmissionActionType {
     FIND_BY_ID = '[FormSubmission] Find By Id',
     FIND_BY_ID_SUCCESS = '[FormSubmission] Find By Id Success',
     SAVE = '[FormSubmission] Save',
     SAVE_SUCCESS = '[FormSubmission] Save Success',
+    SAVE_NOTE = '[FormSubmission] Save Note',
+    SAVE_NOTE_SUCCESS = '[FormSubmission] Save Note Success',
     REMOVE = '[FormSubmission] Remove',
     REMOVE_SUCCESS = '[FormSubmission] Remove Success',
     GET_ALL = '[FormSubmission] Get All',
@@ -39,6 +42,16 @@ export const save = createAction(
 export const saveSuccess = createAction(
     FormSubmissionActionType.SAVE_SUCCESS,
     props<{ formSubmission: FormSubmissionVO | any, messages: any[], success: boolean}>()
+);
+
+export const saveNote = createAction(
+    FormSubmissionActionType.SAVE,
+    props<{ note: NoteVO | any , loading: boolean }>()
+);
+
+export const saveNoteSuccess = createAction(
+    FormSubmissionActionType.SAVE_SUCCESS,
+    props<{ note: NoteVO | any, messages: any[], success: boolean}>()
 );
 
 export const remove = createAction(

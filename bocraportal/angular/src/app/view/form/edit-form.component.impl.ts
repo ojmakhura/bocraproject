@@ -2,25 +2,21 @@
 import { Component, Injector } from '@angular/core';
 import { EditFormAddSectionForm, EditFormComponent } from '@app/view/form/edit-form.component';
 import { EditFormSaveForm } from '@app/view/form/edit-form.component';
-import { EditFormDeleteForm } from '@app/view/form/edit-form.component';
-import { EditFormSearchForm } from '@app/view/form/edit-form.component';
 import { EditFormVarsForm } from '@app/view/form/edit-form.component';
 import * as LicenceTypeSelectors from '@app/store/licence/type/licence-type.selectors';
 import * as FormActions from '@app/store/form/form.actions';
 import * as FormSelectors from '@app/store/form/form.selectors';
 import { select } from '@ngrx/store';
-import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { EditFormAddFieldForm } from '@app/view/form/edit-form.component';
-import { EditFieldComponentImpl } from './edit-field.component.impl';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
 import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
 import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import * as LicenseeActions from '@app/store/licensee/licensee.actions';
+import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
-import { EditSectionComponentImpl } from './edit-section.component.impl';
-import { MatDialogConfig } from '@angular/material/dialog';
+import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
 
 @Component({
   selector: 'app-edit-form',
@@ -35,6 +31,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.formLicenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
+    this.formLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.keycloakService = injector.get(KeycloakService);
     this.formFormFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
     this.formField$ = this.store.pipe(select(FormSelectors.selectFormField));
@@ -112,11 +109,23 @@ export class EditFormComponentImpl extends EditFormComponent {
 
   override formLicenceTypesSearch(): void {
     let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
-    criteria.typeSearch = this.formLicenceTypesSearchField;
+    criteria.typeSearch = this.formLicenceTypesSearchField.value;
     this.store.dispatch(
       LicenceTypeActions.search({
         criteria: criteria,
         loading: true,
+      })
+    );
+  }
+
+  override formLicenseesSearch(): void {
+    let criteria: LicenseeCriteria = new LicenseeCriteria();
+    criteria.licenseeName = this.formLicenseesSearchField.value;
+    criteria.uin = this.formLicenseesSearchField.value;
+    this.store.dispatch(
+      LicenseeActions.search({
+        criteria: criteria,
+        loading: true
       })
     );
   }
@@ -152,6 +161,6 @@ export class EditFormComponentImpl extends EditFormComponent {
   override doEditFormFormFields(formField: any) {
     this.formController.resetUseCaseScope();
     this.useCaseScope.queryParams['id'] = formField.id;
-    this.router.navigate(['form/edit-field'], {queryParams: this.useCaseScope.queryParams})
+    this.router.navigate(['form/edit-field'], { queryParams: this.useCaseScope.queryParams })
   }
 }

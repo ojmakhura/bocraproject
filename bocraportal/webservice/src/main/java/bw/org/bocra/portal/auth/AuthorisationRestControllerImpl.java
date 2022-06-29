@@ -118,7 +118,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
         try {
             Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.search(criteria)); // TODO: Add custom code here;
             ResponseEntity<Collection<AuthorisationVO>> response;
-            System.out.println(data.get());
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
@@ -158,7 +157,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     }
 
     @Override
-    public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles, String accessPointTypeCode) {
+    public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles, Set<String> accessPointTypeCode) {
         try {
             Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.getAccessTypeCodeAuthorisations(roles, accessPointTypeCode)); // TODO: Add custom code here;
             ResponseEntity<Collection<AuthorisationVO>> response;

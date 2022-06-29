@@ -123,7 +123,7 @@ public class AuthorisationServiceImpl
 
     @Override
     protected Collection<AuthorisationVO> handleGetAccessTypeCodeAuthorisations(Set<String> roles,
-            String accessPointTypeCode) throws Exception {
+            Set<String> accessPointTypeCode) throws Exception {
         
         return (Collection<AuthorisationVO>) this.authorisationDao.findAccessTypeCodeAuthorisations(AuthorisationDao.TRANSFORM_AUTHORISATIONVO, roles, accessPointTypeCode);
     }

@@ -10,6 +10,8 @@ import * as PeriodSelectors from '@app/store/period/period.selectors';
 import { PeriodCriteria } from '@app/model/bw/org/bocra/portal/period/period-criteria';
 import { KeycloakService } from 'keycloak-angular';
 import { select } from '@ngrx/store';
+import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 
 @Component({
   selector: 'app-edit-form-activation',
@@ -25,14 +27,61 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         this.keycloakService = this._injector.get(KeycloakService);
         this.formActivationPeriods$ = this.store.pipe(select(PeriodSelectors.selectPeriods));
         this.formActivationForms$ = this.store.pipe(select(FormSelectors.selectForms));
+
     }
 
     override beforeOnInit(form: EditFormActivationVarsForm): EditFormActivationVarsForm{
-        this.formActivationForms$.subscribe(dd => console.log(dd));
+        
         return form;
     }
 
     doNgOnDestroy(): void {
+    }
+
+    override doNgAfterViewInit(): void {
+
+        this.formActivationFormControl.valueChanges.subscribe((form: FormVO) => {
+            
+            if(form.formName) {
+
+                let activationName = `${form.formName}`;
+                if(this.formActivationPeriod?.periodName) {
+                    activationName = `${form.formName}: ${this.formActivationPeriod?.periodName}`;
+                }
+
+                activationName = `${activationName} Activation`;
+
+                this.formActivationActivationNameControl.patchValue(activationName);
+            }
+        });
+
+        this.formActivationPeriodControl.valueChanges.subscribe((period: PeriodVO) => {
+            if(period.periodName) {
+                let activationName = `${period.periodName}`;
+                if(this.formActivationForm?.formName) {
+                    activationName = `${this.formActivationForm?.formName}: ${activationName}`;
+                }
+
+                activationName = `${activationName} Activation`;
+
+                this.formActivationActivationNameControl.patchValue(activationName);
+            }
+        });
+
+    }
+
+    override handleFormChanges(change: any): void {
+        console.log(change)
+
+        if(change?.formActivation?.perion) {
+            if(this.formActivationForm?.formName) {
+                console.log('form changing');
+                console.log(this.formActivationForm);
+            }
+        }
+
+        if(change?.Form?.formName) {
+        }
     }
 
     override formActivationFormSearch(): void {
@@ -40,6 +89,8 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         criteria.code = this.formActivationFormSearchField.value;
         criteria.formName = this.formActivationFormSearchField.value;
         this.store.dispatch(FormActions.searchForms({criteria: criteria, loading: true}));
+
+        
     }
 
     override formActivationPeriodSearch(): void {

@@ -19,6 +19,14 @@ export const formSubmissionReducer = createReducer(
         success: action.success,
         messages: action.messages
     })),
+    on(FormSubmissionActions.saveNoteSuccess, (state, action) => ({
+        ...state,
+        note: action.note, 
+        notes: [...state.notes, action.note], 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
     on(FormSubmissionActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 

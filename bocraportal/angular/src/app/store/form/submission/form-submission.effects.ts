@@ -4,11 +4,16 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as FormSubmissionActions from './form-submission.actions';
 import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
+import { NoteRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/note/note-rest-controller.impl';
 
 @Injectable()
 export class FormSubmissionEffects {
 
-    constructor(private actions$: Actions, private submissionRestController: SubmissionRestControllerImpl) {}
+    constructor(
+        private actions$: Actions, 
+        private submissionRestController: SubmissionRestControllerImpl,
+        private noteController: NoteRestControllerImpl
+    ) {}
 
     findById$ = createEffect(() => 
          this.actions$.pipe(
@@ -31,6 +36,20 @@ export class FormSubmissionEffects {
                 map( formSubmission => FormSubmissionActions.saveSuccess({
                     formSubmission,
                     messages: [`Submission ${formSubmission?.form?.formName} saved.`],
+                    success: true
+                })),
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+            ))
+        )
+    );
+
+    saveNote$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormSubmissionActions.saveNote),
+            mergeMap(({ note }) => this.noteController.save(note).pipe(
+                map( note => FormSubmissionActions.saveNoteSuccess({
+                    note,
+                    messages: [`Note for saved.`],
                     success: true
                 })),
                 catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
