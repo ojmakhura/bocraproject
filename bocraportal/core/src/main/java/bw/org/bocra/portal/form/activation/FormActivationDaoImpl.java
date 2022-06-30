@@ -8,6 +8,7 @@ package bw.org.bocra.portal.form.activation;
 
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.period.config.PeriodConfig;
@@ -28,17 +29,11 @@ public class FormActivationDaoImpl
     extends FormActivationDaoBase
 {
     
-    public FormActivationDaoImpl(
-        FormRepository formRepository,
-        PeriodRepository periodRepository,
-        FormActivationRepository formActivationRepository
-    ) {
 
-        super(
-            formRepository,
-            periodRepository,
-            formActivationRepository
-        );
+    public FormActivationDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
+            FormSubmissionRepository formSubmissionRepository, FormActivationRepository formActivationRepository) {
+        
+        super(formRepository, periodRepository, formSubmissionRepository, formActivationRepository);
     }
 
     /**

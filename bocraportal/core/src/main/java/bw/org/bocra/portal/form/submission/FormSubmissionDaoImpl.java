@@ -17,6 +17,7 @@ import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.activation.FormActivationRepository;
 import bw.org.bocra.portal.form.submission.data.FormData;
 import bw.org.bocra.portal.form.submission.data.FormDataDao;
 import bw.org.bocra.portal.form.submission.data.FormDataRepository;
@@ -39,11 +40,13 @@ public class FormSubmissionDaoImpl
     extends FormSubmissionDaoBase
 {
 
+
     public FormSubmissionDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
             FormDataRepository formDataRepository, LicenseeRepository licenseeRepository, NoteRepository noteRepository,
-            FormSubmissionRepository formSubmissionRepository) {
+            FormActivationRepository formActivationRepository, FormSubmissionRepository formSubmissionRepository) {
+
         super(formRepository, periodRepository, formDataRepository, licenseeRepository, noteRepository,
-                formSubmissionRepository);
+                formActivationRepository, formSubmissionRepository);
     }
 
     /**

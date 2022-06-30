@@ -10,6 +10,8 @@ package bw.org.bocra.portal.form.activation;
 
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
+import bw.org.bocra.portal.form.submission.FormSubmissionDao;
+import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,21 +31,15 @@ import org.springframework.context.MessageSource;
 public class FormActivationServiceImpl
     extends FormActivationServiceBase
 {
-    public FormActivationServiceImpl(
-        FormActivationDao formActivation,
-        FormActivationRepository formActivationRepository,
-        FormDao form,
-        FormRepository formRepository,
-        MessageSource messageSource
-    ) {
+    
+
+    public FormActivationServiceImpl(FormActivationDao formActivationDao,
+            FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository,
+            FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
+            MessageSource messageSource) {
         
-        super(
-            formActivation,
-            formActivationRepository,
-            form,
-            formRepository,
-            messageSource
-        );
+        super(formActivationDao, formActivationRepository, formDao, formRepository, formSubmissionDao, formSubmissionRepository,
+                messageSource);
     }
 
     /**
@@ -65,6 +61,15 @@ public class FormActivationServiceImpl
     {
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
         activation = formActivationRepository.save(activation);
+
+        /**
+         * The form activations is a new one so we need to 
+         * create form submissions for all the licensees 
+         * associated with the form.
+         */
+        if(formActivation.getId() == null) {
+            
+        }
 
         return formActivationDao.toFormActivationVO(activation);
     }

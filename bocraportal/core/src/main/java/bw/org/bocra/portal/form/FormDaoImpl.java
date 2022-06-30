@@ -8,6 +8,8 @@ package bw.org.bocra.portal.form;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
@@ -21,8 +23,11 @@ import bw.org.bocra.portal.form.section.FormSectionVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeFormRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
+import bw.org.bocra.portal.licensee.LicenseeForm;
 import bw.org.bocra.portal.licensee.LicenseeFormRepository;
+import bw.org.bocra.portal.licensee.LicenseeFormVO;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 
 /**
@@ -110,6 +115,17 @@ public class FormDaoImpl
                 target.getFormSections().add(section);
             }
         }
+
+        Set<LicenseeFormVO> licensees = new HashSet<>();
+        for(LicenseeForm lf : source.getLicenseeForms()) {
+            LicenseeFormVO entity = new LicenseeFormVO();
+            getLicenseeFormDao().toLicenseeFormVO(lf, entity);
+
+            licensees.add(entity);
+        }
+
+        target.setLicensees(licensees);
+
     }
 
     /**

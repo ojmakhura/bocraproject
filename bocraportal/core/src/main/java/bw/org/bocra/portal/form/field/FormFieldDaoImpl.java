@@ -65,8 +65,6 @@ public class FormFieldDaoImpl
 
             target.setFormSection(section);
         }
-
-        //if(CollectionUtils.isNotEmpty(source.getfor))
     }
 
     /**
