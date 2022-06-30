@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
+import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmission;
 import bw.org.bocra.portal.form.submission.FormSubmissionDao;
@@ -33,6 +36,17 @@ import bw.org.bocra.portal.licence.LicenceDao;
 import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceSpecifications;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.form.LicenseeForm;
+import bw.org.bocra.portal.licensee.form.LicenseeFormDao;
+import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
+import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.licensee.sector.LicenseeSector;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorDao;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholder;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholderDao;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
 import bw.org.bocra.portal.licensee.shares.ShareholderVO;
 import bw.org.bocra.portal.report.Report;
 import bw.org.bocra.portal.report.ReportVO;
@@ -51,16 +65,19 @@ public class LicenseeServiceImpl
     extends LicenseeServiceBase
 {
 
+
     public LicenseeServiceImpl(LicenseeDao licenseeDao, LicenseeRepository licenseeRepository,
             LicenseeShareholderDao licenseeShareholderDao, LicenseeShareholderRepository licenseeShareholderRepository,
             LicenseeFormDao licenseeFormDao, LicenseeFormRepository licenseeFormRepository,
             LicenseeSectorDao licenseeSectorDao, LicenseeSectorRepository licenseeSectorRepository,
             LicenceDao licenceDao, LicenceRepository licenceRepository, FormSubmissionDao formSubmissionDao,
             FormSubmissionRepository formSubmissionRepository, SectorDao sectorDao, SectorRepository sectorRepository,
-            MessageSource messageSource) {
+            FormDao formDao, FormRepository formRepository, MessageSource messageSource) {
+
         super(licenseeDao, licenseeRepository, licenseeShareholderDao, licenseeShareholderRepository, licenseeFormDao,
                 licenseeFormRepository, licenseeSectorDao, licenseeSectorRepository, licenceDao, licenceRepository,
-                formSubmissionDao, formSubmissionRepository, sectorDao, sectorRepository, messageSource);
+                formSubmissionDao, formSubmissionRepository, sectorDao, sectorRepository, formDao, formRepository,
+                messageSource);
     }
 
     /**
@@ -372,6 +389,54 @@ public class LicenseeServiceImpl
         lVo.setName(sector.getName());
 
         return lVo;
+    }
+
+    @Override
+    protected Boolean handleRemoveSector(Long licenseeSectorId) throws Exception {
+
+        getLicenseeSectorDao().remove(licenseeSectorId);
+        return true;
+    }
+
+    @Override
+    protected LicenseeFormVO handleAddForm(Long licenseeId, Long formId) throws Exception {
+        Licensee licensee = getLicenseeDao().load(licenseeId);
+        Form form = getFormDao().load(formId);
+        LicenseeForm lf = LicenseeForm.Factory.newInstance();
+        lf.setLicensee(licensee);
+        lf = getLicenseeFormDao().create(form, licensee);
+
+        return getLicenseeFormDao().toLicenseeFormVO(lf);
+    }
+
+    @Override
+    protected Boolean handleRemoveForm(Long licenseeFormId) throws Exception {
+        getLicenseeFormDao().remove(licenseeFormId);
+        return true;
+    }
+
+    @Override
+    protected LicenseeFormVO handleUpdateForm(Long licenseeFormId, Long formId) throws Exception {
+        Form form = getFormDao().load(formId);
+        LicenseeForm lf = getLicenseeFormDao().load(licenseeFormId);
+        lf.setForm(form);
+        getLicenseeFormDao().update(lf);
+
+        return getLicenseeFormDao().toLicenseeFormVO(lf);
+    }
+
+    @Override
+    protected LicenseeSectorVO handleUpdateSector(Long licenseeSectorId, Long sectorId)
+            throws Exception {
+        
+        Sector sector = getSectorDao().get(sectorId);
+        LicenseeSector ls = getLicenseeSectorDao().load(licenseeSectorId);
+        ls.setSector(sector);
+
+        getLicenseeSectorDao().update(ls);
+
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

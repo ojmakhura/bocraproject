@@ -20,6 +20,8 @@ import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.shares.ShareholderVO;
 import bw.org.bocra.portal.report.ReportVO;
 import bw.org.bocra.portal.report.config.ReportConfigVO;
@@ -222,4 +224,37 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
         }
 
     }
+
+    // @Override
+    // public ResponseEntity<?> handleAddForm(Long licenseeId, Long formId) {
+    //     LicenseeFormVO vo = getLicenseeService().addForm(licenseeId, formId);
+
+    //     if(vo == null || vo.getId() != null) {
+    //         return ResponseEntity.noContent().build();
+    //     }
+
+    //     return ResponseEntity.ok(vo);
+    // }
+
+    // @Override
+    // public ResponseEntity<?> handleRemoveForm(Long licenseeFormId) {
+        
+    //     return ResponseEntity.ok(licenseeService.removeForm(licenseeFormId));
+    // }
+
+    @Override
+    public ResponseEntity<?> handleRemoveSector(Long licenseeSectorId) {
+        return ResponseEntity.ok(getLicenseeService().removeSector(licenseeSectorId));
+    }
+
+    // @Override
+    // public ResponseEntity<?> handleUpdateForm(Long licenseeFormId, Long formId) {
+    //     return ResponseEntity.ok(licenseeService.updateForm(licenseeFormId, formId));
+    // }
+
+    // @Override
+    // public ResponseEntity<?> handleUpdateSector(Long licenseeSectorId, Long sectorId) {
+       
+    //     return ResponseEntity.ok(licenseeService.updateSector(licenseeSectorId, sectorId));
+    // }
 }

@@ -4,6 +4,7 @@ import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-fiel
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
+import { LicenseeFormVO } from '@model/bw/org/bocra/portal/licensee/licensee-form-vo';
 
 export enum FormActionType {
     FIND_FORM_BY_ID = '[Form] Find Form By Id',
@@ -27,6 +28,13 @@ export enum FormActionType {
     SET_SECTIONS = '[Form] Set Sections',
     REMOVE_SECTION = '[Form] Remove Section',
     REMOVE_SECTION_SUCCESS = '[Form] Remove Section Success',
+    ADD_LICENSEE = '[Form] Save Licensee',
+    ADD_LICENSEE_SUCCESS = '[Form] Save Licensee Success',
+    UPDATE_LICENSEE = '[Form] Update Licensee',
+    UPDATE_LICENSEE_SUCCESS = '[Form] Update Licensee Success',
+    SET_LICENSEES = '[Form] Set Licensees',
+    REMOVE_LICENSEE = '[Form] Remove Licensee',
+    REMOVE_LICENSEE_SUCCESS = '[Form] Remove Licensee Success',
     REMOVE_FIELD = '[Form] Remove Field',
     REMOVE_FIELD_SUCCESS = '[Form] Remove Field Success',
     GET_ALL_FIELDS = '[Form] Get All Fields',
@@ -141,6 +149,41 @@ export const removeSection = createAction(
 
 export const removeSectionSuccess = createAction(
     FormActionType.REMOVE_SECTION_SUCCESS,
+    props<{ removed: boolean | any, messages: any[], success: boolean }>()
+);
+
+export const addLicensee = createAction(
+    FormActionType.ADD_LICENSEE,
+    props<{ formId: number, licenseeId: number, loading: boolean }>()
+);
+
+export const addLicenseeSuccess = createAction(
+    FormActionType.ADD_LICENSEE_SUCCESS,
+    props<{ licenseeForm: LicenseeFormVO | any, messages: any[], success: boolean }>()
+);
+
+export const updateLicensee = createAction(
+    FormActionType.UPDATE_LICENSEE,
+    props<{ licenseeFormId: number, licenseeId: number, loading: boolean }>()
+);
+
+export const updateLicenseeSuccess = createAction(
+    FormActionType.UPDATE_LICENSEE_SUCCESS,
+    props<{ licenseeForm: LicenseeFormVO | any, messages: any[], success: boolean }>()
+);
+
+export const setLicensees = createAction(
+    FormActionType.SET_LICENSEES,
+    props<{ licenseeForms: LicenseeFormVO[] }>()
+);
+
+export const removeLicensee = createAction(
+    FormActionType.REMOVE_LICENSEE,
+    props<{ id: number | any, loading: boolean }>()
+);
+
+export const removeLicenseeSuccess = createAction(
+    FormActionType.REMOVE_LICENSEE_SUCCESS,
     props<{ removed: boolean | any, messages: any[], success: boolean }>()
 );
 

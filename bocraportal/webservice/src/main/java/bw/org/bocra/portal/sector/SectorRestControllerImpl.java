@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bw.org.bocra.portal.licensee.LicenseeSectorVO;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 
 @RestController
 @RequestMapping("/sector")

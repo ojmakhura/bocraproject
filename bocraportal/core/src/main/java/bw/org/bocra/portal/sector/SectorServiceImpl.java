@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
-import bw.org.bocra.portal.licensee.LicenseeSector;
-import bw.org.bocra.portal.licensee.LicenseeSectorDao;
-import bw.org.bocra.portal.licensee.LicenseeSectorRepository;
-import bw.org.bocra.portal.licensee.LicenseeSectorVO;
+import bw.org.bocra.portal.licensee.sector.LicenseeSector;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorDao;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 
 /**
  * @see bw.org.bocra.portal.sector.SectorService

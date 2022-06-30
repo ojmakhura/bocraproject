@@ -71,6 +71,16 @@ export const selectFormSections = createSelector(
     (state: FormState) => state.formSections
 );
 
+export const selectLicenseeForm = createSelector(
+    selectFormState,
+    (state: FormState) => state.licenseeForm
+);
+
+export const selectLicenseeForms = createSelector(
+    selectFormState,
+    (state: FormState) => state.licenseeForms
+);
+
 export const selectRequired = createSelector(
     selectFormState,
     (state: FormState) => state.required

@@ -26,6 +26,9 @@ import bw.org.bocra.portal.licence.Licence;
 import bw.org.bocra.portal.licence.LicenceDao;
 import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
 import bw.org.bocra.portal.licensee.shares.ShareholderDao;
 import bw.org.bocra.portal.licensee.shares.ShareholderRepository;
 import bw.org.bocra.portal.notification.NotificationDao;
@@ -48,6 +51,7 @@ public class LicenseeDaoImpl
     extends LicenseeDaoBase
 {
 
+
     public LicenseeDaoImpl(LicenseeUserRepository licenseeUserRepository,
             FormSubmissionRepository formSubmissionRepository, FormRepository formRepository,
             LicenceRepository licenceRepository, DocumentRepository documentRepository,
@@ -57,7 +61,7 @@ public class LicenseeDaoImpl
             LicenseeSectorRepository licenseeSectorRepository, LicenseeFormRepository licenseeFormRepository,
             LicenseeReportConfigRepository licenseeReportConfigRepository,
             NotificationRepository notificationRepository, LicenseeRepository licenseeRepository) {
-                
+
         super(licenseeUserRepository, formSubmissionRepository, formRepository, licenceRepository, documentRepository,
                 reportRepository, reportConfigRepository, sectorRepository, shareholderRepository,
                 licenseeShareholderRepository, licenseeSectorRepository, licenseeFormRepository, licenseeReportConfigRepository,
@@ -85,30 +89,30 @@ public class LicenseeDaoImpl
             }
         }
 
-        if(CollectionUtils.isNotEmpty(source.getLicenseeSectors())) {
+        // if(CollectionUtils.isNotEmpty(source.getLicenseeSectors())) {
 
-            target.setSectors(new ArrayList<>());
+        //     target.setSectors(new ArrayList<>());
 
-            for(LicenseeSector entity : source.getLicenseeSectors()) {
-                LicenseeSectorVO vo = new LicenseeSectorVO();
-                vo.setLicenseeSectorId(entity.getId());
-                vo.setId(entity.getSector().getId());
-                vo.setCode(entity.getSector().getCode());
-                vo.setName(entity.getSector().getName());
-                target.getSectors().add(vo);
-            }
-        }
+        //     for(LicenseeSector entity : source.getLicenseeSectors()) {
+        //         LicenseeSectorVO vo = new LicenseeSectorVO();
+        //         vo.setLicenseeSectorId(entity.getId());
+        //         vo.setId(entity.getSector().getId());
+        //         vo.setCode(entity.getSector().getCode());
+        //         vo.setName(entity.getSector().getName());
+        //         target.getSectors().add(vo);
+        //     }
+        // }
 
-        if(CollectionUtils.isNotEmpty(source.getLicenseeForms())) {
+        // if(CollectionUtils.isNotEmpty(source.getLicenseeForms())) {
 
-            target.setSectors(new ArrayList<>());
+        //     target.setSectors(new ArrayList<>());
 
-            for(LicenseeForm entity : source.getLicenseeForms()) {
-                FormVO vo = new FormVO();
-                formDao.toFormVO(entity.getForm(), vo);
-                target.getForms().add(vo);
-            }
-        }
+        //     for(LicenseeForm entity : source.getLicenseeForms()) {
+        //         FormVO vo = new FormVO();
+        //         formDao.toFormVO(entity.getForm(), vo);
+        //         target.getForms().add(vo);
+        //     }
+        // }
 
         //source.get
 
@@ -179,18 +183,18 @@ public class LicenseeDaoImpl
 
         }
 
-        if(CollectionUtils.isNotEmpty(source.getSectors()) && source.getId() != null) {
-            Collection<LicenseeSector> sectors = new ArrayList<>();
-            for(LicenseeSectorVO sector : source.getSectors()) {
-                if( sector.getLicenseeSectorId() != null) {
-                    sectors.add(licenseeSectorRepository.getById(sector.getLicenseeSectorId()));
-                } else if(sector.getId() != null) {
+        // if(CollectionUtils.isNotEmpty(source.getSectors()) && source.getId() != null) {
+        //     Collection<LicenseeSector> sectors = new ArrayList<>();
+        //     for(LicenseeSectorVO sector : source.getSectors()) {
+        //         if( sector.getLicenseeSectorId() != null) {
+        //             sectors.add(licenseeSectorRepository.getById(sector.getLicenseeSectorId()));
+        //         } else if(sector.getId() != null) {
 
-                    sectors.add(licenseeSectorDao.create(target, sectorDao.load(sector.getId())));
-                }
-            }
+        //             sectors.add(licenseeSectorDao.create(target, sectorDao.load(sector.getId())));
+        //         }
+        //     }
 
-            target.setLicenseeSectors(sectors);
-        }
+        //     target.setLicenseeSectors(sectors);
+    //     }
     }
 }

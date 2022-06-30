@@ -4,6 +4,7 @@ import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria'
 import { FieldType } from '@app/model/bw/org/bocra/portal/form/field/field-type';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
+import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-form-vo';
 
 export const formKey = 'form';
 
@@ -14,6 +15,8 @@ export interface FormState {
   formField: FormFieldVO | any;
   formSection: FormSectionVO | any;
   formSections: Array<FormSectionVO> | Array<any>;
+  licenseeForms: Array<LicenseeFormVO> | Array<any>;
+  licenseeForm: LicenseeFormVO | any;
   form: FormVO | any;
   required: Boolean | any;
   min: String | any;
@@ -36,6 +39,8 @@ export const initialState: FormState = {
   formField: null,
   formSection: null,
   formSections: [],
+  licenseeForms: [],
+  licenseeForm: null,
   form: null,
   required: null,
   min: null,
