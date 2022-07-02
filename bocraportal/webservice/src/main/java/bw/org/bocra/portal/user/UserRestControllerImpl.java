@@ -143,8 +143,6 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             userRepresentation.setAttributes(attributes);
         }
 
-        // System.out.println(user);
-
         // if(CollectionUtils.isNotEmpty(user.getRoles())) {
         // userRepresentation.getClientRoles();
         // Map<String, List<String>> roles = new HashMap<>();
@@ -179,7 +177,6 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
 
         Response res = usersResource.create(userRepresentation);
-        System.out.println(res.getEntity());
 
         List<UserRepresentation> users = usersResource.search(user.getUsername(), true);
         if (CollectionUtils.isNotEmpty(users)) {

@@ -4,7 +4,7 @@ import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria'
 import { FieldType } from '@app/model/bw/org/bocra/portal/form/field/field-type';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
-import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-form-vo';
+import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/form/licensee-form-vo';
 
 export const formKey = 'form';
 

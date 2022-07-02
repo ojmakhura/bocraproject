@@ -5,6 +5,7 @@
 //
 package bw.org.bocra.portal.form;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +31,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         Optional<FormVO> data = Optional.of(formService.findById(id));
-        ResponseEntity<FormVO> response;
+        ResponseEntity<?> response;
 
         if(data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());

@@ -2,8 +2,8 @@
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FormActivationRestController } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller';
-import { FormActivationVO } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-vo';
 import { FormActivationCriteria } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-criteria';
+import { FormActivationVO } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-vo';
 
 @Injectable()
 export class FormActivationRestControllerImpl extends FormActivationRestController {

@@ -4,7 +4,7 @@ import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-fiel
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
-import { LicenseeFormVO } from '@model/bw/org/bocra/portal/licensee/licensee-form-vo';
+import { LicenseeFormVO } from '@model/bw/org/bocra/portal/licensee/form/licensee-form-vo';
 
 export enum FormActionType {
     FIND_FORM_BY_ID = '[Form] Find Form By Id',

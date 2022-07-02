@@ -105,7 +105,7 @@ public class LicenceTypeServiceImpl
         Specification<LicenceType> specs = null;
 
         if(StringUtils.isNotBlank(criteria.getTypeSearch())) {
-            System.out.println(criteria);
+            
             specs = LicenceTypeSpecifications.findByCodeContainingIgnoreCase(criteria.getTypeSearch());
             specs.or(LicenceTypeSpecifications.findByDescriptionContainingIgnoreCase(criteria.getTypeSearch()));
             specs.or(LicenceTypeSpecifications.findByNameContainingIgnoreCase(criteria.getTypeSearch()));

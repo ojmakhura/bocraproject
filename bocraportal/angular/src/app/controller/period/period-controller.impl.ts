@@ -28,4 +28,7 @@ export class PeriodControllerImpl extends PeriodController {
 	public doEditGroup(form: any): void {
 	}
 
+	public createNext(form: any): void {
+	}
+
 }

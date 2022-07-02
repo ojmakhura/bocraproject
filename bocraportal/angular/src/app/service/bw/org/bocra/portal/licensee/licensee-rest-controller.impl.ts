@@ -2,30 +2,23 @@
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LicenseeRestController } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller';
-import { ReportConfigVO } from '@app/model/bw/org/bocra/portal/report/config/report-config-vo';
-import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
-import { ShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/shareholder-vo';
-import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-form-vo';
-import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-sector-vo';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
-import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { ReportVO } from '@app/model/bw/org/bocra/portal/report/report-vo';
-import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
+import { ShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/shareholder-vo';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
-import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
+import { ReportConfigVO } from '@app/model/bw/org/bocra/portal/report/config/report-config-vo';
 
 @Injectable()
 export class LicenseeRestControllerImpl extends LicenseeRestController {
 
     constructor(private injector: Injector) {
         super(injector);
-    }
-
-    public override addForm(licenseeId: number | any , formId: number | any ): Observable<LicenseeSectorVO | any> {
-
-        return this.http.get<LicenseeSectorVO | any>(this.path + `/${licenseeId}/add/form/${formId}`);
-
     }
 
     public override addSector(licenseeId: number | any , sectorId: number | any ): Observable<LicenseeSectorVO | any> {
@@ -106,12 +99,6 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
 
     }
 
-    public override removeForm(licenseeFormId: number | any ): Observable<Boolean | any> {
-
-        return this.http.delete<Boolean | any>(this.path + `/form/delete/{licenseeFormId}`);
-
-    }
-
     public override removeSector(licenseeSectorId: number | any ): Observable<Boolean | any> {
 
         return this.http.delete<Boolean | any>(this.path + `/sector/delete/{licenseeSectorId}`);
@@ -127,18 +114,6 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
     public override search(criteria: LicenseeCriteria | any ): Observable<LicenseeVO[] | any[]> {
 
         return this.http.post<LicenseeVO[] | any[]>(this.path + `/search`, criteria);
-
-    }
-
-    public override updateForm(licenseeFormId: number | any , formId: number | any ): Observable<LicenseeFormVO | any> {
-
-        return this.http.patch<LicenseeFormVO | any>(this.path + `/form/update`, {licenseeFormId: licenseeFormId, formId: formId});
-
-    }
-
-    public override updateSector(licenseeSectorId: number | any , sectorId: number | any ): Observable<LicenseeSectorVO | any> {
-
-        return this.http.patch<LicenseeSectorVO | any>(this.path + `/sector/update`, {licenseeSectorId: licenseeSectorId, sectorId: sectorId});
 
     }
 

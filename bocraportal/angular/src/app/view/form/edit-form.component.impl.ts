@@ -31,22 +31,24 @@ export class EditFormComponentImpl extends EditFormComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.formLicenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
-    this.formLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
+    //this.formLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.keycloakService = injector.get(KeycloakService);
     this.formFormFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
     this.formField$ = this.store.pipe(select(FormSelectors.selectFormField));
     this.formSection$ = this.store.pipe(select(FormSelectors.selectFormSection));
     this.formFormSections$ = this.store.pipe(select(FormSelectors.selectFormSections));
+
+    this.keycloakService.getToken().then(token => console.log(token));
+    
   }
 
   override beforeOnInit(form: EditFormVarsForm): EditFormVarsForm {
     return form;
   }
 
-  override doNgOnDestroy(): void {
-  }
+  override doNgOnDestroy(): void {}
 
-  override afterOnInit() { }
+  override afterOnInit() {}
 
   override doNgAfterViewInit() {
     this.route.queryParams.subscribe((queryParams: any) => {
@@ -125,19 +127,17 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.store.dispatch(
       LicenseeActions.search({
         criteria: criteria,
-        loading: true
+        loading: true,
       })
     );
   }
 
   override beforeEditFormAddField(form: EditFormAddFieldForm): void {
-
     this.useCaseScope.pageVariables['form'] = this.form;
     this.useCaseScope.queryParams['formId'] = this.form.id;
   }
 
   override afterEditFormAddSection(form: EditFormAddSectionForm, dialogData: any): void {
-
     if (dialogData?.formSection) {
       let section: FormSectionVO = dialogData.formSection;
       if (section.id) {
@@ -161,6 +161,10 @@ export class EditFormComponentImpl extends EditFormComponent {
   override doEditFormFormFields(formField: any) {
     this.formController.resetUseCaseScope();
     this.useCaseScope.queryParams['id'] = formField.id;
-    this.router.navigate(['form/edit-field'], { queryParams: this.useCaseScope.queryParams })
+    this.router.navigate(['form/edit-field'], { queryParams: this.useCaseScope.queryParams });
+  }
+
+  override doEditFormFormSections(formSections: FormSectionVO) {
+    
   }
 }

@@ -2,7 +2,7 @@
 import { createAction, props } from '@ngrx/store';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
-import { LicenseeSectorVO } from '@model/bw/org/bocra/portal/licensee/licensee-sector-vo';
+import { LicenseeSectorVO } from '@model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
 
 export enum LicenseeActionType {
     FIND_BY_ID = '[Licensee] Find By Id',

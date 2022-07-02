@@ -16,7 +16,7 @@ import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo'
 import { KeycloakService } from 'keycloak-angular';
 import { select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-sector-vo';
+import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
 
 @Component({
   selector: 'app-edit-sector',
@@ -59,18 +59,18 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     });
 
     this.licensee$.subscribe((licensee) => {
-      console.log(licensee)
+      console.log(licensee);
     });
 
     this.licensees$.subscribe((licensees) => {
       licensees.forEach((lc) => {
-        this.store.dispatch(SectorActions.addLicenseeSuccess({ licensee: lc, messages: [''],success: true }));
+        this.store.dispatch(SectorActions.addLicenseeSuccess({ licensee: lc, messages: [''], success: true }));
       });
     });
   }
 
   override addToSectorLicensees(licensee: LicenseeSectorVO) {
-    this.store.dispatch(SectorActions.addLicensee({sectorId: this.sectorId, licenseeId: licensee.id, loading: true}));
+    this.store.dispatch(SectorActions.addLicensee({ sectorId: this.sectorId, licenseeId: licensee.id, loading: true }));
     console.log(licensee);
     console.log(this.sectorId);
     let tmp: LicenseeSectorVO = new LicenseeSectorVO();

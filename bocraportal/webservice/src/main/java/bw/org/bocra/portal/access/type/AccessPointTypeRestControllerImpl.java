@@ -98,7 +98,6 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
     @Override
     public ResponseEntity<?> handleSave(AccessPointTypeVO accessPointType) {
         try {
-            System.out.println(accessPointType);
             Optional<?> data = Optional.of(accessPointTypeService.save(accessPointType));
             ResponseEntity<?> response;
 

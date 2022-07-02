@@ -26,13 +26,13 @@ export class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
 
     public override findByLicensee(licenseeId: number | any ): Observable<LicenseeFormVO[] | any[]> {
 
-        return this.http.get<LicenseeFormVO[] | any[]>(this.path + `/${formId}`);
+        return this.http.get<LicenseeFormVO[] | any[]>(this.path + `/${licenseeId}`);
 
     }
 
     public override findBySector(sectorId: number | any ): Observable<FormVO[] | any[]> {
 
-        return this.http.get<FormVO[] | any[]>(this.path + `/{formId}/sectorId/${sectorId}`);
+        return this.http.get<FormVO[] | any[]>(this.path + `/{sectorId}/sectorId/${sectorId}`);
 
     }
 
@@ -56,7 +56,7 @@ export class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
 
     public override updateSector(id: number | any , sectorId: number | any ): Observable<LicenseeFormVO | any> {
 
-        return this.http.patch<LicenseeFormVO | any>(this.path + `/${id}/${formId}`, {id: id, sectorId: sectorId});
+        return this.http.patch<LicenseeFormVO | any>(this.path + `/${id}/${sectorId}`, {id: id, sectorId: sectorId});
 
     }
 

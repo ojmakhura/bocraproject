@@ -2,8 +2,8 @@
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NotificationRestController } from '@app/service/bw/org/bocra/portal/notification/notification-rest-controller';
-import { NotificationVO } from '@app/model/bw/org/bocra/portal/notification/notification-vo';
 import { NotificationCriteria } from '@app/model/bw/org/bocra/portal/notification/notification-criteria';
+import { NotificationVO } from '@app/model/bw/org/bocra/portal/notification/notification-vo';
 
 @Injectable()
 export class NotificationRestControllerImpl extends NotificationRestController {

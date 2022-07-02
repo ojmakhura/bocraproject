@@ -4,7 +4,6 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as SectorActions from './sector.actions';
 import { SectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller.impl';
-import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-sector-vo';
 
 @Injectable()
 export class SectorEffects {
