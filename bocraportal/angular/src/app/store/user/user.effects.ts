@@ -36,15 +36,15 @@ export class UserEffects {
     //     )
     // );
 
-    // loadUsers$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(UserActions.loadUsers),
-    //         mergeMap(() => this.userRestController.loadUsers().pipe(
-    //             map( results => UserActions.loadUsersSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
-    //         ))
-    //     )
-    // );
+    loadUsers$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(UserActions.loadUsers),
+            mergeMap(() => this.userRestController.loadUsers().pipe(
+                map( users => UserActions.loadUsersSuccess({users: users, messages: [], success: true})),
+                catchError(({error}) => [UserActions.userFailure({messages: [error]})])
+            ))
+        )
+    );
 
     // findById$ = createEffect(() => 
     //      this.actions$.pipe(
@@ -86,15 +86,15 @@ export class UserEffects {
     //     )
     // );
 
-    // search$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(UserActions.search),
-    //         mergeMap(({ criteria }) => this.licenseeRestController.search(criteria).pipe(
-    //             map( results => UserActions.searchSuccess({results})),
-    //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
-    //         ))
-    //     )
-    // );
+    search$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(UserActions.search),
+            mergeMap(({ criteria }) => this.userRestController.search(criteria).pipe(
+                map( users => UserActions.searchSuccess({users: users, messages: [`Found ${users.length} users.`], success: false})),
+                catchError(({error}) => [UserActions.userFailure({messages: [error]})])
+            ))
+        )
+    );
 
     // getAllPaged$ = createEffect(() => 
     //      this.actions$.pipe(

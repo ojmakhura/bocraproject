@@ -61,6 +61,22 @@ public class PeriodServiceImpl
             periodVO = getPeriodDao().toPeriodVO(period);
         }
 
+        if(period.getPrevious() != null && period.getPrevious().getId() != null) {
+            Period prev = period.getPrevious();
+            if(prev.getNext() == null || (prev.getNext() != null && prev.getNext().getId() != period.getId())) {
+                prev.setNext(period);
+                getPeriodRepository().save(prev);
+            }
+        }
+
+        if(period.getNext() != null && period.getNext().getId() != null) {
+            Period next = period.getNext();
+            if(next.getPrevious() == null || (next.getPrevious() != null && next.getPrevious().getId() != period.getId())) {
+                next.setPrevious(period);
+                getPeriodRepository().save(next);
+            }
+        }
+
         return periodVO;
     }
 

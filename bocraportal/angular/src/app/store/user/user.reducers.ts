@@ -29,7 +29,7 @@ export const userReducer = createReducer(
         ...state,
         userId: null, 
         user: null, 
-        users: [], 
+        users: action.users, 
         criteria: null, 
         loading: false,
         success: action.success,
@@ -75,16 +75,16 @@ export const userReducer = createReducer(
     //     success: action.success,
     //     messages: action.messages
     // })),
-    // on(UserActions.searchSuccess, (state, action) => ({
-    //     ...state,
-    //     userId: null, 
-    //     user: null, 
-    //     users: [], 
-    //     criteria: null, 
-    //     loading: false,
-    //     success: action.success,
-    //     messages: action.messages
-    // })),
+    on(UserActions.searchSuccess, (state, action) => ({
+        ...state,
+        userId: null, 
+        user: null, 
+        users: action.users, 
+        criteria: null, 
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
     // on(UserActions.getAllPagedSuccess, (state, action) => ({
     //     ...state,
     //     userId: null, 

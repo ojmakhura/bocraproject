@@ -28,7 +28,7 @@ export class SearchUsersComponentImpl extends SearchUsersComponent {
      */
     override beforeSearchUsersSearch(form: SearchUsersSearchForm): void {
         this.store.dispatch(UserActions.search({
-            criteria: form.criteria,
+            criteria: form.criteria.searchCriteria,
             loading: true
         }));
     }
