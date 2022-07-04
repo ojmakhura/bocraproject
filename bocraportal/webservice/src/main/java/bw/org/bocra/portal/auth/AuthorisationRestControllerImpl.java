@@ -7,8 +7,6 @@ package bw.org.bocra.portal.auth;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,10 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin()
 public class AuthorisationRestControllerImpl extends AuthorisationRestControllerBase {
 
-    public AuthorisationRestControllerImpl(AuthorisationService authorisationService) {
-        super(authorisationService);
-    }
-
     protected static Logger log = LoggerFactory.getLogger(AuthorisationRestController.class);
 
     @Override
@@ -35,7 +29,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             ResponseEntity<AuthorisationVO> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.status(HttpStatus.FOUND).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -43,7 +37,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -65,7 +59,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -86,7 +80,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -107,7 +101,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -127,8 +121,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            e.printStackTrace();
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -149,30 +142,9 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
-    }
-
-    @Override
-    public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles, Set<String> accessPointTypeCode) {
-        try {
-            Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.getAccessTypeCodeAuthorisations(roles, accessPointTypeCode)); // TODO: Add custom code here;
-            ResponseEntity<Collection<AuthorisationVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
-        }
     }
 }

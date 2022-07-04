@@ -16,91 +16,118 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("license")
 public class LicenceRestControllerImpl extends LicenceRestControllerBase {
 
-    public LicenceRestControllerImpl(LicenceService licenceService) {
-        super(licenceService);
-    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<LicenceVO> data = Optional.of(licenceService.findById(id)); // TODO: Add custom code here;
-        ResponseEntity<LicenceVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<LicenceVO> data = Optional.of(licenceService.findById(id)); // TODO: Add custom code here;
+            ResponseEntity<LicenceVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<LicenceVO>> data = Optional.of(licenceService.getAll()); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenceVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<LicenceVO>> data = Optional.of(licenceService.getAll()); // TODO: Add custom code here;
+            ResponseEntity<Collection<LicenceVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<LicenceVO>> data = Optional.of(licenceService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenceVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<LicenceVO>> data = Optional.of(licenceService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
+            ResponseEntity<Collection<LicenceVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(licenceService.remove(id)); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Boolean> data = Optional.of(licenceService.remove(id)); // TODO: Add custom code here;
+            ResponseEntity<Boolean> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSave(LicenceVO licence) {
-        Optional<LicenceVO> data = Optional.of(licenceService.save(licence)); // TODO: Add custom code here;
-        ResponseEntity<LicenceVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<LicenceVO> data = Optional.of(licenceService.save(licence)); // TODO: Add custom code here;
+            ResponseEntity<LicenceVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSearch(LicenceCriteria criteria) {
-        Optional<Collection<LicenceVO>> data = Optional.of(licenceService.search(criteria)); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenceVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<LicenceVO>> data = Optional.of(licenceService.search(criteria)); // TODO: Add custom code here;
+            ResponseEntity<Collection<LicenceVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 }

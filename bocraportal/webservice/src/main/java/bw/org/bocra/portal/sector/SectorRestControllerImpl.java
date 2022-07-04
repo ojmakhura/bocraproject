@@ -12,110 +12,140 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
+import bw.org.bocra.portal.licensee.LicenseeSectorVO;
 
 @RestController
 @RequestMapping("/sector")
 public class SectorRestControllerImpl extends SectorRestControllerBase {
 
-    public SectorRestControllerImpl(SectorService sectorService) {
-        super(sectorService);
-    }
-
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<SectorVO> data = Optional.of(sectorService.findById(id)); // TODO: Add custom code here;
-        ResponseEntity<SectorVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<SectorVO> data = Optional.of(sectorService.findById(id)); // TODO: Add custom code here;
+            ResponseEntity<SectorVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll()); // TODO: Add custom code here;
-        ResponseEntity<Collection<SectorVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll()); // TODO: Add custom code here;
+            ResponseEntity<Collection<SectorVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
-        ResponseEntity<Collection<SectorVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
+            ResponseEntity<Collection<SectorVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(sectorService.remove(id)); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Boolean> data = Optional.of(sectorService.remove(id)); // TODO: Add custom code here;
+            ResponseEntity<Boolean> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSave(SectorVO sector) {
-        Optional<SectorVO> data = Optional.of(sectorService.save(sector)); // TODO: Add custom code here;
-        ResponseEntity<SectorVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<SectorVO> data = Optional.of(sectorService.save(sector)); // TODO: Add custom code here;
+            ResponseEntity<SectorVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
-        Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
-        ResponseEntity<Collection<SectorVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
+            ResponseEntity<Collection<SectorVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleAddLicensee(Long sectorId, Long licenseeId) {
+        try{
+            LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
 
-        LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
-
-        if(lvo == null || lvo.getId() == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
-        } else {
-            return ResponseEntity.ok().body(lvo);
+            if(lvo == null || lvo.getId() == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    
+            } else {
+                return ResponseEntity.ok().body(lvo);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
 }

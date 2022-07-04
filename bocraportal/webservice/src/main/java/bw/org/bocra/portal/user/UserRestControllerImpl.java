@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.ws.rs.core.Response;
 
@@ -22,14 +21,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RolesResource;
-import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -41,13 +38,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import bw.org.bocra.portal.licensee.LicenseeService;
-import bw.org.bocra.portal.licensee.LicenseeVO;
-
 @RestController
 @RequestMapping("user")
 @CrossOrigin()
 public class UserRestControllerImpl extends UserRestControllerBase {
+
+    protected static Logger log = LoggerFactory.getLogger(UserRestControllerImpl.class);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -61,10 +57,6 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     @Value("${keycloak.resource}")
     private String clientId;
 
-    public UserRestControllerImpl(LicenseeUserService licenseeUserService, LicenseeService licenseeService) {
-        super(licenseeUserService, licenseeService);
-    }
-
     private Keycloak getKeycloak() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication
@@ -74,14 +66,6 @@ public class UserRestControllerImpl extends UserRestControllerBase {
                 getAuthClient(), context.getTokenString());
 
         return keycloak;
-    }
-
-    private RealmResource getRealmResource() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication
-                .getCredentials();
-
-        return getKeycloak().realm(context.getRealm());
     }
 
     private CredentialRepresentation createCredential(String type, String value, Boolean temporary) {
@@ -105,17 +89,8 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication
                 .getCredentials();
+
         return context.getToken().issuedFor;
-    }
-
-    private ClientRepresentation findAuthenticatedClientResource() {
-        for (ClientRepresentation clientRep : getRealmResource().clients().findAll()) {
-            if (clientRep.getClientId().equals(getAuthClient())) {
-                return clientRep;
-            }
-        }
-
-        return null;
     }
 
     private UsersResource getUsersResource() {
@@ -129,7 +104,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         return keycloak.realm(context.getRealm()).users();
     }
 
-    private RolesResource getClientRolesResource(String clientId) {
+    private RolesResource getRolesResource() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) authentication
@@ -137,7 +112,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
 
         Keycloak keycloak = getKeycloak();
 
-        return keycloak.realm(context.getRealm()).clients().get(clientId).roles();
+        return keycloak.realm(context.getRealm()).roles();
     }
 
     private UserRepresentation userVOUserRepresentation(UserVO user) {
@@ -157,19 +132,21 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         if (user.getLicensee() != null && user.getLicensee().getId() != null) {
             Map<String, List<String>> attributes = new HashMap<>();
             List<String> licenseeAttributes = new ArrayList<>();
-            licenseeAttributes.add(user.getLicensee().getId().toString());
-            licenseeAttributes.add(user.getLicensee().getLicenseeName());
+            licenseeAttributes.add("id:" + user.getLicensee().getId());
+            licenseeAttributes.add("licenseeName:" + user.getLicensee().getLicenseeName());
             attributes.put("licensee", licenseeAttributes);
 
             userRepresentation.setAttributes(attributes);
         }
 
-        if (CollectionUtils.isNotEmpty(user.getRoles())) {
+        // System.out.println(user);
 
-            Map<String, List<String>> roles = new HashMap<>();
-            roles.put(user.getClient(), (List<String>) user.getRoles());
-            userRepresentation.setClientRoles(roles);
-        }
+        // if(CollectionUtils.isNotEmpty(user.getRoles())) {
+        // userRepresentation.getClientRoles();
+        // Map<String, List<String>> roles = new HashMap<>();
+        // roles.put(this.getAuthClient(), (List<String>) user.getRoles());
+        // userRepresentation.setClientRoles(roles);
+        // }
 
         return userRepresentation;
     }
@@ -182,89 +159,61 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         user.setEnabled(userRepresentation.isEnabled());
         user.setFirstName(userRepresentation.getFirstName());
         user.setUsername(userRepresentation.getUsername());
-        user.setLastName(userRepresentation.getLastName());
         user.setRoles(new ArrayList<>());
-
-        if (userRepresentation.getAttributes() != null && !userRepresentation.getAttributes().isEmpty()) {
-            List<String> licenseeAttributes = userRepresentation.getAttributes().get("licensee");
-
-            if (CollectionUtils.isNotEmpty(licenseeAttributes)) {
-                LicenseeVO licensee = licenseeService.findById(Long.parseLong(licenseeAttributes.get(0)));
-
-                // The licensee with that ID does not exist (maybe deleted)
-                // So we update the user
-                if (licensee == null || licensee.getId() == null) {
-                    UsersResource usersResource = getUsersResource();
-                    UserResource userResource = usersResource.get(userRepresentation.getId());
-                    userRepresentation.getAttributes().remove("licensee");
-                    userResource.update(userRepresentation);
-                }
-
-                user.setLicensee(licensee);
-            }
-        }
-
-        RealmResource realmResource = getRealmResource();
-        UserResource userResource = realmResource.users().get(userRepresentation.getId());
-
-        ClientRepresentation clientRepresentation = getRealmResource().clients().findByClientId(getAuthClient()).get(0);
-
-        for (RoleRepresentation roleRep : userResource.roles().clientLevel(clientRepresentation.getId()).listAll()) {
-            user.getRoles().add(roleRep.getName());
+        // user.setRoles(userRepresentation.getClientRoles());
+        for (Map.Entry<String, List<String>> entry : userRepresentation.getClientRoles().entrySet()) {
+            user.getRoles().addAll(entry.getValue());
         }
 
         return user;
     }
 
     @Override
-    public ResponseEntity<?> handleCreateUser(String clientId, UserVO user) {
-
-        if (StringUtils.isBlank(clientId)) {
-            clientId = findAuthenticatedClientResource().getId();
-            user.setClient(clientId);
-        }
+    public ResponseEntity<?> handleCreateUser(UserVO user) {
 
         UsersResource usersResource = getUsersResource();
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
 
         Response res = usersResource.create(userRepresentation);
+        System.out.println(res.getEntity());
 
-        List<UserRepresentation> users = usersResource.search(user.getUsername(), user.getFirstName(),
-                user.getLastName(), user.getEmail(), 0, 1);
-        if (CollectionUtils.isNotEmpty(users)) {
-
-            UserRepresentation rep = users.get(0);
-            UserResource userResource = usersResource.get(rep.getId());
-
-            if (StringUtils.isNotBlank(rep.getId())) {
-                user.setUserId(rep.getId());
-                LicenseeUserVO licenseeUser = new LicenseeUserVO();
-                licenseeUser.setDateAdded(LocalDate.now());
-                licenseeUser.setUser(user);
-                licenseeUser.setLicensee(user.getLicensee());
-                // licenseeUser = licenseeUserService.save(licenseeUser);
-            }
-
-            List<RoleRepresentation> roleReps = new ArrayList<>();
-
-            for (String role : user.getRoles()) {
-                RolesResource rolesResource = getClientRolesResource(user.getClient());
-
-                RoleRepresentation roleRep = rolesResource.get(role).toRepresentation();
-                if (StringUtils.isNotBlank(roleRep.getId())) {
-                    roleReps.add(roleRep);
+        try{
+            List<UserRepresentation> users = usersResource.search(user.getUsername(), true);
+            if (CollectionUtils.isNotEmpty(users)) {
+    
+                UserRepresentation rep = users.get(0);
+                
+                if (StringUtils.isNotBlank(rep.getId())) {
+                    user.setUserId(rep.getId());
+                    LicenseeUserVO licenseeUser = new LicenseeUserVO();
+                    licenseeUser.setDateAdded(LocalDate.now());
+                    licenseeUser.setUser(user);
+                    licenseeUser.setLicensee(user.getLicensee());
+                    // licenseeUser = licenseeUserService.save(licenseeUser);
+    
+                    // List<RoleRepresentation> roleToAdd = new LinkedList<>();
+                    // for (String role : user.getRoles()) {
+                    //     getRolesResource().get(role);
+                    //     roleToAdd.add(getRolesResource()
+                    //             .get(role)
+                    //             .toRepresentation());
+                    // }
+    
+                    // UserResource userResource = usersResource.get(rep.getId());
+    
+                    // userResource.roles().clientLevel(getAuthClient()).add(roleToAdd);
                 }
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-
-            if (CollectionUtils.isNotEmpty(roleReps)) {
-                userResource.roles().clientLevel(user.getClient()).add(roleReps);
-            }
-
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+
     }
 
     @Override
@@ -280,84 +229,39 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             users.add(vo);
         }
 
-        Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
-        ResponseEntity<Collection<UserVO>> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
+            ResponseEntity<Collection<UserVO>> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleUpdateUserName(String username, String userId) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return response;
-    }
-
-    @Override
-    public ResponseEntity<?> handleSearch(String criteria) {
-
-        List<UserRepresentation> usersRep = getUsersResource().search(criteria, false);
-
-        if (CollectionUtils.isEmpty(usersRep)) {
-            return ResponseEntity.noContent().build();
-        }
-
-        List<UserVO> users = new ArrayList<>();
-
-        for (UserRepresentation rep : usersRep) {
-            users.add(userRepresentationUserVO(rep));
-        }
-
-        return ResponseEntity.ok(users);
-    }
-
-    @Override
-    public ResponseEntity<?> handleAddClientRoles(String clientId, Set<String> roles, String userId) {
-        List<RoleRepresentation> roleReps = new ArrayList<>();
-        UserResource userResource = getUsersResource().get(userId);
-        RolesResource rolesResource = getClientRolesResource(clientId);
-        UserRepresentation rep = userResource.toRepresentation();
-
-        if(StringUtils.isBlank(rep.getId())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("User with userId %s does not exist.", clientId));
-        }
-
-        for (String role : roles) {
-
-            RoleRepresentation roleRep = rolesResource.get(role).toRepresentation();
-            if (StringUtils.isNotBlank(roleRep.getId())) {
-                roleReps.add(roleRep);
+        try{
+            Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<Boolean> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
+    
+            return response;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        if (CollectionUtils.isNotEmpty(roleReps)) {
-            userResource.roles().clientLevel(clientId).add(roleReps);
-        }
-
-        return ResponseEntity.ok(userRepresentationUserVO(rep));
-    }
-
-    @Override
-    public ResponseEntity<?> handleFindUserById(String userId) {
-        UserRepresentation rep = getUsersResource().get(userId).toRepresentation();
-
-        if (StringUtils.isNotBlank(rep.getId())) {
-            return ResponseEntity.ok(userRepresentationUserVO(rep));
-        }
-
-        return ResponseEntity.notFound().build();
     }
 }

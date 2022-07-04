@@ -20,241 +20,275 @@ import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.licence.LicenceVO;
-import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
-import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.shares.ShareholderVO;
 import bw.org.bocra.portal.report.ReportVO;
 import bw.org.bocra.portal.report.config.ReportConfigVO;
 import bw.org.bocra.portal.sector.SectorVO;
-import bw.org.bocra.portal.user.LicenseeUserService;
 
 @RestController
 @RequestMapping("/licensee")
 public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
-    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService) {
-        super(licenseeService, licenseeUserService);
-    }
-
     protected static Logger log = LoggerFactory.getLogger(LicenseeRestControllerImpl.class);
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<LicenseeVO> data = Optional.of(this.licenseeService.findById(id)); // TODO: Add custom code here;
-        ResponseEntity<LicenseeVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<LicenseeVO> data = Optional.of(this.licenseeService.findById(id)); // TODO: Add custom code here;
+            ResponseEntity<LicenseeVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll()); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenseeVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll()); // TODO: Add custom code here;
+            ResponseEntity<Collection<LicenseeVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(this.licenseeService.remove(id)); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Boolean> data = Optional.of(this.licenseeService.remove(id)); // TODO: Add custom code here;
+            ResponseEntity<Boolean> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSave(LicenseeVO licenseeVO) {
-        Optional<LicenseeVO> data = Optional.of(this.licenseeService.save(licenseeVO)); // TODO: Add custom code here;
-        ResponseEntity<LicenseeVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<LicenseeVO> data = Optional.of(this.licenseeService.save(licenseeVO)); // TODO: Add custom code here;
+            ResponseEntity<LicenseeVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSearch(LicenseeCriteria criteria) {
-        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.search(criteria)); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenseeVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.search(criteria)); // TODO: Add custom code here;
+            ResponseEntity<Collection<LicenseeVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenseeVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
+            ResponseEntity<Collection<LicenseeVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetDocuments(Long id) {
-        Collection<DocumentVO> docs = licenseeService.getDocuments(id);
+        try{
+            Collection<DocumentVO> docs = licenseeService.getDocuments(id);
 
-        if(CollectionUtils.isEmpty(docs)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(docs);
+            if(CollectionUtils.isEmpty(docs)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(docs);
+            }            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
     }
 
     @Override
     public ResponseEntity<?> handleGetForms(Long id) {
-        Collection<FormVO> vos = licenseeService.getForms(id);
+        try{
+            Collection<FormVO> vos = licenseeService.getForms(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetFormSubmissions(Long id) {
-        Collection<FormSubmissionVO> vos = licenseeService.getFormSubmissions(id);
+        try{
+            Collection<FormSubmissionVO> vos = licenseeService.getFormSubmissions(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetLicences(Long id) {
-        Collection<LicenceVO> vos = licenseeService.getLicences(id);
+        try{
+            Collection<LicenceVO> vos = licenseeService.getLicences(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }            
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetReportConfigurations(Long id) {
-        Collection<ReportConfigVO> vos = licenseeService.getReportConfigurations(id);
+        try{
+            Collection<ReportConfigVO> vos = licenseeService.getReportConfigurations(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetReports(Long id) {
-        Collection<ReportVO> vos = licenseeService.getReports(id);
+        try{
+            Collection<ReportVO> vos = licenseeService.getReports(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetSectors(Long id) {
-        Collection<SectorVO> vos = licenseeService.getSectors(id);
+        try{
+            Collection<SectorVO> vos = licenseeService.getSectors(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetShareholders(Long id) {
-        Collection<ShareholderVO> vos = licenseeService.getShareholders(id);
+        try{
+            Collection<ShareholderVO> vos = licenseeService.getShareholders(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<?> handleAddSector(Long licenseeId, Long sectorId) {
+        try{
+            LicenseeSectorVO lvo = getLicenseeService().addSector(licenseeId, sectorId);
 
-        LicenseeSectorVO lvo = getLicenseeService().addSector(licenseeId, sectorId);
-
-        if(lvo == null || lvo.getId() == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
-        } else {
-            return ResponseEntity.ok().body(lvo);
+            if(lvo == null || lvo.getId() == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    
+            } else {
+                return ResponseEntity.ok().body(lvo);
+            }
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
     }
-
-    // @Override
-    // public ResponseEntity<?> handleAddForm(Long licenseeId, Long formId) {
-    //     LicenseeFormVO vo = getLicenseeService().addForm(licenseeId, formId);
-
-    //     if(vo == null || vo.getId() != null) {
-    //         return ResponseEntity.noContent().build();
-    //     }
-
-    //     return ResponseEntity.ok(vo);
-    // }
-
-    // @Override
-    // public ResponseEntity<?> handleRemoveForm(Long licenseeFormId) {
-        
-    //     return ResponseEntity.ok(licenseeService.removeForm(licenseeFormId));
-    // }
-
-    @Override
-    public ResponseEntity<?> handleRemoveSector(Long licenseeSectorId) {
-        return ResponseEntity.ok(getLicenseeService().removeSector(licenseeSectorId));
-    }
-
-    // @Override
-    // public ResponseEntity<?> handleUpdateForm(Long licenseeFormId, Long formId) {
-    //     return ResponseEntity.ok(licenseeService.updateForm(licenseeFormId, formId));
-    // }
-
-    // @Override
-    // public ResponseEntity<?> handleUpdateSector(Long licenseeSectorId, Long sectorId) {
-       
-    //     return ResponseEntity.ok(licenseeService.updateSector(licenseeSectorId, sectorId));
-    // }
 }

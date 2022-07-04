@@ -15,10 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/notification")
 public class NotificationRestControllerImpl extends NotificationRestControllerBase {
 
-    public NotificationRestControllerImpl(NotificationService notificationService) {
-        super(notificationService);
-    }
-
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
@@ -33,7 +29,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -52,7 +48,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -71,7 +67,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -89,11 +85,8 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             }
 
             return response;
-        } catch(IllegalArgumentException e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Delete failed. Id is null.");
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -111,11 +104,8 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             }
 
             return response;
-        } catch(IllegalArgumentException e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Saving failed. Notification is null.");
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -134,7 +124,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
