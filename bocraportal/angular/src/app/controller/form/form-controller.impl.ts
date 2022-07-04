@@ -46,4 +46,7 @@ export class FormControllerImpl extends FormController {
 	public doAddFieldCancelled(form: any): void {
 	}
 
+	public doAddLicensee(form: any): void {
+	}
+
 }

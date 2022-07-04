@@ -88,10 +88,11 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   override doNgOnDestroy() {}
 
   override sectorLicenseesAddDialog(): void {
-    this.store.dispatch(SectorActions.setLicensees({ licensees: [] }));
+    
   }
 
   override sectorLicenseesSearch(): void {
+    this.store.dispatch(SectorActions.setLicensees({ licensees: [] }));
     let criteria: string = '';
     criteria = this.sectorLicenseesSearchField.value;
     this.store.dispatch(

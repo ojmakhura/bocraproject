@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
@@ -25,6 +26,7 @@ import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.notification.NotificationDao;
 import bw.org.bocra.portal.notification.NotificationRepository;
+import bw.org.bocra.portal.sector.form.SectorFormRepository;
 
 /**
  * @see Sector
@@ -35,9 +37,11 @@ public class SectorDaoImpl
 {
 
     public SectorDaoImpl(LicenseeRepository licenseeRepository, LicenseeSectorRepository licenseeSectorRepository,
-            NotificationRepository notificationRepository, SectorRepository sectorRepository) {
-                
-        super(licenseeRepository, licenseeSectorRepository, notificationRepository, sectorRepository);
+            NotificationRepository notificationRepository, FormRepository formRepository,
+            SectorFormRepository sectorFormRepository, SectorRepository sectorRepository) {
+
+        super(licenseeRepository, licenseeSectorRepository, notificationRepository, formRepository, sectorFormRepository,
+                sectorRepository);
     }
 
     /**

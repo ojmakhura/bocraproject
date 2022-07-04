@@ -24,7 +24,12 @@ import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeFormRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.licensee.form.LicenseeForm;
+import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
+import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
+import bw.org.bocra.portal.sector.SectorRepository;
+import bw.org.bocra.portal.sector.form.SectorFormRepository;
 
 /**
  * @see Form
@@ -34,16 +39,16 @@ public class FormDaoImpl
     extends FormDaoBase
 {
 
-
     public FormDaoImpl(LicenceTypeRepository licenceTypeRepository, FormFieldRepository formFieldRepository,
             FormSubmissionRepository formSubmissionRepository, LicenseeRepository licenseeRepository,
             ReportConfigRepository reportConfigRepository, FormSectionRepository formSectionRepository,
-            LicenceTypeFormRepository licenceTypeFormRepository,
-            bw.org.bocra.portal.licensee.form.LicenseeFormRepository licenseeFormRepository,
-            FormReportConfigRepository formReportConfigRepository, FormRepository formRepository) {
+            LicenceTypeFormRepository licenceTypeFormRepository, LicenseeFormRepository licenseeFormRepository,
+            FormReportConfigRepository formReportConfigRepository, SectorFormRepository sectorFormRepository,
+            SectorRepository sectorRepository, FormRepository formRepository) {
+
         super(licenceTypeRepository, formFieldRepository, formSubmissionRepository, licenseeRepository, reportConfigRepository,
                 formSectionRepository, licenceTypeFormRepository, licenseeFormRepository, formReportConfigRepository,
-                formRepository);
+                sectorFormRepository, sectorRepository, formRepository);
     }
 
     /**
@@ -113,15 +118,15 @@ public class FormDaoImpl
             }
         }
 
-        // Set<LicenseeFormVO> licensees = new HashSet<>();
-        // for(LicenseeForm lf : source.getLicenseeForms()) {
-        //     LicenseeFormVO entity = new LicenseeFormVO();
-        //     getLicenseeFormDao().toLicenseeFormVO(lf, entity);
+        Set<LicenseeFormVO> licensees = new HashSet<>();
+        for(LicenseeForm lf : source.getLicenseeForms()) {
+            LicenseeFormVO vo = new LicenseeFormVO();
+            getLicenseeFormDao().toLicenseeFormVO(lf, vo);
 
-        //     licensees.add(entity);
-        // }
+            licensees.add(vo);
+        }
 
-        // target.setLicensees(licensees);
+        target.setLicensees(licensees);
 
     }
 
