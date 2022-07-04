@@ -15,6 +15,7 @@ import { select } from '@ngrx/store';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { Observable } from 'rxjs';
 import { MatRadioChange } from '@angular/material/radio';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-edit-user',
@@ -22,14 +23,14 @@ import { MatRadioChange } from '@angular/material/radio';
   styleUrls: ['./edit-user.component.scss'],
 })
 export class EditUserComponentImpl extends EditUserComponent {
-
   protected http: HttpClient;
-  licensees$: Observable<LicenseeVO[]>;
+  protected keycloakService: KeycloakService;
 
   constructor(private injector: Injector) {
     super(injector);
     this.http = this._injector.get(HttpClient);
-    this.licensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
+    this.userLicensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
+    this.keycloakService = this.injector.get(KeycloakService);
   }
 
   override beforeOnInit(form: EditUserVarsForm): EditUserVarsForm {
@@ -53,28 +54,27 @@ export class EditUserComponentImpl extends EditUserComponent {
       });
     });
 
-    // this.store.dispatch(LicenseeActions.getAll({loading: true}));
-    // this.licensees$.forEach(licensees => {
-    //   licensees.forEach(licensee => {
-    //     let item: SelectItem = new SelectItem();
-    //     item.label = licensee.licenseeName;
-    //     item.value = licensee;
-    //     this.userLicenseeBackingList.push(item);
-    //   });
-    // });
+    this.keycloakService.getToken().then((token) => console.log(token));
+
     return form;
   }
 
   override afterOnInit() {
-    // if (this.useCaseScope.pageVariables['id']) {
-    //   this.store.dispatch(licenceTypeActions.findById({ id: this.useCaseScope.pageVariables['id'] }));
-    // }
-
     this.user$.subscribe((user) => {
-      this.setEditUserFormValue({user: user});
+      this.setEditUserFormValue({ user: user });
     });
   }
 
+  override doNgAfterViewInit() {
+    this.route.queryParams.subscribe((queryParams: any) => {
+      
+      if (queryParams?.userId) {        console.log(queryParams);
+        this.store.dispatch(
+          UserActions.findById({userId: queryParams.userId, loading: true})
+        );
+      }
+    });
+  }
 
   override doNgOnDestroy() {
     this.store.dispatch(LicenseeActions.licenseeReset());
@@ -84,19 +84,23 @@ export class EditUserComponentImpl extends EditUserComponent {
    * This method may be overwritten
    */
   override beforeEditUserSave(form: EditUserSaveForm): void {
-    console.log(form.user)
-    this.store.dispatch(UserActions.createUser({
-      user: form.user,
-      loading: true
-    }));
+    console.log(form.user);
+    this.store.dispatch(
+      UserActions.createUser({
+        user: form.user,
+        loading: true,
+      })
+    );
   }
 
   override userLicenseeSearch(): void {
     let criteria: string = '';
     criteria = this.userLicenseeSearchField.value;
-    this.store.dispatch(LicenseeActions.search({
-      criteria: {uin: criteria, licenseeName: criteria},
-      loading: true
-    }));
+    this.store.dispatch(
+      LicenseeActions.search({
+        criteria: { uin: criteria, licenseeName: criteria },
+        loading: true,
+      })
+    );
   }
 }
