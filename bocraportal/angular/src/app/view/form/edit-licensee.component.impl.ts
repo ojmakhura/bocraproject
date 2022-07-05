@@ -13,6 +13,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select } from '@ngrx/store';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
+import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/form/licensee-form-vo';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -27,6 +28,12 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
+    console.log(form);
+    console.log(this.dialogData)
+    if (!form?.licenseeForm) {
+      form.licenseeForm = new LicenseeFormVO();
+    }
+    form.licenseeForm.form = this.dialogData?.form;
     return form;
   }
   doNgOnDestroy(): void {}

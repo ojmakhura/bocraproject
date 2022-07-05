@@ -20,7 +20,6 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
         super(licenseeFormService);
     }
 
-
     @Override
     public ResponseEntity<?> handleCreate(Long licenseeId, Long formId) {
         try {
@@ -28,6 +27,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
+                System.out.println(data.get());
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();

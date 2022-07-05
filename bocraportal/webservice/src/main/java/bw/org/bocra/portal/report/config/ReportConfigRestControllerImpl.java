@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBase {
 
 
+    public ReportConfigRestControllerImpl(ReportConfigService reportConfigService) {
+        super(reportConfigService);
+        //TODO Auto-generated constructor stub
+    }
+
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{

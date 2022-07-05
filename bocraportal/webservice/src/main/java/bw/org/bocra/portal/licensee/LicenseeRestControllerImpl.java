@@ -20,14 +20,21 @@ import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.shares.ShareholderVO;
 import bw.org.bocra.portal.report.ReportVO;
 import bw.org.bocra.portal.report.config.ReportConfigVO;
 import bw.org.bocra.portal.sector.SectorVO;
+import bw.org.bocra.portal.user.LicenseeUserService;
 
 @RestController
 @RequestMapping("/licensee")
 public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
+
+    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService) {
+        super(licenseeService, licenseeUserService);
+        //TODO Auto-generated constructor stub
+    }
 
     protected static Logger log = LoggerFactory.getLogger(LicenseeRestControllerImpl.class);
 
@@ -290,5 +297,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
+    }
+
+    @Override
+    public ResponseEntity<?> handleRemoveSector(Long licenseeSectorId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -7,6 +7,8 @@ package bw.org.bocra.portal.auth;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("authorisation")
 @CrossOrigin()
 public class AuthorisationRestControllerImpl extends AuthorisationRestControllerBase {
+
+    public AuthorisationRestControllerImpl(AuthorisationService authorisationService) {
+        super(authorisationService);
+        //TODO Auto-generated constructor stub
+    }
 
     protected static Logger log = LoggerFactory.getLogger(AuthorisationRestController.class);
 
@@ -146,5 +153,12 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
+    }
+
+    @Override
+    public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles,
+            Set<String> accessPointTypeCodes) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

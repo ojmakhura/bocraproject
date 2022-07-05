@@ -12,11 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bw.org.bocra.portal.licensee.LicenseeSectorVO;
 
 @RestController
 @RequestMapping("/sector")
 public class SectorRestControllerImpl extends SectorRestControllerBase {
+
+    public SectorRestControllerImpl(SectorService sectorService) {
+        super(sectorService);
+        //TODO Auto-generated constructor stub
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
@@ -135,7 +139,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddLicensee(Long sectorId, Long licenseeId) {
         try{
-            LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
+            bw.org.bocra.portal.licensee.sector.LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
 
             if(lvo == null || lvo.getId() == null) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
