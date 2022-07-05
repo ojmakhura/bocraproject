@@ -8,8 +8,10 @@ package bw.org.bocra.portal.form.submission;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
@@ -23,6 +25,7 @@ import bw.org.bocra.portal.form.section.FormSection;
 import bw.org.bocra.portal.form.section.FormSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
+import bw.org.bocra.portal.form.submission.data.DataFieldSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 import bw.org.bocra.portal.form.submission.note.NoteRepository;
 import bw.org.bocra.portal.licensee.Licensee;
@@ -70,13 +73,39 @@ public class FormSubmissionDaoImpl
             target.setForm(formVO);
             
             if(CollectionUtils.isNotEmpty(source.getDataFields())) {
+                Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
                 Collection<DataFieldVO> datas = new HashSet<>();
                 for (DataField dataField : source.getDataFields()) {
                     DataFieldVO data = new DataFieldVO();
-                    getDataFieldDao().toDataFieldVO(dataField, data);
+                    //getDataFieldDao().toDataFieldVO(dataField, data);
+                    data.setId(dataField.getId());
+                    data.setUnits(dataField.getUnits());
+                    data.setValue(dataField.getValue());
                     datas.add(data);
+
+                    FormSection section = dataField.getFormField().getFormSection();
+
+                    DataFieldSectionVO sec = new DataFieldSectionVO();
+                    sec.setPosition(section.getPosition());
+                    sec.setSectionLabel(section.getSectionLabel());
+                    sec.setSectionName(section.getSectionName());
+
+                    if(!sectioned.containsKey(sec)) {
+                        sectioned.put(sec, new ArrayList<>());
+                    }
+
+                    sectioned.get(sec).add(data);
                 }
-                target.setDataFields(datas);
+                //target.setDataFields(datas);
+                Collection<DataFieldSectionVO> sections = new ArrayList<>();
+                
+                for(Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
+                    DataFieldSectionVO sec = entry.getKey();
+                    sec.setDataFields(entry.getValue());
+                    sections.add(sec);
+                }
+
+                target.setSections(sections);
             }
         }
 
@@ -160,8 +189,9 @@ public class FormSubmissionDaoImpl
             Period period = getPeriodDao().load(source.getPeriod().getId());
             target.setPeriod(period);
         }
+        
 
-        if(CollectionUtils.isNotEmpty(source.getDataFields())) {
+        /*if(CollectionUtils.isNotEmpty(source.getDataFields())) {
             Collection<DataField> datas = new HashSet<>();
             for (DataFieldVO dataField : source.getDataFields()) {
                 if(dataField.getId() != null){
@@ -171,6 +201,24 @@ public class FormSubmissionDaoImpl
                 }
             }
             target.setDataFields(datas);
+        }*/
+
+        target.setDataFields(new ArrayList<>());
+
+        for(DataFieldSectionVO section : source.getSections()) {
+            for (DataFieldVO dataField : section.getDataFields()) {
+                if(dataField.getId() != null){
+                    DataField data = getDataFieldDao().load(dataField.getId());
+                    data.setValue(dataField.getValue());
+                    //getDataFieldDao().update(data);
+                    target.getDataFields().add(data);
+                } else {
+                    DataField data = DataField.Factory.newInstance();
+                    getDataFieldDao().dataFieldVOToEntity(dataField, data, copyIfNull);
+                    //data = getDataFieldRepository().save(data);
+                    target.getDataFields().add(data);
+                }
+            }
         }
     }
 }

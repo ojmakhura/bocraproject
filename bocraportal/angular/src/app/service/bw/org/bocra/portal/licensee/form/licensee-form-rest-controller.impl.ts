@@ -13,26 +13,22 @@ export class LicenseeFormRestControllerImpl extends LicenseeFormRestController {
 
     public override create(licenseeId: number | any , formId: number | any ): Observable<LicenseeFormVO | any> {
 
-        return this.http.post<LicenseeFormVO | any>(this.path, {licenseeId: licenseeId, formId: formId});
-
+        return this.http.post<LicenseeFormVO | any>(this.path + `?licenseeId=${licenseeId}&formId=${formId}`, { });
     }
 
     public override findByForm(formId: number | any ): Observable<LicenseeFormVO[] | any[]> {
 
         return this.http.get<LicenseeFormVO[] | any[]>(this.path + `/{formId}/formId/${formId}`);
-
     }
 
     public override findById(id: number | any ): Observable<LicenseeFormVO | any> {
 
         return this.http.get<LicenseeFormVO | any>(this.path + `/${id}`);
-
     }
 
     public override findByLicensee(licenseeId: number | any ): Observable<LicenseeFormVO[] | any[]> {
 
         return this.http.get<LicenseeFormVO[] | any[]>(this.path + `/${licenseeId}`);
-
     }
 
     public override getAll(): Observable<LicenseeFormVO[] | any[]> {
@@ -44,19 +40,16 @@ export class LicenseeFormRestControllerImpl extends LicenseeFormRestController {
     public override remove(id: number | any ): Observable<boolean | any> {
 
         return this.http.delete<boolean | any>(this.path + `/${id}`);
-
     }
 
     public override updateForm(id: number | any , formId: number | any ): Observable<LicenseeFormVO | any> {
 
         return this.http.patch<LicenseeFormVO | any>(this.path + `/${id}/${formId}`, {id: id, formId: formId});
-
     }
 
     public override updateLicensee(id: number | any , licenseeId: number | any ): Observable<LicenseeFormVO | any> {
 
         return this.http.patch<LicenseeFormVO | any>(this.path + `/${id}/${licenseeId}`, {id: id, licenseeId: licenseeId});
-
     }
 
 }

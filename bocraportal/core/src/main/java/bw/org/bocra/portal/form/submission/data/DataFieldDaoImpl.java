@@ -51,13 +51,17 @@ public class DataFieldDaoImpl
 
         if(source.getFormField() != null) {
             FormFieldVO field = new FormFieldVO();
-            getFormFieldDao().toFormFieldVO(source.getFormField(), field);
+            field.setId(source.getFormField().getId());
+            field.setFieldId(source.getFormField().getFieldId());
+            field.setFieldName(source.getFormField().getFieldName());
+            field.setFieldValueType(source.getFormField().getFieldValueType());
+            field.setFieldType(source.getFormField().getFieldType());
             target.setFormField(field);
         }
 
         if(source.getFormSubmission() != null) {
             FormSubmissionVO submission = new FormSubmissionVO();
-            getFormSubmissionDao().toFormSubmissionVO(source.getFormSubmission(), submission);
+            submission.setId(source.getFormSubmission().getId());
             target.setFormSubmission(submission);
         }
     }
