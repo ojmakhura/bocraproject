@@ -8,14 +8,26 @@
  */
 package bw.org.bocra.portal.form.activation;
 
+import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
+import bw.org.bocra.portal.form.section.FormSection;
+import bw.org.bocra.portal.form.submission.FormSubmission;
 import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
+import bw.org.bocra.portal.form.submission.FormSubmissionStatus;
+import bw.org.bocra.portal.licence.type.LicenceType;
+import bw.org.bocra.portal.licence.type.LicenceTypeForm;
+import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.licensee.form.LicenseeForm;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -68,7 +80,28 @@ public class FormActivationServiceImpl
          * associated with the form.
          */
         if(formActivation.getId() == null) {
+            Set<Licensee> licensees = new HashSet<>();
+            Form form = activation.getForm();
             
+            for(LicenseeForm licensee : form.getLicenseeForms()) {
+                licensees.add(licensee.getLicensee());
+            }
+            
+            // for(LicenceTypeForm ltf : form.getLicenceTypeForms()) {
+            //     LicenceType lt = ltf.getLicenceType();
+            //     for(Licensee licensee : lt.get)
+            // }
+
+            for(Licensee licensee : licensees) {
+                FormSubmission submission = FormSubmission.Factory.newInstance();
+                submission.setCreatedBy(activation.getCreatedBy());
+                submission.setCreatedDate(LocalDateTime.now());
+                submission.setForm(form);
+                submission.setLicensee(licensee);
+                submission.setPeriod(activation.getPeriod());
+                //submission.setSubmissionStatus(FormSubmissionStatus.);
+            }
+
         }
 
         return formActivationDao.toFormActivationVO(activation);
