@@ -41,7 +41,6 @@ export class EditFormComponentImpl extends EditFormComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.formLicenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
-    //this.formLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.keycloakService = injector.get(KeycloakService);
     this.formFormFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
     this.formField$ = this.store.pipe(select(FormSelectors.selectFormField));

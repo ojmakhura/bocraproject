@@ -104,28 +104,28 @@
             </div>
           </div>
         </fieldset>
-        <div formArrayName="formDatas">
-          <legend id="formSubmissionFormDatas_label" class="col-sm-2 col-form-label" for="formSubmissionFormDatas">
-            <span translate>form.datas</span>
+        <div formArrayName="dataFields">
+          <legend id="formSubmissionDataFields_label" class="col-sm-2 col-form-label" for="formSubmissionDataFields">
+            <span translate>data.fields</span>
           </legend>
-          <div *ngFor="let formData of formSubmissionFormDatas; let i = index" [formGroupName]='i'>
-            <div class="mb-3" *ngIf="isButton(formData)">
-              <input type="button" class="btn btn-primary" value="{{getDataValue(formData)}}">
+          <div *ngFor="let dataField of formSubmissionDataFields; let i = index" [formGroupName]='i'>
+            <div class="mb-3" *ngIf="isButton(dataField)">
+              <input type="button" class="btn btn-primary" value="{{getDataValue(dataField)}}">
             </div>
-            <div class="mb-3" *ngIf="!isHidden(formData) && isSimpleType(formData)">
-              <label class="form-label">{{getDataValue(formData)}}</label>
-              <input class="form-control" type="{{this.getType(formData)}}" formControlName="value" *ngIf="!isTextArea(formData)
-												&& !isSelect(formData) && !isRange(formData)">
-              <textarea class="form-control" formControlName="value" *ngIf="isTextArea(formData)"></textarea>
+            <div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
+              <label class="form-label">{{getDataValue(dataField)}}</label>
+              <input class="form-control" type="{{this.getType(dataField)}}" formControlName="value" *ngIf="!isTextArea(dataField)
+												&& !isSelect(dataField) && !isRange(dataField)">
+              <textarea class="form-control" formControlName="value" *ngIf="isTextArea(dataField)"></textarea>
               <select class="form-select" aria-label="Default select example" formControlName="value"
-                *ngIf="isSelect(formData)">
+                *ngIf="isSelect(dataField)">
                 <option selected></option>
                 <option value="1">One</option>
                 <option value="2">Two</option>
                 <option value="3">Three</option>
               </select>
-              <input type="range" class="form-range" min="{{formData.formField.min}}" max="{{formData.formField.max}}"
-                *ngIf="isRange(formData)">
+              <input type="range" class="form-range" min="{{dataField.formField.min}}" max="{{dataField.formField.max}}"
+                *ngIf="isRange(dataField)">
             </div>
           </div>
         </div>

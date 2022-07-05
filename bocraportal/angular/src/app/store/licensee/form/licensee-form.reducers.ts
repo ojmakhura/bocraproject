@@ -76,7 +76,7 @@ export const licenseeFormReducer = createReducer(
   }))
 );
 
-export const licenseeFeature = createFeature({
+export const licenseeFormFeature = createFeature({
   name: licenseeFormKey,
   reducer: licenseeFormReducer,
 });

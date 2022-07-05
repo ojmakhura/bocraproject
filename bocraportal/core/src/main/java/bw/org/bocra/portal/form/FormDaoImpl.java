@@ -86,14 +86,16 @@ public class FormDaoImpl
 
             for (FormField entity : source.getFormFields()) {
                 FormFieldVO field = new FormFieldVO();
-                field.setId(entity.getId());
-                field.setCreatedBy(entity.getCreatedBy());
-                field.setCreatedDate(entity.getCreatedDate());
-                field.setUpdatedBy(entity.getUpdatedBy());
-                field.setUpdatedDate(entity.getUpdatedDate());
-                field.setFieldId(entity.getFieldId());
-                field.setFieldName(entity.getFieldName());
-                field.setFieldType(entity.getFieldType());
+                // field.setId(entity.getId());
+                // field.setCreatedBy(entity.getCreatedBy());
+                // field.setCreatedDate(entity.getCreatedDate());
+                // field.setUpdatedBy(entity.getUpdatedBy());
+                // field.setUpdatedDate(entity.getUpdatedDate());
+                // field.setFieldId(entity.getFieldId());
+                // field.setFieldName(entity.getFieldName());
+                // field.setFieldType(entity.getFieldType());
+
+                formFieldDao.toFormFieldVO(entity, field);
 
                 target.getFormFields().add(field);
             }
@@ -106,13 +108,15 @@ public class FormDaoImpl
 
             for(FormSection entity : source.getFormSections()) {
                 FormSectionVO section = new FormSectionVO();
-                section.setId(entity.getId());
-                section.setCreatedBy(entity.getCreatedBy());
-                section.setCreatedDate(entity.getCreatedDate());
-                section.setUpdatedBy(entity.getUpdatedBy());
-                section.setUpdatedDate(entity.getUpdatedDate());
-                section.setPosition(entity.getPosition());
-                section.setSectionName(entity.getSectionName());
+                // section.setId(entity.getId());
+                // section.setCreatedBy(entity.getCreatedBy());
+                // section.setCreatedDate(entity.getCreatedDate());
+                // section.setUpdatedBy(entity.getUpdatedBy());
+                // section.setUpdatedDate(entity.getUpdatedDate());
+                // section.setPosition(entity.getPosition());
+                // section.setSectionName(entity.getSectionName());
+
+                getFormSectionDao().toFormSectionVO(entity, section);
 
                 target.getFormSections().add(section);
             }

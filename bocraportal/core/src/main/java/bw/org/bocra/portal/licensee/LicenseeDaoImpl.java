@@ -26,8 +26,12 @@ import bw.org.bocra.portal.licence.Licence;
 import bw.org.bocra.portal.licence.LicenceDao;
 import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
+import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
 import bw.org.bocra.portal.licensee.shares.ShareholderDao;
 import bw.org.bocra.portal.licensee.shares.ShareholderRepository;
@@ -89,27 +93,26 @@ public class LicenseeDaoImpl
             }
         }
 
-        // if(CollectionUtils.isNotEmpty(source.getLicenseeSectors())) {
+        if(CollectionUtils.isNotEmpty(source.getLicenseeSectors())) {
 
-        //     target.setSectors(new ArrayList<>());
+            target.setSectors(new ArrayList<>());
 
-        //     for(LicenseeSector entity : source.getLicenseeSectors()) {
-        //         LicenseeSectorVO vo = new LicenseeSectorVO();
-        //         vo.setLicenseeSectorId(entity.getId());
-        //         vo.setId(entity.getSector().getId());
-        //         vo.setCode(entity.getSector().getCode());
-        //         vo.setName(entity.getSector().getName());
-        //         target.getSectors().add(vo);
-        //     }
-        // }
+            for(LicenseeSector entity : source.getLicenseeSectors()) {
+                LicenseeSectorVO vo = new LicenseeSectorVO();
+                vo.setLicenseeSectorId(entity.getId());
+                vo.setId(entity.getSector().getId());
+                vo.setCode(entity.getSector().getCode());
+                vo.setName(entity.getSector().getName());
+                target.getSectors().add(vo);
+            }
+        }
 
         // if(CollectionUtils.isNotEmpty(source.getLicenseeForms())) {
 
         //     target.setSectors(new ArrayList<>());
 
         //     for(LicenseeForm entity : source.getLicenseeForms()) {
-        //         FormVO vo = new FormVO();
-        //         formDao.toFormVO(entity.getForm(), vo);
+        //         LicenseeFormVO vo = new LicenseeFormVO();
         //         target.getForms().add(vo);
         //     }
         // }

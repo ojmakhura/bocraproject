@@ -13,8 +13,8 @@ import java.util.Collection;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import bw.org.bocra.portal.form.submission.data.FormDataDao;
-import bw.org.bocra.portal.form.submission.data.FormDataRepository;
+import bw.org.bocra.portal.form.submission.data.DataFieldDao;
+import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 
 /**
  * @see bw.org.bocra.portal.form.submission.SubmissionService
@@ -25,8 +25,9 @@ public class SubmissionServiceImpl
 {
 
     public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
-            FormDataDao formDataDao, FormDataRepository formDataRepository, MessageSource messageSource) {
-        super(formSubmissionDao, formSubmissionRepository, formDataDao, formDataRepository, messageSource);
+            DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
+                
+        super(formSubmissionDao, formSubmissionRepository, dataFieldDao, dataFieldRepository, messageSource);
     }
 
     /**

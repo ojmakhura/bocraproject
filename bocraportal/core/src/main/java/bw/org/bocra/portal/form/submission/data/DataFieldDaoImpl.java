@@ -9,38 +9,45 @@ package bw.org.bocra.portal.form.submission.data;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.field.FormField;
-import bw.org.bocra.portal.form.field.FormFieldDao;
 import bw.org.bocra.portal.form.field.FormFieldRepository;
 import bw.org.bocra.portal.form.field.FormFieldVO;
+import bw.org.bocra.portal.form.section.FormSection;
 import bw.org.bocra.portal.form.submission.FormSubmission;
-import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 
 /**
- * @see FormData
+ * @see DataField
  */
-@Repository("formDataDao")
-public class FormDataDaoImpl
-    extends FormDataDaoBase
+@Repository("dataFieldDao")
+public class DataFieldDaoImpl
+    extends DataFieldDaoBase
 {
 
-    public FormDataDaoImpl(FormFieldRepository formFieldRepository, FormSubmissionRepository formSubmissionRepository,
-            FormDataRepository formDataRepository) {
+    public DataFieldDaoImpl(FormFieldRepository formFieldRepository, FormSubmissionRepository formSubmissionRepository,
+            DataFieldRepository dataFieldRepository) {
                 
-        super(formFieldRepository, formSubmissionRepository, formDataRepository);
+        super(formFieldRepository, formSubmissionRepository, dataFieldRepository);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void toFormDataVO(
-        FormData source,
-        FormDataVO target)
+    public void toDataFieldVO(
+        DataField source,
+        DataFieldVO target)
     {
-        // TODO verify behavior of toFormDataVO
-        super.toFormDataVO(source, target);
+        // TODO verify behavior of toDataFieldVO
+        super.toDataFieldVO(source, target);
+        if(source.getFormField().getFormSection() != null) {
+            FormSection section = source.getFormField().getFormSection();
+
+            if(section.getPosition() != null) {
+                target.setSectionPosition(section.getPosition());
+                target.setSectionLabel(section.getSectionLabel());
+            }
+        }
 
         if(source.getFormField() != null) {
             FormFieldVO field = new FormFieldVO();
@@ -59,10 +66,10 @@ public class FormDataDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public FormDataVO toFormDataVO(final FormData entity)
+    public DataFieldVO toDataFieldVO(final DataField entity)
     {
-        // TODO verify behavior of toFormDataVO
-        return super.toFormDataVO(entity);
+        // TODO verify behavior of toDataFieldVO
+        return super.toDataFieldVO(entity);
     }
 
     /**
@@ -70,27 +77,27 @@ public class FormDataDaoImpl
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private FormData loadFormDataFromFormDataVO(FormDataVO formDataVO)
+    private DataField loadDataFieldFromDataFieldVO(DataFieldVO dataFieldVO)
     {
 
-        if (formDataVO.getId() == null)
+        if (dataFieldVO.getId() == null)
         {
-            return  FormData.Factory.newInstance();
+            return  DataField.Factory.newInstance();
         }
         else
         {
-            return this.load(formDataVO.getId());
+            return this.load(dataFieldVO.getId());
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public FormData formDataVOToEntity(FormDataVO formDataVO)
+    public DataField dataFieldVOToEntity(DataFieldVO dataFieldVO)
     {
-        // TODO verify behavior of formDataVOToEntity
-        FormData entity = this.loadFormDataFromFormDataVO(formDataVO);
-        this.formDataVOToEntity(formDataVO, entity, true);
+        // TODO verify behavior of dataFieldVOToEntity
+        DataField entity = this.loadDataFieldFromDataFieldVO(dataFieldVO);
+        this.dataFieldVOToEntity(dataFieldVO, entity, true);
         return entity;
     }
 
@@ -98,13 +105,13 @@ public class FormDataDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public void formDataVOToEntity(
-        FormDataVO source,
-        FormData target,
+    public void dataFieldVOToEntity(
+        DataFieldVO source,
+        DataField target,
         boolean copyIfNull)
     {
-        // TODO verify behavior of formDataVOToEntity
-        super.formDataVOToEntity(source, target, copyIfNull);
+        // TODO verify behavior of dataFieldVOToEntity
+        super.dataFieldVOToEntity(source, target, copyIfNull);
 
         if(source.getFormField() != null && source.getFormField().getId() != null) {
             FormField field = formFieldDao.load(source.getFormField().getId());

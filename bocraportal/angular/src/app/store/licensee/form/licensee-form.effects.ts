@@ -6,7 +6,7 @@ import * as LicenseeFormActions from './licensee-form.actions';
 import { LicenseeFormRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/form/licensee-form-rest-controller.impl';
 
 @Injectable()
-export class LicenseeEffects {
+export class LicenseeFormEffects {
   documentRestController: any;
 
   constructor(private actions$: Actions, private licenseeFormRestController: LicenseeFormRestControllerImpl) {}

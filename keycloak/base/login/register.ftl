@@ -10,7 +10,7 @@
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
                     <input type="text" id="firstName" placeholder="FirstName" class="${properties.kcInputClass!}" name="firstName"
-                           value="${(register.formData.firstName!'')}"
+                           value="${(register.dataField.firstName!'')}"
                            aria-invalid="<#if messagesPerField.existsError('firstName')>true</#if>"
                     />
 
@@ -28,7 +28,7 @@
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
                     <input type="text" id="lastName" placeholder="LastName" class="${properties.kcInputClass!}" name="lastName"
-                           value="${(register.formData.lastName!'')}"
+                           value="${(register.dataField.lastName!'')}"
                            aria-invalid="<#if messagesPerField.existsError('lastName')>true</#if>"
                     />
 
@@ -46,7 +46,7 @@
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
                     <input type="text" id="email" placeholder="Email" class="${properties.kcInputClass!}" name="email"
-                           value="${(register.formData.email!'')}" autocomplete="email"
+                           value="${(register.dataField.email!'')}" autocomplete="email"
                            aria-invalid="<#if messagesPerField.existsError('email')>true</#if>"
                     />
 
@@ -65,7 +65,7 @@
                     </div>
                     <div class="${properties.kcInputWrapperClass!}">
                         <input type="text" id="username" placeholder="UserName" class="${properties.kcInputClass!}" name="username"
-                               value="${(register.formData.username!'')}" autocomplete="username"
+                               value="${(register.dataField.username!'')}" autocomplete="username"
                                aria-invalid="<#if messagesPerField.existsError('username')>true</#if>"
                         />
 

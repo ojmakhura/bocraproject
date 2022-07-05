@@ -42,7 +42,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
       f?.formSections?.forEach((element: FormSectionVO) => {
         let item: SelectItem = new SelectItem();
         item.label = element.sectionName;
-        item.value = element;
+        item.value = element.id;
 
         this.formFieldFormSectionBackingList.push(item);
       });
@@ -74,7 +74,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
 
     this.formField$.subscribe(field => {
       if(field) {
-        console.log(field)
+        
         if(field.form) {
           this.store.dispatch(FormActions.findFormById({ id: field.form.id, loading: true }));
         }
@@ -85,7 +85,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
     
     
     this.form$.subscribe((f) => {
-      console.log(f)
+      
       this.formFieldFormControl.patchValue(f);
       this.formFieldFormSectionBackingList = []
       f?.formSections?.forEach((element: FormSectionVO) => {
@@ -119,6 +119,8 @@ export class EditFieldComponentImpl extends EditFieldComponent {
    */
   override beforeEditFieldSave(form: EditFieldSaveForm): void {
     
+    console.log(form);
+
     if (this.formFieldControl.dirty && this.formFieldControl.valid) {
       if (this.formField.id) {
         this.formField.updatedBy = this.keycloakService.getUsername();

@@ -10,8 +10,11 @@ package bw.org.bocra.portal.form;
 
 import java.util.Collection;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
+import bw.org.bocra.portal.form.field.FormField;
 
 /**
  * @see bw.org.bocra.portal.form.FormService
@@ -66,6 +69,16 @@ public class FormServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
+
+        Form form = getFormDao().load(id);
+        if(CollectionUtils.isNotEmpty(form.getFormSubmissions())) {
+            throw new FormServiceException("This form cannot be removed. It has data associated with it.");
+        }
+
+        // for(FormField field : form.getFormFields()) {
+            
+        // }
+
         if(id == null) {
             return false;
         }

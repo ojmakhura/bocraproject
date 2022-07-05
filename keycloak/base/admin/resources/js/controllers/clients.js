@@ -786,10 +786,10 @@ module.controller(
               storePassword: $scope.uploadStorePassword,
             },
             file: $file,
-            /* set file formData name for 'Content-Desposition' header. Default: 'file' */
-            //fileFormDataName: myFile,
-            /* customize how data is added to formData. See #40#issuecomment-28612000 for example */
-            //formDataAppender: function(formData, key, val){}
+            /* set file dataField name for 'Content-Desposition' header. Default: 'file' */
+            //fileDataFieldName: myFile,
+            /* customize how data is added to dataField. See #40#issuecomment-28612000 for example */
+            //dataFieldAppender: function(dataField, key, val){}
           })
           .then(function (data, status, headers) {
             Notifications.success("Keystore uploaded successfully.");
@@ -1264,10 +1264,10 @@ module.controller(
             // headers: {'headerKey': 'headerValue'}, withCredential: true,
             data: { myObj: "" },
             file: $file,
-            /* set file formData name for 'Content-Desposition' header. Default: 'file' */
-            //fileFormDataName: myFile,
-            /* customize how data is added to formData. See #40#issuecomment-28612000 for example */
-            //formDataAppender: function(formData, key, val){}
+            /* set file dataField name for 'Content-Desposition' header. Default: 'file' */
+            //fileDataFieldName: myFile,
+            /* customize how data is added to dataField. See #40#issuecomment-28612000 for example */
+            //dataFieldAppender: function(dataField, key, val){}
           })
           .success(function (data, status, headers) {
             Notifications.success("Uploaded successfully.");
