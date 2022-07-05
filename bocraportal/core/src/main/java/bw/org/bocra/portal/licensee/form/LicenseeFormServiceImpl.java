@@ -71,6 +71,7 @@ public class LicenseeFormServiceImpl
     protected LicenseeFormVO handleCreate(Long licenseeId, Long formId)
         throws Exception
     {
+        System.out.println(String.format("Creating for licensee %d and form %d", licenseeId,formId));
         Licensee licensee = getLicenseeDao().load(licenseeId);
         Form form = getFormDao().load(formId);
         LicenseeForm lf = LicenseeForm.Factory.newInstance();
