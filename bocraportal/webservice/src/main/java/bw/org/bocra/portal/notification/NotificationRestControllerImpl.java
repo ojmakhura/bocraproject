@@ -29,7 +29,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -48,7 +48,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -67,7 +67,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -86,7 +86,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -105,7 +105,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -124,7 +124,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
 
             return response;
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
