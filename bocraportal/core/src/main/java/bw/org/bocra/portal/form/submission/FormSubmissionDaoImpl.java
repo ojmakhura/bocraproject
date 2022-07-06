@@ -74,14 +74,9 @@ public class FormSubmissionDaoImpl
             
             if(CollectionUtils.isNotEmpty(source.getDataFields())) {
                 Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
-                Collection<DataFieldVO> datas = new HashSet<>();
                 for (DataField dataField : source.getDataFields()) {
                     DataFieldVO data = new DataFieldVO();
-                    //getDataFieldDao().toDataFieldVO(dataField, data);
-                    data.setId(dataField.getId());
-                    data.setUnits(dataField.getUnits());
-                    data.setValue(dataField.getValue());
-                    datas.add(data);
+                    getDataFieldDao().toDataFieldVO(dataField, data);
 
                     FormSection section = dataField.getFormField().getFormSection();
 

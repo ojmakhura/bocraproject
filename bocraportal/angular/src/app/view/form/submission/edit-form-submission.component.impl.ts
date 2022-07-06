@@ -22,11 +22,12 @@ import { SelectItem } from '@app/utils/select-item';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { SanitizeHtml } from '@app/pipe/sanitize-html.pipe';
 import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
-import { FormGroup } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
+import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
 
 // <div formArrayName="dataFields">
 // 					<div *ngFor="let dataField of formSubmissionDataFields.controls; let i = index"  [formGroupName]='i'>
@@ -74,10 +75,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   override doNgAfterViewInit() {
-
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
-        console.log(queryParams.id)
         this.store.dispatch(
           FormSubmissionActions.findById({
             id: queryParams.id,
@@ -87,9 +86,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       }
     });
 
-    this.formSubmission$.subscribe(submission => {
-      this.setEditFormSubmissionFormValue({formSubmission: submission});
-      console.log(this.formSubmissionControl)
+    this.formSubmission$.subscribe((submission) => {
+      this.setEditFormSubmissionFormValue({ formSubmission: submission });
     });
 
     // this.store.dispatch(FormActions.getAllForms({ loading: true }));
@@ -124,14 +122,22 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
    * This method may be overwritten
    */
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
-    if (form.formSubmission?.id) {
-      form.formSubmission.updatedBy = this.keycloakService.getUsername();
-      form.formSubmission.updatedDate = new Date();
-    } else {
-      form.formSubmission.createdBy = this.keycloakService.getUsername();
-      form.formSubmission.createdDate = new Date();
-    }
+    let formSubmission: FormSubmissionVO = form.formSubmission;
+    formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;
+
     //this.store.dispatch(SubmissionActions.save({ formSubmission: form.formSubmission }));
+  }
+
+  private doFormSubmissionSave(formSubmission: FormSubmissionVO) {
+    if (formSubmission?.id) {
+      formSubmission.updatedBy = this.keycloakService.getUsername();
+      formSubmission.updatedDate = new Date();
+    } else {
+      formSubmission.createdBy = this.keycloakService.getUsername();
+      formSubmission.createdDate = new Date();
+    }
+
+    //this.store.dispatch(SubmissionActions.save({ form.formSubmission }));
   }
 
   getFormObject(form: string) {
@@ -207,7 +213,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       sectionName: [value?.sectionName],
       sectionLabel: [value?.sectionLabel],
       position: [value?.position],
-      dataFields: this.createDataFieldVOArray(value.dataFields)
+      dataFields: this.createDataFieldVOArray(value.dataFields),
     });
   }
 
@@ -221,5 +227,21 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   getDataValue(data: DataFieldVO) {
     return `${data.formField.fieldName}`;
+  }
+
+  getSectorFieldsControls(i: number): FormArray {
+    return this.formSubmissionSectionsControl.controls[i].get('dataFields') as FormArray;
+  }
+
+  getSectorFields(i: number): DataFieldVO[] {
+    return this.formSubmissionSectionsControl.controls[i].get('dataFields')?.value;
+  }
+
+  getSectionName(i: number): string {
+    return this.formSubmissionSectionsControl.controls[i].value.sectionName;
+  }
+
+  getSectionLabel(i: number): string {
+    return this.formSubmissionSectionsControl.controls[i].value.sectionLabel;
   }
 }

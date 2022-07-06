@@ -129,10 +129,39 @@
 				</fieldset> -->
 				<div formArrayName="sections">
 					<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index" [formGroupName]='i'>
-						{{ section.value.sectionName }}
-						<div *ngFor="let dataField of section.value.dataFields">
-							{{dataField.id}}
+						<div>
+							<span>
+								{{ getSectionName(i) }}
+							</span>
 						</div>
+						<div formArrayName="dataFields">
+							<div *ngFor="let dataField of getSectorFields(i); let j = index" [formGroupName]='j'>
+								<div class="mb-3" *ngIf="isButton(dataField)">
+									<input type="button" class="btn btn-primary" value="{{getDataValue(dataField)}}">
+								</div>
+								<div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
+									<label class="form-label">{{getDataValue(dataField)}}</label>
+									<input class="form-control" type="{{this.getType(dataField)}}" formControlName="value"
+										*ngIf="!isTextArea(dataField)
+																&& !isSelect(dataField) && !isRange(dataField)">
+									<textarea class="form-control" formControlName="value"
+										*ngIf="isTextArea(dataField)"></textarea>
+									<select class="form-select" aria-label="Default select example" formControlName="value"
+										*ngIf="isSelect(dataField)">
+										<option selected></option>
+										<option value="1">One</option>
+										<option value="2">Two</option>
+										<option value="3">Three</option>
+									</select>
+									<input type="range" class="form-range" min="{{dataField.formField.min}}"
+										max="{{dataField.formField.max}}" *ngIf="isRange(dataField)">
+								</div>
+							</div>
+						</div>
+						<!-- <div *ngFor="let dataField of section.value.dataFields">
+							{{dataField.id}}
+							
+						</div> -->
 						<!-- <div formArrayName="dataFields">
 							<div *ngFor="let dataField of section.dataFields; let j = index" [formGroupName]='j'>
 								<div class="mb-3" *ngIf="isButton(dataField)">
@@ -158,34 +187,6 @@
 							</div>
 						</div> -->
 					</div>
-					<!-- <div formArrayName="dataFields">
-						<legend id="formSubmissionDataFields_label" class="col-sm-2 col-form-label"
-							for="formSubmissionDataFields">
-							<span translate>data.fields</span>
-						</legend>
-						<div *ngFor="let dataField of formSubmissionDataFields; let i = index" [formGroupName]='i'>
-							<div class="mb-3" *ngIf="isButton(dataField)">
-								<input type="button" class="btn btn-primary" value="{{getDataValue(dataField)}}">
-							</div>
-							<div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-								<label class="form-label">{{getDataValue(dataField)}}</label>
-								<input class="form-control" type="{{this.getType(dataField)}}" formControlName="value"
-									*ngIf="!isTextArea(dataField)
-															&& !isSelect(dataField) && !isRange(dataField)">
-								<textarea class="form-control" formControlName="value"
-									*ngIf="isTextArea(dataField)"></textarea>
-								<select class="form-select" aria-label="Default select example" formControlName="value"
-									*ngIf="isSelect(dataField)">
-									<option selected></option>
-									<option value="1">One</option>
-									<option value="2">Two</option>
-									<option value="3">Three</option>
-								</select>
-								<input type="range" class="form-range" min="{{dataField.formField.min}}"
-									max="{{dataField.formField.max}}" *ngIf="isRange(dataField)">
-							</div>
-						</div>
-					</div> -->
 				</div>
 				<div class="mb-3">
 					<label id="formSubmissionSubmissionStatus_label" class="col-sm-2 col-form-label"

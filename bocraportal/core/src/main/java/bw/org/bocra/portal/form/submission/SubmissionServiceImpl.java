@@ -15,8 +15,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
+import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.period.PeriodVO;
 
@@ -39,8 +41,16 @@ public class SubmissionServiceImpl
     @Override
     protected FormSubmissionVO handleFindById(Long id)
             throws Exception {
-        return id == null ? null
-                : (FormSubmissionVO) getFormSubmissionDao().get(FormSubmissionDao.TRANSFORM_FORMSUBMISSIONVO, id);
+
+        FormSubmission entity = getFormSubmissionDao().get(id);
+        FormSubmissionVO submission = getFormSubmissionDao().toFormSubmissionVO(entity);
+
+        // for(DataField field : entity.getDataFields()) {
+        //     DataFieldVO vo = getDataFieldDao().toDataFieldVO(field);
+        // }
+        //submission.setDataFields(value);
+        
+        return submission;
     }
 
     /**
