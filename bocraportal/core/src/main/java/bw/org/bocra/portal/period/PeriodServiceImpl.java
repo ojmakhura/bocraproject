@@ -8,8 +8,10 @@
  */
 package bw.org.bocra.portal.period;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,6 +24,10 @@ import org.springframework.stereotype.Service;
 public class PeriodServiceImpl
     extends PeriodServiceBase
 {
+
+    public PeriodServiceImpl(PeriodDao periodDao, PeriodRepository periodRepository, MessageSource messageSource) {
+        super(periodDao, periodRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.period.PeriodService#findById(Long)
@@ -48,11 +54,27 @@ public class PeriodServiceImpl
     protected  PeriodVO handleSave(PeriodVO periodVO)
         throws Exception
     {
+        Period period = periodDao.periodVOToEntity(periodVO);
+        period = this.periodRepository.save(period);
+
         if(periodVO.getId() != null) {
+            periodVO = getPeriodDao().toPeriodVO(period);
+        }
 
-            Period period = periodDao.periodVOToEntity(periodVO);
-            period = this.periodRepository.save(period);
+        if(period.getPrevious() != null && period.getPrevious().getId() != null) {
+            Period prev = period.getPrevious();
+            if(prev.getNext() == null || (prev.getNext() != null && prev.getNext().getId() != period.getId())) {
+                prev.setNext(period);
+                getPeriodRepository().save(prev);
+            }
+        }
 
+        if(period.getNext() != null && period.getNext().getId() != null) {
+            Period next = period.getNext();
+            if(next.getPrevious() == null || (next.getPrevious() != null && next.getPrevious().getId() != period.getId())) {
+                next.setPrevious(period);
+                getPeriodRepository().save(next);
+            }
         }
 
         return periodVO;
@@ -90,11 +112,17 @@ public class PeriodServiceImpl
      * @see bw.org.bocra.portal.period.PeriodService#search(PeriodCriteria)
      */
     @Override
-    protected  Collection<PeriodVO> handleSearch(PeriodCriteria searchCriteria)
+    protected  Collection<PeriodVO> handleSearch(PeriodCriteria criteria)
         throws Exception
     {
-        Collection<Period> periods = getPeriodDao().findByCriteria(searchCriteria);
-        return getPeriodDao().toPeriodVOCollection(periods);
+        Collection<Period> periods = getPeriodDao().findByCriteria(criteria);
+        Collection<PeriodVO> vos = new ArrayList<>();
+
+        for(Period period : periods) {
+            vos.add(getPeriodDao().toPeriodVO(period));
+        }
+
+        return vos;
     }
 
     @Override

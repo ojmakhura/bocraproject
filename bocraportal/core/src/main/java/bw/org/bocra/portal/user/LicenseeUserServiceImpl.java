@@ -9,9 +9,13 @@
 package bw.org.bocra.portal.user;
 
 import java.util.Collection;
+
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.licensee.LicenseeService;
 
 /**
  * @see bw.org.bocra.portal.user.LicenseeUserService
@@ -21,6 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class LicenseeUserServiceImpl
     extends LicenseeUserServiceBase
 {
+
+    public LicenseeUserServiceImpl(LicenseeService licenseeService, LicenseeUserDao licenseeUserDao,
+            LicenseeUserRepository licenseeUserRepository, MessageSource messageSource) {
+        super(licenseeService, licenseeUserDao, licenseeUserRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.user.LicenseeUserService#findById(Long)

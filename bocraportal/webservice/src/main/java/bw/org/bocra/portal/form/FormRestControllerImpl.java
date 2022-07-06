@@ -5,6 +5,7 @@
 //
 package bw.org.bocra.portal.form;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,11 +24,14 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     protected static Logger log = LoggerFactory.getLogger(FormRestControllerImpl.class);
 
+    public FormRestControllerImpl(FormService formService) {
+        super(formService);
+    }
 
     @Override
-    public ResponseEntity<FormVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<FormVO> data = Optional.of(formService.findById(id));
-        ResponseEntity<FormVO> response;
+        ResponseEntity<?> response;
 
         if(data.isPresent()) {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
@@ -38,7 +43,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<FormVO>> data = Optional.of(formService.getAll());
         ResponseEntity<Collection<FormVO>> response;
 
@@ -52,7 +57,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<FormVO>> data = Optional.of(formService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<FormVO>> response;
 
@@ -66,7 +71,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(formService.remove(id)); 
         ResponseEntity<Boolean> response;
 
@@ -80,13 +85,11 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<FormVO> handleSave(FormVO formVO) {
-        log.info(formVO.toString());
+    public ResponseEntity<?> handleSave(FormVO formVO) {
         Optional<FormVO> data = Optional.of(formService.save(formVO));
         ResponseEntity<FormVO> response;
 
         if(data.isPresent()) {
-            log.info(data.get().toString());
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -96,7 +99,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormVO>> handleSearch(FormCriteria criteria) {
+    public ResponseEntity<?> handleSearch(FormCriteria criteria) {
         Optional<Collection<FormVO>> data = Optional.of(formService.search(criteria)); 
         ResponseEntity<Collection<FormVO>> response;
 

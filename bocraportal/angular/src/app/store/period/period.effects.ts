@@ -14,8 +14,12 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.findById),
             mergeMap(({ id }) => this.periodRestController.findById(id).pipe(
-                map( period => PeriodActions.findByIdSuccess({period})),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                map( period => PeriodActions.findByIdSuccess({
+                    period,
+                    messages: [`Period ${period.periodName} found.`],
+                    success: true
+                })),
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error.error]})])
             ))
         )
     );
@@ -24,8 +28,12 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.save),
             mergeMap(({ period }) => this.periodRestController.save(period).pipe(
-                map( period => PeriodActions.saveSuccess({period})),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                map( period => PeriodActions.saveSuccess({
+                    period,
+                    messages: [`Period ${period.periodName} saved.`],
+                    success: true
+                })),
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error.error]})])
             ))
         )
     );
@@ -34,8 +42,12 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.remove),
             mergeMap(({ id }) => this.periodRestController.remove(id).pipe(
-                map( removed => PeriodActions.removeSuccess({removed})),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                map( removed => PeriodActions.removeSuccess({
+                    removed,
+                    messages: [`Period ${id} removed.`],
+                    success: true
+                })),
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error.error]})])
             ))
         )
     );
@@ -44,8 +56,12 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.getAll),
             mergeMap(() => this.periodRestController.getAll().pipe(
-                map( periods => PeriodActions.getAllSuccess({periods})),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                map( periods => PeriodActions.getAllSuccess({
+                    periods,
+                    messages: [`${periods.length} periods found.`],
+                    success: true
+                })),
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error.error]})])
             ))
         )
     );
@@ -53,9 +69,13 @@ export class PeriodEffects {
     search$ = createEffect(() => 
          this.actions$.pipe(
             ofType(PeriodActions.search),
-            mergeMap(({ searchCriteria }) => this.periodRestController.search(searchCriteria).pipe(
-                map( periods => PeriodActions.searchSuccess({periods})),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+            mergeMap(({ criteria }) => this.periodRestController.search(criteria).pipe(
+                map( periods => PeriodActions.searchSuccess({
+                    periods,
+                    messages: [`${periods.length} periods found.`],
+                    success: true
+                })),
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error.error]})])
             ))
         )
     );
@@ -64,8 +84,12 @@ export class PeriodEffects {
          this.actions$.pipe(
             ofType(PeriodActions.getAllPaged),
             mergeMap(({ pageNumber, pageSize }) => this.periodRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( periods => PeriodActions.getAllPagedSuccess({periods})),
-                catchError(({error}) => [PeriodActions.periodFailure(error)])
+                map( periods => PeriodActions.getAllPagedSuccess({
+                    periods,
+                    messages: [`Page ${pageNumber} found with ${periods.length} periods.`],
+                    success: true
+                })),
+                catchError(({error}) => [PeriodActions.periodFailure({messages: [error.error]})])
             ))
         )
     );

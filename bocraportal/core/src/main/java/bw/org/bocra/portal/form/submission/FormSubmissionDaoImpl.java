@@ -8,18 +8,33 @@ package bw.org.bocra.portal.form.submission;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
-import bw.org.bocra.portal.form.submission.data.FormData;
-import bw.org.bocra.portal.form.submission.data.FormDataVO;
+import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.section.FormSection;
+import bw.org.bocra.portal.form.section.FormSectionVO;
+import bw.org.bocra.portal.form.submission.data.DataField;
+import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
+import bw.org.bocra.portal.form.submission.data.DataFieldSectionVO;
+import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+import bw.org.bocra.portal.form.submission.note.NoteRepository;
 import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodDao;
+import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
 
 /**
@@ -29,6 +44,17 @@ import bw.org.bocra.portal.period.PeriodVO;
 public class FormSubmissionDaoImpl
     extends FormSubmissionDaoBase
 {
+
+
+    public FormSubmissionDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
+            DataFieldRepository dataFieldRepository, LicenseeRepository licenseeRepository,
+            NoteRepository noteRepository, FormActivationRepository formActivationRepository,
+            FormSubmissionRepository formSubmissionRepository) {
+
+        super(formRepository, periodRepository, dataFieldRepository, licenseeRepository, noteRepository,
+                formActivationRepository, formSubmissionRepository);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -41,9 +67,41 @@ public class FormSubmissionDaoImpl
         super.toFormSubmissionVO(source, target);
 
         if(source.getForm() != null) {
-            FormVO form = new FormVO();
-            getFormDao().toFormVO(source.getForm(), form);
-            target.setForm(form);
+            Form form = source.getForm();
+            FormVO formVO = new FormVO();
+            getFormDao().toFormVO(form, formVO);
+            target.setForm(formVO);
+            
+            if(CollectionUtils.isNotEmpty(source.getDataFields())) {
+                Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
+                for (DataField dataField : source.getDataFields()) {
+                    DataFieldVO data = new DataFieldVO();
+                    getDataFieldDao().toDataFieldVO(dataField, data);
+
+                    FormSection section = dataField.getFormField().getFormSection();
+
+                    DataFieldSectionVO sec = new DataFieldSectionVO();
+                    sec.setPosition(section.getPosition());
+                    sec.setSectionLabel(section.getSectionLabel());
+                    sec.setSectionName(section.getSectionName());
+
+                    if(!sectioned.containsKey(sec)) {
+                        sectioned.put(sec, new ArrayList<>());
+                    }
+
+                    sectioned.get(sec).add(data);
+                }
+                //target.setDataFields(datas);
+                Collection<DataFieldSectionVO> sections = new ArrayList<>();
+                
+                for(Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
+                    DataFieldSectionVO sec = entry.getKey();
+                    sec.setDataFields(entry.getValue());
+                    sections.add(sec);
+                }
+
+                target.setSections(sections);
+            }
         }
 
         if(source.getLicensee() != null) {
@@ -58,15 +116,7 @@ public class FormSubmissionDaoImpl
             target.setPeriod(period);
         }
 
-        if(CollectionUtils.isNotEmpty(source.getFormDatas())) {
-            Collection<FormDataVO> datas = new HashSet<>();
-            for (FormData formData : source.getFormDatas()) {
-                FormDataVO data = new FormDataVO();
-                getFormDataDao().toFormDataVO(formData, data);
-                datas.add(data);
-            }
-            target.setFormDatas(datas);
-        }
+        
     }
 
     /**
@@ -134,17 +184,36 @@ public class FormSubmissionDaoImpl
             Period period = getPeriodDao().load(source.getPeriod().getId());
             target.setPeriod(period);
         }
+        
 
-        if(CollectionUtils.isNotEmpty(source.getFormDatas())) {
-            Collection<FormData> datas = new HashSet<>();
-            for (FormDataVO formData : source.getFormDatas()) {
-                if(formData.getId() != null){
-                    FormData data = getFormDataDao().load(formData.getId());
+        /*if(CollectionUtils.isNotEmpty(source.getDataFields())) {
+            Collection<DataField> datas = new HashSet<>();
+            for (DataFieldVO dataField : source.getDataFields()) {
+                if(dataField.getId() != null){
+                    DataField data = getDataFieldDao().load(dataField.getId());
                     if(data != null && data.getId() != null)
                         datas.add(data);
                 }
             }
-            target.setFormDatas(datas);
+            target.setDataFields(datas);
+        }*/
+
+        target.setDataFields(new ArrayList<>());
+
+        for(DataFieldSectionVO section : source.getSections()) {
+            for (DataFieldVO dataField : section.getDataFields()) {
+                if(dataField.getId() != null){
+                    DataField data = getDataFieldDao().load(dataField.getId());
+                    data.setValue(dataField.getValue());
+                    //getDataFieldDao().update(data);
+                    target.getDataFields().add(data);
+                } else {
+                    DataField data = DataField.Factory.newInstance();
+                    getDataFieldDao().dataFieldVOToEntity(dataField, data, copyIfNull);
+                    //data = getDataFieldRepository().save(data);
+                    target.getDataFields().add(data);
+                }
+            }
         }
     }
 }

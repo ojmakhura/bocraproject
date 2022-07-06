@@ -20,23 +20,19 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/licensee/licensee.module')).LicenseeModule
     },
     {
-      path: 'licensetype', 
-      loadChildren: async () => (await import('@app/view/type/license-type.module')).LicenseTypeModule
-    },
-    {
       path: 'user', 
       loadChildren: async () => (await import('@app/view/user/user.module')).UserModule
     },
     {
-      path: 'guard', 
-      loadChildren: async () => (await import('@app/view/guard/guard.module')).GuardModule
+      path: 'authorisation', 
+      loadChildren: async () => (await import('@app/view/auth/authorisation.module')).AuthorisationModule
     },
     {
       path: 'period', 
       loadChildren: async () => (await import('@app/view/period/period.module')).PeriodModule
     },
     {
-      path: 'periodconfig', 
+      path: 'period/config', 
       loadChildren: async () => (await import('@app/view/period/config/period-config.module')).PeriodConfigModule
     },
     {
@@ -44,8 +40,44 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/form/form.module')).FormModule
     },
     {
-      path: 'formsubmission', 
+      path: 'form/submission', 
       loadChildren: async () => (await import('@app/view/form/submission/form-submission.module')).FormSubmissionModule
+    },
+    {
+      path: 'form/activation', 
+      loadChildren: async () => (await import('@app/view/form/activation/form-activation.module')).FormActivationModule
+    },
+    {
+      path: 'dashboard', 
+      loadChildren: async () => (await import('@app/view/dashboard/dashboard.module')).DashboardModule
+    },
+    {
+      path: 'licence/type', 
+      loadChildren: async () => (await import('@app/view/licence/type/licence-type.module')).LicenceTypeModule
+    },
+    {
+      path: 'licence', 
+      loadChildren: async () => (await import('@app/view/licence/licence.module')).LicenceModule
+    },
+    {
+      path: 'document/type', 
+      loadChildren: async () => (await import('@app/view/document/type/document-type.module')).DocumentTypeModule
+    },
+    {
+      path: 'document', 
+      loadChildren: async () => (await import('@app/view/document/document.module')).DocumentModule
+    },
+    {
+      path: 'sector', 
+      loadChildren: async () => (await import('@app/view/sector/sector.module')).SectorModule
+    },
+    {
+      path: 'access', 
+      loadChildren: async () => (await import('@app/view/access/access-point.module')).AccessPointModule
+    },
+    {
+      path: 'access/type', 
+      loadChildren: async () => (await import('@app/view/access/type/access-point-type.module')).AccessPointTypeModule
     },
   ]),
   // Fallback when no prior route is matched

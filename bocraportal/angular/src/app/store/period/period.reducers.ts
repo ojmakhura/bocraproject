@@ -7,70 +7,64 @@ export const periodReducer = createReducer(
     initialState,
     on(PeriodActions.findByIdSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        searchCriteria: null, 
         period: action.period, 
-        id: null, 
-        removed: false,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodActions.saveSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        searchCriteria: null, 
         period: action.period, 
-        id: null, 
-        removed: false,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodActions.removeSuccess, (state, action) => ({
         ...state,
-        periods: [], 
-        searchCriteria: null, 
-        period: null, 
-        id: null, 
         removed: action.removed,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodActions.getAllSuccess, (state, action) => ({
         ...state,
         periods: action.periods, 
-        searchCriteria: null, 
-        period: null, 
-        id: null, 
-        removed: false,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodActions.searchSuccess, (state, action) => ({
         ...state,
         periods: action.periods, 
-        searchCriteria: null, 
-        period: null, 
-        id: null, 
-        removed: false,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         periods: action.periods, 
-        searchCriteria: null, 
-        period: null, 
-        id: null, 
-        removed: false,
-        error: null
+        loading: false,
+        success: action.success,
+        messages: action.messages
     })),
     on(PeriodActions.periodReset, (state) => ({
       ...state,
         periods: [], 
-        searchCriteria: null, 
+        criteria: null, 
         period: null, 
         id: null, 
         removed: false,
-        error: null
+        loading: false,
+        success: false,
+        error: false,
+        messages: []
     })),
     on(PeriodActions.periodFailure, (state, action) => ({
         ...state,
-        error: action.error
+        loading: false,
+        success: false,
+        error: true,
+        messages: action.messages
     }))
 );
 

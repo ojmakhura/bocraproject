@@ -8,23 +8,28 @@ import { env } from './.env';
 
 export const environment = {
   production: true,
-  version: env['npm_package_version'],
-  serverUrl: $ENV.API_URL,
+  version: env['npm_package_version'] + '-dev',
+  serverUrl: 'http://api.localhost',
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US'],
-  bocraApiServer: $ENV.API_URL,
-  bocraKeycloakServer: 'http://localhost:8080',
-  redirectUri: 'http://localhost:4200',
+  bocraApiServer: 'http://api.localhost',
+  bocraKeycloakServer: 'http://keycloak.localhost',
+  keycloakRealm: 'bocraportal',
+  webClientId: '5bf59357-eafb-4de3-baff-dc98f1d9bab7',
+  redirectUri: 'http://192.168.57.6',
+  keycloakClientRoleUrl: 'http://keycloak.localhost/auth/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
+  keycloakRealmRoleUrl: 'http://keycloak.localhost/auth/admin/realms/bocraportal/roles',
   keycloak: {
-    issuer: $ENV.KEYCLOAK_AUTH_URL,
+    issuer: 'http://keycloak.localhost/auth',
     redirectUri: window.location.origin,
-    clientId: $ENV.KEYCLOAK_WEB_CLIENT,
+    clientId: 'bocraportal-web',
     scope: 'openid profile email offline_access',
     responseType: 'code',
-    realm: $ENV.KEYCLOAK_REALM,
+    realm: 'bocraportal',
     // at_hash is not present in JWT token
     disableAtHashCheck: true,
     showDebugInformation: true,
     requireHttps: false,
+    checkLoginIframe: false
   },
 };

@@ -7,8 +7,6 @@ package bw.org.bocra.portal.form.field;
 
 import java.util.Collection;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin()
 public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
 
-    protected static Logger log = LoggerFactory.getLogger(FormFieldRestControllerImpl.class);
-
+    public FormFieldRestControllerImpl(FormFieldService formFieldService) {
+        super(formFieldService);
+    }
 
     @Override
-    public ResponseEntity<FormFieldVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<FormFieldVO> data = Optional.of(formFieldService.findById(id));
         ResponseEntity<FormFieldVO> response;
 
@@ -38,7 +37,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormFieldVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<FormFieldVO>> data = Optional.of(formFieldService.getAll());
         ResponseEntity<Collection<FormFieldVO>> response;
 
@@ -52,7 +51,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormFieldVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<FormFieldVO>> data = Optional.of(formFieldService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<FormFieldVO>> response;
 
@@ -66,7 +65,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(formFieldService.remove(id));
         ResponseEntity<Boolean> response;
 
@@ -80,7 +79,8 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<FormFieldVO> handleSave(FormFieldVO formFieldVO) {
+    public ResponseEntity<?> handleSave(FormFieldVO formFieldVO) {
+        
         Optional<FormFieldVO> data = Optional.of(formFieldService.save(formFieldVO));
         ResponseEntity<FormFieldVO> response;
 

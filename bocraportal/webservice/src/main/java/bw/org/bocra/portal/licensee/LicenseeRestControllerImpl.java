@@ -7,24 +7,39 @@ package bw.org.bocra.portal.licensee;
 
 import java.util.Collection;
 import java.util.Optional;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.submission.FormSubmissionVO;
+import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
+import bw.org.bocra.portal.licensee.shares.ShareholderVO;
+import bw.org.bocra.portal.report.ReportVO;
+import bw.org.bocra.portal.report.config.ReportConfigVO;
+import bw.org.bocra.portal.sector.SectorVO;
+import bw.org.bocra.portal.user.LicenseeUserService;
+
 @RestController
 @RequestMapping("/licensee")
-@CrossOrigin()
 public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
+
+    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService) {
+        super(licenseeService, licenseeUserService);
+    }
 
     protected static Logger log = LoggerFactory.getLogger(LicenseeRestControllerImpl.class);
 
-
     @Override
-    public ResponseEntity<LicenseeVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<LicenseeVO> data = Optional.of(this.licenseeService.findById(id)); // TODO: Add custom code here;
         ResponseEntity<LicenseeVO> response;
 
@@ -38,7 +53,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<LicenseeVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll()); // TODO: Add custom code here;
         ResponseEntity<Collection<LicenseeVO>> response;
 
@@ -52,7 +67,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(this.licenseeService.remove(id)); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
@@ -66,7 +81,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<LicenseeVO> handleSave(LicenseeVO licenseeVO) {
+    public ResponseEntity<?> handleSave(LicenseeVO licenseeVO) {
         Optional<LicenseeVO> data = Optional.of(this.licenseeService.save(licenseeVO)); // TODO: Add custom code here;
         ResponseEntity<LicenseeVO> response;
 
@@ -80,8 +95,8 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<LicenseeVO>> handleSearchLicensees(LicenseeCriteria searchCriteria) {
-        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.search(searchCriteria)); // TODO: Add custom code here;
+    public ResponseEntity<?> handleSearch(LicenseeCriteria criteria) {
+        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.search(criteria)); // TODO: Add custom code here;
         ResponseEntity<Collection<LicenseeVO>> response;
 
         if(data.isPresent()) {
@@ -94,7 +109,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<LicenseeVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
         ResponseEntity<Collection<LicenseeVO>> response;
 
@@ -107,17 +122,139 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
         return response;
     }
 
-    // @Override
-    // public ResponseEntity<LicenseeVO> handleUpdateLicensee(LicenseeVO licenseeVO) {
-    //     Optional<LicenseeVO> data = Optional.empty(); // TODO: Add custom code here;
-    //     ResponseEntity<LicenseeVO> response;
+    @Override
+    public ResponseEntity<?> handleGetDocuments(Long id) {
+        Collection<DocumentVO> docs = licenseeService.getDocuments(id);
 
-    //     if(data.isPresent()) {
-    //         response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-    //     } else {
-    //         response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if(CollectionUtils.isEmpty(docs)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(docs);
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<?> handleGetForms(Long id) {
+        Collection<FormVO> vos = licenseeService.getForms(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleGetFormSubmissions(Long id) {
+        Collection<FormSubmissionVO> vos = licenseeService.getFormSubmissions(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleGetLicences(Long id) {
+        Collection<LicenceVO> vos = licenseeService.getLicences(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleGetReportConfigurations(Long id) {
+        Collection<ReportConfigVO> vos = licenseeService.getReportConfigurations(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleGetReports(Long id) {
+        Collection<ReportVO> vos = licenseeService.getReports(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleGetSectors(Long id) {
+        Collection<SectorVO> vos = licenseeService.getSectors(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleGetShareholders(Long id) {
+        Collection<ShareholderVO> vos = licenseeService.getShareholders(id);
+
+        if(CollectionUtils.isEmpty(vos)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.ok().body(vos);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleAddSector(Long licenseeId, Long sectorId) {
+
+        LicenseeSectorVO lvo = getLicenseeService().addSector(licenseeId, sectorId);
+
+        if(lvo == null || lvo.getId() == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        } else {
+            return ResponseEntity.ok().body(lvo);
+        }
+
+    }
+
+    // @Override
+    // public ResponseEntity<?> handleAddForm(Long licenseeId, Long formId) {
+    //     LicenseeFormVO vo = getLicenseeService().addForm(licenseeId, formId);
+
+    //     if(vo == null || vo.getId() != null) {
+    //         return ResponseEntity.noContent().build();
     //     }
 
-    //     return response;
+    //     return ResponseEntity.ok(vo);
+    // }
+
+    // @Override
+    // public ResponseEntity<?> handleRemoveForm(Long licenseeFormId) {
+        
+    //     return ResponseEntity.ok(licenseeService.removeForm(licenseeFormId));
+    // }
+
+    @Override
+    public ResponseEntity<?> handleRemoveSector(Long licenseeSectorId) {
+        return ResponseEntity.ok(getLicenseeService().removeSector(licenseeSectorId));
+    }
+
+    // @Override
+    // public ResponseEntity<?> handleUpdateForm(Long licenseeFormId, Long formId) {
+    //     return ResponseEntity.ok(licenseeService.updateForm(licenseeFormId, formId));
+    // }
+
+    // @Override
+    // public ResponseEntity<?> handleUpdateSector(Long licenseeSectorId, Long sectorId) {
+       
+    //     return ResponseEntity.ok(licenseeService.updateSector(licenseeSectorId, sectorId));
     // }
 }

@@ -8,7 +8,7 @@ export const selectPageVariables = createSelector(selectUseCaseScopeState, (stat
 
 export const selectUseCaseInDialog = createSelector(selectUseCaseScopeState, (state: UseCaseScopeState) => state.useCaseInDialog);
 
-export const selectError = createSelector(selectUseCaseScopeState, (state: UseCaseScopeState) => state.error);
+export const selectMessages = createSelector(selectUseCaseScopeState, (state: UseCaseScopeState) => state.messages);
 
 export const selectUseCaseParameters = createSelector(selectUseCaseScopeState, (state: UseCaseScopeState) => state.useCaseParameters);
 

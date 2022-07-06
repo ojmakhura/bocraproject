@@ -9,6 +9,9 @@ package bw.org.bocra.portal.user;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
+
 /**
  * @see LicenseeUser
  */
@@ -16,6 +19,11 @@ import org.springframework.stereotype.Repository;
 public class LicenseeUserDaoImpl
     extends LicenseeUserDaoBase
 {
+    
+    public LicenseeUserDaoImpl(LicenseeRepository licenseeRepository, LicenseeUserRepository licenseeUserRepository) {
+        super(licenseeRepository, licenseeUserRepository);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -28,11 +36,12 @@ public class LicenseeUserDaoImpl
         super.toLicenseeUserVO(source, target);
 
         if(source.getLicensee() != null) {
-            target.setOrganisation(licenseeDao.toLicenseeVO(source.getLicensee()));
+            target.setLicensee(licenseeDao.toLicenseeVO(source.getLicensee()));
         }
 
-        if(!StringUtils.isNotBlank(source.getUserId())) {
+        if(StringUtils.isNotBlank(source.getUserId())) {
             //target.setUser(value);
+            
         }
     }
 
@@ -87,8 +96,8 @@ public class LicenseeUserDaoImpl
         // TODO verify behavior of LicenseeUserVOToEntity
         super.licenseeUserVOToEntity(source, target, copyIfNull);
 
-        if(source.getOrganisation() != null) {
-            target.setLicensee(licenseeDao.licenseeVOToEntity(source.getOrganisation()));
+        if(source.getLicensee() != null) {
+            target.setLicensee(licenseeDao.licenseeVOToEntity(source.getLicensee()));
         }
 
         if(source.getUser() != null) {

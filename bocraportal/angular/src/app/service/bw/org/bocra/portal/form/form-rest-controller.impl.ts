@@ -4,36 +4,48 @@ import { Observable } from 'rxjs';
 import { FormRestController } from '@app/service/bw/org/bocra/portal/form/form-rest-controller';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
-import { KeycloakService } from 'keycloak-angular';
 
 @Injectable()
 export class FormRestControllerImpl extends FormRestController {
-  constructor(private injector: Injector, keycloakService: KeycloakService) {
-    super(injector);
-  }
 
-  public findById(id: number): Observable<FormVO> {
-    return this.http.get<FormVO>(this.path + `/id/${id}`);
-  }
+    constructor(private injector: Injector) {
+        super(injector);
+    }
 
-  public getAll(): Observable<FormVO[]> {
-    return this.http.get<FormVO[]>(this.path + `/all`);
-  }
+    public override findById(id: number | any ): Observable<FormVO | any> {
 
-  public getAllPaged(pageNumber: number, pageSize: number): Observable<FormVO[]> {
-    return this.http.get<FormVO[]>(this.path + `/all/pageNumber/${pageNumber}/pageSize/${pageSize}`);
-  }
+        return this.http.get<FormVO | any>(this.path + `/${id}`);
 
-  public remove(id: number): Observable<boolean> {
-    return this.http.delete<boolean>(this.path + `/id/${id}`);
-  }
+    }
 
-  public save(formVO: FormVO): Observable<FormVO> {
-    
-    return this.http.post<FormVO>(this.path, formVO);
-  }
+    public override getAll(): Observable<FormVO[] | any[]> {
 
-  public search(criteria: FormCriteria): Observable<FormVO[]> {
-    return this.http.post<FormVO[]>(this.path + `/search`, criteria);
-  }
+        return this.http.get<FormVO[] | any[]>(this.path + `/all`);
+
+    }
+
+    public override getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<FormVO[] | any[]> {
+
+        return this.http.get<FormVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+
+    }
+
+    public override remove(id: number | any ): Observable<boolean | any> {
+
+        return this.http.delete<boolean | any>(this.path + `/${id}`);
+
+    }
+
+    public override save(formVO: FormVO | any ): Observable<FormVO | any> {
+
+        return this.http.post<FormVO | any>(this.path, formVO);
+
+    }
+
+    public override search(criteria: FormCriteria | any ): Observable<FormVO[] | any[]> {
+
+        return this.http.post<FormVO[] | any[]>(this.path + `/search`, criteria);
+
+    }
+
 }

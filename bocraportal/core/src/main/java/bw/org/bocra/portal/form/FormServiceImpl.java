@@ -8,11 +8,13 @@
  */
 package bw.org.bocra.portal.form;
 
-import bw.org.bocra.portal.guard.UrlGuardVO;
-
-import java.util.ArrayList;
 import java.util.Collection;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
+import bw.org.bocra.portal.form.field.FormField;
 
 /**
  * @see bw.org.bocra.portal.form.FormService
@@ -21,6 +23,10 @@ import org.springframework.stereotype.Service;
 public class FormServiceImpl
     extends FormServiceBase
 {
+
+    public FormServiceImpl(FormDao formDao, FormRepository formRepository, MessageSource messageSource) {
+        super(formDao, formRepository, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.form.FormService#findById(Long)
@@ -49,7 +55,6 @@ public class FormServiceImpl
 
         if(formVO.getId() == null) {
             form = getFormDao().create(form);
-            logger.info(form.toString());
         } else {
             getFormDao().update(form);
         }
@@ -64,6 +69,16 @@ public class FormServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
+
+        Form form = getFormDao().load(id);
+        if(CollectionUtils.isNotEmpty(form.getFormSubmissions())) {
+            throw new FormServiceException("This form cannot be removed. It has data associated with it.");
+        }
+
+        // for(FormField field : form.getFormFields()) {
+            
+        // }
+
         if(id == null) {
             return false;
         }

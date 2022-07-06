@@ -1574,10 +1574,10 @@ module.controller(
             // headers: {'headerKey': 'headerValue'}, withCredential: true,
             data: input,
             file: $file,
-            /* set file formData name for 'Content-Desposition' header. Default: 'file' */
-            //fileFormDataName: myFile,
-            /* customize how data is added to formData. See #40#issuecomment-28612000 for example */
-            //formDataAppender: function(formData, key, val){}
+            /* set file dataField name for 'Content-Desposition' header. Default: 'file' */
+            //fileDataFieldName: myFile,
+            /* customize how data is added to dataField. See #40#issuecomment-28612000 for example */
+            //dataFieldAppender: function(dataField, key, val){}
           })
           .progress(function (evt) {
             console.log(

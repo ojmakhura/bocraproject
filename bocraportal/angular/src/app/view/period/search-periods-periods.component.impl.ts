@@ -13,18 +13,4 @@ export class SearchPeriodsPeriodsComponentImpl extends SearchPeriodsPeriodsCompo
         super(injector);
     }
 
-	beforeOnInit(){
-	}
-	
-	afterOnInit() {
-	}
-
-  doNgAfterViewInit() {
-    
-  }
-  doNgOnDestroy(): void {}
-
-
-	doSearchPeriodsEdit(form: any): any {
-    return form;	}
 }

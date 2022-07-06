@@ -22,8 +22,12 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
     protected static Logger logger = LoggerFactory.getLogger(SubmissionRestControllerImpl.class);
 
+    public SubmissionRestControllerImpl(SubmissionService submissionService) {
+        super(submissionService);
+    }
+
     @Override
-    public ResponseEntity<FormSubmissionVO> handleFindById(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         Optional<FormSubmissionVO> data = Optional.of(submissionService.findById(id));
         ResponseEntity<FormSubmissionVO> response;
 
@@ -37,7 +41,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormSubmissionVO>> handleGetAll() {
+    public ResponseEntity<?> handleGetAll() {
         Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll());
         ResponseEntity<Collection<FormSubmissionVO>> response;
 
@@ -51,7 +55,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormSubmissionVO>> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll(pageNumber, pageSize));
         ResponseEntity<Collection<FormSubmissionVO>> response;
 
@@ -65,7 +69,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Boolean> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         Optional<Boolean> data = Optional.of(submissionService.remove(id));
         ResponseEntity<Boolean> response;
 
@@ -79,7 +83,8 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<FormSubmissionVO> handleSave(FormSubmissionVO formSubmissionVO) {
+    public ResponseEntity<?> handleSave(FormSubmissionVO formSubmissionVO) {
+        System.out.println(formSubmissionVO);
         Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmissionVO));
         ResponseEntity<FormSubmissionVO> response;
 
@@ -93,7 +98,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<Collection<FormSubmissionVO>> handleSearch(FormSubmissionCriteria criteria) {
+    public ResponseEntity<?> handleSearch(FormSubmissionCriteria criteria) {
         Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.search(criteria));
         ResponseEntity<Collection<FormSubmissionVO>> response;
 

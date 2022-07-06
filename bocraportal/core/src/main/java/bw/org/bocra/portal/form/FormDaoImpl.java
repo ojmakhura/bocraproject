@@ -8,14 +8,28 @@ package bw.org.bocra.portal.form;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 
 import bw.org.bocra.portal.form.field.FormField;
+import bw.org.bocra.portal.form.field.FormFieldRepository;
 import bw.org.bocra.portal.form.field.FormFieldVO;
-import bw.org.bocra.portal.type.LicenseType;
-import bw.org.bocra.portal.type.LicenseTypeVO;
+import bw.org.bocra.portal.form.section.FormSection;
+import bw.org.bocra.portal.form.section.FormSectionRepository;
+import bw.org.bocra.portal.form.section.FormSectionVO;
+import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
+import bw.org.bocra.portal.licence.type.LicenceTypeFormRepository;
+import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.licensee.form.LicenseeForm;
+import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
+import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.report.config.ReportConfigRepository;
+import bw.org.bocra.portal.sector.SectorRepository;
+import bw.org.bocra.portal.sector.form.SectorFormRepository;
 
 /**
  * @see Form
@@ -24,6 +38,19 @@ import bw.org.bocra.portal.type.LicenseTypeVO;
 public class FormDaoImpl
     extends FormDaoBase
 {
+
+    public FormDaoImpl(LicenceTypeRepository licenceTypeRepository, FormFieldRepository formFieldRepository,
+            FormSubmissionRepository formSubmissionRepository, LicenseeRepository licenseeRepository,
+            ReportConfigRepository reportConfigRepository, FormSectionRepository formSectionRepository,
+            LicenceTypeFormRepository licenceTypeFormRepository, LicenseeFormRepository licenseeFormRepository,
+            FormReportConfigRepository formReportConfigRepository, SectorFormRepository sectorFormRepository,
+            SectorRepository sectorRepository, FormRepository formRepository) {
+
+        super(licenceTypeRepository, formFieldRepository, formSubmissionRepository, licenseeRepository, reportConfigRepository,
+                formSectionRepository, licenceTypeFormRepository, licenseeFormRepository, formReportConfigRepository,
+                sectorFormRepository, sectorRepository, formRepository);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -35,34 +62,76 @@ public class FormDaoImpl
         // TODO verify behavior of toFormVO
         super.toFormVO(source, target);
 
-        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
+        // if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
 
-            if(target.getLicenseTypes() == null) {
-                target.setLicenseTypes(new ArrayList<>());
-            }
+        //     if(target.getLicenceTypes() == null) {
+        //         target.setLicenceTypes(new ArrayList<>());
+        //     }
             
-            for (LicenseType entity : source.getLicenseTypes()) {
-                LicenseTypeVO type = new LicenseTypeVO();
-                type.setId(entity.getId());
-                type.setCode(entity.getCode());
-                type.setDescription(entity.getDescription());
-                type.setName(entity.getName());
+        //     for (LicenceType entity : source.getLicenceTypes()) {
+        //         LicenceTypeVO type = new LicenceTypeVO();
+        //         type.setId(entity.getId());
+        //         type.setCode(entity.getCode());
+        //         type.setDescription(entity.getDescription());
+        //         type.setName(entity.getName());
                 
-                target.getLicenseTypes().add(type);
-            }
-        }
+        //         target.getLicenceTypes().add(type);
+        //     }
+        // }
 
-        if(!CollectionUtils.isEmpty(source.getFormFields())) {
+        if(CollectionUtils.isNotEmpty(source.getFormFields())) {
             if(target.getFormFields() == null) {
                 target.setFormFields(new ArrayList<>());
             }
 
             for (FormField entity : source.getFormFields()) {
                 FormFieldVO field = new FormFieldVO();
+                // field.setId(entity.getId());
+                // field.setCreatedBy(entity.getCreatedBy());
+                // field.setCreatedDate(entity.getCreatedDate());
+                // field.setUpdatedBy(entity.getUpdatedBy());
+                // field.setUpdatedDate(entity.getUpdatedDate());
+                // field.setFieldId(entity.getFieldId());
+                // field.setFieldName(entity.getFieldName());
+                // field.setFieldType(entity.getFieldType());
+
                 formFieldDao.toFormFieldVO(entity, field);
+
                 target.getFormFields().add(field);
             }
         }
+
+        if(CollectionUtils.isNotEmpty(source.getFormSections())) {
+            if(target.getFormSections() == null) {
+                target.setFormSections(new ArrayList<>());
+            }
+
+            for(FormSection entity : source.getFormSections()) {
+                FormSectionVO section = new FormSectionVO();
+                // section.setId(entity.getId());
+                // section.setCreatedBy(entity.getCreatedBy());
+                // section.setCreatedDate(entity.getCreatedDate());
+                // section.setUpdatedBy(entity.getUpdatedBy());
+                // section.setUpdatedDate(entity.getUpdatedDate());
+                // section.setPosition(entity.getPosition());
+                // section.setSectionName(entity.getSectionName());
+
+                getFormSectionDao().toFormSectionVO(entity, section);
+
+                target.getFormSections().add(section);
+            }
+        }
+
+        Set<LicenseeFormVO> licensees = new HashSet<>();
+        for(LicenseeForm lf : source.getLicenseeForms()) {
+            LicenseeFormVO vo = new LicenseeFormVO();
+            getLicenseeFormDao().toLicenseeFormVO(lf, vo);
+
+            licensees.add(vo);
+        }
+
+        target.setLicensees(licensees);
+
     }
 
     /**
@@ -137,35 +206,50 @@ public class FormDaoImpl
                 } else {
 
                     FormField entity = formFieldDao.load(field.getId());
-                        
                     entity.setForm(target);
-                    entity = formFieldDao.create(entity);
-    
                     fields.add(entity);
                 }
             }
 
             target.setFormFields(fields);
-
-            System.out.println(target);
-
         }
 
-        if(!CollectionUtils.isEmpty(source.getLicenseTypes())) {
+        if(CollectionUtils.isNotEmpty(source.getFormSections())) {
 
-            if(target.getLicenseTypes() == null) {
-                target.setLicenseTypes(new ArrayList<>());
-            }
+            Collection<FormSection> sections = new ArrayList<>();
 
-            for(LicenseTypeVO type : source.getLicenseTypes()) {
+            for(FormSectionVO section : source.getFormSections()) {
+                if(section.getId() == null) {
+                    FormSection entity = FormSection.Factory.newInstance();
+                    getFormSectionDao().formSectionVOToEntity(section, entity, copyIfNull);
 
-                if(type.getId() != null) {
-                    LicenseType entity = getLicenseTypeDao().load(type.getId());
-                    target.getLicenseTypes().add(entity);
+                    entity.setForm(target);
+                    entity = formSectionDao.create(entity);
+
+                    sections.add(entity);
+                } else {
+                    FormSection entity = formSectionDao.load(section.getId());
+                    entity.setForm(target);
+                    sections.add(entity);
                 }
-
             }
+
+            target.setFormSections(sections);
         }
+
+        // if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
+
+        //     target.setLicenceTypes(new ArrayList<>());
+
+        //     for(LicenceTypeVO type : source.getLicenceTypes()) {
+
+        //         if(type.getId() != null) {
+        //             LicenceType entity = getLicenceTypeDao().load(type.getId());
+        //             target.getLicenceTypes().add(entity);
+        //         }
+
+        //     }
+        // }
     }
 
 }

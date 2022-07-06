@@ -10,9 +10,9 @@
                 <div class="${properties.kcLabelWrapperClass!}">
                     <label for="certificate_subjectDN" class="${properties.kcLabelClass!}">${msg("clientCertificate")}</label>
                 </div>
-                <#if x509.formData.subjectDN??>
+                <#if x509.dataField.subjectDN??>
                     <div class="${properties.kcLabelWrapperClass!}">
-                         <label id="certificate_subjectDN" class="${properties.kcLabelClass!}">${(x509.formData.subjectDN!"")}</label>
+                         <label id="certificate_subjectDN" class="${properties.kcLabelClass!}">${(x509.dataField.subjectDN!"")}</label>
                     </div>
                 <#else>
                     <div class="${properties.kcLabelWrapperClass!}">
@@ -23,12 +23,12 @@
 
             <div class="${properties.kcFormGroupClass!}">
 
-                    <#if x509.formData.isUserEnabled??>
+                    <#if x509.dataField.isUserEnabled??>
                           <div class="${properties.kcLabelWrapperClass!}">
                              <label for="username" class="${properties.kcLabelClass!}">${msg("doX509Login")}</label>
                           </div>
                           <div class="${properties.kcLabelWrapperClass!}">
-                             <label id="username" class="${properties.kcLabelClass!}">${(x509.formData.username!'')}</label>
+                             <label id="username" class="${properties.kcLabelClass!}">${(x509.dataField.username!'')}</label>
                          </div>
                     </#if>
 
@@ -43,7 +43,7 @@
                 <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
                     <div class="${properties.kcFormButtonsWrapperClass!}">
                         <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonLargeClass!}" name="login" id="kc-login" type="submit" value="${msg("doContinue")}"/>
-                        <#if x509.formData.isUserEnabled??>
+                        <#if x509.dataField.isUserEnabled??>
                             <input class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonLargeClass!}" name="cancel" id="kc-cancel" type="submit" value="${msg("doIgnore")}"/>
                         </#if>
                     </div>

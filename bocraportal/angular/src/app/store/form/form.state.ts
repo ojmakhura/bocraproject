@@ -3,14 +3,20 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 import { FieldType } from '@app/model/bw/org/bocra/portal/form/field/field-type';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
+import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
+import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/form/licensee-form-vo';
 
 export const formKey = 'form';
 
 export interface FormState {
-  searchCriteria: FormCriteria | any;
+  criteria: FormCriteria | any;
   fieldType: FieldType | any;
   formFields: Array<FormFieldVO> | Array<any>;
   formField: FormFieldVO | any;
+  formSection: FormSectionVO | any;
+  formSections: Array<FormSectionVO> | Array<any>;
+  licenseeForms: Array<LicenseeFormVO> | Array<any>;
+  licenseeForm: LicenseeFormVO | any;
   form: FormVO | any;
   required: Boolean | any;
   min: String | any;
@@ -20,14 +26,21 @@ export interface FormState {
   max: String | any;
   defaultValue: String | any;
   removed: boolean;
-  error: any;
+  success: boolean;
+  loading: boolean;
+  error: boolean,
+  messages: any[];
 }
 
 export const initialState: FormState = {
-  searchCriteria: null,
+  criteria: null,
   fieldType: null,
   formFields: [],
   formField: null,
+  formSection: null,
+  formSections: [],
+  licenseeForms: [],
+  licenseeForm: null,
   form: null,
   required: null,
   min: null,
@@ -37,5 +50,8 @@ export const initialState: FormState = {
   max: null,
   defaultValue: null,
   removed: false,
-  error: null,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
 };

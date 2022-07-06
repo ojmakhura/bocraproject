@@ -6,10 +6,17 @@
  */
 package bw.org.bocra.portal.form.field;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
+import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.section.FormSection;
+import bw.org.bocra.portal.form.section.FormSectionDao;
+import bw.org.bocra.portal.form.section.FormSectionRepository;
+import bw.org.bocra.portal.form.section.FormSectionVO;
 
 /**
  * @see FormField
@@ -18,6 +25,13 @@ import bw.org.bocra.portal.form.FormVO;
 public class FormFieldDaoImpl
     extends FormFieldDaoBase
 {
+
+    public FormFieldDaoImpl(FormRepository formRepository, FormSectionRepository formSectionRepository,
+            FormFieldRepository formFieldRepository) {
+                
+        super(formRepository, formSectionRepository, formFieldRepository);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -36,6 +50,20 @@ public class FormFieldDaoImpl
             form.setFormName(source.getForm().getFormName());
             
             target.setForm(form);
+        }
+
+        if(source.getFormSection() != null) {
+            FormSection entity = source.getFormSection();
+            FormSectionVO section = new FormSectionVO();
+            section.setCreatedBy(entity.getCreatedBy());
+            section.setCreatedDate(entity.getCreatedDate());
+            section.setId(entity.getId());
+            section.setPosition(entity.getPosition());
+            section.setSectionName(entity.getSectionName());
+            section.setUpdatedBy(entity.getUpdatedBy());
+            section.setUpdatedDate(entity.getUpdatedDate());
+
+            target.setFormSection(section);
         }
     }
 
@@ -89,17 +117,16 @@ public class FormFieldDaoImpl
         // TODO verify behavior of formFieldVOToEntity
         super.formFieldVOToEntity(source, target, copyIfNull);
 
-        if(source.getForm() != null) {
+        if(source.getForm() != null && source.getForm().getId() != null) {
 
-            Form form = Form.Factory.newInstance();
-            formDao.formVOToEntity(source.getForm(), form, copyIfNull);
-            
-            if(form.getId() == null) {
-                form = formDao.create(form);
-            }
-
+            Form form = formDao.load(source.getForm().getId());
             target.setForm(form);
-        } 
+        }
 
+        if(source.getFormSection() != null && source.getFormSection().getId() != null) {
+            FormSection section = formSectionDao.load(source.getFormSection().getId());
+            target.setFormSection(section);
+        }
+        
     }
 }

@@ -34,4 +34,19 @@ export class FormControllerImpl extends FormController {
 	public doAddFieldDone(form: any): void {
 	}
 
+	public doAddSection(form: any): void {
+	}
+
+	public doAddSectionDone(form: any): void {
+	}
+
+	public doSaveField(form: any): void {
+	}
+
+	public doAddFieldCancelled(form: any): void {
+	}
+
+	public doAddLicensee(form: any): void {
+	}
+
 }

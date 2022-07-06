@@ -2,16 +2,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import * as AuthActions from './auth.actions';
 import { KeycloakService } from 'keycloak-angular';
-import { UrlGuardRestControllerImpl } from '@app/service/bw/org/bocra/portal/guard/url-guard-rest-controller.impl';
-import { UrlGuardCriteria } from '@app/model/bw/org/bocra/portal/guard/url-guard-criteria';
-import { UrlGuardType } from '@app/model/bw/org/bocra/portal/guard/url-guard-type';
+import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
 import * as nav from '@app/shell/navigation';
 
 @Injectable()
 export class AuthEffects {
-  constructor(private actions$: Actions, private keycloakService: KeycloakService, private urlGuardRestController: UrlGuardRestControllerImpl) {}
+  constructor(private actions$: Actions, private keycloakService: KeycloakService, private authorisationRestController: AuthorisationRestControllerImpl) {}
 
   // isLoggedIn$ = createEffect(() =>
   //   this.actions$.pipe(
@@ -25,7 +22,7 @@ export class AuthEffects {
   //             AuthActions.getRolesSuccess({roles: this.keycloakService.getUserRoles()});
   //           }
   //         }),
-  //         catchError(({ error }) => [AuthActions.authFailure(error)])
+  //         catchError(({ messages }) => [AuthActions.authFailure(messages)])
   //       )
   //     )
   //   )
@@ -37,7 +34,7 @@ export class AuthEffects {
   //     mergeMap(() =>
   //       this.keycloakService.logout().then(
   //         map(() => AuthActions.authReset()),
-  //         catchError(({ error }) => [AuthActions.authFailure(error)])
+  //         catchError(({ messages }) => [AuthActions.authFailure(messages)])
   //       )
   //     )
   //   )

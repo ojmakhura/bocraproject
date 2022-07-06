@@ -1,49 +1,56 @@
 package bw.org.bocra.portal;
 
-import java.util.Collections;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.format.datetime.DateFormatter;
+import org.springframework.format.datetime.DateFormatterRegistrar;
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
+import org.springframework.format.support.DefaultFormattingConversionService;
+import org.springframework.format.support.FormattingConversionService;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 @Configuration
 public class SpringRestConfiguration {
-	
 	// @Bean
-	// public CorsFilter corsFilter() {
-	// 	UrlBasedCorsConfigurationSource confSource = new UrlBasedCorsConfigurationSource();
-	// 	CorsConfiguration config = new CorsConfiguration();
-    //     config.setAllowCredentials(true);
-    //     config.setAllowedOriginPatterns(Collections.singletonList("*"));
-    //     config.addAllowedHeader("*");
-    //     for(HttpMethod method : HttpMethod.values()) {
-    //         config.addAllowedMethod(method);
-    //     }
-	// 	confSource.registerCorsConfiguration("/**", config);
-	// 	return new CorsFilter(confSource);
-	// }
+    // @Override
+    // public FormattingConversionService mvcConversionService() {
+    //     DefaultFormattingConversionService conversionService = new DefaultFormattingConversionService(false);
 
-    @Bean
-    public Docket api() {
+    //     DateTimeFormatterRegistrar dateTimeRegistrar = new DateTimeFormatterRegistrar();
+    //     dateTimeRegistrar.setDateFormatter(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    //     dateTimeRegistrar.setDateTimeFormatter(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
+    //     dateTimeRegistrar.registerFormatters(conversionService);
 
-        return new Docket(DocumentationType.SWAGGER_2)
-            .select()
-            .apis(RequestHandlerSelectors.any())
-            .paths(PathSelectors.any())
-            .build();
-    }
+    //     DateFormatterRegistrar dateRegistrar = new DateFormatterRegistrar();
+    //     dateRegistrar.setFormatter(new DateFormatter("dd.MM.yyyy"));
+    //     dateRegistrar.registerFormatters(conversionService);
 
+    //     return conversionService;
+    // }
+
+    // @Bean
+    // public ObjectMapper jsonObjectMapper() {
+    //     final ObjectMapper jsonMapper = new ObjectMapper();
+    //     jsonMapper.registerModule(new JavaTimeModule());
+    //     jsonMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+    //     //some other configuration like:
+    //     jsonMapper.registerModule(new Jdk8Module());
+    //     jsonMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+
+    //     return jsonMapper;
+    // }
 }

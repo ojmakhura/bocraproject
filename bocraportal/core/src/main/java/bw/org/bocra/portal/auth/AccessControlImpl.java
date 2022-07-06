@@ -8,9 +8,12 @@
  */
 package bw.org.bocra.portal.auth;
 
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.user.LicenseeUserService;
 
 /**
  * @see bw.org.bocra.portal.auth.AccessControl
@@ -20,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccessControlImpl
     extends AccessControlBase
 {
+
+    public AccessControlImpl(AuthorisationService authorisationService, LicenseeUserService licenseeUserService,
+            MessageSource messageSource) {
+        super(authorisationService, licenseeUserService, messageSource);
+    }
 
     /**
      * @see bw.org.bocra.portal.auth.AccessControl#authorised(String)
