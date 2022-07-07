@@ -1,5 +1,5 @@
-<div fxFlex class="container">
-  <mat-sidenav-container fxFill>
+<!-- <div fxFlex class="container"> -->
+<!-- <mat-sidenav-container fxFill>
     <mat-sidenav
       #sidenav
       [mode]="isMobile ? 'over' : 'side'"
@@ -10,9 +10,9 @@
       <mat-toolbar color="primary">
         <span translate>application.name</span>
         <div fxFlex></div>
-        <div>
-          <!-- Uncomment if you are using authentication -->
-          <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <div> -->
+<!-- Uncomment if you are using authentication -->
+<!-- <button mat-icon-button [matMenuTriggerFor]="userMenu">
             <mat-icon>person</mat-icon>
           </button>
           <mat-menu #userMenu="matMenu">
@@ -37,7 +37,12 @@
             <mat-divider></mat-divider>
           </div>
           <div *ngFor="let item of menus$ | async">
-            <a mat-list-item routerLink="{{ item.routerLink }}" routerLinkActive="active" (click)="isMobile && sidenav.close()">
+            <a
+              mat-list-item
+              routerLink="{{ item.routerLink }}"
+              routerLinkActive="active"
+              (click)="isMobile && sidenav.close()"
+            >
               <span translate>{{ item.titleKey }}</span>
             </a>
             <mat-divider></mat-divider>
@@ -60,5 +65,184 @@
       </mat-toolbar>
       <router-outlet></router-outlet>
     </mat-sidenav-content>
-  </mat-sidenav-container>
+  </mat-sidenav-container> -->
+<!-- </div> -->
+<div class="container-fluid d-flex flex-column bg-light min-vh-100">
+	<!-- Navbar start-->
+	<div class="row">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container-fluid">
+				<a class="navbar-brand" routerLink="active">
+					<img src="../assets/bocra-logo.png" alt="" height="40" routerLink="active" class="me-2">
+					<strong>Online Portal</strong>
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+					aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarContent">
+					<ul class="navbar-nav mx-auto">
+						<li class="nav-item">
+							<a class="nav-link" routerLink="/home">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" routerLink="/about">About Us</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" routerLink="active">Contact Us</a>
+						</li>
+					</ul>
+					<form class="d-flex">
+						<input class="form-control me-2" type="text" placeholder="Search for..."
+							aria-label="Search for..." />
+						<button class="btn btn-outline-primary" type="button"><i class="fa fa-search"></i></button>
+					</form>
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" routerLink="active">File A Complaint</a>
+						</li>
+						<!-- <li class="nav-item">
+							<button class="btn btn-primary" routerLink="active">Login</button>
+						</li> -->
+						<li class="nav-item">
+							<a class="nav-link" routerLink="active"><i class="fa fa-bell fa-lg"
+									aria-hidden="false"></i></a>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+								data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fa fa-user-circle fa-lg" aria-hidden="false"></i>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+								aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" routerLink="profile"><i class="fa fa-user"
+											aria-hidden="false"></i>&nbsp;
+										Profile</a></li>
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li><a class="dropdown-item" (click)="logout()">
+										<i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp; Logout</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+	<!-- Navbar end -->
+
+	<!-- Sidebar start -->
+	<div class="row flex-grow-1">
+		<div class="bg-dark pb-5 col-auto border-bottom border-top border-white min-vh-75">
+			<div class="modal-header border-top border-dark justify-content-end">
+				<i class="fa fa-long-arrow-left fa-lg text-white" aria-hidden="true" (click)="toggle()"
+					*ngIf="!toggled"></i>
+				<i class="fa fa-long-arrow-right fa-lg text-white" aria-hidden="true" (click)="toggle()"
+					*ngIf="toggled"></i>
+			</div>
+			<nav class="sidebar">
+				<ul class="nav flex-column" *ngFor="let item of menus$ | async">
+					<li class="nav-item"><a class="nav-link" routerLink="{{ item.routerLink }}"
+							routerLinkActive="active"><i class="fa fa-puzzle-piece fa-lg" aria-hidden="true"
+								title="Sector Management"></i>&nbsp;<span *ngIf="!toggled" class="ms-3" translate>{{
+								item.titleKey }}</span></a></li>
+					<!-- <li class="nav-item"><a class="nav-link" routerLink="active"><i class="fa fa-building fa-lg" aria-hidden="true"
+								title="Licensee Management"></i><span *ngIf="!toggled" class="ms-3">Licensee
+								Management</span></a></li>
+					<li class="nav-item"><a class="nav-link" routerLink="active"><i class="fa fa-file-text fa-lg" aria-hidden="true"
+								title="License Management"></i><span *ngIf="!toggled" class="ms-3">License
+								Management</span></a></li>
+					<li class="nav-item"><a class="nav-link" routerLink="active"><i class="fa fa-users fa-lg" aria-hidden="true"
+								title="User Management"></i><span *ngIf="!toggled" class="ms-3">User
+								Management</span></a>
+					</li>
+					<li class="nav-item"><a class="nav-link" routerLink="data-capture"><i class="fa fa-database fa-lg" aria-hidden="true"
+								title="Data Capture"></i><span *ngIf="!toggled" class="ms-3">Data Capture</span></a>
+					</li>
+					<li class="nav-item"><a class="nav-link" routerLink="active"><i class="fa fa-files-o fa-lg" aria-hidden="true"
+								title="Process Submissions"></i><span *ngIf="!toggled" class="ms-3">Process
+								Submissions</span></a></li>
+					<li class="nav-item"><a class="nav-link" routerLink="active"><i class="fa fa-file-excel-o fa-lg" aria-hidden="true"
+								title="Form Structure"></i><span *ngIf="!toggled" class="ms-3">Form Structure</span></a>
+					</li>
+					<li class="nav-item"><a class="nav-link" routerLink="active"><i class="fa fa-bar-chart fa-lg" aria-hidden="true"
+								title="Reports"></i><span *ngIf="!toggled" class="ms-3">Reports</span></a></li> -->
+				</ul>
+			</nav>
+		</div>
+		<div class="col mb-4" id="content">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+	<!-- Sidebar end -->
+
+
+	<!-- Footer start -->
+	<div class="row bg-dark text-white pt-4  px-5 pb-2 mt-auto">
+		<footer class="container">
+			<div class="row justify-content-center py-3 border-top border-success">
+				<div class="col-lg-2">
+					<img src="assets/bocra-logo.png" alt="...">
+				</div>
+				<div class="col-lg-3">
+					<div class="row">
+						<p><i class="fa fa-location-arrow fa-lg me-2 text-primary" aria-hidden="true"></i>Plot 50671
+							Independence Avenue<br>
+							Gaborone, Botswana</p>
+					</div>
+					<div class="row">
+						<div class="col-lg-6">
+							<i class="fa fa-phone fa-lg me-2 text-primary" aria-hidden="true"></i>+267 395 7755
+						</div>
+						<div class="col-lg-6">
+							<i class="fa fa-fax fa-lg me-2 text-primary" aria-hidden="true"></i>+267 395 7976
+						</div>
+					</div>
+					<div class="row">
+						<p><i class="fa fa-envelope fa-lg text-primary me-2" aria-hidden="true"></i>info@bocra.org.bw
+						</p>
+					</div>
+				</div>
+				<div class="col-lg-2">
+					<p>Social media: &nbsp;
+						<span class="text-primary">
+							<a href="https://www.facebook.com/BTAbw"><i class="fa fa-facebook-official fa-lg me-2"
+									aria-hidden="true"></i></a>
+							<a href="https://twitter.com/bocrabw"><i class="fa fa-twitter-square fa-lg me-2"
+									aria-hidden="true"></i></a>
+							<a href="https://www.youtube.com/channel/UCkv70wCxbxy7OkC12QlL3ZA/feed"><i
+									class="fa fa-youtube-play fa-lg me-2" aria-hidden="true"></i></a>
+							<a href="https://www.linkedin.com/company/bta_3/"><i
+									class="fa fa-linkedin-square fa-lg me-2" aria-hidden="true"></i></a>
+							<a href="https://www.flickr.com/photos/bocra_bw/"><i class="fa fa-flickr fa-lg me-2"
+									aria-hidden="true"></i></a>
+						</span>
+					</p>
+				</div>
+			</div>
+			<div class="row py-3 justify-content-center border-top border-warning">
+				<div class="col-lg-5">
+					<div class="row" id="footer-nav">
+						<div class="col-lg-3">
+							<a routerLink="/about" class="text-decoration-none">About Us</a>
+						</div>
+						<div class="col-lg-3">
+							<a routerLink="active" class="text-decoration-none">Contact Us</a>
+						</div>
+						<div class="col-lg-3">
+							<a routerLink="active" class="text-decoration-none">Links</a>
+						</div>
+						<div class="col-lg-3">
+							<a routerLink="active" class="text-decoration-none">FAQ`S</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2">
+					Copyright 2022 BOCRA
+				</div>
+			</div>
+		</footer>
+	</div>
+	<!-- Footer end -->
 </div>
