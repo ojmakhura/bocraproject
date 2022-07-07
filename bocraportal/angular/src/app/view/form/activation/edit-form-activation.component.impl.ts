@@ -102,7 +102,23 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   }
 
   override beforeEditFormActivationSave(form: EditFormActivationSaveForm): void {
-    console.log(form);
+    if (this.formActivationControl.valid) {
+      if (form.formActivation.id) {
+        form.formActivation.updatedBy = this.keycloakService.getUsername();
+        form.formActivation.updatedDate = new Date();
+      } else {
+        form.formActivation.createdBy = this.keycloakService.getUsername();
+        form.formActivation.createdDate = new Date();
+      }
+      this.store.dispatch(
+        FormActivationActions.save({
+          formActivation: form.formActivation,
+          loading: true,
+        })
+      );
+    } else {
+      this.store.dispatch(FormActivationActions.formActivationFailure({ messages: ['Form activation has an error!'] }));
+    }
   }
 
   override createFormSubmissionVOGroup(value: FormSubmissionVO): FormGroup {
