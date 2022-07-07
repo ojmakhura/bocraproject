@@ -84,7 +84,6 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleSave(FormSubmissionVO formSubmissionVO) {
-        System.out.println(formSubmissionVO);
         Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmissionVO));
         ResponseEntity<FormSubmissionVO> response;
 
