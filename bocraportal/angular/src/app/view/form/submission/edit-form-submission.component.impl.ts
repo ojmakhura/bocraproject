@@ -216,7 +216,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   override createDataFieldSectionVOGroup(value: DataFieldSectionVO): FormGroup {
     return this.formBuilder.group({
-      sectionName: [value?.sectionName],
+      sectionId: [value?.sectionId],
       sectionLabel: [value?.sectionLabel],
       position: [value?.position],
       dataFields: this.createDataFieldVOArray(value.dataFields),
@@ -248,7 +248,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   getSectionName(i: number): string {
-    return this.formSubmissionSections[i].sectionName;
+    return this.formSubmissionSections[i].sectionId;
   }
 
   getSectionLabel(i: number): string {
