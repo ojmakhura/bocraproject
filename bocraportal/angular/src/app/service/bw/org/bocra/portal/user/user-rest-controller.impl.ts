@@ -10,13 +10,9 @@ export class UserRestControllerImpl extends UserRestController {
     super(injector);
   }
 
-  public override createUser(clientId: string | any, user: UserVO | any): Observable<UserVO | any> {
+  public override createUser(user: UserVO | any): Observable<UserVO | any> {
 
-    if(!clientId) {
-      clientId = '';
-    }
-
-    return this.http.post<UserVO | any>(this.path + `/create?clientId=${clientId}`, { user: user });
+    return this.http.post<UserVO | any>(this.path + `/create`, user);
   }
 
   public override findUserById(userId: string | any): Observable<UserVO | any> {
