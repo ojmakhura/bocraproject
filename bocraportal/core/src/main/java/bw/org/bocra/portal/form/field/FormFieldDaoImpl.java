@@ -59,7 +59,8 @@ public class FormFieldDaoImpl
             section.setCreatedDate(entity.getCreatedDate());
             section.setId(entity.getId());
             section.setPosition(entity.getPosition());
-            section.setSectionName(entity.getSectionName());
+            section.setSectionLabel(entity.getSectionLabel());
+            section.setSectionId(entity.getSectionId());
             section.setUpdatedBy(entity.getUpdatedBy());
             section.setUpdatedDate(entity.getUpdatedDate());
 

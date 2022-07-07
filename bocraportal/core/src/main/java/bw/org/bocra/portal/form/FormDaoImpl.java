@@ -85,7 +85,7 @@ public class FormDaoImpl
             }
 
             for (FormField entity : source.getFormFields()) {
-                FormFieldVO field = new FormFieldVO();
+                //FormFieldVO field = new FormFieldVO();
                 // field.setId(entity.getId());
                 // field.setCreatedBy(entity.getCreatedBy());
                 // field.setCreatedDate(entity.getCreatedDate());
@@ -95,7 +95,7 @@ public class FormDaoImpl
                 // field.setFieldName(entity.getFieldName());
                 // field.setFieldType(entity.getFieldType());
 
-                formFieldDao.toFormFieldVO(entity, field);
+                FormFieldVO field = formFieldDao.toFormFieldVO(entity);
 
                 target.getFormFields().add(field);
             }
@@ -108,14 +108,6 @@ public class FormDaoImpl
 
             for(FormSection entity : source.getFormSections()) {
                 FormSectionVO section = new FormSectionVO();
-                // section.setId(entity.getId());
-                // section.setCreatedBy(entity.getCreatedBy());
-                // section.setCreatedDate(entity.getCreatedDate());
-                // section.setUpdatedBy(entity.getUpdatedBy());
-                // section.setUpdatedDate(entity.getUpdatedDate());
-                // section.setPosition(entity.getPosition());
-                // section.setSectionName(entity.getSectionName());
-
                 getFormSectionDao().toFormSectionVO(entity, section);
 
                 target.getFormSections().add(section);

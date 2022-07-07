@@ -46,6 +46,7 @@ public class DataFieldDaoImpl
             if(section.getPosition() != null) {
                 target.setSectionPosition(section.getPosition());
                 target.setSectionLabel(section.getSectionLabel());
+                target.setSectionId(section.getSectionId());
             }
         }
 

@@ -29,12 +29,11 @@ import bw.org.bocra.portal.form.field.FormFieldVO;
  */
 @Repository("formSectionDao")
 public class FormSectionDaoImpl
-    extends FormSectionDaoBase
-{
+        extends FormSectionDaoBase {
 
     public FormSectionDaoImpl(FormRepository formRepository, FormFieldRepository formFieldRepository,
             FormSectionRepository formSectionRepository) {
-                
+
         super(formRepository, formFieldRepository, formSectionRepository);
     }
 
@@ -43,13 +42,14 @@ public class FormSectionDaoImpl
      */
     @Override
     public void toFormSectionVO(
-        FormSection source,
-        FormSectionVO target)
-    {
+            FormSection source,
+            FormSectionVO target) {
         // TODO verify behavior of toFormSectionVO
         super.toFormSectionVO(source, target);
-        // WARNING! No conversion for target.form (can't convert source.getForm():bw.org.bocra.portal.form.Form to bw.org.bocra.portal.form.FormVO
-        if(source.getForm() != null) {
+        // WARNING! No conversion for target.form (can't convert
+        // source.getForm():bw.org.bocra.portal.form.Form to
+        // bw.org.bocra.portal.form.FormVO
+        if (source.getForm() != null) {
             FormVO form = new FormVO();
 
             form.setCode(source.getForm().getCode());
@@ -64,16 +64,24 @@ public class FormSectionDaoImpl
             target.setForm(form);
         }
 
-        // WARNING! No conversion for target.formFields (can't convert source.getFormFields():bw.org.bocra.portal.form.field.FormField to bw.org.bocra.portal.form.field.FormFieldVO
-        if(CollectionUtils.isNotEmpty(source.getFormFields())) {
+        // WARNING! No conversion for target.formFields (can't convert
+        // source.getFormFields():bw.org.bocra.portal.form.field.FormField to
+        // bw.org.bocra.portal.form.field.FormFieldVO
+        if (CollectionUtils.isNotEmpty(source.getFormFields())) {
             Collection<FormFieldVO> fields = new ArrayList<>();
-            for(FormField field : source.getFormFields()) {
+            for (FormField field : source.getFormFields()) {
                 FormFieldVO f = new FormFieldVO();
                 f.setId(field.getId());
                 f.setFieldId(field.getFieldId());
                 f.setFieldName(field.getFieldName());
                 f.setFieldType(field.getFieldType());
                 f.setFieldValueType(field.getFieldValueType());
+                
+                FormSectionVO section = new FormSectionVO();
+                super.toFormSectionVO(source, section);
+
+                f.setFormSection(section);
+
                 fields.add(f);
             }
 
@@ -85,25 +93,21 @@ public class FormSectionDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public FormSectionVO toFormSectionVO(final FormSection entity)
-    {
+    public FormSectionVO toFormSectionVO(final FormSection entity) {
         // TODO verify behavior of toFormSectionVO
         return super.toFormSectionVO(entity);
     }
 
     /**
-     * Retrieves the entity object that is associated with the specified value object
+     * Retrieves the entity object that is associated with the specified value
+     * object
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private FormSection loadFormSectionFromFormSectionVO(FormSectionVO formSectionVO)
-    {
-        if (formSectionVO.getId() == null)
-        {
-            return  FormSection.Factory.newInstance();
-        }
-        else
-        {
+    private FormSection loadFormSectionFromFormSectionVO(FormSectionVO formSectionVO) {
+        if (formSectionVO.getId() == null) {
+            return FormSection.Factory.newInstance();
+        } else {
             return this.load(formSectionVO.getId());
         }
     }
@@ -111,8 +115,7 @@ public class FormSectionDaoImpl
     /**
      * {@inheritDoc}
      */
-    public FormSection formSectionVOToEntity(FormSectionVO formSectionVO)
-    {
+    public FormSection formSectionVOToEntity(FormSectionVO formSectionVO) {
         // TODO verify behavior of formSectionVOToEntity
         FormSection entity = this.loadFormSectionFromFormSectionVO(formSectionVO);
         this.formSectionVOToEntity(formSectionVO, entity, true);
@@ -124,22 +127,25 @@ public class FormSectionDaoImpl
      */
     @Override
     public void formSectionVOToEntity(
-        FormSectionVO source,
-        FormSection target,
-        boolean copyIfNull)
-    {
+            FormSectionVO source,
+            FormSection target,
+            boolean copyIfNull) {
         // TODO verify behavior of formSectionVOToEntity
         super.formSectionVOToEntity(source, target, copyIfNull);
-        // WARNING! No conversion for target.form (can't convert source.getForm():bw.org.bocra.portal.form.Form to bw.org.bocra.portal.form.FormVO
-        if(source.getForm() != null) {
+        // WARNING! No conversion for target.form (can't convert
+        // source.getForm():bw.org.bocra.portal.form.Form to
+        // bw.org.bocra.portal.form.FormVO
+        if (source.getForm() != null) {
             Form form = getFormDao().load(source.getForm().getId());
             target.setForm(form);
         }
 
-        // WARNING! No conversion for target.formFields (can't convert source.getFormFields():bw.org.bocra.portal.form.field.FormField to bw.org.bocra.portal.form.field.FormFieldVO
-        if(CollectionUtils.isNotEmpty(source.getFormFields())) {
+        // WARNING! No conversion for target.formFields (can't convert
+        // source.getFormFields():bw.org.bocra.portal.form.field.FormField to
+        // bw.org.bocra.portal.form.field.FormFieldVO
+        if (CollectionUtils.isNotEmpty(source.getFormFields())) {
             Collection<FormField> fields = new ArrayList<>();
-            for(FormFieldVO field : source.getFormFields()) {
+            for (FormFieldVO field : source.getFormFields()) {
                 FormField f = getFormFieldDao().get(field.getId());
                 fields.add(f);
             }
@@ -153,10 +159,11 @@ public class FormSectionDaoImpl
 
         Specification<FormSection> specs = null;
 
-        if(StringUtils.isNotBlank(criteria)) {
-            specs = FormSectionSpecifications.findBySectionNameContainingIgnoreCase(criteria);
+        if (StringUtils.isNotBlank(criteria)) {
+            specs = FormSectionSpecifications.findBySectionLabelContainingIgnoreCase(criteria)
+                .or(FormSectionSpecifications.findBySectionIdContainingIgnoreCase(criteria));
         }
-        
-        return formSectionRepository.findAll(specs, Sort.by("sectionName").ascending());
+
+        return formSectionRepository.findAll(specs, Sort.by("sectionId", "sectionLabel").ascending());
     }
 }

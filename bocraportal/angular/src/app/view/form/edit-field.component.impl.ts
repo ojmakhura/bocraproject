@@ -41,7 +41,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
 
       f?.formSections?.forEach((element: FormSectionVO) => {
         let item: SelectItem = new SelectItem();
-        item.label = element.sectionName;
+        item.label = element.sectionLabel;
         item.value = element.id;
 
         this.formFieldFormSectionBackingList.push(item);
@@ -90,7 +90,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
       this.formFieldFormSectionBackingList = []
       f?.formSections?.forEach((element: FormSectionVO) => {
         let item: SelectItem = new SelectItem();
-        item.label = element.sectionName;
+        item.label = element.sectionLabel;
         item.value = element.id;
 
         this.formFieldFormSectionBackingList.push(item);
