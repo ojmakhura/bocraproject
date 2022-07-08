@@ -9,18 +9,19 @@ import { env } from './.env';
 export const environment = {
   production: true,
   version: env['npm_package_version'] + '-dev',
-  serverUrl: 'http://api.localhost',
+  serverUrl: 'http://192.168.57.4:8085',
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US'],
-  bocraApiServer: 'http://api.localhost',
-  bocraKeycloakServer: 'http://keycloak.localhost',
+  bocraApiServer: 'http://192.168.57.4:8085',
+  bocraKeycloakServer: 'http://192.168.57.3:8080',
   keycloakRealm: 'bocraportal',
   webClientId: '5bf59357-eafb-4de3-baff-dc98f1d9bab7',
   redirectUri: 'http://192.168.57.6',
-  keycloakClientRoleUrl: 'http://keycloak.localhost/auth/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
-  keycloakRealmRoleUrl: 'http://keycloak.localhost/auth/admin/realms/bocraportal/roles',
+  keycloakClientRoleUrl:
+    'http://192.168.57.3:8080/auth/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
+  keycloakRealmRoleUrl: 'http://192.168.57.3:8080/auth/admin/realms/bocraportal/roles',
   keycloak: {
-    issuer: 'http://keycloak.localhost/auth',
+    issuer: 'http://192.168.57.3:8080/auth',
     redirectUri: window.location.origin,
     clientId: 'bocraportal-web',
     scope: 'openid profile email offline_access',
@@ -30,6 +31,6 @@ export const environment = {
     disableAtHashCheck: true,
     showDebugInformation: true,
     requireHttps: false,
-    checkLoginIframe: false
+    checkLoginIframe: false,
   },
 };
