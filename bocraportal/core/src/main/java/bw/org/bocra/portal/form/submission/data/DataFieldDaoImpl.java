@@ -57,6 +57,13 @@ public class DataFieldDaoImpl
             field.setFieldName(source.getFormField().getFieldName());
             field.setFieldValueType(source.getFormField().getFieldValueType());
             field.setFieldType(source.getFormField().getFieldType());
+            field.setDefaultValue(source.getFormField().getDefaultValue());
+            field.setMin(source.getFormField().getMin());
+            field.setMinLength(source.getFormField().getMinLength());
+            field.setMax(source.getFormField().getMax());
+            field.setMaxLength(source.getFormField().getMaxLength());
+            field.setExpression(source.getFormField().getExpression());
+            
             target.setFormField(field);
         }
 
