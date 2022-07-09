@@ -156,7 +156,7 @@ services:
       - db
       - keycloak
     ports:
-      - ${API_SERVER_PORT}
+      - ${API_SERVER_PORT}:${API_SERVER_PORT}
     build:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile

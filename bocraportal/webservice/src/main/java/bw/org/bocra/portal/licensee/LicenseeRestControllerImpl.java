@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
@@ -27,29 +28,33 @@ import bw.org.bocra.portal.report.ReportVO;
 import bw.org.bocra.portal.report.config.ReportConfigVO;
 import bw.org.bocra.portal.sector.SectorVO;
 import bw.org.bocra.portal.user.LicenseeUserService;
+import bw.org.bocra.portal.user.UserVO;
 
 @RestController
 @RequestMapping("/licensee")
 public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
-    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService) {
+    private final KeycloakUserService keycloakUserService;
+    
+    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService, KeycloakUserService keycloakUserService) {
         super(licenseeService, licenseeUserService);
+        this.keycloakUserService = keycloakUserService;
     }
 
     protected static Logger log = LoggerFactory.getLogger(LicenseeRestControllerImpl.class);
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<LicenseeVO> data = Optional.of(this.licenseeService.findById(id)); // TODO: Add custom code here;
-        ResponseEntity<LicenseeVO> response;
+        LicenseeVO licensee = this.licenseeService.findById(id);
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if(licensee == null || licensee.getId() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return response;
+        Collection<UserVO> users = this.keycloakUserService.getLicenseeUsers(licensee.getId());
+        licensee.setUsers(users);
+        
+        return ResponseEntity.status(HttpStatus.OK).body(licensee);
     }
 
     @Override

@@ -16,8 +16,10 @@
 					<button type="button" color="accent" (click)="editFormSubmissionNote()" class="btn btn-info">
 						<span translate>note</span>
 					</button>
-					<button color="accent" type="button" (click)="editFormSubmissionFormReset()"
-						class="btn btn-info"><span translate>reset</span></button>
+					<button type="button" color="accent" (click)="editFormSubmissionSubmit()" class="btn btn-info">
+						<span translate>submit</span>
+					</button>
+					<button color="accent" type="button" (click)="editFormSubmissionFormReset()" class="btn btn-info" ><span translate>reset</span></button>
 				</div>
 			</section>
 			<div *ngIf="success | async" class="alert alert-success" role="alert">
@@ -31,20 +33,43 @@
 				</div>
 			</div>
 			<div formGroupName="formSubmission">
-				<div class="mb-3" formGroupName="form">
-					<label id="formSubmissionForm_label" class="col-sm-2 col-form-label" for="formSubmissionForm"><span
-							translate>form</span>*</label>
-					<select id="formSubmissionForm" class="form-select" formControlName="id" required>
-						<option *ngFor="let item of formSubmissionFormBackingList" [value]="item.value">{{ item.label }}
-						</option>
-					</select>
+				<fieldset class="mb-3" formGroupName="form">
+					<!-- <legend id="formSubmissionForm_label" class="col-sm-2 col-form-label" for="formSubmissionForm"><span translate>form</span>*</legend> -->
+					<!-- <div class="col my-3 view-buttons">
+				<button type="button" (click)="formSubmissionFormAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formSubmissionFormModal">
+					<mat-icon>add_box</mat-icon>
+				</button>
+				<button type="button" (click)="formSubmissionFormClear()" class="btn btn-primary">
+					<mat-icon>clear</mat-icon>
+				</button>
+			</div> -->
+					<!-- <div class="row mb-3">
+				<label for="formSubmissionFormId" class="col-sm-2 col-form-label" translate>id</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="formSubmissionFormId" value="{{formSubmissionForm?.id}}" disabled>
+				</div>
+			</div> -->
+					<!-- <div class="row mb-3">
+				<label for="formSubmissionFormCode" class="col-sm-2 col-form-label" translate>code</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="formSubmissionFormCode" value="{{formSubmissionForm?.code}}" disabled>
+				</div>
+			</div> -->
+					<div class="row mb-3">
+						<label for="formSubmissionFormFormName" class="col-sm-2 col-form-label"
+							translate>form.name</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="formSubmissionFormFormName"
+								value="{{formSubmissionForm?.formName}}" disabled>
+						</div>
+					</div>
 					<div *ngIf="editFormSubmissionForm.invalid && formSubmissionFormControl.invalid && (formSubmissionFormControl.dirty || formSubmissionFormControl.touched)"
 						class="alert alert-danger" role="alert">
 						<div *ngIf="formSubmissionFormControl.errors['required']">
 							<span translate>form.required</span>
 						</div>
 					</div>
-				</div>
+				</fieldset>
 				<fieldset class="mb-3" formGroupName="period">
 					<!-- <legend id="formSubmissionPeriod_label" class="col-sm-2 col-form-label" for="formSubmissionPeriod"><span translate>period</span>*</legend>
 				    <div class="col my-3 view-buttons"  *ngIf="!formSubmissionId">
@@ -66,7 +91,7 @@
 							translate>period.name</label>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="formSubmissionPeriodPeriodName"
-								value="{{formSubmissionPeriod?.periodName}}" disabled>
+								value="{{ formSubmissionPeriod?.periodName }}" disabled />
 						</div>
 					</div>
 					<!-- <div class="row mb-3">
@@ -114,7 +139,7 @@
 							translate>licensee.name</label>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="formSubmissionLicenseeLicenseeName"
-								value="{{formSubmissionLicensee?.licenseeName}}" disabled>
+								value="{{ formSubmissionLicensee?.licenseeName }}" disabled />
 						</div>
 					</div>
 					<!-- <div *ngIf="editFormSubmissionForm.invalid && formSubmissionLicenseeControl.invalid && (formSubmissionLicenseeControl.dirty || formSubmissionLicenseeControl.touched)" class="alert alert-danger" role="alert">
@@ -123,69 +148,38 @@
 				        </div>
 				    </div> -->
 				</fieldset>
-				<!-- <fieldset class="mb-3" formGroupName="dataFields">
-				    <legend id="formSubmissionDataFields_label" class="col-sm-2 col-form-label" for="formSubmissionDataFields"><span translate>data.fields</span></legend>
-				    <input type="text" id="formSubmissionDataFields" class="form-control" name="dataFields" formControlName="id"/>
-				</fieldset> -->
 				<div formArrayName="sections">
-					<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index" [formGroupName]='i'>
+					<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index" [formGroupName]="i">
 						<div>
 							<span>
-								{{ getSectionName(i) }}
+								{{ getSectionLabel(i) }}
 							</span>
 						</div>
 						<div formArrayName="dataFields">
-							<div *ngFor="let dataField of getSectorFields(i); let j = index" [formGroupName]='j'>
+							<div *ngFor="let dataField of getSectorFields(i); let j = index; trackBy:trackByFn" [formGroupName]="j">
 								<div class="mb-3" *ngIf="isButton(dataField)">
-									<input type="button" class="btn btn-primary" value="{{getDataValue(dataField)}}">
+									<input type="button" class="btn btn-primary"
+										value="{{ getDataValue(dataField) }}" />
 								</div>
 								<div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-									<label class="form-label">{{getDataValue(dataField)}}</label>
-									<input class="form-control" type="{{this.getType(dataField)}}" formControlName="value"
-										*ngIf="!isTextArea(dataField)
-																&& !isSelect(dataField) && !isRange(dataField)">
+									<label class="form-label">{{ getDataValue(dataField) }}</label>
+									<input class="form-control" type="{{ this.getType(dataField) }}"
+										formControlName="value"
+										*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)" />
 									<textarea class="form-control" formControlName="value"
 										*ngIf="isTextArea(dataField)"></textarea>
-									<select class="form-select" aria-label="Default select example" formControlName="value"
-										*ngIf="isSelect(dataField)">
+									<select class="form-select" aria-label="Default select example"
+										formControlName="value" *ngIf="isSelect(dataField)">
 										<option selected></option>
 										<option value="1">One</option>
 										<option value="2">Two</option>
 										<option value="3">Three</option>
 									</select>
-									<input type="range" class="form-range" min="{{dataField.formField.min}}"
-										max="{{dataField.formField.max}}" *ngIf="isRange(dataField)">
+									<input type="range" class="form-range" min="{{ dataField.formField.min }}"
+										max="{{ dataField.formField.max }}" *ngIf="isRange(dataField)" />
 								</div>
 							</div>
 						</div>
-						<!-- <div *ngFor="let dataField of section.value.dataFields">
-							{{dataField.id}}
-							
-						</div> -->
-						<!-- <div formArrayName="dataFields">
-							<div *ngFor="let dataField of section.dataFields; let j = index" [formGroupName]='j'>
-								<div class="mb-3" *ngIf="isButton(dataField)">
-									<input type="button" class="btn btn-primary" value="{{getDataValue(dataField)}}">
-								</div>
-								<div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-									<label class="form-label">{{getDataValue(dataField)}}</label>
-									<input class="form-control" type="{{this.getType(dataField)}}" formControlName="value"
-										*ngIf="!isTextArea(dataField)
-																&& !isSelect(dataField) && !isRange(dataField)">
-									<textarea class="form-control" formControlName="value"
-										*ngIf="isTextArea(dataField)"></textarea>
-									<select class="form-select" aria-label="Default select example" formControlName="value"
-										*ngIf="isSelect(dataField)">
-										<option selected></option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
-									<input type="range" class="form-range" min="{{dataField.formField.min}}"
-										max="{{dataField.formField.max}}" *ngIf="isRange(dataField)">
-								</div>
-							</div>
-						</div> -->
 					</div>
 				</div>
 				<div class="mb-3">
@@ -193,8 +187,10 @@
 						for="formSubmissionSubmissionStatus"><span translate>submission.status</span>*</label>
 					<input type="text" id="formSubmissionSubmissionStatus" class="form-control" name="submissionStatus"
 						formControlName="submissionStatus" required />
-					<div *ngIf="editFormSubmissionForm.invalid && formSubmissionSubmissionStatusControl.invalid && (formSubmissionSubmissionStatusControl.dirty || formSubmissionSubmissionStatusControl.touched)"
-						class="alert alert-danger" role="alert">
+					<div *ngIf="editFormSubmissionForm.invalid &&
+              				formSubmissionSubmissionStatusControl.invalid &&
+							(formSubmissionSubmissionStatusControl.dirty || formSubmissionSubmissionStatusControl.touched)" 
+							class="alert alert-danger" role="alert">
 						<div *ngIf="formSubmissionSubmissionStatusControl.errors['required']">
 							<span translate>submission.status.required</span>
 						</div>
@@ -205,14 +201,10 @@
 						for="formSubmissionUpload"><span translate>upload</span></label>
 					<input type="file" id="formSubmissionUpload" class="form-control" formControlName="upload" />
 				</div>
-				
+
 				<!-- <fieldset class="mb-3" formGroupName="notes">
 				    <legend id="formSubmissionNotes_label" class="col-sm-2 col-form-label" for="formSubmissionNotes"><span translate>notes</span></legend>
 				    <input type="text" id="formSubmissionNotes" class="form-control" name="notes" formControlName="id"/>
-				</fieldset> -->
-				<!-- <fieldset class="mb-3" formGroupName="sections">
-				    <legend id="formSubmissionSections_label" class="col-sm-2 col-form-label" for="formSubmissionSections"><span translate>sections</span></legend>
-				    <input type="text" id="formSubmissionSections" class="form-control" name="sections" formControlName="id"/>
 				</fieldset> -->
 			</div>
 		</form>
@@ -246,10 +238,10 @@
 					</form>
 				</div>
 				<mat-table matSort [dataSource]="formSubmissionPeriods$ | async"
-					#formSubmissionPeriodModalSort="matSort" class="table table-bordered" style="width: 100%;">
+					#formSubmissionPeriodModalSort="matSort" class="table table-bordered" style="width: 100%">
 					<ng-container matColumnDef="actions">
 						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-						<mat-cell *matCellDef="let row; let i=index">
+						<mat-cell *matCellDef="let row; let i = index">
 							<mat-radio-group (change)="formSubmissionPeriodSelected($event, row)">
 								<mat-radio-button [value]="row" [checked]="formSubmissionPeriodSelect.id === row.id">
 								</mat-radio-button>
@@ -273,7 +265,7 @@
 						<mat-cell *matCellDef="let row"> {{ row.periodEnd }} </mat-cell>
 					</ng-container>
 					<mat-header-row *matHeaderRowDef="formSubmissionPeriodModalColumns"></mat-header-row>
-					<mat-row *matRowDef="let row; columns: formSubmissionPeriodModalColumns;"></mat-row>
+					<mat-row *matRowDef="let row; columns: formSubmissionPeriodModalColumns"></mat-row>
 				</mat-table>
 				<mat-paginator #formSubmissionPeriodModalPaginator="matPaginator" [pageSize]="10"
 					[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
@@ -281,7 +273,9 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
 				<button type="button" class="btn btn-primary" (click)="addSelectedFormSubmissionPeriod()"
-					data-bs-dismiss="modal" translate>save</button>
+					data-bs-dismiss="modal" translate>
+					save
+				</button>
 			</div>
 		</div>
 	</div>
@@ -315,10 +309,10 @@
 					</form>
 				</div>
 				<mat-table matSort [dataSource]="formSubmissionLicensees$ | async"
-					#formSubmissionLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%;">
+					#formSubmissionLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%">
 					<ng-container matColumnDef="actions">
 						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-						<mat-cell *matCellDef="let row; let i=index">
+						<mat-cell *matCellDef="let row; let i = index">
 							<mat-radio-group (change)="formSubmissionLicenseeSelected($event, row)">
 								<mat-radio-button [value]="row" [checked]="formSubmissionLicenseeSelect.id === row.id">
 								</mat-radio-button>
@@ -338,7 +332,7 @@
 						<mat-cell *matCellDef="let row"> {{ row.licenseeName }} </mat-cell>
 					</ng-container>
 					<mat-header-row *matHeaderRowDef="formSubmissionLicenseeModalColumns"></mat-header-row>
-					<mat-row *matRowDef="let row; columns: formSubmissionLicenseeModalColumns;"></mat-row>
+					<mat-row *matRowDef="let row; columns: formSubmissionLicenseeModalColumns"></mat-row>
 				</mat-table>
 				<mat-paginator #formSubmissionLicenseeModalPaginator="matPaginator" [pageSize]="10"
 					[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
@@ -346,7 +340,9 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
 				<button type="button" class="btn btn-primary" (click)="addSelectedFormSubmissionLicensee()"
-					data-bs-dismiss="modal" translate>save</button>
+					data-bs-dismiss="modal" translate>
+					save
+				</button>
 			</div>
 		</div>
 	</div>

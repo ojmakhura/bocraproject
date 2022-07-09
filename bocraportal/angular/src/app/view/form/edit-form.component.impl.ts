@@ -221,4 +221,32 @@ export class EditFormComponentImpl extends EditFormComponent {
       }
     });
   }
+
+  override createFormFieldVOGroup(value: FormFieldVO): FormGroup {
+    return this.formBuilder.group({
+      id: [value?.id],
+      createdBy: [value?.createdBy],
+      updatedBy: [value?.updatedBy],
+      createdDate: [value?.createdDate],
+      updatedDate: [value?.updatedDate],
+      fieldType: [value?.fieldType],
+      fieldId: [value?.fieldId],
+      fieldName: [value?.fieldName],
+      description: [value?.description],
+      fieldValueType: [value?.fieldValueType],
+      expression: [value?.expression],
+      defaultValue: [value?.defaultValue],
+      required: [value?.required],
+      min: [value?.min],
+      max: [value?.max],
+      minLength: [value?.minLength],
+      maxLength: [value?.maxLength],
+      formSection: {
+        id: [value?.formSection?.id],
+        position: [value?.formSection?.position],
+        sectionId: [value?.formSection?.sectionId],
+        sectionLabel: [value?.formSection?.sectionLabel],
+      }
+    });
+  }
 }

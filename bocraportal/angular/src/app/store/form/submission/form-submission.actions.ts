@@ -45,12 +45,12 @@ export const saveSuccess = createAction(
 );
 
 export const saveNote = createAction(
-    FormSubmissionActionType.SAVE,
+    FormSubmissionActionType.SAVE_NOTE,
     props<{ note: NoteVO | any , loading: boolean }>()
 );
 
 export const saveNoteSuccess = createAction(
-    FormSubmissionActionType.SAVE_SUCCESS,
+    FormSubmissionActionType.SAVE_NOTE_SUCCESS,
     props<{ note: NoteVO | any, messages: any[], success: boolean}>()
 );
 

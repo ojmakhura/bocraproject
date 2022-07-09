@@ -12,6 +12,7 @@ import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormRepository;
+import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.section.FormSection;
 import bw.org.bocra.portal.form.submission.FormSubmission;
@@ -22,11 +23,14 @@ import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
+import bw.org.bocra.portal.form.submission.data.DataFieldSpecifications;
 import bw.org.bocra.portal.licence.type.LicenceType;
 import bw.org.bocra.portal.licence.type.LicenceTypeForm;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
+import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodVO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,6 +43,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.MessageSource;
+import org.springframework.data.jpa.domain.Specification;
 
 
 /**
@@ -68,7 +73,43 @@ public class FormActivationServiceImpl
     protected FormActivationVO handleFindById(Long id)
         throws Exception
     {
-        return (FormActivationVO) getFormActivationDao().load(FormActivationDao.TRANSFORM_FORMACTIVATIONVO, id);
+        FormActivation act = getFormActivationDao().load(id);
+        FormActivationVO activation = getFormActivationDao().toFormActivationVO(act);
+        activation.setFormSubmissions(new ArrayList<>());
+        
+        for(FormSubmission submission : act.getFormSubmissions()) {
+            FormSubmissionVO vo = new FormSubmissionVO();
+            vo.setId(submission.getId());
+            vo.setSubmittedBy(submission.getSubmittedBy());
+            vo.setSubmissionDate(submission.getSubmissionDate());
+            vo.setId(submission.getId());
+            vo.setSubmissionStatus(submission.getSubmissionStatus());
+
+            Licensee le = submission.getLicensee();
+            LicenseeVO licensee = new LicenseeVO();
+            licensee.setId(le.getId());
+            licensee.setAddress(le.getAddress());
+            licensee.setLicenseeName(le.getLicenseeName());
+            licensee.setUin(le.getUin());
+            vo.setLicensee(licensee);
+
+            Form frm = act.getForm();
+            FormVO form = new FormVO();
+            form.setId(frm.getId());
+            form.setFormName(frm.getFormName());
+            form.setCode(frm.getCode());
+            vo.setForm(form);
+
+            Period prd = act.getPeriod();
+            PeriodVO period = new PeriodVO();
+            period.setId(prd.getId());
+            period.setPeriodName(prd.getPeriodName());
+            vo.setPeriod(period);
+
+            activation.getFormSubmissions().add(vo);
+        }
+        
+        return activation;
     }
 
     /**
@@ -163,7 +204,7 @@ public class FormActivationServiceImpl
     protected Collection<FormActivationVO> handleSearch(FormActivationCriteria criteria)
         throws Exception
     {
-        List<FormActivation> activations = new ArrayList<>();
+        Collection<FormActivation> activations = getFormActivationDao().findByCriteria(criteria);
         List<FormActivationVO> vos = new ArrayList<>();
 
         for(FormActivation activation : activations) {

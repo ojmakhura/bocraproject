@@ -5,7 +5,7 @@ import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission
 export const formActivationKey = "formActivation";
 
 export interface FormActivationState {
-    periodName: String | any;
+    activationName: String | any;
     formActivation: FormActivationVO | any;
     id: number | any;
     formActivations: Array<FormActivationVO> | Array<any>;
@@ -18,7 +18,7 @@ export interface FormActivationState {
 }
 
 export const initialState: FormActivationState = {
-    periodName: null,
+    activationName: null,
     formActivation: null,
     id: null,
     formActivations: [],

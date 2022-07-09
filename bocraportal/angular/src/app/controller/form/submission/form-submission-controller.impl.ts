@@ -31,4 +31,7 @@ export class FormSubmissionControllerImpl extends FormSubmissionController {
 	public doInitialiseEditNote(form: any): void {
 	}
 
+	public doSubmit(form: any): void {
+	}
+
 }

@@ -83,7 +83,7 @@ public class FormSubmissionDaoImpl
                     DataFieldSectionVO sec = new DataFieldSectionVO();
                     sec.setPosition(section.getPosition());
                     sec.setSectionLabel(section.getSectionLabel());
-                    sec.setSectionName(section.getSectionName());
+                    sec.setSectionId(section.getSectionId());
 
                     if(!sectioned.containsKey(sec)) {
                         sectioned.put(sec, new ArrayList<>());

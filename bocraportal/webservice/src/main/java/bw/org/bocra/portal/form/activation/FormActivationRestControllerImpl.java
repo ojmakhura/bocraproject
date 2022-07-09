@@ -98,7 +98,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
     @Override
     public ResponseEntity<?> handleSave(FormActivationVO formActivation) {
-        System.out.println(formActivation);
         try {
             Optional<?> data = Optional.of(formActivationService.save(formActivation));
             ResponseEntity<?> response;

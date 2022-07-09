@@ -68,7 +68,7 @@ export class EditUserComponentImpl extends EditUserComponent {
   override doNgAfterViewInit() {
     this.route.queryParams.subscribe((queryParams: any) => {
       
-      if (queryParams?.userId) {        console.log(queryParams);
+      if (queryParams?.userId) {
         this.store.dispatch(
           UserActions.findById({userId: queryParams.userId, loading: true})
         );

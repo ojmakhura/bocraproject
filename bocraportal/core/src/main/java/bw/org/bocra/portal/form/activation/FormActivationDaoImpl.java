@@ -18,6 +18,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
@@ -161,8 +163,8 @@ public class FormActivationDaoImpl
             spec = FormActivationSpecifications.findByActivationNameContainingIgnoreCase(criteria.activationName);
         }
 
-        if(criteria.getForm() != null) {
-            Specification<FormActivation> tmp = FormActivationSpecifications.findByFormId(criteria.getForm().getId());
+        if(criteria.getFormId() != null) {
+            Specification<FormActivation> tmp = FormActivationSpecifications.findByFormId(criteria.getFormId());
             if(spec == null) {
                 spec = tmp;
             } else {
@@ -170,8 +172,8 @@ public class FormActivationDaoImpl
             }
         }
 
-        if(criteria.getPeriod() != null) {
-            Specification<FormActivation> tmp = FormActivationSpecifications.findByPeriodId(criteria.getPeriod().getId());
+        if(criteria.getPeriodId() != null) {
+            Specification<FormActivation> tmp = FormActivationSpecifications.findByPeriodId(criteria.getPeriodId());
             if(spec == null) {
                 spec = tmp;
             } else {
@@ -179,6 +181,6 @@ public class FormActivationDaoImpl
             }
         }
 
-        return formActivationRepository.findAll(spec);
+        return formActivationRepository.findAll(spec, Sort.by(Direction.DESC, "id"));
     }
 }

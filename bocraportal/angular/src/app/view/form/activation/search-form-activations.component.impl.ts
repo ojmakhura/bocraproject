@@ -3,8 +3,8 @@ import { Component, Injector } from '@angular/core';
 import { SearchFormActivationsComponent } from '@app/view/form/activation/search-form-activations.component';
 import { SearchFormActivationsSearchForm } from '@app/view/form/activation/search-form-activations.component';
 import { SearchFormActivationsVarsForm } from '@app/view/form/activation/search-form-activations.component';
-import { MatRadioChange } from '@angular/material/radio';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import * as FormActivationActions from '@app/store/form/activation/form-activation.actions';
+import { FormActivationCriteria } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-criteria';
 
 @Component({
   selector: 'app-search-form-activations',
@@ -22,5 +22,14 @@ export class SearchFormActivationsComponentImpl extends SearchFormActivationsCom
     }
 
     doNgOnDestroy(): void {
+    }
+
+    override beforeSearchFormActivationsSearch(form: SearchFormActivationsSearchForm): void {
+        let criteria: FormActivationCriteria = new FormActivationCriteria
+        criteria.activationName = criteria.activationName;
+        this.store.dispatch(FormActivationActions.search({
+            criteria: criteria,
+            loading: true
+        }));
     }
 }
