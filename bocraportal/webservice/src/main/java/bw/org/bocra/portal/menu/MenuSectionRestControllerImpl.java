@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/menusectionrestcontroller/")
+@RequestMapping("/menu/section")
 public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase {
     
     public MenuSectionRestControllerImpl(
@@ -27,7 +27,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(menuSectionService.findById(id));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -46,7 +46,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(menuSectionService.getAll());
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -65,26 +65,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> handleGetAuthorisedMenuSections(Set<String> roles, Set<String> accessPointTypeCodes) {
-        try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(menuSectionService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -103,7 +84,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(menuSectionService.remove(id));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -122,7 +103,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleSave(MenuSectionVO menuSection) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(menuSectionService.save(menuSection));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -141,7 +122,27 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(menuSectionService.search(criteria));
+            ResponseEntity<?> response;
+
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<?> handleFindByAuthorisationRoles(Set<String> roles) {
+        try {
+            Optional<?> data = Optional.of(menuSectionService.findByAuthorisationRoles(roles));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {

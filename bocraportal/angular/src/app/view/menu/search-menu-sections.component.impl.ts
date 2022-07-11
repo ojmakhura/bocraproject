@@ -3,11 +3,7 @@ import { Component, Injector } from '@angular/core';
 import { SearchMenuSectionsComponent } from '@app/view/menu/search-menu-sections.component';
 import { SearchMenuSectionsSearchForm } from '@app/view/menu/search-menu-sections.component';
 import { SearchMenuSectionsVarsForm } from '@app/view/menu/search-menu-sections.component';
-import { SectorState } from '@app/store/menu/sector.state';
-import * as SectorSelectors from '@app/store/menu/sector.selectors';
-import * as SectorActions from '@app/store/menu/sector.actions';
-import { MatRadioChange } from '@angular/material/radio';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import * as MenuSectionActions from '@app/store/menu/menu-section.actions';
 
 @Component({
   selector: 'app-search-menu-sections',
@@ -25,5 +21,14 @@ export class SearchMenuSectionsComponentImpl extends SearchMenuSectionsComponent
     }
 
     doNgOnDestroy(): void {
+    }
+
+    override beforeSearchMenuSectionsSearch(form: SearchMenuSectionsSearchForm): void {
+        this.store.dispatch(
+            MenuSectionActions.search({
+                criteria: form.criteria ? form.criteria : '',
+                loading: true
+            })
+        );
     }
 }

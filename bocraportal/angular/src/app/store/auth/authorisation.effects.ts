@@ -49,6 +49,26 @@ export class AuthorisationEffects {
     )
   );
 
+  assignMenuSection$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthorisationActions.assignMenuSection),
+      mergeMap(({ authorisationId, menuSectionId }) =>
+        this.authorisationRestController.assignMenuSection(authorisationId, menuSectionId).pipe(
+          map((authorisation) =>
+            AuthorisationActions.assignMenuSectionSuccess({
+              authorisation,
+              messages: [`Authorisation ${authorisation?.accessPoint?.url} updated.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            AuthorisationActions.authorisationFailure({ messages: [error?.error ? error.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
   remove$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthorisationActions.remove),
