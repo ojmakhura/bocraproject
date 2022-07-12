@@ -1,64 +1,180 @@
-<div fxFlex class="container">
-  <mat-sidenav-container fxFill>
-    <mat-sidenav
-      #sidenav
-      [mode]="isMobile ? 'over' : 'side'"
-      [opened]="!isMobile"
-      [disableClose]="!isMobile"
-      ngClass.gt-sm="has-border"
-    >
-      <mat-toolbar color="primary">
-        <span translate>application.name</span>
-        <div fxFlex></div>
-        <div>
-          <!-- Uncomment if you are using authentication -->
-          <button mat-icon-button [matMenuTriggerFor]="userMenu">
-            <mat-icon>person</mat-icon>
-          </button>
-          <mat-menu #userMenu="matMenu">
-            <mat-list>
-              <mat-list-item>
-                <span translate>Logged in as</span>&nbsp;<b>{{ username }}</b>
-              </mat-list-item>
-              <mat-divider></mat-divider>
-            </mat-list>
-            <button mat-menu-item (click)="logout()" translate>Logout</button>
-          </mat-menu>
-        </div>
-        <app-language-selector [icon]="true"></app-language-selector>
-      </mat-toolbar>
-      <nav>
-        <mat-nav-list>
-          <mat-divider></mat-divider>
-          <div>
-            <a mat-list-item routerLink="/home" routerLinkActive="active" (click)="isMobile && sidenav.close()">
-              <span translate>home</span>
-            </a>
-            <mat-divider></mat-divider>
-          </div>
-          <div *ngFor="let item of menus$ | async">
-            <a mat-list-item routerLink="{{ item.routerLink }}" routerLinkActive="active" (click)="isMobile && sidenav.close()">
-              <span translate>{{ item.titleKey }}</span>
-            </a>
-            <mat-divider></mat-divider>
-          </div>
-          <div>
-            <a mat-list-item routerLink="/about" routerLinkActive="active" (click)="isMobile && sidenav.close()">
-              <span translate>about</span>
-            </a>
-            <mat-divider></mat-divider>
-          </div>
-        </mat-nav-list>
-      </nav>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <mat-toolbar color="primary" class="mat-elevation-z6">
-        <button class="menu-button" mat-icon-button (click)="sidenav.toggle()" fxHide.gt-sm>
-          <mat-icon>menu</mat-icon>
-        </button>
-        <span>{{ title }}</span>
-      </mat-toolbar>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+<div class="container-fluid d-flex flex-column bg-light min-vh-100">
+	<!-- Navbar start-->
+	<div class="row">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container-fluid">
+				<a class="navbar-brand" routerLink="active">
+					<img src="../assets/bocra-logo.png" alt="" height="40" routerLink="active" class="me-2">
+					<strong class="me-2">Online Portal</strong>
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+					aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarContent">
+					<button type="button" class="btn btn-outline-primary" data-bs-toggle="offcanvas"
+						data-bs-target="#sidenav" aria-controls="sidenav">
+						<i class="fa fa-bars"></i>
+					</button>
+					<ul class="navbar-nav mx-auto">
+						<li class="nav-item">
+							<a class="nav-link" routerLink="/home">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" routerLink="/about">About Us</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" routerLink="active">Contact Us</a>
+						</li>
+					</ul>
+					<form class="d-flex">
+						<input class="form-control me-2" type="text" placeholder="Search for..."
+							aria-label="Search for..." />
+						<button class="btn btn-outline-primary" type="button"><i class="fa fa-search"></i></button>
+					</form>
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" routerLink="active">File A Complaint</a>
+						</li>
+						<!-- <li class="nav-item">
+							<button class="btn btn-primary" routerLink="active">Login</button>
+						</li> -->
+						<li class="nav-item">
+							<a class="nav-link" routerLink="active"><i class="fa fa-bell fa-lg"
+									aria-hidden="false"></i></a>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+								data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fa fa-user-circle fa-lg" aria-hidden="false"></i>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+								aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" routerLink="profile"><i class="fa fa-user"
+											aria-hidden="false"></i>&nbsp;
+										Profile</a></li>
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li><a class="dropdown-item" (click)="logout()">
+										<i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp; Logout</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+	<!-- Navbar end -->
+
+	<!-- Title -->
+	<div class="container-fluid mb-3">
+		<nav aria-label="breadcrumb" *ngIf="title!=='Home'" class="py-3">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+				<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+			</ol>
+		</nav>
+		<!-- Content start -->
+		<router-outlet></router-outlet>
+		<!-- Content end -->
+	</div>
+	<!-- Title end -->
+
+	<!-- Sidebar start -->
+	<div class="offcanvas offcanvas-start bg-dark text-white" data-bs-scroll="true" tabindex="-1" id="sidenav"
+		aria-labelledby="sidenavLabel">
+		<div class="offcanvas-header text-white">
+			<h5 class="offcanvas-title" id="sidenavLabel">My Dashboard</h5>
+			<button type="button" class="btn btn-outline-primary" aria-label="Close" data-bs-dismiss="offcanvas">
+				<i class="fa fa-long-arrow-left"></i>
+			</button>
+		</div>
+		<div class="offcanvas-body">
+			<nav class="sidebar">
+				<ul class="nav flex-column" *ngFor="let item of menus$ | async">
+					<li class="nav-item">
+						<a class="nav-link" routerLink="{{ item.routerLink }}" routerLinkActive="active"><i
+								class="fa fa-puzzle-piece fa-lg" aria-hidden="true" title="Sector Management"></i>&nbsp;
+							<span *ngIf="!toggled" class="ms-3" translate>{{
+								item.titleKey }}
+							</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<!-- Sidebar end -->
+
+
+
+
+	<!-- Footer start -->
+	<div class="row bg-dark text-white pt-4  px-5 pb-2 mt-auto">
+		<footer class="container">
+			<div class="row justify-content-center py-3 border-top border-success">
+				<div class="col-lg-2">
+					<img src="assets/bocra-logo.png" alt="...">
+				</div>
+				<div class="col-lg-3">
+					<div class="row">
+						<p><i class="fa fa-location-arrow fa-lg me-2 text-primary" aria-hidden="true"></i>Plot 50671
+							Independence Avenue<br>
+							Gaborone, Botswana</p>
+					</div>
+					<div class="row">
+						<div class="col-lg-6">
+							<i class="fa fa-phone fa-lg me-2 text-primary" aria-hidden="true"></i>+267 395 7755
+						</div>
+						<div class="col-lg-6">
+							<i class="fa fa-fax fa-lg me-2 text-primary" aria-hidden="true"></i>+267 395 7976
+						</div>
+					</div>
+					<div class="row">
+						<p><i class="fa fa-envelope fa-lg text-primary me-2" aria-hidden="true"></i>info@bocra.org.bw
+						</p>
+					</div>
+				</div>
+				<div class="col-lg-2">
+					<p>Social media: &nbsp;
+						<span>
+							<a href="https://www.facebook.com/BTAbw"><i
+									class="fa fa-facebook-official text-primary fa-lg me-2" aria-hidden="true"></i></a>
+							<a href="https://twitter.com/bocrabw"><i class="fa fa-twitter-square text-info fa-lg me-2"
+									aria-hidden="true"></i></a>
+							<a href="https://www.youtube.com/channel/UCkv70wCxbxy7OkC12QlL3ZA/feed"><i
+									class="fa fa-youtube-play text-danger fa-lg me-2" aria-hidden="true"></i></a>
+							<a href="https://www.linkedin.com/company/bta_3/"><i
+									class="fa fa-linkedin-square text-primary fa-lg me-2" aria-hidden="true"></i></a>
+							<a href="https://www.flickr.com/photos/bocra_bw/"><i
+									class="fa fa-flickr text-light fa-lg me-2" aria-hidden="true"></i></a>
+						</span>
+					</p>
+				</div>
+			</div>
+			<div class="row py-3 justify-content-center border-top border-warning">
+				<div class="col-lg-5">
+					<div class="row" id="footer-nav">
+						<div class="col-lg-3">
+							<a routerLink="/about" class="text-decoration-none">About Us</a>
+						</div>
+						<div class="col-lg-3">
+							<a routerLink="active" class="text-decoration-none">Contact Us</a>
+						</div>
+						<div class="col-lg-3">
+							<a routerLink="active" class="text-decoration-none">Links</a>
+						</div>
+						<div class="col-lg-3">
+							<a routerLink="active" class="text-decoration-none">FAQ`S</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2">
+					Copyright 2022 BOCRA
+				</div>
+			</div>
+		</footer>
+	</div>
+	<!-- Footer end -->
 </div>
