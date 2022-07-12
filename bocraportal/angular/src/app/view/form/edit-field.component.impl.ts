@@ -21,10 +21,9 @@ import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-fiel
 @Component({
   selector: 'app-edit-field',
   templateUrl: './edit-field.component.html',
-  styleUrls: ['./edit-field.component.scss']
+  styleUrls: ['./edit-field.component.scss'],
 })
 export class EditFieldComponentImpl extends EditFieldComponent {
-
   form$: Observable<FormVO>;
   protected keycloakService: KeycloakService;
 
@@ -33,7 +32,6 @@ export class EditFieldComponentImpl extends EditFieldComponent {
     this.form$ = this.store.pipe(select(FormSelectors.selectForm));
     this.keycloakService = injector.get(KeycloakService);
   }
-
 
   override beforeOnInit(form: EditFieldVarsForm): EditFieldVarsForm {
     if (this.useCaseScope?.pageVariables['form']) {
@@ -57,8 +55,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
     return form;
   }
 
-  override doNgOnDestroy(): void {
-  }
+  override doNgOnDestroy(): void {}
 
   override doNgAfterViewInit() {
     this.route.queryParams.subscribe((queryParams: any) => {
@@ -67,30 +64,26 @@ export class EditFieldComponentImpl extends EditFieldComponent {
       } else {
         if (queryParams?.formId) {
           this.store.dispatch(FormActions.findFormById({ id: queryParams.formId, loading: true }));
-          
         }
       }
     });
 
-    this.formField$.subscribe(field => {
-      if(field) {
-        
-        if(field.form) {
+    this.formField$.subscribe((field) => {
+      if (field) {
+        if (field.form) {
           this.store.dispatch(FormActions.findFormById({ id: field.form.id, loading: true }));
         }
 
-        this.setEditFieldFormValue({formField: field});
+        this.setEditFieldFormValue({ formField: field });
       }
     });
-    
-    
+
     this.form$.subscribe((f) => {
-      
       this.formFieldFormControl.patchValue(f);
-      this.formFieldFormSectionBackingList = []
+      this.formFieldFormSectionBackingList = [];
       f?.formSections?.forEach((element: FormSectionVO) => {
         let item: SelectItem = new SelectItem();
-        item.label = element.sectionLabel;
+        item.label = element?.sectionLabel ? element?.sectionLabel : element?.sectionId;
         item.value = element.id;
 
         this.formFieldFormSectionBackingList.push(item);
@@ -102,8 +95,8 @@ export class EditFieldComponentImpl extends EditFieldComponent {
    * This method may be overwritten
    */
   override beforeEditFieldCancel(form: EditFieldCancelForm): void {
-    this.useCaseScope.pageVariables['form'] = form.formFieldForm;
-    this.useCaseScope.queryParams['id'] = form.formFieldForm.id;
+    this.useCaseScope.pageVariables['form'] = this.formField.form;
+    this.useCaseScope.queryParams['id'] = this.formField.form.id;
   }
 
   /**
@@ -118,7 +111,6 @@ export class EditFieldComponentImpl extends EditFieldComponent {
    * This method may be overwritten
    */
   override beforeEditFieldSave(form: EditFieldSaveForm): void {
-    
     console.log(form);
 
     if (this.formFieldControl.dirty && this.formFieldControl.valid) {

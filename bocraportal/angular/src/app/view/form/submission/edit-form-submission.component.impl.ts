@@ -17,7 +17,7 @@ import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as FormSubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
 import * as FormSubmissionActions from '@app/store/form/submission/form-submission.actions';
 import { KeycloakService } from 'keycloak-angular';
-import { Observable } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { select } from '@ngrx/store';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
@@ -30,6 +30,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
+import { FormEntryType } from '@app/model/bw/org/bocra/portal/form/form-entry-type';
 import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
 
 // <div formArrayName="dataFields">
@@ -64,6 +65,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   formSubmissions$: Observable<FormSubmissionVO[]>;
   forms$: Observable<FormVO[]>;
   _forms: FormVO[] = [];
+  fieldColumns: string[] = []
+  fieldColumnIds: string[] = []
+  fieldColumns$: Observable<string[]> = of([]);
 
   constructor(private injector: Injector) {
     super(injector);
@@ -90,33 +94,15 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
 
     this.formSubmission$.subscribe((submission) => {
+      console.log(submission)
       this.setEditFormSubmissionFormValue({ formSubmission: submission });
+      submission?.form?.formFields?.forEach(field => {
+        console.log(field.fieldName);
+        this.fieldColumns.push(field.fieldName);
+        this.fieldColumnIds.push(field.fieldId);
+      });
     });
-
-    // this.store.dispatch(FormActions.getAllForms({ loading: true }));
-    // this.forms$.subscribe((forms) => {
-    //   forms.forEach((form) => {
-    //     let item: SelectItem = new SelectItem();
-    //     item.label = form.formName;
-    //     item.value = form.id;
-    //     this.formSubmissionFormBackingList.push(item);
-    //     this._forms.push(form);
-    //   });
-    // });
-
-    // this.formSubmissionFormControl.get('id')?.valueChanges.subscribe((id) => {
-    //   let item: FormVO | undefined = this._forms.find((form) => '' + form.id === id);
-    //   console.log(item);
-    //   if (item) {
-    //     this.formSubmissionFormControl.patchValue(item);
-    //     item?.formFields.forEach((field: FormFieldVO) => {
-    //       let data: DataFieldVO = new DataFieldVO();
-    //       data.formField = field;
-    //       data.value = '';
-    //       this.formSubmissionDataFieldsControl.push(this.createDataFieldVOGroup(data));
-    //     });
-    //   }
-    // });
+    
   }
 
   doNgOnDestroy() {}
@@ -234,12 +220,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   getFieldDefaultValue(field: DataFieldVO) {
-    console.log(field)
     return field.formField.defaultValue;
   }
 
   override handleFormChanges(change: any): void {
-    console.log(change);
   }
 
   getDataValue(data: DataFieldVO) {
