@@ -265,4 +265,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   trackByFn(index: any, item: any) {
     return index;
   }
+
+  isSingleEntry(): boolean {
+
+    return this.formSubmission.form.entryType === FormEntryType.SINGLE;
+  }
 }
