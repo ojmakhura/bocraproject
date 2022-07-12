@@ -73,31 +73,6 @@
 				<span translate>form.required</span>
 			  </div>
 			</div>
-<<<<<<< HEAD
-		  </fieldset>
-		  <fieldset class="mb-3" formGroupName="period">
-			<!-- <legend id="formSubmissionPeriod_label" class="col-sm-2 col-form-label" for="formSubmissionPeriod"><span translate>period</span>*</legend>
-						<div class="col my-3 view-buttons"  *ngIf="!formSubmissionId">
-							<button type="button" (click)="formSubmissionPeriodAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formSubmissionPeriodModal">
-								<mat-icon>add_box</mat-icon>
-							</button>
-							<button type="button" (click)="formSubmissionPeriodClear()" class="btn btn-primary">
-								<mat-icon>clear</mat-icon>
-							</button>
-						</div> -->
-			<!-- <div class="row mb-3">
-							<label for="formSubmissionPeriodId" class="col-sm-2 col-form-label" translate>id</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" id="formSubmissionPeriodId" value="{{formSubmissionPeriod?.id}}" disabled>
-							</div>
-						</div> -->
-			<div class="row mb-3">
-			  <label for="formSubmissionPeriodPeriodName" class="col-sm-2 col-form-label" translate>period.name</label>
-			  <div class="col-sm-10">
-				<input type="text" class="form-control" id="formSubmissionPeriodPeriodName"
-				  value="{{ formSubmissionPeriod?.periodName }}" disabled />
-			  </div>
-=======
 			<div formGroupName="formSubmission">
 				<fieldset class="mb-3" formGroupName="form">
 					<!-- <legend id="formSubmissionForm_label" class="col-sm-2 col-form-label" for="formSubmissionForm"><span translate>form</span>*</legend> -->
@@ -215,14 +190,16 @@
 				    </div> -->
 				</fieldset>
 				<div formArrayName="sections" *ngIf="isSingleEntry(); else isMultipleEntry">
-					<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index" [formGroupName]="i">
+					<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index"
+						[formGroupName]="i">
 						<div>
 							<span>
 								{{ getSectionLabel(i) }}
 							</span>
 						</div>
 						<div formArrayName="dataFields">
-							<div *ngFor="let dataField of getSectorFields(i); let j = index; trackBy:trackByFn" [formGroupName]="j">
+							<div *ngFor="let dataField of getSectorFields(i); let j = index; trackBy:trackByFn"
+								[formGroupName]="j">
 								<div class="mb-3" *ngIf="isButton(dataField)">
 									<input type="button" class="btn btn-primary"
 										value="{{ getDataValue(dataField) }}" />
@@ -249,8 +226,29 @@
 					</div>
 				</div>
 				<ng-template #isMultipleEntry>
-					Start here
-				  </ng-template>
+					<div class="mb-3">
+						<label id="formSubmissionUpload_label" class="col-sm-2 col-form-label"
+							for="formSubmissionUpload"><span translate>upload</span></label>
+						<input type="file" id="formSubmissionUpload" class="form-control" formControlName="upload" />
+					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="row">Id</th>
+								<th scope="col" *ngFor="let columnId of fieldColumnIds; let x = index;">{{fieldColumns[x]}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let columnId of fieldColumnIds; let x = index;">
+								<th scope="row">1</th>
+								<td>Mark</td>
+								<td>Otto</td>
+								<td>@mdo</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</ng-template>
 				<div class="mb-3">
 					<label id="formSubmissionSubmissionStatus_label" class="col-sm-2 col-form-label"
 						for="formSubmissionSubmissionStatus"><span translate>submission.status</span>*</label>
@@ -258,24 +256,18 @@
 						formControlName="submissionStatus" required />
 					<div *ngIf="editFormSubmissionForm.invalid &&
               				formSubmissionSubmissionStatusControl.invalid &&
-							(formSubmissionSubmissionStatusControl.dirty || formSubmissionSubmissionStatusControl.touched)" 
-							class="alert alert-danger" role="alert">
+							(formSubmissionSubmissionStatusControl.dirty || formSubmissionSubmissionStatusControl.touched)"
+						class="alert alert-danger" role="alert">
 						<div *ngIf="formSubmissionSubmissionStatusControl.errors['required']">
 							<span translate>submission.status.required</span>
 						</div>
 					</div>
-				</div>
-				<div class="mb-3">
-					<label id="formSubmissionUpload_label" class="col-sm-2 col-form-label"
-						for="formSubmissionUpload"><span translate>upload</span></label>
-					<input type="file" id="formSubmissionUpload" class="form-control" formControlName="upload" />
 				</div>
 
 				<!-- <fieldset class="mb-3" formGroupName="notes">
 				    <legend id="formSubmissionNotes_label" class="col-sm-2 col-form-label" for="formSubmissionNotes"><span translate>notes</span></legend>
 				    <input type="text" id="formSubmissionNotes" class="form-control" name="notes" formControlName="id"/>
 				</fieldset> -->
->>>>>>> 68e6a80 (added isSingleRntry function)
 			</div>
 			<!-- <div class="row mb-3">
 							<label for="formSubmissionPeriodPeriodStart" class="col-sm-2 col-form-label" translate>period.start</label>
@@ -446,6 +438,7 @@
   <div class="modal fade" id="formSubmissionPeriodModal" tabindex="-1" aria-labelledby="formSubmissionPeriodLabel"
 	aria-hidden="true">
 	<div class="modal-dialog">
+<<<<<<< HEAD
 	  <div class="modal-content">
 		<div class="modal-header">
 		  <h5 class="modal-title" id="formSubmissionPeriodAddLabel" translate>
@@ -510,9 +503,79 @@
 			  save
 			</button>
 		  </div>
+=======
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="formSubmissionPeriodAddLabel" translate>
+					action.select
+					<span translate>period</span>
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div>
+					<form>
+						<div>
+							<mat-form-field>
+								<mat-label translate>search</mat-label>
+								<input matInput type="text" [formControl]="formSubmissionPeriodSearchField"
+									id="formSubmissionPeriodSearchField" />
+							</mat-form-field>
+						</div>
+						<button type="button" (click)="formSubmissionPeriodSearch()" class="btn btn-primary">
+							<mat-icon>search</mat-icon>
+						</button>
+					</form>
+				</div>
+				<div>
+					<mat-table matSort [dataSource]="formSubmissionPeriods$ | async"
+						#formSubmissionPeriodModalSort="matSort" class="table table-bordered" style="width: 100%">
+						<ng-container matColumnDef="actions">
+							<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+							<mat-cell *matCellDef="let row; let i = index">
+								<mat-radio-group (change)="formSubmissionPeriodSelected($event, row)">
+									<mat-radio-button [value]="row"
+										[checked]="formSubmissionPeriodSelect.id === row.id">
+									</mat-radio-button>
+								</mat-radio-group>
+							</mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="id">
+							<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="periodName">
+							<mat-header-cell *matHeaderCellDef translate>period.name</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.periodName }} </mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="periodStart">
+							<mat-header-cell *matHeaderCellDef translate>period.start</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.periodStart }} </mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="periodEnd">
+							<mat-header-cell *matHeaderCellDef translate>period.end</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.periodEnd }} </mat-cell>
+						</ng-container>
+						<mat-header-row *matHeaderRowDef="formSubmissionPeriodModalColumns"></mat-header-row>
+						<mat-row *matRowDef="let row; columns: formSubmissionPeriodModalColumns"></mat-row>
+					</mat-table>
+					<mat-paginator #formSubmissionPeriodModalPaginator="matPaginator" [pageSize]="10"
+						[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+						translate>action.close</button>
+					<button type="button" class="btn btn-primary" (click)="addSelectedFormSubmissionPeriod()"
+						data-bs-dismiss="modal" translate>
+						save
+					</button>
+				</div>
+			</div>
+>>>>>>> 08d11ce (Table renderinf for data fields in form submission)
 		</div>
 	  </div>
 	</div>
+<<<<<<< HEAD
   
 	<!-- Modal for licensee -->
 	<div class="modal fade" id="formSubmissionLicenseeModal" tabindex="-1" aria-labelledby="formSubmissionLicenseeLabel"
@@ -581,3 +644,74 @@
 	  </div>
 	</div>
   </div>
+=======
+
+	<!-- Modal for licensee -->
+	<div class="modal fade" id="formSubmissionLicenseeModal" tabindex="-1" aria-labelledby="formSubmissionLicenseeLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="formSubmissionLicenseeAddLabel" translate>
+						action.select
+						<span translate>licensee</span>
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div>
+						<form>
+							<div>
+								<mat-form-field>
+									<mat-label translate>search</mat-label>
+									<input matInput type="text" [formControl]="formSubmissionLicenseeSearchField"
+										id="formSubmissionLicenseeSearchField" />
+								</mat-form-field>
+							</div>
+							<button type="button" (click)="formSubmissionLicenseeSearch()" class="btn btn-primary">
+								<mat-icon>search</mat-icon>
+							</button>
+						</form>
+					</div>
+					<mat-table matSort [dataSource]="formSubmissionLicensees$ | async"
+						#formSubmissionLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%">
+						<ng-container matColumnDef="actions">
+							<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+							<mat-cell *matCellDef="let row; let i = index">
+								<mat-radio-group (change)="formSubmissionLicenseeSelected($event, row)">
+									<mat-radio-button [value]="row"
+										[checked]="formSubmissionLicenseeSelect.id === row.id">
+									</mat-radio-button>
+								</mat-radio-group>
+							</mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="id">
+							<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="uin">
+							<mat-header-cell *matHeaderCellDef translate>uin</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.uin }} </mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="licenseeName">
+							<mat-header-cell *matHeaderCellDef translate>licensee.name</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.licenseeName }} </mat-cell>
+						</ng-container>
+						<mat-header-row *matHeaderRowDef="formSubmissionLicenseeModalColumns"></mat-header-row>
+						<mat-row *matRowDef="let row; columns: formSubmissionLicenseeModalColumns"></mat-row>
+					</mat-table>
+					<mat-paginator #formSubmissionLicenseeModalPaginator="matPaginator" [pageSize]="10"
+						[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+						translate>action.close</button>
+					<button type="button" class="btn btn-primary" (click)="addSelectedFormSubmissionLicensee()"
+						data-bs-dismiss="modal" translate>
+						save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+>>>>>>> 08d11ce (Table renderinf for data fields in form submission)

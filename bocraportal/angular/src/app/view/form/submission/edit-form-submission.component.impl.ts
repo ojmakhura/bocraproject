@@ -12,7 +12,7 @@ import * as FormSelectors from '@app/store/form/form.selectors';
 import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as FormSubmissionActions from '@app/store/form/submission/form-submission.actions';
 import { KeycloakService } from 'keycloak-angular';
-import { Observable } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { select } from '@ngrx/store';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
@@ -282,7 +282,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   isSingleEntry(): boolean {
-<<<<<<< HEAD
     return this.formSubmission.form.entryType === FormEntryType.SINGLE;
   }
 
@@ -487,9 +486,4 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
     return `${dataField.row}_${dataField.formField.fieldId}`;
   }
-=======
-
-    return this.formSubmission.form.entryType === FormEntryType.SINGLE;
-  }
->>>>>>> 68e6a80 (added isSingleRntry function)
 }
