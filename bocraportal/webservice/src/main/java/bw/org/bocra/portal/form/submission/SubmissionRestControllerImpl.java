@@ -7,6 +7,8 @@ package bw.org.bocra.portal.form.submission;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 
 @RestController
 @RequestMapping("form/submission")
@@ -105,6 +109,48 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<?> handleAddDataField(DataFieldVO dataField) {
+        Optional<DataFieldVO> data = Optional.of(submissionService.addDataField(dataField));
+        ResponseEntity<DataFieldVO> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<?> handleAddDataFields(Set<DataFieldVO> dataFields) {
+        Optional<Collection<DataFieldVO>> data = Optional.of(submissionService.addDataFields(dataFields));
+        ResponseEntity<Collection<DataFieldVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<?> handleDeleteDataField(Long id) {
+        Optional<Boolean> data = Optional.of(submissionService.deleteDataField(id));
+        ResponseEntity<Boolean> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         return response;
