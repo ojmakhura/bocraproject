@@ -326,6 +326,10 @@
                      <mat-header-cell *matHeaderCellDef translate>form.name</mat-header-cell>
                      <mat-cell *matCellDef="let row"> {{ row?.formName }} </mat-cell>
                  </ng-container>
+                 <ng-container matColumnDef="entryType">
+                     <mat-header-cell *matHeaderCellDef translate>entry.type</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.entryType }} </mat-cell>
+                 </ng-container>
                  <mat-header-row *matHeaderRowDef="formActivationFormModalColumns"></mat-header-row>
                  <mat-row *matRowDef="let row; columns: formActivationFormModalColumns;"></mat-row>
              </mat-table>

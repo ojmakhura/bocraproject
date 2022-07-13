@@ -17,7 +17,7 @@ import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as FormSubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
 import * as FormSubmissionActions from '@app/store/form/submission/form-submission.actions';
 import { KeycloakService } from 'keycloak-angular';
-import { Observable, of, tap } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { select } from '@ngrx/store';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
@@ -25,7 +25,7 @@ import { SelectItem } from '@app/utils/select-item';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { SanitizeHtml } from '@app/pipe/sanitize-html.pipe';
 import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
@@ -55,6 +55,11 @@ import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submis
 // 					</div>
 // 				</div>
 
+export class RowGroup {
+  row: number | undefined = undefined;
+  fields: DataFieldVO[] = [];
+}
+
 @Component({
   selector: 'app-edit-form-submission',
   templateUrl: './edit-form-submission.component.html',
@@ -64,10 +69,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   protected keycloakService: KeycloakService;
   formSubmissions$: Observable<FormSubmissionVO[]>;
   forms$: Observable<FormVO[]>;
-  _forms: FormVO[] = [];
   fieldColumns: string[] = []
   fieldColumnIds: string[] = []
-  fieldColumns$: Observable<string[]> = of([]);
+  formFields: FormFieldVO[] = [];
+  rowGroups: RowGroup[] = [];
 
   constructor(private injector: Injector) {
     super(injector);
@@ -94,18 +99,19 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
 
     this.formSubmission$.subscribe((submission) => {
-      console.log(submission)
+
+      this.formFields = submission?.form?.formFields;
+
       this.setEditFormSubmissionFormValue({ formSubmission: submission });
       submission?.form?.formFields?.forEach(field => {
-        console.log(field.fieldName);
         this.fieldColumns.push(field.fieldName);
         this.fieldColumnIds.push(field.fieldId);
       });
     });
-    
+
   }
 
-  doNgOnDestroy() {}
+  doNgOnDestroy() { }
 
   /**
    * This method may be overwritten
@@ -113,7 +119,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
     let formSubmission: FormSubmissionVO = form.formSubmission;
     formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;
-    this.doFormSubmissionSave(formSubmission);
+    console.log(formSubmission)
+    console.log(this.formSubmissionDataFieldsControl.value)
+    //this.doFormSubmissionSave(formSubmission);
   }
 
   override beforeEditFormSubmissionSubmit(form: EditFormSubmissionSubmitForm): void {
@@ -214,6 +222,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   override createDataFieldVOGroup(value: DataFieldVO): FormGroup {
     return this.formBuilder.group({
       id: [value?.id],
+      row: [value?.row],
       formField: this.createFormFieldForm(value?.formField),
       value: [value?.value ? value?.value : this.getFieldDefaultValue(value)],
     });
@@ -253,5 +262,117 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   isSingleEntry(): boolean {
 
     return this.formSubmission.form.entryType === FormEntryType.SINGLE;
+  }
+
+  getFormField(fieldId: string): FormFieldVO | any {
+    let filtered = this.formFields.filter(field => field.fieldId === fieldId);
+
+    if (filtered.length > 0) {
+      return filtered[0];
+    }
+
+    return null;
+  }
+
+  uploadData() {
+
+  }
+
+  getFieldKeys(object: any): string[] {
+    return Object.keys(object);
+  }
+
+  onFileSelected(event: any) {
+    if (event) {
+
+      const file: File = event.target.files[0];
+      file.text().then(content => {
+
+        let rows: string[] = content.trim().split('\n');
+        let headers: string[] = rows[0].trim().split(',');
+        let dataRows: string[] = rows.splice(1);
+
+        for (let i = 0; i < dataRows.length; i++) {
+          const row = dataRows[i].trim();
+          const rowData = row.split(',');
+
+          if (rowData.length != headers.length) {
+            continue;
+          }
+          //let dt: FormGroup = this.formBuilder.group({});
+          //dt.addControl('id', new FormControl());
+          //dt.addControl('row', this.formBuilder.control(i + 1));
+
+          for (let j = 0; j < rowData.length; j++) {
+            //dt.addControl(headers[j], this.formBuilder.control(rowData[j]));
+            let field: DataFieldVO = new DataFieldVO();
+            field.row = i + 1;
+            field.formField = this.getFormField(headers[j]);
+            field.value = rowData[j];
+            field.formSubmission = <FormSubmissionVO>{
+              id: this.formSubmissionId
+            };
+            
+            let filteredGroups: RowGroup[] = this.rowGroups.filter(fd => fd.row === field.row);
+            let group: RowGroup | undefined = undefined
+
+            if (!filteredGroups || (filteredGroups && filteredGroups.length == 0)) {
+              group = new RowGroup();
+              group.row = field.row;
+              this.rowGroups.push(group);
+            } else {
+              group = filteredGroups[0];
+            }
+
+            group.fields.push(field);
+            this.formSubmissionDataFieldsControl.push(this.createDataFieldVOGroup(field));
+          }
+
+          //this.dataFieldsControl.push(dt);
+
+        }
+      });
+
+    }
+  }
+
+  getRowDataFields(row: any): DataFieldVO[] {
+
+    let keys = Object.keys(row).filter(key => key !== 'row'); // no need to get the 'row'
+    let fields: DataFieldVO[] = [];
+    keys.forEach(key => {
+      let field: DataFieldVO = new DataFieldVO();
+      field.row = row.row;
+      field.id = row.id;
+    });
+
+    return [];
+  }
+
+  get groupedDataFields(): RowGroup[] {
+    let groups: RowGroup[] = [];
+
+    this.formSubmissionDataFieldsControl.value.forEach((dataField: any) => {
+      let filteredGroups: RowGroup[] = groups.filter(field => field.row === dataField.row);
+      let group: RowGroup | undefined = undefined
+
+      if (!filteredGroups || (filteredGroups && filteredGroups.length == 0)) {
+        group = new RowGroup();
+        group.row = dataField.row;
+        groups.push(group);
+      } else {
+        group = filteredGroups[0];
+      }
+
+      group.fields.push(dataField);
+
+    });
+
+    return this.rowGroups;
+  }
+
+  getColumnData(row: number, columnId: string) {
+    console.log(row, columnId);
+    return 'val'
   }
 }
