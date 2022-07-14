@@ -175,4 +175,25 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleAssignMenuSection(Long authorisationId, Long menuSectionId) {
+        try {
+            Optional<AuthorisationVO> data = Optional.of(authorisationService.assignMenuSection(authorisationId, menuSectionId));
+            ResponseEntity<AuthorisationVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
+    }
 }

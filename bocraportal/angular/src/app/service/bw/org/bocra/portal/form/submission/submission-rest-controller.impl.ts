@@ -2,14 +2,33 @@
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
-import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
+import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
 
 @Injectable()
 export class SubmissionRestControllerImpl extends SubmissionRestController {
 
     constructor(private injector: Injector) {
         super(injector);
+    }
+
+    public override addDataField(dataField: DataFieldVO | any ): Observable<DataFieldVO | any> {
+
+        return this.http.post<DataFieldVO | any>(this.path + `/field`, dataField);
+
+    }
+
+    public override addDataFields(dataFields: DataFieldVO | any ): Observable<DataFieldVO[] | any[]> {
+
+        return this.http.post<DataFieldVO[] | any[]>(this.path + `/fields`, dataFields);
+
+    }
+
+    public override deleteDataField(id: number | any ): Observable<Boolean | any> {
+
+        return this.http.delete<Boolean | any>(this.path + `/field?id=${id}`);
+
     }
 
     public override findById(id: number | any ): Observable<FormSubmissionVO | any> {
