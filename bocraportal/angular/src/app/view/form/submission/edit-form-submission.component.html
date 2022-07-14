@@ -196,43 +196,52 @@
 						<input type="file" id="formSubmissionUpload" class="form-control"
 							(change)="onFileSelected($event)" />
 					</div>
-					<div *ngIf="false">
-						<button type="button" class="btn btn-primary">
-							<mat-icon>add_box</mat-icon>
+					<div>
+						<button type="button" class="btn btn-primary" (click)="uploadData()" *ngIf="hasUnsavedDataFields()">
+							<mat-icon>upload</mat-icon>
+						</button>
+						<button type="button" class="btn btn-danger" (click)="clearData()" *ngIf="rowGroups.length > 0">
+							<mat-icon>clear</mat-icon>
 						</button>
 					</div>
-					<table class="table table-stripped" *ngIf="rowGroups.length > 0">
-						<thead>
-							<tr>
-								<th scope="col" translate>Row</th>
-								<th scope="col" *ngFor="let columnId of fieldColumnIds; let x = index">
-									{{ fieldColumns[x] }}
-								</th>
-								<th scope="col" translate>actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr *ngFor="let group of rowGroups; let x = index">
-								<td>
-									{{ group.row }}
-								</td>
-								<td *ngFor="let field of group.fields">
-									{{ field.value }}
-								</td>
-								<td>
-									<button type="button" color="accent" (click)="deleteDataRow(x, group)"
+					<div *ngIf="rowGroups.length > 0">
+						<mat-table [dataSource]="dataFieldsDataSource" class="table" style="width: 100%">
+							<ng-container matColumnDef="status">
+								<mat-header-cell *matHeaderCellDef > Status </mat-header-cell>
+								<mat-cell *matCellDef="let group"> 
+									<div *ngIf="!group.saved">
+										<i class="bi bi-x-lg" style="color: red;"></i>
+									</div>
+									<div *ngIf="group.saved">
+										<i class="bi bi-check-lg" style="color: green;"></i>
+									</div>
+								</mat-cell>
+							</ng-container>
+							<ng-container *ngFor="let columnId of fieldColumnIds; let x = index"
+								matColumnDef="{{columnId}}">
+								<mat-header-cell *matHeaderCellDef > {{ getColumnName(columnId) }} </mat-header-cell>
+								<mat-cell *matCellDef="let group"> {{ getColumnValue(columnId, group) }} </mat-cell>
+							</ng-container>
+							<ng-container matColumnDef="actions">
+								<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+								<mat-cell *matCellDef="let row; index as i">
+									<button type="button" color="accent" (click)="deleteDataRow(i, row)"
 										class="btn btn-info">
 										<mat-icon>delete</mat-icon>
 									</button>
-									<button type="button" color="accent" (click)="doEditDataRow(x, group)"
+									<button type="button" color="accent" (click)="doEditDataRow(i, row)"
 										class="btn btn-info">
 										<mat-icon>edit</mat-icon>
 									</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-
+								</mat-cell>
+							</ng-container>
+							<mat-header-row *matHeaderRowDef="actionRowAdded()"></mat-header-row>
+							<mat-row *matRowDef="let row; columns: actionRowAdded()"></mat-row>
+						</mat-table>
+						<mat-paginator #dataFieldsPaginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 30, 40, 50, 60, 70, 80, 90]" showFirstLastButtons
+							aria-label="Select page of periodic elements">
+						</mat-paginator>
+					</div>
 				</ng-template>
 				<div class="mb-3">
 					<label id="formSubmissionSubmissionStatus_label" class="col-sm-2 col-form-label"
