@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY ./bocraportal/angular/target/bocraportal .
 RUN npm install
-RUN npm run build --prod
+RUN npm run build --configuration=production
 
 # Stage 2
 FROM nginx:alpine
