@@ -23,63 +23,84 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<FormSectionVO> data = Optional.of(formSectionService.findById(id));
-        ResponseEntity<FormSectionVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<FormSectionVO> data = Optional.of(formSectionService.findById(id));
+            ResponseEntity<FormSectionVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll());
-        ResponseEntity<Collection<FormSectionVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll());
+            ResponseEntity<Collection<FormSectionVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll(pageNumber, pageSize));
-        ResponseEntity<Collection<FormSectionVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll(pageNumber, pageSize));
+            ResponseEntity<Collection<FormSectionVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(formSectionService.remove(id));
-        ResponseEntity<Boolean> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Boolean> data = Optional.of(formSectionService.remove(id));
+            ResponseEntity<Boolean> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSave(FormSectionVO formSection) {
-        
+        try{
+                    
         Optional<FormSectionVO> data = Optional.of(formSectionService.save(formSection));
         ResponseEntity<FormSectionVO> response;
 
@@ -90,19 +111,28 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
         }
 
         return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
-        Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.search(criteria));
-        ResponseEntity<Collection<FormSectionVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.search(criteria));
+            ResponseEntity<Collection<FormSectionVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 }

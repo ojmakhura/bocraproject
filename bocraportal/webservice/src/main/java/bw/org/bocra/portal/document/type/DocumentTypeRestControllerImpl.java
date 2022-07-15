@@ -23,85 +23,115 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<DocumentTypeVO> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<DocumentTypeVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<DocumentTypeVO> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<DocumentTypeVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<DocumentTypeVO>> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<Collection<DocumentTypeVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<DocumentTypeVO>> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<Collection<DocumentTypeVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<DocumentTypeVO>> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<Collection<DocumentTypeVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<DocumentTypeVO>> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<Collection<DocumentTypeVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<Boolean> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSave(DocumentTypeVO documentType) {
-        Optional<DocumentTypeVO> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<DocumentTypeVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<DocumentTypeVO> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<DocumentTypeVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
-        Optional<Collection<DocumentTypeVO>> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<Collection<DocumentTypeVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<DocumentTypeVO>> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<Collection<DocumentTypeVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 }

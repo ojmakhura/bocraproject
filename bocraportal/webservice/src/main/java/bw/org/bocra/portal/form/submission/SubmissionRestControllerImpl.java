@@ -32,127 +32,172 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<FormSubmissionVO> data = Optional.of(submissionService.findById(id));
-        ResponseEntity<FormSubmissionVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<FormSubmissionVO> data = Optional.of(submissionService.findById(id));
+            ResponseEntity<FormSubmissionVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll());
-        ResponseEntity<Collection<FormSubmissionVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll());
+            ResponseEntity<Collection<FormSubmissionVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll(pageNumber, pageSize));
-        ResponseEntity<Collection<FormSubmissionVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll(pageNumber, pageSize));
+            ResponseEntity<Collection<FormSubmissionVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(submissionService.remove(id));
-        ResponseEntity<Boolean> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Boolean> data = Optional.of(submissionService.remove(id));
+            ResponseEntity<Boolean> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSave(FormSubmissionVO formSubmissionVO) {
-        Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmissionVO));
-        ResponseEntity<FormSubmissionVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmissionVO));
+            ResponseEntity<FormSubmissionVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSearch(FormSubmissionCriteria criteria) {
-        Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.search(criteria));
-        ResponseEntity<Collection<FormSubmissionVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.search(criteria));
+            ResponseEntity<Collection<FormSubmissionVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleAddDataField(DataFieldVO dataField) {
-        Optional<DataFieldVO> data = Optional.of(submissionService.addDataField(dataField));
-        ResponseEntity<DataFieldVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<DataFieldVO> data = Optional.of(submissionService.addDataField(dataField));
+            ResponseEntity<DataFieldVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleAddDataFields(Set<DataFieldVO> dataFields) {
-        Optional<Collection<DataFieldVO>> data = Optional.of(submissionService.addDataFields(dataFields));
-        ResponseEntity<Collection<DataFieldVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Collection<DataFieldVO>> data = Optional.of(submissionService.addDataFields(dataFields));
+            ResponseEntity<Collection<DataFieldVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleDeleteDataField(Long id) {
-        Optional<Boolean> data = Optional.of(submissionService.deleteDataField(id));
-        ResponseEntity<Boolean> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        try{
+            Optional<Boolean> data = Optional.of(submissionService.deleteDataField(id));
+            ResponseEntity<Boolean> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 }

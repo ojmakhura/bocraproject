@@ -45,188 +45,262 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        LicenseeVO licensee = this.licenseeService.findById(id);
+        try{
+            LicenseeVO licensee = this.licenseeService.findById(id);
 
-        if(licensee == null || licensee.getId() == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        Collection<UserVO> users = this.keycloakUserService.getLicenseeUsers(licensee.getId());
-        licensee.setUsers(users);
-        
-        return ResponseEntity.status(HttpStatus.OK).body(licensee);
+            if(licensee == null || licensee.getId() == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            Collection<UserVO> users = this.keycloakUserService.getLicenseeUsers(licensee.getId());
+            licensee.setUsers(users);
+            
+            return ResponseEntity.status(HttpStatus.OK).body(licensee);
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll()); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenseeVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return response;
+        try{
+            Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll()); // TODO: Add custom code here;
+            ResponseEntity<Collection<LicenseeVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(this.licenseeService.remove(id)); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return response;
+        try{
+            Optional<Boolean> data = Optional.of(this.licenseeService.remove(id)); // TODO: Add custom code here;
+            ResponseEntity<Boolean> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleSave(LicenseeVO licenseeVO) {
-        Optional<LicenseeVO> data = Optional.of(this.licenseeService.save(licenseeVO)); // TODO: Add custom code here;
-        ResponseEntity<LicenseeVO> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return response;
+        try{
+            Optional<LicenseeVO> data = Optional.of(this.licenseeService.save(licenseeVO)); // TODO: Add custom code here;
+            ResponseEntity<LicenseeVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleSearch(LicenseeCriteria criteria) {
-        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.search(criteria)); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenseeVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return response;
+        try{
+            Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.search(criteria)); // TODO: Add custom code here;
+            ResponseEntity<Collection<LicenseeVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenseeVO>> response;
-
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return response;
+        try{
+            Optional<Collection<LicenseeVO>> data = Optional.of(this.licenseeService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
+            ResponseEntity<Collection<LicenseeVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleGetDocuments(Long id) {
-        Collection<DocumentVO> docs = licenseeService.getDocuments(id);
+        try{
+            Collection<DocumentVO> docs = licenseeService.getDocuments(id);
 
-        if(CollectionUtils.isEmpty(docs)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(docs);
-        }
+            if(CollectionUtils.isEmpty(docs)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(docs);
+            }
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
 
     }
 
     @Override
     public ResponseEntity<?> handleGetForms(Long id) {
-        Collection<FormVO> vos = licenseeService.getForms(id);
+        try{
+            Collection<FormVO> vos = licenseeService.getForms(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
-        }
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleGetFormSubmissions(Long id) {
-        Collection<FormSubmissionVO> vos = licenseeService.getFormSubmissions(id);
+        try{
+            Collection<FormSubmissionVO> vos = licenseeService.getFormSubmissions(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
-        }
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleGetLicences(Long id) {
-        Collection<LicenceVO> vos = licenseeService.getLicences(id);
+        try{
+            Collection<LicenceVO> vos = licenseeService.getLicences(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
-        }
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleGetReportConfigurations(Long id) {
-        Collection<ReportConfigVO> vos = licenseeService.getReportConfigurations(id);
+        try{
+            Collection<ReportConfigVO> vos = licenseeService.getReportConfigurations(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
-        }
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleGetReports(Long id) {
-        Collection<ReportVO> vos = licenseeService.getReports(id);
+        try{
+            Collection<ReportVO> vos = licenseeService.getReports(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
-        }
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleGetSectors(Long id) {
-        Collection<SectorVO> vos = licenseeService.getSectors(id);
+        try{
+            Collection<SectorVO> vos = licenseeService.getSectors(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
-        }
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleGetShareholders(Long id) {
-        Collection<ShareholderVO> vos = licenseeService.getShareholders(id);
+        try{
+            Collection<ShareholderVO> vos = licenseeService.getShareholders(id);
 
-        if(CollectionUtils.isEmpty(vos)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.ok().body(vos);
-        }
+            if(CollectionUtils.isEmpty(vos)) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok().body(vos);
+            }
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
     }
 
     @Override
     public ResponseEntity<?> handleAddSector(Long licenseeId, Long sectorId) {
+        try{
+            LicenseeSectorVO lvo = getLicenseeService().addSector(licenseeId, sectorId);
 
-        LicenseeSectorVO lvo = getLicenseeService().addSector(licenseeId, sectorId);
-
-        if(lvo == null || lvo.getId() == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
-        } else {
-            return ResponseEntity.ok().body(lvo);
-        }
+            if(lvo == null || lvo.getId() == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    
+            } else {
+                return ResponseEntity.ok().body(lvo);
+            }
+        } catch(Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+          }
 
     }
 
