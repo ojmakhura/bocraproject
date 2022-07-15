@@ -105,24 +105,24 @@ gen_docker_env: rm_env
 	@$(LOCAL_DOCKER_ENV)
 
 ##
-## Building and running on the local platform
+## Building and running on the test platform
 ##
-build_local_api: gen_test_docker_env build_api build_api
+build_test_api: gen_test_docker_env build_api build_api
 	docker-compose -f docker-compose-test.yml build api
 
-build_local_web: gen_test_docker_env build_web 
+build_test_web: gen_test_docker_env build_web 
 	docker-compose -f docker-compose-test.yml build web
 
-build_local_db: gen_test_docker_env
+build_test_db: gen_test_docker_env
 	docker-compose -f docker-compose-test.yml build db
 
-build_local_keycloak: gen_test_docker_env
+build_test_keycloak: gen_test_docker_env
 	docker-compose -f docker-compose-test.yml build keycloak
 
-build_local_proxy: gen_test_docker_env
+build_test_proxy: gen_test_docker_env
 	docker-compose -f docker-compose-test.yml build proxy
 
-build_local_images: gen_test_docker_env build_all
+build_test_images: gen_test_docker_env build_all
 	docker-compose -f docker-compose-local.yml build
 
 gen_test_docker_env: rm_env

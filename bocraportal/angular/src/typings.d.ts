@@ -15,4 +15,11 @@ declare var $ENV: Env;
 
 interface Env {
   ENVIRONMENT: string;
+  KEYCLOAK_AUTH_URL: string;
+  API_URL: string;
+  KEYCLOAK_REALM: string;
+  BOCRA_API_ADDRESS: string;
+  KEYCLOAK_WEB_CLIENT: string;
+  REDIRECT_URL: string;
+  KEYCLOAK_WEB_CLIENT_ID: string;
 }
