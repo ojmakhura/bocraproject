@@ -90,7 +90,7 @@ services:
     environment:
       PROXY_ADDRESS_FORWARDING: "true"
       DB_VENDOR: POSTGRES
-      DB_ADDR: bocra-db
+      DB_ADDR: ${BOCRA_PROXY_ADDRESS}
       DB_DATABASE: ${KEYCLOAK_DB}
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
@@ -166,7 +166,7 @@ services:
       traefik-public:
       default:
     environment:
-      POSTGRES_SERVER: bocra-db
+      POSTGRES_SERVER: ${BOCRA_PROXY_ADDRESS}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}

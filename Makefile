@@ -105,7 +105,34 @@ gen_docker_env: rm_env
 	@$(LOCAL_DOCKER_ENV)
 
 ##
-## Building and running on the test platform
+## Building and running on the local platform
+##
+build_local_api: gen_test_docker_env build_api build_api
+	docker-compose -f docker-compose-test.yml build api
+
+build_local_web: gen_test_docker_env build_web 
+	docker-compose -f docker-compose-test.yml build web
+
+build_local_db: gen_test_docker_env
+	docker-compose -f docker-compose-test.yml build db
+
+build_local_keycloak: gen_test_docker_env
+	docker-compose -f docker-compose-test.yml build keycloak
+
+build_local_proxy: gen_test_docker_env
+	docker-compose -f docker-compose-test.yml build proxy
+
+build_local_images: gen_test_docker_env build_all
+	docker-compose -f docker-compose-local.yml build
+
+gen_test_docker_env: rm_env
+	if [ -f .env ]; then \
+		rm -f .env; \
+	fi
+	@$(LOCAL_DOCKER_ENV)
+
+##
+## Building and running on the live platform
 ##
 build_live_api: gen_live_env build_api
 	docker-compose build api

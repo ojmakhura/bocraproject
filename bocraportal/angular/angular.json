@@ -69,6 +69,28 @@
               ],
               "outputHashing": "all"
             },
+            "test": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "serviceWorker": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
@@ -88,6 +110,9 @@
           "configurations": {
             "production": {
               "browserTarget": "bocraportal:build:production"
+            },
+            "test": {
+              "browserTarget": "bocraportal:build:test"
             },
             "development": {
               "browserTarget": "bocraportal:build:development"
@@ -147,6 +172,9 @@
           "configurations": {
             "production": {
               "devServerTarget": "bocraportal:serve:production"
+            },
+            "test": {
+              "devServerTarget": "bocraportal:serve:production"
             }
           }
         },
@@ -164,6 +192,9 @@
           },
           "configurations": {
             "production": {
+              "devServerTarget": "bocraportal:serve:production"
+            },
+            "test": {
               "devServerTarget": "bocraportal:serve:production"
             }
           }
