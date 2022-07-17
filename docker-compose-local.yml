@@ -166,7 +166,7 @@ services:
       traefik-public:
       default:
     environment:
-      POSTGRES_SERVER: ${BOCRA_PROXY_ADDRESS}
+      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}

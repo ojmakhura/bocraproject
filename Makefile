@@ -32,8 +32,11 @@ clean_mda:
 build_local_api: gen_docker_env build_api build_api
 	docker-compose -f docker-compose-local.yml build api
 
-build_local_web: gen_docker_env build_web 
+build_local_web: gen_docker_env 
 	docker-compose -f docker-compose-local.yml build web
+
+build_local_web_dist: rm_env gen_local_env build_web local_web_deps
+	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm run build --configuration=production
 
 build_local_db: gen_docker_env
 	docker-compose -f docker-compose-local.yml build db
