@@ -160,7 +160,7 @@ LOCAL_ENV = printf "%s\n" \
 
 TEST_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
-    "export BOCRA_DATA=${HOME}/${BOCRA_DATA}"\
+    "export BOCRA_DATA=${BOCRA_DATA}"\
     "export IMAGE_VERSION=${DEV_IMAGE_VERSION}"\
     "export DOMAIN=${TEST_DOMAIN}"\
     "export DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${TEST_DOMAIN}"\
@@ -182,7 +182,7 @@ TEST_ENV = printf "%s\n" \
 
 LIVE_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
-    "export BOCRA_DATA=${HOME}/${BOCRA_DATA}"\
+    "export BOCRA_DATA=${BOCRA_DATA}"\
     "export IMAGE_VERSION=${DEV_IMAGE_VERSION}"\
     "export DOMAIN=${LIVE_DOMAIN}"\
     "export DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${LIVE_DOMAIN}"\
@@ -194,7 +194,7 @@ LIVE_ENV = printf "%s\n" \
     "export REDIRECT_URI=${LIVE_REDIRECT_URI}"\
     "export SMTP_HOST=${LIVE_SMTP_HOST}"\
     "export BOCRA_KEYCLOAK_ADDRESS=${BOCRA_KEYCLOAK_LIVE_ADDRESS}"\
-    "export KEYCLOAK_AUTH_URL=${KEYCLOAK_LOCAL_BASE_URL}"\
+    "export KEYCLOAK_AUTH_URL=${KEYCLOAK_LIVE_BASE_URL}"\
     "export KEYCLOAK_API_SECRET=${KEYCLOAK_LIVE_API_SECRET}"\
     "export ACME_EMAIL=${LIVE_ACME_EMAIL}"\
     "export WEB_URL=${BOCRA_WEB_SUBDOMAIN}.${LIVE_DOMAIN}"\
