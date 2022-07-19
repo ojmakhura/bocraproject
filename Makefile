@@ -146,6 +146,63 @@ gen_docker_env: rm_env
 	fi
 	@$(LOCAL_DOCKER_ENV)
 
+#################################################################################
+## Building and running on the test platform
+#################################################################################
+build_test_api: gen_test_env build_api build_api_image 
+
+build_test_web: gen_test_env build_web_image 
+
+build_test_db: gen_test_env build_db_image 
+
+build_test_keycloak: gen_test_env build_keycloak_image 
+
+build_test_proxy: gen_test_env build_proxy_image 
+
+build_test_images: gen_test_env build_images 
+
+###
+## Run the local images
+###
+up_test_app: build_test_images up_full_app
+
+up_test_db: gen_test_env up_db
+
+up_test_keycloak: gen_test_env up_keycloak
+
+up_test_proxy: gen_test_env up_proxy
+
+up_test_web: gen_test_env up_web
+
+up_test_pgadmin: gen_test_env up_pgadmin
+
+up_test_api: gen_test_env up_api
+
+up_test_registry: gen_test_env up_registry
+
+up_test_jenkins: gen_test_env up_jenkins
+
+run_test_app: gen_test_env build_test_images up_test_app
+
+# run_test_web: build_test_images up_test_app
+stop_test_app:
+	docker-compose down
+
+rm_env:
+	rm -f .env
+
+gen_test_env: rm_env
+	if [ -f .env ]; then \
+		rm -f .env; \
+	fi
+	@$(TEST_ENV)
+
+gen_docker_env: rm_env
+	if [ -f .env ]; then \
+		rm -f .env; \
+	fi
+	@$(TEST_DOCKER_ENV)
+
 ##
 ## Check the logs
 ##
