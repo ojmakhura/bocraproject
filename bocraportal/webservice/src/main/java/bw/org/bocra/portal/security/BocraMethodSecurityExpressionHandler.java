@@ -14,11 +14,12 @@ public class BocraMethodSecurityExpressionHandler extends DefaultMethodSecurityE
     @Override
     protected MethodSecurityExpressionOperations createSecurityExpressionRoot(
       Authentication authentication, MethodInvocation invocation) {
-        BocraAccessExpressionRoot root = 
-          new BocraAccessExpressionRoot(authentication);
+        BocraAccessExpressionRoot root = new BocraAccessExpressionRoot(authentication);
+        
         root.setPermissionEvaluator(getPermissionEvaluator());
         root.setTrustResolver(this.trustResolver);
         root.setRoleHierarchy(getRoleHierarchy());
+
         return root;
     }
 

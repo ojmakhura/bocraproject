@@ -15,7 +15,7 @@ services:
       default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - traefik-data
+      # - traefik-data
     ports:
       - 80:80
       - 8080:8080
@@ -36,7 +36,7 @@ services:
     hostname: db
     image: postgres:14
     volumes:
-      - app-db-data:/var/lib/postgresql/data
+      - ${BOCRA_DATA}/db:/var/lib/postgresql/data
       - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
     # env_file:
     #  - .env
@@ -78,7 +78,7 @@ services:
     #ports:
     #  - "8000:80"
     volumes:
-      - pgadmin-data:/var/lib/pgadmin
+      - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-pgadmin.rule=Host(`${PGADMIN_DOMAIN}`)"
@@ -106,8 +106,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.keycloak
-    #volumes:
-    #  - keycloak-installation:/opt/jboss/keycloak
+    # volumes:
+    #   - ${BOCRA_DATA}/keycloak:/opt/jboss/keycloak
     networks:
       traefik-public:
       bocra-network:
@@ -115,7 +115,7 @@ services:
       default:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-keycloak.rule=Host(`${LOCAL_DOMAIN}/${BOCRA_KEYCLOAK_SUBDOMAIN}`)"
+      - "traefik.http.routers.bocra-keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
 
   ###############################################################################
   # Angular web application
@@ -130,7 +130,7 @@ services:
     # env_file:
     #   - .env
     volumes:
-      - web-app-data:/web
+      - ${BOCRA_DATA}/web:/web
     depends_on:
       - db
       - keycloak
@@ -199,9 +199,9 @@ services:
       REGISTRY_AUTH_HTPASSWD_PATH: ${REGISTRY_AUTH_HTPASSWD_PATH}
       REGISTRY_AUTH_HTPASSWD_REALM: ${REGISTRY_AUTH_HTPASSWD_REALM}
     volumes:
-      - registry-data:/var/lib/registry
-      - registry-certs:/certs
-      - registry-auth:/auth
+      - ${BOCRA_DATA}/registry/data:/var/lib/registry
+      - ${BOCRA_DATA}/registry/certs:/certs
+      - ${BOCRA_DATA}/registry/auth:/auth
     networks:
       bocra-network:
         ipv4_address: ${BOCRA_REGISTRY_ADDRESS}
@@ -227,7 +227,7 @@ services:
     env_file:
       - .env
     volumes:
-      - jenkins-data:/var/jenkins_home
+      - ${BOCRA_DATA}/jenkins:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       bocra-network:
@@ -241,61 +241,61 @@ services:
 ###############################################################################
 # Volumes
 ###############################################################################
-volumes:
-  app-db-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/db
-  web-app-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/web
-  pgadmin-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/pgadmin
-  keycloak-installation:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/keycloak
-  traefik-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/junior/bocra/traefik
-  registry-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/registry/data
-  registry-certs:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/registry/certs
-  registry-auth:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/registry/auth
-  jenkins-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${BOCRA_DATA}/jenkins
+# volumes:
+#   app-db-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ${BOCRA_DATA}/db
+#   web-app-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ${BOCRA_DATA}/web
+#   pgadmin-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ${BOCRA_DATA}/pgadmin
+#   keycloak-installation:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ${BOCRA_DATA}/keycloak
+#   traefik-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: /home/junior/bocra/traefik
+#   registry-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ${BOCRA_DATA}/registry/data
+#   registry-certs:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ${BOCRA_DATA}/registry/certs
+#   registry-auth:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ${BOCRA_DATA}/registry/auth
+#   jenkins-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ${BOCRA_DATA}/jenkins
 
 ###############################################################################
 # Networks

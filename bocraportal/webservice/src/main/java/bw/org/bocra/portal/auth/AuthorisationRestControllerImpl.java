@@ -9,8 +9,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,16 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("authorisation")
+@RequestMapping("/authorisation")
+@Tag(name = "suthorisation", description = "Managing the access authorisations.")
 @CrossOrigin()
-@Tag(name = "authorisations", description = "Managing access authorisations")
 public class AuthorisationRestControllerImpl extends AuthorisationRestControllerBase {
 
+    
+    
     public AuthorisationRestControllerImpl(AuthorisationService authorisationService) {
         super(authorisationService);
     }
-
-    protected static Logger log = LoggerFactory.getLogger(AuthorisationRestController.class);
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
