@@ -14,5 +14,4 @@
 FROM nginx:alpine
 COPY ./bocraportal/angular/target/bocraportal/dist/* /usr/share/nginx/html/
 COPY ./bocraportal/angular/target/bocraportal/dist/assets /usr/share/nginx/html/assets
-RUN ls -l /usr/share/nginx/html/*
 ## COPY --from=build-step /app/dist/ /usr/share/nginx/html
