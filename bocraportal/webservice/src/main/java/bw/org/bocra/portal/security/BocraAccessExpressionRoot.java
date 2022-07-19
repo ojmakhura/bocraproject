@@ -31,17 +31,16 @@ public class BocraAccessExpressionRoot extends SecurityExpressionRoot implements
     private Object returnObject;
     private Object target;
 
-    @Autowired
     private AccessPointRepository accessPointRepository;
-
-    @Autowired
     private AuthorisationRepository authorisationRepository;
 
     //private Authentication authentication;
 
-    public BocraAccessExpressionRoot(Authentication authentication) {
+    public BocraAccessExpressionRoot(Authentication authentication, AccessPointRepository accessPointRepository, AuthorisationRepository authorisationRepository) {
         
         super(authentication);
+        this.accessPointRepository = accessPointRepository;
+        this.authorisationRepository = authorisationRepository;
     }
 
     @Override
@@ -77,8 +76,9 @@ public class BocraAccessExpressionRoot extends SecurityExpressionRoot implements
         System.out.println(apiEndpoint);
         System.out.println(authentication);
 
-        Specification<AccessPoint> apSpec = AccessPointSpecifications.findByUrlContaining(apiEndpoint);
+        Specification<AccessPoint> apSpec = AccessPointSpecifications.findByUrlLikeIgnoreCase(apiEndpoint);
         Collection<AccessPoint> aps = this.accessPointRepository.findAll(apSpec);
+        System.out.println(aps);
 
         if(CollectionUtils.isEmpty(aps)) return false;
 
