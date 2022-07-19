@@ -79,6 +79,10 @@ const routes: Routes = [
       path: 'access/type', 
       loadChildren: async () => (await import('@app/view/access/type/access-point-type.module')).AccessPointTypeModule
     },
+    {
+      path: 'menu', 
+      loadChildren: async () => (await import('@app/view/menu/menu-section.module')).MenuSectionModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 

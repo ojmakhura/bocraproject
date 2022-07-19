@@ -181,12 +181,12 @@
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
-                <version>1.6.8</version>
+                <version>${openapi.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-security</artifactId>
-                <version>1.6.8</version>
+                <version>${openapi.version}</version>
              </dependency>
             <dependency>
                 <groupId>org.keycloak</groupId>
@@ -358,6 +358,7 @@
         <!-- To override parent default settings for compiler plugin and compliance checks-->
         <dependencyConvergence>true</dependencyConvergence>
         <keycloak.version>16.1.1</keycloak.version>
+        <openapi.version>1.6.9</openapi.version>
         <!-- Any of these configuration values can be overridden by the descendant, the default is JDK 1.6 >
         <java.runtime.version>1.7</java.runtime.version>
         <java.required.version>1.7</java.required.version>

@@ -26,6 +26,7 @@ import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
 import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/form/licensee-form-vo';
 import { FormGroup } from '@angular/forms';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 
 @Component({
   selector: 'app-edit-form',
@@ -123,6 +124,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   override formLicenceTypesSearch(): void {
+    
     let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
     criteria.typeSearch = this.formLicenceTypesSearchField.value;
     this.store.dispatch(
@@ -133,7 +135,12 @@ export class EditFormComponentImpl extends EditFormComponent {
     );
   }
 
+  override formLicenseesAddDialog() {
+    this.editFormAddLicensee();
+  }
+
   override formLicenseesSearch(): void {
+    console.log("form licenses search")
     let criteria: LicenseeCriteria = new LicenseeCriteria();
     criteria.licenseeName = this.formLicenseesSearchField.value;
     criteria.uin = this.formLicenseesSearchField.value;
@@ -218,7 +225,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         id: value?.form?.id,
         code: value?.form?.code,
         formName: value?.form?.formName,
-      }
+      },
     });
   }
 
@@ -245,8 +252,8 @@ export class EditFormComponentImpl extends EditFormComponent {
         id: [value?.formSection?.id],
         position: [value?.formSection?.position],
         sectionId: [value?.formSection?.sectionId],
-        sectionLabel: [value?.formSection?.sectionLabel],
-      }
+        sectionLabel: [value?.formSection?.sectionLabel ? value?.formSection?.sectionLabel : value?.formSection?.sectionId],
+      },
     });
   }
 }

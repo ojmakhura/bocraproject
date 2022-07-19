@@ -17,23 +17,19 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.form.Form;
-import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
 import bw.org.bocra.portal.form.section.FormSection;
-import bw.org.bocra.portal.form.section.FormSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 import bw.org.bocra.portal.form.submission.note.NoteRepository;
 import bw.org.bocra.portal.licensee.Licensee;
-import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.period.Period;
-import bw.org.bocra.portal.period.PeriodDao;
 import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
 
@@ -44,7 +40,6 @@ import bw.org.bocra.portal.period.PeriodVO;
 public class FormSubmissionDaoImpl
     extends FormSubmissionDaoBase
 {
-
 
     public FormSubmissionDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
             DataFieldRepository dataFieldRepository, LicenseeRepository licenseeRepository,
@@ -68,8 +63,7 @@ public class FormSubmissionDaoImpl
 
         if(source.getForm() != null) {
             Form form = source.getForm();
-            FormVO formVO = new FormVO();
-            getFormDao().toFormVO(form, formVO);
+            FormVO formVO = getFormDao().toFormVO(form);
             target.setForm(formVO);
             
             if(CollectionUtils.isNotEmpty(source.getDataFields())) {
@@ -115,8 +109,6 @@ public class FormSubmissionDaoImpl
             getPeriodDao().toPeriodVO(source.getPeriod(), period);
             target.setPeriod(period);
         }
-
-        
     }
 
     /**

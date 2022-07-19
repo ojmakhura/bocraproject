@@ -18,8 +18,8 @@ export class UserEffects {
   createUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.createUser),
-      mergeMap(({ user }) =>
-        this.userRestController.createUser(environment.webClientId, user).pipe(
+      mergeMap(({ user }) => 
+        this.userRestController.createUser(user).pipe(
           map((user) =>
             UserActions.createUserSuccess({
               user,

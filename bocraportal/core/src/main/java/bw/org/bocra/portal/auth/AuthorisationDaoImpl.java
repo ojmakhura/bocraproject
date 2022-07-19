@@ -16,6 +16,7 @@ import bw.org.bocra.portal.access.type.AccessPointType;
 import bw.org.bocra.portal.access.type.AccessPointTypeDao;
 import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
+import bw.org.bocra.portal.menu.MenuSectionRepository;
 
 /**
  * @see Authorisation
@@ -25,10 +26,12 @@ public class AuthorisationDaoImpl
     extends AuthorisationDaoBase
 {
 
+
     public AuthorisationDaoImpl(AccessPointRepository accessPointRepository,
-            AccessPointTypeRepository accessPointTypeRepository, AuthorisationRepository authorisationRepository) {
-                
-        super(accessPointRepository, accessPointTypeRepository, authorisationRepository);
+            AccessPointTypeRepository accessPointTypeRepository, MenuSectionRepository menuSectionRepository,
+            AuthorisationRepository authorisationRepository) {
+
+        super(accessPointRepository, accessPointTypeRepository, menuSectionRepository, authorisationRepository);
     }
 
     /**
