@@ -75,8 +75,8 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    #ports:
-    #  - "8000:80"
+    ports:
+      - "8000:80"
     volumes:
       - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
     labels:
@@ -101,6 +101,8 @@ services:
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
     depends_on:
       - db
+    ports:
+      - "9000:8080"
     # env_file:
     #   - .env
     build:
@@ -135,13 +137,13 @@ services:
       - db
       - keycloak
       - api
+    ports:
+      - "80:80"
     networks:
       traefik-public:
       bocra-network:
         ipv4_address: ${BOCRA_WEB_ADDRESS}
       default:
-        #ports:
-        #  - 3100:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
