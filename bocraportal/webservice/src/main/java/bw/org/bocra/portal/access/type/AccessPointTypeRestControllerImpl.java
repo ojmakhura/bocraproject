@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/access/type")
-@Tag(name = "accessPointType", description = "Configuring different resource types accessible.")
+@Tag(name = "Access Point Type", description = "Configuring different resource types accessible.")
 public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestControllerBase {
 
     public AccessPointTypeRestControllerImpl(AccessPointTypeService accessPointTypeService) {

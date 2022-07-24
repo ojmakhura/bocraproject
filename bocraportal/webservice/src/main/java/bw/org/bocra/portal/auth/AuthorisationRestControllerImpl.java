@@ -19,12 +19,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/authorisation")
-@Tag(name = "suthorisation", description = "Managing the access authorisations.")
+@Tag(name = "Authorisation", description = "Managing the access authorisations.")
 @CrossOrigin()
 public class AuthorisationRestControllerImpl extends AuthorisationRestControllerBase {
 
-    
-    
     public AuthorisationRestControllerImpl(AuthorisationService authorisationService) {
         super(authorisationService);
     }
@@ -182,6 +180,27 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
         try {
             Optional<AuthorisationVO> data = Optional.of(authorisationService.assignMenuSection(authorisationId, menuSectionId));
             ResponseEntity<AuthorisationVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByRolesAndUrl(String url, Set<String> roles) {
+        try {
+            Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.findByRolesAndUrl(url, roles));
+            ResponseEntity<Collection<AuthorisationVO>> response;
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());

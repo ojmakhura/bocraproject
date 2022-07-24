@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/access")
-@Tag(name = "accessPoint", description = "Managing the different resources available.")
+@Tag(name = "Access Point", description = "Managing the different resources available.")
 public class AccessPointRestControllerImpl extends AccessPointRestControllerBase {
 
     public AccessPointRestControllerImpl(AccessPointService accessPointService) {

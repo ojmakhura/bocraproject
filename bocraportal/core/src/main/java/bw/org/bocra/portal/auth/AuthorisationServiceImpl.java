@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.auth;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -146,6 +147,19 @@ public class AuthorisationServiceImpl
         authorisation = authorisationRepository.save(authorisation);
 
         return authorisationDao.toAuthorisationVO(authorisation);
+    }
+
+    @Override
+    protected Collection<AuthorisationVO> handleFindByRolesAndUrl(String url, Set<String> roles) throws Exception {
+
+        Collection<Authorisation> authorisations = authorisationRepository.findByRolesAndUrl(url, roles);
+        Collection<AuthorisationVO> vos = new ArrayList<>();
+
+        for(Authorisation auth : authorisations) {
+            vos.add(authorisationDao.toAuthorisationVO(auth));
+        }
+
+        return vos;
     }
 
 }

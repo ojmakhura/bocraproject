@@ -37,9 +37,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bw.org.bocra.portal.user.LicenseeUserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("auth")
+@Tag(name = "Authentication", description = "Managing authentications.")
 @CrossOrigin()
 public class AuthControllerImpl extends AuthControllerBase {
 

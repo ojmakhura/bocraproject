@@ -1,6 +1,7 @@
 package bw.org.bocra.portal.security;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -80,7 +81,7 @@ public class BocraAccessExpressionRoot extends SecurityExpressionRoot implements
         Collection<AccessPoint> aps = this.accessPointRepository.findAll(apSpec);
         System.out.println(aps);
 
-        if(CollectionUtils.isEmpty(aps)) return false;
+        if(CollectionUtils.isEmpty(aps)) return true;
 
         Collection<Long> apIds = new ArrayList<>();
         for(AccessPoint ap : aps) {
@@ -89,6 +90,11 @@ public class BocraAccessExpressionRoot extends SecurityExpressionRoot implements
 
         Specification<Authorisation> spec = AuthorisationSpecifications.findByAccessPointIdIn(apIds);
         Collection<Authorisation> auths = this.authorisationRepository.findAll(spec);
+        ArrayList<Long> st = new ArrayList<>();
+        st.add(2l);
+        st.add(65l);
+
+        this.authorisationRepository.findAll(AuthorisationSpecifications.findByMenuSectionIdIn(st));
 
         // for(Authorisation auth : auths) {
         //     if(auth.)
