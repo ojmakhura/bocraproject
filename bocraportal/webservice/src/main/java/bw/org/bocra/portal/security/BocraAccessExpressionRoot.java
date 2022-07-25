@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
+import org.keycloak.representations.AccessToken.Access;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,7 @@ import bw.org.bocra.portal.auth.Authorisation;
 import bw.org.bocra.portal.auth.AuthorisationRepository;
 import bw.org.bocra.portal.auth.AuthorisationService;
 import bw.org.bocra.portal.auth.AuthorisationSpecifications;
+import bw.org.bocra.portal.keycloak.KeycloakService;
 
 //@Component
 public class BocraAccessExpressionRoot extends SecurityExpressionRoot implements MethodSecurityExpressionOperations {
@@ -34,8 +39,6 @@ public class BocraAccessExpressionRoot extends SecurityExpressionRoot implements
 
     private AccessPointRepository accessPointRepository;
     private AuthorisationRepository authorisationRepository;
-
-    //private Authentication authentication;
 
     public BocraAccessExpressionRoot(Authentication authentication, AccessPointRepository accessPointRepository, AuthorisationRepository authorisationRepository) {
         
@@ -74,32 +77,27 @@ public class BocraAccessExpressionRoot extends SecurityExpressionRoot implements
     }
 
     public boolean isAuthorised(String apiEndpoint) {
-        System.out.println(apiEndpoint);
-        System.out.println(authentication);
 
-        Specification<AccessPoint> apSpec = AccessPointSpecifications.findByUrlLikeIgnoreCase(apiEndpoint);
-        Collection<AccessPoint> aps = this.accessPointRepository.findAll(apSpec);
-        System.out.println(aps);
+        /// Find the api with the requesting URL
+        Collection<Authorisation> auths = this.authorisationRepository.findByAccessUrlAndCode(apiEndpoint, "API");
 
-        if(CollectionUtils.isEmpty(aps)) return true;
-
-        Collection<Long> apIds = new ArrayList<>();
-        for(AccessPoint ap : aps) {
-            apIds.add(ap.getId());
+        // If there are no authorisations, we assume the request is authorised by default
+        if(CollectionUtils.isEmpty(auths)) {
+            return true;
         }
 
-        Specification<Authorisation> spec = AuthorisationSpecifications.findByAccessPointIdIn(apIds);
-        Collection<Authorisation> auths = this.authorisationRepository.findAll(spec);
-        ArrayList<Long> st = new ArrayList<>();
-        st.add(2l);
-        st.add(65l);
+        SimpleKeycloakAccount acc = (SimpleKeycloakAccount) authentication.getDetails();
+        AccessToken token = acc.getKeycloakSecurityContext().getToken();
+        Access access = token.getResourceAccess(token.getIssuedFor()); // Get the authenticated client
 
-        this.authorisationRepository.findAll(AuthorisationSpecifications.findByMenuSectionIdIn(st));
+        for (Authorisation auth : auths) {
+            for(String role : auth.getRoles()) {
+                if(access.getRoles().contains(role)) {
+                    return true;
+                }
+            }
+        }
 
-        // for(Authorisation auth : auths) {
-        //     if(auth.)
-        // }
-
-        return true;
+        return false;
     }
 }

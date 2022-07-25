@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 
 import bw.org.bocra.portal.access.AccessPointRepository;
 import bw.org.bocra.portal.auth.AuthorisationRepository;
+import bw.org.bocra.portal.keycloak.KeycloakService;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -19,6 +20,9 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
   @Autowired
   private AuthorisationRepository authorisationRepository;
+
+  //@Autowired
+  private KeycloakService keycloakService;
 
   @Override
   protected MethodSecurityExpressionHandler createExpressionHandler() {

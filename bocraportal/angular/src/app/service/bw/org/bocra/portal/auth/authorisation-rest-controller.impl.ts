@@ -55,4 +55,7 @@ export class AuthorisationRestControllerImpl extends AuthorisationRestController
         return this.http.post<AuthorisationVO[] | any[]>(this.path + `/search`, criteria);
     }
 
+    public findByRolesAndUrl(url: any, roles: any): Observable<any[] | AuthorisationVO[]> {
+        throw new Error('Method not implemented.');
+    }
 }

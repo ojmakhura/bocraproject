@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 
 import bw.org.bocra.portal.access.AccessPointRepository;
 import bw.org.bocra.portal.auth.AuthorisationRepository;
+import bw.org.bocra.portal.keycloak.KeycloakService;
 
 public class BocraMethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
 
