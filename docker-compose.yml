@@ -186,15 +186,14 @@ services:
   ###############################################################################
   registry:
     image: registry:2
+    container_name: bocra-registry
     ports:
       - 5000:5000
-    env_file:
-      - .env
     depends_on:
       - proxy
     environment:
-      REGISTRY_HTTP_TLS_CERTIFICATE: ${REGISTRY_HTTP_TLS_CERTIFICATE}
-      REGISTRY_HTTP_TLS_KEY: ${REGISTRY_HTTP_TLS_KEY}
+      #REGISTRY_HTTP_TLS_CERTIFICATE: ${REGISTRY_HTTP_TLS_CERTIFICATE}
+      #REGISTRY_HTTP_TLS_KEY: ${REGISTRY_HTTP_TLS_KEY}
       REGISTRY_AUTH: ${REGISTRY_AUTH}
       REGISTRY_AUTH_HTPASSWD_PATH: ${REGISTRY_AUTH_HTPASSWD_PATH}
       REGISTRY_AUTH_HTPASSWD_REALM: ${REGISTRY_AUTH_HTPASSWD_REALM}
