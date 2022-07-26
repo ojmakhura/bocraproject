@@ -75,8 +75,8 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    #ports:
-    #  - "8000:80"
+    ports:
+      - "9000:80"
     volumes:
       - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
     labels:
@@ -101,11 +101,11 @@ services:
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
     depends_on:
       - db
-    # env_file:
-    #   - .env
     build:
       context: .
       dockerfile: Dockerfile.keycloak
+    ports:
+      - 8089:8080
     # volumes:
     #   - ${BOCRA_DATA}/keycloak:/opt/jboss/keycloak
     networks:
