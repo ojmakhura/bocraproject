@@ -1,4 +1,4 @@
-create database if not exists bocraportal;
+CREATE DATABASE keycloak;
 
 CREATE SEQUENCE IF NOT EXISTS public.access_point_seq
     INCREMENT 1

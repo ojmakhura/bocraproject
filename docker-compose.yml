@@ -15,18 +15,33 @@ services:
       default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ${BOCRA_DATA}/traefik/acme:/acme
       # - traefik-data
     ports:
-      - 80:80
-      - 8080:8080
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
     command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      #- --entrypoints.websecure.address=:443
+      - --api
     labels:
-      traefik.http.routers.bocra-proxy.rule: Host(`${PROXY_DOMAIN}`)
-      traefik.http.routers.bocra-proxy.service: api@internal
+    #  traefik.http.routers.bocra-proxy.rule: Host(`${PROXY_DOMAIN}`)
+    #  traefik.http.routers.bocra-proxy.service: api@internal
+      # Dashboard
+      - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+    #  - "traefik.http.routers.traefik.middlewares=admin"
+    #  - "traefik.http.routers.traefik.tls.certresolver=le"
+    #  - "traefik.http.middlewares.admin.basicauth.users=userXY:pwXY"
+    # global redirect to https
+    #  - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+    #  - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
+    #  - "traefik.http.routers.redirs.entrypoints=web"
+    #  - "traefik.http.routers.redirs.middlewares=redirect-to-https"
 
   ###############################################################################
   # Postgres database
@@ -77,8 +92,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "9000:80"
-    volumes:
-      - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
+    #volumes:
+    #  - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-pgadmin.rule=Host(`${PGADMIN_DOMAIN}`)"
@@ -88,17 +103,24 @@ services:
   ###############################################################################
   keycloak:
     container_name: bocra-keycloak
+    image: docker.io/bitnami/keycloak:18.0.0
     hostname: bocra-keycloak
-    image: "bocra-keycloak:latest"
+    #image: "bocra-keycloak:latest"
     environment:
       PROXY_ADDRESS_FORWARDING: "true"
       DB_VENDOR: POSTGRES
+      KC_DB_VENDOR: POSTGRES
       DB_ADDR: ${BOCRA_DB_ADDRESS}
-      DB_DATABASE: ${KEYCLOAK_DB}
-      DB_USER: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      KEYCLOAK_USER: ${KEYCLOAK_USER}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_DB}
+      KEYCLOAK_DATABASE_USER: ${POSTGRES_USER}
+      KEYCLOAK_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_CREATE_ADMIN_USER: true
+      KEYCLOAK_ADMIN_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_MANAGEMENT_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_MANAGEMENT_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_DATABASE_HOST: ${POSTGRES_SERVER}
+      KEYCLOAK_DATABASE_PORT: ${POSTGRES_SERVER_PORT}
     depends_on:
       - db
     build:
@@ -106,8 +128,8 @@ services:
       dockerfile: Dockerfile.keycloak
     ports:
       - 8089:8080
-    # volumes:
-    #   - ${BOCRA_DATA}/keycloak:/opt/jboss/keycloak
+    #volumes:
+    #  - ${BOCRA_DATA}/keycloak:/opt/jboss/keycloak
     networks:
       traefik-public:
       bocra-network:
