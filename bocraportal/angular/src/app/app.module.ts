@@ -63,80 +63,27 @@ import { AccessPointTypeControllerImpl } from '@app/controller/access/type/acces
 import { MenuSectionModule } from '@app/view/menu/menu-section.module';
 import { MenuSectionControllerImpl } from '@app/controller/menu/menu-section-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
-<<<<<<< HEAD
-import { LicenceRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/licence-rest-controller.impl';
-<<<<<<< HEAD
-import { AccessPointTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/type/access-point-type-rest-controller.impl';
-import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
-import { LicenseeSectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/sector/licensee-sector-rest-controller.impl';
+import { AccessPointRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/access-point-rest-controller.impl';
+import { SectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller.impl';
 import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller.impl';
 import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
-import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
+import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
 import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
-import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
-import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
-import { DocumentRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/document-rest-controller.impl';
-import { LicenseeFormRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/form/licensee-form-rest-controller.impl';
+import { AccessPointTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/type/access-point-type-rest-controller.impl';
 import { MenuSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/menu/menu-section-rest-controller.impl';
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
-import { DocumentTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/type/document-type-rest-controller.impl';
-import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
-import { AccessPointRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/access-point-rest-controller.impl';
-<<<<<<< HEAD
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
-import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
-import { LicenseeSectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/sector/licensee-sector-rest-controller.impl';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
-<<<<<<< HEAD
-import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
-import { FormActivationRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller.impl';
+import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
 import { LicenceRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/licence-rest-controller.impl';
-import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
-import { AccessPointRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/access-point-rest-controller.impl';
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
-import { MenuSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/menu/menu-section-rest-controller.impl';
-import { LicenseeSectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/sector/licensee-sector-rest-controller.impl';
-import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
-import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
-=======
+import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
+import { LicenseeFormRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/form/licensee-form-rest-controller.impl';
 import { DocumentRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/document-rest-controller.impl';
-import { MenuSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/menu/menu-section-rest-controller.impl';
->>>>>>> 68e6a80 (added isSingleRntry function)
-=======
 import { FormActivationRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller.impl';
-import { SectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller.impl';
->>>>>>> 08d11ce (Table renderinf for data fields in form submission)
-=======
-import { SectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller.impl';
-=======
->>>>>>> c04743e (aving of uploaded data)
-import { LicenseeSectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/sector/licensee-sector-rest-controller.impl';
 import { LicenceTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/type/licence-type-rest-controller.impl';
-import { DocumentRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/document-rest-controller.impl';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
-import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
-import { DocumentTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/type/document-type-rest-controller.impl';
-import { AccessPointRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/access-point-rest-controller.impl';
+import { LicenseeSectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/sector/licensee-sector-rest-controller.impl';
 import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
-import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
-import { LicenceRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/licence-rest-controller.impl';
-import { AccessPointTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/type/access-point-type-rest-controller.impl';
-import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
-import { MenuSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/menu/menu-section-rest-controller.impl';
-import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
-import { FormActivationRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller.impl';
-import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
-<<<<<<< HEAD
->>>>>>> 225ceba (Multiple data submission)
-=======
-import { SectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller.impl';
-import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller.impl';
-import { LicenseeFormRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/form/licensee-form-rest-controller.impl';
 import { NoteRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/note/note-rest-controller.impl';
->>>>>>> c04743e (aving of uploaded data)
+import { DocumentTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/type/document-type-rest-controller.impl';
+import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
 import { AuthModule } from './auth';
 true
 
@@ -183,80 +130,27 @@ true
     ],
     providers: [
         UseCaseScope,
-<<<<<<< HEAD
-        LicenceRestControllerImpl,
-<<<<<<< HEAD
-        AccessPointTypeRestControllerImpl,
-        AuthorisationRestControllerImpl,
-        LicenseeSectorRestControllerImpl,
+        AccessPointRestControllerImpl,
+        SectorRestControllerImpl,
         FormSectionRestControllerImpl,
         FormFieldRestControllerImpl,
-        FormRestControllerImpl,
+        SubmissionRestControllerImpl,
         LicenseeRestControllerImpl,
-        PeriodRestControllerImpl,
-        PeriodConfigRestControllerImpl,
-        DocumentRestControllerImpl,
-        LicenseeFormRestControllerImpl,
+        AccessPointTypeRestControllerImpl,
         MenuSectionRestControllerImpl,
-        UserRestControllerImpl,
-        DocumentTypeRestControllerImpl,
-        SubmissionRestControllerImpl,
-        AccessPointRestControllerImpl,
-<<<<<<< HEAD
-        UserRestControllerImpl,
-        PeriodRestControllerImpl,
-        LicenseeSectorRestControllerImpl,
-        LicenseeRestControllerImpl,
         AuthorisationRestControllerImpl,
-<<<<<<< HEAD
-        SubmissionRestControllerImpl,
-        FormActivationRestControllerImpl,
+        PeriodConfigRestControllerImpl,
         LicenceRestControllerImpl,
-        FormRestControllerImpl,
-        AccessPointRestControllerImpl,
-        UserRestControllerImpl,
-        MenuSectionRestControllerImpl,
-        LicenseeSectorRestControllerImpl,
-        AuthorisationRestControllerImpl,
-        LicenseeRestControllerImpl,
-        PeriodConfigRestControllerImpl,
-=======
+        PeriodRestControllerImpl,
+        LicenseeFormRestControllerImpl,
         DocumentRestControllerImpl,
-        MenuSectionRestControllerImpl,
->>>>>>> 68e6a80 (added isSingleRntry function)
-=======
         FormActivationRestControllerImpl,
-        SectorRestControllerImpl,
->>>>>>> 08d11ce (Table renderinf for data fields in form submission)
-=======
-        SectorRestControllerImpl,
-=======
->>>>>>> c04743e (aving of uploaded data)
-        LicenseeSectorRestControllerImpl,
         LicenceTypeRestControllerImpl,
-        DocumentRestControllerImpl,
-        LicenseeRestControllerImpl,
-        SubmissionRestControllerImpl,
-        DocumentTypeRestControllerImpl,
-        AccessPointRestControllerImpl,
+        LicenseeSectorRestControllerImpl,
         FormRestControllerImpl,
-        FormFieldRestControllerImpl,
-        LicenceRestControllerImpl,
-        AccessPointTypeRestControllerImpl,
-        PeriodConfigRestControllerImpl,
-        MenuSectionRestControllerImpl,
-        PeriodRestControllerImpl,
-        FormActivationRestControllerImpl,
-        AuthorisationRestControllerImpl,
-        UserRestControllerImpl,
-<<<<<<< HEAD
->>>>>>> 225ceba (Multiple data submission)
-=======
-        SectorRestControllerImpl,
-        FormSectionRestControllerImpl,
-        LicenseeFormRestControllerImpl,
         NoteRestControllerImpl,
->>>>>>> c04743e (aving of uploaded data)
+        DocumentTypeRestControllerImpl,
+        UserRestControllerImpl,
         LicenseeControllerImpl,
         UserControllerImpl,
         AuthorisationControllerImpl,
