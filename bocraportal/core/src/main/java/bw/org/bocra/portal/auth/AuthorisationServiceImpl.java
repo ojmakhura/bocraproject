@@ -19,6 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.menu.MenuSection;
+import bw.org.bocra.portal.menu.MenuSectionDao;
+import bw.org.bocra.portal.menu.MenuSectionRepository;
+
 /**
  * @see bw.org.bocra.portal.authorisation.AuthorisationService
  */
@@ -29,8 +33,10 @@ public class AuthorisationServiceImpl
 {
 
     public AuthorisationServiceImpl(AuthorisationDao authorisationDao, AuthorisationRepository authorisationRepository,
-            MessageSource messageSource) {
-        super(authorisationDao, authorisationRepository, messageSource);
+            MenuSectionDao menuSectionDao, MenuSectionRepository menuSectionRepository, MessageSource messageSource) {
+
+        super(authorisationDao, authorisationRepository, menuSectionDao, menuSectionRepository, messageSource);
+        //TODO Auto-generated constructor stub
     }
 
     /**
@@ -44,7 +50,7 @@ public class AuthorisationServiceImpl
             return null;
         }
 
-        Authorisation authorisation = this.authorisationRepository.getById(id);
+        Authorisation authorisation = this.authorisationRepository.getReferenceById(id);
         return authorisationDao.toAuthorisationVO(authorisation);
     }
 
@@ -126,6 +132,20 @@ public class AuthorisationServiceImpl
             Set<String> accessPointTypeCode) throws Exception {
         
         return (Collection<AuthorisationVO>) this.authorisationDao.findAccessTypeCodeAuthorisations(AuthorisationDao.TRANSFORM_AUTHORISATIONVO, roles, accessPointTypeCode);
+    }
+
+    @Override
+    protected AuthorisationVO handleAssignMenuSection(Long authorisationId, Long menuSectionId)
+            throws Exception {
+
+        Authorisation authorisation = authorisationDao.load(authorisationId);
+        MenuSection menuSection = menuSectionDao.load(menuSectionId);
+
+        authorisation.setMenuSection(menuSection);
+
+        authorisation = authorisationRepository.save(authorisation);
+
+        return authorisationDao.toAuthorisationVO(authorisation);
     }
 
 }
