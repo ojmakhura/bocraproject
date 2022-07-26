@@ -282,6 +282,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   isSingleEntry(): boolean {
+<<<<<<< HEAD
     return this.formSubmission.form.entryType === FormEntryType.SINGLE;
   }
 
@@ -486,4 +487,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
     return `${dataField.row}_${dataField.formField.fieldId}`;
   }
+=======
+
+    return this.formSubmission.form.entryType === FormEntryType.SINGLE;
+  }
+>>>>>>> 68e6a80 (added isSingleRntry function)
 }
