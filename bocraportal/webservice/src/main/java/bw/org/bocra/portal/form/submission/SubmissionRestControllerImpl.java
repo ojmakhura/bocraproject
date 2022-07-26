@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+<<<<<<< HEAD
 import io.swagger.v3.oas.annotations.tags.Tag;
+=======
+>>>>>>> c04743e (aving of uploaded data)
 
 @RestController
 @RequestMapping("form/submission")

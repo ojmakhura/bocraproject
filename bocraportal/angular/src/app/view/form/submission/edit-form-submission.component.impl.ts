@@ -12,12 +12,13 @@ import * as FormSelectors from '@app/store/form/form.selectors';
 import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as FormSubmissionActions from '@app/store/form/submission/form-submission.actions';
 import { KeycloakService } from 'keycloak-angular';
-import { map, Observable, of, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { select } from '@ngrx/store';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import { FormArray, FormGroup } from '@angular/forms';
 =======
@@ -26,11 +27,15 @@ import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 >>>>>>> 225ceba (Multiple data submission)
+=======
+import { FormArray, FormGroup } from '@angular/forms';
+>>>>>>> c04743e (aving of uploaded data)
 import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
 import { FormEntryType } from '@app/model/bw/org/bocra/portal/form/form-entry-type';
 import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
 import { RowGroup } from '@app/model/submission/row-group';
 import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
+<<<<<<< HEAD
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -41,6 +46,8 @@ export class RowGroup {
   row: number | undefined = undefined;
   fields: DataFieldVO[] = [];
 }
+=======
+>>>>>>> c04743e (aving of uploaded data)
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -48,9 +55,11 @@ export class RowGroup {
   styleUrls: ['./edit-form-submission.component.scss'],
 })
 export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent {
+  
   protected keycloakService: KeycloakService;
   formSubmissions$: Observable<FormSubmissionVO[]>;
   forms$: Observable<FormVO[]>;
+<<<<<<< HEAD
 <<<<<<< HEAD
   fieldColumns: string[] = ['Row'];
   fieldColumnIds: string[] = ['row'];
@@ -69,6 +78,14 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     private changeDetectorRefs: ChangeDetectorRef,
     private injector: Injector
   ) {
+=======
+  fieldColumns: string[] = [];
+  fieldColumnIds: string[] = [];
+  formFields: FormFieldVO[] = [];
+  rowGroups: RowGroup[] = [];
+
+  constructor(submissionRestController: SubmissionRestControllerImpl, private injector: Injector) {
+>>>>>>> c04743e (aving of uploaded data)
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
@@ -94,6 +111,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
     this.formSubmission$.subscribe((submission) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.rowGroups = [];
       this.formFields = submission?.form?.formFields;
 
@@ -107,15 +125,29 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       submission?.form?.formFields?.forEach((field) => {
 =======
 
+=======
+      this.rowGroups = [];
+>>>>>>> c04743e (aving of uploaded data)
       this.formFields = submission?.form?.formFields;
 
+      submission?.sections?.forEach(section => {
+        section.dataFields.forEach((dataField: DataFieldVO) => {
+          this.addToRowGroup(dataField);
+        })
+      });
+
       this.setEditFormSubmissionFormValue({ formSubmission: submission });
+<<<<<<< HEAD
       submission?.form?.formFields?.forEach(field => {
 >>>>>>> 225ceba (Multiple data submission)
+=======
+      submission?.form?.formFields?.forEach((field) => {
+>>>>>>> c04743e (aving of uploaded data)
         this.fieldColumns.push(field.fieldName);
         this.fieldColumnIds.push(field.fieldId);
       });
     });
+<<<<<<< HEAD
 
 <<<<<<< HEAD
     this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
@@ -158,9 +190,11 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
 =======
 >>>>>>> 225ceba (Multiple data submission)
+=======
+>>>>>>> c04743e (aving of uploaded data)
   }
 
-  doNgOnDestroy() { }
+  doNgOnDestroy() {}
 
   /**
    * This method may be overwritten
@@ -168,9 +202,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
     let formSubmission: FormSubmissionVO = form.formSubmission;
     formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;
-    console.log(formSubmission)
-    console.log(this.formSubmissionDataFieldsControl.value)
-    //this.doFormSubmissionSave(formSubmission);
+    this.doFormSubmissionSave(formSubmission);
   }
 
   override beforeEditFormSubmissionSubmit(form: EditFormSubmissionSubmitForm): void {
@@ -324,11 +356,15 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   getFormField(fieldId: string): FormFieldVO | any {
 <<<<<<< HEAD
+<<<<<<< HEAD
     let filtered = this.formFields?.filter((field) => field.fieldId === fieldId);
 
     if (filtered?.length > 0) {
 =======
     let filtered = this.formFields.filter(field => field.fieldId === fieldId);
+=======
+    let filtered = this.formFields.filter((field) => field.fieldId === fieldId);
+>>>>>>> c04743e (aving of uploaded data)
 
     if (filtered.length > 0) {
 >>>>>>> 225ceba (Multiple data submission)
@@ -339,6 +375,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   uploadData() {
+<<<<<<< HEAD
 <<<<<<< HEAD
     this.formSubmissionDataFields.forEach((field) => {
       if (!field.formSubmission) {
@@ -353,6 +390,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 =======
 
 >>>>>>> 225ceba (Multiple data submission)
+=======
+    
+>>>>>>> c04743e (aving of uploaded data)
   }
 
   getFieldKeys(object: any): string[] {
@@ -361,6 +401,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   onFileSelected(event: any) {
     if (event) {
+<<<<<<< HEAD
 <<<<<<< HEAD
       const file: File = event.target.files[0];
       if (!file) {
@@ -373,6 +414,13 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       file.text().then(content => {
 
 >>>>>>> 225ceba (Multiple data submission)
+=======
+      const file: File = event.target.files[0];
+      if(!file) {
+        return;
+      }
+      file.text().then((content) => {
+>>>>>>> c04743e (aving of uploaded data)
         let rows: string[] = content.trim().split('\n');
         let headers: string[] = rows[0].trim().split(',');
         let dataRows: string[] = rows.splice(1);
@@ -385,6 +433,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
             continue;
           }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
           for (let j = 0; j < rowData.length; j++) {
 =======
@@ -395,11 +444,17 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
           for (let j = 0; j < rowData.length; j++) {
             //dt.addControl(headers[j], this.formBuilder.control(rowData[j]));
 >>>>>>> 225ceba (Multiple data submission)
+=======
+
+          for (let j = 0; j < rowData.length; j++) {
+            
+>>>>>>> c04743e (aving of uploaded data)
             let field: DataFieldVO = new DataFieldVO();
             field.row = i + 1;
             field.formField = this.getFormField(headers[j]);
             field.value = rowData[j];
             field.formSubmission = <FormSubmissionVO>{
+<<<<<<< HEAD
 <<<<<<< HEAD
               id: this.formSubmissionId,
             };
@@ -551,69 +606,58 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     return `${dataField.row}_${dataField.formField.fieldId}`;
 =======
               id: this.formSubmissionId
+=======
+              id: this.formSubmissionId,
+>>>>>>> c04743e (aving of uploaded data)
             };
-            
-            let filteredGroups: RowGroup[] = this.rowGroups.filter(fd => fd.row === field.row);
-            let group: RowGroup | undefined = undefined
 
-            if (!filteredGroups || (filteredGroups && filteredGroups.length == 0)) {
-              group = new RowGroup();
-              group.row = field.row;
-              this.rowGroups.push(group);
-            } else {
-              group = filteredGroups[0];
-            }
-
-            group.fields.push(field);
-            this.formSubmissionDataFieldsControl.push(this.createDataFieldVOGroup(field));
+            this.submissionRestController.addDataField(field).subscribe(dataField => {
+              
+              this.addToRowGroup(dataField);
+            })
           }
-
-          //this.dataFieldsControl.push(dt);
-
         }
       });
-
     }
   }
 
-  getRowDataFields(row: any): DataFieldVO[] {
+  addToRowGroup(dataField: DataFieldVO) {
+    let filteredGroups: RowGroup[] = this.rowGroups.filter((fd) => fd.row === dataField.row);
+    let group: RowGroup | undefined = undefined;
 
-    let keys = Object.keys(row).filter(key => key !== 'row'); // no need to get the 'row'
-    let fields: DataFieldVO[] = [];
-    keys.forEach(key => {
-      let field: DataFieldVO = new DataFieldVO();
-      field.row = row.row;
-      field.id = row.id;
-    });
-
-    return [];
+    if (!filteredGroups || (filteredGroups && filteredGroups.length == 0)) {
+      group = new RowGroup();
+      group.row = dataField.row;
+      this.rowGroups.push(group);
+      
+    } else {
+      group = filteredGroups[0];
+    }
+    
+    group.fields.push(dataField);
+    this.formSubmissionDataFieldsControl.push(this.createDataFieldVOGroup(dataField));
   }
 
-  get groupedDataFields(): RowGroup[] {
-    let groups: RowGroup[] = [];
+  deleteDataRow(row: number, group: RowGroup) {
+    
+    this.rowGroups.splice(row, 1); // remove from the row group array
 
-    this.formSubmissionDataFieldsControl.value.forEach((dataField: any) => {
-      let filteredGroups: RowGroup[] = groups.filter(field => field.row === dataField.row);
-      let group: RowGroup | undefined = undefined
-
-      if (!filteredGroups || (filteredGroups && filteredGroups.length == 0)) {
-        group = new RowGroup();
-        group.row = dataField.row;
-        groups.push(group);
-      } else {
-        group = filteredGroups[0];
-      }
-
-      group.fields.push(dataField);
-
+    // remove from the form submissionb
+    group.fields.forEach(field => {
+      const index = this.formSubmissionDataFields.findIndex(fd => (fd.row === field.row && fd.formField.id === field.formField.id));
+      this.formSubmissionDataFieldsControl.removeAt(index);
     });
 
-    return this.rowGroups;
   }
 
+<<<<<<< HEAD
   getColumnData(row: number, columnId: string) {
     console.log(row, columnId);
     return 'val'
 >>>>>>> 225ceba (Multiple data submission)
+=======
+  doEditDataRow(row: number, group: RowGroup) {
+
+>>>>>>> c04743e (aving of uploaded data)
   }
 }

@@ -2,9 +2,15 @@
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
+<<<<<<< HEAD
 import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
+=======
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
+import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
+>>>>>>> c04743e (aving of uploaded data)
 
 @Injectable()
 export class SubmissionRestControllerImpl extends SubmissionRestController {
@@ -25,12 +31,15 @@ export class SubmissionRestControllerImpl extends SubmissionRestController {
 
     }
 
+<<<<<<< HEAD
     public override deleteDataField(id: number | any ): Observable<Boolean | any> {
 
         return this.http.delete<Boolean | any>(this.path + `/field?id=${id}`);
 
     }
 
+=======
+>>>>>>> c04743e (aving of uploaded data)
     public override findById(id: number | any ): Observable<FormSubmissionVO | any> {
 
         return this.http.get<FormSubmissionVO | any>(this.path + `/${id}`);

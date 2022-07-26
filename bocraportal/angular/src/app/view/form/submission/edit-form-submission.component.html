@@ -44,6 +44,7 @@
 					<button type="button" (click)="formSubmissionFormClear()" class="btn btn-primary">
 						<mat-icon>clear</mat-icon>
 					</button>
+<<<<<<< HEAD
 				</div> -->
 			<!-- <div class="row mb-3">
 					<label for="formSubmissionFormId" class="col-sm-2 col-form-label" translate>id</label>
@@ -63,6 +64,26 @@
 				<input type="text" class="form-control" id="formSubmissionFormFormName"
 				  value="{{ formSubmissionForm?.formName }}" disabled />
 			  </div>
+=======
+					<button type="button" color="accent" (click)="editFormSubmissionSearch()" class="btn btn-info">
+						<span translate>search</span>
+					</button>
+					<button type="button" color="accent" (click)="editFormSubmissionNote()" class="btn btn-info">
+						<span translate>note</span>
+					</button>
+					<button type="button" color="accent" (click)="editFormSubmissionSubmit()" class="btn btn-info">
+						<span translate>submit</span>
+					</button>
+					<button color="accent" type="button" (click)="editFormSubmissionFormReset()" class="btn btn-info">
+						<span translate>reset</span>
+					</button>
+				</div>
+			</section>
+			<div *ngIf="success | async" class="alert alert-success" role="alert">
+				<div *ngFor="let message of messages | async">
+					{{ message }}
+				</div>
+>>>>>>> c04743e (aving of uploaded data)
 			</div>
 			<div *ngIf="
 				editFormSubmissionForm.invalid &&
@@ -77,35 +98,38 @@
 				<fieldset class="mb-3" formGroupName="form">
 					<!-- <legend id="formSubmissionForm_label" class="col-sm-2 col-form-label" for="formSubmissionForm"><span translate>form</span>*</legend> -->
 					<!-- <div class="col my-3 view-buttons">
-				<button type="button" (click)="formSubmissionFormAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formSubmissionFormModal">
-					<mat-icon>add_box</mat-icon>
-				</button>
-				<button type="button" (click)="formSubmissionFormClear()" class="btn btn-primary">
-					<mat-icon>clear</mat-icon>
-				</button>
-			</div> -->
+				  <button type="button" (click)="formSubmissionFormAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formSubmissionFormModal">
+					  <mat-icon>add_box</mat-icon>
+				  </button>
+				  <button type="button" (click)="formSubmissionFormClear()" class="btn btn-primary">
+					  <mat-icon>clear</mat-icon>
+				  </button>
+			  </div> -->
 					<!-- <div class="row mb-3">
-				<label for="formSubmissionFormId" class="col-sm-2 col-form-label" translate>id</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="formSubmissionFormId" value="{{formSubmissionForm?.id}}" disabled>
-				</div>
-			</div> -->
+				  <label for="formSubmissionFormId" class="col-sm-2 col-form-label" translate>id</label>
+				  <div class="col-sm-10">
+					  <input type="text" class="form-control" id="formSubmissionFormId" value="{{formSubmissionForm?.id}}" disabled>
+				  </div>
+			  </div> -->
 					<!-- <div class="row mb-3">
-				<label for="formSubmissionFormCode" class="col-sm-2 col-form-label" translate>code</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="formSubmissionFormCode" value="{{formSubmissionForm?.code}}" disabled>
-				</div>
-			</div> -->
+				  <label for="formSubmissionFormCode" class="col-sm-2 col-form-label" translate>code</label>
+				  <div class="col-sm-10">
+					  <input type="text" class="form-control" id="formSubmissionFormCode" value="{{formSubmissionForm?.code}}" disabled>
+				  </div>
+			  </div> -->
 					<div class="row mb-3">
 						<label for="formSubmissionFormFormName" class="col-sm-2 col-form-label"
 							translate>form.name</label>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="formSubmissionFormFormName"
-								value="{{formSubmissionForm?.formName}}" disabled>
+								value="{{ formSubmissionForm?.formName }}" disabled />
 						</div>
 					</div>
-					<div *ngIf="editFormSubmissionForm.invalid && formSubmissionFormControl.invalid && (formSubmissionFormControl.dirty || formSubmissionFormControl.touched)"
-						class="alert alert-danger" role="alert">
+					<div *ngIf="
+				editFormSubmissionForm.invalid &&
+				formSubmissionFormControl.invalid &&
+				(formSubmissionFormControl.dirty || formSubmissionFormControl.touched)
+			  " class="alert alert-danger" role="alert">
 						<div *ngIf="formSubmissionFormControl.errors['required']">
 							<span translate>form.required</span>
 						</div>
@@ -113,20 +137,20 @@
 				</fieldset>
 				<fieldset class="mb-3" formGroupName="period">
 					<!-- <legend id="formSubmissionPeriod_label" class="col-sm-2 col-form-label" for="formSubmissionPeriod"><span translate>period</span>*</legend>
-				    <div class="col my-3 view-buttons"  *ngIf="!formSubmissionId">
-				        <button type="button" (click)="formSubmissionPeriodAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formSubmissionPeriodModal">
-				            <mat-icon>add_box</mat-icon>
-				        </button>
-				        <button type="button" (click)="formSubmissionPeriodClear()" class="btn btn-primary">
-				            <mat-icon>clear</mat-icon>
-				        </button>
-				    </div> -->
+					  <div class="col my-3 view-buttons"  *ngIf="!formSubmissionId">
+						  <button type="button" (click)="formSubmissionPeriodAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formSubmissionPeriodModal">
+							  <mat-icon>add_box</mat-icon>
+						  </button>
+						  <button type="button" (click)="formSubmissionPeriodClear()" class="btn btn-primary">
+							  <mat-icon>clear</mat-icon>
+						  </button>
+					  </div> -->
 					<!-- <div class="row mb-3">
-				        <label for="formSubmissionPeriodId" class="col-sm-2 col-form-label" translate>id</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="formSubmissionPeriodId" value="{{formSubmissionPeriod?.id}}" disabled>
-				        </div>
-				    </div> -->
+						  <label for="formSubmissionPeriodId" class="col-sm-2 col-form-label" translate>id</label>
+						  <div class="col-sm-10">
+							  <input type="text" class="form-control" id="formSubmissionPeriodId" value="{{formSubmissionPeriod?.id}}" disabled>
+						  </div>
+					  </div> -->
 					<div class="row mb-3">
 						<label for="formSubmissionPeriodPeriodName" class="col-sm-2 col-form-label"
 							translate>period.name</label>
@@ -136,45 +160,45 @@
 						</div>
 					</div>
 					<!-- <div class="row mb-3">
-				        <label for="formSubmissionPeriodPeriodStart" class="col-sm-2 col-form-label" translate>period.start</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="formSubmissionPeriodPeriodStart" value="{{formSubmissionPeriod?.periodStart}}" disabled>
-				        </div>
-				    </div> -->
+						  <label for="formSubmissionPeriodPeriodStart" class="col-sm-2 col-form-label" translate>period.start</label>
+						  <div class="col-sm-10">
+							  <input type="text" class="form-control" id="formSubmissionPeriodPeriodStart" value="{{formSubmissionPeriod?.periodStart}}" disabled>
+						  </div>
+					  </div> -->
 					<!-- <div class="row mb-3">
-				        <label for="formSubmissionPeriodPeriodEnd" class="col-sm-2 col-form-label" translate>period.end</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="formSubmissionPeriodPeriodEnd" value="{{formSubmissionPeriod?.periodEnd}}" disabled>
-				        </div>
-				    </div> -->
+						  <label for="formSubmissionPeriodPeriodEnd" class="col-sm-2 col-form-label" translate>period.end</label>
+						  <div class="col-sm-10">
+							  <input type="text" class="form-control" id="formSubmissionPeriodPeriodEnd" value="{{formSubmissionPeriod?.periodEnd}}" disabled>
+						  </div>
+					  </div> -->
 					<!-- <div *ngIf="editFormSubmissionForm.invalid && formSubmissionPeriodControl.invalid && (formSubmissionPeriodControl.dirty || formSubmissionPeriodControl.touched)" class="alert alert-danger" role="alert">
-				        <div *ngIf="formSubmissionPeriodControl.errors['required']">
-				            <span translate>period.required</span>
-				        </div>
-				    </div> -->
+						  <div *ngIf="formSubmissionPeriodControl.errors['required']">
+							  <span translate>period.required</span>
+						  </div>
+					  </div> -->
 				</fieldset>
 				<fieldset class="mb-3" formGroupName="licensee">
 					<!-- <legend id="formSubmissionLicensee_label" class="col-sm-2 col-form-label" for="formSubmissionLicensee"><span translate>licensee</span>*</legend> -->
 					<!-- <div class="col my-3 view-buttons">
-				        <button type="button" (click)="formSubmissionLicenseeAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formSubmissionLicenseeModal">
-				            <mat-icon>add_box</mat-icon>
-				        </button>
-				        <button type="button" (click)="formSubmissionLicenseeClear()" class="btn btn-primary">
-				            <mat-icon>clear</mat-icon>
-				        </button>
-				    </div> -->
+						  <button type="button" (click)="formSubmissionLicenseeAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formSubmissionLicenseeModal">
+							  <mat-icon>add_box</mat-icon>
+						  </button>
+						  <button type="button" (click)="formSubmissionLicenseeClear()" class="btn btn-primary">
+							  <mat-icon>clear</mat-icon>
+						  </button>
+					  </div> -->
 					<!-- <div class="row mb-3">
-				        <label for="formSubmissionLicenseeId" class="col-sm-2 col-form-label" translate>id</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="formSubmissionLicenseeId" value="{{formSubmissionLicensee?.id}}" disabled>
-				        </div>
-				    </div> -->
+						  <label for="formSubmissionLicenseeId" class="col-sm-2 col-form-label" translate>id</label>
+						  <div class="col-sm-10">
+							  <input type="text" class="form-control" id="formSubmissionLicenseeId" value="{{formSubmissionLicensee?.id}}" disabled>
+						  </div>
+					  </div> -->
 					<!-- <div class="row mb-3">
-				        <label for="formSubmissionLicenseeUin" class="col-sm-2 col-form-label" translate>uin</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="formSubmissionLicenseeUin" value="{{formSubmissionLicensee?.uin}}" disabled>
-				        </div>
-				    </div> -->
+						  <label for="formSubmissionLicenseeUin" class="col-sm-2 col-form-label" translate>uin</label>
+						  <div class="col-sm-10">
+							  <input type="text" class="form-control" id="formSubmissionLicenseeUin" value="{{formSubmissionLicensee?.uin}}" disabled>
+						  </div>
+					  </div> -->
 					<div class="row mb-3">
 						<label for="formSubmissionLicenseeLicenseeName" class="col-sm-2 col-form-label"
 							translate>licensee.name</label>
@@ -184,10 +208,10 @@
 						</div>
 					</div>
 					<!-- <div *ngIf="editFormSubmissionForm.invalid && formSubmissionLicenseeControl.invalid && (formSubmissionLicenseeControl.dirty || formSubmissionLicenseeControl.touched)" class="alert alert-danger" role="alert">
-				        <div *ngIf="formSubmissionLicenseeControl.errors['required']">
-				            <span translate>licensee.required</span>
-				        </div>
-				    </div> -->
+						  <div *ngIf="formSubmissionLicenseeControl.errors['required']">
+							  <span translate>licensee.required</span>
+						  </div>
+					  </div> -->
 				</fieldset>
 				<div formArrayName="sections" *ngIf="isSingleEntry(); else isMultipleEntry">
 					<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index"
@@ -198,7 +222,7 @@
 							</span>
 						</div>
 						<div formArrayName="dataFields">
-							<div *ngFor="let dataField of getSectorFields(i); let j = index; trackBy:trackByFn"
+							<div *ngFor="let dataField of getSectorFields(i); let j = index; trackBy: trackByFn"
 								[formGroupName]="j">
 								<div class="mb-3" *ngIf="isButton(dataField)">
 									<input type="button" class="btn btn-primary"
@@ -229,70 +253,45 @@
 					<div class="mb-3">
 						<label id="formSubmissionUpload_label" class="col-sm-2 col-form-label"
 							for="formSubmissionUpload"><span translate>upload</span></label>
-						<input type="file" id="formSubmissionUpload" class="form-control" formControlName="upload"
-							#upload (change)="onFileSelected($event)" />
-
-						<button type="button" class="btn btn-primary" (click)="uploadData()">
-							<mat-icon>upload</mat-icon>
-						</button>
+						<input type="file" id="formSubmissionUpload" class="form-control"
+							(change)="onFileSelected($event)" />
 					</div>
-					<div>
+					<div *ngIf="false">
 						<button type="button" class="btn btn-primary">
 							<mat-icon>add_box</mat-icon>
 						</button>
 					</div>
-					<table class="table">
+					<table class="table table-stripped" *ngIf="rowGroups.length > 0">
 						<thead>
 							<tr>
-								<th scope="col" *ngFor="let columnId of fieldColumnIds; let x = index;">
-									{{fieldColumns[x]}}
+								<th scope="col" translate>Row</th>
+								<th scope="col" *ngFor="let columnId of fieldColumnIds; let x = index">
+									{{ fieldColumns[x] }}
 								</th>
+								<th scope="col" translate>actions</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngFor="let group of rowGroups; let x = index;">
+							<tr *ngFor="let group of rowGroups; let x = index">
 								<td>
-									{{group.row}}
+									{{ group.row }}
 								</td>
 								<td *ngFor="let field of group.fields">
 									{{ field.value }}
 								</td>
+								<td>
+									<button type="button" color="accent" (click)="deleteDataRow(x, group)"
+										class="btn btn-info">
+										<mat-icon>delete</mat-icon>
+									</button>
+									<button type="button" color="accent" (click)="doEditDataRow(x, group)"
+										class="btn btn-info">
+										<mat-icon>edit</mat-icon>
+									</button>
+								</td>
 							</tr>
 						</tbody>
 					</table>
-					<table mat-table [dataSource]="groupedDataFields" class="table table-bordered table-striped" style="width: 100%">
-
-						<ng-container *ngFor="let disCol of fieldColumnIds; let colIndex = index"
-							matColumnDef="{{disCol}}">
-							<th mat-header-cell *matHeaderCellDef>{{disCol}}</th>
-							<td mat-cell *matCellDef="let element">{{getColumnData(colIndex, disCol)}}</td>
-						</ng-container>
-
-
-						<tr mat-header-row *matHeaderRowDef="fieldColumnIds"></tr>
-						<tr mat-row *matRowDef="let row; columns: fieldColumnIds"></tr>
-					</table>
-
-					<!-- <mat-table matSort [dataSource]="groupedDataFields" #formFieldsSort="matSort"
-						class="table table-bordered table-striped" style="width: 100%">
-						
-						<div *ngFor="let group of groupedDataFields; let x = index;">
-							<ng-container matColumnDef="row">
-								<mat-header-cell *matHeaderCellDef translate>Row</mat-header-cell>
-								<mat-cell *matCellDef="let row"> {{ row?.row }} </mat-cell>
-							</ng-container>
-							<ng-container *ngFor="let field of group.fields; let i = index;" matColumnDef="{{field?.formField?.fieldId}}">
-								<mat-header-cell *matHeaderCellDef translate>{{field.formField.fieldId}}</mat-header-cell>
-								<mat-cell *matCellDef="let row"> {{ row?.value }} </mat-cell>
-							</ng-container>							
-						</div>
-						<mat-header-row *matHeaderRowDef="fieldColumnIds"></mat-header-row>
-						<mat-row *matRowDef="let row; columns: fieldColumnIds"></mat-row>
-					</mat-table>
-					<mat-paginator #formFormFieldsPaginator="matPaginator" [pageSize]="10"
-						[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons>
-					</mat-paginator> -->
-
 
 				</ng-template>
 				<div class="mb-3">
@@ -300,10 +299,11 @@
 						for="formSubmissionSubmissionStatus"><span translate>submission.status</span>*</label>
 					<input type="text" id="formSubmissionSubmissionStatus" class="form-control" name="submissionStatus"
 						formControlName="submissionStatus" required />
-					<div *ngIf="editFormSubmissionForm.invalid &&
-              				formSubmissionSubmissionStatusControl.invalid &&
-							(formSubmissionSubmissionStatusControl.dirty || formSubmissionSubmissionStatusControl.touched)"
-						class="alert alert-danger" role="alert">
+					<div *ngIf="
+				editFormSubmissionForm.invalid &&
+				formSubmissionSubmissionStatusControl.invalid &&
+				(formSubmissionSubmissionStatusControl.dirty || formSubmissionSubmissionStatusControl.touched)
+			  " class="alert alert-danger" role="alert">
 						<div *ngIf="formSubmissionSubmissionStatusControl.errors['required']">
 							<span translate>submission.status.required</span>
 						</div>
@@ -311,9 +311,9 @@
 				</div>
 
 				<!-- <fieldset class="mb-3" formGroupName="notes">
-				    <legend id="formSubmissionNotes_label" class="col-sm-2 col-form-label" for="formSubmissionNotes"><span translate>notes</span></legend>
-				    <input type="text" id="formSubmissionNotes" class="form-control" name="notes" formControlName="id"/>
-				</fieldset> -->
+					  <legend id="formSubmissionNotes_label" class="col-sm-2 col-form-label" for="formSubmissionNotes"><span translate>notes</span></legend>
+					  <input type="text" id="formSubmissionNotes" class="form-control" name="notes" formControlName="id"/>
+				  </fieldset> -->
 			</div>
 			<!-- <div class="row mb-3">
 							<label for="formSubmissionPeriodPeriodStart" class="col-sm-2 col-form-label" translate>period.start</label>
@@ -760,4 +760,8 @@
 			</div>
 		</div>
 	</div>
+<<<<<<< HEAD
 >>>>>>> 08d11ce (Table renderinf for data fields in form submission)
+=======
+</div>
+>>>>>>> c04743e (aving of uploaded data)
