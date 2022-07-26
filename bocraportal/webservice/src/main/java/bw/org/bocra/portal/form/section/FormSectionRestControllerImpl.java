@@ -6,6 +6,8 @@
 package bw.org.bocra.portal.form.section;
 
 import bw.org.bocra.portal.form.FormVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.Collection;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/form/section")
+@Tag(name = "Form Section", description = "Managing form sections.")
 public class FormSectionRestControllerImpl extends FormSectionRestControllerBase {
 
     public FormSectionRestControllerImpl(FormSectionService formSectionService) {

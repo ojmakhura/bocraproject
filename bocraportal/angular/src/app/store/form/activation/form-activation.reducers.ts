@@ -21,7 +21,8 @@ export const formActivationReducer = createReducer(
     })),
     on(FormActivationActions.removeSuccess, (state, action) => ({
         ...state,
-        removed: action.removed, 
+        removed: action.removed,
+        formActivation: null,
         loading: false,
         success: action.success,
         messages: action.messages

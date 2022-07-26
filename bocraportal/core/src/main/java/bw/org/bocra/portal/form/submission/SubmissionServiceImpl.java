@@ -10,6 +10,7 @@ package bw.org.bocra.portal.form.submission;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -160,6 +161,30 @@ public class SubmissionServiceImpl
             throws Exception {
 
         return toSubmissionVOCollection((Collection<FormSubmission>) getFormSubmissionDao().loadAll(pageNumber, pageSize));
+    }
+
+    @Override
+    protected DataFieldVO handleAddDataField(DataFieldVO dataField) throws Exception {
+        DataField field = getDataFieldDao().dataFieldVOToEntity(dataField);
+        return (DataFieldVO) dataFieldDao.create(DataFieldDao.TRANSFORM_DATAFIELDVO, field);
+    }
+
+    @Override
+    protected Collection<DataFieldVO> handleAddDataFields(Set<DataFieldVO> dataFields) throws Exception {
+        
+        Collection<DataFieldVO> fields = new ArrayList<>();
+
+        for(DataFieldVO field : dataFields) {
+            fields.add(this.addDataField(field));
+        }
+
+        return null;
+    }
+
+    @Override
+    protected Boolean handleDeleteDataField(Long id) throws Exception {
+        getDataFieldDao().remove(id);
+        return true;
     }
 
 }

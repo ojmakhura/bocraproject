@@ -9,24 +9,23 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
-@RequestMapping("authorisation")
+@RequestMapping("/authorisation")
+@Tag(name = "Authorisation", description = "Managing the access authorisations.")
 @CrossOrigin()
 public class AuthorisationRestControllerImpl extends AuthorisationRestControllerBase {
 
     public AuthorisationRestControllerImpl(AuthorisationService authorisationService) {
         super(authorisationService);
     }
-
-    protected static Logger log = LoggerFactory.getLogger(AuthorisationRestController.class);
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
@@ -159,6 +158,48 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles, Set<String> accessPointTypeCode) {
         try {
             Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.getAccessTypeCodeAuthorisations(roles, accessPointTypeCode)); // TODO: Add custom code here;
+            ResponseEntity<Collection<AuthorisationVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleAssignMenuSection(Long authorisationId, Long menuSectionId) {
+        try {
+            Optional<AuthorisationVO> data = Optional.of(authorisationService.assignMenuSection(authorisationId, menuSectionId));
+            ResponseEntity<AuthorisationVO> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByRolesAndUrl(String url, Set<String> roles) {
+        try {
+            Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.findByRolesAndUrl(url, roles));
             ResponseEntity<Collection<AuthorisationVO>> response;
     
             if(data.isPresent()) {

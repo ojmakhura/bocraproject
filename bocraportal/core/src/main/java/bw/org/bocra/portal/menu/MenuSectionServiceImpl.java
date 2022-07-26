@@ -10,9 +10,16 @@ package bw.org.bocra.portal.menu;
 
 import bw.org.bocra.portal.auth.AuthorisationDao;
 import bw.org.bocra.portal.auth.AuthorisationRepository;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,8 +56,10 @@ public class MenuSectionServiceImpl
     protected MenuSectionVO handleSave(MenuSectionVO menuSection)
         throws Exception
     {
-        // TODO implement protected  MenuSectionVO handleSave(MenuSectionVO menuSection)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.menu.MenuSectionService.handleSave(MenuSectionVO menuSection) Not implemented!");
+        MenuSection section = getMenuSectionDao().menuSectionVOToEntity(menuSection);
+        section = getMenuSectionRepository().save(section);
+
+        return getMenuSectionDao().toMenuSectionVO(section);
     }
 
     /**
@@ -60,8 +69,7 @@ public class MenuSectionServiceImpl
     protected Collection<MenuSectionVO> handleGetAll(Integer pageNumber, Integer pageSize)
         throws Exception
     {
-        // TODO implement protected  Collection<MenuSectionVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.menu.MenuSectionService.handleGetAll(Integer pageNumber, Integer pageSize) Not implemented!");
+        return (Collection<MenuSectionVO>) menuSectionDao.loadAll(MenuSectionDao.TRANSFORM_MENUSECTIONVO, pageNumber, pageSize);
     }
 
     /**
@@ -71,8 +79,9 @@ public class MenuSectionServiceImpl
     protected boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.menu.MenuSectionService.handleRemove(Long id) Not implemented!");
+        menuSectionRepository.deleteById(id);
+
+        return true;
     }
 
     /**
@@ -82,8 +91,8 @@ public class MenuSectionServiceImpl
     protected Collection<MenuSectionVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<MenuSectionVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.menu.MenuSectionService.handleGetAll() Not implemented!");
+
+        return getValueObjectCollections(menuSectionDao.loadAll());
     }
 
     /**
@@ -93,8 +102,16 @@ public class MenuSectionServiceImpl
     protected Collection<MenuSectionVO> handleSearch(String criteria)
         throws Exception
     {
-        // TODO implement protected  Collection<MenuSectionVO> handleSearch(String criteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.menu.MenuSectionService.handleSearch(String criteria) Not implemented!");
+        Specification<MenuSection> spec = null;
+
+        if(StringUtils.isNotBlank(criteria)) {
+            spec = MenuSectionSpecifications.findByDisplayIdContainingIgnoreCase(criteria)
+                    .or(MenuSectionSpecifications.findByDisplayNameContainingIgnoreCase(criteria));
+        }
+
+        Collection<MenuSection> sections = getMenuSectionRepository().findAll(spec, Sort.by(Direction.ASC, "position"));
+
+        return getValueObjectCollections(sections);
     }
 
     /**
@@ -104,14 +121,25 @@ public class MenuSectionServiceImpl
     protected MenuSectionVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  MenuSectionVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.menu.MenuSectionService.handleFindById(Long id) Not implemented!");
+        MenuSection section = menuSectionDao.get(id);
+        return getMenuSectionDao().toMenuSectionVO(section);
     }
 
     @Override
     protected Collection<MenuSectionVO> handleFindByAuthorisationRoles(Set<String> roles) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        
+        Collection<MenuSection> sections = menuSectionRepository.findByAutorisationRoles(roles);
+        return getValueObjectCollections(sections);
+    }
+
+    private Collection<MenuSectionVO> getValueObjectCollections(Collection<MenuSection> sections) {
+        Collection<MenuSectionVO> vos = new ArrayList<>();
+
+        for(MenuSection section : sections) {
+            vos.add(getMenuSectionDao().toMenuSectionVO(section));
+        }
+
+        return vos;
     }
 
 }

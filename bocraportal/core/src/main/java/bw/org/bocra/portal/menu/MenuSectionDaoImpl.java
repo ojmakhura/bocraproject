@@ -6,6 +6,7 @@
  */
 package bw.org.bocra.portal.menu;
 
+import bw.org.bocra.portal.access.AccessPointVO;
 import bw.org.bocra.portal.auth.Authorisation;
 import bw.org.bocra.portal.auth.AuthorisationRepository;
 import bw.org.bocra.portal.auth.AuthorisationVO;
@@ -47,7 +48,19 @@ public class MenuSectionDaoImpl
         target.setAuthorisations(new HashSet<>());
         for(Authorisation auth : source.getAuthorisations()) {
             AuthorisationVO vo = new AuthorisationVO();
-            authorisationDao.toAuthorisationVO(auth, vo);
+            vo.setId(auth.getId());
+            vo.setCreatedBy(auth.getCreatedBy());
+            vo.setCreatedDate(auth.getCreatedDate());
+            vo.setUpdatedBy(auth.getUpdatedBy());
+            vo.setUpdatedDate(auth.getUpdatedDate());
+
+            AccessPointVO point = new AccessPointVO();
+            point.setId(auth.getAccessPoint().getId());
+            point.setName(auth.getAccessPoint().getName());
+            point.setUrl(auth.getAccessPoint().getUrl());
+
+            vo.setAccessPoint(point);
+
             target.getAuthorisations().add(vo);
         }
     }

@@ -84,7 +84,6 @@ export class EditUserComponentImpl extends EditUserComponent {
    * This method may be overwritten
    */
   override beforeEditUserSave(form: EditUserSaveForm): void {
-    console.log(form.user);
     this.store.dispatch(
       UserActions.createUser({
         user: form.user,

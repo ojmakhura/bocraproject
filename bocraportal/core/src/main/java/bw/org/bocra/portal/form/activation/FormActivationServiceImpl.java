@@ -45,25 +45,23 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.domain.Specification;
 
-
 /**
  * @see bw.org.bocra.portal.form.activation.FormActivationService
  */
 @Service("formActivationService")
-@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class FormActivationServiceImpl
-    extends FormActivationServiceBase
-{
-    
+        extends FormActivationServiceBase {
 
     public FormActivationServiceImpl(FormActivationDao formActivationDao,
             FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository,
             FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
             DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
 
-        super(formActivationDao, formActivationRepository, formDao, formRepository, formSubmissionDao, formSubmissionRepository,
+        super(formActivationDao, formActivationRepository, formDao, formRepository, formSubmissionDao,
+                formSubmissionRepository,
                 dataFieldDao, dataFieldRepository, messageSource);
-        //TODO Auto-generated constructor stub
+        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -71,13 +69,12 @@ public class FormActivationServiceImpl
      */
     @Override
     protected FormActivationVO handleFindById(Long id)
-        throws Exception
-    {
+            throws Exception {
         FormActivation act = getFormActivationDao().load(id);
         FormActivationVO activation = getFormActivationDao().toFormActivationVO(act);
         activation.setFormSubmissions(new ArrayList<>());
-        
-        for(FormSubmission submission : act.getFormSubmissions()) {
+
+        for (FormSubmission submission : act.getFormSubmissions()) {
             FormSubmissionVO vo = new FormSubmissionVO();
             vo.setId(submission.getId());
             vo.setSubmittedBy(submission.getSubmittedBy());
@@ -108,7 +105,7 @@ public class FormActivationServiceImpl
 
             activation.getFormSubmissions().add(vo);
         }
-        
+
         return activation;
     }
 
@@ -117,58 +114,62 @@ public class FormActivationServiceImpl
      */
     @Override
     protected FormActivationVO handleSave(FormActivationVO formActivation)
-        throws Exception
-    {
+            throws Exception {
 
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
         activation = formActivationRepository.save(activation);
 
         /**
-         * The form activations is a new one so we need to 
-         * create form submissions for all the licensees 
+         * The form activations is a new one so we need to
+         * create form submissions for all the licensees
          * associated with the form.
          */
-        if(formActivation.getId() == null) {
+        if (formActivation.getId() == null) {
             Set<Licensee> licensees = new HashSet<>();
             Form form = activation.getForm();
-            
-            for(LicenseeForm licensee : form.getLicenseeForms()) {
+
+            for (LicenseeForm licensee : form.getLicenseeForms()) {
                 licensees.add(licensee.getLicensee());
             }
-            
+
             // for(LicenceTypeForm ltf : form.getLicenceTypeForms()) {
-            //     LicenceType lt = ltf.getLicenceType();
-            //     for(Licensee licensee : lt.get)
+            // LicenceType lt = ltf.getLicenceType();
+            // for(Licensee licensee : lt.get)
             // }
 
             formActivation = formActivationDao.toFormActivationVO(activation);
             formActivation.setFormSubmissions(new ArrayList<>());
 
-            if(form.getEntryType() == FormEntryType.SINGLE) {
-                for(Licensee licensee : licensees) {
-                    FormSubmission submission = FormSubmission.Factory.newInstance();
-                    submission.setCreatedBy(activation.getCreatedBy());
-                    submission.setCreatedDate(LocalDateTime.now());
-                    submission.setForm(form);
-                    submission.setLicensee(licensee);
-                    submission.setFormActivation(activation);
-                    submission.setPeriod(activation.getPeriod());
-                    submission.setSubmissionStatus(FormSubmissionStatus.NEW.getValue());
+            for (Licensee licensee : licensees) {
+                FormSubmission submission = FormSubmission.Factory.newInstance();
+                submission.setCreatedBy(activation.getCreatedBy());
+                submission.setCreatedDate(LocalDateTime.now());
+                submission.setForm(form);
+                submission.setLicensee(licensee);
+                submission.setFormActivation(activation);
+                submission.setPeriod(activation.getPeriod());
+                submission.setSubmissionStatus(FormSubmissionStatus.NEW.getValue());
 
-                    submission = getFormSubmissionDao().create(submission);
-    
-                    for(FormField field : form.getFormFields()) {
+                submission = getFormSubmissionDao().create(submission);
+
+                /**
+                 * If the for requires single entry, the we create the data fields
+                 */
+                if (form.getEntryType() == FormEntryType.SINGLE) {
+                    for (FormField field : form.getFormFields()) {
                         DataField dataField = DataField.Factory.newInstance();
                         dataField.setFormSubmission(submission);
                         dataField.setFormField(field);
+                        dataField.setValue(field.getDefaultValue());
+                        dataField.setRow(0);
 
                         dataField = getDataFieldDao().create(dataField);
                     }
-
-                    FormSubmissionVO vo = new FormSubmissionVO();
-                    getFormSubmissionDao().toFormSubmissionVO(submission, vo);
-                    formActivation.getFormSubmissions().add(vo);
                 }
+
+                FormSubmissionVO vo = new FormSubmissionVO();
+                getFormSubmissionDao().toFormSubmissionVO(submission, vo);
+                formActivation.getFormSubmissions().add(vo);
             }
 
         }
@@ -181,8 +182,7 @@ public class FormActivationServiceImpl
      */
     @Override
     protected boolean handleRemove(Long id)
-        throws Exception
-    {
+            throws Exception {
         formActivationDao.remove(id);
         return true;
     }
@@ -192,8 +192,7 @@ public class FormActivationServiceImpl
      */
     @Override
     protected Collection<FormActivationVO> handleGetAll()
-        throws Exception
-    {
+            throws Exception {
         return (Collection<FormActivationVO>) formActivationDao.loadAll(FormActivationDao.TRANSFORM_FORMACTIVATIONVO);
     }
 
@@ -202,12 +201,11 @@ public class FormActivationServiceImpl
      */
     @Override
     protected Collection<FormActivationVO> handleSearch(FormActivationCriteria criteria)
-        throws Exception
-    {
+            throws Exception {
         Collection<FormActivation> activations = getFormActivationDao().findByCriteria(criteria);
         List<FormActivationVO> vos = new ArrayList<>();
 
-        for(FormActivation activation : activations) {
+        for (FormActivation activation : activations) {
             vos.add(getFormActivationDao().toFormActivationVO(activation));
         }
 
@@ -215,13 +213,14 @@ public class FormActivationServiceImpl
     }
 
     /**
-     * @see bw.org.bocra.portal.form.activation.FormActivationService#getAll(Integer, Integer)
+     * @see bw.org.bocra.portal.form.activation.FormActivationService#getAll(Integer,
+     *      Integer)
      */
     @Override
     protected Collection<FormActivationVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throws Exception
-    {
-        return (Collection<FormActivationVO>) getFormActivationDao().loadAll(FormActivationDao.TRANSFORM_FORMACTIVATIONVO, pageNumber, pageSize);
+            throws Exception {
+        return (Collection<FormActivationVO>) getFormActivationDao()
+                .loadAll(FormActivationDao.TRANSFORM_FORMACTIVATIONVO, pageNumber, pageSize);
     }
 
 }
