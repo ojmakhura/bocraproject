@@ -21,7 +21,6 @@ import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.licence.LicenceVO;
-import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.shares.ShareholderVO;
 import bw.org.bocra.portal.report.ReportVO;
@@ -29,9 +28,11 @@ import bw.org.bocra.portal.report.config.ReportConfigVO;
 import bw.org.bocra.portal.sector.SectorVO;
 import bw.org.bocra.portal.user.LicenseeUserService;
 import bw.org.bocra.portal.user.UserVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/licensee")
+@Tag(name = "Licensee", description = "Managing licensees.")
 public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
     private final KeycloakUserService keycloakUserService;

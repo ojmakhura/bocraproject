@@ -16,6 +16,8 @@ export enum AuthorisationActionType {
     SEARCH_SUCCESS = '[Authorisation] Search Success',
     GET_ALL_PAGED = '[Authorisation] Get All Paged',
     GET_ALL_PAGED_SUCCESS = '[Authorisation] Get All Paged Success',
+    ASSIGN_MENU_SECTION = '[Authorisation] Assign Menu Section',
+    ASSIGN_MENU_SECTION_SUCCESS = '[Authorisation] Assign Menu Section Success',
     AUTHORISATION_RESET = '[Authorisation] Authorisation Reset',
     AUTHORISATION_FAILURE = '[Authorisation] Authorisation Action Failure',
     AUTHORISATION_LOADING = '[Authorisation] Authorisation Loading'
@@ -69,6 +71,16 @@ export const search = createAction(
 export const searchSuccess = createAction(
     AuthorisationActionType.SEARCH_SUCCESS,
     props<{ authorisations: AuthorisationVO[] | any[], messages: any[], success: boolean}>()
+);
+
+export const assignMenuSection = createAction(
+    AuthorisationActionType.ASSIGN_MENU_SECTION,
+    props<{ authorisationId: number, menuSectionId: number, loading: boolean }>()
+);
+
+export const assignMenuSectionSuccess = createAction(
+    AuthorisationActionType.ASSIGN_MENU_SECTION_SUCCESS,
+    props<{ authorisation: AuthorisationVO | any, messages: any[], success: boolean}>()
 );
 
 export const getAllPaged = createAction(

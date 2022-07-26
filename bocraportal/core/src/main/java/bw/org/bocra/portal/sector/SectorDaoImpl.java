@@ -26,7 +26,9 @@ import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.notification.NotificationDao;
 import bw.org.bocra.portal.notification.NotificationRepository;
+import bw.org.bocra.portal.sector.form.SectorForm;
 import bw.org.bocra.portal.sector.form.SectorFormRepository;
+import bw.org.bocra.portal.sector.form.SectorFormVO;
 
 /**
  * @see Sector
@@ -62,8 +64,6 @@ public class SectorDaoImpl
                 LicenseeSectorVO lvo = new LicenseeSectorVO();
                 lvo.setLicenseeSectorId(l.getId());
                 lvo.setId(l.getLicensee().getId());
-                //lvo.setCreatedBy(l.getLicensee().getCreatedBy());
-                //lvo.setCreatedDate(l.getLicensee().getCreatedDate());
                 lvo.setLicenseeName(l.getLicensee().getLicenseeName());
                 lvo.setStatus(l.getLicensee().getStatus());
                 lvo.setUin(l.getLicensee().getUin());
@@ -72,6 +72,16 @@ public class SectorDaoImpl
 
             target.setLicensees(licensees);
         }
+
+        Collection<SectorFormVO> forms = new ArrayList<>();
+
+        for(SectorForm form : source.getSectorForms()) {
+            SectorFormVO vo = new SectorFormVO();
+            getSectorFormDao().toSectorFormVO(form, vo);
+            forms.add(vo);
+        }
+
+        target.setForms(forms);
     }
 
     /**

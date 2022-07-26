@@ -2,6 +2,7 @@
 import { Component, Injector } from '@angular/core';
 import {
   EditFormActivationComponent,
+  EditFormActivationDeleteForm,
   EditFormActivationSaveForm,
 } from '@app/view/form/activation/edit-form-activation.component';
 import { EditFormActivationVarsForm } from '@app/view/form/activation/edit-form-activation.component';
@@ -85,6 +86,20 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   }
 
   override handleFormChanges(change: any): void {
+  }
+
+  override beforeEditFormActivationDelete(form: EditFormActivationDeleteForm): void {
+
+    if(confirm('Are you sure you want to delete the form activation?')) {
+
+      this.store.dispatch(
+        FormActivationActions.remove({
+          id: form.formActivation.id,
+          loading: true
+        })
+      );
+      this.editFormActivationFormReset();
+    }
   }
 
   override formActivationFormSearch(): void {

@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/sector")
+@Tag(name = "Sector", description = "Managing sectors.")
 public class SectorRestControllerImpl extends SectorRestControllerBase {
 
     public SectorRestControllerImpl(SectorService sectorService) {

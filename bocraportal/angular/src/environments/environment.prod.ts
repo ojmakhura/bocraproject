@@ -9,27 +9,55 @@ import { env } from './.env';
 export const environment = {
   production: true,
   version: env['npm_package_version'] + '-dev',
-  serverUrl: 'http://api.localhost',
+  serverUrl: $ENV.API_URL,
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US'],
-  bocraApiServer: 'http://api.localhost',
-  bocraKeycloakServer: 'http://keycloak.localhost',
-  keycloakRealm: 'bocraportal',
-  webClientId: '5bf59357-eafb-4de3-baff-dc98f1d9bab7',
-  redirectUri: 'http://192.168.57.6',
-  keycloakClientRoleUrl: 'http://keycloak.localhost/auth/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
-  keycloakRealmRoleUrl: 'http://keycloak.localhost/auth/admin/realms/bocraportal/roles',
+  bocraApiServer: $ENV.API_URL,
+  keycloakRealm: $ENV.KEYCLOAK_REALM,
+  redirectUri: $ENV.REDIRECT_URL,
+  keycloakClientRoleUrl:
+    `${$ENV.KEYCLOAK_AUTH_URL}/admin/realms/${$ENV.KEYCLOAK_REALM}/clients/${$ENV.KEYCLOAK_WEB_CLIENT_ID}/roles`,
+  keycloakRealmRoleUrl: `${$ENV.KEYCLOAK_AUTH_URL}/admin/realms/${$ENV.KEYCLOAK_REALM}/roles`,
   keycloak: {
-    issuer: 'http://keycloak.localhost/auth',
+    issuer: $ENV.KEYCLOAK_AUTH_URL,
     redirectUri: window.location.origin,
-    clientId: 'bocraportal-web',
+    clientId: $ENV.KEYCLOAK_WEB_CLIENT,
     scope: 'openid profile email offline_access',
     responseType: 'code',
-    realm: 'bocraportal',
+    realm: $ENV.KEYCLOAK_REALM,
     // at_hash is not present in JWT token
     disableAtHashCheck: true,
     showDebugInformation: true,
     requireHttps: false,
-    checkLoginIframe: false
+    checkLoginIframe: false,
   },
 };
+
+// export const environment = {
+//   production: false,
+//   version: env['npm_package_version'] + '-dev',
+//   serverUrl: '/api',
+//   defaultLanguage: 'en-US',
+//   supportedLanguages: ['en-US'],
+//   bocraApiServer: 'http://192.168.57.4:8085/',
+//   bocraKeycloakServer: 'http://192.168.57.3:8080',
+//   keycloakRealm: 'bocraportal',
+//   webClientId: '5bf59357-eafb-4de3-baff-dc98f1d9bab7',
+//   redirectUri: 'http://localhost:4200',
+//   keycloakClientRoleUrl:
+//     'http://192.168.57.3:8080/auth/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
+//   keycloakRealmRoleUrl: 'http://192.168.57.3:8080/auth/admin/realms/bocraportal/roles',
+//   keycloak: {
+//     issuer: 'http://192.168.57.3:8080/auth',
+//     redirectUri: window.location.origin,
+//     clientId: 'bocraportal-web',
+//     scope: 'openid profile email offline_access',
+//     responseType: 'code',
+//     realm: 'bocraportal',
+//     // at_hash is not present in JWT token
+//     disableAtHashCheck: true,
+//     showDebugInformation: true,
+//     requireHttps: false,
+//     checkLoginIframe: false,
+//   },
+// };

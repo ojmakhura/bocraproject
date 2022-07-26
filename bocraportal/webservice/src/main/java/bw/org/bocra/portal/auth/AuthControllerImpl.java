@@ -37,9 +37,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bw.org.bocra.portal.user.LicenseeUserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("auth")
+@Tag(name = "Authentication", description = "Managing authentications.")
 @CrossOrigin()
 public class AuthControllerImpl extends AuthControllerBase {
 
@@ -48,17 +50,6 @@ public class AuthControllerImpl extends AuthControllerBase {
     }
 
     protected static Logger log = LoggerFactory.getLogger(AuthControllerImpl.class);
-
-    // private Keycloak getInstance() {
-    //     return KeycloakBuilder
-    //             .builder()
-    //             .serverUrl(getAuthServerUrl())
-    //             .realm("master")
-    //             .username(USERNAME)
-    //             .password(PASSWORD)
-    //             .clientId(CLIENT_ID)
-    //             .build();
-    // }
 
     @Override
     public ResponseEntity<?> handleGetAccessTokenString(String username, String password) {

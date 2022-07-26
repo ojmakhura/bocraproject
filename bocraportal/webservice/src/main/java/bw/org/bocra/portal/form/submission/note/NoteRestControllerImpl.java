@@ -11,8 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/form/submission/note")
+@Tag(name = "Form Submission Notes", description = "Managing form submission notes.")
 public class NoteRestControllerImpl extends NoteRestControllerBase {
     
     public NoteRestControllerImpl(
