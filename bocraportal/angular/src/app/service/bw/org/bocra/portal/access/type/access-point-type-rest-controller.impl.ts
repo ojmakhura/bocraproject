@@ -48,7 +48,7 @@ export class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
 
     }
 
-    public override pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<any[] | AccessPointVO[]> {
+    public override pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<any[] | AccessPointTypeVO[]> {
         throw new Error('Method not implemented.');
     }
 }
