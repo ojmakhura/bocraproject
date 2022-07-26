@@ -11,8 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/notification")
+@Tag(name = "Notifications", description = "Managing notifications.")
 public class NotificationRestControllerImpl extends NotificationRestControllerBase {
 
     public NotificationRestControllerImpl(NotificationService notificationService) {

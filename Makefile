@@ -9,16 +9,19 @@ build_common:
 build_core:
 	mvn -f bocraportal/core install -Dmaven.test.skip=true -o
 
-build_api:
-	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/webservice && mvn install -o
+build_api: 
+	chmod 755 .env && . ./.env && mvn -f bocraportal/webservice install -o
 
 build_web:
 	mvn -f bocraportal/angular install -Dmaven.test.skip=true -o
 
+build_web_dist: build_web local_web_deps
+	chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm run build --configuration=production
+
 build_all: 
 	mvn -f bocraportal install -Dmaven.test.skip=true -o
 
-clean_build: gen_local_env clean_all build_all
+clean_build: clean_all build_all
 
 clean_all:
 	mvn -f bocraportal clean -o
@@ -27,72 +30,111 @@ clean_mda:
 	mvn -f bocraportal/mda clean -o
 
 ##
-## Building and running on the local platform
+## Start the docker containers
 ##
-build_local_api: gen_docker_env build_api build_api
-	docker-compose -f docker-compose-local.yml build api
+up_full_app: 
+	chmod 755 .env && . ./.env && docker-compose up -d
 
-build_local_web: gen_docker_env build_web 
-	docker-compose -f docker-compose-local.yml build web
+up_db:
+	chmod 755 .env && . ./.env && docker-compose up -d db
 
-build_local_db: gen_docker_env
-	docker-compose -f docker-compose-local.yml build db
+up_keycloak:
+	chmod 755 .env && . ./.env && docker-compose up -d keycloak
 
-build_local_keycloak: gen_docker_env
-	docker-compose -f docker-compose-local.yml build keycloak
+up_proxy: 
+	chmod 755 .env && . ./.env && docker-compose up -d proxy
 
-build_local_proxy: gen_docker_env
-	docker-compose -f docker-compose-local.yml build proxy
+up_web:
+	chmod 755 .env && . ./.env && docker-compose up -d web
 
-build_local_images: gen_docker_env build_all
-	docker-compose -f docker-compose-local.yml build
+up_pgadmin: 
+	chmod 755 .env && . ./.env && docker-compose up -d pgadmin
 
-up_local_app: rm_env gen_docker_env
-	docker-compose -f docker-compose-local.yml up -d
+up_api: 
+	chmod 755 .env && . ./.env && docker-compose up -d api
 
-up_local_db: rm_env gen_docker_env
-	docker-compose -f docker-compose-local.yml up -d db
+up_registry:
+	chmod 755 .env && . ./.env && docker-compose up -d registry
 
-up_local_keycloak: rm_env gen_docker_env
-	docker-compose -f docker-compose-local.yml up -d keycloak
+up_jenkins:
+	chmod 755 .env && . ./.env && docker-compose up -d jenkins
 
-up_local_proxy: rm_env gen_docker_env
-	docker-compose -f docker-compose-local.yml up -d proxy
+##
+## Build docker images
+##
+build_api_image: build_api
+	chmod 755 .env && . ./.env && docker-compose build api
 
-up_local_web: rm_env gen_docker_env
-	docker-compose -f docker-compose-local.yml up -d web
+build_web_image:
+	docker-compose build web
 
-up_local_pgadmin: rm_env gen_docker_env
-	docker-compose -f docker-compose-local.yml up -d pgadmin
+build_db_image: 
+	chmod 755 .env && . ./.env && docker-compose build db
 
-up_local_api: rm_env gen_docker_env
-	docker-compose -f docker-compose-local.yml up -d api
+build_keycloak_image: 
+	chmod 755 .env && . ./.env && docker-compose build keycloak
 
-up_local_registry: rm_env gen_docker_env
-	docker-compose -f docker-compose-local.yml up -d registry
+build_proxy_image: 
+	chmod 755 .env && . ./.env && docker-compose build proxy
 
-up_local_jenkins: rm_env gen_docker_env
-	docker-compose -f docker-compose-local.yml up -d jenkins
+build_images: build_all
+	chmod 755 .env && . ./.env && docker-compose build
 
-run_local_app: build_local_images up_local_app
+#################################################################################
+## Building and running on the local platform
+#################################################################################
+build_local_api: gen_env build_api build_api_image 
 
-run_api_local: rm_env gen_local_env
+build_local_web: gen_env build_web_image 
+
+build_local_db: gen_env build_db_image 
+
+build_local_keycloak: gen_env build_keycloak_image 
+
+build_local_proxy: gen_env build_proxy_image 
+
+build_local_images: gen_env build_images 
+
+###
+## Run the local images
+###
+up_local_app: build_local_images up_full_app
+
+up_local_db: gen_env up_db
+
+up_local_keycloak: gen_env up_keycloak
+
+up_local_proxy: gen_env up_proxy
+
+up_local_web: gen_env build_local_web up_web
+
+up_local_pgadmin: gen_env up_pgadmin
+
+up_local_api: gen_env build_local_api up_api
+
+up_local_registry: gen_env up_registry
+
+up_local_jenkins: gen_env up_jenkins
+
+run_local_app: gen_env build_local_images up_local_app
+
+run_api_local: gen_env
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/webservice && mvn spring-boot:run
 
-local_web_deps: rm_env gen_local_env build_web
+local_web_deps: gen_env build_web
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm i
 
-run_web_local: rm_env gen_local_env
+run_web_local: gen_env build_web
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm start
 
 # run_local_web: build_local_images up_local_app
 stop_local_app:
-	docker-compose -f docker-compose-local.yml  down
+	docker-compose down
 
 rm_env:
 	rm -f .env
 
-gen_local_env: rm_env
+gen_env: rm_env
 	if [ -f .env ]; then \
 		rm -f .env; \
 	fi
@@ -104,35 +146,54 @@ gen_docker_env: rm_env
 	fi
 	@$(LOCAL_DOCKER_ENV)
 
-##
+#################################################################################
 ## Building and running on the test platform
-##
-build_live_api: gen_live_env build_api
-	docker-compose build api
+#################################################################################
+build_test_api: gen_test_env build_api build_api_image 
 
-build_live_web: gen_live_env build_api
-	docker-compose build web
+build_test_web: gen_test_env build_web_image 
 
-build_live_images: gen_live_env build_all
-	docker-compose build
+build_test_db: gen_test_env build_db_image 
 
-up_live_app: 
-	if [ -f /bocra/traefik/acme.json ]; then \ 
-		rm -f /bocra/traefik/acme.json; \
-	fi
-	docker-compose up -d
+build_test_keycloak: gen_test_env build_keycloak_image 
 
-run_live_app: build_live_all up_live_app
+build_test_proxy: gen_test_env build_proxy_image 
 
-stop_live_app:
+build_test_images: gen_test_env build_images 
+
+###
+## Run the local images
+###
+up_test_app: build_test_images up_full_app
+
+up_test_db: gen_test_env up_db
+
+up_test_keycloak: gen_test_env up_keycloak
+
+up_test_proxy: gen_test_env up_proxy
+
+up_test_web: gen_test_env up_web
+
+up_test_pgadmin: gen_test_env up_pgadmin
+
+up_test_api: gen_test_env up_api
+
+up_test_registry: gen_test_env up_registry
+
+up_test_jenkins: gen_test_env up_jenkins
+
+run_test_app: gen_test_env build_test_images up_test_app
+
+# run_test_web: build_test_images up_test_app
+stop_test_app:
 	docker-compose down
 
-gen_live_env: 
+
+gen_test_env: rm_env
 	if [ -f .env ]; then \
 		rm -f .env; \
 	fi
-	@$(LIVE_ENV)
-
+	@$(TEST_ENV)
 
 ##
 ## Check the logs
@@ -151,12 +212,6 @@ proxy_logs:
 
 pgadmin_logs:
 	docker-compose logs pgadmin
-
-# queue_logs:
-# 	docker-compose logs queue
-
-# flower_logs:
-# 	docker-compose logs flower
 
 db_logs:
 	docker-compose logs db

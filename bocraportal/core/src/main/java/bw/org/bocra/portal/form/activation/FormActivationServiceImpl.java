@@ -160,6 +160,8 @@ public class FormActivationServiceImpl
                         DataField dataField = DataField.Factory.newInstance();
                         dataField.setFormSubmission(submission);
                         dataField.setFormField(field);
+                        dataField.setValue(field.getDefaultValue());
+                        dataField.setRow(0);
 
                         dataField = getDataFieldDao().create(dataField);
                     }

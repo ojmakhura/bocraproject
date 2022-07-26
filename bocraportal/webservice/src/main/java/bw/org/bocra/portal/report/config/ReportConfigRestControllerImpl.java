@@ -12,8 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/report/config")
+@Tag(name = "Report Configuration", description = "Managing report configurations in the system.")
 public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBase {
 
     public ReportConfigRestControllerImpl(ReportConfigService reportConfigService) {

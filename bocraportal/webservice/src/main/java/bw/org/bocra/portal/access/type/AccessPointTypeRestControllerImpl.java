@@ -11,8 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.access.AccessPointCriteria;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/access/type")
+@Tag(name = "Access Point Type", description = "Configuring different resource types accessible.")
 public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestControllerBase {
 
     public AccessPointTypeRestControllerImpl(AccessPointTypeService accessPointTypeService) {
@@ -131,5 +135,11 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @Override
+    public ResponseEntity<?> handlePagedSearch(Integer pageNumber, Integer pageSize, AccessPointCriteria criteria) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

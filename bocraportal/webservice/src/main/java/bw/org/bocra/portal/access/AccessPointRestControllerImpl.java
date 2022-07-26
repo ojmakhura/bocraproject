@@ -11,8 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/access")
+@Tag(name = "Access Point", description = "Managing the different resources available.")
 public class AccessPointRestControllerImpl extends AccessPointRestControllerBase {
 
     public AccessPointRestControllerImpl(AccessPointService accessPointService) {

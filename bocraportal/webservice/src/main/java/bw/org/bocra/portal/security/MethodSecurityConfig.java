@@ -1,19 +1,33 @@
 package bw.org.bocra.portal.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
-//@Configuration
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+import bw.org.bocra.portal.access.AccessPointRepository;
+import bw.org.bocra.portal.auth.AuthorisationRepository;
+import bw.org.bocra.portal.keycloak.KeycloakService;
+
+@Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
-    
-    // @Override
-    // protected MethodSecurityExpressionHandler createExpressionHandler() {
-    //     BocraMethodSecurityExpressionHandler expressionHandler = 
-    //       new BocraMethodSecurityExpressionHandler();
-    //     expressionHandler.setPermissionEvaluator(new BocraPermissionEvaluator());
-    //     return expressionHandler;
-    // }
+
+
+  @Autowired
+  private AccessPointRepository accessPointRepository;
+
+  @Autowired
+  private AuthorisationRepository authorisationRepository;
+
+  //@Autowired
+  private KeycloakService keycloakService;
+
+  @Override
+  protected MethodSecurityExpressionHandler createExpressionHandler() {
+    BocraMethodSecurityExpressionHandler expressionHandler = new BocraMethodSecurityExpressionHandler(accessPointRepository, authorisationRepository);
+    expressionHandler.setPermissionEvaluator(new BocraPermissionEvaluator());
+    return expressionHandler;
+  }
 }

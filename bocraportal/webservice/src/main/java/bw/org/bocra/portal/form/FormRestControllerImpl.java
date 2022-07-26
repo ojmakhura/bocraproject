@@ -5,7 +5,6 @@
 //
 package bw.org.bocra.portal.form;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -13,13 +12,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("form")
 @CrossOrigin()
+@Tag(name = "Form", description = "Managing form definitions.")
 public class FormRestControllerImpl extends FormRestControllerBase {
 
     protected static Logger log = LoggerFactory.getLogger(FormRestControllerImpl.class);

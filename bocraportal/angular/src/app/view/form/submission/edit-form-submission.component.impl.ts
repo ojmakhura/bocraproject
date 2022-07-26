@@ -12,7 +12,7 @@ import * as FormSelectors from '@app/store/form/form.selectors';
 import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as FormSubmissionActions from '@app/store/form/submission/form-submission.actions';
 import { KeycloakService } from 'keycloak-angular';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { select } from '@ngrx/store';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
@@ -27,6 +27,8 @@ import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/f
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { FieldValueType } from '@app/model/bw/org/bocra/portal/form/field/field-value-type';
+import * as math from 'mathjs';
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -34,11 +36,10 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./edit-form-submission.component.scss'],
 })
 export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent {
-
   protected keycloakService: KeycloakService;
   formSubmissions$: Observable<FormSubmissionVO[]>;
   forms$: Observable<FormVO[]>;
-  fieldColumns: string[] = ["Row"];
+  fieldColumns: string[] = ['Row'];
   fieldColumnIds: string[] = ['row'];
   formFields: FormFieldVO[] = [];
   rowGroups: RowGroup[] = [];
@@ -47,7 +48,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
   @ViewChild(MatSort) dataFieldsSort: MatSort;
 
-  constructor(private changeDetectorRefs: ChangeDetectorRef, submissionRestController: SubmissionRestControllerImpl, private injector: Injector) {
+  constructor(
+    private changeDetectorRefs: ChangeDetectorRef,
+    private injector: Injector
+  ) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
@@ -75,10 +79,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       this.rowGroups = [];
       this.formFields = submission?.form?.formFields;
 
-      submission?.sections?.forEach(section => {
+      submission?.sections?.forEach((section) => {
         section.dataFields.forEach((dataField: DataFieldVO) => {
           this.addToRowGroup(dataField);
-        })
+        });
       });
 
       this.setEditFormSubmissionFormValue({ formSubmission: submission });
@@ -89,10 +93,46 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
 
     this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
-    //this.dataFieldsDataSource.sort = this.dataFieldsSort;
   }
 
-  doNgOnDestroy() { }
+  onRowChange(section: any, row: number) {
+    let sec: DataFieldSectionVO = section.value;
+    let changeField: DataFieldVO = section.value.dataFields[row];
+    let calculationFields: FormGroup[] = [];
+
+    // Find the caculation fields controls
+    for(let i = 0; i < this.formSubmissionSectionsControl.length; i++) {
+      let fieldsControls: FormArray = this.formSubmissionSectionsControl.controls[i].get('dataFields') as FormArray;
+      for (let i = 0; i < fieldsControls.length; i++) {
+        let fieldControl: FormGroup = <FormGroup>fieldsControls.controls[i];
+        let field: DataFieldVO = fieldControl.value;
+        let formField: FormFieldVO = field.formField;
+        if (
+          formField.fieldValueType === FieldValueType.CALCULATED &&
+          formField.expression.includes(`[${changeField.formField.fieldId}]`)
+        ) {
+          calculationFields.push(fieldControl);
+        }
+      }
+    }
+
+    // Make the calculations
+    calculationFields.forEach((fieldControl) => {
+      let field: DataFieldVO = fieldControl.value;
+      let expression: string = field.formField.expression;
+
+      for (let i = 0; i < sec.dataFields.length; i++) {
+        let field: DataFieldVO = sec.dataFields[i];
+        if(expression.includes(`[${field.formField.fieldId}]`)) {
+          expression = expression.replace(`[${field.formField.fieldId}]`, field.value);
+        }
+      }
+
+      fieldControl?.get('value')?.setValue(math.evaluate(expression));
+    });
+  }
+
+  doNgOnDestroy() {}
 
   /**
    * This method may be overwritten
@@ -180,7 +220,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       createdDate: [formField?.createdDate ? formField.createdDate : null],
       updatedDate: [formField?.updatedDate ? formField.updatedDate : null],
       fieldType: [formField?.fieldType ? formField.fieldType : null],
+      fieldValueType: [formField?.fieldValueType ? formField.fieldValueType : null],
       fieldName: [formField?.fieldName ? formField.fieldName : null],
+      expression: [formField?.expression ? formField.expression : null],
+      fieldId: [formField?.fieldId ? formField.fieldId : null],
       defaultValue: [formField?.defaultValue ? formField.defaultValue : null],
       required: [formField?.required ? formField.required : null],
       min: [formField?.min ? formField.min : null],
@@ -198,12 +241,13 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
   }
 
-  override createDataFieldVOGroup(value: DataFieldVO): FormGroup {
+  override createDataFieldVOGroup(dataField: DataFieldVO): FormGroup {
+    let disable = dataField.formField.fieldValueType === FieldValueType.CALCULATED;
     return this.formBuilder.group({
-      id: [value?.id],
-      row: [value?.row],
-      formField: this.createFormFieldForm(value?.formField),
-      value: [value?.value ? value?.value : this.getFieldDefaultValue(value)],
+      id: [dataField?.id],
+      row: [dataField?.row],
+      formField: this.createFormFieldForm(dataField?.formField),
+      value: [dataField?.value ? {value: dataField?.value, disabled: disable} : {value: this.getFieldDefaultValue(dataField), disabled: disable} ],
     });
   }
 
@@ -211,7 +255,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     return field.formField.defaultValue;
   }
 
-  override handleFormChanges(change: any): void { }
+  override handleFormChanges(change: any): void {}
 
   getDataValue(data: DataFieldVO) {
     return `${data.formField.fieldName}`;
@@ -252,15 +296,13 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   uploadData() {
-
-    this.formSubmissionDataFields.forEach(field => {
+    this.formSubmissionDataFields.forEach((field) => {
       if (!field.formSubmission) {
         field.formSubmission = new FormSubmissionVO();
         field.formSubmission.id = this.formSubmissionId;
       }
 
-      this.submissionRestController.addDataField(field).subscribe(dataField => {
-
+      this.submissionRestController.addDataField(field).subscribe((dataField) => {
         this.addToRowGroup(dataField);
       });
     });
@@ -290,15 +332,14 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
           }
 
           for (let j = 0; j < rowData.length; j++) {
-
-              let field: DataFieldVO = new DataFieldVO();
-              field.row = i + 1;
-              field.formField = this.getFormField(headers[j]);
-              field.value = rowData[j];
-              field.formSubmission = <FormSubmissionVO>{
-                id: this.formSubmissionId,
-              };
-              this.addToRowGroup(field);
+            let field: DataFieldVO = new DataFieldVO();
+            field.row = i + 1;
+            field.formField = this.getFormField(headers[j]);
+            field.value = rowData[j];
+            field.formSubmission = <FormSubmissionVO>{
+              id: this.formSubmissionId,
+            };
+            this.addToRowGroup(field);
           }
         }
       });
@@ -315,7 +356,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       this.rowGroups.push(group);
       this.dataFieldsDataSource.data.push(group);
       this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
-
     } else {
       group = filteredGroups[0];
     }
@@ -326,48 +366,46 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   deleteDataRow(row: number, group: RowGroup) {
-    
     if (!group) {
       return;
     }
 
-    if(confirm("Are you sure you want to delete this data row?")) {
-      group.fields.forEach(field => {
-        if(field.id) {
-          this.submissionRestController.deleteDataField(field.id).subscribe(removed => {
-            const index = this.formSubmissionDataFields.findIndex(fd => (fd.row === field.row && fd.formField.id === field.formField.id));
+    if (confirm('Are you sure you want to delete this data row?')) {
+      group.fields.forEach((field) => {
+        if (field.id) {
+          this.submissionRestController.deleteDataField(field.id).subscribe((removed) => {
+            const index = this.formSubmissionDataFields.findIndex(
+              (fd) => fd.row === field.row && fd.formField.id === field.formField.id
+            );
             this.formSubmissionDataFieldsControl.removeAt(index);
           });
         } else {
-          const index = this.formSubmissionDataFields.findIndex(fd => (fd.row === field.row && fd.formField.id === field.formField.id));
+          const index = this.formSubmissionDataFields.findIndex(
+            (fd) => fd.row === field.row && fd.formField.id === field.formField.id
+          );
           this.formSubmissionDataFieldsControl.removeAt(index);
         }
       });
-  
+
       this.rowGroups.splice(row, 1); // remove from the row group array
       this.dataFieldsDataSource.data.splice(row, 1);
       this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
     }
   }
 
-  doEditDataRow(row: number, group: RowGroup) {
-
-  }
+  doEditDataRow(row: number, group: RowGroup) {}
 
   getColumnValue(columnId: string, group: RowGroup) {
-
     if (columnId === 'row') return group.row;
 
     return this.getDataFieldByFieldId(columnId, group)?.value;
   }
 
   getColumnHeader(columnId: string, group: RowGroup) {
-
     return this.getDataFieldByFieldId(columnId, group)?.formField.fieldName;
   }
 
   getColumnName(columnId: string): string {
-
     if (columnId === 'status') {
       return 'Status';
     }
@@ -380,7 +418,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       return 'Actions';
     }
 
-    let index: number = this.fieldColumnIds.findIndex(colId => colId === columnId);
+    let index: number = this.fieldColumnIds.findIndex((colId) => colId === columnId);
 
     if (index === -1) {
       return '';
@@ -390,7 +428,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   getDataFieldByFieldId(columnId: string, group: RowGroup) {
-    let field: DataFieldVO[] = group.fields.filter(field => field.formField.fieldId === columnId);
+    let field: DataFieldVO[] = group.fields.filter((field) => field.formField.fieldId === columnId);
 
     if (!field || field.length == 0) {
       return null;
@@ -414,26 +452,38 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   clearData() {
-    if (confirm("Are you sure you want to clear the data? This will delete all the data associated with this submission from the database.")) {
-
-      while(this.rowGroups.length > 0) {
+    if (
+      confirm(
+        'Are you sure you want to clear the data? This will delete all the data associated with this submission from the database.'
+      )
+    ) {
+      while (this.rowGroups.length > 0) {
         let group: RowGroup = this.rowGroups[0];
-        group.fields.forEach(field => {
-          if(field.id) {
-            this.submissionRestController.deleteDataField(field.id).subscribe(removed => {
-              const index = this.formSubmissionDataFields.findIndex(fd => (fd.row === field.row && fd.formField.id === field.formField.id));
+        group.fields.forEach((field) => {
+          if (field.id) {
+            this.submissionRestController.deleteDataField(field.id).subscribe((removed) => {
+              const index = this.formSubmissionDataFields.findIndex(
+                (fd) => fd.row === field.row && fd.formField.id === field.formField.id
+              );
               this.formSubmissionDataFieldsControl.removeAt(index);
             });
           } else {
-            const index = this.formSubmissionDataFields.findIndex(fd => (fd.row === field.row && fd.formField.id === field.formField.id));
+            const index = this.formSubmissionDataFields.findIndex(
+              (fd) => fd.row === field.row && fd.formField.id === field.formField.id
+            );
             this.formSubmissionDataFieldsControl.removeAt(index);
           }
         });
 
         this.rowGroups.splice(0, 1);
-        this.dataFieldsDataSource.data.splice(0,1)
+        this.dataFieldsDataSource.data.splice(0, 1);
         this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
       }
     }
+  }
+
+  getDataFieldId(dataField: DataFieldVO): string {
+
+    return `${dataField.row}_${dataField.formField.fieldId}`;
   }
 }

@@ -16,7 +16,7 @@ export const environment = {
   serverUrl: '/api',
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US'],
-  bocraApiServer: 'http://192.168.57.4:8085',
+  bocraApiServer: 'http://192.168.57.4:8085/',
   bocraKeycloakServer: 'http://192.168.57.3:8080',
   keycloakRealm: 'bocraportal',
   webClientId: '5bf59357-eafb-4de3-baff-dc98f1d9bab7',

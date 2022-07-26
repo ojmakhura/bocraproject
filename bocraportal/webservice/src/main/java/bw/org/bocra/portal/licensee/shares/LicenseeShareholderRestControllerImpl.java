@@ -11,8 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/licensee/shareholder")
+@Tag(name = "Licensee SHareholder", description = "Managing licensee shareholders mapping.")
 public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRestControllerBase {
     
     public LicenseeShareholderRestControllerImpl(

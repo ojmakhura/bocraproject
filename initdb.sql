@@ -1,4 +1,4 @@
-create database bocraportal;
+create database if not exists bocraportal;
 
 CREATE SEQUENCE IF NOT EXISTS public.access_point_seq
     INCREMENT 1
