@@ -229,24 +229,70 @@
 					<div class="mb-3">
 						<label id="formSubmissionUpload_label" class="col-sm-2 col-form-label"
 							for="formSubmissionUpload"><span translate>upload</span></label>
-						<input type="file" id="formSubmissionUpload" class="form-control" formControlName="upload" />
+						<input type="file" id="formSubmissionUpload" class="form-control" formControlName="upload"
+							#upload (change)="onFileSelected($event)" />
+
+						<button type="button" class="btn btn-primary" (click)="uploadData()">
+							<mat-icon>upload</mat-icon>
+						</button>
+					</div>
+					<div>
+						<button type="button" class="btn btn-primary">
+							<mat-icon>add_box</mat-icon>
+						</button>
 					</div>
 					<table class="table">
 						<thead>
 							<tr>
-								<th scope="row">Id</th>
-								<th scope="col" *ngFor="let columnId of fieldColumnIds; let x = index;">{{fieldColumns[x]}}</th>
+								<th scope="col" *ngFor="let columnId of fieldColumnIds; let x = index;">
+									{{fieldColumns[x]}}
+								</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngFor="let columnId of fieldColumnIds; let x = index;">
-								<th scope="row">1</th>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
+							<tr *ngFor="let group of rowGroups; let x = index;">
+								<td>
+									{{group.row}}
+								</td>
+								<td *ngFor="let field of group.fields">
+									{{ field.value }}
+								</td>
 							</tr>
 						</tbody>
 					</table>
+					<table mat-table [dataSource]="groupedDataFields" class="table table-bordered table-striped" style="width: 100%">
+
+						<ng-container *ngFor="let disCol of fieldColumnIds; let colIndex = index"
+							matColumnDef="{{disCol}}">
+							<th mat-header-cell *matHeaderCellDef>{{disCol}}</th>
+							<td mat-cell *matCellDef="let element">{{getColumnData(colIndex, disCol)}}</td>
+						</ng-container>
+
+
+						<tr mat-header-row *matHeaderRowDef="fieldColumnIds"></tr>
+						<tr mat-row *matRowDef="let row; columns: fieldColumnIds"></tr>
+					</table>
+
+					<!-- <mat-table matSort [dataSource]="groupedDataFields" #formFieldsSort="matSort"
+						class="table table-bordered table-striped" style="width: 100%">
+						
+						<div *ngFor="let group of groupedDataFields; let x = index;">
+							<ng-container matColumnDef="row">
+								<mat-header-cell *matHeaderCellDef translate>Row</mat-header-cell>
+								<mat-cell *matCellDef="let row"> {{ row?.row }} </mat-cell>
+							</ng-container>
+							<ng-container *ngFor="let field of group.fields; let i = index;" matColumnDef="{{field?.formField?.fieldId}}">
+								<mat-header-cell *matHeaderCellDef translate>{{field.formField.fieldId}}</mat-header-cell>
+								<mat-cell *matCellDef="let row"> {{ row?.value }} </mat-cell>
+							</ng-container>							
+						</div>
+						<mat-header-row *matHeaderRowDef="fieldColumnIds"></mat-header-row>
+						<mat-row *matRowDef="let row; columns: fieldColumnIds"></mat-row>
+					</mat-table>
+					<mat-paginator #formFormFieldsPaginator="matPaginator" [pageSize]="10"
+						[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons>
+					</mat-paginator> -->
+
 
 				</ng-template>
 				<div class="mb-3">
