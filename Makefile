@@ -33,52 +33,52 @@ clean_mda:
 ## Start the docker containers
 ##
 up_full_app: 
-	chmod 755 .env && . ./.env && docker-compose up -d
+	chmod 755 .env && . ./.env && docker compose up -d
 
 up_db:
-	chmod 755 .env && . ./.env && docker-compose up -d db
+	chmod 755 .env && . ./.env && docker compose up -d db
 
 up_keycloak:
-	chmod 755 .env && . ./.env && docker-compose up -d keycloak
+	chmod 755 .env && . ./.env && docker compose up -d keycloak
 
 up_proxy: 
-	chmod 755 .env && . ./.env && docker-compose up -d proxy
+	chmod 755 .env && . ./.env && docker compose up -d proxy
 
 up_web:
-	chmod 755 .env && . ./.env && docker-compose up -d web
+	chmod 755 .env && . ./.env && docker compose up -d web
 
 up_pgadmin: 
-	chmod 755 .env && . ./.env && docker-compose up -d pgadmin
+	chmod 755 .env && . ./.env && docker compose up -d pgadmin
 
 up_api: 
-	chmod 755 .env && . ./.env && docker-compose up -d api
+	chmod 755 .env && . ./.env && docker compose up -d api
 
 up_registry:
-	chmod 755 .env && . ./.env && docker-compose up -d registry
+	chmod 755 .env && . ./.env && docker compose up -d registry
 
 up_jenkins:
-	chmod 755 .env && . ./.env && docker-compose up -d jenkins
+	chmod 755 .env && . ./.env && docker compose up -d jenkins
 
 ##
 ## Build docker images
 ##
 build_api_image: build_api
-	chmod 755 .env && . ./.env && docker-compose build api
+	chmod 755 .env && . ./.env && docker compose build api
 
 build_web_image:
-	docker-compose build web
+	docker compose build web
 
 build_db_image: 
-	chmod 755 .env && . ./.env && docker-compose build db
+	chmod 755 .env && . ./.env && docker compose build db
 
 build_keycloak_image: 
-	chmod 755 .env && . ./.env && docker-compose build keycloak
+	chmod 755 .env && . ./.env && docker compose build keycloak
 
 build_proxy_image: 
-	chmod 755 .env && . ./.env && docker-compose build proxy
+	chmod 755 .env && . ./.env && docker compose build proxy
 
 build_images: build_all
-	chmod 755 .env && . ./.env && docker-compose build
+	chmod 755 .env && . ./.env && docker compose build
 
 #################################################################################
 ## Building and running on the local platform
@@ -129,7 +129,7 @@ run_web_local: gen_env build_web
 
 # run_local_web: build_local_images up_local_app
 stop_local_app:
-	docker-compose down
+	docker compose down
 
 rm_env:
 	rm -f .env
@@ -186,7 +186,7 @@ run_test_app: gen_test_env build_test_images up_test_app
 
 # run_test_web: build_test_images up_test_app
 stop_test_app:
-	docker-compose down
+	docker compose down
 
 
 gen_test_env: rm_env
@@ -199,19 +199,19 @@ gen_test_env: rm_env
 ## Check the logs
 ##
 keycloak_logs:
-	docker-compose logs keycloak
+	docker compose logs keycloak
 
 api_logs:
-	docker-compose logs api
+	docker compose logs api
 
 web_logs:
-	docker-compose logs web
+	docker compose logs web
 
 proxy_logs:
-	docker-compose logs proxy
+	docker compose logs proxy
 
 pgadmin_logs:
-	docker-compose logs pgadmin
+	docker compose logs pgadmin
 
 db_logs:
-	docker-compose logs db
+	docker compose logs db
