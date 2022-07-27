@@ -215,3 +215,8 @@ pgadmin_logs:
 
 db_logs:
 	docker compose logs db
+	
+jenkins_logs:
+	docker compose logs jenkins
+registry_logs:
+	docker compose logs registry
