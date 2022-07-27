@@ -26,6 +26,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
   menus: any[] = [];
   menus$: Observable<Menu[]>;
   username$: Observable<string>;
+  toggled = false;
 
   constructor(
     private router: Router,
@@ -50,14 +51,17 @@ export class ShellComponent implements OnInit, AfterViewInit {
 
     let auths = new Set();
 
-    this.authorisationRestController.getAccessTypeCodeAuthorisations(this.keycloakService.getUserRoles(), 'MENU').subscribe((authorisations) => {
-      authorisations.forEach((authorisation: AuthorisationVO) => {
-        let menu: Menu = nav.menuItems.find((item) => authorisation.accessPoint.url === item.routerLink);
-        if (menu) {
-          this.store.dispatch(MenuActions.addMenu({ menu: menu }));
-        }
+    this.authorisationRestController
+      .getAccessTypeCodeAuthorisations(this.keycloakService.getUserRoles(), 'MENU')
+      .subscribe((authorisations) => {
+        authorisations.forEach((authorisation: AuthorisationVO) => {
+          let menu: Menu = nav.menuItems.find((item) => authorisation.accessPoint.url === item.routerLink);
+          if (menu) {
+            menu.titleKey=authorisation.accessPoint.name
+            this.store.dispatch(MenuActions.addMenu({ menu: menu }));
+          }
+        });
       });
-    });
 
     // this.keycloakService.getToken().then((token) => {
     //   var decoded: any = jwt_decode(token);
@@ -82,5 +86,12 @@ export class ShellComponent implements OnInit, AfterViewInit {
 
   get title(): string {
     return this.titleService.getTitle();
+  }
+  toggle(){
+    if(this.toggled===false){
+      this.toggled = true;
+    }else{
+      this.toggled = false;
+    }
   }
 }
