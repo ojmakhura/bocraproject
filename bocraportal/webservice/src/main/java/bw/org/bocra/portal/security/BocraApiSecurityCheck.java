@@ -2,6 +2,7 @@ package bw.org.bocra.portal.security;
 
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.AccessToken.Access;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import bw.org.bocra.portal.auth.AuthorisationRepository;
-import bw.org.bocra.portal.auth.AuthorisationService;
 import bw.org.bocra.portal.auth.Authorisation;
 
 @Component(value = "securityCheck")
@@ -23,12 +23,23 @@ public class BocraApiSecurityCheck {
         this.authorisationRepository = authorisationRepository;
     }
 
+    public boolean isAuthorised(String apiEndpoint, String method) {
+
+        return StringUtils.isBlank(method) ? this.isAuthorised(apiEndpoint) : this.handleIsAuthorised(method + " " + apiEndpoint);
+    }
+
     public boolean isAuthorised(String apiEndpoint) {
 
+        System.out.println("public boolean isAuthorised(String apiEndpoint)");
+
+        return this.handleIsAuthorised(apiEndpoint);
+    }
+
+    private boolean handleIsAuthorised(String url) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         /// Find the api with the requesting URL
-        Collection<Authorisation> auths = this.authorisationRepository.findByAccessUrlAndCode(apiEndpoint, "API");
+        Collection<Authorisation> auths = this.authorisationRepository.findByAccessUrlAndCode(url, "API");
 
         // If there are no authorisations, we assume the request is authorised by default
         if(CollectionUtils.isEmpty(auths)) {

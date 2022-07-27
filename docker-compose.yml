@@ -102,12 +102,16 @@ services:
   # Keycloak authentication server
   ###############################################################################
   keycloak:
+    image: quay.io/keycloak/keycloak:18.0.2-legacy
+    hostname: keycloak
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile.keycloak
     container_name: bocra-keycloak
-    hostname: bocra-keycloak
     environment:
       PROXY_ADDRESS_FORWARDING: "true"
       DB_VENDOR: POSTGRES
-      DB_ADDR: bocra-db
+      DB_ADDR: ${POSTGRES_SERVER}
       DB_DATABASE: ${KEYCLOAK_DB}
       DB_USER: ${POSTGRES_USER}
       DB_SCHEMA: public
@@ -116,9 +120,6 @@ services:
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
     depends_on:
       - db
-    build:
-      context: .
-      dockerfile: Dockerfile.keycloak
     ports:
       - 8089:8080
     #volumes:
