@@ -1,7 +1,4 @@
-#FROM jboss/keycloak:16.1.1
-FROM bitnami/keycloak:18.0.0
-
-#COPY initdb.sql /docker-entrypoint-initdb.d/
+FROM quay.io/keycloak/keycloak:18.0.2-legacy
 
 COPY --chown=jboss:root keycloak/bocra /opt/jboss/keycloak/themes/bocra
 COPY --chown=jboss:root keycloak/base /opt/jboss/keycloak/themes/base
@@ -9,4 +6,3 @@ COPY --chown=jboss:root keycloak/standalone.xml /opt/jboss/keycloak/standalone/c
 
 COPY --chown=jboss:root keycloak/bocra/login/resources/css/bocra-login.css /opt/jboss/keycloak/themes/bocra/login/resources/css/bocra-login.css
 COPY --chown=jboss:root keycloak/bocra/account/resources/css/bocra-account.css /opt/jboss/keycloak/themes/bocra/account/resources/css/bocra-account.css
-
