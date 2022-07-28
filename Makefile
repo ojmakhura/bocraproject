@@ -195,6 +195,55 @@ gen_test_env: rm_env
 	fi
 	@$(TEST_ENV)
 
+
+#################################################################################
+## Building and running on the development test platform
+#################################################################################
+build_dev_api: gen_dev_env build_api build_api_image 
+
+build_dev_web: gen_dev_env build_web_image 
+
+build_dev_db: gen_dev_env build_db_image 
+
+build_dev_keycloak: gen_dev_env build_keycloak_image 
+
+build_dev_proxy: gen_dev_env build_proxy_image 
+
+build_dev_images: gen_dev_env build_images 
+
+###
+## Run the dev images
+###
+up_dev_app: build_dev_images up_full_app
+
+up_dev_db: gen_dev_env up_db
+
+up_dev_keycloak: gen_dev_env up_keycloak
+
+up_dev_proxy: gen_dev_env up_proxy
+
+up_dev_web: gen_dev_env up_web
+
+up_dev_pgadmin: gen_dev_env up_pgadmin
+
+up_dev_api: gen_dev_env up_api
+
+up_dev_registry: gen_dev_env up_registry
+
+up_dev_jenkins: gen_dev_env up_jenkins
+
+run_dev_app: gen_dev_env build_dev_images up_dev_app
+
+# run_dev_web: build_dev_images up_dev_app
+stop_dev_app:
+	docker compose down
+
+gen_dev_env: rm_env
+	if [ -f .env ]; then \
+		rm -f .env; \
+	fi
+	@$(DEV_ENV)
+
 ##
 ## Check the logs
 ##
