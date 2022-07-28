@@ -16,21 +16,36 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${BOCRA_DATA}/traefik/acme:/acme
+      - ${BOCRA_DATA}/certs:/etc/certs:ro
+      - ./traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
       # - traefik-data
     ports:
-      - "80:80"
       - "443:443"
-      - "8080:8080"
+      - "80:8080"
     command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker=true
+      - --providers.file.directory=/etc/traefik/dynamic_conf
+
       - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:80
-      #- --entrypoints.websecure.address=:443
+      # - --entrypoints.web.address=:80
+      # - --entrypoints.websecure.address=:443
       - --api
+      - --api.dashboard=true
+      #- --entryPoints.http.address=:80
+      #- --entryPoints.https.address=:443
     labels:
-      - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
-      - "traefik.http.routers.traefik.service=api@internal"
+      - traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.entrypoints=websecure
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+      - traefik.http.routers.traefik.middlewares=https-redirect
+      - traefik.http.routers.traefik.entrypoints=https
+      - traefik.http.routers.traefik.tls=true
 
   ###############################################################################
   # Postgres database
@@ -59,6 +74,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
+      - traefik.http.routers.bocra-db.tls=true
         # - "traefik.http.routers.bocra-db.entrypoints=websecure"
         #- "traefik.http.routers.bocra-db.tls.certresolver=myresolver"
 
@@ -68,6 +84,8 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: bocra-pgadmin
+    deploy:
+      replicas: 3
     networks:
       traefik-public:
       bocra-network:
@@ -84,8 +102,13 @@ services:
     #volumes:
     #  - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.bocra-pgadmin.rule=Host(`${PGADMIN_DOMAIN}`)"
+      - traefik.http.middlewares.bocra-pgadmin_https.redirectscheme.scheme=https
+      - traefik.http.routers.bocra-pgadmin.entrypoints=web
+      - traefik.http.routers.bocra-pgadmin.rule=Host(`${PGADMIN_DOMAIN}`)
+      - traefik.http.routers.bocra-pgadmin.middlewares=bocra-pgadmin_https@docker
+      - traefik.http.routers.bocra-pgadmin_https.rule=Host(`${PGADMIN_DOMAIN}`)
+      - traefik.http.routers.bocra-pgadmin_https.tls=true
+      - traefik.http.routers.bocra-pgadmin_https.entrypoints=websecure
 
   ###############################################################################
   # Keycloak authentication server
@@ -97,6 +120,8 @@ services:
     #  context: .
     #  dockerfile: Dockerfile.keycloak
     container_name: bocra-keycloak
+    #deploy:
+    #  replicas: 2
     environment:
       PROXY_ADDRESS_FORWARDING: "true"
       DB_VENDOR: POSTGRES
@@ -119,8 +144,14 @@ services:
         ipv4_address: ${BOCRA_KEYCLOAK_ADDRESS}
       default:
     labels:
+      - traefik.http.middlewares.bocra-keycloak_https.redirectscheme.scheme=websecure
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+      - traefik.http.routers.bocra-keycloak.entrypoints=web
+      - traefik.http.routers.bocra-keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)
+      - traefik.http.routers.bocra-keycloak.middlewares=bocra-keycloak_https@docker
+      - traefik.http.routers.bocra-keycloak_https.rule=Host(`${KEYCLOAK_DOMAIN}`)
+      - traefik.http.routers.bocra-keycloak_https.tls=true
+      - traefik.http.routers.bocra-keycloak_https.entrypoints=websecure
 
   ###############################################################################
   # Angular web application
@@ -128,6 +159,8 @@ services:
   web:
     image: "bocra-web:latest"
     hostname: web
+    deploy:
+      replicas: 5
     build:
       context: .
       dockerfile: bocraportal/angular/Dockerfile

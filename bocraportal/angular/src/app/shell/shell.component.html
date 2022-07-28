@@ -4,7 +4,7 @@
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div class="container-fluid">
 				<a class="navbar-brand" routerLink="active">
-					<img src="../assets/bocra-logo.png" alt="" height="40" routerLink="active" class="me-2">
+					<img src="../assets/bocra-logo.png" alt="" height="40" routerLink="active" class="me-2" />
 					<strong class="me-2">Online Portal</strong>
 				</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
@@ -44,21 +44,24 @@
 									aria-hidden="false"></i></a>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
-								data-bs-toggle="dropdown" aria-expanded="false">
+							<a mat-icon-button [matMenuTriggerFor]="userMenu" class="nav-link dropdown-toggle"
+								id="navbarDropdown" role="button" aria-expanded="false">
 								<i class="fa fa-user-circle fa-lg" aria-hidden="false"></i>
 							</a>
-							<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
-								aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" routerLink="profile"><i class="fa fa-user"
-											aria-hidden="false"></i>&nbsp;
-										Profile</a></li>
-								<li>
-									<hr class="dropdown-divider">
-								</li>
-								<li><a class="dropdown-item" (click)="logout()">
-										<i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp; Logout</a></li>
-							</ul>
+							<mat-menu #userMenu="matMenu">
+								<mat-list>
+									<mat-list-item>
+										<span translate>Logged in as</span>&nbsp;<b>{{ username }}</b>
+									</mat-list-item>
+									<mat-divider></mat-divider>
+									<mat-list-item>
+										<a class="dropdown-item" routerLink="profile"><i class="fa fa-user"
+												aria-hidden="false"></i>&nbsp; Profile</a>
+									</mat-list-item>
+									<mat-divider></mat-divider>
+								</mat-list>
+								<button mat-menu-item (click)="logout()" translate>Logout</button>
+							</mat-menu>
 						</li>
 					</ul>
 				</div>
@@ -69,7 +72,7 @@
 
 	<!-- Title -->
 	<div class="container-fluid mb-3">
-		<nav aria-label="breadcrumb" *ngIf="title!=='Home'" class="py-3">
+		<nav aria-label="breadcrumb" *ngIf="title !== 'Home'" class="py-3">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
 				<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
@@ -96,9 +99,7 @@
 					<li class="nav-item">
 						<a class="nav-link" routerLink="{{ item.routerLink }}" routerLinkActive="active"><i
 								class="fa fa-puzzle-piece fa-lg" aria-hidden="true" title="Sector Management"></i>&nbsp;
-							<span *ngIf="!toggled" class="ms-3" translate>{{
-								item.titleKey }}
-							</span>
+							<span *ngIf="!toggled" class="ms-3" translate>{{ item.titleKey }} </span>
 						</a>
 					</li>
 				</ul>
@@ -107,21 +108,21 @@
 	</div>
 	<!-- Sidebar end -->
 
-
-
-
 	<!-- Footer start -->
-	<div class="row bg-dark text-white pt-4  px-5 pb-2 mt-auto">
+	<div class="row bg-dark text-white pt-4 px-5 pb-2 mt-auto">
 		<footer class="container">
 			<div class="row justify-content-center py-3 border-top border-success">
 				<div class="col-lg-2">
-					<img src="assets/bocra-logo.png" alt="...">
+					<img src="assets/bocra-logo.png" alt="..." />
 				</div>
 				<div class="col-lg-3">
 					<div class="row">
-						<p><i class="fa fa-location-arrow fa-lg me-2 text-primary" aria-hidden="true"></i>Plot 50671
-							Independence Avenue<br>
-							Gaborone, Botswana</p>
+						<p>
+							<i class="fa fa-location-arrow fa-lg me-2 text-primary" aria-hidden="true"></i>Plot 50671
+							Independence
+							Avenue<br />
+							Gaborone, Botswana
+						</p>
 					</div>
 					<div class="row">
 						<div class="col-lg-6">
@@ -137,7 +138,8 @@
 					</div>
 				</div>
 				<div class="col-lg-2">
-					<p>Social media: &nbsp;
+					<p>
+						Social media: &nbsp;
 						<span>
 							<a href="https://www.facebook.com/BTAbw"><i
 									class="fa fa-facebook-official text-primary fa-lg me-2" aria-hidden="true"></i></a>
@@ -170,9 +172,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-2">
-					Copyright 2022 BOCRA
-				</div>
+				<div class="col-lg-2">Copyright 2022 BOCRA</div>
 			</div>
 		</footer>
 	</div>
