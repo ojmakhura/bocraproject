@@ -29,19 +29,8 @@ services:
       #- --entrypoints.websecure.address=:443
       - --api
     labels:
-    #  traefik.http.routers.bocra-proxy.rule: Host(`${PROXY_DOMAIN}`)
-    #  traefik.http.routers.bocra-proxy.service: api@internal
-      # Dashboard
       - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
       - "traefik.http.routers.traefik.service=api@internal"
-    #  - "traefik.http.routers.traefik.middlewares=admin"
-    #  - "traefik.http.routers.traefik.tls.certresolver=le"
-    #  - "traefik.http.middlewares.admin.basicauth.users=userXY:pwXY"
-    # global redirect to https
-    #  - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-    #  - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
-    #  - "traefik.http.routers.redirs.entrypoints=web"
-    #  - "traefik.http.routers.redirs.middlewares=redirect-to-https"
 
   ###############################################################################
   # Postgres database
@@ -121,7 +110,7 @@ services:
     depends_on:
       - db
     ports:
-      - 8089:8080
+      - ${KEYCLOAK_PUBLIC_PORT}:8080
     #volumes:
     #  - ${BOCRA_DATA}/keycloak:/opt/jboss/keycloak
     networks:
@@ -151,13 +140,13 @@ services:
       - db
       - keycloak
       - api
+    ports:
+      - ${WEB_PUBLIC_PORT}:80
     networks:
       traefik-public:
       bocra-network:
         ipv4_address: ${BOCRA_WEB_ADDRESS}
       default:
-    ports:
-        - 9080:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
