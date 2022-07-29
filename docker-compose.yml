@@ -1,6 +1,5 @@
 version: "3.9"
 services:
-
   ###############################################################################
   # Traefik proxy
   ###############################################################################
@@ -52,11 +51,6 @@ services:
       - "traefik.http.routers.dashboard.rule=Host(`${PROXY_DOMAIN}`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
       - "traefik.http.routers.dashboard.tls=true"
-      #- "traefik.http.routers.dashboard.tls.certresolver=myresolver"
-#      - "traefik.http.routers.traefik.tls.certresolver=letsencryptresolver"
-#      - "traefik.http.routers.traefik.middlewares=traefik-auth"
-#      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$8EVjn/nj$$GiLUZqcbueT
-#      - "traefik.http.middlewares.traefik-auth.basicauth.users=USER:PASSWORD"
 
   ###############################################################################
   # Postgres database
@@ -87,21 +81,6 @@ services:
       - "traefik.http.routers.bocra-db.entrypoints=websecure"
       - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
       - "traefik.http.routers.bocra-db.tls=true"
-      # - "traefik.http.services.bocra-db-secure.loadbalancer.server.port=9000"
-      # - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
-      # - "traefik.http.routers.bocra-db.entrypoints=web"
-      # - "traefik.http.routers.bocra-db-secure.rule=Host(`${DB_DOMAIN}`)"
-      # - "traefik.http.routers.bocra-db-secure.entrypoints=websecure"
-      # - "traefik.http.routers.bocra-db-secure.tls=true"
-
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
-      # - "traefik.http.routers.traefik.entrypoints=websecure"
-      # - "traefik.http.routers.traefik.service=api@internal"
-      # - "traefik.http.routers.bocra-db.tls=true"
-      # - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-      # - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
-      # - "traefik.http.routers.https-redirect.middlewares=https-redirect"
 
   ###############################################################################
   # Postgres administration frontend
@@ -129,15 +108,6 @@ services:
       - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
       - "traefik.http.routers.bocra-pgadmin.rule=Host(`${PGADMIN_DOMAIN}`)"
       - "traefik.http.routers.bocra-pgadmin.tls=true"
-      # - "traefik.http.services.bocra-db-secure.loadbalancer.server.port=9000"
-      # - "traefik.http.routers.bocra-pgadmin.rule=Host(`${PGADMIN_DOMAIN}`)"
-      # - "traefik.http.routers.bocra-pgadmin.entrypoints=web"
-      # - "traefik.http.routers.bocra-pgadmin-secure.rule=Host(`${PGADMIN_DOMAIN}`)"
-      # - "traefik.http.routers.bocra-pgadmin-secure.entrypoints=websecure"
-      # - "traefik.http.routers.bocra-pgadmin-secure.tls=true"
-      # - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-      # - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
-      # - "traefik.http.routers.https-redirect.middlewares=https-redirect"
 
   ###############################################################################
   # Keycloak authentication server
@@ -145,12 +115,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:18.0.2-legacy
     hostname: keycloak
-    #build:
-    #  context: .
-    #  dockerfile: Dockerfile.keycloak
     container_name: bocra-keycloak
-    #deploy:
-    #  replicas: 2
     environment:
       PROXY_ADDRESS_FORWARDING: "true"
       DB_VENDOR: POSTGRES
@@ -177,15 +142,6 @@ services:
       - "traefik.http.routers.bocra-keycloak.entrypoints=websecure"
       - "traefik.http.routers.bocra-keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
       - "traefik.http.routers.bocra-keycloak.tls=true"
-      # - "traefik.http.services.bocra-keycloak-secure.loadbalancer.server.port=9000"
-      # - "traefik.http.routers.bocra-keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
-      # - "traefik.http.routers.bocra-keycloak.entrypoints=web"
-      # - "traefik.http.routers.bocra-keycloak-secure.rule=Host(`${KEYCLOAK_DOMAIN}`)"
-      # - "traefik.http.routers.bocra-keycloak-secure.entrypoints=websecure"
-      # - "traefik.http.routers.bocra-keycloak-secure.tls=true"
-      # - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-      # - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
-      # - "traefik.http.routers.https-redirect.middlewares=https-redirect"
 
   ###############################################################################
   # Angular web application
@@ -219,14 +175,6 @@ services:
       - "traefik.http.routers.bocra-web.entrypoints=websecure"
       - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
       - "traefik.http.routers.bocra-web.tls=true"
-      # - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
-      # - "traefik.http.routers.bocra-web.entrypoints=web"
-      # - "traefik.http.routers.bocra-web-secure.rule=Host(`${WEB_DOMAIN}`)"
-      # - "traefik.http.routers.bocra-web-secure.entrypoints=websecure"
-      # - "traefik.http.routers.bocra-web-secure.tls=true"
-      # - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-      # - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
-      # - "traefik.http.routers.https-redirect.middlewares=https-redirect"
 
   ###############################################################################
   # The main API 
