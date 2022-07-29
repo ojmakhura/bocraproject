@@ -8,6 +8,7 @@ package bw.org.bocra.portal.form.submission.note;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/form/submission/note")
 @Tag(name = "Form Submission Notes", description = "Managing form submission notes.")
+@CrossOrigin()
 public class NoteRestControllerImpl extends NoteRestControllerBase {
     
     public NoteRestControllerImpl(
