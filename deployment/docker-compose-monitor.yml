@@ -1,0 +1,114 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # Traefik proxy
+  ###############################################################################
+  proxy:
+    image: traefik:2.8
+    container_name: bocra-proxy
+    hostname: traefik
+    networks:
+      bocra-network:
+      traefik-public:
+      default:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # - ${BOCRA_DATA}/traefik/acme:/acme
+      - ./certs:/etc/certs:ro
+      - ./traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
+      # - traefik-data
+    ports:
+      - "443:443"
+      - "80:80"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.file.directory=/etc/traefik/dynamic_conf/"
+      - "--providers.file.watch=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--log.level=DEBUG"
+      - "--accessLog"
+      - "--api"
+      - "--metrics"
+      - "--metrics.prometheus"
+      - "--providers.docker.network=traefik-public"
+      - "--providers.docker"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    labels:
+      - "traefik.enable=true"
+      # - "traefik.http.routers.traefik.rule=Host(`${MONITOR_DOMAIN}`)"
+      - "traefik.http.routers.traefik.rule=Host(`monitor.local`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.https-redirect.middlewares=https-redirect"
+      # - "traefik.http.routers.dashboard.rule=Host(`${MONITOR_DOMAIN}`)"
+      - "traefik.http.routers.dashboard.rule=Host(`monitor.local`)"
+      - "traefik.http.routers.dashboard.service=dashboard@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+
+  ###############################################################################
+  # Local docker container registry
+  ###############################################################################
+  registry:
+    image: registry:2
+    container_name: bocra-registry
+    ports:
+      - 5000:5000
+    depends_on:
+      - keycloak
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+      # REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /certs/localhost_trust_chain.pem
+      # REGISTRY_AUTH_TOKEN_REALM: ${KEYCLOAK_AUTH_URL}/realms/${KEYCLOAK_REALM}/protocol/docker-v2/auth
+      # REGISTRY_AUTH_TOKEN_SERVICE: ${REGISTRY_CLIENT}
+      # REGISTRY_AUTH_TOKEN_ISSUER: ${KEYCLOAK_AUTH_URL}/realms/${KEYCLOAK_REALM}
+      # REGISTRY_HTTP_TLS_CERTIFICATE: ${REGISTRY_HTTP_TLS_CERTIFICATE}
+      # REGISTRY_HTTP_TLS_KEY: ${REGISTRY_HTTP_TLS_KEY}
+
+      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/localhost.crt
+      REGISTRY_HTTP_TLS_KEY: /certs/localhost.key
+      REGISTRY_AUTH_TOKEN_REALM: https://app.local/auth/realms/bocra-it/protocol/docker-v2/auth
+      REGISTRY_AUTH_TOKEN_SERVICE: bocra-registry
+      REGISTRY_AUTH_TOKEN_ISSUER: https://app.local/auth/realms/bocra-it
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /certs/localhost_trust_chain.pem
+    volumes:
+      # - ${BOCRA_DATA}/registry/data:/var/lib/registry
+      - /bocra/registry/data:/var/lib/registry
+      - /home/junior/programming/docker/keycloak-docker-compose-yaml/certs:/certs
+    networks:
+      bocra-network:
+      traefik-public:
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-registry.entrypoints=websecure"
+      # - "traefik.http.routers.bocra-registry.rule=Host(`${REGISTRY_DOMAIN}`)"
+      - "traefik.http.routers.bocra-registry.rule=Host(`registry.monitor.local`)"
+      - "traefik.http.routers.bocra-registry.tls=true"
+
+
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  traefik-public:
+    # Allow setting it to false for testing
+    external: true
+  bocra-network:
+    name: bocra-network
+    driver: bridge
+    external: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.57.0/24
+  bocra-elk:
+    name: bocra-elk
+    driver: bridge
