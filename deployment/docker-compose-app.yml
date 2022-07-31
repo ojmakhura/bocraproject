@@ -1,0 +1,117 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # Traefik proxy
+  ###############################################################################
+  proxy:
+    image: traefik:2.8
+    container_name: bocra-proxy
+    hostname: traefik
+    networks:
+      bocra-network:
+        ipv4_address: ${BOCRA_PROXY_ADDRESS}
+      traefik-public:
+      default:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      #- ${BOCRA_DATA}/traefik/acme:/acme
+      - ${BOCRA_DATA}/certs:/etc/certs:ro
+      - ${BOCRA_DATA}/traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
+      # - traefik-data
+    ports:
+      - "443:443"
+      - "80:80"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.file.directory=/etc/traefik/dynamic_conf/"
+      - "--providers.file.watch=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--log.level=DEBUG"
+      - "--accessLog"
+      - "--api"
+      - "--metrics"
+      - "--metrics.prometheus"
+      - "--providers.docker.network=traefik-public"
+      - "--providers.docker"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.https-redirect.middlewares=https-redirect"
+      - "traefik.http.routers.dashboard.rule=Host(`${PROXY_DOMAIN}`)"
+      - "traefik.http.routers.dashboard.service=dashboard@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+  
+  ###############################################################################
+  # Keycloak authentication server
+  ###############################################################################
+  keycloak:
+    image: quay.io/keycloak/keycloak:18.0.2-legacy
+    hostname: keycloak
+    container_name: bocra-keycloak
+    command: ["-b", "0.0.0.0","-Dkeycloak.profile.feature.docker=enabled"]
+    environment:
+      PROXY_ADDRESS_FORWARDING: "true"
+      DB_VENDOR: POSTGRES
+      DB_ADDR: ${POSTGRES_SERVER}
+      DB_DATABASE: ${KEYCLOAK_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_SCHEMA: public
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+    depends_on:
+      - db
+    ports:
+      - ${KEYCLOAK_PUBLIC_PORT}:8080
+    #volumes:
+    #  - ${BOCRA_DATA}/keycloak:/opt/jboss/keycloak
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_KEYCLOAK_ADDRESS}
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-keycloak.entrypoints=websecure"
+      - "traefik.http.routers.bocra-keycloak.rule=Host(`${APP_DOMAIN}`) && PathPrefix(`/keycloak`)"
+      - "traefik.http.routers.bocra-keycloak.tls=true"
+
+  api:
+    image: "localhost:5000/bocra-api/bocra-api:0.0.1"
+    container_name: bocra-api
+    hostname: api
+    depends_on:
+      - db
+      - keycloak
+    ports:
+      - ${API_SERVER_PORT}:${API_SERVER_PORT}
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_API_ADDRESS}
+      default:
+    environment:
+      POSTGRES_SERVER: 192.168.100.71
+      SERVER_PORT: ${API_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      KEYCLOAK_AUTH_URL: https://192.168.100.72:8080/auth
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+
+networks:
+  bocra-network:
+    # Allow setting it to false for testing
+    external: true

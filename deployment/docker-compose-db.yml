@@ -1,0 +1,120 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # Traefik proxy
+  ###############################################################################
+  proxy:
+    image: traefik:2.8
+    container_name: bocra-proxy
+    hostname: traefik
+    networks:
+      bocra-network:
+        ipv4_address: ${BOCRA_PROXY_ADDRESS}
+      traefik-public:
+      default:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${BOCRA_DATA}/traefik/acme:/acme
+      - ${BOCRA_DATA}/certs:/etc/certs:ro
+      - ${BOCRA_DATA}/traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
+    ports:
+      - "443:443"
+      - "80:80"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.file.directory=/etc/traefik/dynamic_conf/"
+      - "--providers.file.watch=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--log.level=DEBUG"
+      - "--accessLog"
+      - "--api"
+      - "--metrics"
+      - "--metrics.prometheus"
+      - "--providers.docker.network=traefik-public"
+      - "--providers.docker"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.https-redirect.middlewares=https-redirect"
+      - "traefik.http.routers.dashboard.rule=Host(`${PROXY_DOMAIN}`)"
+      - "traefik.http.routers.dashboard.service=dashboard@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+
+  ###############################################################################
+  # Postgres database
+  ###############################################################################
+  bocra-db:
+    container_name: bocra-db
+    hostname: db
+    image: postgres:14
+    volumes:
+      - ${BOCRA_DATA}/db:/var/lib/postgresql/data
+      # - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    depends_on:
+      - proxy
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_DB_ADDRESS}
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-db.entrypoints=websecure"
+      - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
+      - "traefik.http.routers.bocra-db.tls=true"
+
+  ###############################################################################
+  # Postgres administration frontend
+  ###############################################################################
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: bocra-pgadmin
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_PGADMIN_ADDRESS}
+      default:
+    depends_on:
+      - proxy
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    #ports:
+    #  - "9000:80"
+    #volumes:
+    #  - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.bocra-pgadmin.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.bocra-pgadmin.tls=true"
+
+networks:
+  traefik-public:
+    # Allow setting it to false for testing
+    external: true
+  bocra-network:
+    name: bocra-network
+    driver: bridge
+    external: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.57.0/24
