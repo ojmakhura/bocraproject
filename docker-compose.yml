@@ -21,6 +21,7 @@ services:
     ports:
       - "443:443"
       - "80:80"
+      - "8080:8080"
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -39,6 +40,11 @@ services:
       - "--providers.docker"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+
+      # - "--api.insecure=true"
+      # - "--providers.docker=true"
+      # - "--providers.docker.exposedbydefault=false"
+      # - "--entrypoints.web.address=:80"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
@@ -99,6 +105,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      SCRIPT_NAME: /pgadmin
     #ports:
     #  - "9000:80"
     #volumes:
@@ -116,9 +123,9 @@ services:
     image: quay.io/keycloak/keycloak:18.0.2-legacy
     hostname: keycloak
     container_name: bocra-keycloak
-    command: ["-b", "0.0.0.0","-Dkeycloak.profile.feature.docker=enabled"]
+    command: ["-b", "0.0.0.0","-Dkeycloak.profile.feature.docker=enabled", "--http-relative-path=/keycloak"]
     environment:
-      PROXY_ADDRESS_FORWARDING: "true"
+      # PROXY_ADDRESS_FORWARDING: "true"
       DB_VENDOR: POSTGRES
       DB_ADDR: ${POSTGRES_SERVER}
       DB_DATABASE: ${KEYCLOAK_DB}
@@ -127,10 +134,11 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       KEYCLOAK_USER: ${KEYCLOAK_USER}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      PROXY_ADDRESS_FORWARDING: true
     depends_on:
       - db
-    ports:
-      - ${KEYCLOAK_PUBLIC_PORT}:8080
+    #ports:
+    #  - ${KEYCLOAK_PUBLIC_PORT}:8080
     #volumes:
     #  - ${BOCRA_DATA}/keycloak:/opt/jboss/keycloak
     networks:
@@ -140,9 +148,13 @@ services:
       default:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-keycloak.entrypoints=websecure"
-      - "traefik.http.routers.bocra-keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
-      - "traefik.http.routers.bocra-keycloak.tls=true"
+      - "traefik.http.routers.keycloak.entrypoints=websecure"
+      # - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+      - "traefik.http.routers.keycloak.rule=Host(`app.localhost`) && PathPrefix(`/keycloak`)"
+      # - "traefik.frontend.keycloak.rule=Host(`app.localhost`) && PathPrefix(`/keycloak`)"
+      - "traefik.http.middlewares.strip-keycloak.stripprefix.prefixes=/keycloak"
+      - "traefik.http.routers.keycloak.middlewares=strip-keycloak@docker"
+      - "traefik.http.routers.keycloak.tls=true"
 
   ###############################################################################
   # Angular web application
