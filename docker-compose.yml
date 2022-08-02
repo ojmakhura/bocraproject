@@ -51,6 +51,9 @@ services:
       - "--providers.docker"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--certificatesresolvers.le.acme.email=${LOCAL_ACME_EMAIL?Variable not set}"
+      - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme/acme.json"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
 
     labels:
       - "traefik.enable=true"
@@ -58,6 +61,7 @@ services:
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=le"
       - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
       - "traefik.http.routers.https-redirect.middlewares=https-redirect"
@@ -92,6 +96,7 @@ services:
       - "traefik.http.routers.bocra-db.entrypoints=websecure"
       - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
       - "traefik.http.routers.bocra-db.tls=true"
+      - "traefik.http.routers.bocra-db.tls.certresolver=le"
 
   ###############################################################################
   # Postgres administration frontend
@@ -120,6 +125,7 @@ services:
       - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
       - "traefik.http.routers.bocra-pgadmin.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
       - "traefik.http.routers.bocra-pgadmin.tls=true"
+      - "traefik.http.routers.bocra-pgadmin.tls.certresolver=le"
 
   ###############################################################################
   # Keycloak authentication server
@@ -173,7 +179,7 @@ services:
       # - "traefik.http.middlewares.strip-keycloak.stripprefix.prefixes=/keycloak"
       # - "traefik.http.routers.keycloak.middlewares=strip-keycloak@docker"
       - "traefik.http.routers.keycloak.tls=true"
-      - "traefik.http.routers.keycloak.tls.certresolver=sslresolver"
+      - "traefik.http.routers.keycloak.tls.certresolver=le"
       # - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
       # Select middleware chain https-only and keycloakforwardauth
       #- "traefik.http.routers.keycloak.middlewares=keycloakForwardAuth"
@@ -220,6 +226,7 @@ services:
       - "traefik.http.routers.bocra-web.entrypoints=websecure"
       - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
       - "traefik.http.routers.bocra-web.tls=true"
+      - "traefik.http.routers.bocra-web.tls.certresolver=le"
 
   ###############################################################################
   # The main API 
@@ -257,6 +264,7 @@ services:
       - "traefik.http.routers.bocra-api.entrypoints=websecure"
       - "traefik.http.routers.bocra-api.rule=Host(`${API_DOMAIN}`)"
       - "traefik.http.routers.bocra-api.tls=true"
+      - "traefik.http.routers.bocra-api.tls.certresolver=le"
 
   ###############################################################################
   # Local docker container registry
@@ -298,6 +306,7 @@ services:
       - "traefik.http.routers.bocra-registry.entrypoints=websecure"
       - "traefik.http.routers.bocra-registry.rule=Host(`${REGISTRY_DOMAIN}`)"
       - "traefik.http.routers.bocra-registry.tls=true"
+      - "traefik.http.routers.bocra-registry.tls.certresolver=le"
   
   ###############################################################################
   # Jenkins for CI/CD
@@ -327,6 +336,7 @@ services:
       - "traefik.http.routers.bocra-jenkins.entrypoints=websecure"
       - "traefik.http.routers.bocra-jenkins.rule=Host(`${JENKINS_DOMAIN}`)"
       - "traefik.http.routers.bocra-jenkins.tls=true"
+      - "traefik.http.routers.bocra-jenkins.tls.certresolver=le"
 
 ###############################################################################
 # Networks
