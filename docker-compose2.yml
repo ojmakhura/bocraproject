@@ -201,9 +201,9 @@ services:
     environment:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
       REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /certs/registry_trust_chain.pem
-      REGISTRY_AUTH_TOKEN_REALM: https://keycloak.localhost/auth/realms/bocraportal/protocol/docker-v2/auth
+      REGISTRY_AUTH_TOKEN_REALM: https://keycloak.localhost/realms/bocraportal/protocol/docker-v2/auth
       REGISTRY_AUTH_TOKEN_SERVICE: bocra-registry
-      REGISTRY_AUTH_TOKEN_ISSUER: https://keycloak.localhost/auth/realms/bocraportal
+      REGISTRY_AUTH_TOKEN_ISSUER: https://keycloak.localhost/realms/bocraportal
       REGISTRY_HTTP_TLS_CERTIFICATE: /certs/localhost.crt
       REGISTRY_HTTP_TLS_KEY: /certs/localhost.key
     volumes:

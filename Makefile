@@ -106,11 +106,11 @@ up_local_keycloak: gen_env up_keycloak
 
 up_local_proxy: gen_env up_proxy
 
-up_local_web: gen_env build_local_web up_web
+up_local_web: gen_env up_web
 
 up_local_pgadmin: gen_env up_pgadmin
 
-up_local_api: gen_env build_local_api up_api
+up_local_api: gen_env up_api
 
 up_local_registry: gen_env up_registry
 
