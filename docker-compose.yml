@@ -130,8 +130,8 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
       SCRIPT_NAME: /pgadmin
-    #ports:
-    #  - "9000:80"
+    ports:
+      - "9000:80"
     #volumes:
     #  - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
     labels:
@@ -170,8 +170,8 @@ services:
     # healthcheck:
     #   test: "curl -f http://localhost:8080/realms/master || exit 1"
     #   start_period: 15s
-    #ports:
-    #  - ${KEYCLOAK_PUBLIC_PORT}:8080
+    ports:
+      - ${KEYCLOAK_PUBLIC_PORT}:8080
     # volumes:
     #   - ./certs:/certs:ro
     # build:
