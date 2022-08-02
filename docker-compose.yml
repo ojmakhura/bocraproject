@@ -17,7 +17,6 @@ services:
       - ${BOCRA_DATA}/traefik/acme:/acme
       - ./certs:/etc/certs:ro
       - ./traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
-      # - traefik-data
     ports:
       - "443:443"
       - "80:80"
@@ -53,10 +52,6 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
 
-      # - "--api.insecure=true"
-      # - "--providers.docker=true"
-      # - "--providers.docker.exposedbydefault=false"
-      # - "--entrypoints.web.address=:80"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
@@ -80,8 +75,6 @@ services:
     volumes:
       - ${BOCRA_DATA}/db:/var/lib/postgresql/data
       - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
-    # env_file:
-    #  - .env
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_USER: ${POSTGRES_USER}
@@ -124,28 +117,18 @@ services:
     #  - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
     labels:
       - "traefik.enable=true"
-      # - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
       - "traefik.http.routers.bocra-pgadmin.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
-      # - "traefik.http.routers.bocra-pgadmin.tls=true"
+      - "traefik.http.routers.bocra-pgadmin.tls=true"
 
   ###############################################################################
   # Keycloak authentication server
   ###############################################################################
   keycloak:
-    # image: quay.io/keycloak/keycloak:18.0.2-legacy
-    image: "bocra-keycloak:latest"
+    image: quay.io/keycloak/keycloak:18.0.2-legacy
     hostname: keycloak
     container_name: bocra-keycloak
-    command:
-      - "start-dev"
-      #      - "start"
-      - "--http-enabled=false"
-      - "--http-port=8080"
-      # - "--hostname-strict-https=true"
-      - "--spi-theme-static-max-age=-1"
-      - "--spi-theme-cache-themes=false"
-      - "--spi-theme-cache-templates=false"
-      - "-Dkeycloak.profile.feature.docker=enabled"
+    command: ["-b", "0.0.0.0","-Dkeycloak.profile.feature.docker=enabled"]
     environment:
       PROXY_ADDRESS_FORWARDING: "true"
       DB_VENDOR: POSTGRES
@@ -164,16 +147,16 @@ services:
       GROUPS_DISCOVERY_PROTOCOL: JDBC_PING
     depends_on:
       - db
-    healthcheck:
-      test: "curl -f http://localhost:8080/realms/master || exit 1"
-      start_period: 15s
+    # healthcheck:
+    #   test: "curl -f http://localhost:8080/realms/master || exit 1"
+    #   start_period: 15s
     #ports:
     #  - ${KEYCLOAK_PUBLIC_PORT}:8080
     # volumes:
     #   - ./certs:/certs:ro
-    build:
-      context: .
-      dockerfile: Dockerfile.keycloak
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.keycloak
     networks:
       traefik-public:
       bocra-network:
@@ -182,15 +165,16 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.keycloak.entrypoints=web"
+      - "traefik.http.routers.keycloak.entrypoints=websecure"
       - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
       - "traefik.http.services.keycloak.loadbalancer.passhostheader=true"
       - "traefik.http.routers.keycloak.service=keycloak"
       # - "traefik.frontend.keycloak.rule=Host(`app.localhost`) && PathPrefix(`/keycloak`)"
       # - "traefik.http.middlewares.strip-keycloak.stripprefix.prefixes=/keycloak"
       # - "traefik.http.routers.keycloak.middlewares=strip-keycloak@docker"
-      # - "traefik.http.routers.keycloak.tls=true"
-      # - "traefik.http.routers.keycloak.tls.certresolver=sslresolver"
-      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+      - "traefik.http.routers.keycloak.tls=true"
+      - "traefik.http.routers.keycloak.tls.certresolver=sslresolver"
+      # - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
       # Select middleware chain https-only and keycloakforwardauth
       #- "traefik.http.routers.keycloak.middlewares=keycloakForwardAuth"
       #- "traefik.http.routers.keycloak.middlewares=secured"
@@ -201,8 +185,8 @@ services:
 #      - "traefik.http.middlewares.keycloak.headers.browserxssfilter=true"
 ##      - "traefik.http.middlewares.keycloak.headers.sslforcehost=true"
 #      - "traefik.http.middlewares.keycloak.headers.contentsecuritypolicy=default-src 'self';script-src 'self' 'unsafe-inline' 'unsafe-eval';style-src 'self' 'unsafe-inline';img-src 'self' data:;frame-src 'self' *;object-src 'self';font-src 'self' data:;"
-#      - "traefik.http.middlewares.compresstraefik.compress=true"
-#      - "traefik.http.routers.keycloak.middlewares=keycloak, compresstraefik"
+      # - "traefik.http.middlewares.compresstraefik.compress=true"
+      # - "traefik.http.routers.keycloak.middlewares=keycloak, compresstraefik"
 
   ###############################################################################
   # Angular web application
@@ -295,9 +279,9 @@ services:
 
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
       REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /certs/localhost_trust_chain.pem
-      REGISTRY_AUTH_TOKEN_REALM: ${KEYCLOAK_AUTH_URL}/realms/${KEYCLOAK_REALM}/protocol/docker-v2/auth
+      REGISTRY_AUTH_TOKEN_REALM: ${KEYCLOAK_AUTH_URL}/realms/${BOCRA_REGISTRY_REALM}/protocol/docker-v2/auth
       REGISTRY_AUTH_TOKEN_SERVICE: ${REGISTRY_CLIENT}
-      REGISTRY_AUTH_TOKEN_ISSUER: ${KEYCLOAK_AUTH_URL}/realms/${KEYCLOAK_REALM}
+      REGISTRY_AUTH_TOKEN_ISSUER: ${KEYCLOAK_AUTH_URL}/realms/${BOCRA_REGISTRY_REALM}
       REGISTRY_HTTP_TLS_CERTIFICATE: ${REGISTRY_HTTP_TLS_CERTIFICATE}
       REGISTRY_HTTP_TLS_KEY: ${REGISTRY_HTTP_TLS_KEY}
     volumes:

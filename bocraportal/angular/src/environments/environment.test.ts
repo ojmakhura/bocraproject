@@ -18,10 +18,10 @@ export const environment = {
   webClientId: '5bf59357-eafb-4de3-baff-dc98f1d9bab7',
   redirectUri: 'http://168.167.14.40',
   keycloakClientRoleUrl:
-    'http://192.168.57.3:8080/auth/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
-  keycloakRealmRoleUrl: 'http://192.168.57.3:8080/auth/admin/realms/bocraportal/roles',
+    'http://192.168.57.3:8080/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
+  keycloakRealmRoleUrl: 'http://192.168.57.3:8080/admin/realms/bocraportal/roles',
   keycloak: {
-    issuer: 'http://192.168.57.3:8080/auth',
+    issuer: 'http://192.168.57.3:8080',
     redirectUri: window.location.origin,
     clientId: 'bocraportal-web',
     scope: 'openid profile email offline_access',
