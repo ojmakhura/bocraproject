@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
@@ -82,12 +83,6 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         http.cors().and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
-            .antMatchers("/users/unsecure")
-            .permitAll()
-            .antMatchers("/auth/signin")
-            .permitAll()
-            .antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v3/**", "/swagger-resources/**")
-            .permitAll()
             .anyRequest().authenticated();
     }
 
@@ -118,29 +113,17 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         return registrationBean;
     }
 
-    // @Override
-    // public void configure(WebSecurity web) throws Exception {
-    //     // TODO Auto-generated method stub
-    //     super.configure(web);
-    //     web.ignoring()
-    //             .mvcMatchers("/js/**")
-    //             .and()
-    //             .ignoring()
-    //             .mvcMatchers("/css/**")
-    //             .and()
-    //             .ignoring()
-    //             .mvcMatchers("/images/**")
-    //             .and()
-    //             .ignoring()
-    //             .mvcMatchers("/html/**")
-    //             .and()
-    //             .ignoring()
-    //             .antMatchers(HttpMethod.OPTIONS, "/**")
-    //             .and()
-    //             .ignoring()
-    //             .antMatchers("/web");
-    //     /* @formatter:on */
-    // }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().mvcMatchers(
+            "/swagger-ui/*", 
+            "/swagger-ui.html", 
+            "/webjars/**", 
+            "/v3/**", 
+            "/swagger-resources/**",
+            "/auth/signin"
+        );
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
