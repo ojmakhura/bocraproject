@@ -128,7 +128,7 @@ run_web_local: gen_env build_web
 	@$(LOCAL_ENV) && chmod 755 .env && . ./.env && cd bocraportal/angular/target/bocraportal && npm start
 
 # run_local_web: build_local_images up_local_app
-stop_local_app:
+stop_app:
 	docker compose down
 
 rm_env:
@@ -184,11 +184,6 @@ up_test_jenkins: gen_test_env up_jenkins
 
 run_test_app: gen_test_env build_test_images up_test_app
 
-# run_test_web: build_test_images up_test_app
-stop_test_app:
-	docker compose down
-
-
 gen_test_env: rm_env
 	if [ -f .env ]; then \
 		rm -f .env; \
@@ -233,10 +228,6 @@ up_dev_registry: gen_dev_env up_registry
 up_dev_jenkins: gen_dev_env up_jenkins
 
 run_dev_app: gen_dev_env build_dev_images up_dev_app
-
-# run_dev_web: build_dev_images up_dev_app
-stop_dev_app:
-	docker compose down
 
 gen_dev_env: rm_env
 	if [ -f .env ]; then \
