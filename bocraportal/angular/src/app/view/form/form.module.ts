@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '@shared';
 import { MaterialModule } from '@app/material.module';
+import { DataTablesModule } from 'angular-datatables';
 import { FormRoutingModule } from './form-routing.module';
 import { EditFormComponentImpl } from '@app/view/form/edit-form.component.impl';
 import { SearchFormsComponentImpl } from '@app/view/form/search-forms.component.impl';
@@ -33,6 +34,7 @@ import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/
     TranslateModule,
     SharedModule,
     FlexLayoutModule,
+    DataTablesModule,
     MaterialModule,
     FormRoutingModule,
     StoreModule.forFeature(formFeature),
