@@ -8,6 +8,7 @@ package bw.org.bocra.portal.access.type;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/access/type")
 @Tag(name = "Access Point Type", description = "Configuring different resource types accessible.")
+@CrossOrigin()
 public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestControllerBase {
 
     public AccessPointTypeRestControllerImpl(AccessPointTypeService accessPointTypeService) {

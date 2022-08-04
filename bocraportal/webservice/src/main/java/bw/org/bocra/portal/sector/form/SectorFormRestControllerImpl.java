@@ -12,12 +12,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/sector/form")
 @Tag(name = "Sector Forms", description = "Managing sector level forms.")
+@CrossOrigin()
 public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
     public SectorFormRestControllerImpl(

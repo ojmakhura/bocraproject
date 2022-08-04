@@ -1,0 +1,151 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # Traefik proxy
+  ###############################################################################
+  proxy:
+    image: traefik:2.8
+    container_name: bocra-proxy
+    hostname: traefik
+    restart: unless-stopped
+    networks:
+      bocra-network:
+        ipv4_address: ${BOCRA_PROXY_ADDRESS}
+      traefik-public:
+      default:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${BOCRA_DATA}/traefik/acme.json:${BOCRA_DATA}/traefik/acme.json
+      - ./traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
+    ports:
+      - "443:443"
+      - "80:80"
+    healthcheck:
+      test: [ "CMD", "wget", "http://localhost:8082/ping","--spider" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entryPoints.ping.address=:8082"
+      - "--log.level=DEBUG"
+      - "--accessLog"
+      - "--accesslog=true"
+      - "--api"
+      - "--api.dashboard"
+      - "--ping=true"
+      - "--ping.entrypoint=ping"
+      - "--metrics"
+      - "--metrics.prometheus"
+      - "--providers.docker.network=traefik-public"
+      - "--providers.docker"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
+      - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.proxy.rule=Host(`${PROXY_DOMAIN}`)"
+      - "traefik.http.routers.proxy.entrypoints=websecure"
+      - "traefik.http.routers.proxy.service=api@internal"
+      - "traefik.http.routers.proxy.tls=true"
+      - "traefik.http.routers.proxy.tls.certresolver=le"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.https-redirect.middlewares=https-redirect"
+      - "traefik.http.routers.dashboard.rule=Host(`dashboard.bocra.localhost`)"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.service=dashboard@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=le"
+
+  ###############################################################################
+  # Postgres database
+  ###############################################################################
+  db:
+    container_name: bocra-db
+    hostname: db
+    image: postgres:14
+    restart: unless-stopped
+    volumes:
+      - ${BOCRA_DATA}/db:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    depends_on:
+      proxy:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_DB_ADDRESS}
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-db.entrypoints=websecure"
+      - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
+      - "traefik.http.routers.bocra-db.tls=true"
+      - "traefik.http.routers.bocra-db.tls.certresolver=le"
+
+  ###############################################################################
+  # Postgres administration frontend
+  ###############################################################################
+  pgadmin:
+    image: dpage/pgadmin4:6.12
+    container_name: bocra-pgadmin
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/auth/realms/master"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_PGADMIN_ADDRESS}
+      default:
+    depends_on:
+      proxy:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      SCRIPT_NAME: /pgadmin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.bocra-pgadmin.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.bocra-pgadmin.tls=true"
+      - "traefik.http.routers.bocra-pgadmin.tls.certresolver=le"
+
+networks:
+  traefik-public:
+    # Allow setting it to false for testing
+    external: true
+  bocra-network:
+    name: bocra-network
+    driver: bridge
+    external: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.57.0/24

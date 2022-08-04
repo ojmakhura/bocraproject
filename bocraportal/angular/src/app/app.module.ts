@@ -64,6 +64,7 @@ import { MenuSectionModule } from '@app/view/menu/menu-section.module';
 import { MenuSectionControllerImpl } from '@app/controller/menu/menu-section-controller.impl';
 import { UseCaseScope } from '@app/utils/use-case-scope';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
 import { DocumentRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/document-rest-controller.impl';
 import { AccessPointTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/type/access-point-type-rest-controller.impl';
@@ -88,25 +89,33 @@ import { LicenseeFormRestControllerImpl } from '@app/service/bw/org/bocra/portal
 =======
 import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
 import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
+=======
+>>>>>>> origin/ojm-dev
 import { AccessPointTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/type/access-point-type-rest-controller.impl';
-import { DocumentTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/type/document-type-rest-controller.impl';
+import { LicenseeSectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/sector/licensee-sector-rest-controller.impl';
+import { NoteRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/note/note-rest-controller.impl';
+import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
+import { FormActivationRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller.impl';
 import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { LicenceTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/type/licence-type-rest-controller.impl';
+import { DocumentTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/type/document-type-rest-controller.impl';
 import { LicenceRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/licence-rest-controller.impl';
-import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
-import { MenuSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/menu/menu-section-rest-controller.impl';
-import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
-import { AccessPointRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/access-point-rest-controller.impl';
+import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
+import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
 import { LicenseeFormRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/form/licensee-form-rest-controller.impl';
 import { DocumentRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/document-rest-controller.impl';
-import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
-import { FormActivationRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller.impl';
-import { LicenceTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/type/licence-type-rest-controller.impl';
-import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller.impl';
-import { NoteRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/note/note-rest-controller.impl';
+import { MenuSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/menu/menu-section-rest-controller.impl';
+import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
 import { SectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller.impl';
-import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
+import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
+import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
+import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller.impl';
 import { PeriodConfigRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/config/period-config-rest-controller.impl';
+<<<<<<< HEAD
 import { LicenseeSectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/sector/licensee-sector-rest-controller.impl';
+>>>>>>> origin/ojm-dev
+=======
+import { AccessPointRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/access-point-rest-controller.impl';
 >>>>>>> origin/ojm-dev
 import { AuthModule } from './auth';
 true
@@ -155,6 +164,7 @@ true
     providers: [
         UseCaseScope,
 <<<<<<< HEAD
+<<<<<<< HEAD
         LicenseeRestControllerImpl,
         DocumentRestControllerImpl,
         AccessPointTypeRestControllerImpl,
@@ -179,25 +189,33 @@ true
 =======
         UserRestControllerImpl,
         AuthorisationRestControllerImpl,
+=======
+>>>>>>> origin/ojm-dev
         AccessPointTypeRestControllerImpl,
-        DocumentTypeRestControllerImpl,
+        LicenseeSectorRestControllerImpl,
+        NoteRestControllerImpl,
+        UserRestControllerImpl,
+        FormActivationRestControllerImpl,
         LicenseeRestControllerImpl,
+        LicenceTypeRestControllerImpl,
+        DocumentTypeRestControllerImpl,
         LicenceRestControllerImpl,
-        FormRestControllerImpl,
-        MenuSectionRestControllerImpl,
-        FormFieldRestControllerImpl,
-        AccessPointRestControllerImpl,
+        PeriodRestControllerImpl,
+        SubmissionRestControllerImpl,
         LicenseeFormRestControllerImpl,
         DocumentRestControllerImpl,
-        SubmissionRestControllerImpl,
-        FormActivationRestControllerImpl,
-        LicenceTypeRestControllerImpl,
-        FormSectionRestControllerImpl,
-        NoteRestControllerImpl,
+        MenuSectionRestControllerImpl,
+        FormFieldRestControllerImpl,
         SectorRestControllerImpl,
-        PeriodRestControllerImpl,
+        AuthorisationRestControllerImpl,
+        FormRestControllerImpl,
+        FormSectionRestControllerImpl,
         PeriodConfigRestControllerImpl,
+<<<<<<< HEAD
         LicenseeSectorRestControllerImpl,
+>>>>>>> origin/ojm-dev
+=======
+        AccessPointRestControllerImpl,
 >>>>>>> origin/ojm-dev
         LicenseeControllerImpl,
         UserControllerImpl,

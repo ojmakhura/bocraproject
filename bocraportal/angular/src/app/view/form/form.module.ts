@@ -20,6 +20,10 @@ import { formFeature } from '@app/store/form/form.reducers';
 import { FormEffects } from '@app/store/form/form.effects';
 import { licenseeFormFeature } from '@app/store/licensee/form/licensee-form.reducers';
 import { LicenseeFormEffects } from '@app/store/licensee/form/licensee-form.effects';
+import { FormControllerImpl } from '@app/controller/form/form-controller.impl';
+import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
+import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
+import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller.impl';
 
 @NgModule({
   imports: [
@@ -44,6 +48,11 @@ import { LicenseeFormEffects } from '@app/store/licensee/form/licensee-form.effe
     EditLicenseeComponentImpl,
   ],
   entryComponents: [],
-  providers: [],
+  providers: [
+    FormControllerImpl,
+    FormRestControllerImpl,
+    FormFieldRestControllerImpl,
+    FormSectionRestControllerImpl,
+  ],
 })
 export class FormModule {}
