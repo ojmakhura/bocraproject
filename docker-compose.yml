@@ -20,7 +20,6 @@ services:
     ports:
       - "443:443"
       - "80:80"
-      - "8080:8080"
     healthcheck:
       test: [ "CMD", "wget", "http://localhost:8082/ping","--spider" ]
       interval: 5s
@@ -108,15 +107,15 @@ services:
   # Postgres administration frontend
   ###############################################################################
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:6.12
     container_name: bocra-pgadmin
     restart: unless-stopped
-    # healthcheck:
-    #   test: ["CMD", "curl", "--fail", "http://localhost:8080/auth/realms/master"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 3
-    #   start_period: 15s
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/auth/realms/master"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     networks:
       traefik-public:
       bocra-network:
