@@ -16,7 +16,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${BOCRA_DATA}/traefik/acme.json:${BOCRA_DATA}/traefik/acme.json
-      - ./traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
+      - ${BOCRA_DATA}/traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
     ports:
       - "443:443"
       - "80:80"
@@ -61,11 +61,13 @@ services:
       - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
       - "traefik.http.routers.https-redirect.middlewares=https-redirect"
-      - "traefik.http.routers.dashboard.rule=Host(`dashboard.bocra.localhost`)"
-      - "traefik.http.routers.dashboard.entrypoints=websecure"
-      - "traefik.http.routers.dashboard.service=dashboard@internal"
-      - "traefik.http.routers.dashboard.tls=true"
-      - "traefik.http.routers.dashboard.tls.certresolver=le"
+      #- "traefik.http.routers.dashboard.rule=Host(`${PROXY_DOMAIN}`)"
+      #- "traefik.http.routers.dashboard.entrypoints=websecure"
+      #- "traefik.http.routers.dashboard.service=dashboard@internal"
+      #- "traefik.http.routers.dashboard.tls=true"
+      #- "traefik.http.routers.dashboard.tls.certresolver=le"
+      - "traefik.http.routers.proxy.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_USER}:$$2y$$05$$6l7wDVYCljKjCsQSeh.2x.6NfZYnTw02GS7Is/gCzkS7GfmVIE3Mu"
 
   ###############################################################################
   # Postgres database
@@ -110,12 +112,12 @@ services:
     image: dpage/pgadmin4:6.12
     container_name: bocra-pgadmin
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/auth/realms/master"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
+    # healthcheck:
+    #  test: ["CMD", "curl", "--fail", "http://localhost:8080/auth/realms/master"]
+    #  interval: 10s
+    #  timeout: 5s
+    #  retries: 3
+    #  start_period: 15s
     networks:
       traefik-public:
       bocra-network:
