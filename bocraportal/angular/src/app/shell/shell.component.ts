@@ -40,7 +40,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
     this.username$ = this.store.pipe(select(AuthSelectors.selectUsername));
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit(): void {
     this.keycloakService.isLoggedIn().then((loggedIn) => {
@@ -57,7 +57,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
         authorisations.forEach((authorisation: AuthorisationVO) => {
           let menu: Menu = nav.menuItems.find((item) => authorisation.accessPoint.url === item.routerLink);
           if (menu) {
-            menu.titleKey=authorisation.accessPoint.name
+            menu.titleKey = authorisation.accessPoint.name
             this.store.dispatch(MenuActions.addMenu({ menu: menu }));
           }
         });
@@ -86,12 +86,5 @@ export class ShellComponent implements OnInit, AfterViewInit {
 
   get title(): string {
     return this.titleService.getTitle();
-  }
-  toggle(){
-    if(this.toggled===false){
-      this.toggled = true;
-    }else{
-      this.toggled = false;
-    }
   }
 }
