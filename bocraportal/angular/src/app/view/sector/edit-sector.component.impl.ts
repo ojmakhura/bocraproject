@@ -123,7 +123,15 @@ export class EditSectorComponentImpl extends EditSectorComponent {
         })
       );
     } else {
-      this.store.dispatch(SectorActions.sectorFailure({ messages: ['Form has errors!'] }));
+      let messages: string[] = []
+      if(!this.sectorNameControl.valid) {
+        messages.push("Sector name has errors")
+      }
+      if(!this.sectorCodeControl.valid) {
+        messages.push("Sector code has errors")
+      }
+      this.store.dispatch(SectorActions.sectorFailure({ messages: messages }));
     }
   }
 }
+

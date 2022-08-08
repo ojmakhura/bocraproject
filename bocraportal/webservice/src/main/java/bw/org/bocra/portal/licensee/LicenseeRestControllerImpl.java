@@ -90,16 +90,32 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleSave(LicenseeVO licenseeVO) {
-        Optional<LicenseeVO> data = Optional.of(this.licenseeService.save(licenseeVO)); // TODO: Add custom code here;
-        ResponseEntity<LicenseeVO> response;
+        //Optional<LicenseeVO> data = Optional.of(this.licenseeService.save(licenseeVO)); // TODO: Add custom code here;
+        // ResponseEntity<LicenseeVO> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // if(data.isPresent()) {
+        //     response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        // } else {
+        //     response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // }
+
+        // return response;
+
+        try {
+            Optional<?> data = Optional.of(this.licenseeService.save(licenseeVO));
+            ResponseEntity<?> response;
+
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override

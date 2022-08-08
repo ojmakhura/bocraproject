@@ -137,4 +137,6 @@ public class LicenseeSectorServiceImpl
         throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.LicenseeSectorService.handleUpdateSector(Long id, Long sectorId) Not implemented!");
     }
 
+    
+
 }

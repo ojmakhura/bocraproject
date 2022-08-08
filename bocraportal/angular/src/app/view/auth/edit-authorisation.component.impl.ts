@@ -94,20 +94,26 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
    * This method may be overwritten
    */
   override beforeEditAuthorisationSave(form: EditAuthorisationSaveForm): void {
-    if (form.authorisation?.id) {
-      form.authorisation.updatedBy = this.keycloakService.getUsername();
-      form.authorisation.updatedDate = new Date();
-    } else {
-      form.authorisation.createdBy = this.keycloakService.getUsername();
-      form.authorisation.createdDate = new Date();
+    if (this.editAuthorisationForm.valid){
+      if (form.authorisation?.id) {
+        form.authorisation.updatedBy = this.keycloakService.getUsername();
+        form.authorisation.updatedDate = new Date();
+      } else {
+        form.authorisation.createdBy = this.keycloakService.getUsername();
+        form.authorisation.createdDate = new Date();
+      }
+      this.store.dispatch(
+        AuthorisationActions.save({
+          authorisation: form.authorisation,
+          loading: true,
+        })
+      );
+  
+      }else{
+        
+        this.store.dispatch(AuthorisationActions.authorisationFailure({ messages:['Form has to be filled'] }));
+      }
     }
-    this.store.dispatch(
-      AuthorisationActions.save({
-        authorisation: form.authorisation,
-        loading: true,
-      })
-    );
-  }
 
   override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
     this.store.dispatch(

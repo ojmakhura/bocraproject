@@ -34,7 +34,7 @@ export class LicenseeEffects {
                     messages: [`Licensee ${licensee.licenseeName} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [LicenseeActions.licenseeFailure({messages: [error.error]})])
+                catchError(({error}) => [LicenseeActions.licenseeFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );

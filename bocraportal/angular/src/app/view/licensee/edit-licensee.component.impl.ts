@@ -71,21 +71,39 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
    * This method may be overwritten
    */
   override beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
-    if (form.licensee?.id) {
-      form.licensee.updatedBy = this.keycloakService.getUsername();
-      form.licensee.updatedDate = new Date();
-    } else {
-      form.licensee.createdBy = this.keycloakService.getUsername();
-      form.licensee.createdDate = new Date();
+    if (this.editLicenseeForm.valid && this.editLicenseeForm.dirty) {
+      if (form.licensee?.id) {
+        form.licensee.updatedBy = this.keycloakService.getUsername();
+        form.licensee.updatedDate = new Date();
+      } else {
+        form.licensee.createdBy = this.keycloakService.getUsername();
+        form.licensee.createdDate = new Date();
+      }
+  
+      this.store.dispatch(
+        LicenseeActions.save({
+          licensee: form.licensee,
+          loading: true,
+        })
+      );
+      }
+      else {
+        let messages: string[] = []
+        if(!this.licenseeStatusControl.valid) {
+          messages.push("licensee status has errors")
+        }
+        if(!this.licenseeUinControl.valid) {
+          messages.push("licensee Uin has errors")
+        }
+        if(!this.licenseeLicenseeNameControl.valid) {
+          messages.push("licensee name has errors")
+        }
+        this.store.dispatch(LicenseeActions.licenseeFailure({ messages: messages }));
+      }
+  
+    
     }
 
-    this.store.dispatch(
-      LicenseeActions.save({
-        licensee: form.licensee,
-        loading: true,
-      })
-    );
-  }
 
   override licenseeLicencesSearch(): void {
     let criteria: string = '';

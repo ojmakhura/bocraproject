@@ -22,9 +22,11 @@ import { KeycloakService } from 'keycloak-angular';
   templateUrl: './edit-user.component.html',
   styleUrls: ['./edit-user.component.scss'],
 })
-export class EditUserComponentImpl extends EditUserComponent {
+
+ export class EditUserComponentImpl extends EditUserComponent {
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
+  store: any;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -84,13 +86,46 @@ export class EditUserComponentImpl extends EditUserComponent {
    * This method may be overwritten
    */
   override beforeEditUserSave(form: EditUserSaveForm): void {
-    this.store.dispatch(
-      UserActions.createUser({
-        user: form.user,
-        loading: true,
-      })
-    );
-  }
+
+    if (this.editUserForm.valid && this.editUserForm.dirty) {
+      if (form.user?.id) {
+        form.user.updatedBy = this.keycloakService.getUsername();
+        form.user.updatedDate = new Date();
+      } else {
+        form.user.createdBy = this.keycloakService.getUsername();
+        form.user.createdDate = new Date();
+      }
+  
+      // this.store.dispatch(
+      //   UserActions.save({
+      //     user: form.user,
+      //     loading: true,
+      //   })
+      // );
+      }
+      else {
+        let messages: string[] = []
+        if(!this.userUsernameControl.valid) {
+          messages.push("Username has errors")
+        }
+        if(!this.userEmailControl.valid) {
+          messages.push("Email has errors")
+        }
+        if(!this.userPasswordControl.valid) {
+          messages.push("Password has errors")
+        }
+        if(!this.userFirstNameControl.valid) {
+          messages.push("First name has errors")
+        }
+        if(!this.userLastNameControl.valid) {
+          messages.push("lastname has errors")
+        }
+
+        this.store.dispatch(UserActions.userFailure({ messages: messages }));
+      }
+    }
+  
+
 
   override userLicenseeSearch(): void {
     let criteria: string = '';
@@ -103,3 +138,4 @@ export class EditUserComponentImpl extends EditUserComponent {
     );
   }
 }
+

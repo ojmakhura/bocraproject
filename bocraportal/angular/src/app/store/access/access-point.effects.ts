@@ -31,11 +31,13 @@ export class AccessPointEffects {
           map((accessPoint) =>
             AccessPointActions.saveSuccess({ accessPoint, messages: [`Access point ${accessPoint.name} saved.`], success: true })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error] })])
+          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
   );
+
+
 
   remove$ = createEffect(() =>
     this.actions$.pipe(
