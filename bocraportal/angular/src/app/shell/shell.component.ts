@@ -14,7 +14,6 @@ import * as AuthSelectors from '@app/store/auth/auth.selectors';
 import * as AuthActions from '@app/store/auth/auth.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
 import * as MenuActions from '@app/store/menu/menu.actions';
-import jwt_decode from 'jwt-decode';
 import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 
 @Component({
