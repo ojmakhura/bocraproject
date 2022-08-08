@@ -47,9 +47,10 @@ services:
       - "--providers.docker"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
+      - "--certificatesresolvers.le.acme.email=${ACME_EMAIL}"
       - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
       - "--certificatesresolvers.le.acme.tlschallenge=true"
+      - "--providers.docker.swarmmode"
 
     labels:
       - "traefik.enable=true"
@@ -98,9 +99,6 @@ services:
       KEYCLOAK_LOGLEVEL: DEBUG
       JDBC_PARAMS=useSSL: true
       GROUPS_DISCOVERY_PROTOCOL: JDBC_PING
-    depends_on:
-      db:
-        condition: service_healthy
     networks:
       traefik-public:
       bocra-network:
@@ -131,8 +129,6 @@ services:
       retries: 3
       start_period: 5s
     depends_on:
-      db:
-        condition: service_healthy
       keycloak:
         condition: service_healthy
     build:
@@ -179,8 +175,6 @@ services:
     volumes:
       - ${BOCRA_DATA}/web:/web
     depends_on:
-      db:
-        condition: service_healthy
       keycloak:
         condition: service_healthy
       api:
@@ -198,7 +192,17 @@ services:
       - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
       - "traefik.http.routers.bocra-web.tls=true"
       - "traefik.http.routers.bocra-web.tls.certresolver=le"
+
+
 networks:
-  bocra-network:
+  traefik-public:
     # Allow setting it to false for testing
     external: true
+  bocra-network:
+    name: bocra-network
+    driver: bridge
+    external: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.57.0/24
