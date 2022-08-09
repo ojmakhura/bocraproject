@@ -3,6 +3,7 @@ import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo'
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
 import { ShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/shareholder-vo';
 import { LicenseeSectorVO } from '@model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
+import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 
 export const licenseeKey = "licensee";
 
@@ -15,6 +16,8 @@ export interface LicenseeState {
     shareholder: ShareholderVO | any,
     sector: LicenseeSectorVO | any,
     sectors: Array<LicenseeSectorVO> | Array<any>,
+    document: DocumentVO | any,
+    documents: Array<DocumentVO> | Array<any>,
     removed: boolean,
     success: boolean,
     loading: boolean,
@@ -35,5 +38,7 @@ export const initialState: LicenseeState = {
     success: false,
     loading: false,
     error: false,
-    messages: []
+    messages: [],
+    document: undefined,
+    documents: []
 };
