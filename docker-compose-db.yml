@@ -1,0 +1,89 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # Postgres database
+  ###############################################################################
+  db:
+    container_name: bocra-db
+    hostname: db
+    image: postgres:14
+    restart: unless-stopped
+    volumes:
+      - ${BOCRA_DATA}/db:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    # deploy:
+    #   mode: replicated
+    #   replicas: 1
+    #   placement:
+    #     constraints:
+    #       - node.hostname == roguew
+    #depends_on:
+    #  proxy:
+    #    condition: service_healthy
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_DB_ADDRESS}
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-db.entrypoints=websecure"
+      - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
+      - "traefik.http.routers.bocra-db.tls=true"
+      - "traefik.http.routers.bocra-db.tls.certresolver=le"
+
+  ###############################################################################
+  # Postgres administration frontend
+  ###############################################################################
+  pgadmin:
+    image: dpage/pgadmin4:6.12
+    container_name: bocra-pgadmin
+    restart: unless-stopped
+    # healthcheck:
+    #   test: ["CMD", "curl", "--fail", "http://localhost:8080/auth/realms/master"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 15s
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_PGADMIN_ADDRESS}
+      default:
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      SCRIPT_NAME: /pgadmin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.bocra-pgadmin.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.bocra-pgadmin.tls=true"
+      - "traefik.http.routers.bocra-pgadmin.tls.certresolver=le"
+
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  traefik-public:
+  bocra-network:
+    name: bocra-network
+    driver: bridge
+    external: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.57.0/24
