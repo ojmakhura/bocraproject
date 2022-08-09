@@ -14,7 +14,6 @@ import * as AuthSelectors from '@app/store/auth/auth.selectors';
 import * as AuthActions from '@app/store/auth/auth.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
 import * as MenuActions from '@app/store/menu/menu.actions';
-import jwt_decode from 'jwt-decode';
 import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 
 @Component({
@@ -26,6 +25,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
   menus: any[] = [];
   menus$: Observable<Menu[]>;
   username$: Observable<string>;
+  toggled = false;
 
   constructor(
     private router: Router,
@@ -50,14 +50,17 @@ export class ShellComponent implements OnInit, AfterViewInit {
 
     let auths = new Set();
 
-    this.authorisationRestController.getAccessTypeCodeAuthorisations(this.keycloakService.getUserRoles(), 'MENU').subscribe((authorisations) => {
-      authorisations.forEach((authorisation: AuthorisationVO) => {
-        let menu: Menu = nav.menuItems.find((item) => authorisation.accessPoint.url === item.routerLink);
-        if (menu) {
-          this.store.dispatch(MenuActions.addMenu({ menu: menu }));
-        }
+    this.authorisationRestController
+      .getAccessTypeCodeAuthorisations(this.keycloakService.getUserRoles(), 'MENU')
+      .subscribe((authorisations) => {
+        authorisations.forEach((authorisation: AuthorisationVO) => {
+          let menu: Menu = nav.menuItems.find((item) => authorisation.accessPoint.url === item.routerLink);
+          if (menu) {
+            menu.titleKey=authorisation.accessPoint.name
+            this.store.dispatch(MenuActions.addMenu({ menu: menu }));
+          }
+        });
       });
-    });
 
     // this.keycloakService.getToken().then((token) => {
     //   var decoded: any = jwt_decode(token);
@@ -82,5 +85,12 @@ export class ShellComponent implements OnInit, AfterViewInit {
 
   get title(): string {
     return this.titleService.getTitle();
+  }
+  toggle(){
+    if(this.toggled===false){
+      this.toggled = true;
+    }else{
+      this.toggled = false;
+    }
   }
 }

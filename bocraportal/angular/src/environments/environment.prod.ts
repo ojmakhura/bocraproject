@@ -33,31 +33,3 @@ export const environment = {
   },
 };
 
-// export const environment = {
-//   production: false,
-//   version: env['npm_package_version'] + '-dev',
-//   serverUrl: '/api',
-//   defaultLanguage: 'en-US',
-//   supportedLanguages: ['en-US'],
-//   bocraApiServer: 'http://192.168.57.4:8085/',
-//   bocraKeycloakServer: 'http://192.168.57.3:8080',
-//   keycloakRealm: 'bocraportal',
-//   webClientId: '5bf59357-eafb-4de3-baff-dc98f1d9bab7',
-//   redirectUri: 'http://localhost:4200',
-//   keycloakClientRoleUrl:
-//     'http://192.168.57.3:8080/auth/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
-//   keycloakRealmRoleUrl: 'http://192.168.57.3:8080/auth/admin/realms/bocraportal/roles',
-//   keycloak: {
-//     issuer: 'http://192.168.57.3:8080/auth',
-//     redirectUri: window.location.origin,
-//     clientId: 'bocraportal-web',
-//     scope: 'openid profile email offline_access',
-//     responseType: 'code',
-//     realm: 'bocraportal',
-//     // at_hash is not present in JWT token
-//     disableAtHashCheck: true,
-//     showDebugInformation: true,
-//     requireHttps: false,
-//     checkLoginIframe: false,
-//   },
-// };

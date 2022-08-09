@@ -7,10 +7,9 @@ package bw.org.bocra.portal.period;
 
 import java.util.Collection;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("period")
 @Tag(name = "Period", description = "Managing time periods in the system.")
+@PreAuthorize("@securityCheck.isAuthorised('/period')")
 @CrossOrigin()
 public class PeriodRestControllerImpl extends PeriodRestControllerBase {
 
