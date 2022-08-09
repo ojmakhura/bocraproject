@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared';
 import { MaterialModule } from '@app/material.module';
 import { FormRoutingModule } from './form-routing.module';
+import { CsvModule } from '@ctrl/ngx-csv';
 import { EditFormComponentImpl } from '@app/view/form/edit-form.component.impl';
 import { SearchFormsComponentImpl } from '@app/view/form/search-forms.component.impl';
 import { SearchFormsFormsComponentImpl } from '@app/view/form/search-forms-forms.component.impl';
@@ -34,6 +35,7 @@ import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/
     SharedModule,
     FlexLayoutModule,
     MaterialModule,
+    CsvModule,
     FormRoutingModule,
     StoreModule.forFeature(formFeature),
     StoreModule.forFeature(licenseeFormFeature),
