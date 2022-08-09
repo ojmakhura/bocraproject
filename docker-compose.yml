@@ -61,7 +61,7 @@ services:
       - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
       - "traefik.http.routers.https-redirect.middlewares=https-redirect"
-      - "traefik.http.routers.dashboard.rule=Host(`dashboard.bocra.localhost`)"
+      - "traefik.http.routers.dashboard.rule=Host(`${PROXY_DASH_DOMAIN}`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
       - "traefik.http.routers.dashboard.tls=true"
@@ -110,12 +110,6 @@ services:
     image: dpage/pgadmin4:6.12
     container_name: bocra-pgadmin
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/auth/realms/master"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
     networks:
       traefik-public:
       bocra-network:
