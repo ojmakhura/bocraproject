@@ -42,21 +42,21 @@ public class AuthorisationDaoImpl
         super.toAuthorisationVO(source, target);
 
         if(source.getAccessPoint() != null && source.getAccessPoint().getId() != null) {
-            AccessPointVO point = new AccessPointVO();
-            point.setId(source.getAccessPoint().getId());
-            point.setName(source.getAccessPoint().getName());
-            point.setUrl(source.getAccessPoint().getUrl());
+            AccessPointVO point = getAccessPointDao().toAccessPointVO(source.getAccessPoint());// new AccessPointVO();
+            // point.setId(source.getAccessPoint().getId());
+            // point.setName(source.getAccessPoint().getName());
+            // point.setUrl(source.getAccessPoint().getUrl());
 
-            AccessPointType typeEntity = source.getAccessPoint().getAccessPointType();
+            // AccessPointType typeEntity = source.getAccessPoint().getAccessPointType();
 
-            if(typeEntity != null && typeEntity.getId() != null) {
-                AccessPointTypeVO type = new AccessPointTypeVO();
-                type.setCode(typeEntity.getCode());
-                type.setId(typeEntity.getId());
-                type.setName(typeEntity.getName());
+            // if(typeEntity != null && typeEntity.getId() != null) {
+            //     AccessPointTypeVO type = new AccessPointTypeVO();
+            //     type.setCode(typeEntity.getCode());
+            //     type.setId(typeEntity.getId());
+            //     type.setName(typeEntity.getName());
 
-                point.setAccessPointType(type);
-            }
+            //     point.setAccessPointType(type);
+            // }
 
             target.setAccessPoint(point);
         }

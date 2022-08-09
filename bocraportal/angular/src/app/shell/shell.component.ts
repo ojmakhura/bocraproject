@@ -56,8 +56,11 @@ export class ShellComponent implements OnInit, AfterViewInit {
         authorisations.forEach((authorisation: AuthorisationVO) => {
           let menu: Menu = nav.menuItems.find((item) => authorisation.accessPoint.url === item.routerLink);
           if (menu) {
-            menu.titleKey=authorisation.accessPoint.name
-            this.store.dispatch(MenuActions.addMenu({ menu: menu }));
+            let m: Menu = new Menu();
+            m.icon = authorisation.accessPoint.icon ? authorisation.accessPoint.icon : "fa-puzzle-piece fa-lg";
+            m.routerLink = menu.routerLink;
+            m.titleKey = authorisation.accessPoint.name;
+            this.store.dispatch(MenuActions.addMenu({ menu: m }));
           }
         });
       });
