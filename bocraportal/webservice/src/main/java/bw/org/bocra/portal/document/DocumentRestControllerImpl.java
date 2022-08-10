@@ -5,135 +5,148 @@
 //
 package bw.org.bocra.portal.document;
 
-import java.util.Collection;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("document")
-@Tag(name = "Document", description = "Managing the documents.")
+@RequestMapping("/document")
 @CrossOrigin()
+@Tag(name = "Document", description = "Managing the documents.")
 public class DocumentRestControllerImpl extends DocumentRestControllerBase {
-
-    public DocumentRestControllerImpl(DocumentService documentService) {
+    
+    public DocumentRestControllerImpl(
+        DocumentService documentService    ) {
+        
         super(documentService);
     }
 
+
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<DocumentVO> data = Optional.of(documentService.findById(id)); // TODO: Add custom code here;
-        ResponseEntity<DocumentVO> response;
+        try {
+            Optional<?> data = Optional.of(documentService.findById(id)); // TODO: Add custom code here;
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<DocumentVO>> data = Optional.of(documentService.getAll()); // TODO: Add custom code here;
-        ResponseEntity<Collection<DocumentVO>> response;
+        try {
+            Optional<?> data = Optional.of(documentService.getAll()); // TODO: Add custom code here;
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<DocumentVO>> data = Optional.of(documentService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
-        ResponseEntity<Collection<DocumentVO>> response;
+        try {
+            Optional<?> data = Optional.of(documentService.getAll(pageNumber, pageSize));
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
-
-    // @Override
-    // public ResponseEntity<?> handleGetLicenceDocuments(Long licenceId) {
-    //     Optional<Collection<DocumentVO>> data = Optional.of(documentService.getLicenceDocuments(licenceId)); // TODO: Add custom code here;
-    //     ResponseEntity<Collection<DocumentVO>> response;
-
-    //     if(data.isPresent()) {
-    //         response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-    //     } else {
-    //         response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    //     }
-
-    //     return response;
-    // }
-
-    // @Override
-    // public ResponseEntity<?> handleGetLicenseeDocuments(Long licenseeId) {
-    //     Optional<Collection<DocumentVO>> data = Optional.of(documentService.getLicenseeDocuments(licenseeId)); // TODO: Add custom code here;
-    //     ResponseEntity<Collection<DocumentVO>> response;
-
-    //     if(data.isPresent()) {
-    //         response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-    //     } else {
-    //         response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    //     }
-
-    //     return response;
-    // }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(documentService.remove(id)); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
+        try {
+            Optional<?> data = Optional.of(documentService.remove(id));
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSave(DocumentVO document) {
-        Optional<DocumentVO> data = Optional.of(documentService.save(document)); // TODO: Add custom code here;
-        ResponseEntity<DocumentVO> response;
+        try {
+            Optional<?> data = Optional.of(documentService.save(document));
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
 
-        return response;
+    @PostMapping("/licensee/upload")
+    public DocumentVO uploadLicenseeDocument(@RequestParam(name = "file") MultipartFile file, @PathVariable Long licenseeId) {
+        System.out.println(String.format("Licensee %d\n", licenseeId));
+        return new DocumentVO();
     }
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
-        Optional<Collection<DocumentVO>> data = Optional.of(documentService.search(criteria)); // TODO: Add custom code here;
-        ResponseEntity<Collection<DocumentVO>> response;
+        try {
+            Optional<?> data = Optional.of(documentService.search(criteria));
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 }

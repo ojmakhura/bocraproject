@@ -10,6 +10,8 @@ export interface UserState {
     users: Array<UserVO> | Array<any>,
     id: number | any,
     user: UserVO | any,
+    password: string,
+    confirmPassword: string,
     removed: boolean,
     success: boolean;
     loading: boolean;
@@ -27,5 +29,7 @@ export const initialState: UserState = {
     success: false,
     loading: false,
     error: true,
-    messages: []
+    messages: [],
+    password: '',
+    confirmPassword: ''
 };

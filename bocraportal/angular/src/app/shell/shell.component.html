@@ -98,7 +98,7 @@
 				<ul class="nav flex-column" *ngFor="let item of menus$ | async">
 					<li class="nav-item">
 						<a class="nav-link" routerLink="{{ item.routerLink }}" routerLinkActive="active"><i
-								class="fa fa-puzzle-piece fa-lg" aria-hidden="true" title="Sector Management"></i>&nbsp;
+								class="fa {{item.icon}} fa-lg" aria-hidden="true" title="Sector Management"></i>&nbsp;
 							<span *ngIf="!toggled" class="ms-3" translate>{{ item.titleKey }} </span>
 						</a>
 					</li>

@@ -43,8 +43,8 @@ export class DocumentTypeRestControllerImpl extends DocumentTypeRestController {
 
     public override search(criteria: string | any ): Observable<DocumentTypeVO[] | any[]> {
 
-        return this.http.get<DocumentTypeVO[] | any[]>(this.path + `/search/criteria/${criteria}`);
-
+        let cr = criteria ? `/search?criteria=${criteria}` : `/all`;
+        return this.http.get<DocumentTypeVO[] | any[]>(this.path + `${cr}`);
     }
 
 }

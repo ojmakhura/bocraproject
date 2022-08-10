@@ -43,7 +43,7 @@ export class DocumentRestControllerImpl extends DocumentRestController {
 
     public override search(criteria: string | any ): Observable<DocumentVO[] | any[]> {
 
-        return this.http.get<DocumentVO[] | any[]>(this.path + `/search/criteria/${criteria}`);
+        return this.http.get<DocumentVO[] | any[]>(this.path + `/search/${criteria}`);
 
     }
 
