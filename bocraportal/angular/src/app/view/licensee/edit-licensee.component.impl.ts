@@ -120,6 +120,10 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     );
   }
 
+  override beforeEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {
+    
+  }
+
   override licenseeSectorsSearch(): void {
     let criteria: string = '';
     criteria = this.licenseeSectorsSearchField.value;
@@ -129,5 +133,11 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
         loading: true,
       })
     );
+  }
+
+  override beforeEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm): void {
+    console.log(form);
+    console.log(this.useCaseScope.pageVariables);
+    console.log(this.licensee);
   }
 }

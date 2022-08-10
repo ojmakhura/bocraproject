@@ -7,7 +7,7 @@ export const documentTypeReducer = createReducer(
     initialState,
     on(DocumentTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
-        documentType: null, 
+        documentType: action.documentType, 
         documentTypes: [], 
         criteria: null, 
         id: null, 
@@ -16,7 +16,7 @@ export const documentTypeReducer = createReducer(
     })),
     on(DocumentTypeActions.saveSuccess, (state, action) => ({
         ...state,
-        documentType: null, 
+        documentType: action.documentType, 
         documentTypes: [], 
         criteria: null, 
         id: null, 
@@ -35,7 +35,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.getAllSuccess, (state, action) => ({
         ...state,
         documentType: null, 
-        documentTypes: [], 
+        documentTypes: action.documentTypes, 
         criteria: null, 
         id: null, 
         success: action.success,
@@ -44,7 +44,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.searchSuccess, (state, action) => ({
         ...state,
         documentType: null, 
-        documentTypes: [], 
+        documentTypes: action.documentTypes, 
         criteria: null, 
         id: null, 
         success: action.success,
@@ -53,7 +53,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         documentType: null, 
-        documentTypes: [], 
+        documentTypes: action.documentTypes, 
         criteria: null, 
         id: null, 
         success: action.success,
