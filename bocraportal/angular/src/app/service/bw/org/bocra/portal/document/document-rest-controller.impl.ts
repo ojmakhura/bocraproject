@@ -47,4 +47,16 @@ export class DocumentRestControllerImpl extends DocumentRestController {
 
     }
 
+    public override uploadLicenceDocument(licenceId: number | any , file: File | any ): Observable<DocumentVO | any> {
+
+        return this.http.post<DocumentVO | any>(this.path + `/licence/upload`, {licenceId: licenceId, file: file});
+
+    }
+
+    public override uploadLicenseeDocument(licenseeId: number | any , file: File | any ): Observable<DocumentVO | any> {
+
+        return this.http.post<DocumentVO | any>(this.path + `/licensee/upload`, {licenseeId: licenseeId, file: file});
+
+    }
+
 }
