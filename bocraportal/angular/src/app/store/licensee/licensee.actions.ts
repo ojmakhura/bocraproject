@@ -68,7 +68,7 @@ export const removeSectorSuccess = createAction(
 
 export const addDocument = createAction(
     LicenseeActionType.ADD_DOCUMENT,
-    props<{ id: number, documentTypeId: number, file: File, loading: boolean }>()
+    props<{ id: number, documentTypeId: number, file: File, fileName: string, loading: boolean }>()
 );
 
 export const addDocumentSuccess = createAction(

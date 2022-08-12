@@ -5,9 +5,6 @@
 //
 package bw.org.bocra.portal.document;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -15,16 +12,14 @@ import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.LicenseeVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/document")
@@ -170,7 +165,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
             document.setCreatedDate(LocalDateTime.now());
-            //document.setFile(file.getBytes());
+            document.setFile(file.getBytes());
             LicenceVO licence = new LicenceVO();
             licence.setId(licenceId);
             document.setLicence(licence);
@@ -198,7 +193,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
             document.setCreatedDate(LocalDateTime.now());
-            //document.setFile(file.getBytes());
+            document.setFile(file.getBytes());
             LicenseeVO licensee = new LicenseeVO();
             licensee.setId(licenseeId);
             document.setLicensee(licensee);
