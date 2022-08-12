@@ -140,4 +140,15 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     console.log(this.useCaseScope.pageVariables);
     console.log(this.licensee);
   }
+
+  override afterEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm, dialogData: any): void {
+       this.store.dispatch(
+         LicenseeActions.addDocument({
+          id: this.licenseeId,
+          documentTypeId: dialogData.document.documentType.id,
+          file: dialogData.document.file,
+          loading: true
+         })
+      );
+  }
 }

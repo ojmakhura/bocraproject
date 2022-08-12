@@ -29,7 +29,7 @@ export const licenseeReducer = createReducer(
     on(LicenseeActions.addDocumentSuccess, (state, action) => ({
         ...state,
         document: action.document, 
-        documents: [...state.document, action.document], 
+        documents: [...state.documents, action.document], 
         loading: false,
         messages: action.messages
     })),

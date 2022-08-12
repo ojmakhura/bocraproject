@@ -30,8 +30,6 @@ public class BocraApiSecurityCheck {
 
     public boolean isAuthorised(String apiEndpoint) {
 
-        System.out.println("public boolean isAuthorised(String apiEndpoint)");
-
         return this.handleIsAuthorised(apiEndpoint);
     }
 

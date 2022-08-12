@@ -5,107 +5,159 @@
 //
 package bw.org.bocra.portal.licence;
 
-import java.util.Collection;
+import bw.org.bocra.portal.document.DocumentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("license")
-@Tag(name = "Licence", description = "Managing licences.")
+@RequestMapping("/license")
 @CrossOrigin()
+@Tag(name = "Licence", description = "Managing licences.")
 public class LicenceRestControllerImpl extends LicenceRestControllerBase {
-
-    public LicenceRestControllerImpl(LicenceService licenceService) {
-        super(licenceService);
+    
+    public LicenceRestControllerImpl(LicenceService licenceService, DocumentService documentService) {
+        
+        super(licenceService, documentService);
     }
+
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        Optional<LicenceVO> data = Optional.of(licenceService.findById(id)); // TODO: Add custom code here;
-        ResponseEntity<LicenceVO> response;
+        try {
+            Optional<?> data = Optional.of(licenceService.findById(id));
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        Optional<Collection<LicenceVO>> data = Optional.of(licenceService.getAll()); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenceVO>> response;
+        try {
+            Optional<?> data = Optional.of(licenceService.getAll());
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        Optional<Collection<LicenceVO>> data = Optional.of(licenceService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenceVO>> response;
+        try {
+            Optional<?> data = Optional.of(licenceService.getAll(pageNumber, pageSize));
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        Optional<Boolean> data = Optional.of(licenceService.remove(id)); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
+        try {
+            Optional<?> data = Optional.of(licenceService.remove(id));
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSave(LicenceVO licence) {
-        Optional<LicenceVO> data = Optional.of(licenceService.save(licence)); // TODO: Add custom code here;
-        ResponseEntity<LicenceVO> response;
+        try {
+            Optional<?> data = Optional.of(licenceService.save(licence));
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSearch(LicenceCriteria criteria) {
-        Optional<Collection<LicenceVO>> data = Optional.of(licenceService.search(criteria)); // TODO: Add custom code here;
-        ResponseEntity<Collection<LicenceVO>> response;
+        try {
+            Optional<?> data = Optional.of(licenceService.search(criteria));
+            ResponseEntity<?> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
 
-        return response;
+
+    @Override
+    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file) {
+        try {
+            Optional<?> data = Optional.empty();
+            ResponseEntity<?> response;
+
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
