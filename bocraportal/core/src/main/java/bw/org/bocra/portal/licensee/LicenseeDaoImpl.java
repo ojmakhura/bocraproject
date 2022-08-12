@@ -13,13 +13,20 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentRepository;
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
+import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
+import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.licence.Licence;
 import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
+import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
@@ -28,6 +35,7 @@ import bw.org.bocra.portal.licensee.shares.ShareholderRepository;
 import bw.org.bocra.portal.notification.NotificationRepository;
 import bw.org.bocra.portal.report.ReportRepository;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
+import bw.org.bocra.portal.sector.Sector;
 import bw.org.bocra.portal.sector.SectorRepository;
 import bw.org.bocra.portal.user.LicenseeUserRepository;
 
@@ -72,6 +80,7 @@ public class LicenseeDaoImpl
 
             for(Licence entity : source.getLicences()) {
                 LicenceVO vo = new LicenceVO();
+
                 licenceDao.toLicenceVO(entity, vo);
                 target.getLicences().add(vo);
             }
@@ -90,19 +99,38 @@ public class LicenseeDaoImpl
                 target.getSectors().add(vo);
             }
         }
+        
+        target.setDocuments(new ArrayList<>());
+        for(Document document : source.getDocuments()) {
 
-        // if(CollectionUtils.isNotEmpty(source.getLicenseeForms())) {
+            DocumentVO dvo = new DocumentVO();
+            dvo.setId(document.getId());
+            dvo.setDocumentName(document.getDocumentName());
+            dvo.setDocumentId(document.getDocumentId());
 
-        //     target.setSectors(new ArrayList<>());
+            DocumentTypeVO type = new DocumentTypeVO();
+            type.setCode(document.getDocumentType().getCode());
+            type.setId(document.getDocumentType().getId());
+            type.setName(document.getDocumentType().getName());
 
-        //     for(LicenseeForm entity : source.getLicenseeForms()) {
-        //         LicenseeFormVO vo = new LicenseeFormVO();
-        //         target.getForms().add(vo);
-        //     }
-        // }
+            dvo.setDocumentType(type);
 
-        //source.get
+            target.getDocuments().add(dvo);
+        }
 
+        target.setForms(new ArrayList<>());
+        for(LicenseeForm form : source.getLicenseeForms()) {
+            LicenseeFormVO lf = new LicenseeFormVO();
+            lf.setId(form.getId());
+
+            lf.setForm(new FormVO());
+            lf.getForm().setId(form.getForm().getId());
+            lf.getForm().setCode(form.getForm().getCode());
+            lf.getForm().setEntryType(form.getForm().getEntryType());
+            lf.getForm().setFormName(form.getForm().getFormName());
+
+            target.getForms().add(lf);
+        }
 
         // TODO: read users from keycloak
     }
@@ -161,7 +189,7 @@ public class LicenseeDaoImpl
             Collection<Licence> types = new ArrayList<>();
             for(LicenceVO licence : source.getLicences()) {
                 if(licence.getId() != null) {
-                    Licence entity = licenceRepository.getById(licence.getId());
+                    Licence entity = licenceRepository.getReferenceById(licence.getId());
                     types.add(entity);
                 }
             }
@@ -174,7 +202,7 @@ public class LicenseeDaoImpl
         //     Collection<LicenseeSector> sectors = new ArrayList<>();
         //     for(LicenseeSectorVO sector : source.getSectors()) {
         //         if( sector.getLicenseeSectorId() != null) {
-        //             sectors.add(licenseeSectorRepository.getById(sector.getLicenseeSectorId()));
+        //             sectors.add(licenseeSectorRepository.getReferenceById(sector.getLicenseeSectorId()));
         //         } else if(sector.getId() != null) {
 
         //             sectors.add(licenseeSectorDao.create(target, sectorDao.load(sector.getId())));

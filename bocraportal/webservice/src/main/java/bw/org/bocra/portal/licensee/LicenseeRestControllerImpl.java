@@ -6,15 +6,20 @@
 package bw.org.bocra.portal.licensee;
 
 import bw.org.bocra.portal.document.DocumentService;
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
+import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.user.LicenseeUserService;
 import bw.org.bocra.portal.user.UserVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,28 +36,46 @@ import org.springframework.web.multipart.MultipartFile;
 public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     
     private final KeycloakUserService keycloakUserService;
+    private final KeycloakService keycloakService;
     
-    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService, DocumentService documentService, KeycloakUserService keycloakUserService) {
+    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService, DocumentService documentService, KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
         
         super(licenseeService, licenseeUserService, documentService);
         this.keycloakUserService = keycloakUserService;
+        this.keycloakService = keycloakService;
     }
 
 
     @Override
-    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file) {
+    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            AccessToken token = keycloakService.getSecurityContext().getToken();
+            DocumentVO document = new DocumentVO();
+            document.setCreatedBy(token.getPreferredUsername());
+            document.setCreatedDate(LocalDateTime.now());
+            document.setFile(file.getBytes());
+            document.setDocumentName(fileName);
+            
+            LicenseeVO licensee = new LicenseeVO();
+            licensee.setId(id);
+            document.setLicensee(licensee);
+
+            DocumentTypeVO docType = new DocumentTypeVO();
+            docType.setId(documentTypeId);
+
+            document.setDocumentType(docType);
+            document = this.documentService.save(document);            
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if(document != null && document.getId() != null) {
+                response = ResponseEntity.status(HttpStatus.OK).body(document);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -81,8 +104,6 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleFindById(Long id) {
         try {
 
-            System.out.println(UUID.randomUUID().toString());
-            
             LicenseeVO licensee = licenseeService.findById(id);
             ResponseEntity<?> response;
 
@@ -96,6 +117,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

@@ -143,7 +143,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
 
 
     @Override
-    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file) {
+    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
         try {
             Optional<?> data = Optional.empty();
             ResponseEntity<?> response;
