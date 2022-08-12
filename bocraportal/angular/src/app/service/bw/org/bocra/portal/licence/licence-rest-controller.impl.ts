@@ -4,12 +4,19 @@ import { Observable } from 'rxjs';
 import { LicenceRestController } from '@app/service/bw/org/bocra/portal/licence/licence-rest-controller';
 import { LicenceCriteria } from '@app/model/bw/org/bocra/portal/licence/licence-criteria';
 import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
+import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 
 @Injectable()
 export class LicenceRestControllerImpl extends LicenceRestController {
 
     constructor(private injector: Injector) {
         super(injector);
+    }
+
+    public override addDocument(id: number | any , documentTypeId: number | any , file: File | any ): Observable<DocumentVO | any> {
+
+        return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, {documentTypeId: documentTypeId, file: file});
+
     }
 
     public override findById(id: number | any ): Observable<LicenceVO | any> {

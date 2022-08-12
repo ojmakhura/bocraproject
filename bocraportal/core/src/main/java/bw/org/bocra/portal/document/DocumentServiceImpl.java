@@ -10,7 +10,11 @@ package bw.org.bocra.portal.document;
 
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +53,19 @@ public class DocumentServiceImpl
         throws Exception
     {
         Document entity = getDocumentDao().documentVOToEntity(document);
+
+        if(StringUtils.isBlank(entity.getDocumentId())) {
+            String uid = UUID.randomUUID().toString();
+            List<Document> docs = this.documentRepository.findAll(DocumentSpecifications.findByDocumentId(uid));
+
+            while(CollectionUtils.isNotEmpty(docs)) {
+                uid = UUID.randomUUID().toString();
+                docs = this.documentRepository.findAll(DocumentSpecifications.findByDocumentId(uid));
+            }
+
+            entity.setDocumentId(uid);
+        }
+
         entity = this.documentRepository.save(entity);
         
         return documentDao.toDocumentVO(entity);

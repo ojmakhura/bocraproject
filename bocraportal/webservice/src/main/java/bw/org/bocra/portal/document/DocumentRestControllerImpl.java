@@ -170,7 +170,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
             document.setCreatedDate(LocalDateTime.now());
-            document.setFile(file.getBytes());
+            //document.setFile(file.getBytes());
             LicenceVO licence = new LicenceVO();
             licence.setId(licenceId);
             document.setLicence(licence);
@@ -198,7 +198,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
             document.setCreatedDate(LocalDateTime.now());
-            document.setFile(file.getBytes());
+            //document.setFile(file.getBytes());
             LicenseeVO licensee = new LicenseeVO();
             licensee.setId(licenseeId);
             document.setLicensee(licensee);

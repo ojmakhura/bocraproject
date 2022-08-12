@@ -15,7 +15,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +33,6 @@ import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.licence.Licence;
 import bw.org.bocra.portal.licence.LicenceDao;
 import bw.org.bocra.portal.licence.LicenceRepository;
-import bw.org.bocra.portal.licence.LicenceSpecifications;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.form.LicenseeFormDao;
@@ -65,7 +63,6 @@ public class LicenseeServiceImpl
     extends LicenseeServiceBase
 {
 
-
     public LicenseeServiceImpl(LicenseeDao licenseeDao, LicenseeRepository licenseeRepository,
             LicenseeShareholderDao licenseeShareholderDao, LicenseeShareholderRepository licenseeShareholderRepository,
             LicenseeFormDao licenseeFormDao, LicenseeFormRepository licenseeFormRepository,
@@ -91,7 +88,7 @@ public class LicenseeServiceImpl
             return null;
         }
 
-        Licensee licensee = this.licenseeRepository.getById(id);
+        Licensee licensee = this.licenseeRepository.getReferenceById(id);
 
         return licenseeDao.toLicenseeVO(licensee);
     }

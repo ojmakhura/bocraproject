@@ -8,42 +8,27 @@ package bw.org.bocra.portal.licensee;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
-import bw.org.bocra.portal.document.DocumentDao;
 import bw.org.bocra.portal.document.DocumentRepository;
-import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
-import bw.org.bocra.portal.form.FormVO;
-import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.licence.Licence;
-import bw.org.bocra.portal.licence.LicenceDao;
 import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
-import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
-import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
-import bw.org.bocra.portal.licensee.shares.ShareholderDao;
 import bw.org.bocra.portal.licensee.shares.ShareholderRepository;
-import bw.org.bocra.portal.notification.NotificationDao;
 import bw.org.bocra.portal.notification.NotificationRepository;
-import bw.org.bocra.portal.report.ReportDao;
 import bw.org.bocra.portal.report.ReportRepository;
-import bw.org.bocra.portal.report.config.ReportConfigDao;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
-import bw.org.bocra.portal.sector.SectorDao;
 import bw.org.bocra.portal.sector.SectorRepository;
-import bw.org.bocra.portal.user.LicenseeUserDao;
 import bw.org.bocra.portal.user.LicenseeUserRepository;
 
 /**
@@ -54,7 +39,6 @@ import bw.org.bocra.portal.user.LicenseeUserRepository;
 public class LicenseeDaoImpl
     extends LicenseeDaoBase
 {
-
 
     public LicenseeDaoImpl(LicenseeUserRepository licenseeUserRepository,
             FormSubmissionRepository formSubmissionRepository, FormRepository formRepository,
