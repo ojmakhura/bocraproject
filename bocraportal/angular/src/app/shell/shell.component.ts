@@ -1,20 +1,20 @@
-import { Title } from '@angular/platform-browser';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { KeycloakService } from 'keycloak-angular';
-import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
-import { AuthorisationCriteria } from '@app/model/bw/org/bocra/portal/auth/authorisation-criteria';
-import * as nav from './navigation';
-import { Observable } from 'rxjs';
-import { Menu } from '@app/model/menu/menu';
-import { Store, select } from '@ngrx/store';
-import { AuthState } from '@app/store/auth/auth.state';
-import * as AuthSelectors from '@app/store/auth/auth.selectors';
-import * as AuthActions from '@app/store/auth/auth.actions';
-import * as MenuSelectors from '@app/store/menu/menu.selectors';
-import * as MenuActions from '@app/store/menu/menu.actions';
 import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
+import { Menu } from '@app/model/menu/menu';
+import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
+import * as AuthActions from '@app/store/auth/auth.actions';
+import * as AuthSelectors from '@app/store/auth/auth.selectors';
+import { AuthState } from '@app/store/auth/auth.state';
+import * as MenuActions from '@app/store/menu/menu.actions';
+import * as MenuSelectors from '@app/store/menu/menu.selectors';
+import { select, Store } from '@ngrx/store';
+import { KeycloakService } from 'keycloak-angular';
+import { Observable } from 'rxjs';
+import * as nav from './navigation';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-shell',
@@ -64,10 +64,6 @@ export class ShellComponent implements OnInit, AfterViewInit {
           }
         });
       });
-
-    // this.keycloakService.getToken().then((token) => {
-    //   var decoded: any = jwt_decode(token);
-    // });
   }
 
   logout() {
@@ -95,5 +91,14 @@ export class ShellComponent implements OnInit, AfterViewInit {
     }else{
       this.toggled = false;
     }
+  }
+
+  editProfile() {
+    this.keycloakService.loadUserProfile().then(profile => {
+      if(profile?.id) {
+        this.router.navigate(["/user/edit-user"], {queryParams: {userId: profile?.id}});
+      }
+    })
+    
   }
 }
