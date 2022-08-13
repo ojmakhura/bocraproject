@@ -11,11 +11,14 @@ import { environment } from '@env/environment';
 import * as LicenseSelectors from '@app/store/licensee/licensee.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as UserActions from '@app/store/user/user.actions';
+import * as UserSelectors from '@app/store/user/user.selectors';
 import { select } from '@ngrx/store';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { Observable } from 'rxjs';
 import { MatRadioChange } from '@angular/material/radio';
 import { KeycloakService } from 'keycloak-angular';
+import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-user',
@@ -25,6 +28,7 @@ import { KeycloakService } from 'keycloak-angular';
 export class EditUserComponentImpl extends EditUserComponent {
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
+  protected logedInUser: UserVO;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -54,8 +58,6 @@ export class EditUserComponentImpl extends EditUserComponent {
       });
     });
 
-    this.keycloakService.getToken().then((token) => console.log(token));
-
     return form;
   }
 
@@ -63,6 +65,9 @@ export class EditUserComponentImpl extends EditUserComponent {
     this.user$.subscribe((user) => {
       this.setEditUserFormValue({ user: user });
     });
+
+    console.log(this.keycloakService.loadUserProfile())
+    this.keycloakService.loadUserProfile().then(val => console.log(val));
   }
 
   override doNgAfterViewInit() {
@@ -101,5 +106,20 @@ export class EditUserComponentImpl extends EditUserComponent {
         loading: true,
       })
     );
+  }
+
+  override createUserForm(user: UserVO): FormGroup {
+      return this.formBuilder.group({
+          userId: [user?.userId ? user.userId : null],
+          username: [user?.username ? user.username : null, [Validators.required, ]],
+          email: [user?.email ? user.email : null, [Validators.required, Validators.email, ]],
+          password: [{value: user?.password, disabled: true}, [Validators.required]],
+          firstName: [user?.firstName ? user.firstName : null, [Validators.required, ]],
+          lastName: [user?.lastName ? user.lastName : null, [Validators.required, ]],
+          enabled: [user?.enabled ? user.enabled : null],
+          licensee: this.createLicenseeVOGroup(user?.licensee),
+          roles: user?.roles ? this.formBuilder.array(user?.roles ? user.roles : []) : new FormArray([]),
+          client: [user?.client ? user.client : null],
+      });
   }
 }

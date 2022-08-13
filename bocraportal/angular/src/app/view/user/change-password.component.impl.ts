@@ -16,6 +16,9 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ChangePasswordComponentImpl extends ChangePasswordComponent {
 
+    passwordMessages: string[] = []
+    passwordErrors: string[] = []
+
     constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
         super(data, injector);
     }
@@ -25,5 +28,31 @@ export class ChangePasswordComponentImpl extends ChangePasswordComponent {
     }
 
     doNgOnDestroy(): void {
+    }
+
+    override handleFormChanges(change: any): void {
+        console.log(this.changePasswordForm.valid)
+        if(change?.password != change?.confirmPassword) {
+            this.passwordErrors = ["Passwords entered are not the same."];
+            this.changePasswordForm
+        } else {
+            this.passwordErrors = [];
+        }
+    }
+
+    /**
+     * Before we return the dialog data, we need to check if the data in
+     * the dialog is valid by checking that the form has no errors and that
+     * the password and confirm fielda are the same.
+     * @param data 
+     * @returns 
+     */
+    override handleDialogDone(data: any): any {
+
+        if(this.changePasswordForm.valid && this.password === this.confirmPassword) {
+            return data;
+        }
+
+        return null;
     }
 }

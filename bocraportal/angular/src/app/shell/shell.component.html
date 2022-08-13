@@ -33,7 +33,7 @@
 							<a class="nav-link" routerLink="active"><i class="fa fa-commenting fa-lg"
 									aria-hidden="false"></i>&nbsp; File A Complaint</a>
 						</li>
-						<li class="nav-item px-2">
+						<li class="nav-item">
 							<a class="nav-link" routerLink="active"><i class="fa fa-bell fa-lg"
 									aria-hidden="false"></i></a>
 						</li>
@@ -49,7 +49,7 @@
 									</mat-list-item>
 									<mat-divider></mat-divider>
 									<mat-list-item>
-										<a class="dropdown-item" routerLink="profile"><i class="fa fa-user"
+										<a class="dropdown-item" (click)="editProfile()"><i class="fa fa-user"
 												aria-hidden="false"></i>&nbsp; Profile</a>
 									</mat-list-item>
 									<mat-divider></mat-divider>
