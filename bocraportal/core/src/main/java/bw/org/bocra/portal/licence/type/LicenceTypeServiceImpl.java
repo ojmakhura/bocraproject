@@ -9,18 +9,13 @@
 package bw.org.bocra.portal.licence.type;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see bw.org.bocra.portal.licence.type.LicenceTypeService
@@ -102,26 +97,8 @@ public class LicenceTypeServiceImpl
     protected  Collection<LicenceTypeVO> handleSearch(LicenceTypeCriteria criteria)
         throws Exception
     {
-        Specification<LicenceType> specs = null;
 
-        if(StringUtils.isNotBlank(criteria.getTypeSearch())) {
-            
-            specs = LicenceTypeSpecifications.findByCodeContainingIgnoreCase(criteria.getTypeSearch());
-            specs.or(LicenceTypeSpecifications.findByDescriptionContainingIgnoreCase(criteria.getTypeSearch()));
-            specs.or(LicenceTypeSpecifications.findByNameContainingIgnoreCase(criteria.getTypeSearch()));
-        }
-
-        if(criteria.getLicence() != null) {
-            Specification<LicenceType> licenceSpec = LicenceTypeSpecifications.findByLicencesIdIn(Arrays.asList(criteria.getLicence()));
-
-            if(specs == null) {
-                specs = licenceSpec;
-            } else {
-                specs.and(licenceSpec);
-            }
-        }
-
-        Collection<LicenceType> entities = licenceTypeRepository.findAll(specs);
+        Collection<LicenceType> entities = licenceTypeDao.findByCriteria(criteria);
         Collection<LicenceTypeVO> vos = new ArrayList<>();
         logger.info(entities.toString());
 

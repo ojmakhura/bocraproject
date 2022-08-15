@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.document.type.DocumentType;
 import bw.org.bocra.portal.document.type.DocumentTypeDao;
 import bw.org.bocra.portal.document.type.DocumentTypeRepository;
@@ -48,7 +49,7 @@ public class DocumentDaoImpl
         Specification<Document> spec = null;
 
         if(StringUtils.isNotBlank(criteria)) {
-            spec = DocumentSpecifications.findByDocumentNameContainingIgnoreCase(criteria);
+            spec = BocraportalSpecifications.<Document, String>findByAttributeContainingIgnoreCase("documentName", criteria);
         }
 
         return documentRepository.findAll(spec);
