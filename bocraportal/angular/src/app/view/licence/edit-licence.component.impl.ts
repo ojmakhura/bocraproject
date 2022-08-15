@@ -7,6 +7,8 @@ import { LicenceState } from '@app/store/licence/licence.state';
 import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import * as LicenceActions from '@app/store/licence/licence.actions';
 import { KeycloakService } from 'keycloak-angular';
+import { FormGroup } from '@angular/forms';
+import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 
 @Component({
   selector: 'app-edit-licence',
@@ -61,5 +63,39 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
         loading: true,
       })
     );
+  }
+
+  // override afterEditLicenceNewDocument(form: EditLicenceNewDocumentForm, dialogData: any): void {
+    
+  //   if(dialogData) {
+  //     console.log(dialogData)
+  //     this.store.dispatch(
+  //       LicenseeActions.addDocument({
+  //         id: this.licenseeId,
+  //         documentTypeId: dialogData.document.documentType.id,
+  //         file: dialogData.document.file,
+  //         fileName: dialogData.document.documentName,
+  //         loading: true,
+  //       })
+  //     );
+  //   }
+  // }
+
+  override createDocumentVOGroup(value: DocumentVO): FormGroup {
+      return this.formBuilder.group({
+          id: [value?.id],
+          createdBy: [value?.createdBy],
+          updatedBy: [value?.updatedBy],
+          createdDate: [value?.createdDate],
+          updatedDate: [value?.updatedDate],
+          documentName: [value?.documentName],
+          file: [value?.file],
+          documentId: [value?.documentId],
+          documentType: {
+            id: [value.documentType.id],
+            code: [value.documentType.code],
+            name: [value.documentType.name],
+          }
+      });
   }
 }

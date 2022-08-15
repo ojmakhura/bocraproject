@@ -21,9 +21,14 @@ export class LicenseeRestControllerImpl extends LicenseeRestController {
         super(injector);
     }
 
-    public override addDocument(id: number | any , documentTypeId: number | any , file: File | any ): Observable<DocumentVO | any> {
+    public override addDocument(id: number | any , documentTypeId: number | any , file: File | any, fileName: string | any ): Observable<DocumentVO | any> {
 
-        return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, {documentTypeId: documentTypeId, file: file});
+        const formData: FormData = new FormData();
+        formData.append('documentTypeId', documentTypeId);
+        formData.append('file', file);
+        formData.append('fileName', fileName);
+        
+        return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, formData);
 
     }
 

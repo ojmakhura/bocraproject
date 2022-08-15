@@ -21,6 +21,8 @@ import * as DocumentSelectors from '@app/store/document/document.selectors';
 import * as LicenceActions from '@app/store/licence/licence.actions';
 import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import * as FormActions from '@app/store/form/form.actions';
+import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -120,9 +122,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     );
   }
 
-  override beforeEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {
-    
-  }
+  override beforeEditLicenseeDocuments(form: EditLicenseeDocumentsForm): void {}
 
   override licenseeSectorsSearch(): void {
     let criteria: string = '';
@@ -142,13 +142,36 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override afterEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm, dialogData: any): void {
-       this.store.dispatch(
-         LicenseeActions.addDocument({
+    
+    if(dialogData) {
+      console.log(dialogData)
+      this.store.dispatch(
+        LicenseeActions.addDocument({
           id: this.licenseeId,
           documentTypeId: dialogData.document.documentType.id,
           file: dialogData.document.file,
-          loading: true
-         })
+          fileName: dialogData.document.documentName,
+          loading: true,
+        })
       );
+    }
+  }
+
+  override createDocumentVOGroup(value: DocumentVO): FormGroup {
+      return this.formBuilder.group({
+          id: [value?.id],
+          createdBy: [value?.createdBy],
+          updatedBy: [value?.updatedBy],
+          createdDate: [value?.createdDate],
+          updatedDate: [value?.updatedDate],
+          documentName: [value?.documentName],
+          file: [value?.file],
+          documentId: [value?.documentId],
+          documentType: {
+            id: [value.documentType.id],
+            code: [value.documentType.code],
+            name: [value.documentType.name],
+          }
+      });
   }
 }
