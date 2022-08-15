@@ -6,6 +6,7 @@
  */
 package bw.org.bocra.portal.form.activation;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
@@ -160,7 +161,7 @@ public class FormActivationDaoImpl
     protected Collection<FormActivation> handleFindByCriteria(FormActivationCriteria criteria) throws Exception {
         Specification<FormActivation> spec = null;
         if(StringUtils.isNotBlank(criteria.getActivationName())) {
-            spec = FormActivationSpecifications.findByActivationNameContainingIgnoreCase(criteria.activationName);
+            spec = BocraportalSpecifications.<FormActivation, String>findByAttributeContainingIgnoreCase("activationName", criteria.activationName);
         }
 
         if(criteria.getFormId() != null) {

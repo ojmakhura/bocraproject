@@ -6,6 +6,7 @@
  */
 package bw.org.bocra.portal.period;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
 import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
@@ -145,17 +147,17 @@ public class PeriodDaoImpl
     protected Collection<Period> handleFindByCriteria(PeriodCriteria criteria) throws Exception {
 
         Specification<Period> specs = null;
-
+        
         if (criteria.getSearchDate() != null) {
-            specs = PeriodSpecifications.findByPeriodStartGreaterThanEqual(criteria.getSearchDate());
-            specs = specs.and(PeriodSpecifications.findByPeriodEndLessThanEqual(criteria.getSearchDate()));
+            specs = BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThanEqual("periodStart", criteria.getSearchDate().);
+            specs = specs.and(BocraportalSpecifications.<Period, LocalDate>findByPeriodEndLessThanEqual("periodStart", criteria.getSearchDate()));
         }
 
         if (StringUtils.isNotBlank(criteria.getPeriodName())) {
             if (specs == null) {
-                specs = PeriodSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName());
+                specs = BocraportalSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName());
             } else {
-                specs = specs.and(PeriodSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName()));
+                specs = specs.and(BocraportalSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName()));
             }
         }
 

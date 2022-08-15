@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.menu;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.auth.AuthorisationDao;
 import bw.org.bocra.portal.auth.AuthorisationRepository;
 
@@ -105,9 +106,10 @@ public class MenuSectionServiceImpl
         Specification<MenuSection> spec = null;
 
         if(StringUtils.isNotBlank(criteria)) {
-            spec = MenuSectionSpecifications.findByDisplayIdContainingIgnoreCase(criteria)
-                    .or(MenuSectionSpecifications.findByDisplayNameContainingIgnoreCase(criteria));
+            spec = BocraportalSpecifications.<MenuSection, String>findByAttributeContainingIgnoreCase("displayId", criteria)
+                    .or(BocraportalSpecifications.<MenuSection, String>findByAttributeContainingIgnoreCase("name", criteria));
         }
+
 
         Collection<MenuSection> sections = getMenuSectionRepository().findAll(spec, Sort.by(Direction.ASC, "position"));
 

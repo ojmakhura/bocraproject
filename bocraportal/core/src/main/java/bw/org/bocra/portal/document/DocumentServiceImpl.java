@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.document;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import java.util.Collection;
 import java.util.List;
@@ -56,11 +57,11 @@ public class DocumentServiceImpl
 
         if(StringUtils.isBlank(entity.getDocumentId())) {
             String uid = UUID.randomUUID().toString();
-            List<Document> docs = this.documentRepository.findAll(DocumentSpecifications.findByDocumentId(uid));
+            List<Document> docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("uid", uid));
 
             while(CollectionUtils.isNotEmpty(docs)) {
                 uid = UUID.randomUUID().toString();
-                docs = this.documentRepository.findAll(DocumentSpecifications.findByDocumentId(uid));
+                docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("uid", uid));
             }
 
             entity.setDocumentId(uid);
