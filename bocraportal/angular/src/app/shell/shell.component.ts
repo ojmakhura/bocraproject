@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 import { Menu } from '@app/model/menu/menu';
-import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
+import { AuthorisationRestController } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller';
 import * as AuthActions from '@app/store/auth/auth.actions';
 import * as AuthSelectors from '@app/store/auth/auth.selectors';
 import { AuthState } from '@app/store/auth/auth.state';
@@ -14,7 +14,7 @@ import { select, Store } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
 import * as nav from './navigation';
-import jwt_decode from 'jwt-decode';
+//import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-shell',
@@ -33,7 +33,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
     private keycloakService: KeycloakService,
     private store: Store<AuthState>,
     private breakpoint: BreakpointObserver,
-    private authorisationRestController: AuthorisationRestControllerImpl
+    private authorisationRestController: AuthorisationRestController
   ) {
     this.menus$ = this.store.pipe(select(MenuSelectors.selectMenus));
     this.username$ = this.store.pipe(select(AuthSelectors.selectUsername));

@@ -22,9 +22,9 @@ import { FormEffects } from '@app/store/form/form.effects';
 import { licenseeFormFeature } from '@app/store/licensee/form/licensee-form.reducers';
 import { LicenseeFormEffects } from '@app/store/licensee/form/licensee-form.effects';
 import { FormControllerImpl } from '@app/controller/form/form-controller.impl';
-import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
-import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
-import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller.impl';
+import { FormRestController } from '@app/service/bw/org/bocra/portal/form/form-rest-controller';
+import { FormFieldRestController } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller';
+import { FormSectionRestController } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller';
 
 @NgModule({
   imports: [
@@ -52,9 +52,9 @@ import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/
   entryComponents: [],
   providers: [
     FormControllerImpl,
-    FormRestControllerImpl,
-    FormFieldRestControllerImpl,
-    FormSectionRestControllerImpl,
+    FormRestController,
+    FormFieldRestController,
+    FormSectionRestController,
   ],
 })
 export class FormModule {}

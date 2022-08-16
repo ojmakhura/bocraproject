@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeDao;
@@ -158,9 +159,9 @@ public class SectorDaoImpl
         Specification<Sector> specs = null;
         
         if(StringUtils.isNotBlank(criteria)) {
-            specs = SectorSpecifications.findByCodeContainingIgnoreCase(criteria)
-                    .or(SectorSpecifications.findByNameContainingIgnoreCase(criteria))
-                    .or(SectorSpecifications.findByDescriptionContainingIgnoreCase(criteria));
+            specs = BocraportalSpecifications.<Sector, String>findByAttributeContainingIgnoreCase("code", criteria)
+                    .or(BocraportalSpecifications.<Sector, String>findByAttributeContainingIgnoreCase("name", criteria))
+                    .or(BocraportalSpecifications.<Sector, String>findByAttributeContainingIgnoreCase("description", criteria));
         }
 
         return this.sectorRepository.findAll(specs, Sort.by("name").ascending());

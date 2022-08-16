@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { KeycloakService } from 'keycloak-angular';
-import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
+import { AuthorisationRestController } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller';
 import * as nav from '@app/shell/navigation';
 
 @Injectable()
 export class AuthEffects {
-  constructor(private actions$: Actions, private keycloakService: KeycloakService, private authorisationRestController: AuthorisationRestControllerImpl) {}
+  constructor(private actions$: Actions, private keycloakService: KeycloakService, private authorisationRestController: AuthorisationRestController) {}
 
   // isLoggedIn$ = createEffect(() =>
   //   this.actions$.pipe(

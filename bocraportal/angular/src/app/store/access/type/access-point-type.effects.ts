@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as AccessPointTypeActions from './access-point-type.actions';
-import { AccessPointTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/access/type/access-point-type-rest-controller.impl';
+import { AccessPointTypeRestController } from '@app/service/bw/org/bocra/portal/access/type/access-point-type-rest-controller';
 
 @Injectable()
 export class AccessPointTypeEffects {
-  constructor(private actions$: Actions, private accessPointTypeRestController: AccessPointTypeRestControllerImpl) {}
+  constructor(private actions$: Actions, private accessPointTypeRestController: AccessPointTypeRestController) {}
 
   findById$ = createEffect(() =>
     this.actions$.pipe(

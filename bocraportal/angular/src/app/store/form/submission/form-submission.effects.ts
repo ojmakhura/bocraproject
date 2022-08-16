@@ -3,16 +3,16 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as FormSubmissionActions from './form-submission.actions';
-import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
-import { NoteRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/note/note-rest-controller.impl';
+import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
+import { NoteRestController } from '@app/service/bw/org/bocra/portal/form/submission/note/note-rest-controller';
 
 @Injectable()
 export class FormSubmissionEffects {
 
     constructor(
         private actions$: Actions, 
-        private submissionRestController: SubmissionRestControllerImpl,
-        private noteController: NoteRestControllerImpl
+        private submissionRestController: SubmissionRestController,
+        private noteController: NoteRestController
     ) {}
 
     findById$ = createEffect(() => 

@@ -61,7 +61,15 @@ public class DocumentDaoImpl
         DocumentVO target)
     {
         // TODO verify behavior of toDocumentVO
-        super.toDocumentVO(source, target);
+
+        target.setId(source.getId());
+        target.setCreatedBy(source.getCreatedBy());
+        target.setUpdatedBy(source.getUpdatedBy());
+        target.setCreatedDate(source.getCreatedDate());
+        target.setUpdatedDate(source.getUpdatedDate());
+        target.setDocumentName(source.getDocumentName());
+        //target.setFile(source.getFile());
+        target.setDocumentId(source.getDocumentId());
 
         if(source.getDocumentType() != null) {
             DocumentTypeVO type = new DocumentTypeVO();

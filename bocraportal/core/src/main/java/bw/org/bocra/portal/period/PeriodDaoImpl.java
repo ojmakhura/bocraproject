@@ -149,18 +149,25 @@ public class PeriodDaoImpl
         Specification<Period> specs = null;
         
         if (criteria.getSearchDate() != null) {
-            specs = BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThanEqual("periodStart", criteria.getSearchDate().);
-            specs = specs.and(BocraportalSpecifications.<Period, LocalDate>findByPeriodEndLessThanEqual("periodStart", criteria.getSearchDate()));
+            specs = BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThan("periodStart", criteria.getSearchDate());
+            specs = specs.and(BocraportalSpecifications.<Period, LocalDate>findByAttributeLessThanEqual("periodStart", criteria.getSearchDate()));
         }
 
         if (StringUtils.isNotBlank(criteria.getPeriodName())) {
             if (specs == null) {
-                specs = BocraportalSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName());
+                specs = BocraportalSpecifications.<Period, String>findByAttributeContainingIgnoreCase("periodName", criteria.getPeriodName());
             } else {
-                specs = specs.and(BocraportalSpecifications.findByPeriodNameContainingIgnoreCase(criteria.getPeriodName()));
+                specs = specs.and(BocraportalSpecifications.<Period, String>findByAttributeContainingIgnoreCase("periodName", criteria.getPeriodName()));
             }
         }
 
         return periodRepository.findAll(specs);
+    }
+
+    public static Specification<Period> findByAttributeLessThan(String attribute, LocalDate attributeValue){
+        return (root, cq, cb) -> {
+            
+            return cb.lessThanOrEqualTo(root.<LocalDate>get(attribute), attributeValue);
+        };
     }
 }

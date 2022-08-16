@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as LicenseeActions from './licensee.actions';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { LicenseeRestController } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller';
 
 @Injectable()
 export class LicenseeEffects {
     documentRestController: any;
 
-    constructor(private actions$: Actions, private licenseeRestController: LicenseeRestControllerImpl) {}
+    constructor(private actions$: Actions, private licenseeRestController: LicenseeRestController) {}
 
     findById$ = createEffect(() => 
          this.actions$.pipe(

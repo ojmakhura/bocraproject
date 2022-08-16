@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as FormActivationActions from './form-activation.actions';
-import { FormActivationRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller.impl';
+import { FormActivationRestController } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller';
 
 @Injectable()
 export class FormActivationEffects {
 
-    constructor(private actions$: Actions, private formActivationRestController: FormActivationRestControllerImpl) {}
+    constructor(private actions$: Actions, private formActivationRestController: FormActivationRestController) {}
 
     findById$ = createEffect(() => 
          this.actions$.pipe(

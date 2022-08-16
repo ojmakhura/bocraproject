@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as DocumentTypeActions from './document-type.actions';
-import { DocumentTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/document/type/document-type-rest-controller.impl';
+import { DocumentTypeRestController } from '@app/service/bw/org/bocra/portal/document/type/document-type-rest-controller';
 
 @Injectable()
 export class DocumentTypeEffects {
 
-    constructor(private actions$: Actions, private documentTypeRestController: DocumentTypeRestControllerImpl) {}
+    constructor(private actions$: Actions, private documentTypeRestController: DocumentTypeRestController) {}
 
     findById$ = createEffect(() => 
          this.actions$.pipe(

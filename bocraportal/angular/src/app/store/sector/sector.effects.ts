@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as SectorActions from './sector.actions';
-import { SectorRestControllerImpl } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller.impl';
+import { SectorRestController } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller';
 
 @Injectable()
 export class SectorEffects {
 
-    constructor(private actions$: Actions, private sectorRestController: SectorRestControllerImpl) {}
+    constructor(private actions$: Actions, private sectorRestController: SectorRestController) {}
 
     findById$ = createEffect(() => 
          this.actions$.pipe(
