@@ -7,7 +7,7 @@ import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as LicenseSelectors from '@app/store/licensee/licensee.selectors';
 import * as UserActions from '@app/store/user/user.actions';
 import { SelectItem } from '@app/utils/select-item';
-import { EditUserComponent, EditUserSaveForm, EditUserVarsForm } from '@app/view/user/edit-user.component';
+import { EditUserChangePasswordForm, EditUserComponent, EditUserDeleteForm, EditUserSaveForm, EditUserVarsForm } from '@app/view/user/edit-user.component';
 import { environment } from '@env/environment';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
@@ -21,7 +21,6 @@ import { KeycloakService } from 'keycloak-angular';
  export class EditUserComponentImpl extends EditUserComponent {
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
-  //store: any;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -103,7 +102,9 @@ import { KeycloakService } from 'keycloak-angular';
    * This method may be overwritten
    */
   override beforeEditUserSave(form: EditUserSaveForm): void {
-
+    console.log(form);
+    console.log(this.editUserForm);
+    console.log(this.editUserForm.value);
     if (this.editUserForm.valid && this.editUserForm.dirty) {
       if (form.user?.id) {
         form.user.updatedBy = this.keycloakService.getUsername();
@@ -135,15 +136,13 @@ import { KeycloakService } from 'keycloak-angular';
           messages.push("First name has errors")
         }
         if(!this.userLastNameControl.valid) {
-          messages.push("lastname has errors")
+          messages.push("Last Name has errors")
         }
 
         this.store.dispatch(UserActions.userFailure({ messages: messages }));
       }
     }
   
-
-
   override userLicenseeSearch(): void {
     let criteria: string = '';
     criteria = this.userLicenseeSearchField.value;
@@ -163,7 +162,7 @@ import { KeycloakService } from 'keycloak-angular';
       userId: [user?.userId ? user.userId : null],
       username: [user?.username ? user.username : null, [Validators.required]],
       email: [user?.email ? user.email : null, [Validators.required, Validators.email]],
-      password: [{ value: user?.password, disabled: true }, [Validators.required]],
+      password: [{ value: user?.password }, [Validators.required]],
       firstName: [user?.firstName ? user.firstName : null, [Validators.required]],
       lastName: [user?.lastName ? user.lastName : null, [Validators.required]],
       enabled: [user?.enabled ? user.enabled : null],
@@ -174,12 +173,21 @@ import { KeycloakService } from 'keycloak-angular';
   }
 
   override getEditUserChangePasswordFormDialogConfig(data: any): any {
+    console.log(data)
     return {
       data: {
         userId: this.userUserId,
         width: '800px',
       },
     };
+  }
+
+  override afterEditUserChangePassword(form: EditUserChangePasswordForm, dialogData: any): void {
+        if(!this.userUserId) {
+          this.userPasswordControl.patchValue(dialogData?.newPassword)
+        } else {
+
+        }
   }
 }
 
