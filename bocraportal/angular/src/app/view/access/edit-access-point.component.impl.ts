@@ -96,11 +96,26 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
   }
 
   override beforeEditAccessPointDelete(form: EditAccessPointDeleteForm): void {
+    if (this.editAccessPointForm.valid && this.editAccessPointForm.dirty){
+      if (form.accessPoint?.id) {
+        form.accessPoint.updatedBy = this.keycloakService.getUsername();
+        form.accessPoint.updatedDate = new Date();
+      } else {
+        form.accessPoint.createdBy = this.keycloakService.getUsername();
+        form.accessPoint.createdDate = new Date();
+      }
+      if(form?.accessPoint?.id && confirm("Are you sure you want to delete the period?")){
     this.store.dispatch(
       AccessPointActions.remove({
         id: form?.accessPoint?.id,
         loading: false,
       })
+
     );
-  }
+    }
+  }else {
+    
+    this.store.dispatch(AccessPointActions.accessPointFailure({ messages:['Please select something to delete'] }));
+ }
+}
 }

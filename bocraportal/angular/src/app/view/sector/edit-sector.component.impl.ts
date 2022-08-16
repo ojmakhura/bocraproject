@@ -102,6 +102,29 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       })
     );
   }
+  override beforeEditSectorDelete(form: EditSectorDeleteForm): void {
+    if (this.editSectorForm.valid && this.editSectorForm.dirty){
+      if (form.sector?.id) {
+        form.sector.updatedBy = this.keycloakService.getUsername();
+        form.sector.updatedDate = new Date();
+      } else {
+        form.sector.createdBy = this.keycloakService.getUsername();
+        form.sector.createdDate = new Date();
+      }
+      if(form?.sector?.id && confirm("Are you sure you want to delete the period?")){
+    this.store.dispatch(
+      SectorActions.remove({
+        id: form?.sector?.id,
+        loading: false,
+      })
+
+    );
+      }
+  }else{
+        
+    this.store.dispatch(SectorActions.sectorFailure({ messages:['Please select something to delete'] }));
+  }
+  }
 
   /**
    * This method may be overwritten

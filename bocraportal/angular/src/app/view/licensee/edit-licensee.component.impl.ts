@@ -103,7 +103,30 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   
     
     }
-
+    override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
+      if (this.editLicenseeForm.valid && this.editLicenseeForm.dirty){
+        if (form.licensee?.id) {
+          form.licensee.updatedBy = this.keycloakService.getUsername();
+          form.licensee.updatedDate = new Date();
+        } else {
+          form.licensee.createdBy = this.keycloakService.getUsername();
+          form.licensee.createdDate = new Date();
+        }
+        if(form?.licensee?.id && confirm("Are you sure you want to delete the period?")){
+      this.store.dispatch(
+        LicenseeActions.remove({
+          id: form?.licensee?.id,
+          loading: false,
+        })
+  
+      );
+        }
+    }else{
+          
+      this.store.dispatch(LicenseeActions.licenseeFailure({ messages:['Please select something to delete'] }));
+    }
+    }
+  
 
   override licenseeLicencesSearch(): void {
     let criteria: string = '';

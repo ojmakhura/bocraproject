@@ -26,7 +26,7 @@ import { KeycloakService } from 'keycloak-angular';
  export class EditUserComponentImpl extends EditUserComponent {
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
-  store: any;
+  //store: any;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -80,6 +80,30 @@ import { KeycloakService } from 'keycloak-angular';
 
   override doNgOnDestroy() {
     this.store.dispatch(LicenseeActions.licenseeReset());
+  }
+
+  override beforeEditUserDelete(form: EditUserDeleteForm): void {
+    if (this.editUserForm.valid && this.editUserForm.dirty){
+      if (form.user?.id) {
+        form.user.updatedBy = this.keycloakService.getUsername();
+        form.user.updatedDate = new Date();
+      } else {
+        form.user.createdBy = this.keycloakService.getUsername();
+        form.user.createdDate = new Date();
+      }
+      if(form?.user?.id && confirm("Are you sure you want to delete the period?")){
+    this.store.dispatch(
+      UserActions.remove({
+        id: form?.user?.id,
+        loading: false,
+      })
+
+    );
+      }
+  }else{
+        
+    this.store.dispatch(UserActions.userFailure({ messages:['Please select something to delete'] }));
+  }
   }
 
   /**

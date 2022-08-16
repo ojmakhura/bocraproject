@@ -94,7 +94,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
    * This method may be overwritten
    */
   override beforeEditAuthorisationSave(form: EditAuthorisationSaveForm): void {
-    if (this.editAuthorisationForm.valid){
+    if (this.editAuthorisationForm.valid && this.editAuthorisationForm.dirty){
       if (form.authorisation?.id) {
         form.authorisation.updatedBy = this.keycloakService.getUsername();
         form.authorisation.updatedDate = new Date();
@@ -115,14 +115,29 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
       }
     }
 
-  override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
-    this.store.dispatch(
-      AuthorisationActions.remove({
-        id: form?.authorisation?.id,
-        loading: false,
-      })
-    );
-  }
+    override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
+      if (this.editAuthorisationForm.valid && this.editAuthorisationForm.dirty){
+        if (form.authorisation?.id) {
+          form.authorisation.updatedBy = this.keycloakService.getUsername();
+          form.authorisation.updatedDate = new Date();
+        } else {
+          form.authorisation.createdBy = this.keycloakService.getUsername();
+          form.authorisation.createdDate = new Date();
+        }
+        if(form?.authorisation?.id && confirm("Are you sure you want to delete the period?")){
+      this.store.dispatch(
+        AuthorisationActions.remove({
+          id: form?.authorisation?.id,
+          loading: false,
+        })
+  
+      );
+        }
+    }else{
+          
+      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages:['Please select something to delete'] }));
+    }
+    }
     
   override authorisationAccessPointSearch(): void {
     let criteria: AccessPointCriteria = new AccessPointCriteria();
