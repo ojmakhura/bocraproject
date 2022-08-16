@@ -8,14 +8,18 @@
  */
 package bw.org.bocra.portal.document;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 /**
@@ -49,6 +53,19 @@ public class DocumentServiceImpl
         throws Exception
     {
         Document entity = getDocumentDao().documentVOToEntity(document);
+
+        if(StringUtils.isBlank(entity.getDocumentId())) {
+            String uid = UUID.randomUUID().toString();
+            List<Document> docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("uid", uid));
+
+            while(CollectionUtils.isNotEmpty(docs)) {
+                uid = UUID.randomUUID().toString();
+                docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("uid", uid));
+            }
+
+            entity.setDocumentId(uid);
+        }
+
         entity = this.documentRepository.save(entity);
         
         return documentDao.toDocumentVO(entity);
@@ -132,6 +149,11 @@ public class DocumentServiceImpl
         Collection<Document> docs = getDocumentDao().getLicenceDocuments(licenceId);
         return getDocumentDao().toDocumentVOCollection(docs);
 
+    }
+
+    @Override
+    protected byte[] handleDownloadFile(Long id) throws Exception {
+        return getDocumentDao().get(id).getFile();
     }
 
 }

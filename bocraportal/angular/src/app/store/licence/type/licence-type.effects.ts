@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as LicenceTypeActions from './licence-type.actions';
-import { LicenceTypeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licence/type/licence-type-rest-controller.impl';
+import { LicenceTypeRestController } from '@app/service/bw/org/bocra/portal/licence/type/licence-type-rest-controller';
 
 @Injectable()
 export class LicenceTypeEffects {
 
-    constructor(private actions$: Actions, private licenceTypeRestController: LicenceTypeRestControllerImpl) {}
+    constructor(private actions$: Actions, private licenceTypeRestController: LicenceTypeRestController) {}
 
     findById$ = createEffect(() => 
          this.actions$.pipe(

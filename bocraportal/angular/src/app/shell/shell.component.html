@@ -36,9 +36,6 @@
 						<li class="nav-item">
 							<a class="nav-link" routerLink="active">File A Complaint</a>
 						</li>
-						<!-- <li class="nav-item">
-							<button class="btn btn-primary" routerLink="active">Login</button>
-						</li> -->
 						<li class="nav-item">
 							<a class="nav-link" routerLink="active"><i class="fa fa-bell fa-lg"
 									aria-hidden="false"></i></a>
@@ -55,7 +52,7 @@
 									</mat-list-item>
 									<mat-divider></mat-divider>
 									<mat-list-item>
-										<a class="dropdown-item" routerLink="profile"><i class="fa fa-user"
+										<a class="dropdown-item" (click)="editProfile()"><i class="fa fa-user"
 												aria-hidden="false"></i>&nbsp; Profile</a>
 									</mat-list-item>
 									<mat-divider></mat-divider>
@@ -98,7 +95,7 @@
 				<ul class="nav flex-column" *ngFor="let item of menus$ | async">
 					<li class="nav-item">
 						<a class="nav-link" routerLink="{{ item.routerLink }}" routerLinkActive="active"><i
-								class="fa fa-puzzle-piece fa-lg" aria-hidden="true" title="Sector Management"></i>&nbsp;
+								class="fa {{item.icon}} fa-lg" aria-hidden="true" title="Sector Management"></i>&nbsp;
 							<span *ngIf="!toggled" class="ms-3" translate>{{ item.titleKey }} </span>
 						</a>
 					</li>

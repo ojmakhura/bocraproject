@@ -3,16 +3,16 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as UserActions from './user.actions';
-import { UserRestControllerImpl } from '@app/service/bw/org/bocra/portal/user/user-rest-controller.impl';
-import { LicenseeRestControllerImpl } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller.impl';
+import { UserRestController } from '@app/service/bw/org/bocra/portal/user/user-rest-controller';
+import { LicenseeRestController } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller';
 import { environment } from '@env/environment';
 
 @Injectable()
 export class UserEffects {
   constructor(
     private actions$: Actions,
-    private userRestController: UserRestControllerImpl,
-    private licenseeRestController: LicenseeRestControllerImpl
+    private userRestController: UserRestController,
+    private licenseeRestController: LicenseeRestController
   ) {}
 
   createUser$ = createEffect(() =>

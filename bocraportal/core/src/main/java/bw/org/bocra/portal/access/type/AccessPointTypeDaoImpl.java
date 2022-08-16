@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
+
 /**
  * @see AccessPointType
  */
@@ -33,8 +35,8 @@ public class AccessPointTypeDaoImpl
     {
         Specification<AccessPointType> spec = null;
         if(StringUtils.isNotBlank(criteria)) {
-            spec = AccessPointTypeSpecifications.findByNameContainingIgnoreCase(criteria)
-                    .or(AccessPointTypeSpecifications.findByDescriptionContainingIgnoreCase(criteria));
+            spec = BocraportalSpecifications.<AccessPointType, String>findByAttributeContainingIgnoreCase("name", criteria)
+                    .or(BocraportalSpecifications.<AccessPointType, String>findByAttributeContainingIgnoreCase("description", criteria));
             
         }
 

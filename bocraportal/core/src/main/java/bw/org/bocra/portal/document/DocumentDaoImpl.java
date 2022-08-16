@@ -12,16 +12,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.document.type.DocumentType;
-import bw.org.bocra.portal.document.type.DocumentTypeDao;
 import bw.org.bocra.portal.document.type.DocumentTypeRepository;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.licence.Licence;
-import bw.org.bocra.portal.licence.LicenceDao;
 import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.Licensee;
-import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
@@ -48,7 +46,7 @@ public class DocumentDaoImpl
         Specification<Document> spec = null;
 
         if(StringUtils.isNotBlank(criteria)) {
-            spec = DocumentSpecifications.findByDocumentNameContainingIgnoreCase(criteria);
+            spec = BocraportalSpecifications.<Document, String>findByAttributeContainingIgnoreCase("documentName", criteria);
         }
 
         return documentRepository.findAll(spec);
@@ -63,23 +61,44 @@ public class DocumentDaoImpl
         DocumentVO target)
     {
         // TODO verify behavior of toDocumentVO
-        super.toDocumentVO(source, target);
+
+        target.setId(source.getId());
+        target.setCreatedBy(source.getCreatedBy());
+        target.setUpdatedBy(source.getUpdatedBy());
+        target.setCreatedDate(source.getCreatedDate());
+        target.setUpdatedDate(source.getUpdatedDate());
+        target.setDocumentName(source.getDocumentName());
+        //target.setFile(source.getFile());
+        target.setDocumentId(source.getDocumentId());
 
         if(source.getDocumentType() != null) {
             DocumentTypeVO type = new DocumentTypeVO();
-            getDocumentTypeDao().toDocumentTypeVO(source.getDocumentType(), type);
+            type.setId(source.getDocumentType().getId());
+            type.setCode(source.getDocumentType().getCode());
+            type.setName(source.getDocumentType().getName());
+
             target.setDocumentType(type);
         }
 
         if(source.getLicence() != null) {
             LicenceVO licence = new LicenceVO();
-            getLicenceDao().toLicenceVO(source.getLicence(), licence);
+            licence.setId(source.getLicence().getId());
+            licence.setLicenceNumber(source.getLicence().getLicenceNumber());
+            licence.setProvisional(source.getLicence().getProvisional());
+            licence.setStatus(source.getLicence().getStatus());
+            licence.setStartDate(source.getLicence().getStartDate());
+            
             target.setLicence(licence);
         }
 
         if(source.getLicensee() != null) {
             LicenseeVO licensee = new LicenseeVO();
-            getLicenseeDao().toLicenseeVO(source.getLicensee(), licensee);
+            licensee.setAddress(source.getLicensee().getAddress());
+            licensee.setId(source.getLicensee().getId());
+            licensee.setLicenseeName(source.getLicensee().getLicenseeName());
+            licensee.setUin(source.getLicensee().getUin());
+
+            target.setLicensee(licensee);
         }
     }
 
@@ -133,22 +152,19 @@ public class DocumentDaoImpl
         // TODO verify behavior of documentVOToEntity
         super.documentVOToEntity(source, target, copyIfNull);
 
-        if(source.getDocumentType() != null) {
+        if(source.getDocumentType() != null && source.getDocumentType().getId() != null) {
 
-            DocumentType docType = DocumentType.Factory.newInstance();
-            getDocumentTypeDao().documentTypeVOToEntity(source.getDocumentType(), docType, copyIfNull);
+            DocumentType docType = getDocumentTypeDao().load(source.getDocumentType().getId());
             target.setDocumentType(docType);
         }
 
-        if(source.getLicence() != null) {
-            Licence licence = Licence.Factory.newInstance();
-            getLicenceDao().licenceVOToEntity(source.getLicence(), licence, copyIfNull);
+        if(source.getLicence() != null && source.getLicence().getId() != null) {
+            Licence licence = getLicenceDao().load(source.getLicence().getId());
             target.setLicence(licence);
         }
 
-        if(source.getLicensee() != null) {
-            Licensee licensee = Licensee.Factory.newInstance();
-            getLicenseeDao().licenseeVOToEntity(source.getLicensee(), licensee, copyIfNull);
+        if(source.getLicensee() != null && source.getLicensee().getId() != null) {
+            Licensee licensee = getLicenseeDao().load(source.getLicensee().getId());
             target.setLicensee(licensee);
         }
     }

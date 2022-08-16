@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
@@ -57,9 +58,9 @@ public class LicenceTypeDaoImpl
 
         if(StringUtils.isNotBlank(criteria.getTypeSearch())) {
 
-            criteriaSpecs = LicenceTypeSpecifications.findByCodeLikeIgnoreCase(criteria.getTypeSearch());
-            criteriaSpecs.and(LicenceTypeSpecifications.findByNameLikeIgnoreCase(criteria.getTypeSearch()));
-            criteriaSpecs.and(LicenceTypeSpecifications.findByDescriptionLikeIgnoreCase(criteria.getTypeSearch()));
+            criteriaSpecs = BocraportalSpecifications.<LicenceType, String>findByAttributeLikeIgnoreCase("code", criteria.getTypeSearch());
+            criteriaSpecs.and(BocraportalSpecifications.<LicenceType, String>findByAttributeLikeIgnoreCase("name", criteria.getTypeSearch()));
+            criteriaSpecs.and(BocraportalSpecifications.<LicenceType, String>findByAttributeLikeIgnoreCase("description", criteria.getTypeSearch()));
         }
 
         if(criteria.getLicence() != null) {

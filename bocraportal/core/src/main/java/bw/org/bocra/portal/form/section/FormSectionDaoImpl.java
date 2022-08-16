@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
@@ -160,8 +161,8 @@ public class FormSectionDaoImpl
         Specification<FormSection> specs = null;
 
         if (StringUtils.isNotBlank(criteria)) {
-            specs = FormSectionSpecifications.findBySectionLabelContainingIgnoreCase(criteria)
-                .or(FormSectionSpecifications.findBySectionIdContainingIgnoreCase(criteria));
+            specs = BocraportalSpecifications.<FormSection, String>findByAttributeContainingIgnoreCase("sectionLabel", criteria)
+                .or(BocraportalSpecifications.<FormSection, String>findByAttributeContainingIgnoreCase("sectionId", criteria));
         }
 
         return formSectionRepository.findAll(specs, Sort.by("sectionId", "sectionLabel").ascending());
