@@ -23,6 +23,8 @@ import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import * as FormActions from '@app/store/form/form.actions';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 import { FormGroup } from '@angular/forms';
+import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/form/licensee-form-vo';
+import { DocumentRestController } from '@app/service/bw/org/bocra/portal/document/document-rest-controller';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -31,10 +33,12 @@ import { FormGroup } from '@angular/forms';
 })
 export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   protected keycloakService: KeycloakService;
+  // documentRestController: DocumentRestController;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
+    // this.documentRestController = injector.get(DocumentRestController);
     this.licenseeDocuments$ = this.store.pipe(select(DocumentSelectors.selectDocuments));
     this.licenseeLicences$ = this.store.pipe(select(LicenceSelectors.selectLicences));
   }
@@ -142,9 +146,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override afterEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm, dialogData: any): void {
-    
-    if(dialogData) {
-      console.log(dialogData)
+    if (dialogData) {
+      console.log(dialogData);
       this.store.dispatch(
         LicenseeActions.addDocument({
           id: this.licenseeId,
@@ -158,20 +161,38 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override createDocumentVOGroup(value: DocumentVO): FormGroup {
-      return this.formBuilder.group({
-          id: [value?.id],
-          createdBy: [value?.createdBy],
-          updatedBy: [value?.updatedBy],
-          createdDate: [value?.createdDate],
-          updatedDate: [value?.updatedDate],
-          documentName: [value?.documentName],
-          file: [value?.file],
-          documentId: [value?.documentId],
-          documentType: {
-            id: [value.documentType.id],
-            code: [value.documentType.code],
-            name: [value.documentType.name],
-          }
-      });
+    return this.formBuilder.group({
+      id: [value?.id],
+      createdBy: [value?.createdBy],
+      updatedBy: [value?.updatedBy],
+      createdDate: [value?.createdDate],
+      updatedDate: [value?.updatedDate],
+      documentName: [value?.documentName],
+      file: [value?.file],
+      documentId: [value?.documentId],
+      documentType: {
+        id: [value.documentType.id],
+        code: [value.documentType.code],
+        name: [value.documentType.name],
+      },
+    });
+  }
+
+  override createLicenseeFormVOGroup(value: LicenseeFormVO): FormGroup {
+    return this.formBuilder.group({
+      id: [value?.id],
+      form: {
+        id: value?.form?.id,
+        code: value?.form?.code,
+        formName: value?.form?.formName,
+      },
+    });
+  }
+
+  fileDownload(doc: DocumentVO) {
+    console.log(doc);
+    this.documentRestController.downloadFile(doc.id).subscribe((response: any) => {
+      //console.log(response);
+    });
   }
 }

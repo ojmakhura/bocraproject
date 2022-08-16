@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as AuthorisationActions from './authorisation.actions';
-import { AuthorisationRestControllerImpl } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller.impl';
+import { AuthorisationRestController } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller';
 
 @Injectable()
 export class AuthorisationEffects {
-  constructor(private actions$: Actions, private authorisationRestController: AuthorisationRestControllerImpl) {}
+  constructor(private actions$: Actions, private authorisationRestController: AuthorisationRestController) {}
 
   findById$ = createEffect(() =>
     this.actions$.pipe(

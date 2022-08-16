@@ -151,4 +151,9 @@ public class DocumentServiceImpl
 
     }
 
+    @Override
+    protected byte[] handleDownloadFile(Long id) throws Exception {
+        return getDocumentDao().get(id).getFile();
+    }
+
 }

@@ -213,4 +213,26 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+
+    @Override
+    public ResponseEntity<?> handleDownloadFile(Long id) {
+
+        try {
+            
+            Optional<?> data = Optional.of(documentService.downloadFile(id)); // TODO: Add custom code here;
+            ResponseEntity<?> response;
+
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

@@ -23,7 +23,6 @@ import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submissi
 import { FormEntryType } from '@app/model/bw/org/bocra/portal/form/form-entry-type';
 import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
 import { RowGroup } from '@app/model/submission/row-group';
-import { SubmissionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller.impl';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';

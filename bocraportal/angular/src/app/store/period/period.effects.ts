@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as PeriodActions from './period.actions';
-import { PeriodRestControllerImpl } from '@app/service/bw/org/bocra/portal/period/period-rest-controller.impl';
+import { PeriodRestController } from '@app/service/bw/org/bocra/portal/period/period-rest-controller';
 
 @Injectable()
 export class PeriodEffects {
 
-    constructor(private actions$: Actions, private periodRestController: PeriodRestControllerImpl) {}
+    constructor(private actions$: Actions, private periodRestController: PeriodRestController) {}
 
     findById$ = createEffect(() => 
          this.actions$.pipe(

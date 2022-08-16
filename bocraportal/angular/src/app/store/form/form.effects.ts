@@ -3,18 +3,18 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as FormActions from './form.actions';
-import { FormFieldRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller.impl';
-import { FormRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/form-rest-controller.impl';
-import { FormSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller.impl';
+import { FormFieldRestController } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller';
+import { FormRestController } from '@app/service/bw/org/bocra/portal/form/form-rest-controller';
+import { FormSectionRestController } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller';
 
 @Injectable()
 export class FormEffects {
 
     constructor(
         private actions$: Actions, 
-        private formFieldRestController: FormFieldRestControllerImpl, 
-        private formRestController: FormRestControllerImpl,
-        private formSectionRestController: FormSectionRestControllerImpl) {
+        private formFieldRestController: FormFieldRestController, 
+        private formRestController: FormRestController,
+        private formSectionRestController: FormSectionRestController) {
         
     }
 

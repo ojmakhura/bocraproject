@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as MenuSectionActions from './menu-section.actions';
-import { MenuSectionRestControllerImpl } from '@app/service/bw/org/bocra/portal/menu/menu-section-rest-controller.impl';
+import { MenuSectionRestController } from '@app/service/bw/org/bocra/portal/menu/menu-section-rest-controller';
 
 @Injectable()
 export class MenuSectionEffects {
-  constructor(private actions$: Actions, private menuSectionRestController: MenuSectionRestControllerImpl) {}
+  constructor(private actions$: Actions, private menuSectionRestController: MenuSectionRestController) {}
 
   findById$ = createEffect(() =>
     this.actions$.pipe(
