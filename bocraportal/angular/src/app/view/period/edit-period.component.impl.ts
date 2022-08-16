@@ -166,12 +166,38 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
       })
     );
   }
+  
 
   override beforeEditPeriodDelete(form: EditPeriodDeleteForm): void {
     if(form?.period?.id && confirm("Are you sure you want to delete the period?")) {
       this.store.dispatch(PeriodActions.remove({id: form.period.id, loading: true}));
     }
   }
+
+  override beforeEditPeriodDelete(form: EditPeriodDeleteForm): void {
+    if (this.editPeriodForm.valid && this.editPeriodForm.dirty){
+      if (form.period?.id) {
+        form.period.updatedBy = this.keycloakService.getUsername();
+        form.period.updatedDate = new Date();
+      } else {
+        form.period.createdBy = this.keycloakService.getUsername();
+        form.period.createdDate = new Date();
+      }
+      if(form?.period?.id && confirm("Are you sure you want to delete the period?")){
+    this.store.dispatch(
+      PeriodActions.remove({
+        id: form?.period?.id,
+        loading: false,
+      })
+
+    );
+      }
+  }else{
+        
+    this.store.dispatch(PeriodActions.periodFailure({ messages:['Please select something to delete'] }));
+  }
+  }
+
 
   override afterEditPeriodCreateNext(form: EditPeriodCreateNextForm): void {
 

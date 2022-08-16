@@ -27,7 +27,7 @@ export class UserEffects {
               success: true,
             })
           ),
-          catchError(({ error }) => [UserActions.userFailure({ messages: [error.error] })])
+          catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
