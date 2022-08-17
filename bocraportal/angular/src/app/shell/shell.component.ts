@@ -39,7 +39,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
     this.username$ = this.store.pipe(select(AuthSelectors.selectUsername));
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit(): void {
     this.keycloakService.isLoggedIn().then((loggedIn) => {
