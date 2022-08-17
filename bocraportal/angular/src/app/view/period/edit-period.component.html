@@ -9,7 +9,7 @@
   </div>
 </div> -->
 
-<div class="card container px-5 py-2 bg-light">
+<div class="card container px-4 py-2 bg-light">
   <div class="card-body">
     <form [formGroup]="editPeriodForm">
       <section>
@@ -58,24 +58,19 @@
       </div> -->
       <div formGroupName="period">
         <fieldset class="mb-3" formGroupName="periodConfig">
-          <legend id="periodPeriodConfig_label" class="col-sm-6 col-form-label" for="periodPeriodConfig">
+          <legend id="periodPeriodConfig_label" class="col-sm-2 col-form-label" for="periodPeriodConfig">
             <span translate>period.config</span>*
           </legend>
           <div class="col my-3 view-buttons">
-            <button
-              type="button"
-              (click)="periodPeriodConfigAddDialog()"
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#periodPeriodConfigModal"
-            >
+            <button type="button" (click)="periodPeriodConfigAddDialog()" class="btn btn-primary" data-bs-toggle="modal"
+              data-bs-target="#periodPeriodConfigModal">
               <mat-icon>add_box</mat-icon>
             </button>
             <button type="button" (click)="periodPeriodConfigClear()" class="btn btn-primary">
               <mat-icon>clear</mat-icon>
             </button>
           </div>
-          <div class="row mb-3">
+          <!-- <div class="row mb-3">
             <label for="periodPeriodConfigId" class="col-sm-6 col-form-label" translate>id</label>
             <div class="col-sm-10">
               <input
@@ -86,111 +81,73 @@
                 disabled
               />
             </div>
-          </div>
+          </div> -->
           <div class="row mb-3">
-            <label for="periodPeriodConfigPeriodConfigName" class="col-sm-6 col-form-label" translate
-              >period.config.name</label
-            >
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodPeriodConfigPeriodConfigName"
-                value="{{ periodPeriodConfig?.periodConfigName }}"
-                disabled
-              />
+            <label for="periodPeriodConfigPeriodConfigName" class="col-sm-2 col-form-label"
+              translate>period.config.name</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="periodPeriodConfigPeriodConfigName"
+                value="{{ periodPeriodConfig?.periodConfigName }}" disabled />
             </div>
           </div>
           <div class="row mb-3">
-            <label for="periodPeriodConfigStartDay" class="col-sm-6 col-form-label" translate>start.day</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodPeriodConfigStartDay"
-                value="{{ periodPeriodConfig?.startDay }}"
-                disabled
-              />
+            <label for="periodPeriodConfigStartDay" class="col-sm-2 col-form-label" translate>start.day</label>
+            <div class="col-sm-8">
+              <input type="date" class="form-control" id="periodPeriodConfigStartDay"
+                value="{{ periodPeriodConfig?.startDay }}"  />
             </div>
           </div>
           <div class="row mb-3">
-            <label for="periodPeriodConfigStartMonth" class="col-sm-6 col-form-label" translate>start.month</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodPeriodConfigStartMonth"
-                value="{{ periodPeriodConfig?.startMonth }}"
-                disabled
-              />
+            <label for="periodPeriodConfigStartMonth" class="col-sm-2 col-form-label" translate>start.month</label>
+            <div class="col-sm-8">
+              <input type="date" class="form-control" id="periodPeriodConfigStartMonth"
+                value="{{ periodPeriodConfig?.startMonth }}" />
             </div>
           </div>
           <div class="row mb-3">
-            <label for="periodPeriodConfigRepeat" class="col-sm-6 col-form-label" translate>repeat</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodPeriodConfigRepeat"
-                value="{{ periodPeriodConfig?.repeat }}"
-                disabled
-              />
+            <label for="periodPeriodConfigRepeat" class="col-sm-2 col-form-label" translate>repeat</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="periodPeriodConfigRepeat"
+                value="{{ periodPeriodConfig?.repeat }}" disabled />
             </div>
           </div>
           <div class="row mb-3">
-            <label for="periodPeriodConfigRepeatPeriod" class="col-sm-6 col-form-label" translate>repeat.period</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodPeriodConfigRepeatPeriod"
-                value="{{ periodPeriodConfig?.repeatPeriod }}"
-                disabled
-              />
+            <label for="periodPeriodConfigRepeatPeriod" class="col-sm-2 col-form-label" translate>repeat.period</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="periodPeriodConfigRepeatPeriod"
+                value="{{ periodPeriodConfig?.repeatPeriod }}" disabled />
             </div>
           </div>
-          <div
-            *ngIf="
+          <div *ngIf="
               editPeriodForm.invalid &&
               periodPeriodConfigControl.invalid &&
               (periodPeriodConfigControl.dirty || periodPeriodConfigControl.touched)
-            "
-            class="alert alert-danger"
-            role="alert"
-          >
+            " class="alert alert-danger" role="alert">
             <div *ngIf="periodPeriodConfigControl.errors['required']">
               <span translate>period.config.required</span>
             </div>
           </div>
         </fieldset>
-        <div class="mb-3">
-          <label id="periodPeriodName_label" class="col-sm-6 col-form-label" for="periodPeriodName"
-            ><span translate>period.name</span>*</label
-          >
-          <input
-            type="text"
-            id="periodPeriodName"
-            class="form-control"
-            name="periodName"
-            formControlName="periodName"
-            required
-          />
-          <div
-            *ngIf="
+        <div class="row   +-+-mb-3">
+          <label id="periodPeriodName_label" class="col-sm-2 col-form-label" for="periodPeriodName"><span
+              translate>period.name</span>*</label>
+          <div class="col-sm-8">
+            <input type="text" id="periodPeriodName" class="form-control" name="periodName" formControlName="periodName"
+              required />
+          </div>
+          <div *ngIf="
               editPeriodForm.invalid &&
               periodPeriodNameControl.invalid &&
               (periodPeriodNameControl.dirty || periodPeriodNameControl.touched)
-            "
-            class="alert alert-danger"
-            role="alert"
-          >
+            " class="alert alert-danger" role="alert">
             <div *ngIf="periodPeriodNameControl.errors['required']">
               <span translate>period.name.required</span>
             </div>
           </div>
         </div>
-
-        <div class="mb-3">
+ <br>
+ <br>
+        <!-- <div class="mb-3">
           <label id="periodPeriodStart_label" class="col-sm-6 col-form-label" for="periodPeriodStart"
             ><span translate>period.start</span></label
           >
@@ -202,12 +159,12 @@
             navigator="true"
             showOn="button"
           />
-        </div>
-        <div class="mb-3">
-          <label id="periodPeriodEnd_label" class="col-sm-6 col-form-label" for="periodPeriodEnd"
+        </div> -->
+        <div class="row mb-3">
+          <label id="periodPeriodEnd_label" class="col-sm-2 col-form-label" for="periodPeriodEnd"
             ><span translate>period.end</span></label
-          >
-          <input
+          > <div class="col-sm-8">
+            <input
             type="date"
             id="periodPeriodEnd"
             class="form-control"
@@ -215,128 +172,119 @@
             navigator="true"
             showOn="button"
           />
+
+          </div>
+          
         </div>
 
         <fieldset class="mb-3" formGroupName="next">
-          <legend id="periodNext_label" class="col-sm-6 col-form-label" for="periodNext">
-            <span translate>next</span>
-          </legend>
-          <div class="col my-3 view-buttons">
-            <button
-              type="button"
-              (click)="periodNextAddDialog()"
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#periodNextModal"
-            >
-              <mat-icon>add_box</mat-icon>
-            </button>
-            <button type="button" (click)="periodNextClear()" class="btn btn-primary">
-              <mat-icon>clear</mat-icon>
-            </button>
-          </div>
-          <div class="row mb-3">
-            <label for="periodNextId" class="col-sm-6 col-form-label" translate>id</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="periodNextId" value="{{ periodNext?.id }}" disabled />
+          <div class="row">
+            <div class="col col-sm-6">
+              <legend id="periodNext_label" class="col-sm-6 col-form-label" for="periodNext">
+                <span translate>next</span>
+              </legend>
+              <div class="col my-3 view-buttons">
+                <button type="button" (click)="periodNextAddDialog()" class="btn btn-primary" data-bs-toggle="modal"
+                  data-bs-target="#periodNextModal">
+                  <mat-icon>add_box</mat-icon>
+                </button>
+                <button type="button" (click)="periodNextClear()" class="btn btn-primary">
+                  <mat-icon>clear</mat-icon>
+                </button>
+              </div>
+              <!-- <div class="row mb-3">
+                <label for="periodNextId" class="col-sm-6 col-form-label" translate>id</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="periodNextId" value="{{ periodNext?.id }}" disabled />
+                </div>
+              </div> -->
+              <div class="row mb-3">
+                <label for="periodNextPeriodName" class="col-sm-4 col-form-label" translate>period.name</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" id="periodNextPeriodName" value="{{ periodNext?.periodName }}"
+                     />
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="row mb-3">
-            <label for="periodNextPeriodName" class="col-sm-6 col-form-label" translate>period.name</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodNextPeriodName"
-                value="{{ periodNext?.periodName }}"
-                disabled
-              />
+            <div class="col col-sm-6">
+              <legend id="periodPrevious_label" class="col-sm-4 col-form-label" for="periodPrevious">
+                <span translate>previous</span>
+              </legend>
+              <div class="col my-3 view-buttons">
+                <button type="button" (click)="periodPreviousAddDialog()" class="btn btn-primary" data-bs-toggle="modal"
+                  data-bs-target="#periodPreviousModal">
+                  <mat-icon>add_box</mat-icon>
+                </button>
+                <button type="button" (click)="periodPreviousClear()" class="btn btn-primary">
+                  <mat-icon>clear</mat-icon>
+                </button>
+              </div>
+              <!-- <div class="row mb-3">
+                <label for="periodPreviousId" class="col-sm-6 col-form-label" translate>id</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="periodPreviousId" value="{{ periodPrevious?.id }}" disabled />
+                </div>
+              </div> -->
+              <div class="row mb-3">
+                <label for="periodPreviousPeriodName" class="col-sm-4 col-form-label" translate>period.name</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" id="periodPreviousPeriodName"
+                    value="{{ periodPrevious?.periodName }}"/>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="row mb-3">
-            <label for="periodNextPeriodStart" class="col-sm-6 col-form-label" translate>period.start</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodNextPeriodStart"
-                value="{{ periodNext?.periodStart }}"
-                disabled
-              />
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label for="periodNextPeriodEnd" class="col-sm-6 col-form-label" translate>period.end</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodNextPeriodEnd"
-                value="{{ periodNext?.periodEnd }}"
-                disabled
-              />
-            </div>
-          </div>
-        </fieldset>
-        <fieldset class="mb-3" formGroupName="previous">
-          <legend id="periodPrevious_label" class="col-sm-6 col-form-label" for="periodPrevious">
-            <span translate>previous</span>
-          </legend>
-          <div class="col my-3 view-buttons">
-            <button
-              type="button"
-              (click)="periodPreviousAddDialog()"
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#periodPreviousModal"
-            >
-              <mat-icon>add_box</mat-icon>
-            </button>
-            <button type="button" (click)="periodPreviousClear()" class="btn btn-primary">
-              <mat-icon>clear</mat-icon>
-            </button>
-          </div>
-          <div class="row mb-3">
-            <label for="periodPreviousId" class="col-sm-6 col-form-label" translate>id</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="periodPreviousId" value="{{ periodPrevious?.id }}" disabled />
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label for="periodPreviousPeriodName" class="col-sm-6 col-form-label" translate>period.name</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodPreviousPeriodName"
-                value="{{ periodPrevious?.periodName }}"
-                disabled
-              />
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label for="periodPreviousPeriodStart" class="col-sm-6 col-form-label" translate>period.start</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodPreviousPeriodStart"
-                value="{{ periodPrevious?.periodStart }}"
-                disabled
-              />
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label for="periodPreviousPeriodEnd" class="col-sm-6 col-form-label" translate>period.end</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                class="form-control"
-                id="periodPreviousPeriodEnd"
-                value="{{ periodPrevious?.periodEnd }}"
-                disabled
-              />
-            </div>
+
+            <!-- <div class="row mb-3">
+              <label for="periodNextPeriodStart" class="col-sm-6 col-form-label" translate>period.start</label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="periodNextPeriodStart"
+                  value="{{ periodNext?.periodStart }}"
+                  disabled
+                />
+              </div>
+            </div> -->
+            <!-- <div class="row mb-3">
+              <label for="periodNextPeriodEnd" class="col-sm-6 col-form-label" translate>period.end</label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="periodNextPeriodEnd"
+                  value="{{ periodNext?.periodEnd }}"
+                  disabled
+                />
+              </div>
+            </div> -->
+            <!-- </fieldset>
+          <fieldset class="mb-3" formGroupName="previous"> -->
+            
+            <!-- <div class="row mb-3">
+              <label for="periodPreviousPeriodStart" class="col-sm-6 col-form-label" translate>period.start</label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="periodPreviousPeriodStart"
+                  value="{{ periodPrevious?.periodStart }}"
+                  disabled
+                />
+              </div>
+            </div> -->
+            <!-- <div class="row mb-3">
+              <label for="periodPreviousPeriodEnd" class="col-sm-6 col-form-label" translate>period.end</label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="periodPreviousPeriodEnd"
+                  value="{{ periodPrevious?.periodEnd }}"
+                  disabled
+                />
+              </div>
+            </div> -->
           </div>
         </fieldset>
       </div>
@@ -361,13 +309,8 @@
   </div>
 </div>
 <!-- Modal for periodConfig -->
-<div
-  class="modal fade"
-  id="periodPeriodConfigModal"
-  tabindex="-1"
-  aria-labelledby="periodPeriodConfigLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="periodPeriodConfigModal" tabindex="-1" aria-labelledby="periodPeriodConfigLabel"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -383,12 +326,8 @@
             <div>
               <mat-form-field>
                 <mat-label translate>search</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  [formControl]="periodPeriodConfigSearchField"
-                  id="periodPeriodConfigSearchField"
-                />
+                <input matInput type="text" [formControl]="periodPeriodConfigSearchField"
+                  id="periodPeriodConfigSearchField" />
               </mat-form-field>
             </div>
             <button type="button" (click)="periodPeriodConfigSearch()" class="btn btn-primary">
@@ -396,13 +335,8 @@
             </button>
           </form>
         </div>
-        <mat-table
-          matSort
-          [dataSource]="periodPeriodConfigs$ | async"
-          #periodPeriodConfigModalSort="matSort"
-          class="table table-bordered"
-          style="width: 100%"
-        >
+        <mat-table matSort [dataSource]="periodPeriodConfigs$ | async" #periodPeriodConfigModalSort="matSort"
+          class="table table-bordered" style="width: 100%">
           <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
             <mat-cell *matCellDef="let row; let i = index">
@@ -438,22 +372,13 @@
           <mat-header-row *matHeaderRowDef="periodPeriodConfigModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: periodPeriodConfigModalColumns"></mat-row>
         </mat-table>
-        <mat-paginator
-          #periodPeriodConfigModalPaginator="matPaginator"
-          [pageSize]="10"
-          [pageSizeOptions]="[5, 10, 15]"
-          showFirstLastButtons
-        ></mat-paginator>
+        <mat-paginator #periodPeriodConfigModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]"
+          showFirstLastButtons></mat-paginator>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="addSelectedPeriodPeriodConfig()"
-          data-bs-dismiss="modal"
-          translate
-        >
+        <button type="button" class="btn btn-primary" (click)="addSelectedPeriodPeriodConfig()" data-bs-dismiss="modal"
+          translate>
           save
         </button>
       </div>
@@ -486,13 +411,8 @@
             </button>
           </form>
         </div>
-        <mat-table
-          matSort
-          [dataSource]="periodNexts$ | async"
-          #periodNextModalSort="matSort"
-          class="table table-bordered"
-          style="width: 100%"
-        >
+        <mat-table matSort [dataSource]="periodNexts$ | async" #periodNextModalSort="matSort"
+          class="table table-bordered" style="width: 100%">
           <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
             <mat-cell *matCellDef="let row; let i = index">
@@ -520,22 +440,13 @@
           <mat-header-row *matHeaderRowDef="periodNextModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: periodNextModalColumns"></mat-row>
         </mat-table>
-        <mat-paginator
-          #periodNextModalPaginator="matPaginator"
-          [pageSize]="10"
-          [pageSizeOptions]="[5, 10, 15]"
-          showFirstLastButtons
-        ></mat-paginator>
+        <mat-paginator #periodNextModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]"
+          showFirstLastButtons></mat-paginator>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="addSelectedPeriodNext()"
-          data-bs-dismiss="modal"
-          translate
-        >
+        <button type="button" class="btn btn-primary" (click)="addSelectedPeriodNext()" data-bs-dismiss="modal"
+          translate>
           save
         </button>
       </div>
@@ -568,13 +479,8 @@
             </button>
           </form>
         </div>
-        <mat-table
-          matSort
-          [dataSource]="periodPreviouses$ | async"
-          #periodPreviousModalSort="matSort"
-          class="table table-bordered"
-          style="width: 100%"
-        >
+        <mat-table matSort [dataSource]="periodPreviouses$ | async" #periodPreviousModalSort="matSort"
+          class="table table-bordered" style="width: 100%">
           <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
             <mat-cell *matCellDef="let row; let i = index">
@@ -602,22 +508,13 @@
           <mat-header-row *matHeaderRowDef="periodPreviousModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: periodPreviousModalColumns"></mat-row>
         </mat-table>
-        <mat-paginator
-          #periodPreviousModalPaginator="matPaginator"
-          [pageSize]="10"
-          [pageSizeOptions]="[5, 10, 15]"
-          showFirstLastButtons
-        ></mat-paginator>
+        <mat-paginator #periodPreviousModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]"
+          showFirstLastButtons></mat-paginator>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="addSelectedPeriodPrevious()"
-          data-bs-dismiss="modal"
-          translate
-        >
+        <button type="button" class="btn btn-primary" (click)="addSelectedPeriodPrevious()" data-bs-dismiss="modal"
+          translate>
           save
         </button>
       </div>

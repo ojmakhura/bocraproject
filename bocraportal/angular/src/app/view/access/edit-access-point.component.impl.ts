@@ -68,27 +68,54 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
 
   override beforeEditAccessPointSave(form: EditAccessPointSaveForm): void {
 
-    if (form.accessPoint?.id) {
-      form.accessPoint.updatedBy = this.keycloakService.getUsername();
-      form.accessPoint.updatedDate = new Date();
+    if(this.editAccessPointForm.valid && this.editAccessPointForm.dirty){
+      if (form.accessPoint?.id) {
+        form.accessPoint.updatedBy = this.keycloakService.getUsername();
+        form.accessPoint.updatedDate = new Date();
+      } else {
+        form.accessPoint.createdBy = this.keycloakService.getUsername();
+        form.accessPoint.createdDate = new Date();
+      }
+      this.store.dispatch(
+        AccessPointActions.save({
+          accessPoint: form.accessPoint,
+          loading: true,
+        })
+      );
     } else {
-      form.accessPoint.createdBy = this.keycloakService.getUsername();
-      form.accessPoint.createdDate = new Date();
+      let messages: string[] = []
+      if(!this.accessPointNameControl.valid) {
+        messages.push("Access point name has errors")
+      }
+      if(!this.accessPointUrlControl.valid) {
+        messages.push("Access point url  has errors")
+      }
+      this.store.dispatch(AccessPointActions.accessPointFailure({ messages: messages }));
     }
-    this.store.dispatch(
-      AccessPointActions.save({
-        accessPoint: form.accessPoint,
-        loading: true,
-      })
-    );
+  
   }
 
   override beforeEditAccessPointDelete(form: EditAccessPointDeleteForm): void {
+    if (this.editAccessPointForm.valid && this.editAccessPointForm.dirty){
+      if (form.accessPoint?.id) {
+        form.accessPoint.updatedBy = this.keycloakService.getUsername();
+        form.accessPoint.updatedDate = new Date();
+      } else {
+        form.accessPoint.createdBy = this.keycloakService.getUsername();
+        form.accessPoint.createdDate = new Date();
+      }
+      if(form?.accessPoint?.id && confirm("Are you sure you want to delete the period?")){
     this.store.dispatch(
       AccessPointActions.remove({
         id: form?.accessPoint?.id,
         loading: false,
       })
+
     );
-  }
+    }
+  }else {
+    
+    this.store.dispatch(AccessPointActions.accessPointFailure({ messages:['Please select something to delete'] }));
+ }
+}
 }

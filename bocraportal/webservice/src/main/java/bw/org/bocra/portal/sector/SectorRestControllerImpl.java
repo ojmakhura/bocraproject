@@ -70,6 +70,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
+
         Optional<Boolean> data = Optional.of(sectorService.remove(id)); // TODO: Add custom code here;
         ResponseEntity<Boolean> response;
 
@@ -84,6 +85,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleSave(SectorVO sector) {
+       
         Optional<SectorVO> data = Optional.of(sectorService.save(sector)); // TODO: Add custom code here;
         ResponseEntity<SectorVO> response;
 
@@ -94,21 +96,44 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         }
 
         return response;
-    }
+               
+      }
+     
+    
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
-        Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
-        ResponseEntity<Collection<SectorVO>> response;
+        // Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
+        // ResponseEntity<Collection<SectorVO>> response;
 
-        if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // if(data.isPresent()) {
+        //     response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        // } else {
+        //     response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // }
+
+        // return response;
+
+        try {
+            Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
+            ResponseEntity<Collection<SectorVO>> response;
+    
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+            
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
-
-        return response;
     }
+    
+    
 
     @Override
     public ResponseEntity<?> handleAddLicensee(Long sectorId, Long licenseeId) {
