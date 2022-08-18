@@ -203,13 +203,13 @@ services:
     container_name: bocra-web
     volumes:
       - ${BOCRA_DATA}/web:/web
-    depends_on:
-      db:
-        condition: service_healthy
-      keycloak:
-        condition: service_healthy
-      api:
-        condition: service_healthy
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    #   keycloak:
+    #     condition: service_healthy
+    #   api:
+    #     condition: service_healthy
     #ports:
       #   - ${WEB_PUBLIC_PORT}:80
     networks:
