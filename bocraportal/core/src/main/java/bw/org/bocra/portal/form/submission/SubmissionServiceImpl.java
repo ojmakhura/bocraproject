@@ -8,13 +8,17 @@
  */
 package bw.org.bocra.portal.form.submission;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
@@ -185,6 +189,67 @@ public class SubmissionServiceImpl
     protected Boolean handleDeleteDataField(Long id) throws Exception {
         getDataFieldDao().remove(id);
         return true;
+    }
+
+    @Override
+    protected SubmissionSummary handleGetSubmissionSummary(FormSubmissionCriteria criteria) throws Exception {
+        SubmissionSummary summary = new SubmissionSummary();
+        Specification<FormSubmission> specs = null;
+
+        FormSubmissionCriteria tmp = new FormSubmissionCriteria();
+
+        if(criteria.getLicensee() != null) {
+            specs = FormSubmissionSpecifications.findByLicenseeId(criteria.getLicensee());
+        }
+
+        summary.setAllSubmissions(formSubmissionRepository.count(specs));
+
+        if(StringUtils.isNotBlank(criteria.getSubmittedBy())) {
+            if(specs == null) {
+                specs = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy());
+            } else {
+                specs = specs.and(BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy()));
+            }
+        }
+        
+        summary.setMySubmissions(formSubmissionRepository.count(specs));
+
+        /**
+         * Get all values related to status
+         */
+        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.NEW);
+
+        if(specs != null) {
+            sSpecs = sSpecs.and(specs);
+        }
+        summary.setNewSubmissions(formSubmissionRepository.count(specs));
+
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.DRAFT);
+
+        if(specs != null) {
+            sSpecs = sSpecs.and(specs);
+        }
+        summary.setDraftSubmissions(formSubmissionRepository.count(specs));
+
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.SUBMITTED);
+
+        if(specs != null) {
+            sSpecs = sSpecs.and(specs);
+        }
+        summary.setReturnedSubmissions(formSubmissionRepository.count(specs));
+
+        /**
+         * Get count of overdue submissions
+         */
+        sSpecs = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttribute("submissionDate", LocalDateTime.now());
+        sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual("submissionStatus", FormSubmissionStatus.SUBMITTED));
+
+        if(specs != null) {
+            sSpecs = sSpecs.and(specs);
+        }
+        summary.setOverdueSubmissions(formSubmissionRepository.count(specs));
+
+        return summary;
     }
 
 }

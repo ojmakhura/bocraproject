@@ -157,4 +157,18 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
         return response;
     }
+
+    @Override
+    public ResponseEntity<?> handleGetSubmissionSummary(FormSubmissionCriteria criteria) {
+        SubmissionSummary data = submissionService.getSubmissionSummary(criteria);
+        ResponseEntity<SubmissionSummary> response;
+
+        if(data != null) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data);
+        } else {
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        return response;
+    }
 }
