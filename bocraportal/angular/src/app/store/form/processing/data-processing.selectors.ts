@@ -6,9 +6,39 @@ export const selectDataProcessingState = createFeatureSelector<DataProcessingSta
     dataProcessingKey
 );
 
-export const selectId = createSelector(
+export const selectSubmissionSummary = createSelector(
     selectDataProcessingState,
-    (state: DataProcessingState) => state.id
+    (state: DataProcessingState) => state.submissionSummary
+);
+
+export const selectAllSubmission = createSelector(
+    selectDataProcessingState,
+    (state: DataProcessingState) => state.submissionSummary.allSubmissions
+);
+
+export const selectMySubmission = createSelector(
+    selectDataProcessingState,
+    (state: DataProcessingState) => state.submissionSummary.mySubmissions
+);
+
+export const selectDraftSubmission = createSelector(
+    selectDataProcessingState,
+    (state: DataProcessingState) => state.submissionSummary.draftSubmissions
+);
+
+export const selectNewSubmission = createSelector(
+    selectDataProcessingState,
+    (state: DataProcessingState) => state.submissionSummary.newSubmissions
+);
+
+export const selectOverdueSubmission = createSelector(
+    selectDataProcessingState,
+    (state: DataProcessingState) => state.submissionSummary.overdueSubmissions
+);
+
+export const selectReturnedSubmission = createSelector(
+    selectDataProcessingState,
+    (state: DataProcessingState) => state.submissionSummary.returnedSubmissions
 );
 
 export const selectFormSubmissions = createSelector(

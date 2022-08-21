@@ -22,10 +22,10 @@ export const environment = {
   webClientId: '5bf59357-eafb-4de3-baff-dc98f1d9bab7',
   redirectUri: 'http://localhost:4200',
   keycloakClientRoleUrl:
-    'http://keycloak.localhost/auth/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
-  keycloakRealmRoleUrl: 'http://keycloak.localhost/auth/admin/realms/bocraportal/roles',
+    'https://keycloak.localhost/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
+  keycloakRealmRoleUrl: 'https://keycloak.localhost/admin/realms/bocraportal/roles',
   keycloak: {
-    issuer: 'http://keycloak.localhost/auth',
+    issuer: 'https://keycloak.localhost',
     redirectUri: window.location.origin,
     clientId: 'bocraportal-web',
     scope: 'openid profile email offline_access',

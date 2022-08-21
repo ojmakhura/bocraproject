@@ -94,7 +94,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
    * This method may be overwritten
    */
   override beforeEditAuthorisationSave(form: EditAuthorisationSaveForm): void {
-    if (this.editAuthorisationForm.valid && this.editAuthorisationForm.dirty){
+    if (this.editAuthorisationForm.valid && this.editAuthorisationForm.pristine) {
       if (form.authorisation?.id) {
         form.authorisation.updatedBy = this.keycloakService.getUsername();
         form.authorisation.updatedDate = new Date();

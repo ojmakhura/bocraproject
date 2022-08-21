@@ -37,16 +37,16 @@ import { DataProcessingState } from '@app/store/form/processing/data-processing.
 import * as DataProcessingSelectors from '@app/store/form/processing/data-processing.selectors';
 import * as DataProcessingActions from '@app/store/form/processing/data-processing.actions';
 
-import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
-import { NoteVO } from '@app/model/bw/org/bocra/portal/form/submission/note/note-vo';
-import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
-import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
-import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
-import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
-import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
-import { SubmissionDataFormSubmissionsComponentImpl } from '@app/view/form/processing/submission-data-form-submissions.component.impl';
 import { SubmissionProcessingImpl } from '@app/controller/form/processing/submission-processing.impl';
+import { NoteVO } from '@app/model/bw/org/bocra/portal/form/submission/note/note-vo';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { SubmissionDataFormSubmissionsComponentImpl } from '@app/view/form/processing/submission-data-form-submissions.component.impl';
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
+import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
 import { SubmissionDataComponentImpl } from '@app/view/form/processing/submission-data.component.impl';
 @Component({
   selector: 'app-submission-data-base',
@@ -233,24 +233,24 @@ export abstract class SubmissionDataComponent implements OnInit, AfterViewInit, 
         }
     }
 
-    createFormVOGroup(value: FormVO): FormGroup {
+    createLicenseeVOGroup(value: LicenseeVO): FormGroup {
         return this.formBuilder.group({
             id: [value?.id],
             createdBy: [value?.createdBy],
             updatedBy: [value?.updatedBy],
             createdDate: [value?.createdDate],
             updatedDate: [value?.updatedDate],
-            code: [value?.code],
-            formName: [value?.formName],
-            description: [value?.description],
-            entryType: [value?.entryType],
+            status: [value?.status],
+            uin: [value?.uin],
+            licenseeName: [value?.licenseeName],
+            address: [value?.address],
         });
     }
 
-    createFormVOArray(values: FormVO[]): FormArray {
+    createLicenseeVOArray(values: LicenseeVO[]): FormArray {
         if(values) {
             let formArray: FormArray = this.formBuilder.array([]);
-            values?.forEach(value => formArray.push(this.createFormVOGroup(value)))
+            values?.forEach(value => formArray.push(this.createLicenseeVOGroup(value)))
 
             return formArray;
         } else {
@@ -275,31 +275,6 @@ export abstract class SubmissionDataComponent implements OnInit, AfterViewInit, 
         if(values) {
             let formArray: FormArray = this.formBuilder.array([]);
             values?.forEach(value => formArray.push(this.createDataFieldVOGroup(value)))
-
-            return formArray;
-        } else {
-            return new FormArray([]);
-        }
-    }
-
-    createLicenseeVOGroup(value: LicenseeVO): FormGroup {
-        return this.formBuilder.group({
-            id: [value?.id],
-            createdBy: [value?.createdBy],
-            updatedBy: [value?.updatedBy],
-            createdDate: [value?.createdDate],
-            updatedDate: [value?.updatedDate],
-            status: [value?.status],
-            uin: [value?.uin],
-            licenseeName: [value?.licenseeName],
-            address: [value?.address],
-        });
-    }
-
-    createLicenseeVOArray(values: LicenseeVO[]): FormArray {
-        if(values) {
-            let formArray: FormArray = this.formBuilder.array([]);
-            values?.forEach(value => formArray.push(this.createLicenseeVOGroup(value)))
 
             return formArray;
         } else {
@@ -332,25 +307,6 @@ export abstract class SubmissionDataComponent implements OnInit, AfterViewInit, 
         }
     }
 
-    createDataFieldSectionVOGroup(value: DataFieldSectionVO): FormGroup {
-        return this.formBuilder.group({
-            sectionId: [value?.sectionId],
-            sectionLabel: [value?.sectionLabel],
-            position: [value?.position],
-        });
-    }
-
-    createDataFieldSectionVOArray(values: DataFieldSectionVO[]): FormArray {
-        if(values) {
-            let formArray: FormArray = this.formBuilder.array([]);
-            values?.forEach(value => formArray.push(this.createDataFieldSectionVOGroup(value)))
-
-            return formArray;
-        } else {
-            return new FormArray([]);
-        }
-    }
-
     createPeriodVOGroup(value: PeriodVO): FormGroup {
         return this.formBuilder.group({
             id: [value?.id],
@@ -368,6 +324,50 @@ export abstract class SubmissionDataComponent implements OnInit, AfterViewInit, 
         if(values) {
             let formArray: FormArray = this.formBuilder.array([]);
             values?.forEach(value => formArray.push(this.createPeriodVOGroup(value)))
+
+            return formArray;
+        } else {
+            return new FormArray([]);
+        }
+    }
+
+    createFormVOGroup(value: FormVO): FormGroup {
+        return this.formBuilder.group({
+            id: [value?.id],
+            createdBy: [value?.createdBy],
+            updatedBy: [value?.updatedBy],
+            createdDate: [value?.createdDate],
+            updatedDate: [value?.updatedDate],
+            code: [value?.code],
+            formName: [value?.formName],
+            description: [value?.description],
+            entryType: [value?.entryType],
+        });
+    }
+
+    createFormVOArray(values: FormVO[]): FormArray {
+        if(values) {
+            let formArray: FormArray = this.formBuilder.array([]);
+            values?.forEach(value => formArray.push(this.createFormVOGroup(value)))
+
+            return formArray;
+        } else {
+            return new FormArray([]);
+        }
+    }
+
+    createDataFieldSectionVOGroup(value: DataFieldSectionVO): FormGroup {
+        return this.formBuilder.group({
+            sectionId: [value?.sectionId],
+            sectionLabel: [value?.sectionLabel],
+            position: [value?.position],
+        });
+    }
+
+    createDataFieldSectionVOArray(values: DataFieldSectionVO[]): FormArray {
+        if(values) {
+            let formArray: FormArray = this.formBuilder.array([]);
+            values?.forEach(value => formArray.push(this.createDataFieldSectionVOGroup(value)))
 
             return formArray;
         } else {

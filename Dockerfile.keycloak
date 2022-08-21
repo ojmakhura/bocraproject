@@ -1,31 +1,31 @@
-# FROM quay.io/keycloak/keycloak:18.0.2-legacy
+# FROM quay.io/keycloak/keycloak:19.0.1
 
-# COPY --chown=jboss:root keycloak/bocra /opt/jboss/keycloak/themes/bocra
-# COPY --chown=jboss:root keycloak/base /opt/jboss/keycloak/themes/base
-# COPY --chown=jboss:root keycloak/standalone.xml /opt/jboss/keycloak/standalone/configuration/standalone.xml
+# COPY --chown=keycloak:root keycloak/bocra /opt/keycloak/themes/bocra
+# COPY --chown=keycloak:root keycloak/base /opt/keycloak/themes/base
+# # COPY --chown=keycloak:root keycloak/standalone.xml /opt/keycloak/standalone/configuration/standalone.xml
 
-# COPY --chown=jboss:root keycloak/bocra/login/resources/css/bocra-login.css /opt/jboss/keycloak/themes/bocra/login/resources/css/bocra-login.css
-# COPY --chown=jboss:root keycloak/bocra/account/resources/css/bocra-account.css /opt/jboss/keycloak/themes/bocra/account/resources/css/bocra-account.css
+# COPY --chown=keycloak:root keycloak/bocra/login/resources/css/bocra-login.css /opt/keycloak/themes/bocra/login/resources/css/bocra-login.css
+# COPY --chown=keycloak:root keycloak/bocra/account/resources/css/bocra-account.css /opt/keycloak/themes/bocra/account/resources/css/bocra-account.css
 
-FROM quay.io/keycloak/keycloak:18.0.2 as builder
+FROM quay.io/keycloak/keycloak:latest as builder
 
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
 ENV KC_FEATURES=token-exchange
-# ENV KC_DB=postgres
-# RUN printenv
+ENV KC_DB=postgres
 # Install custom providers
 RUN curl -sL https://github.com/aerogear/keycloak-metrics-spi/releases/download/2.5.3/keycloak-metrics-spi-2.5.3.jar -o /opt/keycloak/providers/keycloak-metrics-spi-2.5.3.jar
-RUN /opt/keycloak/bin/kc.sh build 
+RUN /opt/keycloak/bin/kc.sh build -Dkeycloak.profile.feature.docker=enabled
 
-FROM quay.io/keycloak/keycloak:18.0.2
+FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 WORKDIR /opt/keycloak
 # for demonstration purposes only, please make sure to use proper certificates in production instead
-# RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:keycloak.localhost,IP:127.0.0.1" -keystore conf/server.keystore
-# change these values to point to a running postgres instance
-# ENV KC_DB_URL=jdbc:postgresql://db/keycloak
-# ENV KC_DB_USERNAME=postgres
-# ENV KC_DB_PASSWORD=Cash8Aes
-# ENV KC_HOSTNAME=keycloak.localhost
-# ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start", "--https-certificate-key-file=/certs/localhost.key", "--https-certificate-file=/certs/localhost.crt"]
+# RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -keystore conf/server.keystore
+
+COPY --chown=keycloak:root keycloak/bocra /opt/keycloak/themes/bocra
+COPY --chown=keycloak:root keycloak/base /opt/keycloak/themes/base
+COPY --chown=keycloak:root keycloak/bocra/login/resources/css/bocra-login.css /opt/keycloak/themes/bocra/login/resources/css/bocra-login.css
+COPY --chown=keycloak:root keycloak/bocra/account/resources/css/bocra-account.css /opt/keycloak/themes/bocra/account/resources/css/bocra-account.css
+
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]

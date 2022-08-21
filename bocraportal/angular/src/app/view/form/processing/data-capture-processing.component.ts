@@ -34,41 +34,34 @@ import { DataProcessingState } from '@app/store/form/processing/data-processing.
 import * as DataProcessingSelectors from '@app/store/form/processing/data-processing.selectors';
 import * as DataProcessingActions from '@app/store/form/processing/data-processing.actions';
 
-import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
-import { FormSubmissionControllerImpl } from '@app/controller/form/submission/form-submission-controller.impl';
+import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
 import { SubmissionProcessingImpl } from '@app/controller/form/processing/submission-processing.impl';
 import { SubmissionDataComponentImpl } from '@app/view/form/processing/submission-data.component.impl';
 import { MatDialogConfig } from '@angular/material/dialog';
 
 export class DataCaptureProcessingNewSubmissionForm {
-    formSubmissions: Array<FormSubmissionVO>[] | any[];
-    id: number | any;
+    submissions: Array<FormSubmissionVO>[] | any[];
 }
 
 export class DataCaptureProcessingDraftsForm {
-    formSubmissions: Array<FormSubmissionVO>[] | any[];
-    id: number | any;
+    submissions: Array<FormSubmissionVO>[] | any[];
 }
 
 export class DataCaptureProcessingMySubmissionsForm {
-    formSubmissions: Array<FormSubmissionVO>[] | any[];
-    id: number | any;
+    submissions: Array<FormSubmissionVO>[] | any[];
 }
 
 export class DataCaptureProcessingAllSubmissionsForm {
-    formSubmissions: Array<FormSubmissionVO>[] | any[];
-    id: number | any;
+    submissions: Array<FormSubmissionVO>[] | any[];
 }
 
 export class DataCaptureProcessingOverdueSubmissionsForm {
-    formSubmissions: Array<FormSubmissionVO>[] | any[];
-    id: number | any;
+    submissions: Array<FormSubmissionVO>[] | any[];
 }
 
 export class DataCaptureProcessingReturnedSubmissionsForm {
-    formSubmissions: Array<FormSubmissionVO>[] | any[];
-    id: number | any;
+    submissions: Array<FormSubmissionVO>[] | any[];
 }
 @Component({
   selector: 'app-data-capture-processing-base',

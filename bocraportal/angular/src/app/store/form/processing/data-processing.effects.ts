@@ -9,16 +9,16 @@ import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/
 export class DataProcessingEffects {
 
     constructor(private actions$: Actions, private submissionRestController: SubmissionRestController) {}
-
-    // findById$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DataProcessingActions.findById),
-    //         mergeMap(({id}) => this.submissionRestController.findById(id).pipe(
-    //             map( results => DataProcessingActions.findByIdSuccess({results, messages: [`Action successful.`], success: true})),
-    //             catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-    //         ))
-    //     )
-    // );
+    
+    dataCaptureSummary$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(DataProcessingActions.dataCaptureSummary),
+            mergeMap(({}) => this.submissionRestController.getSubmissionSummary().pipe(
+                map( submissionSummary => DataProcessingActions.dataCaptureSummarySuccess({submissionSummary, messages: [`Submission summary loaded.`], success: true})),
+                catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
+            ))
+        )
+    );
 
     // save$ = createEffect(() => 
     //      this.actions$.pipe(
