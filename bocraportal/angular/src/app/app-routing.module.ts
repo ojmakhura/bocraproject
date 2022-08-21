@@ -48,6 +48,10 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/form/activation/form-activation.module')).FormActivationModule
     },
     {
+      path: 'form/processing', 
+      loadChildren: async () => (await import('@app/view/form/processing/data-processing.module')).DataProcessingModule
+    },
+    {
       path: 'dashboard', 
       loadChildren: async () => (await import('@app/view/dashboard/dashboard.module')).DashboardModule
     },
