@@ -7,15 +7,23 @@ export const dataProcessingReducer = createReducer(
     initialState,
     on(DataProcessingActions.dataCaptureSummarySuccess, (state, action) => ({
         ...state,
-        submissions: [], 
+        formSubmissions: [], 
         submissionSummary: action.submissionSummary,
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(DataProcessingActions.loadDataSuccess, (state, action) => ({
+        ...state,
+        formSubmissions: action.formSubmissions, 
+        submissionSummary: state.submissionSummary,
         loading: false,
         success: action.success,
         messages: action.messages
     })),
     on(DataProcessingActions.dataProcessingReset, (state) => ({
       ...state,
-        submissions: [], 
+      formSubmissions: [], 
         loading: false,
         success: false,
         error: false,
