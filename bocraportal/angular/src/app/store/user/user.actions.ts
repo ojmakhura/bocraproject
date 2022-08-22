@@ -106,3 +106,7 @@ export const userLoading = createAction(
 );
 
 export const userFailure = createAction(UserActionType.USER_FAILURE, props<{ messages: any[] }>());
+export function save(arg0: { user: any; loading: boolean; }): any {
+  throw new Error('Function not implemented.');
+}
+

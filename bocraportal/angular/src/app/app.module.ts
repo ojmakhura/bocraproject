@@ -12,6 +12,20 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { TranslateModule } from '@ngx-translate/core';
+import { MaterialModule } from './material.module';
+
+import { CoreModule } from '@core';
+import { environment } from '@env/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { SharedModule } from '@shared';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { HomeModule } from './home/home.module';
+import { ShellModule } from './shell/shell.module';
+//import { ConnectFormDirective } from './connect-form.directive';
 import { UseCaseScope } from '@app/utils/use-case-scope';
 import { AccessPointModule } from '@app/view/access/access-point.module';
 import { AccessPointTypeModule } from '@app/view/access/type/access-point-type.module';
@@ -24,26 +38,13 @@ import { FormModule } from '@app/view/form/form.module';
 import { FormSubmissionModule } from '@app/view/form/submission/form-submission.module';
 import { LicenceModule } from '@app/view/licence/licence.module';
 import { LicenceTypeModule } from '@app/view/licence/type/licence-type.module';
-//import { ConnectFormDirective } from './connect-form.directive';
 import { LicenseeModule } from '@app/view/licensee/licensee.module';
 import { MenuSectionModule } from '@app/view/menu/menu-section.module';
 import { PeriodConfigModule } from '@app/view/period/config/period-config.module';
 import { PeriodModule } from '@app/view/period/period.module';
 import { SectorModule } from '@app/view/sector/sector.module';
 import { UserModule } from '@app/view/user/user.module';
-import { CoreModule } from '@core';
-import { environment } from '@env/environment';
-import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { TranslateModule } from '@ngx-translate/core';
-import { SharedModule } from '@shared';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { AuthModule } from './auth';
-import { HomeModule } from './home/home.module';
-import { MaterialModule } from './material.module';
-import { ShellModule } from './shell/shell.module';
 
 @NgModule({
     declarations: [

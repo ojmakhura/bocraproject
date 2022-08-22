@@ -26,11 +26,13 @@ export class UserRestController {
         return this.http.post<UserVO | any>(this.path + `/create`, user);
 
     }
+    
+    public findUserById(userId: string | any): Observable<UserVO | any> {
+        if (!userId) {
+            userId = '';
+        }
 
-    public findUserById(userId: string | any ): Observable<UserVO | any> {
-
-        return this.http.get<UserVO | any>(this.path);
-
+        return this.http.get<UserVO | any>(this.path + `?userId=${userId}`);
     }
 
     public loadUsers(): Observable<UserVO[] | any[]> {
