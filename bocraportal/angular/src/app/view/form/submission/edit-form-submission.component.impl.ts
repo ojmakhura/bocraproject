@@ -62,15 +62,25 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     return form;
   }
 
+  private loadSubmission(id: number) {
+    this.store.dispatch(
+      FormSubmissionActions.findById({
+        id: id,
+        loading: true,
+      })
+    );
+
+  }
+
   override doNgAfterViewInit() {
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
-        this.store.dispatch(
-          FormSubmissionActions.findById({
-            id: queryParams.id,
-            loading: true,
-          })
-        );
+        this.loadSubmission(queryParams.id);
+      } else {
+        if(this.useCaseScope.pageVariables['id']) {
+          this.loadSubmission(this.useCaseScope.pageVariables['id']);
+        }
       }
     });
 
