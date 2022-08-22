@@ -12,7 +12,7 @@ import * as MenuActions from '@app/store/menu/menu.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
 import { select, Store } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import * as nav from './navigation';
 //import jwt_decode from 'jwt-decode';
 
@@ -73,6 +73,9 @@ export class ShellComponent implements OnInit, AfterViewInit {
     });
   }
 
+  get isLoggedIn() : Observable<boolean> {
+    return from(this.keycloakService.isLoggedIn());
+  }
   get username(): string | null {
     const credentials = this.keycloakService.getUsername();
     return credentials ? credentials : null;
