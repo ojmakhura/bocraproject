@@ -7,7 +7,7 @@
  * MODEL CLASS:  $validationName
  */
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -45,6 +45,8 @@ import { PeriodModule } from '@app/view/period/period.module';
 import { SectorModule } from '@app/view/sector/sector.module';
 import { UserModule } from '@app/view/user/user.module';
 import { AuthModule } from './auth';
+import { initializeKeycloak } from './auth/keycloak-init.factory';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 @NgModule({
     declarations: [
@@ -82,6 +84,7 @@ import { AuthModule } from './auth';
         AccessPointModule,
         AccessPointTypeModule,
         MenuSectionModule,
+        KeycloakAngularModule,
         AuthModule,
         AppRoutingModule, // must be imported as the last module as it contains the fallback route
     ],
@@ -89,6 +92,12 @@ import { AuthModule } from './auth';
     ],
     providers: [
         UseCaseScope,
+        {
+          provide: APP_INITIALIZER,
+          useFactory: initializeKeycloak,
+          multi: true,
+          deps: [KeycloakService],
+        }
     ],
     bootstrap: [AppComponent]
 })

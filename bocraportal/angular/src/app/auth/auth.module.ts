@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -9,8 +9,6 @@ import { MaterialModule } from '@app/material.module';
 import { I18nModule } from '@app/i18n';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login.component';
-import { initializeKeycloak } from './keycloak-init.factory';
-import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 @NgModule({
   imports: [
@@ -21,19 +19,12 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
     FlexLayoutModule,
     MaterialModule,
     I18nModule,
-    KeycloakAngularModule,
     AuthRoutingModule
   ],
   declarations: [
     LoginComponent
   ],
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [KeycloakService],
-    }
   ],
 })
 export class AuthModule { }

@@ -29,9 +29,11 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<any
             //      </body>
             // </html>
             onLoad: 'login-required',
+            // onLoad: 'check-sso',
             checkLoginIframe: false,
             // silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
-          },          
+          },
+          bearerExcludedUrls: ['/assets', '/home', '/'],
         });
         resolve(resolve);
       } catch (error) {
