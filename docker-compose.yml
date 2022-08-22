@@ -156,16 +156,16 @@ services:
       context: .
       dockerfile: Dockerfile.keycloak
     environment:      
-      KC_FEATURES:
-        authorization
-        token-exchange
-        docker
-        impersonation
-        scripts
-        upload-scripts
-        web-authn
-        client-policies
-        dynamic-scopes
+      # KC_FEATURES:
+      #   authorization
+      #   token-exchange
+      #   docker
+      #   impersonation
+      #   scripts
+      #   upload-scripts
+      #   web-authn
+      #   client-policies
+      #   dynamic-scopes
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
