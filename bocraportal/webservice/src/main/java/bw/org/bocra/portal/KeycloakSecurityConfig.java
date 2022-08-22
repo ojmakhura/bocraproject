@@ -83,6 +83,14 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         http.cors().and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
+            .antMatchers(
+                "/swagger-ui/*", 
+                "/swagger-ui.html", 
+                "/webjars/**", 
+                "/v3/**", 
+                "/swagger-resources/**",
+                "/auth/signin"
+            ).permitAll()
             .anyRequest().authenticated();
     }
 
@@ -113,17 +121,17 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         return registrationBean;
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().mvcMatchers(
-            "/swagger-ui/*", 
-            "/swagger-ui.html", 
-            "/webjars/**", 
-            "/v3/**", 
-            "/swagger-resources/**",
-            "/auth/signin"
-        );
-    }
+    // @Override
+    // public void configure(WebSecurity web) throws Exception {
+    //     web.ignoring().antMatchers(
+    //         "/swagger-ui/*", 
+    //         "/swagger-ui.html", 
+    //         "/webjars/**", 
+    //         "/v3/**", 
+    //         "/swagger-resources/**",
+    //         "/auth/signin"
+    //     );
+    // }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

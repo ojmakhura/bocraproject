@@ -148,7 +148,7 @@ public class FormActivationServiceImpl
                 submission.setLicensee(licensee);
                 submission.setFormActivation(activation);
                 submission.setPeriod(activation.getPeriod());
-                submission.setSubmissionStatus(FormSubmissionStatus.NEW.getValue());
+                submission.setSubmissionStatus(FormSubmissionStatus.NEW);
 
                 submission = getFormSubmissionDao().create(submission);
 

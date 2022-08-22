@@ -239,6 +239,12 @@ gen_dev_env: rm_env
 	@$(DEV_ENV)
 
 ##
+## Swarm initialisation
+##
+swarm_init:
+	docker swarm init
+
+##
 ## Check the logs
 ##
 keycloak_logs:
