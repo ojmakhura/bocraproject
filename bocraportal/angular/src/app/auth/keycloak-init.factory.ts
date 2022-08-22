@@ -28,13 +28,13 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<any
             //         </script>
             //      </body>
             // </html>
-            onLoad: 'login-required',
+            //onLoad: 'login-required',
             checkLoginIframe: true,
             // silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
           },
           // By default the keycloak-angular library add Authorization: Bearer TOKEN to all http requests
           // Then to exclude a list of URLs that should not have the authorization header we need to provide  them here.
-          bearerExcludedUrls: ['/assets'],
+          bearerExcludedUrls: ['/assets', "/", "/home"],
         });
         resolve(resolve);
       } catch (error) {

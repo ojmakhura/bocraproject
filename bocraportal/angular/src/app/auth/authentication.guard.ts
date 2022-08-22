@@ -5,6 +5,7 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
+import { or } from 'mathjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,13 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ) {
+
+    console.log(state.url)
+
+    if(state.url === '/' || state.url === '/assets' || state.url === '/about' || state.url === '/home' || state.url === '/contact') {
+      return true;
+    }
+
     // Force the user to log in if currently unauthenticated.
     if (!this.authenticated) {
       await this.keycloak.login({
@@ -37,7 +45,7 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     }
 
     // Allow the user to proceed if all the required roles are present.
-    if (requiredRoles.every((role) => this.roles.includes(role))) {
+    if (requiredRoles.every((role: any) => this.roles.includes(role))) {
       return true;
     } else {
       // redirect to error page if the user doesn't have the nessecairy  role to access

@@ -85,13 +85,6 @@ export class ShellComponent implements OnInit, AfterViewInit {
   get title(): string {
     return this.titleService.getTitle();
   }
-  toggle(){
-    if(this.toggled===false){
-      this.toggled = true;
-    }else{
-      this.toggled = false;
-    }
-  }
 
   editProfile() {
     this.keycloakService.loadUserProfile().then(profile => {
