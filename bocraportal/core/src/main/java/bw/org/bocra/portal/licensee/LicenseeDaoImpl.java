@@ -13,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
+import bw.org.bocra.portal.complaint.ComplaintRepository;
 import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
@@ -55,13 +56,13 @@ public class LicenseeDaoImpl
             SectorRepository sectorRepository, ShareholderRepository shareholderRepository,
             LicenseeShareholderRepository licenseeShareholderRepository,
             LicenseeSectorRepository licenseeSectorRepository, LicenseeFormRepository licenseeFormRepository,
-            LicenseeReportConfigRepository licenseeReportConfigRepository,
+            LicenseeReportConfigRepository licenseeReportConfigRepository, ComplaintRepository complaintRepository,
             NotificationRepository notificationRepository, LicenseeRepository licenseeRepository) {
 
         super(licenseeUserRepository, formSubmissionRepository, formRepository, licenceRepository, documentRepository,
                 reportRepository, reportConfigRepository, sectorRepository, shareholderRepository,
                 licenseeShareholderRepository, licenseeSectorRepository, licenseeFormRepository, licenseeReportConfigRepository,
-                notificationRepository, licenseeRepository);
+                notificationRepository, complaintRepository, licenseeRepository);
     }
 
     /**
