@@ -185,7 +185,7 @@ LOCAL_ENV = printf "%s\n" \
     "export KEYCLOAK_API_SECRET=${KEYCLOAK_LOCAL_API_SECRET}"\
     "export ACME_EMAIL=${LOCAL_ACME_EMAIL}"\
     "export WEB_URL=${BOCRA_WEB_SUBDOMAIN}.${LOCAL_DOMAIN}"\
-    "export API_URL=${API_SERVER}:${API_SERVER_PORT}/"\
+    "export API_URL=${LOCAL_API_URL}/"\
     ${COMMON_LOCAL_VARS}\
     >> .env
 
