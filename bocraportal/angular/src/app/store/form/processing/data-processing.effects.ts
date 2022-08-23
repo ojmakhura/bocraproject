@@ -20,84 +20,17 @@ export class DataProcessingEffects {
         )
     );
 
-    // save$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DataProcessingActions.save),
-    //         mergeMap(({formSubmissionVO}) => this.submissionRestController.save(formSubmissionVO).pipe(
-    //             map( results => DataProcessingActions.saveSuccess({results, messages: [`Action successful.`], success: true})),
-    //             catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-    //         ))
-    //     )
-    // );
-
-    // remove$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DataProcessingActions.remove),
-    //         mergeMap(({id}) => this.submissionRestController.remove(id).pipe(
-    //             map( results => DataProcessingActions.removeSuccess({results, messages: [`Action successful.`], success: true})),
-    //             catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-    //         ))
-    //     )
-    // );
-
-    // getAll$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DataProcessingActions.getAll),
-    //         mergeMap(({}) => this.submissionRestController.getAll().pipe(
-    //             map( results => DataProcessingActions.getAllSuccess({results, messages: [`Action successful.`], success: true})),
-    //             catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-    //         ))
-    //     )
-    // );
-
-    // search$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DataProcessingActions.search),
-    //         mergeMap(({criteria}) => this.submissionRestController.search(criteria).pipe(
-    //             map( results => DataProcessingActions.searchSuccess({results, messages: [`Action successful.`], success: true})),
-    //             catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-    //         ))
-    //     )
-    // );
-
-    // getAllPaged$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DataProcessingActions.getAllPaged),
-    //         mergeMap(({pageNumber, pageSize}) => this.submissionRestController.getAllPaged(pageNumber, pageSize).pipe(
-    //             map( results => DataProcessingActions.getAllPagedSuccess({results, messages: [`Action successful.`], success: true})),
-    //             catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-    //         ))
-    //     )
-    // );
-
-    // addDataFields$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DataProcessingActions.addDataFields),
-    //         mergeMap(({dataFields}) => this.submissionRestController.addDataFields(dataFields).pipe(
-    //             map( results => DataProcessingActions.addDataFieldsSuccess({results, messages: [`Action successful.`], success: true})),
-    //             catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-    //         ))
-    //     )
-    // );
-
-    // addDataField$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DataProcessingActions.addDataField),
-    //         mergeMap(({dataField}) => this.submissionRestController.addDataField(dataField).pipe(
-    //             map( results => DataProcessingActions.addDataFieldSuccess({results, messages: [`Action successful.`], success: true})),
-    //             catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-    //         ))
-    //     )
-    // );
-
-    // deleteDataField$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DataProcessingActions.deleteDataField),
-    //         mergeMap(({id}) => this.submissionRestController.deleteDataField(id).pipe(
-    //             map( results => DataProcessingActions.deleteDataFieldSuccess({results, messages: [`Action successful.`], success: true})),
-    //             catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-    //         ))
-    //     )
-    // );
-
+    loadData$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(DataProcessingActions.loadData),
+            mergeMap(({ criteria }) => this.submissionRestController.search(criteria).pipe(
+                map( formSubmissions => DataProcessingActions.loadDataSuccess({
+                    formSubmissions,
+                    messages: [`${formSubmissions.length} submissions found.`],
+                    success: true
+                })),
+                catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error.error]})])
+            ))
+        )
+    );
 }

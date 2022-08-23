@@ -6,6 +6,8 @@ import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/subm
 import { SubmissionSummary } from '@app/model/bw/org/bocra/portal/form/submission/submission-summary';
 
 export enum DataProcessingActionType {
+    LOAD_DATA = '[DataProcessing] Load Data',
+    LOAD_DATA_SUCCESS = '[DataProcessing] Load Data Success',
     SUBMISSION_SUMMARY = '[DataProcessing] Load Summary',
     SUBMISSION_SUMMARY_SUCCESS = '[DataProcessing] Load Summary Success',
     DATA_PROCESSING_RESET = '[DataProcessing] DataProcessing Reset',
@@ -21,6 +23,16 @@ export const dataCaptureSummary = createAction(
 export const dataCaptureSummarySuccess = createAction(
     DataProcessingActionType.SUBMISSION_SUMMARY_SUCCESS,
     props<{ submissionSummary: SubmissionSummary | any, messages: any[], success: boolean }>()
+);
+
+export const loadData = createAction(
+    DataProcessingActionType.LOAD_DATA,
+    props<{ criteria: FormSubmissionCriteria,loading: boolean }>()
+);
+
+export const loadDataSuccess = createAction(
+    DataProcessingActionType.LOAD_DATA_SUCCESS,
+    props<{ formSubmissions: FormSubmissionVO[] | any, messages: any[], success: boolean }>()
 );
 
 export const dataProcessingLoading = createAction(

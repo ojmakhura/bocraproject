@@ -202,6 +202,7 @@ public class SubmissionServiceImpl
 
         summary.setMySubmissions(formSubmissionRepository.count(specs));
         System.out.println(summary);
+        specs = null;
 
         if(criteria.getLicensee() != null) {
             specs = FormSubmissionSpecifications.findByLicenseeId(criteria.getLicensee());
@@ -213,7 +214,7 @@ public class SubmissionServiceImpl
         /**
          * Get all values related to status
          */
-        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submissionStatus", FormSubmissionStatus.NEW.getValue());
+        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.NEW);
 
         if(specs != null) {
             sSpecs = sSpecs.and(specs);
@@ -221,14 +222,14 @@ public class SubmissionServiceImpl
         summary.setNewSubmissions(formSubmissionRepository.count(sSpecs));
         System.out.println(summary);
 
-        sSpecs = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submissionStatus", FormSubmissionStatus.DRAFT.getValue());
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.DRAFT);
 
         if(specs != null) {
             sSpecs = sSpecs.and(specs);
         }
         summary.setDraftSubmissions(formSubmissionRepository.count(sSpecs));
 
-        sSpecs = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submissionStatus", FormSubmissionStatus.SUBMITTED.getValue());
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.SUBMITTED);
 
         if(specs != null) {
             sSpecs = sSpecs.and(specs);
