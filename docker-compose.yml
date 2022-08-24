@@ -15,7 +15,7 @@ services:
       default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${BOCRA_DATA}/traefik/acme.json:${BOCRA_DATA}/traefik/acme.json
+      - ${BOCRA_DATA}/traefik:${BOCRA_DATA}/traefik
       - ./traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
     ports:
       - "443:443"
@@ -45,8 +45,6 @@ services:
       - "--metrics.prometheus"
       - "--providers.docker.network=traefik-public"
       - "--providers.docker"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
       - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
       - "--certificatesresolvers.le.acme.tlschallenge=true"
