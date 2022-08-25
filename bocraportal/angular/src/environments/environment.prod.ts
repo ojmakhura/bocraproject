@@ -9,17 +9,17 @@ import { env } from './.env';
 export const environment = {
   production: true,
   version: env['npm_package_version'] + '-dev',
-  serverUrl: $ENV.API_URL,
+  serverUrl: "http://csdev.roguesystems.co.bw:8085/",
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US'],
-  bocraApiServer: $ENV.API_URL,
+  bocraApiServer: "http://csdev.roguesystems.co.bw:8085/",
   keycloakRealm: $ENV.KEYCLOAK_REALM,
-  redirectUri: $ENV.REDIRECT_URL,
+  redirectUri: "http://csdev.roguesystems.co.bw:9080",
   keycloakClientRoleUrl:
-    `${$ENV.KEYCLOAK_AUTH_URL}/admin/realms/${$ENV.KEYCLOAK_REALM}/clients/${$ENV.KEYCLOAK_WEB_CLIENT_ID}/roles`,
-  keycloakRealmRoleUrl: `${$ENV.KEYCLOAK_AUTH_URL}/admin/realms/${$ENV.KEYCLOAK_REALM}/roles`,
+    `http://csdev.roguesystems.co.bw:8089/auth/admin/realms/${$ENV.KEYCLOAK_REALM}/clients/${$ENV.KEYCLOAK_WEB_CLIENT_ID}/roles`,
+  keycloakRealmRoleUrl: `http://csdev.roguesystems.co.bw:8089/admin/realms/${$ENV.KEYCLOAK_REALM}/roles`,
   keycloak: {
-    issuer: $ENV.KEYCLOAK_AUTH_URL,
+    issuer: "http://csdev.roguesystems.co.bw:8089/auth",
     redirectUri: window.location.origin,
     clientId: $ENV.KEYCLOAK_WEB_CLIENT,
     scope: 'openid profile email offline_access',
