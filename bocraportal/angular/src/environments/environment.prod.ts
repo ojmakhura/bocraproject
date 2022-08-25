@@ -9,10 +9,10 @@ import { env } from './.env';
 export const environment = {
   production: true,
   version: env['npm_package_version'] + '-dev',
-  serverUrl: "http://api",
+  serverUrl: $ENV.API_URL,
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US'],
-  bocraApiServer: "http://api",
+  bocraApiServer: $ENV.API_URL,
   keycloakRealm: $ENV.KEYCLOAK_REALM,
   redirectUri: $ENV.REDIRECT_URL,
   keycloakClientRoleUrl:
