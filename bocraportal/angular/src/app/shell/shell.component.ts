@@ -12,7 +12,7 @@ import * as MenuActions from '@app/store/menu/menu.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
 import { select, Store } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
-import { from, Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import * as nav from './navigation';
 //import jwt_decode from 'jwt-decode';
 
@@ -25,6 +25,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
   menus: any[] = [];
   menus$: Observable<Menu[]>;
   username$: Observable<string>;
+  isLoggedIn: Observable<boolean> = of(false);
   toggled = false;
 
   constructor(
@@ -44,6 +45,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.keycloakService.isLoggedIn().then((loggedIn) => {
       if (loggedIn) {
+        this.isLoggedIn = of(loggedIn);
         this.store.dispatch(AuthActions.setUsername({ username: this.keycloakService.getUsername() }));
       }
     });
@@ -73,9 +75,6 @@ export class ShellComponent implements OnInit, AfterViewInit {
     });
   }
 
-  get isLoggedIn() : Observable<boolean> {
-    return from(this.keycloakService.isLoggedIn());
-  }
   get username(): string | null {
     const credentials = this.keycloakService.getUsername();
     return credentials ? credentials : null;

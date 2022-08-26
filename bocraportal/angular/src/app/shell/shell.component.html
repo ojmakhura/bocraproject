@@ -37,7 +37,7 @@
 				</div>
 				<ul class="navbar-nav">
 					<div class="topbar-divider d-none d-sm-block" *ngIf="!isMobile"></div>
-					<button class="btn btn-primary" *ngIf="!(isLoggedIn | async)">Login</button>
+					<button class="btn btn-primary" *ngIf="(isLoggedIn | async) === false">Login</button>
 					<li class="nav-item dropdown" *ngIf="isLoggedIn | async">
 						<a class="nav-link dropdown-toggle" [matMenuTriggerFor]="userMenu" id="navbarDropdown"
 							role="button" aria-expanded="false" aria-haspopup="true"><span *ngIf="!isMobile">{{ username
