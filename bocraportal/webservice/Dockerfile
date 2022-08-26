@@ -7,4 +7,4 @@ WORKDIR /app
 ARG JAR_FILE=bocraportal/webservice/target/*.jar
 COPY ${JAR_FILE} bocraportal-webservice.jar
 ENTRYPOINT ["java","-jar","/app/bocraportal-webservice.jar"]
-EXPOSE ${API_SERVER_PORT}
+EXPOSE 8085

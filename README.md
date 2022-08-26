@@ -39,3 +39,6 @@ The build process for this application uses the make command. Make sure it has b
 ## Run the frontend locally
 1. Run the command 'make local_web_deps'
 2. Run the command 'make run_web_local'
+
+# Self Signed cert
+sudo keytool -import -trustcacerts -keystore /usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts -storepass changeit -noprompt -alias localcert -file certs/localhost.crt
