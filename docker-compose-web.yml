@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # Angular web application
+  ###############################################################################
+  web:
+    image: "bocra-web:latest"
+    hostname: web
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    build:
+      context: .
+      dockerfile: bocraportal/angular/Dockerfile
+    container_name: bocra-web
+    volumes:
+      - ${BOCRA_DATA}/web:/web
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_WEB_ADDRESS}
+      default:
+    environment:
+      TZ: Africa/Gaborone
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocra_web == true
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
+        - "traefik.http.routers.bocra-web.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+        - "traefik.http.routers.bocra-web.tls=${SSL_SECURE}"
+        - "traefik.http.routers.bocra-web.tls.certresolver=le"
+
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  traefik-public:
+  bocra-network:

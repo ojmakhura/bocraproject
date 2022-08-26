@@ -35,29 +35,41 @@ clean_mda:
 ##
 ## Start the docker containers
 ##
-up_full_app: 
-	chmod 755 .env && . ./.env && docker compose up -d
+up_full_app: up_proxy up_db
 
 up_db:
-	chmod 755 .env && . ./.env && docker compose up -d db
-##	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-db.yml ${STACK_NAME}-db
+	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-db.yml ${STACK_NAME}-db
 
-up_keycloak:
-	chmod 755 .env && . ./.env && docker compose up -d keycloak
-##	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-db.yml ${STACK_NAME}-keycloak
+down_db:
+	docker stack rm ${STACK_NAME}-db
+
+up_keycloak: build_keycloak_image
+	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-keycloak.yml ${STACK_NAME}-keycloak
+
+down_keycloak:
+	docker stack rm ${STACK_NAME}-keycloak
 
 up_proxy: 
-##	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-traefik.yml ${STACK_NAME}-proxy
-	chmod 755 .env && . ./.env && docker compose up -d proxy
+	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-traefik.yml ${STACK_NAME}-proxy
+
+down_proxy:
+	docker stack rm ${STACK_NAME}-proxy
 
 up_web:
-	chmod 755 .env && . ./.env && docker compose up -d web
+	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-web.yml ${STACK_NAME}-web
 
-up_pgadmin: 
-	chmod 755 .env && . ./.env && docker compose up -d pgadmin
+down_web:
+	docker stack rm ${STACK_NAME}-web
+
+# up_pgadmin: 
+# 	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-web.yml ${STACK_NAME}-web
+# 	chmod 755 .env && . ./.env && docker compose up -d pgadmin
 
 up_api: 
-	chmod 755 .env && . ./.env && docker compose up -d api
+	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-api.yml ${STACK_NAME}-api
+
+down_api:
+	docker stack rm ${STACK_NAME}-api
 
 up_registry:
 	chmod 755 .env && . ./.env && docker compose up -d registry
@@ -69,7 +81,7 @@ up_jenkins:
 ## Build docker images
 ##
 build_api_image: build_api
-	chmod 755 .env && . ./.env && docker compose build api
+	chmod 755 .env && . ./.env && docker compose -f docker-compose-api.yml build api
 
 build_web_image:
 	docker compose build web
@@ -78,7 +90,7 @@ build_db_image:
 	chmod 755 .env && . ./.env && docker compose build db
 
 build_keycloak_image: 
-	chmod 755 .env && . ./.env && docker compose build keycloak
+	chmod 755 .env && . ./.env && docker compose -f docker-compose-keycloak.yml build
 
 build_proxy_image: 
 	chmod 755 .env && . ./.env && docker compose build proxy
@@ -196,7 +208,6 @@ gen_test_env: rm_env
 	fi
 	@$(TEST_ENV)
 
-
 #################################################################################
 ## Building and running on the development test platform
 #################################################################################
@@ -251,22 +262,22 @@ swarm_init:
 ## Check the logs
 ##
 keycloak_logs:
-	docker compose logs keycloak
+	docker service logs ${STACK_NAME}-keycloak_keycloak
 
 api_logs:
-	docker compose logs api
+	docker service logs ${STACK_NAME}-api_api
 
 web_logs:
-	docker compose logs web
+	docker service logs ${STACK_NAME}-web_web
 
 proxy_logs:
-	docker compose logs proxy
+	docker service logs ${STACK_NAME}-proxy_proxy
 
 pgadmin_logs:
-	docker compose logs pgadmin
+	docker service logs ${STACK_NAME}-db_pgadmin
 
 db_logs:
-	docker compose logs db
+	docker service logs ${STACK_NAME}-db_db
 	
 jenkins_logs:
 	docker compose logs jenkins
