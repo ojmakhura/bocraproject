@@ -1,5 +1,8 @@
 include ./Makefile.dev
 
+gen_self_certs:
+	chmod 755 .env && . ./.env && sudo rm ${BOCRA_DATA}/traefik/${DOMAIN}.crt && chmod 755 .env && . ./.env && sudo rm ${BOCRA_DATA}/traefik/${DOMAIN}.key && chmod 755 .env && . ./.env && sudo openssl req -x509 -sha256 -days 356 -nodes -newkey rsa:2048 -out ${BOCRA_DATA}/traefik/${DOMAIN}.crt -keyout ${BOCRA_DATA}/traefik/${DOMAIN}.key
+
 build_mda:
 	mvn -f bocraportal/mda install -Dmaven.test.skip=true -o
 
