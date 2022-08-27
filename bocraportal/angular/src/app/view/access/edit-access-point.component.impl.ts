@@ -29,12 +29,14 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
     super(injector);
     this.keycloakService = this._injector.get(KeycloakService);
     this.accessPointAccessPointTypes$ = this.store.pipe(select(AccessPointTypeSelectors.selectAccessPointTypes));
+    this.accessPointAccessPointTypeBackingList = [];
   }
 
   override beforeOnInit(form: EditAccessPointVarsForm): EditAccessPointVarsForm {
 
     this.store.dispatch(AccessPointTypeActions.getAll({loading: true}));
     this.accessPointAccessPointTypes$.subscribe(types => {
+      this.accessPointAccessPointTypeBackingList = [];
       types.forEach(type => {
         let item: SelectItem = new SelectItem;
         item.label = type.name

@@ -138,6 +138,14 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, J>Specification<E> findByJoinAttributeLike(String joinAttribute, String attribute, String attributeValue) {
+
+        return (root, cq, cb) -> {
+            Join<E, J> join = root.join(joinAttribute);
+            return cb.like(join.get(attribute), attributeValue);
+        };
+    }
+
     public static <E, J, T>Specification<E> findByJoinAttribute(String joinAttribute, String attribute, T attributeValue) {
 
         return (root, cq, cb) -> {

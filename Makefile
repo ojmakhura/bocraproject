@@ -40,14 +40,11 @@ up_full_app:
 
 up_db:
 	chmod 755 .env && . ./.env && docker compose up -d db
-##	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-db.yml ${STACK_NAME}-db
 
 up_keycloak:
 	chmod 755 .env && . ./.env && docker compose up -d keycloak
-##	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-db.yml ${STACK_NAME}-keycloak
 
 up_proxy: 
-##	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-traefik.yml ${STACK_NAME}-proxy
 	chmod 755 .env && . ./.env && docker compose up -d proxy
 
 up_web:
