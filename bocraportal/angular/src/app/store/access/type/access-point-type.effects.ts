@@ -4,15 +4,16 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as AccessPointTypeActions from './access-point-type.actions';
 import { AccessPointTypeRestController } from '@app/service/bw/org/bocra/portal/access/type/access-point-type-rest-controller';
+import { AccessPointTypeVO } from '@app/model/bw/org/bocra/portal/access/type/access-point-type-vo';
 
 @Injectable()
 export class AccessPointTypeEffects {
-  constructor(private actions$: Actions, private accessPointTypeRestController: AccessPointTypeRestController) {}
+  constructor(private actions$: Actions, private accessPointTypeRestController: AccessPointTypeRestController) { }
 
   findById$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointTypeActions.findById),
-      mergeMap(({id}) =>
+      mergeMap(({ id }) =>
         this.accessPointTypeRestController.findById(id).pipe(
           map((accessPointType) =>
             AccessPointTypeActions.findByIdSuccess({ accessPointType, messages: [`Access point type ${accessPointType.name} found.`], success: true })
@@ -26,7 +27,7 @@ export class AccessPointTypeEffects {
   save$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointTypeActions.save),
-      mergeMap(({accessPointType}) =>
+      mergeMap(({ accessPointType }) =>
         this.accessPointTypeRestController.save(accessPointType).pipe(
           map((accessPointType) =>
             AccessPointTypeActions.saveSuccess({ accessPointType, messages: [`Access point type ${accessPointType.name} saved.`], success: true })
@@ -40,7 +41,7 @@ export class AccessPointTypeEffects {
   remove$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointTypeActions.remove),
-      mergeMap(({id}) =>
+      mergeMap(({ id }) =>
         this.accessPointTypeRestController.remove(id).pipe(
           map((removed) =>
             AccessPointTypeActions.removeSuccess({ removed, messages: [`Access point type successfully removed.`], success: true })
@@ -56,6 +57,14 @@ export class AccessPointTypeEffects {
       ofType(AccessPointTypeActions.getAll),
       mergeMap(() =>
         this.accessPointTypeRestController.getAll().pipe(
+          map((data) => {
+            data.sort((a: AccessPointTypeVO, b: AccessPointTypeVO) => {
+              return a.name.localeCompare(b.name);
+            });
+
+            return data;
+          })
+        ).pipe(
           map((accessPointTypes) =>
             AccessPointTypeActions.getAllSuccess({ accessPointTypes, messages: [`${accessPointTypes.length} access point types found.`], success: true })
           ),
@@ -68,8 +77,16 @@ export class AccessPointTypeEffects {
   search$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointTypeActions.search),
-      mergeMap(({criteria}) =>
+      mergeMap(({ criteria }) =>
         this.accessPointTypeRestController.search(criteria).pipe(
+          map((data) => {
+            data.sort((a: AccessPointTypeVO, b: AccessPointTypeVO) => {
+              return a.name.localeCompare(b.name);
+            });
+
+            return data;
+          })
+        ).pipe(
           map((accessPointTypes) =>
             AccessPointTypeActions.searchSuccess({ accessPointTypes, messages: [`${accessPointTypes.length} access point types found.`], success: true })
           ),
@@ -82,7 +99,7 @@ export class AccessPointTypeEffects {
   getAllPaged$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointTypeActions.getAllPaged),
-      mergeMap(({pageNumber, pageSize}) =>
+      mergeMap(({ pageNumber, pageSize }) =>
         this.accessPointTypeRestController.getAllPaged(pageNumber, pageSize).pipe(
           map((accessPointTypes) =>
             AccessPointTypeActions.getAllPagedSuccess({ accessPointTypes, messages: [`Page ${pageNumber} found with ${pageSize} access point types.`], success: true })
