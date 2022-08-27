@@ -23,57 +23,38 @@ export class AuthorisationRestController {
     }
 
     public assignMenuSection(authorisationId: number | any , menuSectionId: number | any ): Observable<AuthorisationVO | any> {
-
         return this.http.get<AuthorisationVO | any>(this.path + `/{authorisationId}/{menuSectionId}`);
-
     }
 
     public findById(id: number | any ): Observable<AuthorisationVO | any> {
-
         return this.http.get<AuthorisationVO | any>(this.path + `/id/${id}`);
-
     }
 
     public findByRolesAndUrl(url: string | any , roles: Set<string> | any ): Observable<AuthorisationVO[] | any[]> {
-
-        return this.http.post<AuthorisationVO[] | any[]>(this.path + `/find-by-roles-url`, {url: url, roles: roles});
-
+        return this.http.post<AuthorisationVO[] | any[]>(this.path + `/find-by-roles-url?url=${url}&roles=${roles}`,{});
     }
 
     public getAccessTypeCodeAuthorisations(roles: Set<string> | any , accessPointTypeCodes: Set<string> | any ): Observable<AuthorisationVO[] | any[]> {
-
         return this.http.get<AuthorisationVO[] | any[]>(this.path + `/authorised?roles=${roles}&accessPointTypeCodes=${accessPointTypeCodes}`);
-
     }
 
     public getAll(): Observable<AuthorisationVO[] | any[]> {
-
         return this.http.get<AuthorisationVO[] | any[]>(this.path + `/all`);
-
     }
 
     public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<AuthorisationVO[] | any[]> {
-
         return this.http.get<AuthorisationVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
-
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
-
         return this.http.delete<boolean | any>(this.path + `/id/${id}`);
-
     }
 
     public save(authorisation: AuthorisationVO | any ): Observable<AuthorisationVO | any> {
-
         return this.http.post<AuthorisationVO | any>(this.path, authorisation);
-
     }
 
     public search(criteria: AuthorisationCriteria | any ): Observable<AuthorisationVO[] | any[]> {
-
         return this.http.post<AuthorisationVO[] | any[]>(this.path + `/search`, criteria);
-
     }
-
 }

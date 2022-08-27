@@ -15,17 +15,13 @@ export class ViewEffects {
     this.actions$.pipe(
       ofType(ViewActions.loadViewAuthorisations),
       mergeMap(({ viewUrl, roles }) => {
-        console.log('loadViewAuthorisations$');
         return this.authorisationRestController.findByRolesAndUrl(viewUrl, roles).pipe(
           map((authorisations) => {
-            console.log(authorisations);
             return authorisations.map((a: AuthorisationVO) => a.accessPoint.url)
           })
         ).pipe(
           map((urls) =>{
-            console.log(urls)
             return ViewActions.loadViewAuthorisationsSuccess({ unauthorisedUrls: urls, success: true })
-
           }),
           catchError((error) => [ViewActions.viewFailure({ messages: [error.error] })])
         )

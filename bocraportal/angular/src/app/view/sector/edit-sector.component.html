@@ -11,13 +11,6 @@
 <div class="card container px-5 py-2 bg-light">
   <div class="card-body">
     <form [formGroup]="editSectorForm">
-      <section>
-        <div class="col my-3 view-buttons">
-					<button type="button" color="accent" (click)="searchSectorsCreate()" class="btn btn-info">
-						<span translate>create</span>
-					</button>
-        </div>
-      </section>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}

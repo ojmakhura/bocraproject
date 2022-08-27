@@ -34,4 +34,7 @@ export class FormSubmissionControllerImpl extends FormSubmissionController {
 	public doSubmit(form: any): void {
 	}
 
+	public doReturnSubmission(form: any): void {
+	}
+
 }
