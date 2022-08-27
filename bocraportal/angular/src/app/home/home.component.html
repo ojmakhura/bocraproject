@@ -15,8 +15,7 @@
 				</h2>
 				<div [id]="'collapse'+i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading'+i"
 					data-bs-parent="#sectors">
-					<div class="accordion-body">
-						{{sec.description}}
+					<div class="accordion-body" [innerHtml]="sec.description | sanitizeHtml">
 					</div>
 				</div>
 			</div>

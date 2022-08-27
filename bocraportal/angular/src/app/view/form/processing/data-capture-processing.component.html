@@ -3,7 +3,7 @@
 	<div class="card-body">
     	<form [formGroup]="dataCaptureProcessingForm">
 			<section>
-				<div class="col my-3 view-buttons">
+				<!-- <div class="col my-3 view-buttons">
 					<button type="button" color="accent" (click)="dataCaptureProcessingNewSubmission()" class="btn btn-info">
 						<span translate>new.submission</span>
 					</button>
@@ -22,6 +22,56 @@
 					<button type="button" color="accent" (click)="dataCaptureProcessingReturnedSubmissions()" class="btn btn-info">
 						<span translate>returned.submissions</span>
 					</button>
+				</div> -->
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="card list-group-item-action list-group-item-primary mb-4" (click)="dataCaptureProcessingNewSubmission()" type="button">
+							<div class="card-body py-4">
+								<span translate>new.submission</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="card list-group-item-action list-group-item-primary mb-4" (click)="dataCaptureProcessingDrafts()"  type="button">
+							<div class="card-body">
+								<span translate>drafts</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="card list-group-item-action list-group-item-primary mb-4" (click)="dataCaptureProcessingMySubmissions()" type="button">
+							<div class="card-body">
+								<span translate>my.submissions</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="card list-group-item-action list-group-item-primary mb-4" (click)="dataCaptureProcessingAllSubmissions()" type="button">
+							<div class="card-body">
+								<span translate>all.submissions</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="card list-group-item-action list-group-item-primary mb-4" (click)="dataCaptureProcessingOverdueSubmissions()" type="button">
+							<div class="card-body">
+								<span translate>overdue.submissions</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="card list-group-item-action list-group-item-primary mb-4" (click)="dataCaptureProcessingReturnedSubmissions()" type="button">
+							<div class="card-body">
+								<span translate>returned.submissions</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</section>
     	</form>

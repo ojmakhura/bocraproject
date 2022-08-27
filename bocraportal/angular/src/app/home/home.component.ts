@@ -5,6 +5,7 @@ import { SectorState } from '@app/store/sector/sector.state';
 import * as SectorSelectors from '@app/store/sector/sector.selectors';
 import { select, Store } from '@ngrx/store';
 import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
+import { SanitizeHtml } from '@app/pipe/sanitize-html.pipe';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   quote: string | undefined;
   isLoading = false;
 
-  sectorList: any;
   sectors$!: Observable<Array<SectorVO>>;
   protected store!: Store<SectorState>;
 
@@ -38,15 +38,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
   }
 
-  beforeOnInit(): void {
-    // console.log(1);
-    this.store.dispatch(
-      SectorActions.getAll({ loading: true })
-    );
-  }
 
   ngOnInit() {
     this.store.dispatch(
