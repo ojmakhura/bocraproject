@@ -16,10 +16,6 @@ export class ViewEffects {
       ofType(ViewActions.loadViewAuthorisations),
       mergeMap(({ viewUrl, roles }) => {
         return this.authorisationRestController.findRestrictedViewItems(viewUrl, roles).pipe(
-          map((authorisations) => {
-            return authorisations.map((a: AuthorisationVO) => a.accessPoint.url)
-          })
-        ).pipe(
           map((urls) =>{
             return ViewActions.loadViewAuthorisationsSuccess({ unauthorisedUrls: urls, success: true })
           }),

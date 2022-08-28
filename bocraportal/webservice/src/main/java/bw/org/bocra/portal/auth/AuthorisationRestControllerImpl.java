@@ -226,8 +226,8 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             Collection<String> restrictedUrls = new ArrayList<>();
 
             for(AuthorisationVO auth : data) {
-                // If the authorisation was found and it has some roles assigned then it is restricted
-                boolean restricted = CollectionUtils.isNotEmpty(auth.getRoles());
+                // Any authorisation entry is but default restricted
+                boolean restricted = true;
                 for(String inRole : auth.getRoles()) {
                     for(String role : roles) {
                         if(role.equalsIgnoreCase(inRole)) { // If we find matching roles, then the url is not restricted

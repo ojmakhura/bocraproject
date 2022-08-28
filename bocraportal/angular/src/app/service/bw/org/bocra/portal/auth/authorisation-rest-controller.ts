@@ -33,9 +33,9 @@ export class AuthorisationRestController {
 
     }
 
-    public findRestrictedViewItems(url: string | any , roles: Set<string> | any ): Observable<AuthorisationVO[] | any[]> {
+    public findRestrictedViewItems(url: string | any , roles: Set<string> | any ): Observable<string[]> {
 
-        return this.http.post<AuthorisationVO[] | any[]>(`${this.path}/restricted-view-items?url=${url}&roles=${roles}`, {});
+        return this.http.post<string[] | any[]>(`${this.path}/restricted-view-items?url=${url}&roles=${roles}`, {});
 
     }
 

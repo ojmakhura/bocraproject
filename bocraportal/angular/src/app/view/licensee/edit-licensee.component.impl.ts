@@ -30,6 +30,7 @@ import { Observable } from 'rxjs';
 export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = false;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -70,9 +71,18 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     this.licensee$.subscribe((licensee) => {
       this.setEditLicenseeFormValue({ licensee: licensee });
     });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/licensee/edit-licensee/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
+    });
   }
 
   doNgOnDestroy() { }
+
 
   /**
    * This method may be overwritten
