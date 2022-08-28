@@ -8,14 +8,14 @@
 		<div class="accordion accordion-flush" id="sectors">
 			<div class="accordion-item mb-3" *ngFor="let sec of sectors$ | async; let i = index">
 				<h2 class="accordion-header" [id]="'heading'+i">
-					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-					[attr.data-bs-target]="'#collapse'+i" aria-expanded="false" [attr.aria-controls]="'collapse'+i">
+					<button class="accordion-button collapsed text-white" type="button" data-bs-toggle="collapse"
+					[attr.data-bs-target]="'#collapse'+i" aria-expanded="false" [attr.aria-controls]="'collapse'+i" [ngStyle]="{ 'background-color': sec.themeColour }">
 						{{sec.name}}
 					</button>
 				</h2>
 				<div [id]="'collapse'+i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading'+i"
 					data-bs-parent="#sectors">
-					<div class="accordion-body" [innerHtml]="sec.description | sanitizeHtml" [style]="'background-color: {{ sec.themeColour }}'">
+					<div class="accordion-body" [innerHtml]="sec.description | sanitizeHtml">
 					</div>
 				</div>
 			</div>

@@ -29,7 +29,7 @@
 							<a class="nav-link" routerLink="active"><i class="fa fa-commenting fa-lg"
 									aria-hidden="false"></i>&nbsp; File A Complaint</a>
 						</li>      
-						<li class="nav-item px-2">
+						<li class="nav-item px-2" *ngIf="isLoggedIn | async">
 							<a class="nav-link" routerLink="active"><i class="fa fa-bell fa-lg"
 									aria-hidden="false"></i>&nbsp; Notifications</a>
 						</li>
@@ -37,7 +37,7 @@
 				</div>
 				<ul class="navbar-nav">
 					<div class="topbar-divider d-none d-sm-block" *ngIf="!isMobile"></div>
-					<button class="btn btn-primary" *ngIf="(isLoggedIn | async) === false">Login</button>
+					<button class="btn btn-primary" *ngIf="(isLoggedIn | async) === false" (click)="login()" >Login</button>
 					<li class="nav-item dropdown" *ngIf="isLoggedIn | async">
 						<a class="nav-link dropdown-toggle" [matMenuTriggerFor]="userMenu" id="navbarDropdown"
 							role="button" aria-expanded="false" aria-haspopup="true"><span *ngIf="!isMobile">{{ username
