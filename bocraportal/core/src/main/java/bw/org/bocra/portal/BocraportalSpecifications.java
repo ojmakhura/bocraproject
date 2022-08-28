@@ -131,10 +131,12 @@ public class BocraportalSpecifications {
     public static <E, T>Specification<E> findByAttributeIn(String attribute, Collection<T> proprertyIn){
 
         return (root, cq, cb) -> {
+
+            return cb.in(root.get(attribute)).value(proprertyIn);
             
-            In<T> in = cb.in(root.<T>get(attribute));
-            proprertyIn.forEach(v -> in.value(v));
-            return in;
+            // In<T> in = cb.in(root.<T>get(attribute));
+            // proprertyIn.forEach(v -> in.value(v));
+            // return in;
         };
     }
 
@@ -143,6 +145,26 @@ public class BocraportalSpecifications {
         return (root, cq, cb) -> {
             Join<E, J> join = root.join(joinAttribute);
             return cb.like(join.get(attribute), attributeValue);
+        };
+    }
+
+    public static <E, J>Specification<E> findByJoinAttributeStartsWith(String joinAttribute, String attribute, String attributeValue) {
+
+        return (root, cq, cb) -> {
+            Join<E, J> join = root.join(joinAttribute);
+            
+            //return cb.like(cb.upper(root.<String>get(attribute)), attributeValue.toUpperCase() + "%");
+            return cb.like(join.get(attribute), attributeValue + "%");
+        };
+    }
+
+    public static <E, J>Specification<E> findByJoinAttributeEndsWith(String joinAttribute, String attribute, String attributeValue) {
+
+        return (root, cq, cb) -> {
+            Join<E, J> join = root.join(joinAttribute);
+            
+            //return cb.like(cb.upper(root.<String>get(attribute)), attributeValue.toUpperCase() + "%");
+            return cb.like(join.get(attribute), "%" + attributeValue);
         };
     }
 

@@ -26,7 +26,15 @@ export enum UserActionType {
   USER_LOADING = '[User] User Loading',
 }
 
-export const createUser = createAction(UserActionType.CREATE_USER, props<{ user: UserVO | any; loading: boolean }>());
+export const createUser = createAction(
+  UserActionType.CREATE_USER, 
+  props<{ user: UserVO | any; loading: boolean }>()
+);
+
+export const save = createAction(
+  UserActionType.SAVE, 
+  props<{ user: UserVO | any; loading: boolean }>()
+);
 
 export const createUserSuccess = createAction(
   UserActionType.CREATE_USER_SUCCESS,
@@ -106,7 +114,4 @@ export const userLoading = createAction(
 );
 
 export const userFailure = createAction(UserActionType.USER_FAILURE, props<{ messages: any[] }>());
-export function save(arg0: { user: any; loading: boolean; }): any {
-  throw new Error('Function not implemented.');
-}
 
