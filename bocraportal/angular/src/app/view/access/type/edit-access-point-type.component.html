@@ -108,7 +108,7 @@
       <button type="button" (click)="editAccessPointTypeFormReset()" class="btn btn-outline-primary">
         <span translate>reset</span>
       </button>
-      <button type="button" (click)="editAccessPointTypeDelete()" class="btn btn-outline-primary">
+      <button type="button" (click)="editAccessPointTypeDelete()" class="btn btn-outline-primary" *ngIf="accessPointTypeId && deleteUnrestricted">
         <span translate>delete</span>
       </button>
     </div>

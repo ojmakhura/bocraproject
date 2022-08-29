@@ -12,15 +12,10 @@
 <div class="card container px-5 py-2 bg-light">
   <section>
     <div class="text-end">
-      <!-- <button type="button" color="accent" (click)="editLicenseeSearch()" class="btn btn-primary">
-        <span translate>search</span>
-      </button>
-      -->
-
-      <button color="accent" type="button" (click)="editLicenseeNewDocument()" class="btn btn-primary">
+      <!-- <button color="accent" type="button" (click)="editLicenseeNewDocument()" *ngIf="licenseeId" class="btn btn-primary">
         <span translate>New Document</span>
-      </button>
-      <button color="accent" type="button" (click)="editLicenseeNewShareholder()" class="btn btn-primary">
+      </button> -->
+      <button color="accent" type="button" (click)="editLicenseeNewShareholder()" *ngIf="licenseeId" class="btn btn-primary">
         <span translate>New Shareholder</span>
       </button>
       <button type="button" (click)="editLicenseeSearch()" class="btn btn-primary">
@@ -28,29 +23,6 @@
       </button>
     </div>
   </section>
-  <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <a [routerLink]="" class="nav-link active" data-bs-toggle="tab"> Edit Licensee</a>
-    </li>
-
-    <li class="nav-item">
-      <a [routerLink]="" class="nav-link "  data-bs-toggle="tab"  data-bs-target="" (click)="editLicenseeSearch()">Search</a>
-    </li>
-
-    <li class="nav-item">
-      <a [routerLink]="" class="nav-link" data-bs-toggle="tab" (click)="editLicenseeDocuments()">Documents</a>
-    </li>
-
-    <li class="nav-item">
-      <a [routerLink]="" class="nav-link" data-bs-toggle="tab" (click)="editLicenseeNewDocument()">New Document</a>
-    </li>
-
-    <li class="nav-item">
-      <a [routerLink]="" class="nav-link a" data-bs-toggle="tab" (click)="editLicenseeNewShareholder()"
-        >New Shareholder</a
-      >
-    </li>
-  </ul> -->
 
   <div class="card-body">
     <form [formGroup]="editLicenseeForm">
@@ -122,25 +94,20 @@
         <br />
 
        <div class="text-end">
-          <button type="button" (click)="editLicenseeDocuments()" class="btn btn-outline-primary">
-            <span translate>documents</span>
-          </button>
           <button type="button" (click)="editLicenseeSave()" class="btn btn-outline-primary">
             <span translate>save</span>
           </button>
           <button type="button" type="button" (click)="editLicenseeFormReset()" class="btn btn-outline-primary">
             <span translate>reset</span>
           </button>
-          <button type="button" (click)="editLicenseeDelete()" class="btn btn-outline-primary" *ngIf="deleteUnrestricted">
-          </button>
-          <button type="button" *ngIf="deleteUnrestricted" (click)="editLicenseeDelete()" class="btn btn-outline-primary">
+          <button type="button" *ngIf="licenseeId && deleteUnrestricted" (click)="editLicenseeDelete()" class="btn btn-outline-primary">
           <span translate>delete</span>
           </button>
         </div>
       </div>
 
         <mat-tab-group animationDuration="0ms" class="view-tabs">
-          <mat-tab label="{{ 'users' | translate }}">
+          <mat-tab label="{{ 'users' | translate }}" *ngIf="licenseeId">
             <div>
               <button type="button" matTooltip="Add User" (click)="licenseeUsersAddDialog()" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#licenseeUsersModal">
@@ -282,8 +249,7 @@
           </mat-tab>
           <mat-tab label="{{ 'documents' | translate }}" *ngIf="licenseeId">
             <div>
-              <button type="button" (click)="licenseeDocumentsAddDialog()" class="btn btn-primary"
-                data-bs-toggle="modal" data-bs-target="#licenseeDocumentsModal">
+              <button type="button" (click)="editLicenseeNewDocument()" matTooltip="Add new document" class="btn btn-primary">
                 <mat-icon>add_box</mat-icon>
               </button>
               <mat-table matSort [dataSource]="licenseeDocuments" #documentsSort="matSort"

@@ -14,6 +14,9 @@ import { select } from '@ngrx/store';
 import { AccessPointCriteria } from '@app/model/bw/org/bocra/portal/access/access-point-criteria';
 import { FormGroup } from '@angular/forms';
 import { AccessPointVO } from '@app/model/bw/org/bocra/portal/access/access-point-vo';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-authorisation',
@@ -21,30 +24,33 @@ import { AccessPointVO } from '@app/model/bw/org/bocra/portal/access/access-poin
   styleUrls: ['./edit-authorisation.component.scss'],
 })
 export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
-  
+
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
     this.http = this._injector.get(HttpClient);
     this.keycloakService = this._injector.get(KeycloakService);
     this.authorisationAccessPoints$ = this.store.pipe(select(AccessPointSelectors.selectAccessPoints));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override doNgOnDestroy(): void {
   }
 
   beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
-    this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
+    this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((roles) => {
 
-      role.forEach((val) => {
-        if(this.keycloakService.getUserRoles().includes(val.name)) {
+      roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
+        if (this.keycloakService.getUserRoles().includes(role.name)) {
 
           let item = new SelectItem();
-          item.label = val['description'];
-          item.value = val['name'];
-  
+          item.label = role['description'];
+          item.value = role['name'];
+
           this.authorisationRolesBackingList.push(item);
         }
       });
@@ -52,30 +58,30 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
 
     return form;
   }
-  
+
   override handleFormChanges(change: any): void {
   }
 
   override afterOnInit() {
-    
+
   }
 
   override createAccessPointVOGroup(value: AccessPointVO): FormGroup {
     return this.formBuilder.group({
-        id: [value?.id],
-        createdBy: [value?.createdBy],
-        updatedBy: [value?.updatedBy],
-        createdDate: [value?.createdDate],
-        updatedDate: [value?.updatedDate],
-        name: [value?.name],
-        url: [value?.url],
-        accessPointType: this.formBuilder.group({
-            id: [value?.accessPointType?.id],
-            code: [value?.accessPointType?.code],
-            name: [value?.accessPointType?.name]
-        })
+      id: [value?.id],
+      createdBy: [value?.createdBy],
+      updatedBy: [value?.updatedBy],
+      createdDate: [value?.createdDate],
+      updatedDate: [value?.updatedDate],
+      name: [value?.name],
+      url: [value?.url],
+      accessPointType: this.formBuilder.group({
+        id: [value?.accessPointType?.id],
+        code: [value?.accessPointType?.code],
+        name: [value?.accessPointType?.name]
+      })
     });
-}
+  }
 
   override doNgAfterViewInit(): void {
     this.route.queryParams.subscribe((queryParams: any) => {
@@ -89,8 +95,24 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
       }
     });
 
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/authorisation/edit-authorisation",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if (item === '/authorisation/edit-authorisation/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
+    });
+
     this.authorisation$.subscribe((authorisation) => {
-      this.setEditAuthorisationFormValue({authorisation: authorisation});
+      this.setEditAuthorisationFormValue({ authorisation: authorisation });
     });
   }
 
@@ -112,41 +134,41 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
           loading: true,
         })
       );
-  
-      }else{
-        
-        this.store.dispatch(AuthorisationActions.authorisationFailure({ messages:['Form has to be filled'] }));
-      }
-    }
 
-    override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
-      if (this.editAuthorisationForm.valid && this.editAuthorisationForm.dirty){
-        if (form.authorisation?.id) {
-          form.authorisation.updatedBy = this.keycloakService.getUsername();
-          form.authorisation.updatedDate = new Date();
-        } else {
-          form.authorisation.createdBy = this.keycloakService.getUsername();
-          form.authorisation.createdDate = new Date();
-        }
-        if(form?.authorisation?.id && confirm("Are you sure you want to delete the period?")){
-      this.store.dispatch(
-        AuthorisationActions.remove({
-          id: form?.authorisation?.id,
-          loading: false,
-        })
-  
-      );
-        }
-    }else{
-          
-      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages:['Please select something to delete'] }));
+    } else {
+
+      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages: ['Form has to be filled'] }));
     }
+  }
+
+  override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
+    if (this.editAuthorisationForm.valid && this.editAuthorisationForm.dirty) {
+      if (form.authorisation?.id) {
+        form.authorisation.updatedBy = this.keycloakService.getUsername();
+        form.authorisation.updatedDate = new Date();
+      } else {
+        form.authorisation.createdBy = this.keycloakService.getUsername();
+        form.authorisation.createdDate = new Date();
+      }
+      if (form?.authorisation?.id && confirm("Are you sure you want to delete the period?")) {
+        this.store.dispatch(
+          AuthorisationActions.remove({
+            id: form?.authorisation?.id,
+            loading: false,
+          })
+
+        );
+      }
+    } else {
+
+      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages: ['Please select something to delete'] }));
     }
-    
+  }
+
   override authorisationAccessPointSearch(): void {
     let criteria: AccessPointCriteria = new AccessPointCriteria();
     criteria.name = this.authorisationAccessPointSearchField.value;
     criteria.url = this.authorisationAccessPointSearchField.value;
-    this.store.dispatch(AccessPointActions.search({criteria: criteria, loading: true}));
+    this.store.dispatch(AccessPointActions.search({ criteria: criteria, loading: true }));
   }
 }

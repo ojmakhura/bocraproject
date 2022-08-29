@@ -14,8 +14,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import bw.org.bocra.portal.form.field.FormField;
-
 /**
  * @see bw.org.bocra.portal.form.FormService
  */

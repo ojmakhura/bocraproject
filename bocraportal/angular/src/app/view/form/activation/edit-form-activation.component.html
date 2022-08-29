@@ -132,7 +132,7 @@
                     <button type="button"  (click)="editFormActivationSave()" class="btn btn-outline-primary">
                         <span translate>save</span>
                     </button>
-                    <button type="button"  (click)="editFormActivationDelete()" class="btn btn-outline-primary" *ngIf="formActivationId">
+                    <button type="button"  (click)="editFormActivationDelete()" class="btn btn-outline-primary" *ngIf="formActivationId && deleteUnrestricted">
                         <span translate>delete</span>
                     </button>
                     <button type="button"  (click)="editFormActivationEdit()" class="btn btn-outline-primary">

@@ -19,6 +19,9 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import * as FormActivationActions from '@app/store/form/activation/form-activation.actions';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { FormGroup } from '@angular/forms';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-form-activation',
@@ -27,12 +30,15 @@ import { FormGroup } from '@angular/forms';
 })
 export class EditFormActivationComponentImpl extends EditFormActivationComponent {
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = this._injector.get(KeycloakService);
     this.formActivationPeriods$ = this.store.pipe(select(PeriodSelectors.selectPeriods));
     this.formActivationForms$ = this.store.pipe(select(FormSelectors.selectForms));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditFormActivationVarsForm): EditFormActivationVarsForm {
@@ -82,6 +88,22 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     this.formActivation$.subscribe(formActivation => {
         console.log(formActivation)
         this.setEditFormActivationFormValue({formActivation});
+    });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/form/activation",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/form/activation/edit-form-activation/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
   }
 

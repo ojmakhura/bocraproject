@@ -87,7 +87,7 @@
             <span translate>save</span>
           </button>
 
-          <button type="button" color="accent" (click)="editSectorDelete()" class="btn btn-outline-primary">
+          <button type="button" color="accent" (click)="editSectorDelete()" class="btn btn-outline-primary" *ngIf="sectorId && deleteUnrestricted">
             <span translate>delete</span>
           </button>
           <button color="accent" type="button" (click)="editSectorFormReset()" class="btn btn-outline-primary">

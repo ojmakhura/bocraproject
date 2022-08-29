@@ -30,7 +30,7 @@ import { Observable } from 'rxjs';
 export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
-  deleteUnrestricted: boolean = false;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -47,8 +47,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   override afterOnInit() { }
 
   override doNgAfterViewInit(): void {
-    console.log("/licensee/edit-licensee");
-
+    
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
         viewUrl: "/licensee/edit-licensee",
@@ -126,7 +125,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   }
   override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
-    if (this.editLicenseeForm.valid && this.editLicenseeForm.dirty) {
+    if (this.editLicenseeForm.valid && this.licenseeId) {
       if (form.licensee?.id) {
         form.licensee.updatedBy = this.keycloakService.getUsername();
         form.licensee.updatedDate = new Date();
