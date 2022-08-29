@@ -15,6 +15,9 @@ import { DocumentTypeVO } from '@app/model/bw/org/bocra/portal/document/type/doc
 import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { Observable } from 'rxjs';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-edit-document',
@@ -24,11 +27,14 @@ import { Observable } from 'rxjs';
 export class EditDocumentComponentImpl extends EditDocumentComponent {
   protected keycloakService: KeycloakService;
   licences$: Observable<LicenceVO[]>;
+  deleteUnrestricted: boolean = true;
+  unauthorisedUrls$: Observable<string[]>;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.licences$ = this.store.select(LicenceSelectors.selectLicences);
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditDocumentVarsForm): EditDocumentVarsForm {
@@ -51,8 +57,24 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
       }
     });
 
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/document/edit-document",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.document$.subscribe((document) => {
       this.setEditDocumentFormValue({document: document});
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/document/edit-document/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
   }
 
