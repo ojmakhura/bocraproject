@@ -89,7 +89,7 @@
 				<span translate>save</span>
 			</button>
 			
-			<button type="button" (click)="createOrEditMenuSectionDelete()" class="btn btn-outline-primary">
+			<button type="button" (click)="createOrEditMenuSectionDelete()" class="btn btn-outline-primary" *ngIf="deleteUnrestricted">
 				<span translate>delete</span>
 			</button>
 			<button type="button" (click)="createOrEditMenuSectionFormReset()" class="btn btn-outline-primary" ><span translate>reset</span></button>

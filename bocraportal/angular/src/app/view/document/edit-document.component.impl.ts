@@ -27,8 +27,9 @@ import { select } from '@ngrx/store';
 export class EditDocumentComponentImpl extends EditDocumentComponent {
   protected keycloakService: KeycloakService;
   licences$: Observable<LicenceVO[]>;
-  deleteUnrestricted: boolean = true;
+  deleteUnrestricted: boolean = false;
   unauthorisedUrls$: Observable<string[]>;
+  
 
   constructor(private injector: Injector) {
     super(injector);

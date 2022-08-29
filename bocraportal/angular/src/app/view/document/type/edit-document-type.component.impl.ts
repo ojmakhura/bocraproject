@@ -7,6 +7,11 @@ import { DocumentTypeState } from '@app/store/document/type/document-type.state'
 import * as DocumentTypeSelectors from '@app/store/document/type/document-type.selectors';
 import * as DocumentTypeActions from '@app/store/document/type/document-type.actions';
 import { KeycloakService } from 'keycloak-angular';
+import { select } from '@ngrx/store';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { Observable } from 'rxjs';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
 
 @Component({
   selector: 'app-edit-document-type',
@@ -14,11 +19,14 @@ import { KeycloakService } from 'keycloak-angular';
   styleUrls: ['./edit-document-type.component.scss']
 })
 export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
+  deleteUnrestricted: boolean = false;
+  unauthorisedUrls$: Observable<string[]>;
 
     protected keycloakService: KeycloakService;
     constructor(private injector: Injector) {
         super(injector);
         this.keycloakService = injector.get(KeycloakService);
+        this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     }
 
     beforeOnInit(form: EditDocumentTypeVarsForm): EditDocumentTypeVarsForm {   
@@ -40,11 +48,34 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
           );
         }
       });
+
+
+      this.store.dispatch(
+        ViewActions.loadViewAuthorisations({
+          viewUrl: "/document/type/edit-document-type",
+          roles: this.keycloakService.getUserRoles(),
+          loading: true
+        })
+      );
+  
   
       this.documentType$.subscribe((documentType) => {
         this.setEditDocumentTypeFormValue({documentType: documentType});
       });
+
+      this.unauthorisedUrls$.subscribe(restrictedItems => {
+        restrictedItems.forEach(item => {
+          if(item === '/document/edit-document-type/{button:delete}') {
+            this.deleteUnrestricted = false;
+          }
+        });
+      }
+      
+      );
     }
+
+  
+
 
     override doNgOnDestroy(){}
 

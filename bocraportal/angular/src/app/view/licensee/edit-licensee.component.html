@@ -121,7 +121,7 @@
 
         <br />
 
-        <div class="text-end">
+       <div class="text-end">
           <button type="button" (click)="editLicenseeDocuments()" class="btn btn-outline-primary">
             <span translate>documents</span>
           </button>
@@ -131,14 +131,13 @@
           <button type="button" type="button" (click)="editLicenseeFormReset()" class="btn btn-outline-primary">
             <span translate>reset</span>
           </button>
-<<<<<<< HEAD
-          <button type="button" (click)="editLicenseeDelete()" class="btn btn-outline-primary" *ngIf="licenseeId">
-=======
+          <button type="button" (click)="editLicenseeDelete()" class="btn btn-outline-primary" *ngIf="deleteUnrestricted">
+          </button>
           <button type="button" *ngIf="deleteUnrestricted" (click)="editLicenseeDelete()" class="btn btn-outline-primary">
->>>>>>> origin/ojm-dev
-            <span translate>delete</span>
+          <span translate>delete</span>
           </button>
         </div>
+      </div>
 
         <mat-tab-group animationDuration="0ms" class="view-tabs">
           <mat-tab label="{{ 'users' | translate }}">
@@ -365,7 +364,7 @@
             </div>
           </mat-tab>
         </mat-tab-group>
-      </div>
+      
     </form>
   </div>
 </div>
