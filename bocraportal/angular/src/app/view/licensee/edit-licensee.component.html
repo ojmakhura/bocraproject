@@ -131,7 +131,11 @@
           <button type="button" type="button" (click)="editLicenseeFormReset()" class="btn btn-outline-primary">
             <span translate>reset</span>
           </button>
+<<<<<<< HEAD
           <button type="button" (click)="editLicenseeDelete()" class="btn btn-outline-primary" *ngIf="licenseeId">
+=======
+          <button type="button" *ngIf="deleteUnrestricted" (click)="editLicenseeDelete()" class="btn btn-outline-primary">
+>>>>>>> origin/ojm-dev
             <span translate>delete</span>
           </button>
         </div>
@@ -139,10 +143,9 @@
         <mat-tab-group animationDuration="0ms" class="view-tabs">
           <mat-tab label="{{ 'users' | translate }}">
             <div>
-              <button type="button" (click)="licenseeUsersAddDialog()" class="btn btn-primary" data-bs-toggle="modal"
+              <button type="button" matTooltip="Add User" (click)="licenseeUsersAddDialog()" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#licenseeUsersModal">
-                ADD USERS
-                <!-- <mat-icon>add_box</mat-icon> -->
+                <mat-icon>add_box</mat-icon>
               </button>
               <mat-table matSort [dataSource]="licenseeUsers" #usersSort="matSort"
                 class="table table-bordered table-striped" style="width: 100%">

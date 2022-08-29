@@ -17,14 +17,12 @@ import { HttpClient } from '@angular/common/http';
 export class UserRestController {
     protected path = 'user';
 
-
     constructor(private http: HttpClient) {
     }
 
     public createUser(user: UserVO | any ): Observable<UserVO | any> {
 
         return this.http.post<UserVO | any>(this.path + `/create`, user);
-
     }
     
     public findUserById(userId: string | any): Observable<UserVO | any> {
@@ -38,13 +36,15 @@ export class UserRestController {
     public loadUsers(): Observable<UserVO[] | any[]> {
 
         return this.http.get<UserVO[] | any[]>(this.path + `/load`);
-
     }
 
     public search(criteria: string | any ): Observable<UserVO | any> {
 
-        return this.http.get<UserVO | any>(this.path + `/search`);
+        if(!criteria) {
+            criteria = '';
+        }
 
+        return this.http.get<UserVO | any>(this.path + `/search?criteria=${criteria}`);
     }
 
     public updateUserName(userId: string | any , username: string | any ): Observable<Boolean | any> {
