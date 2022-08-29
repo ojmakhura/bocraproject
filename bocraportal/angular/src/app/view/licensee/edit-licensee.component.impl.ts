@@ -30,7 +30,7 @@ import { Observable } from 'rxjs';
 export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
-  deleteUnrestricted: boolean = false;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);

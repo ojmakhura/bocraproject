@@ -11,6 +11,10 @@ import * as AccessPointTypeActions from '@app/store/access/type/access-point-typ
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { KeycloakService } from 'keycloak-angular';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { Observable } from 'rxjs';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-edit-access-point-type',
@@ -18,9 +22,14 @@ import { KeycloakService } from 'keycloak-angular';
   styleUrls: ['./edit-access-point-type.component.scss'],
 })
 export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeComponent {
+  protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
+    this.keycloakService = injector.get(KeycloakService);
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditAccessPointTypeVarsForm): EditAccessPointTypeVarsForm {
@@ -30,6 +39,15 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
   override doNgOnDestroy() {}
 
   override doNgAfterViewInit(): void {
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/access/type/edit-access-point-type",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -43,6 +61,14 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
 
     this.accessPointType$.subscribe((accessPointType) => {
       this.setEditAccessPointTypeFormValue({ accessPointType: accessPointType });
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/access/type/edit-access-point-type/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
   }
 

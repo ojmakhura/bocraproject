@@ -100,7 +100,7 @@
 					</li>
 					<li class="nav-item" *ngFor="let item of menus$ | async">
 						<a class="nav-link" routerLink="{{ item.routerLink }}" routerLinkActive="active"
-							data-bs-dismiss="offcanvas"><i class="fa fa-puzzle-piece fa-lg"
+							data-bs-dismiss="offcanvas"><i class="fa {{ item.icon }}"
 								aria-hidden="true"></i>&nbsp;
 							<span class="ms-3" translate>{{
 								item.titleKey }}

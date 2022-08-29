@@ -171,7 +171,7 @@
       <button type="button" color="accent" (click)="editUserSave()" class="btn btn-outline-primary">
         <span translate>save</span>
       </button>
-      <button type="button" color="accent" (click)="editUserDelete()" class="btn btn-outline-primary">
+      <button type="button" color="accent" (click)="editUserDelete()" class="btn btn-outline-primary" *ngIf="deleteUnrestricted">
         <span translate>delete</span>
       </button>
 

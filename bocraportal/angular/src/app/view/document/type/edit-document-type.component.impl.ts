@@ -7,6 +7,10 @@ import { DocumentTypeState } from '@app/store/document/type/document-type.state'
 import * as DocumentTypeSelectors from '@app/store/document/type/document-type.selectors';
 import * as DocumentTypeActions from '@app/store/document/type/document-type.actions';
 import { KeycloakService } from 'keycloak-angular';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { Observable } from 'rxjs';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-edit-document-type',
@@ -16,9 +20,12 @@ import { KeycloakService } from 'keycloak-angular';
 export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
 
     protected keycloakService: KeycloakService;
+    unauthorisedUrls$: Observable<string[]>;
+    deleteUnrestricted: boolean = true;
     constructor(private injector: Injector) {
         super(injector);
         this.keycloakService = injector.get(KeycloakService);
+        this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     }
 
     beforeOnInit(form: EditDocumentTypeVarsForm): EditDocumentTypeVarsForm {   
@@ -30,6 +37,15 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
     }
 
     override doNgAfterViewInit(): void {
+
+      this.store.dispatch(
+        ViewActions.loadViewAuthorisations({
+          viewUrl: "/document/type/edit-document-type",
+          roles: this.keycloakService.getUserRoles(),
+          loading: true
+        })
+      );
+
       this.route.queryParams.subscribe((queryParams: any) => {
         if (queryParams?.id) {
           this.store.dispatch(
@@ -43,6 +59,14 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
   
       this.documentType$.subscribe((documentType) => {
         this.setEditDocumentTypeFormValue({documentType: documentType});
+      });
+
+      this.unauthorisedUrls$.subscribe(restrictedItems => {
+        restrictedItems.forEach(item => {
+          if(item === '/document/type/edit-document-type/{button:delete}') {
+            this.deleteUnrestricted = false;
+          }
+        });
       });
     }
 

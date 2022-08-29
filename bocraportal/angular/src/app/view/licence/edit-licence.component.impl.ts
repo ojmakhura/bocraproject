@@ -9,6 +9,10 @@ import * as LicenceActions from '@app/store/licence/licence.actions';
 import { KeycloakService } from 'keycloak-angular';
 import { FormGroup } from '@angular/forms';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
+import { Observable } from 'rxjs';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-edit-licence',
@@ -17,9 +21,12 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
 })
 export class EditLicenceComponentImpl extends EditLicenceComponent {
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditLicenceVarsForm): EditLicenceVarsForm {
@@ -38,8 +45,24 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
       }
     });
 
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/licence/edit-licence",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.licence$.subscribe((licence) => {
       this.setEditLicenceFormValue({licence: licence});
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/licence/edit-licence/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
   }
 

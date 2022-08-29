@@ -7,7 +7,7 @@
           <button type="button" color="accent" (click)="editFormSave()" class="btn btn-info">
             <span translate>save</span>
           </button>
-          <button type="button" color="accent" (click)="editFormDelete()" class="btn btn-info">
+          <button type="button" color="accent" (click)="editFormDelete()" class="btn btn-info" *ngIf="deleteUnrestricted">
             <span translate>delete</span>
           </button>
           <button type="button" color="accent" (click)="editFormSearch()" class="btn btn-info">

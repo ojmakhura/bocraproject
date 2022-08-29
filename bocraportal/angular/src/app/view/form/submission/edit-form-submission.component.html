@@ -5,23 +5,24 @@
 		<section>
 		  <div class="col my-3 view-buttons">
 			<button type="button" color="accent" (click)="editFormSubmissionSave()" class="btn btn-info">
-			  <span translate>save</span>
+				<span translate>save</span>
 			</button>
-			<button type="button" color="accent" (click)="editFormSubmissionDelete()" class="btn btn-info">
-			  <span translate>delete</span>
+			<button type="button" color="accent" (click)="editFormSubmissionDelete()" class="btn btn-info" *ngIf="deleteUnrestricted">
+				<span translate>delete</span>
 			</button>
 			<button type="button" color="accent" (click)="editFormSubmissionSearch()" class="btn btn-info">
-			  <span translate>search</span>
+				<span translate>search</span>
 			</button>
 			<button type="button" color="accent" (click)="editFormSubmissionNote()" class="btn btn-info">
-			  <span translate>note</span>
+				<span translate>note</span>
 			</button>
-			<button type="button" color="accent" (click)="editFormSubmissionSubmit()" class="btn btn-info">
-			  <span translate>submit</span>
+			<button type="button" color="accent" (click)="editFormSubmissionSubmit()" class="btn btn-info" *ngIf="submitUnrestricted">
+				<span translate>submit</span>
 			</button>
-			<button color="accent" type="button" (click)="editFormSubmissionFormReset()" class="btn btn-info">
-			  <span translate>reset</span>
+			<button type="button" color="accent" (click)="editFormSubmissionReturn()" class="btn btn-info" *ngIf="returnUnrestricted">
+				<span translate>return</span>
 			</button>
+			<button color="accent" type="button" (click)="editFormSubmissionFormReset()" class="btn btn-info" ><span translate>reset</span></button>
 		  </div>
 		</section>
 		<div *ngIf="success | async" class="alert alert-success" role="alert">

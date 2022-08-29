@@ -27,7 +27,8 @@ import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licens
 import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/form/licensee-form-vo';
 import { FormGroup } from '@angular/forms';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
-
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
 @Component({
   selector: 'app-edit-form',
   templateUrl: './edit-form.component.html',
@@ -38,6 +39,8 @@ export class EditFormComponentImpl extends EditFormComponent {
   private formSection$: Observable<FormSectionVO>;
   private formField$: Observable<FormFieldVO>;
   private licenseeForm$: Observable<LicenseeFormVO>;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -48,6 +51,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.formSection$ = this.store.pipe(select(FormSelectors.selectFormSection));
     this.formFormSections$ = this.store.pipe(select(FormSelectors.selectFormSections));
     this.licenseeForm$ = this.store.pipe(select(LicenseeFormSelectors.selectLicenseeForm));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditFormVarsForm): EditFormVarsForm {
@@ -59,6 +63,14 @@ export class EditFormComponentImpl extends EditFormComponent {
   override afterOnInit() {}
 
   override doNgAfterViewInit() {
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/form/edit-form",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -97,6 +109,14 @@ export class EditFormComponentImpl extends EditFormComponent {
       if (licenseeForm) {
         this.addToFormLicensees(licenseeForm);
       }
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/form/edit-form/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
   }
 

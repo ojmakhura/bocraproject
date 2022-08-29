@@ -13,10 +13,12 @@ import * as PeriodSelectors from '@app/store/period/period.selectors';
 import * as PeriodConfigActions from '@app/store/period/config/period-config.actions';
 import * as PeriodConfigSelectors from '@app/store/period/config/period-config.selectors';
 import { select } from '@ngrx/store';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RepeatPeriod } from '@app/model/bw/org/bocra/portal/period/config/repeat-period';
 import { formatDate } from '@angular/common';
 import { PeriodConfigVO } from '@app/model/bw/org/bocra/portal/period/config/period-config-vo';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
 
 @Component({
   selector: 'app-edit-period',
@@ -25,6 +27,8 @@ import { PeriodConfigVO } from '@app/model/bw/org/bocra/portal/period/config/per
 })
 export class EditPeriodComponentImpl extends EditPeriodComponent {
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -32,6 +36,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     this.periodPeriodConfigs$ = this.store.pipe(select(PeriodConfigSelectors.selectPeriodConfigs));
     this.periodNexts$ = this.store.pipe(select(PeriodSelectors.selectPeriods));
     this.periodPreviouses$ = this.store.pipe(select(PeriodSelectors.selectPeriods));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditPeriodVarsForm): EditPeriodVarsForm {
@@ -41,6 +46,15 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
   override doNgOnDestroy() {}
 
   override doNgAfterViewInit() {
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "period/edit-period",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -54,6 +68,14 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
 
     this.period$.subscribe((period) => {
       this.setEditPeriodFormValue({ period: period });
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/period/edit-period/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
 
     this.periodPeriodConfigControl.valueChanges.subscribe((change) => {
@@ -74,7 +96,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         let name = this.getPeriodName(new Date(this.periodPeriodStart), end);
         this.periodPeriodNameControl.patchValue(name);
       }
-    })
+    });
   }
 
   calculateEndDate(start: Date, config: PeriodConfigVO): Date {
