@@ -17,6 +17,8 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
 })
 export class EditLicenceComponentImpl extends EditLicenceComponent {
   protected keycloakService: KeycloakService;
+  deleteUnrestricted: boolean = true;
+
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);

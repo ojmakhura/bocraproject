@@ -21,6 +21,7 @@ import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria'
 })
 export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   protected keycloakService: KeycloakService;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);

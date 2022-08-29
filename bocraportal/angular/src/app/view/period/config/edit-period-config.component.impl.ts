@@ -18,6 +18,7 @@ import { KeycloakService } from 'keycloak-angular';
 export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
 
     protected keycloakService: KeycloakService;
+    deleteUnrestricted: boolean = true;
 
     constructor(private injector: Injector) {
         super(injector);

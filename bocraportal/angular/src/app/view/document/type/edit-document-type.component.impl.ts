@@ -16,6 +16,8 @@ import { KeycloakService } from 'keycloak-angular';
 export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
 
     protected keycloakService: KeycloakService;
+    deleteUnrestricted: boolean = true;
+    
     constructor(private injector: Injector) {
         super(injector);
         this.keycloakService = injector.get(KeycloakService);
