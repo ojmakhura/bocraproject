@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # The main API 
+  ###############################################################################
+  api:
+    image: "bocra-api:latest"
+    container_name: bocra-api
+    hostname: api
+    healthcheck:
+      test: "curl -m 5 --silent --fail --request GET http://localhost:8085/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    build:
+      context: .
+      dockerfile: bocraportal/webservice/Dockerfile
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_API_ADDRESS}
+    environment:
+      POSTGRES_SERVER: db
+      SERVER_PORT: ${API_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
+      TZ: Africa/Gaborone
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocra_api == true
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.api.loadbalancer.server.port=8085"
+        - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+        - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
+        - "traefik.http.routers.api.tls=${SSL_SECURE}"
+        - "traefik.http.routers.api.tls.certresolver=le"
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  traefik-public:
+  bocra-network:

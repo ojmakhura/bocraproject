@@ -13,6 +13,9 @@ import * as LicenseSelectors from '@app/store/licensee/licensee.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as FormActions from '@app/store/form/form.actions';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
+import { Observable } from 'rxjs';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
 
 @Component({
   selector: 'app-edit-licence-type',
@@ -21,10 +24,13 @@ import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria'
 })
 export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditLicenceTypeVarsForm): EditLicenceTypeVarsForm {
@@ -35,6 +41,14 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   }
 
   override doNgAfterViewInit(): void {
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/licence/type/edit-licence-type",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -48,6 +62,14 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
 
     this.licenceType$.subscribe((licenceType) => {
       this.setEditLicenceTypeFormValue({licenceType: licenceType});
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/licence/type/edit-licence-type/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
   }
 

@@ -14,7 +14,9 @@ import { select } from '@ngrx/store';
 import { AccessPointCriteria } from '@app/model/bw/org/bocra/portal/access/access-point-criteria';
 import { FormGroup } from '@angular/forms';
 import { AccessPointVO } from '@app/model/bw/org/bocra/portal/access/access-point-vo';
-
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-edit-authorisation',
   templateUrl: './edit-authorisation.component.html',
@@ -24,12 +26,15 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
   
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
     this.http = this._injector.get(HttpClient);
     this.keycloakService = this._injector.get(KeycloakService);
     this.authorisationAccessPoints$ = this.store.pipe(select(AccessPointSelectors.selectAccessPoints));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override doNgOnDestroy(): void {
@@ -37,12 +42,16 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
 
   beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
-      role.forEach((val) => {
-        let item = new SelectItem();
-        item.label = val['description'];
-        item.value = val['name'];
 
-        this.authorisationRolesBackingList.push(item);
+      role.forEach((val) => {
+        if(this.keycloakService.getUserRoles().includes(val.name)) {
+
+          let item = new SelectItem();
+          item.label = val['description'];
+          item.value = val['name'];
+  
+          this.authorisationRolesBackingList.push(item);
+        }
       });
     });
 
@@ -74,6 +83,14 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
 }
 
   override doNgAfterViewInit(): void {
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/auth/edit-authorisation",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -88,13 +105,21 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     this.authorisation$.subscribe((authorisation) => {
       this.setEditAuthorisationFormValue({authorisation: authorisation});
     });
+    
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/auth/edit-authorisation/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
+    });
   }
 
   /**
    * This method may be overwritten
    */
   override beforeEditAuthorisationSave(form: EditAuthorisationSaveForm): void {
-    if (this.editAuthorisationForm.valid && this.editAuthorisationForm.dirty){
+    if (this.editAuthorisationForm.valid && this.editAuthorisationForm.pristine) {
       if (form.authorisation?.id) {
         form.authorisation.updatedBy = this.keycloakService.getUsername();
         form.authorisation.updatedDate = new Date();

@@ -11,22 +11,6 @@
 <div class="card container px-5 py-2 bg-light">
   <div class="card-body">
     <form [formGroup]="editSectorForm">
-      <!-- <section>
-        <div class="col my-3 view-buttons">
-          <button type="button" color="accent" (click)="editSectorSave()" class="btn btn-info">
-            <span translate>save</span>
-          </button>
-          <button type="button" color="accent" (click)="editSectorSearch()" class="btn btn-info">
-            <span translate>search</span>
-          </button>
-          <button type="button" color="accent" (click)="editSectorDelete()" class="btn btn-info">
-            <span translate>delete</span>
-          </button>
-          <button color="accent" type="button" (click)="editSectorFormReset()" class="btn btn-info">
-            <span translate>reset</span>
-          </button>
-        </div>
-      </section> -->
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}
@@ -39,49 +23,47 @@
       </div>
       <div formGroupName="sector">
         <div class="mb-3">
-          <label id="sectorCode_label" class="col-sm-2 col-form-label" for="sectorCode"
-            ><span translate>code</span>*</label
-          >
+          <label id="sectorCode_label" class="col-sm-2 col-form-label" for="sectorCode"><span
+              translate>code</span>*</label>
           <input type="text" id="sectorCode" class="form-control" name="code" formControlName="code" required />
-          <div
-            *ngIf="
+          <div *ngIf="
               editSectorForm.invalid &&
               sectorCodeControl.invalid &&
               (sectorCodeControl.dirty || sectorCodeControl.touched)
-            "
-            class="alert alert-danger"
-            role="alert"
-          >
+            " class="alert alert-danger" role="alert">
             <div *ngIf="sectorCodeControl.errors['required']">
               <span translate>code.required</span>
             </div>
           </div>
         </div>
         <div class="mb-3">
-          <label id="sectorName_label" class="col-sm-2 col-form-label" for="sectorName"
-            ><span translate>name</span>*</label
-          >
+          <label id="sectorName_label" class="col-sm-2 col-form-label" for="sectorName"><span
+              translate>name</span>*</label>
           <input type="text" id="sectorName" class="form-control" name="name" formControlName="name" required />
-          <div
-            *ngIf="
+          <div *ngIf="
               editSectorForm.invalid &&
               sectorNameControl.invalid &&
               (sectorNameControl.dirty || sectorNameControl.touched)
-            "
-            class="alert alert-danger"
-            role="alert"
-          >
+            " class="alert alert-danger" role="alert">
             <div *ngIf="sectorNameControl.errors['required']">
               <span translate>name.required</span>
             </div>
           </div>
         </div>
         <div class="mb-3">
-          <label id="sectorDescription_label" class="col-sm-2 col-form-label" for="sectorDescription"
-            ><span translate>description</span></label
-          >
+          <label id="sectorDescription_label" class="col-sm-2 col-form-label" for="sectorDescription"><span
+              translate>description</span></label>
           <textarea id="sectorDescription" class="form-control" formControlName="description"></textarea>
         </div>
+        <div class="mb-3">
+          <label id="sectorThemeColour_label" class="col-sm-2 col-form-label" for="sectorThemeColour"><span translate>theme.colour</span>*</label>
+          <input type="color" id="sectorThemeColour" class="form-control" name="themeColour" formControlName="themeColour" required/>
+          <div *ngIf="editSectorForm.invalid && sectorThemeColourControl.invalid && (sectorThemeColourControl.dirty || sectorThemeColourControl.touched)" class="alert alert-danger" role="alert">
+              <div *ngIf="sectorThemeColourControl.errors['required']">
+                  <span translate>theme.colour.required</span>
+              </div>
+          </div>
+      </div>
 
         <br />
         <div class="text-end">
@@ -89,7 +71,7 @@
             <span translate>save</span>
           </button>
 
-          <button type="button" color="accent" (click)="editSectorDelete()" class="btn btn-outline-primary">
+          <button type="button" color="accent" (click)="editSectorDelete()" class="btn btn-outline-primary" *ngIf="deleteUnrestricted">
             <span translate>delete</span>
           </button>
           <button color="accent" type="button" (click)="editSectorFormReset()" class="btn btn-outline-primary">
@@ -100,22 +82,12 @@
         <mat-tab-group animationDuration="0ms" class="view-tabs">
           <mat-tab label="{{ 'licensees' | translate }}" *ngIf="sectorId">
             <div>
-              <button
-                type="button"
-                (click)="sectorLicenseesAddDialog()"
-                class="btn btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#sectorLicenseesModal"
-              >
+              <button type="button" (click)="sectorLicenseesAddDialog()" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#sectorLicenseesModal">
                 <mat-icon>add_box</mat-icon>
               </button>
-              <mat-table
-                matSort
-                [dataSource]="sectorLicensees"
-                #licenseesSort="matSort"
-                class="table table-bordered table-striped"
-                style="width: 100%"
-              >
+              <mat-table matSort [dataSource]="sectorLicensees" #licenseesSort="matSort"
+                class="table table-bordered table-striped" style="width: 100%">
                 <ng-container matColumnDef="actions">
                   <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                   <mat-cell *matCellDef="let row; index as i">
@@ -142,32 +114,18 @@
                 <mat-header-row *matHeaderRowDef="sectorLicenseesModalColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: sectorLicenseesModalColumns"></mat-row>
               </mat-table>
-              <mat-paginator
-                #sectorLicenseesPaginator="matPaginator"
-                [pageSize]="10"
-                [pageSizeOptions]="[5, 10, 15]"
-                showFirstLastButtons
-              ></mat-paginator>
+              <mat-paginator #sectorLicenseesPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]"
+                showFirstLastButtons></mat-paginator>
             </div>
           </mat-tab>
           <mat-tab label="{{ 'forms' | translate }}">
             <div>
-              <button
-                type="button"
-                (click)="sectorFormsAddDialog()"
-                class="btn btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#sectorFormsModal"
-              >
+              <button type="button" (click)="sectorFormsAddDialog()" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#sectorFormsModal">
                 <mat-icon>add_box</mat-icon>
               </button>
-              <mat-table
-                matSort
-                [dataSource]="sectorForms"
-                #formsSort="matSort"
-                class="table table-bordered table-striped"
-                style="width: 100%"
-              >
+              <mat-table matSort [dataSource]="sectorForms" #formsSort="matSort"
+                class="table table-bordered table-striped" style="width: 100%">
                 <ng-container matColumnDef="actions">
                   <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                   <mat-cell *matCellDef="let row; index as i">
@@ -194,12 +152,8 @@
                 <mat-header-row *matHeaderRowDef="sectorFormsModalColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: sectorFormsModalColumns"></mat-row>
               </mat-table>
-              <mat-paginator
-                #sectorFormsPaginator="matPaginator"
-                [pageSize]="10"
-                [pageSizeOptions]="[5, 10, 15]"
-                showFirstLastButtons
-              ></mat-paginator>
+              <mat-paginator #sectorFormsPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]"
+                showFirstLastButtons></mat-paginator>
             </div>
           </mat-tab>
         </mat-tab-group>
@@ -207,13 +161,8 @@
     </form>
   </div>
 </div>
-<div
-  class="modal fade"
-  id="sectorLicenseesModal"
-  tabindex="-1"
-  aria-labelledby="sectorLicenseesLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="sectorLicenseesModal" tabindex="-1" aria-labelledby="sectorLicenseesLabel"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -229,12 +178,8 @@
             <div>
               <mat-form-field>
                 <mat-label translate>search</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  [formControl]="sectorLicenseesSearchField"
-                  id="sectorLicenseesSearchField"
-                />
+                <input matInput type="text" [formControl]="sectorLicenseesSearchField"
+                  id="sectorLicenseesSearchField" />
               </mat-form-field>
             </div>
             <button type="button" (click)="sectorLicenseesSearch()" class="btn btn-primary">
@@ -242,13 +187,8 @@
             </button>
           </form>
         </div>
-        <mat-table
-          matSort
-          [dataSource]="sectorLicensees$ | async"
-          #sectorLicenseesModalSort="matSort"
-          class="table table-bordered"
-          style="width: 100%"
-        >
+        <mat-table matSort [dataSource]="sectorLicensees$ | async" #sectorLicenseesModalSort="matSort"
+          class="table table-bordered" style="width: 100%">
           <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
             <mat-cell *matCellDef="let row; let i = index">
@@ -270,22 +210,13 @@
           <mat-header-row *matHeaderRowDef="sectorLicenseesModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: sectorLicenseesModalColumns"></mat-row>
         </mat-table>
-        <mat-paginator
-          #sectorLicenseesModalPaginator="matPaginator"
-          [pageSize]="10"
-          [pageSizeOptions]="[5, 10, 15]"
-          showFirstLastButtons
-        ></mat-paginator>
+        <mat-paginator #sectorLicenseesModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]"
+          showFirstLastButtons></mat-paginator>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="addSelectedSectorLicensees()"
-          data-bs-dismiss="modal"
-          translate
-        >
+        <button type="button" class="btn btn-primary" (click)="addSelectedSectorLicensees()" data-bs-dismiss="modal"
+          translate>
           save
         </button>
       </div>
@@ -317,13 +248,8 @@
             </button>
           </form>
         </div>
-        <mat-table
-          matSort
-          [dataSource]="sectorForms$ | async"
-          #sectorFormsModalSort="matSort"
-          class="table table-bordered"
-          style="width: 100%"
-        >
+        <mat-table matSort [dataSource]="sectorForms$ | async" #sectorFormsModalSort="matSort"
+          class="table table-bordered" style="width: 100%">
           <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
             <mat-cell *matCellDef="let row; let i = index">
@@ -345,22 +271,13 @@
           <mat-header-row *matHeaderRowDef="sectorFormsModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: sectorFormsModalColumns"></mat-row>
         </mat-table>
-        <mat-paginator
-          #sectorFormsModalPaginator="matPaginator"
-          [pageSize]="10"
-          [pageSizeOptions]="[5, 10, 15]"
-          showFirstLastButtons
-        ></mat-paginator>
+        <mat-paginator #sectorFormsModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]"
+          showFirstLastButtons></mat-paginator>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="addSelectedSectorForms()"
-          data-bs-dismiss="modal"
-          translate
-        >
+        <button type="button" class="btn btn-primary" (click)="addSelectedSectorForms()" data-bs-dismiss="modal"
+          translate>
           save
         </button>
       </div>

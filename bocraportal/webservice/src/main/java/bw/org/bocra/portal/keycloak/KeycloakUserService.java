@@ -2,6 +2,7 @@ package bw.org.bocra.portal.keycloak;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -81,10 +82,8 @@ public class KeycloakUserService {
 
         if (user.getLicensee() != null && user.getLicensee().getId() != null) {
             Map<String, List<String>> attributes = new HashMap<>();
-            List<String> licenseeAttributes = new ArrayList<>();
-            licenseeAttributes.add(user.getLicensee().getId().toString());
-            licenseeAttributes.add(user.getLicensee().getLicenseeName());
-            attributes.put("licensee", licenseeAttributes);
+            attributes.put("licenseeId", Arrays.asList(user.getLicensee().getId().toString()));
+            attributes.put("licenseeName", Arrays.asList(user.getLicensee().getLicenseeName()));
 
             userRepresentation.setAttributes(attributes);
         }
@@ -111,22 +110,17 @@ public class KeycloakUserService {
         user.setRoles(new ArrayList<>());
 
         if (userRepresentation.getAttributes() != null && !userRepresentation.getAttributes().isEmpty()) {
-            List<String> licenseeAttributes = userRepresentation.getAttributes().get("licensee");
+            List<String> licenseeIds = userRepresentation.getAttributes().get("licenseeId");
+            List<String> licenseeNames = userRepresentation.getAttributes().get("licenseeName");
 
-            if (CollectionUtils.isNotEmpty(licenseeAttributes)) {
-                LicenseeVO licensee = licenseeService.findById(Long.parseLong(licenseeAttributes.get(0)));
+            LicenseeVO licensee = new LicenseeVO();
+            if(CollectionUtils.isNotEmpty(licenseeIds))
+                licensee.setId(Long.parseLong(licenseeIds.get(0)));
+            
+            if(CollectionUtils.isNotEmpty(licenseeNames))
+                licensee.setLicenseeName(licenseeNames.get(0));
 
-                // The licensee with that ID does not exist (maybe deleted)
-                // So we update the user
-                if (licensee == null || licensee.getId() == null) {
-                    UsersResource usersResource = keycloakService.getUsersResource();
-                    UserResource userResource = usersResource.get(userRepresentation.getId());
-                    userRepresentation.getAttributes().remove("licensee");
-                    userResource.update(userRepresentation);
-                }
-
-                user.setLicensee(licensee);
-            }
+            user.setLicensee(licensee);
         }
 
         RealmResource realmResource = keycloakService.getRealmResource();
@@ -143,7 +137,7 @@ public class KeycloakUserService {
 
     public Collection<UserVO> getLicenseeUsers(Long id) {
 
-        List<UserRepresentation> userRep = keycloakService.getUsersResource().searchByAttributes("licensee:" + id);
+        List<UserRepresentation> userRep = keycloakService.getUsersResource().searchByAttributes("licenseeId:" + id);
 
         Collection<UserVO> users = new ArrayList<>();
 
@@ -172,15 +166,6 @@ public class KeycloakUserService {
 
             UserRepresentation rep = users.get(0);
             UserResource userResource = usersResource.get(rep.getId());
-
-            if (StringUtils.isNotBlank(rep.getId())) {
-                user.setUserId(rep.getId());
-                LicenseeUserVO licenseeUser = new LicenseeUserVO();
-                licenseeUser.setDateAdded(LocalDate.now());
-                licenseeUser.setUser(user);
-                licenseeUser.setLicensee(user.getLicensee());
-                // licenseeUser = licenseeUserService.save(licenseeUser);
-            }
 
             List<RoleRepresentation> roleReps = new ArrayList<>();
 
@@ -226,7 +211,7 @@ public class KeycloakUserService {
 
     public List<UserVO> search(String criteria) {
 
-        List<UserRepresentation> usersRep = keycloakService.getUsersResource().search(criteria, false);
+        List<UserRepresentation> usersRep = keycloakService.getUsersResource().search(criteria);
 
         if (CollectionUtils.isEmpty(usersRep)) {
             return null;

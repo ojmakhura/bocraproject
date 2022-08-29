@@ -28,6 +28,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { FieldValueType } from '@app/model/bw/org/bocra/portal/form/field/field-value-type';
 import * as math from 'mathjs';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -42,6 +44,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   fieldColumnIds: string[] = ['row'];
   formFields: FormFieldVO[] = [];
   rowGroups: RowGroup[] = [];
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
+  submitUnrestricted: boolean = true;
+  returnUnrestricted: boolean = true;
 
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
@@ -56,21 +62,40 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
     this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
     this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditFormSubmissionVarsForm): EditFormSubmissionVarsForm {
     return form;
   }
 
+  private loadSubmission(id: number) {
+    this.store.dispatch(
+      FormSubmissionActions.findById({
+        id: id,
+        loading: true,
+      })
+    );
+
+  }
+
   override doNgAfterViewInit() {
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/form/submission/edit-form-submission",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
-        this.store.dispatch(
-          FormSubmissionActions.findById({
-            id: queryParams.id,
-            loading: true,
-          })
-        );
+        this.loadSubmission(queryParams.id);
+      } else {
+        if(this.useCaseScope.pageVariables['id']) {
+          this.loadSubmission(this.useCaseScope.pageVariables['id']);
+        }
       }
     });
 
@@ -92,6 +117,20 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
 
     this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/form/submission/edit-form-submission/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+        if(item === '/form/submission/edit-form-submission/{button:submit}') {
+          this.submitUnrestricted = false;
+        }
+        if(item === '/form/submission/edit-form-submission/{button:return}') {
+          this.returnUnrestricted = false;
+        }
+      });
+    });
   }
 
   onRowChange(section: any, row: number) {

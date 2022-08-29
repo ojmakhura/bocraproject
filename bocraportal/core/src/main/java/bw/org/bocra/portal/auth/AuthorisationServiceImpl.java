@@ -16,10 +16,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.access.AccessPoint;
 import bw.org.bocra.portal.menu.MenuSection;
 import bw.org.bocra.portal.menu.MenuSectionDao;
 import bw.org.bocra.portal.menu.MenuSectionRepository;
@@ -152,7 +155,29 @@ public class AuthorisationServiceImpl
     @Override
     protected Collection<AuthorisationVO> handleFindByRolesAndUrl(String url, Set<String> roles) throws Exception {
 
-        Collection<Authorisation> authorisations = authorisationRepository.findByRolesAndUrl(url, roles);
+        System.out.println(url);
+        System.out.println(roles);
+        
+        Specification<Authorisation> specs = BocraportalSpecifications.<Authorisation, AccessPoint>findByJoinAttributeLike("accessPoint", "url", url);
+        specs = specs.and(
+            BocraportalSpecifications.<Authorisation, String>findByAttributeIn("roles", roles)
+        );
+
+        Collection<Authorisation> authorisations = authorisationRepository.findByRolesAndUrlContaining(url, roles);
+        Collection<AuthorisationVO> vos = new ArrayList<>();
+
+        for(Authorisation auth : authorisations) {
+            vos.add(authorisationDao.toAuthorisationVO(auth));
+        }
+
+        return vos;
+    }
+
+    @Override
+    protected Collection<AuthorisationVO> handleFindByUrlPrefix(String prefix) throws Exception {
+        Specification<Authorisation> specs = BocraportalSpecifications.<Authorisation, AccessPoint>findByJoinAttributeStartsWith("accessPoint", "url", prefix);
+        Collection<Authorisation> authorisations = authorisationRepository.findAll(specs);
+        
         Collection<AuthorisationVO> vos = new ArrayList<>();
 
         for(Authorisation auth : authorisations) {

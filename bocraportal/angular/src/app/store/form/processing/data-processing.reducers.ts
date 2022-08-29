@@ -5,72 +5,25 @@ import {dataProcessingKey, initialState} from './data-processing.state';
 
 export const dataProcessingReducer = createReducer(
     initialState,
-    on(DataProcessingActions.findByIdSuccess, (state, action) => ({
+    on(DataProcessingActions.dataCaptureSummarySuccess, (state, action) => ({
         ...state,
-        submissions: [], 
+        formSubmissions: [], 
+        submissionSummary: action.submissionSummary,
         loading: false,
         success: action.success,
         messages: action.messages
     })),
-    on(DataProcessingActions.saveSuccess, (state, action) => ({
+    on(DataProcessingActions.loadDataSuccess, (state, action) => ({
         ...state,
-        submissions: [], 
-        loading: false,
-        success: action.success,
-        messages: action.messages
-    })),
-    on(DataProcessingActions.removeSuccess, (state, action) => ({
-        ...state,
-        submissions: [], 
-        loading: false,
-        success: action.success,
-        messages: action.messages
-    })),
-    on(DataProcessingActions.getAllSuccess, (state, action) => ({
-        ...state,
-        submissions: [], 
-        loading: false,
-        success: action.success,
-        messages: action.messages
-    })),
-    on(DataProcessingActions.searchSuccess, (state, action) => ({
-        ...state,
-        submissions: [], 
-        loading: false,
-        success: action.success,
-        messages: action.messages
-    })),
-    on(DataProcessingActions.getAllPagedSuccess, (state, action) => ({
-        ...state,
-        submissions: [], 
-        loading: false,
-        success: action.success,
-        messages: action.messages
-    })),
-    on(DataProcessingActions.addDataFieldsSuccess, (state, action) => ({
-        ...state,
-        submissions: [], 
-        loading: false,
-        success: action.success,
-        messages: action.messages
-    })),
-    on(DataProcessingActions.addDataFieldSuccess, (state, action) => ({
-        ...state,
-        submissions: [], 
-        loading: false,
-        success: action.success,
-        messages: action.messages
-    })),
-    on(DataProcessingActions.deleteDataFieldSuccess, (state, action) => ({
-        ...state,
-        submissions: [], 
+        formSubmissions: action.formSubmissions, 
+        submissionSummary: state.submissionSummary,
         loading: false,
         success: action.success,
         messages: action.messages
     })),
     on(DataProcessingActions.dataProcessingReset, (state) => ({
       ...state,
-        submissions: [], 
+      formSubmissions: [], 
         loading: false,
         success: false,
         error: false,

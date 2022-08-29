@@ -9,6 +9,10 @@ import { EditPeriodConfigVarsForm } from '@app/view/period/config/edit-period-co
 import * as PeriodConfigActions from '@app/store/period/config/period-config.actions';
 import * as PeriodConfigSelectors from '@app/store/period/config/period-config.selectors';
 import { KeycloakService } from 'keycloak-angular';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { Observable } from 'rxjs';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-edit-period-config',
@@ -18,10 +22,13 @@ import { KeycloakService } from 'keycloak-angular';
 export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
 
     protected keycloakService: KeycloakService;
+    unauthorisedUrls$: Observable<string[]>;
+    deleteUnrestricted: boolean = true;
 
     constructor(private injector: Injector) {
         super(injector);
         this.keycloakService = injector.get(KeycloakService);
+        this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     }
 
     override beforeOnInit(form: EditPeriodConfigVarsForm){
@@ -33,6 +40,14 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
     }
 	
     override doNgAfterViewInit() {
+
+      this.store.dispatch(
+        ViewActions.loadViewAuthorisations({
+          viewUrl: "/period/config/edit-period-config",
+          roles: this.keycloakService.getUserRoles(),
+          loading: true
+        })
+      );
       
       this.route.queryParams.subscribe((queryParams: any) => {
         if (queryParams?.id) {
@@ -47,6 +62,14 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
   
       this.periodConfig$.subscribe((periodConfig) => {
         this.setEditPeriodConfigFormValue({periodConfig: periodConfig});
+      });
+
+      this.unauthorisedUrls$.subscribe(restrictedItems => {
+        restrictedItems.forEach(item => {
+          if(item === '/period/config/edit-period-config/{button:delete}') {
+            this.deleteUnrestricted = false;
+          }
+        });
       });
     }
 

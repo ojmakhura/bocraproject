@@ -170,7 +170,7 @@
         <!-- <button type="button" color="accent" (click)="editAuthorisationSearch()" class="btn btn-outline-primary">
           <span translate>search</span>
         </button> -->
-        <button type="button" color="accent" (click)="editAuthorisationDelete()" class="btn btn-outline-primary">
+        <button type="button" color="accent" (click)="editAuthorisationDelete()" class="btn btn-outline-primary" *ngIf="deleteUnrestricted">
           <span translate>delete</span>
         </button>
         <button color="accent" type="button" (click)="editAuthorisationFormReset()" class="btn btn-outline-primary">

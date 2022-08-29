@@ -15,6 +15,9 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { KeycloakService } from 'keycloak-angular';
 import { select } from '@ngrx/store';
 import { SelectItem } from '@app/utils/select-item';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-access-point',
@@ -24,17 +27,22 @@ import { SelectItem } from '@app/utils/select-item';
 export class EditAccessPointComponentImpl extends EditAccessPointComponent {
     
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = this._injector.get(KeycloakService);
     this.accessPointAccessPointTypes$ = this.store.pipe(select(AccessPointTypeSelectors.selectAccessPointTypes));
+    this.accessPointAccessPointTypeBackingList = [];
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditAccessPointVarsForm): EditAccessPointVarsForm {
 
     this.store.dispatch(AccessPointTypeActions.getAll({loading: true}));
     this.accessPointAccessPointTypes$.subscribe(types => {
+      this.accessPointAccessPointTypeBackingList = [];
       types.forEach(type => {
         let item: SelectItem = new SelectItem;
         item.label = type.name
@@ -50,6 +58,15 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
   override doNgOnDestroy() {}
 
   override doNgAfterViewInit(): void {
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/access/edit-access-point",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -64,6 +81,15 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
     this.accessPoint$.subscribe((accessPoint) => {
       this.setEditAccessPointFormValue({ accessPoint: accessPoint });
     });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/access/edit-access-point/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
+    });
+
   }
 
   override beforeEditAccessPointSave(form: EditAccessPointSaveForm): void {

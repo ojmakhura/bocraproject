@@ -1,0 +1,360 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # Traefik proxy
+  ###############################################################################
+  proxy:
+    image: traefik:2.8
+    container_name: bocra-proxy
+    hostname: traefik
+    networks:
+      bocra-network:
+        ipv4_address: ${BOCRA_PROXY_ADDRESS}
+      traefik-public:
+      default:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${BOCRA_DATA}/traefik:${BOCRA_DATA}/traefik
+      - ./certs:/etc/certs:ro
+      - ./traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
+    ports:
+      - "443:443"
+      - "80:80"
+      # - "8079:8080"
+      # - "8080:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "http://localhost:8082/ping","--spider" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+      # - "--providers.file.directory=/etc/traefik/dynamic_conf/"
+      # - "--providers.file.watch=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entryPoints.ping.address=:8082"
+      - "--log.level=DEBUG"
+      - "--accessLog"
+      - "--accesslog=true"
+      - "--api"
+      - "--api.dashboard"
+      - "--ping=true"
+      - "--ping.entrypoint=ping"
+      - "--metrics"
+      - "--metrics.prometheus"
+      # - "--providers.docker.network=traefik-public"
+      - "--providers.docker"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
+      - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.https-redirect.middlewares=https-redirect"
+      - "traefik.http.routers.dashboard.rule=Host(`dash${PROXY_DOMAIN}`)"
+      - "traefik.http.routers.dashboard.service=dashboard@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+
+  ###############################################################################
+  # Postgres database
+  ###############################################################################
+  db:
+    container_name: bocra-db
+    hostname: db
+    image: postgres:14
+    restart: unless-stopped
+    volumes:
+      - ${BOCRA_DATA}/db:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    depends_on:
+      proxy:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_DB_ADDRESS}
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-db.entrypoints=websecure"
+      - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
+      - "traefik.http.routers.bocra-db.tls=true"
+      - "traefik.http.routers.bocra-db.tls.certresolver=le"
+
+  ###############################################################################
+  # Postgres administration frontend
+  ###############################################################################
+  pgadmin:
+    image: dpage/pgadmin4:6.12
+    container_name: bocra-pgadmin
+    restart: unless-stopped
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_PGADMIN_ADDRESS}
+      default:
+    depends_on:
+      proxy:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    # ports:
+    #   - 9000:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      SCRIPT_NAME: /pgadmin
+      TZ: Africa/Gaborone
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.bocra-pgadmin.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.bocra-pgadmin.tls=true"
+      - "traefik.http.routers.bocra-pgadmin.tls.certresolver=le"
+
+  ###############################################################################
+  # Keycloak authentication server
+  ###############################################################################
+  keycloak:
+    image: bocra-keycloak:latest
+    hostname: keycloak
+    container_name: bocra-keycloak
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--optimized"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    build:
+      context: .
+      dockerfile: Dockerfile.keycloak
+    environment:      
+      # KC_FEATURES:
+      #   authorization
+      #   token-exchange
+      #   docker
+      #   impersonation
+      #   scripts
+      #   upload-scripts
+      #   web-authn
+      #   client-policies
+      #   dynamic-scopes
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
+      KC_DB_URL_HOST: ${POSTGRES_SERVER}
+      KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
+      KC_METRICS_ENABLED: true
+      KC_PROXY: edge
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      PROXY_ADDRESS_FORWARDING: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      TZ: Africa/Gaborone
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_KEYCLOAK_ADDRESS}
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.entrypoints=websecure"
+      - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+      - "traefik.http.routers.keycloak.tls=true"
+      - "traefik.http.routers.keycloak.tls.certresolver=le"
+
+  ###############################################################################
+  # The main API 
+  ###############################################################################
+  api:
+    image: "bocra-api:latest"
+    container_name: bocra-api
+    hostname: api
+
+    healthcheck:
+      test: "curl -m 5 --silent --fail --request GET http://localhost:8085/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: bocraportal/webservice/Dockerfile
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_API_ADDRESS}
+      default:
+    environment:
+      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      SERVER_PORT: ${API_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
+      TZ: Africa/Gaborone
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.api.tls.certresolver=le"
+
+  ###############################################################################
+  # Angular web application
+  ###############################################################################
+  web:
+    image: "bocra-web:latest"
+    hostname: web
+
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    build:
+      context: .
+      dockerfile: bocraportal/angular/Dockerfile
+    container_name: bocra-web
+    volumes:
+      - ${BOCRA_DATA}/web:/web
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_WEB_ADDRESS}
+      default:
+    environment:
+      TZ: Africa/Gaborone
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-web.entrypoints=websecure"
+      - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
+      - "traefik.http.routers.bocra-web.tls=true"
+      - "traefik.http.routers.bocra-web.tls.certresolver=le"
+
+  ###############################################################################
+  # Local docker container registry
+  ###############################################################################
+  registry:
+    image: registry:2
+    container_name: bocra-registry
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /certs/localhost_trust_chain.pem
+      REGISTRY_AUTH_TOKEN_REALM: ${KEYCLOAK_AUTH_URL}/realms/${BOCRA_REGISTRY_REALM}/protocol/docker-v2/auth
+      REGISTRY_AUTH_TOKEN_SERVICE: ${REGISTRY_CLIENT}
+      REGISTRY_AUTH_TOKEN_ISSUER: ${KEYCLOAK_AUTH_URL}/realms/${BOCRA_REGISTRY_REALM}
+      REGISTRY_HTTP_TLS_CERTIFICATE: ${REGISTRY_HTTP_TLS_CERTIFICATE}
+      REGISTRY_HTTP_TLS_KEY: ${REGISTRY_HTTP_TLS_KEY}
+      TZ: Africa/Gaborone
+    volumes:
+      - ${BOCRA_DATA}/registry/data:/var/lib/registry
+      - ./certs:/certs
+      - ${BOCRA_DATA}/registry/auth:/auth
+    networks:
+      bocra-network:
+        ipv4_address: ${BOCRA_REGISTRY_ADDRESS}
+      traefik-public:
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-registry.entrypoints=websecure"
+      - "traefik.http.routers.bocra-registry.rule=Host(`${REGISTRY_DOMAIN}`)"
+      - "traefik.http.routers.bocra-registry.tls=true"
+      - "traefik.http.routers.bocra-registry.tls.certresolver=le"
+  
+  ###############################################################################
+  # Jenkins for CI/CD
+  ###############################################################################
+  jenkins:
+    container_name: bocra-jenkins
+    image: jenkins/jenkins:lts
+    privileged: true
+    user: root
+    depends_on:
+      proxy:
+        condition: service_healthy
+    environment:
+      TZ: Africa/Gaborone
+    volumes:
+      - ${BOCRA_DATA}/jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      bocra-network:
+        ipv4_address: ${BOCRA_JENKINS_ADDRESS}
+      traefik-public:
+      default:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bocra-jenkins.entrypoints=websecure"
+      - "traefik.http.routers.bocra-jenkins.rule=Host(`${JENKINS_DOMAIN}`)"
+      - "traefik.http.routers.bocra-jenkins.tls=true"
+      - "traefik.http.routers.bocra-jenkins.tls.certresolver=le"
+
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  traefik-public:
+    # Allow setting it to false for testing
+    external: true
+  bocra-network:
+    name: bocra-network
+    driver: bridge
+    external: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.57.0/24
+  bocra-elk:
+    name: bocra-elk
+    driver: bridge

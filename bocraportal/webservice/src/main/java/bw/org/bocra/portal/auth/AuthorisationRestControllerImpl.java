@@ -5,10 +5,12 @@
 //
 package bw.org.bocra.portal.auth;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -209,6 +211,41 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             }
     
             return response;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindRestrictedViewItems(String url, Set<String> roles) {
+        try {
+            Collection<AuthorisationVO> data = authorisationService.findByUrlPrefix(url);
+            Collection<String> restrictedUrls = new ArrayList<>();
+
+            for(AuthorisationVO auth : data) {
+                // Any authorisation entry is but default restricted
+                boolean restricted = true;
+                for(String inRole : auth.getRoles()) {
+                    for(String role : roles) {
+                        if(role.equalsIgnoreCase(inRole)) { // If we find matching roles, then the url is not restricted
+                            restricted = false;
+                            break;
+                        }
+                    }
+
+                    if(!restricted) break; // only need to find 1 unrestricted role
+                }
+
+                // Add restricted URL
+                if(restricted) {
+                    restrictedUrls.add(auth.getAccessPoint().getUrl());
+                }
+            }
+    
+            return ResponseEntity.status(HttpStatus.OK).body(restrictedUrls);
             
         } catch (Exception e) {
             e.printStackTrace();

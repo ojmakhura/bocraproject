@@ -1,5 +1,8 @@
 include ./Makefile.dev
 
+gen_self_certs:
+	chmod 755 .env && . ./.env && sudo rm ${BOCRA_DATA}/traefik/${DOMAIN}.crt && chmod 755 .env && . ./.env && sudo rm ${BOCRA_DATA}/traefik/${DOMAIN}.key && chmod 755 .env && . ./.env && sudo openssl req -x509 -sha256 -days 356 -nodes -newkey rsa:2048 -out ${BOCRA_DATA}/traefik/${DOMAIN}.crt -keyout ${BOCRA_DATA}/traefik/${DOMAIN}.key
+
 build_mda:
 	mvn -f bocraportal/mda install -Dmaven.test.skip=true -o
 
@@ -37,14 +40,11 @@ up_full_app:
 
 up_db:
 	chmod 755 .env && . ./.env && docker compose up -d db
-##	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-db.yml ${STACK_NAME}-db
 
 up_keycloak:
 	chmod 755 .env && . ./.env && docker compose up -d keycloak
-##	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-db.yml ${STACK_NAME}-keycloak
 
 up_proxy: 
-##	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-traefik.yml ${STACK_NAME}-proxy
 	chmod 755 .env && . ./.env && docker compose up -d proxy
 
 up_web:
@@ -237,6 +237,12 @@ gen_dev_env: rm_env
 		rm -f .env; \
 	fi
 	@$(DEV_ENV)
+
+##
+## Swarm initialisation
+##
+swarm_init:
+	docker swarm init
 
 ##
 ## Check the logs
