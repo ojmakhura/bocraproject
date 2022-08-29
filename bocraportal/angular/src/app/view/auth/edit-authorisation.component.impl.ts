@@ -37,12 +37,16 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
 
   beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
-      role.forEach((val) => {
-        let item = new SelectItem();
-        item.label = val['description'];
-        item.value = val['name'];
 
-        this.authorisationRolesBackingList.push(item);
+      role.forEach((val) => {
+        if(this.keycloakService.getUserRoles().includes(val.name)) {
+
+          let item = new SelectItem();
+          item.label = val['description'];
+          item.value = val['name'];
+  
+          this.authorisationRolesBackingList.push(item);
+        }
       });
     });
 

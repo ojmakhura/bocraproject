@@ -18,7 +18,7 @@ import { KeycloakService } from 'keycloak-angular';
   styleUrls: ['./edit-user.component.scss'],
 })
 
- export class EditUserComponentImpl extends EditUserComponent {
+export class EditUserComponentImpl extends EditUserComponent {
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
 
@@ -31,22 +31,16 @@ import { KeycloakService } from 'keycloak-angular';
 
   override beforeOnInit(form: EditUserVarsForm): EditUserVarsForm {
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
+
       role.forEach((val) => {
-        let item = new SelectItem();
-        item.label = val['description'];
-        item.value = val['name'];
+        if(this.keycloakService.getUserRoles().includes(val.name)) {
 
-        this.userRolesBackingList.push(item);
-      });
-    });
-
-    this.http.get<any[]>(environment.keycloakRealmRoleUrl).subscribe((role) => {
-      role.forEach((val) => {
-        let item = new SelectItem();
-        item.label = val['description'];
-        item.value = val['name'];
-
-        this.userRolesBackingList.push(item);
+          let item = new SelectItem();
+          item.label = val['description'];
+          item.value = val['name'];
+  
+          this.userRolesBackingList.push(item);
+        }
       });
     });
 
@@ -75,36 +69,6 @@ import { KeycloakService } from 'keycloak-angular';
   }
 
   override beforeEditUserDelete(form: EditUserDeleteForm): void {
-    if (this.editUserForm.valid && this.editUserForm.dirty){
-      if (form.user?.id) {
-        form.user.updatedBy = this.keycloakService.getUsername();
-        form.user.updatedDate = new Date();
-      } else {
-        form.user.createdBy = this.keycloakService.getUsername();
-        form.user.createdDate = new Date();
-      }
-      if(form?.user?.id && confirm("Are you sure you want to delete the period?")){
-    this.store.dispatch(
-      UserActions.remove({
-        id: form?.user?.id,
-        loading: false,
-      })
-
-    );
-      }
-  }else{
-        
-    this.store.dispatch(UserActions.userFailure({ messages:['Please select something to delete'] }));
-  }
-  }
-
-  /**
-   * This method may be overwritten
-   */
-  override beforeEditUserSave(form: EditUserSaveForm): void {
-    console.log(form);
-    console.log(this.editUserForm);
-    console.log(this.editUserForm.value);
     if (this.editUserForm.valid && this.editUserForm.dirty) {
       if (form.user?.id) {
         form.user.updatedBy = this.keycloakService.getUsername();
@@ -113,36 +77,63 @@ import { KeycloakService } from 'keycloak-angular';
         form.user.createdBy = this.keycloakService.getUsername();
         form.user.createdDate = new Date();
       }
-  
-      // this.store.dispatch(
-      //   UserActions.save({
-      //     user: form.user,
-      //     loading: true,
-      //   })
-      // );
-      }
-      else {
-        let messages: string[] = []
-        if(!this.userUsernameControl.valid) {
-          messages.push("Username has errors")
-        }
-        if(!this.userEmailControl.valid) {
-          messages.push("Email has errors")
-        }
-        if(!this.userPasswordControl.valid) {
-          messages.push("Password has errors")
-        }
-        if(!this.userFirstNameControl.valid) {
-          messages.push("First name has errors")
-        }
-        if(!this.userLastNameControl.valid) {
-          messages.push("Last Name has errors")
-        }
+      if (form?.user?.id && confirm("Are you sure you want to delete the period?")) {
+        this.store.dispatch(
+          UserActions.remove({
+            id: form?.user?.id,
+            loading: false,
+          })
 
-        this.store.dispatch(UserActions.userFailure({ messages: messages }));
+        );
       }
+    } else {
+
+      this.store.dispatch(UserActions.userFailure({ messages: ['Please select something to delete'] }));
     }
-  
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  override beforeEditUserSave(form: EditUserSaveForm): void {
+    if (this.editUserForm.valid && this.editUserForm.dirty) {
+      if (form.user?.id) {
+        form.user.updatedBy = this.keycloakService.getUsername();
+        form.user.updatedDate = new Date();
+      } else {
+        form.user.createdBy = this.keycloakService.getUsername();
+        form.user.createdDate = new Date();
+      }
+
+      this.store.dispatch(
+        UserActions.createUser({
+          user: form.user,
+          loading: true,
+        })
+      );
+    }
+    else {
+      let messages: string[] = []
+      if (!this.userUsernameControl.valid) {
+        messages.push("Username has errors")
+      }
+      if (!this.userEmailControl.valid) {
+        messages.push("Email has errors")
+      }
+      if (!this.userPasswordControl.valid) {
+        messages.push("Password has errors")
+      }
+      if (!this.userFirstNameControl.valid) {
+        messages.push("First name has errors")
+      }
+      if (!this.userLastNameControl.valid) {
+        messages.push("Last Name has errors")
+      }
+
+      this.store.dispatch(UserActions.userFailure({ messages: messages }));
+    }
+  }
+
   override userLicenseeSearch(): void {
     let criteria: string = '';
     criteria = this.userLicenseeSearchField.value;
@@ -155,7 +146,7 @@ import { KeycloakService } from 'keycloak-angular';
   }
 
   override createUserForm(user: UserVO): FormGroup {
-    if(!user) {
+    if (!user) {
       user = new UserVO();
     }
     return this.formBuilder.group({
@@ -183,11 +174,11 @@ import { KeycloakService } from 'keycloak-angular';
   }
 
   override afterEditUserChangePassword(form: EditUserChangePasswordForm, dialogData: any): void {
-        if(!this.userUserId) {
-          this.userPasswordControl.patchValue(dialogData?.newPassword)
-        } else {
+    if (!this.userUserId) {
+      this.userPasswordControl.patchValue(dialogData?.newPassword)
+    } else {
 
-        }
+    }
   }
 }
 

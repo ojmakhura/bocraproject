@@ -154,14 +154,30 @@ public class AuthorisationServiceImpl
 
     @Override
     protected Collection<AuthorisationVO> handleFindByRolesAndUrl(String url, Set<String> roles) throws Exception {
+
+        System.out.println(url);
+        System.out.println(roles);
         
         Specification<Authorisation> specs = BocraportalSpecifications.<Authorisation, AccessPoint>findByJoinAttributeLike("accessPoint", "url", url);
         specs = specs.and(
             BocraportalSpecifications.<Authorisation, String>findByAttributeIn("roles", roles)
         );
 
-        // Collection<Authorisation> authorisations = authorisationRepository.findByRolesAndUrl(url, roles);
+        Collection<Authorisation> authorisations = authorisationRepository.findByRolesAndUrlContaining(url, roles);
+        Collection<AuthorisationVO> vos = new ArrayList<>();
+
+        for(Authorisation auth : authorisations) {
+            vos.add(authorisationDao.toAuthorisationVO(auth));
+        }
+
+        return vos;
+    }
+
+    @Override
+    protected Collection<AuthorisationVO> handleFindByUrlPrefix(String prefix) throws Exception {
+        Specification<Authorisation> specs = BocraportalSpecifications.<Authorisation, AccessPoint>findByJoinAttributeStartsWith("accessPoint", "url", prefix);
         Collection<Authorisation> authorisations = authorisationRepository.findAll(specs);
+        
         Collection<AuthorisationVO> vos = new ArrayList<>();
 
         for(Authorisation auth : authorisations) {

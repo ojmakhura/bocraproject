@@ -83,7 +83,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         http.cors().and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
-            .antMatchers(
+            .mvcMatchers(
                 "/swagger-ui/*", 
                 "/swagger-ui.html", 
                 "/webjars/**", 
