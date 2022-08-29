@@ -17,16 +17,16 @@
             <span translate>Search</span>
           </button>
 
-          <!-- <button type="button" color="accent" (click)="editAuthorisationSave()" class="btn btn-info">
+          <!-- <button type="button" color="accent" (click)="editAuthorisationSave()" class="btn btn-primary">
             <span translate>save</span>
           </button>
-          <button type="button" color="accent" (click)="editAuthorisationSearch()" class="btn btn-info">
+          <button type="button" color="accent" (click)="editAuthorisationSearch()" class="btn btn-primary">
             <span translate>search</span>
           </button>
-          <button type="button" color="accent" (click)="editAuthorisationDelete()" class="btn btn-info">
+          <button type="button" color="accent" (click)="editAuthorisationDelete()" class="btn btn-primary">
             <span translate>delete</span>
           </button>
-          <button color="accent" type="button" (click)="editAuthorisationFormReset()" class="btn btn-info">
+          <button color="accent" type="button" (click)="editAuthorisationFormReset()" class="btn btn-primary">
             <span translate>reset</span>
           </button> -->
         </div>
@@ -47,16 +47,16 @@
             <span translate>access.point</span>*
           </legend>
           <div class="col my-3 view-buttons">
-            <!-- <button type="button" type="button" color="accent" (click)="editAuthorisationSave()" class="btn btn-info">
+            <!-- <button type="button" type="button" color="accent" (click)="editAuthorisationSave()" class="btn btn-primary">
               <span translate>save</span>
             </button>
-            <button type="button" color="accent" (click)="editAuthorisationSearch()" class="btn btn-info">
+            <button type="button" color="accent" (click)="editAuthorisationSearch()" class="btn btn-primary">
               <span translate>search</span>
             </button>
-            <button type="button" color="accent" (click)="editAuthorisationDelete()" class="btn btn-info">
+            <button type="button" color="accent" (click)="editAuthorisationDelete()" class="btn btn-primary">
               <span translate>delete</span>
             </button>
-            <button color="accent" type="button" (click)="editAuthorisationFormReset()" class="btn btn-info">
+            <button color="accent" type="button" (click)="editAuthorisationFormReset()" class="btn btn-primary">
               <span translate>reset</span>
             </button> -->
             <button
@@ -151,7 +151,7 @@
             </mat-form-field>
             <ul class="list-group" *ngFor="let control of authorisationRolesControl.controls; let i = index">
               <li class="list-group-item">
-                <button type="button" class="btn btn-info" (click)="authorisationRolesDelete(i)">
+                <button type="button" class="btn btn-primary" (click)="authorisationRolesDelete(i)">
                   <i class="bi bi-trash"></i>
                 </button>
                 {{ getAuthorisationRolesLabel(control.value) }}
@@ -261,7 +261,7 @@
         ></mat-paginator>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" translate>action.close</button>
         <button
           type="button"
           class="btn btn-primary"

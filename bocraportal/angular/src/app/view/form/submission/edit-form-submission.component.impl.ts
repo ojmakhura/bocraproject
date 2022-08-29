@@ -28,6 +28,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { FieldValueType } from '@app/model/bw/org/bocra/portal/form/field/field-value-type';
 import * as math from 'mathjs';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -36,6 +38,8 @@ import * as math from 'mathjs';
 })
 export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent {
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
   formSubmissions$: Observable<FormSubmissionVO[]>;
   forms$: Observable<FormVO[]>;
   fieldColumns: string[] = ['Row'];
@@ -56,6 +60,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
     this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
     this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditFormSubmissionVarsForm): EditFormSubmissionVarsForm {
@@ -82,6 +87,22 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
           this.loadSubmission(this.useCaseScope.pageVariables['id']);
         }
       }
+    });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/form/submission/edit-form-submission",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/form/submission/edit-form-submission/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
 
     this.formSubmission$.subscribe((submission) => {

@@ -8,11 +8,16 @@ import {
 import { EditLicenceTypeSaveForm } from '@app/view/licence/type/edit-licence-type.component';
 import * as licenceTypeActions from '@app/store/licence/type/licence-type.actions';
 import { KeycloakService } from 'keycloak-angular';
-import { select } from '@ngrx/store';
 import * as LicenseSelectors from '@app/store/licensee/licensee.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as FormActions from '@app/store/form/form.actions';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
+import { select } from '@ngrx/store';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+import { Observable } from 'rxjs';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
+
 
 @Component({
   selector: 'app-edit-licence-type',
@@ -20,12 +25,16 @@ import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria'
   styleUrls: ['./edit-licence-type.component.scss'],
 })
 export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
+  deleteUnrestricted: boolean = false;
+  unauthorisedUrls$: Observable<string[]>;
+
   protected keycloakService: KeycloakService;
   deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditLicenceTypeVarsForm): EditLicenceTypeVarsForm {
@@ -46,6 +55,29 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
         );
       }
     });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/licence/type/edit-licence-type",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+
+    this.licenceType$.subscribe((licenceType) => {
+      this.setEditLicenceTypeFormValue({documentType: licenceType});
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/licence/edit-licence-type/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
+    }
+    
+    );
 
     this.licenceType$.subscribe((licenceType) => {
       this.setEditLicenceTypeFormValue({licenceType: licenceType});

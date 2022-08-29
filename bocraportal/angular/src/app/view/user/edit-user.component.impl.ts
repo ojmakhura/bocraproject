@@ -11,6 +11,11 @@ import { EditUserChangePasswordForm, EditUserComponent, EditUserDeleteForm, Edit
 import { environment } from '@env/environment';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
+import { Observable } from 'rxjs';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
+
+
 
 @Component({
   selector: 'app-edit-user',
@@ -21,12 +26,17 @@ import { KeycloakService } from 'keycloak-angular';
 export class EditUserComponentImpl extends EditUserComponent {
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
+  searchUnrestricted: boolean = true;
+  unauthorisedUrls$: Observable<string[]>;
+
+
 
   constructor(private injector: Injector) {
     super(injector);
     this.http = this._injector.get(HttpClient);
     this.userLicensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
     this.keycloakService = this.injector.get(KeycloakService);
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditUserVarsForm): EditUserVarsForm {
@@ -62,6 +72,27 @@ export class EditUserComponentImpl extends EditUserComponent {
         this.store.dispatch(UserActions.findById({ userId: queryParams.userId, loading: true }));
       }
     });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/user/edit-user",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+    this.user$.subscribe((user) => {
+      this.setEditUserFormValue({user: user});
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/user/edit-user/{button:search}') {
+          this.searchUnrestricted = false;
+        }
+      });
+    });
+
   }
 
   override doNgOnDestroy() {
