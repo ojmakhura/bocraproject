@@ -131,7 +131,7 @@
           <button type="button" type="button" (click)="editLicenseeFormReset()" class="btn btn-outline-primary">
             <span translate>reset</span>
           </button>
-          <button type="button" (click)="editLicenseeDelete()" class="btn btn-outline-primary">
+          <button type="button" (click)="editLicenseeDelete()" class="btn btn-outline-primary" *ngIf="licenseeId">
             <span translate>delete</span>
           </button>
         </div>

@@ -4,16 +4,16 @@
     	<form [formGroup]="editFieldForm">
 			<section>
 				<div class="col my-3 view-buttons">
-					<button type="button" color="accent" (click)="editFieldCancel()" class="btn btn-info">
+					<button type="button" color="accent" (click)="editFieldCancel()" class="btn btn-primary">
 						<span translate>cancel</span>
 					</button>
-					<button type="button" color="accent" (click)="editFieldDone()" class="btn btn-info">
+					<button type="button" color="accent" (click)="editFieldDone()" class="btn btn-primary">
 						<span translate>done</span>
 					</button>
-					<button type="button" color="accent" (click)="editFieldSave()" class="btn btn-info">
+					<button type="button" color="accent" (click)="editFieldSave()" class="btn btn-primary">
 						<span translate>save</span>
 					</button>
-					<button color="accent" type="button" (click)="editFieldFormReset()" class="btn btn-info" ><span translate>reset</span></button>
+					<button color="accent" type="button" (click)="editFieldFormReset()" class="btn btn-primary" ><span translate>reset</span></button>
 				</div>
 			</section>
 			<div *ngIf="success | async" class="alert alert-success" role="alert">
@@ -137,7 +137,7 @@
 				        </mat-form-field>
 				        <ul class="list-group" *ngFor="let control of formFieldOptionsControl.controls; let i = index">
 				            <li class="list-group-item">
-				                <button type="button" class="btn btn-info" (click)="formFieldOptionsDelete(i)">
+				                <button type="button" class="btn btn-primary" (click)="formFieldOptionsDelete(i)">
 				                    <i class="bi bi-trash"></i>
 				                </button>
 				                {{ getFormFieldOptionsLabel(control.value) }} 

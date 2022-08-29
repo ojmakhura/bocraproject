@@ -74,7 +74,7 @@
             </div>
           </div>
           <div>
-            <button *ngIf="userUsername" type="button" color="accent" (click)="editUserChangePassword()" class="btn btn-info">
+            <button *ngIf="userUsername" type="button" color="accent" (click)="editUserChangePassword()" class="btn btn-primary">
               <span *ngIf="userUserId; else noUser" translate>change.password</span>
               <ng-template #noUser><span>Set Password</span></ng-template>
             </button>
@@ -149,7 +149,7 @@
             </mat-form-field>
             <ul class="list-group" *ngFor="let control of userRolesControl.controls; let i = index">
               <li class="list-group-item">
-                <button type="button" class="btn btn-info" (click)="userRolesDelete(i)">
+                <button type="button" class="btn btn-primary" (click)="userRolesDelete(i)">
                   <i class="bi bi-trash"></i>
                 </button>
                 {{ getUserRolesLabel(control.value) }}

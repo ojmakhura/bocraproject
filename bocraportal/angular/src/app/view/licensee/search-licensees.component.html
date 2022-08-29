@@ -69,7 +69,7 @@
             </mat-form-field>
             <ul class="list-group" *ngFor="let control of criteriaLicenceIdsControl.controls; let i = index">
               <li class="list-group-item">
-                <button type="button" class="btn btn-info" (click)="criteriaLicenceIdsDelete(i)">
+                <button type="button" class="btn btn-primary" (click)="criteriaLicenceIdsDelete(i)">
                   <i class="bi bi-trash"></i>
                 </button>
                 {{ getCriteriaLicenceIdsLabel(control.value) }}
