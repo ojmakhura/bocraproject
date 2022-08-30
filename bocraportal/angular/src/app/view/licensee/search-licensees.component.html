@@ -46,37 +46,6 @@
             <span translate>reset</span>
           </button>
         </div>
-
-        
-
-
-        <div class="mb-3">
-          <label id="criteriaLicenceIds_label" class="col-sm-2 form-check-label" for="criteriaLicenceIds"
-            ><span translate>licence.ids</span></label
-          >
-          <article formArrayName="licenceIds" id="criteriaLicenceIdsArticle">
-            <mat-form-field class="form-group">
-              <mat-label translate>select.value.text</mat-label>
-              <mat-select
-                name="criteriaLicenceIdsSelector"
-                id="criteriaLicenceIdsSelector"
-                (selectionChange)="onCriteriaLicenceIdsChange($event)"
-              >
-                <mat-option *ngFor="let item of criteriaLicenceIdsBackingList" [value]="item.value">
-                  {{ item.label }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <ul class="list-group" *ngFor="let control of criteriaLicenceIdsControl.controls; let i = index">
-              <li class="list-group-item">
-                <button type="button" class="btn btn-primary" (click)="criteriaLicenceIdsDelete(i)">
-                  <i class="bi bi-trash"></i>
-                </button>
-                {{ getCriteriaLicenceIdsLabel(control.value) }}
-              </li>
-            </ul>
-          </article>
-        </div>
       </div>
     </form>
   </div>

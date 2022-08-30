@@ -63,7 +63,7 @@ export class CreateOrEditMenuSectionComponentImpl extends CreateOrEditMenuSectio
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '//menu/create-or-edit-menu-section/{button:delete}') {
+        if(item === '/menu/create-or-edit-menu-section/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });

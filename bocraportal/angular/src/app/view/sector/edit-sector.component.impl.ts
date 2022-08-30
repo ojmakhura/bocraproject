@@ -17,6 +17,8 @@ import { KeycloakService } from 'keycloak-angular';
 import { select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
 
 @Component({
   selector: 'app-edit-sector',
@@ -28,6 +30,8 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   protected licensees$: Observable<LicenseeVO[]>;
   protected licensee$: Observable<LicenseeVO>;
   protected sectorLicensee$: Observable<LicenseeSectorVO>;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -36,6 +40,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     this.licensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.licensee$ = this.store.pipe(select(LicenseeSelectors.selectLicensee));
     this.sectorLicensee$ = this.store.pipe(select(SectorSelectors.selectLicensee));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: EditSectorVarsForm): EditSectorVarsForm {
@@ -58,13 +63,25 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       this.setEditSectorFormValue({ sector: sector });
     });
 
-    this.licensee$.subscribe((licensee) => {
-      console.log(licensee);
-    });
-
     this.licensees$.subscribe((licensees) => {
       licensees.forEach((lc) => {
         this.store.dispatch(SectorActions.addLicenseeSuccess({ licensee: lc, messages: [''], success: true }));
+      });
+    });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/sector/edit-sector",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/sector/edit-sector/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
       });
     });
   }

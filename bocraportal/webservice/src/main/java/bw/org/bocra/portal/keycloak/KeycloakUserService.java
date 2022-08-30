@@ -91,7 +91,7 @@ public class KeycloakUserService {
         if (CollectionUtils.isNotEmpty(user.getRoles())) {
 
             Map<String, List<String>> roles = new HashMap<>();
-            roles.put(user.getClient(), (List<String>) user.getRoles());
+            roles.put(findAuthenticatedClientResource().getId(), (List<String>) user.getRoles());
             userRepresentation.setClientRoles(roles);
         }
 
@@ -151,10 +151,6 @@ public class KeycloakUserService {
 
     public UserVO createUser( UserVO user) {
 
-        if (StringUtils.isBlank(user.getClient())) {
-            user.setClient(findAuthenticatedClientResource().getId());
-        }
-
         UsersResource usersResource = keycloakService.getUsersResource();
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
 
@@ -170,7 +166,7 @@ public class KeycloakUserService {
             List<RoleRepresentation> roleReps = new ArrayList<>();
 
             for (String role : user.getRoles()) {
-                RolesResource rolesResource = keycloakService.getClientRolesResource(user.getClient());
+                RolesResource rolesResource = keycloakService.getClientRolesResource(findAuthenticatedClientResource().getId());
 
                 RoleRepresentation roleRep = rolesResource.get(role).toRepresentation();
                 if (StringUtils.isNotBlank(roleRep.getId())) {
@@ -179,7 +175,7 @@ public class KeycloakUserService {
             }
 
             if (CollectionUtils.isNotEmpty(roleReps)) {
-                userResource.roles().clientLevel(user.getClient()).add(roleReps);
+                userResource.roles().clientLevel(findAuthenticatedClientResource().getId()).add(roleReps);
             }
 
         } else {

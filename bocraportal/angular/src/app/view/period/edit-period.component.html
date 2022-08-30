@@ -288,7 +288,7 @@
       <button color="accent" type="button" (click)="editPeriodFormReset()" class="btn btn-outline-primary">
         <span translate>reset</span>
       </button>
-      <button type="button" color="accent" (click)="editPeriodDelete()" class="btn btn-outline-primary">
+      <button type="button" color="accent" (click)="editPeriodDelete()" class="btn btn-outline-primary" *ngIf="periodId && deleteUnrestricted">
         <span translate>delete</span>
       </button>
     </div>

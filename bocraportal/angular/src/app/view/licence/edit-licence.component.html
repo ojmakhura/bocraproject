@@ -10,7 +10,7 @@
 					<button type="button" color="accent" (click)="editLicenceSearch()" class="btn btn-primary">
 						<span translate>search</span>
 					</button>
-					<button type="button" color="accent" (click)="editLicenceDelete()" class="btn btn-primary" *ngIf="licenceId">
+					<button type="button" color="accent" (click)="editLicenceDelete()" class="btn btn-primary" *ngIf="licenceId && deleteUnrestricted">
 						<span translate>delete</span>
 					</button>
 					<button type="button" color="accent" (click)="editLicenceDocuments()" class="btn btn-primary">

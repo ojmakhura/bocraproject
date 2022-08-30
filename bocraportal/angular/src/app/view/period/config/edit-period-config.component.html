@@ -3,19 +3,6 @@
 	<div class="card-body">
     	<form [formGroup]="editPeriodConfigForm">
 			<section>
-				<!-- <div class="col my-3 view-buttons">
-					<button type="button" color="accent" (click)="editPeriodConfigSave()" class="btn btn-info">
-						<span translate>save</span>
-					</button>
-					<button type="button" color="accent" (click)="editPeriodConfigSearch()" class="btn btn-info">
-						<span translate>search</span>
-					</button>
-					<button type="button" color="accent" (click)="editPeriodConfigDelete()" class="btn btn-info" *ngIf="periodConfigId">
-						<span translate>delete</span>
-					</button>
-					<button color="accent" type="button" (click)="editPeriodConfigFormReset()" class="btn btn-info" ><span translate>reset</span></button>
-				</div> -->
-
 				<div class="text-end">
 					<button type="button" (click)="editPeriodConfigSearch()" class="btn btn-primary">
 					  <span translate>Search</span>
@@ -108,7 +95,7 @@
 			<button type="button"(click)="editPeriodConfigSearch()" class="btn btn-outline-primary">
 				<span translate>search</span>
 			</button>
-			<button type="button"  (click)="editPeriodConfigDelete()" class="btn btn-outline-primary" *ngIf="periodConfigId">
+			<button type="button"  (click)="editPeriodConfigDelete()" class="btn btn-outline-primary" *ngIf="periodConfigId && deleteUnrestricted">
 				<span translate>delete</span>
 			</button>
 			<button  type="button" (click)="editPeriodConfigFormReset()" class="btn btn-outline-primary" ><span translate>reset</span></button>

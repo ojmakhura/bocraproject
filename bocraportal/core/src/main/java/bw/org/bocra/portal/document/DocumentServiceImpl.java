@@ -56,11 +56,11 @@ public class DocumentServiceImpl
 
         if(StringUtils.isBlank(entity.getDocumentId())) {
             String uid = UUID.randomUUID().toString();
-            List<Document> docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("uid", uid));
+            List<Document> docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("documentId", uid));
 
             while(CollectionUtils.isNotEmpty(docs)) {
                 uid = UUID.randomUUID().toString();
-                docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("uid", uid));
+                docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("documentId", uid));
             }
 
             entity.setDocumentId(uid);

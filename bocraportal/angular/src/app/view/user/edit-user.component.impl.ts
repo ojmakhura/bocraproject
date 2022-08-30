@@ -15,8 +15,6 @@ import { Observable } from 'rxjs';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 
-
-
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
@@ -27,9 +25,8 @@ export class EditUserComponentImpl extends EditUserComponent {
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
   searchUnrestricted: boolean = true;
+  deleteUnrestricted: boolean = true;
   unauthorisedUrls$: Observable<string[]>;
-
-
 
   constructor(private injector: Injector) {
     super(injector);
@@ -62,8 +59,6 @@ export class EditUserComponentImpl extends EditUserComponent {
       this.setEditUserFormValue({ user: user });
     });
 
-    console.log(this.keycloakService.loadUserProfile());
-    this.keycloakService.loadUserProfile().then((val) => console.log(val));
   }
 
   override doNgAfterViewInit() {
@@ -89,6 +84,8 @@ export class EditUserComponentImpl extends EditUserComponent {
       restrictedItems.forEach(item => {
         if(item === '/user/edit-user/{button:search}') {
           this.searchUnrestricted = false;
+        } else if(item === '/user/edit-user/{button:delete}') {
+          this.deleteUnrestricted = false;
         }
       });
     });
@@ -184,13 +181,12 @@ export class EditUserComponentImpl extends EditUserComponent {
       userId: [user?.userId ? user.userId : null],
       username: [user?.username ? user.username : null, [Validators.required]],
       email: [user?.email ? user.email : null, [Validators.required, Validators.email]],
-      password: [{ value: user?.password }, [Validators.required]],
+      password: [{ value: user?.password, disabled: false }, [Validators.required]],
       firstName: [user?.firstName ? user.firstName : null, [Validators.required]],
       lastName: [user?.lastName ? user.lastName : null, [Validators.required]],
       enabled: [user?.enabled ? user.enabled : null],
       licensee: this.createLicenseeVOGroup(user?.licensee),
       roles: user?.roles ? this.formBuilder.array(user?.roles ? user.roles : []) : new FormArray([]),
-      client: [user?.client ? user.client : null],
     });
   }
 

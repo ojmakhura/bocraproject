@@ -30,6 +30,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleCreate(Long sectorId, Long formId) {
+        System.out.println("Form is " + formId + " Sector is " + sectorId);
         try {
             Optional<?> data = Optional.of(sectorFormService.create(sectorId, formId)); 
             ResponseEntity<?> response;

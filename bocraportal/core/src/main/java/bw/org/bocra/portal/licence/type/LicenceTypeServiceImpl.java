@@ -100,7 +100,6 @@ public class LicenceTypeServiceImpl
 
         Collection<LicenceType> entities = licenceTypeDao.findByCriteria(criteria);
         Collection<LicenceTypeVO> vos = new ArrayList<>();
-        logger.info(entities.toString());
 
         for (LicenceType licenceType : entities) {
             LicenceTypeVO vo = new LicenceTypeVO();
