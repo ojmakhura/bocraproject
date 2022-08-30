@@ -5,11 +5,6 @@ import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import { EditAccessPointTypeComponent, EditAccessPointTypeDeleteForm, EditAccessPointTypeSaveForm, EditAccessPointTypeVarsForm } from '@app/view/access/type/edit-access-point-type.component';
 import { KeycloakService } from 'keycloak-angular';
-<<<<<<< HEAD
-import * as ViewActions from '@app/store/view/view.actions';
-import * as ViewSelectors from '@app/store/view/view.selectors';
-=======
->>>>>>> origin/ojm-dev
 import { Observable } from 'rxjs';
 import { select } from '@ngrx/store';
 
@@ -22,20 +17,11 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
-
-  unauthorisedUrls$: Observable<string[]>;
-  deleteUnrestricted: boolean = false;
-  protected keycloakService: KeycloakService;
   
   constructor(private injector: Injector) {
     super(injector);
-<<<<<<< HEAD
-    this.keycloakService = injector.get(KeycloakService);
-    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
-=======
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.keycloakService = injector.get(KeycloakService);
->>>>>>> origin/ojm-dev
   }
 
   override beforeOnInit(form: EditAccessPointTypeVarsForm): EditAccessPointTypeVarsForm {

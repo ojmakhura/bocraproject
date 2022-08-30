@@ -12,17 +12,8 @@ import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import { EditPeriodComponent, EditPeriodCreateNextForm, EditPeriodDeleteForm, EditPeriodSaveForm, EditPeriodVarsForm } from '@app/view/period/edit-period.component';
 import { select } from '@ngrx/store';
-<<<<<<< HEAD
-import { Observable, of } from 'rxjs';
-import { RepeatPeriod } from '@app/model/bw/org/bocra/portal/period/config/repeat-period';
-import { formatDate } from '@angular/common';
-import { PeriodConfigVO } from '@app/model/bw/org/bocra/portal/period/config/period-config-vo';
-import * as ViewActions from '@app/store/view/view.actions';
-import * as ViewSelectors from '@app/store/view/view.selectors';
-=======
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
->>>>>>> origin/ojm-dev
 
 @Component({
   selector: 'app-edit-period',
@@ -74,14 +65,6 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
       this.setEditPeriodFormValue({ period: period });
     });
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
-        if(item === '/period/edit-period/{button:delete}') {
-          this.deleteUnrestricted = false;
-        }
-      });
-    });
-
     this.periodPeriodConfigControl.valueChanges.subscribe((change) => {
       console.log(change);
       if (change?.id && this.periodPeriodStart) {
@@ -101,16 +84,6 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         this.periodPeriodNameControl.patchValue(name);
       }
     });
-<<<<<<< HEAD
-=======
-
-    this.store.dispatch(
-      ViewActions.loadViewAuthorisations({
-        viewUrl: "/period/edit-period",
-        roles: this.keycloakService.getUserRoles(),
-        loading: true
-      })
-    );
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
@@ -119,7 +92,6 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         }
       });
     });
->>>>>>> origin/ojm-dev
   }
 
   calculateEndDate(start: Date, config: PeriodConfigVO): Date {

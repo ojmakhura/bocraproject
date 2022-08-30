@@ -47,8 +47,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   fieldColumnIds: string[] = ['row'];
   formFields: FormFieldVO[] = [];
   rowGroups: RowGroup[] = [];
-  unauthorisedUrls$: Observable<string[]>;
-  deleteUnrestricted: boolean = true;
   submitUnrestricted: boolean = true;
   returnUnrestricted: boolean = true;
 

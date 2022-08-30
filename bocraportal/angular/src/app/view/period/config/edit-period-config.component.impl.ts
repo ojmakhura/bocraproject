@@ -22,13 +22,8 @@ import { select } from '@ngrx/store';
 export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
 
     protected keycloakService: KeycloakService;
-<<<<<<< HEAD
-    unauthorisedUrls$: Observable<string[]>;
-    deleteUnrestricted: boolean = true;
-=======
     deleteUnrestricted: boolean = true;
     unauthorisedUrls$: Observable<string[]>;
->>>>>>> origin/ojm-dev
 
     constructor(private injector: Injector) {
         super(injector);
@@ -45,14 +40,6 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
     }
 	
     override doNgAfterViewInit() {
-
-      this.store.dispatch(
-        ViewActions.loadViewAuthorisations({
-          viewUrl: "/period/config/edit-period-config",
-          roles: this.keycloakService.getUserRoles(),
-          loading: true
-        })
-      );
       
       this.route.queryParams.subscribe((queryParams: any) => {
         if (queryParams?.id) {
@@ -68,12 +55,6 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
       this.periodConfig$.subscribe((periodConfig) => {
         this.setEditPeriodConfigFormValue({periodConfig: periodConfig});
       });
-
-<<<<<<< HEAD
-      this.unauthorisedUrls$.subscribe(restrictedItems => {
-        restrictedItems.forEach(item => {
-          if(item === '/period/config/edit-period-config/{button:delete}') {
-=======
       this.store.dispatch(
         ViewActions.loadViewAuthorisations({
           viewUrl: "/period/type/edit-period-type",
@@ -85,7 +66,6 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
       this.unauthorisedUrls$.subscribe(restrictedItems => {
         restrictedItems.forEach(item => {
           if(item === '/period/type/edit-period-type/{button:delete}') {
->>>>>>> origin/ojm-dev
             this.deleteUnrestricted = false;
           }
         });

@@ -2,10 +2,6 @@
 import { Component, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
-import { Observable } from 'rxjs';
-import * as ViewActions from '@app/store/view/view.actions';
-import * as ViewSelectors from '@app/store/view/view.selectors';
-import { select } from '@ngrx/store';
 import * as LicenceActions from '@app/store/licence/licence.actions';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
