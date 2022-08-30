@@ -1181,7 +1181,6 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
 
     createFormCriteriaGroup(value: FormCriteria): FormGroup {
         return this.formBuilder.group({
-            licenceTypeId: [value?.licenceTypeId],
             code: [value?.code],
             formName: [value?.formName],
         });

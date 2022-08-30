@@ -26,6 +26,11 @@ export const selectForm = createSelector(
     (state: LicenseeFormState) => state.form
 );
 
+export const selectRemoved = createSelector(
+    selectLicenseeFormState,
+    (state: LicenseeFormState) => state.removed
+);
+
 export const selectMessages = createSelector(
     selectLicenseeFormState,
     (state: LicenseeFormState) => state.messages

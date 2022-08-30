@@ -16,6 +16,7 @@ import bw.org.bocra.portal.sector.SectorDao;
 import bw.org.bocra.portal.sector.SectorRepository;
 import java.util.Collection;
 import org.springframework.context.MessageSource;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,22 +54,27 @@ public class LicenseeSectorServiceImpl
      * @see bw.org.bocra.portal.licensee.sector.LicenseeSectorService#findById(Long)
      */
     @Override
-    protected LicenseeFormVO handleFindById(Long id)
+    protected LicenseeSectorVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  LicenseeFormVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.LicenseeSectorService.handleFindById(Long id) Not implemented!");
+        LicenseeSector ls = getLicenseeSectorDao().load(id);
+        return getLicenseeSectorDao().toLicenseeSectorVO(ls);
     }
 
     /**
      * @see bw.org.bocra.portal.licensee.sector.LicenseeSectorService#create(Long, Long)
      */
     @Override
-    protected LicenseeFormVO handleCreate(Long licenseeId, Long sectorId)
+    protected LicenseeSectorVO handleCreate(Long licenseeId, Long sectorId)
         throws Exception
     {
-        // TODO implement protected  LicenseeFormVO handleCreate(Long licenseeId, Long sectorId)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.LicenseeSectorService.handleCreate(Long licenseeId, Long sectorId) Not implemented!");
+
+        LicenseeSector ls = LicenseeSector.Factory.newInstance();
+        ls.setLicensee(getLicenseeDao().load(licenseeId));
+        ls.setSector(getSectorDao().load(sectorId));
+
+        ls = getLicenseeSectorDao().create(ls);
+        return getLicenseeSectorDao().toLicenseeSectorVO(ls);
     }
 
     /**
@@ -78,63 +84,70 @@ public class LicenseeSectorServiceImpl
     protected boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.LicenseeSectorService.handleRemove(Long id) Not implemented!");
+        getLicenseeSectorDao().remove(id);
+        return true;
     }
 
     /**
      * @see bw.org.bocra.portal.licensee.sector.LicenseeSectorService#getAll()
      */
     @Override
-    protected Collection<LicenseeFormVO> handleGetAll()
+    protected Collection<LicenseeSectorVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<LicenseeFormVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.LicenseeSectorService.handleGetAll() Not implemented!");
+        return (Collection<LicenseeSectorVO>) getLicenseeSectorDao().loadAll(LicenseeSectorDao.TRANSFORM_LICENSEESECTORVO);
     }
 
     /**
      * @see bw.org.bocra.portal.licensee.sector.LicenseeSectorService#findByLicensee(Long)
      */
     @Override
-    protected Collection<LicenseeFormVO> handleFindByLicensee(Long licenseeId)
+    protected Collection<LicenseeSectorVO> handleFindByLicensee(Long licenseeId)
         throws Exception
     {
-        // TODO implement protected  Collection<LicenseeFormVO> handleFindByLicensee(Long licenseeId)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.LicenseeSectorService.handleFindByLicensee(Long licenseeId) Not implemented!");
+        Specification<LicenseeSector> specs = LicenseeSectorSpecifications.findByLicenseeId(licenseeId);
+        Collection<LicenseeSector> lss = getLicenseeSectorRepository().findAll(specs);
+
+        return getLicenseeSectorDao().toLicenseeSectorVOCollection(lss);
     }
 
     /**
      * @see bw.org.bocra.portal.licensee.sector.LicenseeSectorService#findBySector(Long)
      */
     @Override
-    protected Collection<FormVO> handleFindBySector(Long sectorId)
+    protected Collection<LicenseeSectorVO> handleFindBySector(Long sectorId)
         throws Exception
     {
-        // TODO implement protected  Collection<FormVO> handleFindBySector(Long sectorId)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.LicenseeSectorService.handleFindBySector(Long sectorId) Not implemented!");
+        Specification<LicenseeSector> specs = LicenseeSectorSpecifications.findBySectorId(sectorId);
+        Collection<LicenseeSector> lss = getLicenseeSectorRepository().findAll(specs);
+
+        return getLicenseeSectorDao().toLicenseeSectorVOCollection(lss);
     }
 
     /**
      * @see bw.org.bocra.portal.licensee.sector.LicenseeSectorService#updateLicensee(Long, Long)
      */
     @Override
-    protected LicenseeFormVO handleUpdateLicensee(Long id, Long licenseeId)
+    protected LicenseeSectorVO handleUpdateLicensee(Long id, Long licenseeId)
         throws Exception
     {
-        // TODO implement protected  LicenseeFormVO handleUpdateLicensee(Long id, Long licenseeId)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.LicenseeSectorService.handleUpdateLicensee(Long id, Long licenseeId) Not implemented!");
+        LicenseeSector ls = getLicenseeSectorDao().load(id);
+        ls.setLicensee(getLicenseeDao().load(licenseeId));
+
+        return getLicenseeSectorDao().toLicenseeSectorVO(ls);
     }
 
     /**
      * @see bw.org.bocra.portal.licensee.sector.LicenseeSectorService#updateSector(Long, Long)
      */
     @Override
-    protected LicenseeFormVO handleUpdateSector(Long id, Long sectorId)
+    protected LicenseeSectorVO handleUpdateSector(Long id, Long sectorId)
         throws Exception
     {
-        // TODO implement protected  LicenseeFormVO handleUpdateSector(Long id, Long sectorId)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.LicenseeSectorService.handleUpdateSector(Long id, Long sectorId) Not implemented!");
+        LicenseeSector ls = getLicenseeSectorDao().load(id);
+        ls.setSector(getSectorDao().load(sectorId));
+
+        return getLicenseeSectorDao().toLicenseeSectorVO(ls);
     }
 
     

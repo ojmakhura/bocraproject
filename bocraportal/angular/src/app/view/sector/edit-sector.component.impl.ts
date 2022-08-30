@@ -87,19 +87,15 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override addToSectorLicensees(licensee: LicenseeSectorVO) {
-    this.store.dispatch(SectorActions.addLicensee({ sectorId: this.sectorId, licenseeId: licensee.id, loading: true }));
-    console.log(licensee);
-    console.log(this.sectorId);
-    let tmp: LicenseeSectorVO = new LicenseeSectorVO();
-    tmp.id = licensee.id;
-    tmp.address = licensee.address;
-    tmp.code = licensee.code;
-    tmp.licenseeName = licensee.licenseeName;
-    tmp.name = licensee.name;
-    tmp.uin = licensee.uin;
-    tmp.licenseeSectorId = this.sectorId;
-
-    this.sectorLicenseesControl.push(this.createLicenseeSectorVOGroup(tmp));
+    this.store.dispatch(
+      SectorActions.addLicensee({ 
+        sectorId: this.sectorId, 
+        licenseeId: licensee.id, 
+        loading: true 
+      })
+    );
+    
+    // this.sectorLicenseesControl.push(this.createLicenseeSectorVOGroup(tmp));
   }
 
   override doNgOnDestroy() {}

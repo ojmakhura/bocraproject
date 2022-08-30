@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/licensee/sector")
-@Tag(name = "Sector", description = "Managing licensee sectors.")
+@Tag(name = "Licensee Sector", description = "Managing licensee sectors.")
 @CrossOrigin()
 public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControllerBase {
     
@@ -31,7 +31,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleCreate(Long licenseeId, Long sectorId) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(licenseeSectorService.create(licenseeId, sectorId));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -50,7 +50,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(licenseeSectorService.findById(id));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -69,7 +69,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleFindByLicensee(Long licenseeId) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(licenseeSectorService.findByLicensee(licenseeId));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -88,7 +88,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleFindBySector(Long sectorId) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(licenseeSectorService.findBySector(sectorId));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -107,7 +107,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(licenseeSectorService.getAll());
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -126,7 +126,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(licenseeSectorService.remove(id));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -145,7 +145,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleUpdateLicensee(Long id, Long licenseeId) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(licenseeSectorService.updateLicensee(id, licenseeId));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -164,7 +164,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleUpdateSector(Long id, Long sectorId) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(licenseeSectorService.updateSector(id, sectorId));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
