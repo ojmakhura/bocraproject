@@ -134,7 +134,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     licenseeForms$: Observable<FormVO[]>;
     licenseeForm$: Observable<LicenseeFormVO>;
     licenseeFormsSearchField: FormControl;
-    licenseeFormsSelect: LicenseeFormVO[] = [];
+    licenseeFormsSelect: FormVO[] = [];
 
     licenseeLicencesColumns = [
         'id',
@@ -211,6 +211,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     success: Observable<boolean>;
     loading: Observable<boolean>;
     error: Observable<boolean>;
+    sectorRemoved$: Observable<boolean>;
     selected: any = null;
 
     constructor(injector: Injector) {
@@ -232,6 +233,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
         this.messages = this.store.pipe(select(LicenseeSelectors.selectMessages));
         this.licenseeSectors$ = this.store.pipe(select(SectorSelectors.selectSectors));
         this.licenseeSector$ = this.store.pipe(select(LicenseeSectorSelectors.selectLicenseeSector));
+        this.sectorRemoved$ = this.store.pipe(select(LicenseeSectorSelectors.selectRemoved));
         this.licenseeForms$ = this.store.pipe(select(FormSelectors.selectForms));
         this.licenseeForm$ = this.store.pipe(select(LicenseeFormSelectors.selectLicenseeForm));
         this.licenseeUsersSearchField = new FormControl();
@@ -743,9 +745,9 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     doEditLicenseeForms(forms: LicenseeFormVO) {
     }
 
-    handleLicenseeFormsSelected(event: MatCheckboxChange, data: LicenseeFormVO): void {}
+    handleLicenseeFormsSelected(event: MatCheckboxChange, data: FormVO): void {}
     
-    licenseeFormsSelected(event: MatCheckboxChange, data: LicenseeFormVO): void {
+    licenseeFormsSelected(event: MatCheckboxChange, data: FormVO): void {
         if(event.checked) {
             this.licenseeFormsSelect.push(data);
         } else {
@@ -767,10 +769,8 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
      */
     addSelectedLicenseeForms(): void {
         this.licenseeFormsSelect.forEach((data) => {
-            const key = Object.keys(data)[0];
-            const found = this.licenseeForms.find((d: LicenseeFormVO) => d[key] === data[key])
+            const found = this.licenseeForms.find((d: LicenseeFormVO) => d.form.id === data?.id)
             if(!found) {
-                
                 this.store.dispatch(
                     LicenseeFormActions.create({
                         licenseeId: this.licenseeId,
@@ -924,8 +924,12 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
                     loading: true
                 })
             );
-            this.handleDeleteFromLicenseeSectors(this.licenseeSectors[index]);
-            this.licenseeSectorsControl.removeAt(index);
+
+            this.licenseeForms$.subscribe(removed => {
+
+                this.handleDeleteFromLicenseeSectors(this.licenseeSectors[index]);
+                this.licenseeSectorsControl.removeAt(index);
+            })
         }
     }
 
@@ -957,7 +961,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     addSelectedLicenseeSectors(): void {
         this.licenseeSectorsSelect.forEach((data) => {
             const key = Object.keys(data)[0];
-            const found = this.licenseeSectors.find((d: LicenseeSectorVO) => d.id === data.id)
+            const found = this.licenseeSectors.find((d: LicenseeSectorVO) => d.sector.id === data.id)
             if(!found) {
                 this.store.dispatch(
                     LicenseeSectorActions.create({
