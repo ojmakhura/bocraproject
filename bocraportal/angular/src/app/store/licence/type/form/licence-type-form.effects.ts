@@ -34,8 +34,8 @@ export class LicenceTypeFormEffects {
   findByLicence$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LicenceTypeFormActions.findByLicenceType),
-      mergeMap(({ licenceId }) =>
-        this.licenceTypeFormRestController.findByLicenceType(licenceId).pipe(
+      mergeMap(({ licenceTypeId }) =>
+        this.licenceTypeFormRestController.findByLicenceType(licenceTypeId).pipe(
           map((licenceTypeForms) =>
             LicenceTypeFormActions.findByFormSuccess({
               licenceTypeForms,
@@ -74,8 +74,8 @@ export class LicenceTypeFormEffects {
   create$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LicenceTypeFormActions.create),
-      mergeMap(({ licenceId, formId }) =>
-        this.licenceTypeFormRestController.create(licenceId, formId).pipe(
+      mergeMap(({ licenceTypeId, formId }) =>
+        this.licenceTypeFormRestController.create(licenceTypeId, formId).pipe(
           map((licenceTypeForm) =>
             LicenceTypeFormActions.createSuccess({
               licenceTypeForm,
@@ -94,8 +94,8 @@ export class LicenceTypeFormEffects {
   updateLicence$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LicenceTypeFormActions.updateLicenceType),
-      mergeMap(({ id, licenceId }) =>
-        this.licenceTypeFormRestController.updateLicenceType(id, licenceId).pipe(
+      mergeMap(({ id, licenceTypeId }) =>
+        this.licenceTypeFormRestController.updateLicenceType(id, licenceTypeId).pipe(
           map((licenceTypeForm) =>
             LicenceTypeFormActions.updateSuccess({
               licenceTypeForm,

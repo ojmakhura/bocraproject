@@ -72,11 +72,27 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label id="formRoles_label" class="col-sm-2 col-form-label" for="formRoles"><span
-                            translate>roles</span></label>
-                    <input type="text" id="formRoles" class="form-control" name="roles" formControlName="roles" />
-                </div>
+				<div class="mb-3">
+				    <label id="formRoles_label" class="col-sm-2 form-check-label" for="formRoles"><span translate>roles</span></label>
+				    <article formArrayName="roles" id="formRolesArticle">
+				        <mat-form-field class="form-group">
+				            <mat-label translate>select.value.text</mat-label>
+				            <mat-select name="formRolesSelector" id="formRolesSelector" (selectionChange)="onFormRolesChange($event)">
+				                <mat-option *ngFor="let item of formRolesBackingList" [value]="item.value">
+				                    {{ item.label }}
+				                </mat-option>
+				            </mat-select>
+				        </mat-form-field>
+				        <ul class="list-group" *ngFor="let control of formRolesControl.controls; let i = index">
+				            <li class="list-group-item">
+				                <button type="button" class="btn btn-info" (click)="formRolesDelete(i)">
+				                    <i class="bi bi-trash"></i>
+				                </button>
+				                {{ getFormRolesLabel(control.value) }} 
+				            </li>
+				        </ul>
+				    </article>
+				</div>
                 <br>
                 <div class="text-end">
 
@@ -99,7 +115,7 @@
                     </button>
                 </div>
                 <mat-tab-group animationDuration="0ms" class="view-tabs">
-                    <mat-tab label="{{'licence.types' | translate}}" *ngIf="formId">
+                    <mat-tab label="{{'licence.types' | translate}}" *ngIf="false">
                         <div>
                             <button type="button" (click)="formLicenceTypesAddDialog()" class="btn btn-primary"
                                 data-bs-toggle="modal" data-bs-target="#formLicenceTypesModal">
@@ -124,13 +140,13 @@
                                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="code">
-                                    <mat-header-cell *matHeaderCellDef translate>code</mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> {{ row?.code }} </mat-cell>
+                                <ng-container matColumnDef="licenceType.code">
+                                    <mat-header-cell *matHeaderCellDef translate>licence.type.code</mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> {{ row?.licenceType?.code }} </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="name">
-                                    <mat-header-cell *matHeaderCellDef translate>name</mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> {{ row?.name }} </mat-cell>
+                                <ng-container matColumnDef="licenceType.name">
+                                    <mat-header-cell *matHeaderCellDef translate>licence.type.name</mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> {{ row?.licenceType?.name }} </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="formLicenceTypesModalColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: formLicenceTypesModalColumns;"></mat-row>
@@ -297,11 +313,11 @@
                                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="sector.code">
+                                <ng-container matColumnDef="code">
                                     <mat-header-cell *matHeaderCellDef translate>sector.code</mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.sector?.code }} </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="sector.name">
+                                <ng-container matColumnDef="name">
                                     <mat-header-cell *matHeaderCellDef translate>sector.name</mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.sector?.name }} </mat-cell>
                                 </ng-container>
@@ -357,13 +373,13 @@
                         <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="code">
-                        <mat-header-cell *matHeaderCellDef translate>code</mat-header-cell>
-                        <mat-cell *matCellDef="let row"> {{ row?.code }} </mat-cell>
+                    <ng-container matColumnDef="licenceType.code">
+                        <mat-header-cell *matHeaderCellDef translate>licence.type.code</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{ row?.licenceType?.code }} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="name">
-                        <mat-header-cell *matHeaderCellDef translate>name</mat-header-cell>
-                        <mat-cell *matCellDef="let row"> {{ row?.name }} </mat-cell>
+                    <ng-container matColumnDef="licenceType.name">
+                        <mat-header-cell *matHeaderCellDef translate>licence.type.name</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{ row?.licenceType?.name }} </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="formLicenceTypesModalColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: formLicenceTypesModalColumns;"></mat-row>
@@ -610,13 +626,13 @@
                         <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="sector.code">
+                    <ng-container matColumnDef="code">
                         <mat-header-cell *matHeaderCellDef translate>sector.code</mat-header-cell>
-                        <mat-cell *matCellDef="let row"> {{ row?.sector?.code }} </mat-cell>
+                        <mat-cell *matCellDef="let row"> {{ row?.code }} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="sector.name">
+                    <ng-container matColumnDef="name">
                         <mat-header-cell *matHeaderCellDef translate>sector.name</mat-header-cell>
-                        <mat-cell *matCellDef="let row"> {{ row?.sector?.name }} </mat-cell>
+                        <mat-cell *matCellDef="let row"> {{ row?.name }} </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="formSectorsModalColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: formSectorsModalColumns;"></mat-row>

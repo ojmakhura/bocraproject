@@ -13,15 +13,24 @@ import * as LicenceTypeActions from '@app/store/licence/type/licence-type.action
 import * as LicenseeFormActions from '@app/store/licensee/form/licensee-form.actions';
 import * as LicenseeFormSelectors from '@app/store/licensee/form/licensee-form.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
+import * as SectorSelectors from '@app/store/sector/sector.selectors';
+import * as SectorActions from '@app/store/sector/sector.actions';
 import {
-  EditFormAddFieldForm, EditFormAddLicenseeForm,
+  EditFormAddFieldForm,
+  EditFormAddLicenseeForm,
   EditFormAddSectionForm,
   EditFormComponent,
-  EditFormDeleteForm, EditFormSaveForm, EditFormVarsForm
+  EditFormDeleteForm,
+  EditFormSaveForm,
+  EditFormVarsForm,
 } from '@app/view/form/edit-form.component';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
+import { SectorFormVO } from '@app/model/bw/org/bocra/portal/sector/form/sector-form-vo';
+import { HttpClient } from '@angular/common/http';
+import { SelectItem } from '@app/utils/select-item';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-edit-form',
@@ -29,6 +38,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./edit-form.component.scss'],
 })
 export class EditFormComponentImpl extends EditFormComponent {
+  protected http: HttpClient;
   protected keycloakService: KeycloakService;
   private formSection$: Observable<FormSectionVO>;
   private formField$: Observable<FormFieldVO>;
@@ -36,6 +46,7 @@ export class EditFormComponentImpl extends EditFormComponent {
 
   constructor(private injector: Injector) {
     super(injector);
+    this.http = this._injector.get(HttpClient);
     this.formLicenceTypes$ = this.store.pipe(select(LicenceTypeFormSelectors.selectLicenceTypeForms));
     this.keycloakService = injector.get(KeycloakService);
     this.formFormFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
@@ -43,6 +54,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.formSection$ = this.store.pipe(select(FormSelectors.selectFormSection));
     this.formFormSections$ = this.store.pipe(select(FormSelectors.selectFormSections));
     this.licenseeForm$ = this.store.pipe(select(LicenseeFormSelectors.selectLicenseeForm));
+    this.formSectors$ = this.store.pipe(select(SectorSelectors.selectSectors));
   }
 
   override beforeOnInit(form: EditFormVarsForm): EditFormVarsForm {
@@ -54,6 +66,19 @@ export class EditFormComponentImpl extends EditFormComponent {
   override afterOnInit() {}
 
   override doNgAfterViewInit() {
+    this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((roles) => {
+      roles
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach((role) => {
+          if (this.keycloakService.getUserRoles().includes(role.name)) {
+            let item = new SelectItem();
+            item.label = role['description'];
+            item.value = role['name'];
+
+            this.formRolesBackingList.push(item);
+          }
+        });
+    });
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -119,7 +144,6 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   override formLicenceTypesSearch(): void {
-    
     let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
     criteria.typeSearch = this.formLicenceTypesSearchField.value;
     this.store.dispatch(
@@ -135,13 +159,21 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   override formLicenseesSearch(): void {
-    console.log("form licenses search")
     let criteria: LicenseeCriteria = new LicenseeCriteria();
     criteria.licenseeName = this.formLicenseesSearchField.value;
     criteria.uin = this.formLicenseesSearchField.value;
     this.store.dispatch(
       LicenseeActions.search({
         criteria: criteria,
+        loading: true,
+      })
+    );
+  }
+
+  override formSectorsSearch(): void {
+    this.store.dispatch(
+      SectorActions.search({
+        criteria: this.formSectorsSearchField.value,
         loading: true,
       })
     );
@@ -247,7 +279,20 @@ export class EditFormComponentImpl extends EditFormComponent {
         id: [value?.formSection?.id],
         position: [value?.formSection?.position],
         sectionId: [value?.formSection?.sectionId],
-        sectionLabel: [value?.formSection?.sectionLabel ? value?.formSection?.sectionLabel : value?.formSection?.sectionId],
+        sectionLabel: [
+          value?.formSection?.sectionLabel ? value?.formSection?.sectionLabel : value?.formSection?.sectionId,
+        ],
+      },
+    });
+  }
+
+  override createSectorFormVOGroup(value: SectorFormVO): FormGroup {
+    return this.formBuilder.group({
+      id: [value?.id],
+      sector: {
+        id: value?.sector?.id,
+        code: value?.sector?.code,
+        name: value?.sector?.name,
       },
     });
   }

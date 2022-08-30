@@ -29,7 +29,9 @@ import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 import bw.org.bocra.portal.sector.SectorRepository;
+import bw.org.bocra.portal.sector.form.SectorForm;
 import bw.org.bocra.portal.sector.form.SectorFormRepository;
+import bw.org.bocra.portal.sector.form.SectorFormVO;
 
 /**
  * @see Form
@@ -124,6 +126,16 @@ public class FormDaoImpl
         }
 
         target.setLicensees(licensees);
+
+        if(CollectionUtils.isNotEmpty(source.getSectorForms())) {
+            Collection<SectorFormVO> sectors = new ArrayList<>();
+            
+            for(SectorForm sec : source.getSectorForms()) {
+                sectors.add(getSectorFormDao().toSectorFormVO(sec));
+            }
+
+            target.setSectors(sectors);
+        }
 
     }
 
