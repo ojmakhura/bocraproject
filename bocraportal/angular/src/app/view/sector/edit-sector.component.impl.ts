@@ -71,16 +71,12 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       this.setEditSectorFormValue({ sector: sector });
     });
 
-    this.licensee$.subscribe((licensee) => {
-      console.log(licensee);
-    });
-
     this.licensees$.subscribe((licensees) => {
       licensees.forEach((lc) => {
         this.store.dispatch(SectorActions.addLicenseeSuccess({ licensee: lc, messages: [''], success: true }));
       });
     });
-
+    
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
         if(item === '/sector/edit-sector/{button:delete}') {

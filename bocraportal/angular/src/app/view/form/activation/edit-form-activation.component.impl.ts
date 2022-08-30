@@ -99,6 +99,14 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         this.setEditFormActivationFormValue({formActivation});
     });
 
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/form/activation",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
         if(item === '/form/activation/edit-form-activation/{button:delete}') {

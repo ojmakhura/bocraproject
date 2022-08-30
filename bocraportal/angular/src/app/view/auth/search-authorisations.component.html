@@ -4,10 +4,10 @@
     <form [formGroup]="searchAuthorisationsForm">
       <!-- <section>
         <div class="col my-3 view-buttons">
-          <button type="button" color="accent" (click)="searchAuthorisationsSearch()" class="btn btn-info">
+          <button type="button" color="accent" (click)="searchAuthorisationsSearch()" class="btn btn-primary">
             <span translate>search</span>
           </button>
-          <button color="accent" type="button" (click)="searchAuthorisationsFormReset()" class="btn btn-info">
+          <button color="accent" type="button" (click)="searchAuthorisationsFormReset()" class="btn btn-primary">
             <span translate>reset</span>
           </button>
         </div>
@@ -66,7 +66,7 @@
             </mat-form-field>
             <ul class="list-group" *ngFor="let control of criteriaRolesControl.controls; let i = index">
               <li class="list-group-item">
-                <button type="button" class="btn btn-info" (click)="criteriaRolesDelete(i)">
+                <button type="button" class="btn btn-primary" (click)="criteriaRolesDelete(i)">
                   <i class="bi bi-trash"></i>
                 </button>
                 {{ getCriteriaRolesLabel(control.value) }}

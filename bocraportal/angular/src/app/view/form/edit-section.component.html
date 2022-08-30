@@ -38,10 +38,10 @@
 		            			<ng-container matColumnDef="actions">
 		            				<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
 		                            <mat-cell *matCellDef="let row; index as i">
-		                                <button type="button" color="accent" (click)="deleteFromFormSectionFormFields(i)" class="btn btn-info">
+		                                <button type="button" color="accent" (click)="deleteFromFormSectionFormFields(i)" class="btn btn-primary">
 		                                    <mat-icon>delete</mat-icon>
 		                                </button>
-		                                <button type="button" color="accent" (click)="doEditFormSectionFormFields(row)" class="btn btn-info">
+		                                <button type="button" color="accent" (click)="doEditFormSectionFormFields(row)" class="btn btn-primary">
 		                                    <mat-icon>edit</mat-icon>
 		                                </button>
 		                            </mat-cell>
@@ -78,8 +78,8 @@
 	</div>
 </div>
 <div mat-dialog-actions>
-	<button type="button" class="btn btn-info" color="accent" (click)="cancelDialog()" translate>action.cancel</button>
-	<button type="button" class="btn btn-info" color="accent" (click)="dialogDone()" translate>action.done</button>
+	<button type="button" class="btn btn-primary" color="accent" (click)="cancelDialog()" translate>action.cancel</button>
+	<button type="button" class="btn btn-primary" color="accent" (click)="dialogDone()" translate>action.done</button>
 </div>
 <div class="modal fade" id="formSectionFormFieldsModal" tabindex="-1" aria-labelledby="formSectionFormFieldsLabel" aria-hidden="true">
     <div class="modal-dialog">

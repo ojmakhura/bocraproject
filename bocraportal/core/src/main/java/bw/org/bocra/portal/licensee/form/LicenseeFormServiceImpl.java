@@ -60,8 +60,8 @@ public class LicenseeFormServiceImpl
     protected LicenseeFormVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  LicenseeFormVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.form.LicenseeFormService.handleFindById(Long id) Not implemented!");
+        LicenseeForm lf = getLicenseeFormDao().load(id);
+        return getLicenseeFormDao().toLicenseeFormVO(lf);
     }
 
     /**
@@ -88,7 +88,7 @@ public class LicenseeFormServiceImpl
     protected boolean handleRemove(Long id)
         throws Exception
     {
-        getFormRepository().deleteById(id);
+        getLicenseeFormRepository().deleteById(id);
         return true;
     }
 
@@ -132,8 +132,6 @@ public class LicenseeFormServiceImpl
     protected Collection<LicenseeFormVO> handleFindByForm(Long formId)
         throws Exception
     {
-        
-
         Specification<LicenseeForm> spec = LicenseeFormSpecifications.findByFormId(formId);
         Collection<LicenseeForm> forms = getLicenseeFormRepository().findAll(spec);
         Collection<LicenseeFormVO> vos = new ArrayList<>();
@@ -155,8 +153,11 @@ public class LicenseeFormServiceImpl
     protected LicenseeFormVO handleUpdateLicensee(Long id, Long licenseeId)
         throws Exception
     {
-        // TODO implement protected  LicenseeFormVO handleUpdateLicensee(Long id, Long licenseeId)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.form.LicenseeFormService.handleUpdateLicensee(Long id, Long licenseeId) Not implemented!");
+        LicenseeForm lf = getLicenseeFormDao().load(id);
+        lf.setLicensee(getLicenseeDao().load(licenseeId));
+        lf = getLicenseeFormRepository().save(lf);
+
+        return getLicenseeFormDao().toLicenseeFormVO(lf);
     }
 
     /**
@@ -166,8 +167,11 @@ public class LicenseeFormServiceImpl
     protected LicenseeFormVO handleUpdateForm(Long id, Long formId)
         throws Exception
     {
-        // TODO implement protected  LicenseeFormVO handleUpdateForm(Long id, Long formId)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.form.LicenseeFormService.handleUpdateForm(Long id, Long formId) Not implemented!");
+        LicenseeForm lf = getLicenseeFormDao().load(id);
+        lf.setForm(getFormDao().load(formId));
+        lf = getLicenseeFormRepository().save(lf);
+
+        return getLicenseeFormDao().toLicenseeFormVO(lf);
     }
 
 }

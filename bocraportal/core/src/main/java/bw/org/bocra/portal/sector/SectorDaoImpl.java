@@ -8,7 +8,6 @@ package bw.org.bocra.portal.sector;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,14 +17,10 @@ import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.FormRepository;
-import bw.org.bocra.portal.licensee.Licensee;
-import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
-import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
-import bw.org.bocra.portal.notification.NotificationDao;
 import bw.org.bocra.portal.notification.NotificationRepository;
 import bw.org.bocra.portal.sector.form.SectorForm;
 import bw.org.bocra.portal.sector.form.SectorFormRepository;

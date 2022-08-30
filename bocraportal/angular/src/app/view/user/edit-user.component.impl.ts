@@ -11,9 +11,9 @@ import { EditUserChangePasswordForm, EditUserComponent, EditUserDeleteForm, Edit
 import { environment } from '@env/environment';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
+import { Observable } from 'rxjs';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-user',
@@ -24,8 +24,9 @@ import { Observable } from 'rxjs';
 export class EditUserComponentImpl extends EditUserComponent {
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
-  unauthorisedUrls$: Observable<string[]>;
+  searchUnrestricted: boolean = true;
   deleteUnrestricted: boolean = true;
+  unauthorisedUrls$: Observable<string[]>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -58,11 +59,15 @@ export class EditUserComponentImpl extends EditUserComponent {
       this.setEditUserFormValue({ user: user });
     });
 
-    console.log(this.keycloakService.loadUserProfile());
-    this.keycloakService.loadUserProfile().then((val) => console.log(val));
   }
 
   override doNgAfterViewInit() {
+
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.userId) {
+        this.store.dispatch(UserActions.findById({ userId: queryParams.userId, loading: true }));
+      }
+    });
 
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
@@ -72,15 +77,15 @@ export class EditUserComponentImpl extends EditUserComponent {
       })
     );
 
-    this.route.queryParams.subscribe((queryParams: any) => {
-      if (queryParams?.userId) {
-        this.store.dispatch(UserActions.findById({ userId: queryParams.userId, loading: true }));
-      }
+    this.user$.subscribe((user) => {
+      this.setEditUserFormValue({user: user});
     });
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/user/edit-user/{button:delete}') {
+        if(item === '/user/edit-user/{button:search}') {
+          this.searchUnrestricted = false;
+        } else if(item === '/user/edit-user/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -176,13 +181,12 @@ export class EditUserComponentImpl extends EditUserComponent {
       userId: [user?.userId ? user.userId : null],
       username: [user?.username ? user.username : null, [Validators.required]],
       email: [user?.email ? user.email : null, [Validators.required, Validators.email]],
-      password: [{ value: user?.password }, [Validators.required]],
+      password: [{ value: user?.password, disabled: false }, [Validators.required]],
       firstName: [user?.firstName ? user.firstName : null, [Validators.required]],
       lastName: [user?.lastName ? user.lastName : null, [Validators.required]],
       enabled: [user?.enabled ? user.enabled : null],
       licensee: this.createLicenseeVOGroup(user?.licensee),
       roles: user?.roles ? this.formBuilder.array(user?.roles ? user.roles : []) : new FormArray([]),
-      client: [user?.client ? user.client : null],
     });
   }
 

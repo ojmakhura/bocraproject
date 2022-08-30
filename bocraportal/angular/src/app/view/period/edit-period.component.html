@@ -19,21 +19,7 @@
             <span translate>Search</span>
           </button>
 
-          <!-- <button type="button" color="accent" (click)="editPeriodSave()" class="btn btn-info">
-            <span translate>save</span>
-          </button>
-          <button type="button" color="accent" (click)="editPeriodSearch()" class="btn btn-info">
-            <span translate>search</span>
-          </button>
-          <button type="button" color="accent" (click)="editPeriodDelete()" class="btn btn-info">
-            <span translate>delete</span>
-          </button>
-          <button type="button" color="accent" (click)="editPeriodCreateNext()" class="btn btn-info">
-            <span translate>create.next</span>
-          </button>
-          <button color="accent" type="button" (click)="editPeriodFormReset()" class="btn btn-info">
-            <span translate>reset</span>
-          </button> -->
+        
         </div>
       </section>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
@@ -302,7 +288,11 @@
       <button color="accent" type="button" (click)="editPeriodFormReset()" class="btn btn-outline-primary">
         <span translate>reset</span>
       </button>
+<<<<<<< HEAD
       <button type="button" color="accent" (click)="editPeriodDelete()" class="btn btn-outline-primary" *ngIf="deleteUnrestricted">
+=======
+      <button type="button" color="accent" (click)="editPeriodDelete()" class="btn btn-outline-primary" *ngIf="periodId && deleteUnrestricted">
+>>>>>>> origin/ojm-dev
         <span translate>delete</span>
       </button>
     </div>

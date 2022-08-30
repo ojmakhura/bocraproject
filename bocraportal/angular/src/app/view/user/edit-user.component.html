@@ -14,7 +14,7 @@
     <form [formGroup]="editUserForm">
       <section>
         <div class="text-end">
-          <button type="button" (click)="editUserSearch()" class="btn btn-primary">
+          <button type="button" (click)="editUserSearch()" class="btn btn-primary" *ngIf="searchUnrestricted">
             <span translate>Search</span>
           </button>
         </div>
@@ -74,7 +74,7 @@
             </div>
           </div>
           <div>
-            <button *ngIf="userUsername" type="button" color="accent" (click)="editUserChangePassword()" class="btn btn-info">
+            <button *ngIf="userUsername" type="button" color="accent" (click)="editUserChangePassword()" class="btn btn-primary">
               <span *ngIf="userUserId; else noUser" translate>change.password</span>
               <ng-template #noUser><span>Set Password</span></ng-template>
             </button>
@@ -149,7 +149,7 @@
             </mat-form-field>
             <ul class="list-group" *ngFor="let control of userRolesControl.controls; let i = index">
               <li class="list-group-item">
-                <button type="button" class="btn btn-info" (click)="userRolesDelete(i)">
+                <button type="button" class="btn btn-primary" (click)="userRolesDelete(i)">
                   <i class="bi bi-trash"></i>
                 </button>
                 {{ getUserRolesLabel(control.value) }}
@@ -171,7 +171,7 @@
       <button type="button" color="accent" (click)="editUserSave()" class="btn btn-outline-primary">
         <span translate>save</span>
       </button>
-      <button type="button" color="accent" (click)="editUserDelete()" class="btn btn-outline-primary" *ngIf="deleteUnrestricted">
+      <button type="button" color="accent" (click)="editUserDelete()" class="btn btn-outline-primary" *ngIf="userUserId && deleteUnrestricted">
         <span translate>delete</span>
       </button>
 

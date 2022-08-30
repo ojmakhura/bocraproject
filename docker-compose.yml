@@ -49,18 +49,13 @@ services:
       # - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
       # - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
       # - "--certificatesresolvers.le.acme.tlschallenge=true"
-    deploy:
-      placement:
-        constraints:
-          # Make the traefik service run only on the node with this label
-          # as the node with it has the volume for the certificates
-          - node.role == manager
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
-        - "traefik.http.routers.traefik.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-        - "traefik.http.routers.traefik.service=api@internal"
-        - "traefik.http.routers.traefik.tls=${SSL_SECURE}"
+    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.traefik.service=api@internal"
+      # - "traefik.http.routers.traefik.tls=${SSL_SECURE}"
         # - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         # - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
         # - "traefik.http.routers.https-redirect.middlewares=https-redirect"

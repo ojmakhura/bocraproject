@@ -22,8 +22,13 @@ import { select } from '@ngrx/store';
 export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
 
     protected keycloakService: KeycloakService;
+<<<<<<< HEAD
     unauthorisedUrls$: Observable<string[]>;
     deleteUnrestricted: boolean = true;
+=======
+    deleteUnrestricted: boolean = true;
+    unauthorisedUrls$: Observable<string[]>;
+>>>>>>> origin/ojm-dev
 
     constructor(private injector: Injector) {
         super(injector);
@@ -64,9 +69,23 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
         this.setEditPeriodConfigFormValue({periodConfig: periodConfig});
       });
 
+<<<<<<< HEAD
       this.unauthorisedUrls$.subscribe(restrictedItems => {
         restrictedItems.forEach(item => {
           if(item === '/period/config/edit-period-config/{button:delete}') {
+=======
+      this.store.dispatch(
+        ViewActions.loadViewAuthorisations({
+          viewUrl: "/period/type/edit-period-type",
+          roles: this.keycloakService.getUserRoles(),
+          loading: true
+        })
+      );
+  
+      this.unauthorisedUrls$.subscribe(restrictedItems => {
+        restrictedItems.forEach(item => {
+          if(item === '/period/type/edit-period-type/{button:delete}') {
+>>>>>>> origin/ojm-dev
             this.deleteUnrestricted = false;
           }
         });

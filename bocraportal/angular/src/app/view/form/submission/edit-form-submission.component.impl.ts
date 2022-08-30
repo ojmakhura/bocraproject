@@ -39,6 +39,8 @@ import * as ViewSelectors from '@app/store/view/view.selectors';
 })
 export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent {
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
   formSubmissions$: Observable<FormSubmissionVO[]>;
   forms$: Observable<FormVO[]>;
   fieldColumns: string[] = ['Row'];
@@ -98,6 +100,22 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
           this.loadSubmission(this.useCaseScope.pageVariables['id']);
         }
       }
+    });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/form/submission/edit-form-submission",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/form/submission/edit-form-submission/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
 
     this.formSubmission$.subscribe((submission) => {
