@@ -28,8 +28,6 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
-    console.log(form);
-    console.log(this.dialogData)
     if (!form?.licenseeForm) {
       form.licenseeForm = new LicenseeFormVO();
     }
@@ -42,7 +40,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     let criteria: FormCriteria = new FormCriteria();
     criteria.code = this.licenseeFormFormSearchField.value;
     criteria.formName = this.licenseeFormFormSearchField.value;
-    criteria.licenceTypeId = this.licenseeFormFormSearchField.value;
+    
     this.store.dispatch(
       FormActions.searchForms({
         criteria: criteria,

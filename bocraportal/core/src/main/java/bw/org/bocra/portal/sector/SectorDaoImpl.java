@@ -57,12 +57,7 @@ public class SectorDaoImpl
             Collection<LicenseeSectorVO> licensees = new ArrayList<>();
 
             for(LicenseeSector l : source.getLicenseeSectors()) {
-                LicenseeSectorVO lvo = new LicenseeSectorVO();
-                lvo.setLicenseeSectorId(l.getId());
-                lvo.setId(l.getLicensee().getId());
-                lvo.setLicenseeName(l.getLicensee().getLicenseeName());
-                lvo.setStatus(l.getLicensee().getStatus());
-                lvo.setUin(l.getLicensee().getUin());
+                LicenseeSectorVO lvo = getLicenseeSectorDao().toLicenseeSectorVO(l);
                 licensees.add(lvo);
             }
 
@@ -135,13 +130,13 @@ public class SectorDaoImpl
 
             for(LicenseeSectorVO lvo : source.getLicensees()) {
 
-                if(lvo.getLicenseeSectorId() != null) {
-                    licensees.add(licenseeSectorRepository.getById(lvo.getLicenseeSectorId()));
+                // if(lvo.getId() != null) {
+                licensees.add(licenseeSectorRepository.getReferenceById(lvo.getId()));
 
-                } else if(lvo.getId() != null) {
-                    LicenseeSector ls = LicenseeSector.Factory.newInstance(licenseeDao.load(lvo.getId()), target);
-                    licensees.add(licenseeSectorRepository.save(ls));
-                }
+                // } else if(lvo.getId() != null) {
+                //     LicenseeSector ls = LicenseeSector.Factory.newInstance(licenseeDao.load(lvo.getId()), target);
+                //     licensees.add(licenseeSectorRepository.save(ls));
+                // }
             }
 
             target.setLicenseeSectors(licensees);

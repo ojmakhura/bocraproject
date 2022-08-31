@@ -377,15 +377,8 @@ public class LicenseeServiceImpl
     protected LicenseeSectorVO handleAddSector(Long licenseeId, Long sectorId) throws Exception {
         Sector sector = getSectorDao().load(sectorId);
         Licensee licensee = getLicenseeDao().load(licenseeId);
-
         LicenseeSector licenseeSector = getLicenseeSectorDao().create(licensee, sector);
-        LicenseeSectorVO lVo = new LicenseeSectorVO();
-        lVo.setLicenseeSectorId(licenseeSector.getId());
-        lVo.setCode(sector.getCode());
-        lVo.setId(sector.getId());
-        lVo.setName(sector.getName());
-
-        return lVo;
+        return getLicenseeSectorDao().toLicenseeSectorVO(licenseeSector);
     }
 
     @Override

@@ -17,13 +17,6 @@
 			</div>
 			<div formGroupName="criteria">
 				<div class="mb-3">
-				    <label id="criteriaLicenceTypeId_label" class="col-sm-2 col-form-label" for="criteriaLicenceTypeId"><span translate>licence.type.id</span></label>
-				    <select id="criteriaLicenceTypeId" class="form-select" formControlName="licenceTypeId" >
-				        <option></option>
-				        <option *ngFor="let item of criteriaLicenceTypeIdBackingList" [value]="item.value">{{ item.label }}</option>
-				    </select>
-				</div>
-				<div class="mb-3">
 				    <label id="criteriaCode_label" class="col-sm-2 col-form-label" for="criteriaCode"><span translate>code</span></label>
 				    <input type="text" id="criteriaCode" class="form-control" name="code" formControlName="code"/>
 				</div>

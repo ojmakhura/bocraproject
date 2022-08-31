@@ -246,7 +246,6 @@ public class SubmissionServiceImpl
             sSpecs = sSpecs.and(specs);
         }
         summary.setOverdueSubmissions(formSubmissionRepository.count(sSpecs));
-        System.out.println(summary);
 
         return summary;
     }
