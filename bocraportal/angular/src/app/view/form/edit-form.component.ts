@@ -231,6 +231,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     loading: Observable<boolean>;
     error: Observable<boolean>;
     selected: any = null;
+    sectorRemoved$: Observable<boolean>;
 
     constructor(injector: Injector) {
         
@@ -251,6 +252,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
         this.error = this.store.pipe(select(FormSelectors.selectError));
         this.messages = this.store.pipe(select(FormSelectors.selectMessages));
         this.sectorForm$ = this.store.pipe(select(SectorFormSelectors.selectSectorForm));
+        this.sectorRemoved$ = this.store.pipe(select(SectorFormSelectors.selectRemoved));
         this.formLicenceTypesSearchField = new FormControl();
         this.formFormSectionsSearchField = new FormControl();
         this.formFormFieldsSearchField = new FormControl();
@@ -991,8 +993,20 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     handleDeleteFromFormSectors(sectors: SectorFormVO): void {}
     
     deleteFromFormSectors(index: number) {
-        this.handleDeleteFromFormSectors(this.formSectors[index]);
-        this.formSectorsControl.removeAt(index);
+        if(confirm('Are you sure you want to remove the sector this form?')) {
+            this.store.dispatch(
+                SectorFormActions.remove({
+                    id: this.formSectors[index].id,
+                    loading: true
+                })
+            );
+
+            this.sectorRemoved$.subscribe(removed => {
+
+                this.handleDeleteFromFormSectors(this.formSectors[index]);
+                this.formSectorsControl.removeAt(index);
+            });
+        }
     }
 
     doEditFormSectors(sectors: SectorFormVO) {
@@ -1181,7 +1195,6 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
 
     createFormCriteriaGroup(value: FormCriteria): FormGroup {
         return this.formBuilder.group({
-            licenceTypeId: [value?.licenceTypeId],
             code: [value?.code],
             formName: [value?.formName],
         });

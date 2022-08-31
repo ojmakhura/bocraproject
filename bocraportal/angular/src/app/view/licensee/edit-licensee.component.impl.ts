@@ -12,6 +12,10 @@ import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as SectorActions from '@app/store/sector/sector.actions';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
+import * as LicenseeSectorSelectors from '@app/store/licensee/sector/licensee-sector.selectors';
+import * as LicenseeSectorActions from '@app/store/licensee/sector/licensee-sector.actions';
+import * as LicenseeFormSelectors from '@app/store/licensee/form/licensee-form.selectors';
+import * as LicenseeFormActions from '@app/store/licensee/form/licensee-form.actions';
 import {
   EditLicenseeComponent,
   EditLicenseeDeleteForm,
@@ -31,6 +35,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
+  sectorRemoved$: Observable<boolean>;
+  formRemoved$: Observable<boolean>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -38,6 +44,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     this.licenseeDocuments$ = this.store.pipe(select(DocumentSelectors.selectDocuments));
     this.licenseeLicences$ = this.store.pipe(select(LicenceSelectors.selectLicences));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
+    this.sectorRemoved$ = this.store.pipe(select(LicenseeSectorSelectors.selectRemoved));
+    this.formRemoved$ = this.store.pipe(select(LicenseeFormSelectors.selectRemoved));
   }
 
   beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
@@ -78,9 +86,58 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
         }
       });
     });
+
+    this.licenseeSector$.subscribe(ls => {
+      if(ls?.id)
+        this.addToLicenseeSectors(ls);
+    });
+
+    this.licenseeForm$.subscribe(lf => {
+      if(lf?.id) {
+        this.addToLicenseeForms(lf);
+      }
+    });
   }
 
   doNgOnDestroy() { }
+
+  override deleteFromLicenseeForms(index: number) {
+    if (confirm('Are you sure you want to delete the licensee form?')) {
+
+      this.store.dispatch(
+          LicenseeFormActions.remove({
+              id: this.licenseeForms[index].id,
+              loading: true
+          })
+      );
+
+      this.formRemoved$.subscribe(removed => {
+        if(removed) {
+          this.handleDeleteFromLicenseeForms(this.licenseeForms[index]);
+          this.licenseeFormsControl.removeAt(index);
+        }
+      });
+    }
+  }
+
+  override deleteFromLicenseeSectors(index: number) {
+    if(confirm('Are you sure you want to delete the licensee sector?')) {
+        this.store.dispatch(
+            LicenseeSectorActions.remove({
+                id: this.licenseeSectors[index].id,
+                loading: true
+            })
+        );
+
+        this.sectorRemoved$.subscribe(removed => {
+          if(removed) {
+
+            this.handleDeleteFromLicenseeSectors(this.licenseeSectors[index]);
+            this.licenseeSectorsControl.removeAt(index);
+          }
+        });
+    }
+}
 
 
   /**
@@ -111,13 +168,13 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     else {
       let messages: string[] = []
       if (!this.licenseeStatusControl.valid) {
-        messages.push("licensee status has errors")
+        messages.push("Licensee status has errors")
       }
       if (!this.licenseeUinControl.valid) {
-        messages.push("licensee Uin has errors")
+        messages.push("Licensee Uin has errors")
       }
       if (!this.licenseeLicenseeNameControl.valid) {
-        messages.push("licensee name has errors")
+        messages.push("Licensee name has errors")
       }
       this.store.dispatch(LicenseeActions.licenseeFailure({ messages: messages }));
     }
@@ -147,7 +204,6 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       this.store.dispatch(LicenseeActions.licenseeFailure({ messages: ['Please select something to delete'] }));
     }
   }
-
 
   override licenseeLicencesSearch(): void {
     let criteria: string = '';

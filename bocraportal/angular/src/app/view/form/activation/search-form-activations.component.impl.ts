@@ -26,7 +26,7 @@ export class SearchFormActivationsComponentImpl extends SearchFormActivationsCom
 
     override beforeSearchFormActivationsSearch(form: SearchFormActivationsSearchForm): void {
         let criteria: FormActivationCriteria = new FormActivationCriteria
-        criteria.activationName = criteria.activationName;
+        criteria.activationName = form.activationName;
         this.store.dispatch(FormActivationActions.search({
             criteria: criteria,
             loading: true

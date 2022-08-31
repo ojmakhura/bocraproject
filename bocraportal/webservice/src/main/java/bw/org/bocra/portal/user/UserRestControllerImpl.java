@@ -39,74 +39,103 @@ public class UserRestControllerImpl extends UserRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleCreateUser(UserVO user) {
+        try{
+            user = this.keycloakUserService.createUser(user);
 
-        user = this.keycloakUserService.createUser(user);
-
-        if(user == null || StringUtils.isBlank(user.getUserId())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            if(user == null || StringUtils.isBlank(user.getUserId())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+    
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @Override
     public ResponseEntity<?> handleLoadUsers() {
+        try{
+            Collection<UserVO> users = this.keycloakUserService.loadUsers();
 
-        Collection<UserVO> users = this.keycloakUserService.loadUsers();
-
-        Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
-        ResponseEntity<Collection<UserVO>> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
+            ResponseEntity<Collection<UserVO>> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleUpdateUserName(String username, String userId) {
-        Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
-        ResponseEntity<Boolean> response;
-
-        if (data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try{
+            Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<Boolean> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
+        try{
 
         List<UserVO> users = this.keycloakUserService.search(criteria);
 
         return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @Override
     public ResponseEntity<?> handleAddClientRoles(String clientId, Set<String> roles, String userId) {
-        UserVO rep = this.keycloakUserService.addClientRoles(clientId, roles, userId);
+        try{
+            UserVO rep = this.keycloakUserService.addClientRoles(clientId, roles, userId);
 
-        if(rep == null || StringUtils.isBlank(rep.getUserId())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("User with userId %s does not exist.", clientId));
+            if(rep == null || StringUtils.isBlank(rep.getUserId())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("User with userId %s does not exist.", clientId));
+            }
+    
+            return ResponseEntity.ok(rep);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return ResponseEntity.ok(rep);
+ 
     }
 
     @Override
     public ResponseEntity<?> handleFindUserById(String userId) {
-        UserVO rep = this.keycloakUserService.findUserById(userId);
+        try{
+            UserVO rep = this.keycloakUserService.findUserById(userId);
 
-        if (rep != null) {
-            return ResponseEntity.ok(rep);
+            if (rep != null) {
+                return ResponseEntity.ok(rep);
+            }
+    
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return ResponseEntity.notFound().build();
     }
 }

@@ -148,12 +148,7 @@ public class SectorServiceImpl
         }
 
         LicenseeSector licenseeSector = getLicenseeSectorDao().create(licensee, sector);
-        LicenseeSectorVO lVo = new LicenseeSectorVO();
-        lVo.setLicenseeSectorId(licenseeSector.getId());
-        lVo.setUin(licensee.getUin());
-        lVo.setLicenseeName(licensee.getLicenseeName());
-        lVo.setAddress(licensee.getAddress());
-        lVo.setId(licensee.getId());
+        LicenseeSectorVO lVo = getLicenseeSectorDao().toLicenseeSectorVO(licenseeSector);
         
         return lVo;
     }

@@ -9,10 +9,10 @@ import { SharedModule } from '@shared';
 import { CsvModule } from '@ctrl/ngx-csv';
 import { MaterialModule } from '@app/material.module';
 import { LicenseeRoutingModule } from './licensee-routing.module';
-import { EditLicenseeComponentImpl } from '@app/view/licensee/edit-licensee.component.impl'; // 1
-import { NewDocumentComponentImpl } from '@app/view/licensee/new-document.component.impl'; // 3
-import { NewShareholderComponentImpl } from '@app/view/licensee/new-shareholder.component.impl'; // 3
-import { SearchLicenseesComponentImpl } from '@app/view/licensee/search-licensees.component.impl'; // 1
+import { EditLicenseeComponentImpl } from '@app/view/licensee/edit-licensee.component.impl';
+import { NewDocumentComponentImpl } from '@app/view/licensee/new-document.component.impl';
+import { NewShareholderComponentImpl } from '@app/view/licensee/new-shareholder.component.impl';
+import { SearchLicenseesComponentImpl } from '@app/view/licensee/search-licensees.component.impl';
 import { SearchLicenseesLicenseesComponentImpl } from '@app/view/licensee/search-licensees-licensees.component.impl'; // 2
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -23,6 +23,8 @@ import { DocumentRestController } from '@app/service/bw/org/bocra/portal/documen
 import { LicenseeRestController } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller';
 import { viewFeature } from '@app/store/view/view.reducers';
 import { ViewEffects } from '@app/store/view/view.effects';
+import { licenseeSectorFeature } from '@app/store/licensee/sector/licensee-sector.reducers';
+import { LicenseeSectorEffects } from '@app/store/licensee/sector/licensee-sector.effects';
 
 @NgModule({
   imports: [
@@ -36,8 +38,9 @@ import { ViewEffects } from '@app/store/view/view.effects';
     CsvModule,
     LicenseeRoutingModule,
     StoreModule.forFeature(licenseeFeature),
+    StoreModule.forFeature(licenseeSectorFeature),
     StoreModule.forFeature(viewFeature),
-    EffectsModule.forFeature([ LicenseeEffects, ViewEffects  ])
+    EffectsModule.forFeature([ LicenseeEffects, ViewEffects, LicenseeSectorEffects ])
   ],
   declarations: [
     EditLicenseeComponentImpl,
@@ -45,8 +48,6 @@ import { ViewEffects } from '@app/store/view/view.effects';
     NewShareholderComponentImpl,
     SearchLicenseesComponentImpl,
     SearchLicenseesLicenseesComponentImpl,
-    NewShareholderComponentImpl,
-    NewDocumentComponentImpl,
   ],
   entryComponents: [],
   providers: [

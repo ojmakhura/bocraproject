@@ -92,11 +92,7 @@ public class LicenseeDaoImpl
             target.setSectors(new ArrayList<>());
 
             for(LicenseeSector entity : source.getLicenseeSectors()) {
-                LicenseeSectorVO vo = new LicenseeSectorVO();
-                vo.setLicenseeSectorId(entity.getId());
-                vo.setId(entity.getSector().getId());
-                vo.setCode(entity.getSector().getCode());
-                vo.setName(entity.getSector().getName());
+                LicenseeSectorVO vo = getLicenseeSectorDao().toLicenseeSectorVO(entity);
                 target.getSectors().add(vo);
             }
         }

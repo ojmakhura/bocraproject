@@ -6,7 +6,7 @@
   <div class="card-body">
     <form [formGroup]="editSectorForm">
       <section>
-				<!-- <div class="col my-3 view-buttons">
+        <!-- <div class="col my-3 view-buttons">
 					<button type="button" color="accent" (click)="editPeriodConfigSave()" class="btn btn-primary">
 						<span translate>save</span>
 					</button>
@@ -19,12 +19,12 @@
 					<button color="accent" type="button" (click)="editPeriodConfigFormReset()" class="btn btn-primary" ><span translate>reset</span></button>
 				</div> -->
 
-				<div class="text-end">
-					<button type="button" (click)="editSectorSearch()" class="btn btn-primary">
-					  <span translate>Search</span>
-					</button>
-				</div>
-			</section>
+        <div class="text-end">
+          <button type="button" (click)="editSectorSearch()" class="btn btn-primary">
+            <span translate>Search</span>
+          </button>
+        </div>
+      </section>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}
@@ -84,7 +84,8 @@
           <button type="button" color="accent" (click)="editSectorSave()" class="btn btn-outline-primary">
             <span translate>save</span>
           </button>
-          <button type="button" color="accent" (click)="editSectorDelete()" class="btn btn-outline-primary" *ngIf="sectorId && deleteUnrestricted">
+          <button type="button" color="accent" (click)="editSectorDelete()" class="btn btn-outline-primary"
+            *ngIf="sectorId && deleteUnrestricted">
             <span translate>delete</span>
           </button>
           <button color="accent" type="button" (click)="editSectorFormReset()" class="btn btn-outline-primary">
@@ -118,11 +119,11 @@
                 </ng-container>
                 <ng-container matColumnDef="uin">
                   <mat-header-cell *matHeaderCellDef translate>uin</mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{ row.uin }} </mat-cell>
+                  <mat-cell *matCellDef="let row"> {{ row?.licensee?.uin }} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="licenseeName">
                   <mat-header-cell *matHeaderCellDef translate>licensee.name</mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{ row.licenseeName }} </mat-cell>
+                  <mat-cell *matCellDef="let row"> {{ row?.licensee?.licenseeName }} </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="sectorLicenseesModalColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: sectorLicenseesModalColumns"></mat-row>
@@ -154,13 +155,13 @@
                   <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
                   <mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="form.code">
+                <ng-container matColumnDef="code">
                   <mat-header-cell *matHeaderCellDef translate>form.code</mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{ row.form.code }} </mat-cell>
+                  <mat-cell *matCellDef="let row"> {{ row?.form?.code }} </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="form.formName">
+                <ng-container matColumnDef="formName">
                   <mat-header-cell *matHeaderCellDef translate>form.form.name</mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{ row.form.formName }} </mat-cell>
+                  <mat-cell *matCellDef="let row"> {{ row?.form?.formName }} </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="sectorFormsModalColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: sectorFormsModalColumns"></mat-row>
@@ -271,15 +272,15 @@
           </ng-container>
           <ng-container matColumnDef="id">
             <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
           </ng-container>
-          <ng-container matColumnDef="form.code">
+          <ng-container matColumnDef="code">
             <mat-header-cell *matHeaderCellDef translate>form.code</mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{ row.form.code }} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.code }} </mat-cell>
           </ng-container>
-          <ng-container matColumnDef="form.formName">
+          <ng-container matColumnDef="formName">
             <mat-header-cell *matHeaderCellDef translate>form.form.name</mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{ row.form.formName }} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.formName }} </mat-cell>
           </ng-container>
           <mat-header-row *matHeaderRowDef="sectorFormsModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: sectorFormsModalColumns"></mat-row>

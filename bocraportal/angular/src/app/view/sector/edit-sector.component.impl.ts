@@ -14,11 +14,16 @@ import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { KeycloakService } from 'keycloak-angular';
+import * as FormActions from '@app/store/form/form.actions';
 import { select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
+import { FormGroup } from '@angular/forms';
+import * as LicenseeSectorActions from '@app/store/licensee/sector/licensee-sector.actions';
+import * as LicenseeSectorSelectors from '@app/store/licensee/sector/licensee-sector.selectors';
+import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 
 @Component({
   selector: 'app-edit-sector',
@@ -29,14 +34,14 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   protected keycloakService: KeycloakService;
   protected licensees$: Observable<LicenseeVO[]>;
   protected licensee$: Observable<LicenseeVO>;
-  protected sectorLicensee$: Observable<LicenseeSectorVO>;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.sectorLicensees$ = this.store.pipe(select(SectorSelectors.selectLicensees));
+    this.sectorLicensees$ = this.store.pipe(select(SectorSelectors.selectSectors));
+    this.sectorLicensee$ = this.store.pipe(select(LicenseeSectorSelectors.selectLicenseeSector));
     this.licensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.licensee$ = this.store.pipe(select(LicenseeSelectors.selectLicensee));
     this.sectorLicensee$ = this.store.pipe(select(SectorSelectors.selectLicensee));
@@ -48,13 +53,6 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override doNgAfterViewInit() {
-    this.store.dispatch(
-      ViewActions.loadViewAuthorisations({
-        viewUrl: "/sector/edit-sector",
-        roles: this.keycloakService.getUserRoles(),
-        loading: true
-      })
-    );
 
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
@@ -76,7 +74,20 @@ export class EditSectorComponentImpl extends EditSectorComponent {
         this.store.dispatch(SectorActions.addLicenseeSuccess({ licensee: lc, messages: [''], success: true }));
       });
     });
-    
+
+    this.sectorLicensee$.subscribe(ls => {
+      if(ls?.id)
+        this.addToSectorLicensees(ls);
+    });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/sector/edit-sector",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
         if(item === '/sector/edit-sector/{button:delete}') {
@@ -87,19 +98,15 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override addToSectorLicensees(licensee: LicenseeSectorVO) {
-    this.store.dispatch(SectorActions.addLicensee({ sectorId: this.sectorId, licenseeId: licensee.id, loading: true }));
-    console.log(licensee);
-    console.log(this.sectorId);
-    let tmp: LicenseeSectorVO = new LicenseeSectorVO();
-    tmp.id = licensee.id;
-    tmp.address = licensee.address;
-    tmp.code = licensee.code;
-    tmp.licenseeName = licensee.licenseeName;
-    tmp.name = licensee.name;
-    tmp.uin = licensee.uin;
-    tmp.licenseeSectorId = this.sectorId;
-
-    this.sectorLicenseesControl.push(this.createLicenseeSectorVOGroup(tmp));
+    this.store.dispatch(
+      SectorActions.addLicensee({ 
+        sectorId: this.sectorId, 
+        licenseeId: licensee.id, 
+        loading: true 
+      })
+    );
+    
+    // this.sectorLicenseesControl.push(this.createLicenseeSectorVOGroup(tmp));
   }
 
   override doNgOnDestroy() {}
@@ -172,6 +179,33 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       }
       this.store.dispatch(SectorActions.sectorFailure({ messages: messages }));
     }
+  }
+
+  override createLicenseeSectorVOGroup(value: LicenseeSectorVO): FormGroup {
+      return this.formBuilder.group({
+          id: [value?.id],
+          licensee: {
+            id: value?.licensee?.id,
+            uin: value?.licensee?.uin,
+            licenseeName: value?.licensee?.licenseeName
+          }
+      });
+  }
+
+  override sectorFormsSearch() {
+
+    let criteria: FormCriteria = new FormCriteria()
+    
+    criteria.code = this.sectorFormsSearchField.value
+    criteria.formName = this.sectorFormsSearchField.value
+
+    this.store.dispatch(
+      FormActions.searchForms({
+        criteria: criteria,
+        loading: true
+      })
+    );
+
   }
 }
 

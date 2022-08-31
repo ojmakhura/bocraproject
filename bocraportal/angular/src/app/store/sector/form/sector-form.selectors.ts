@@ -26,6 +26,11 @@ export const selectForm = createSelector(
     (state: SectorFormState) => state.form
 );
 
+export const selectRemoved= createSelector(
+    selectSectorFormState,
+    (state: SectorFormState) => state.removed
+);
+
 export const selectMessages = createSelector(
     selectSectorFormState,
     (state: SectorFormState) => state.messages
