@@ -11,6 +11,7 @@ export const dataProcessingReducer = createReducer(
         submissionSummary: action.submissionSummary,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DataProcessingActions.loadDataSuccess, (state, action) => ({
@@ -19,6 +20,7 @@ export const dataProcessingReducer = createReducer(
         submissionSummary: state.submissionSummary,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DataProcessingActions.dataProcessingReset, (state) => ({

@@ -13,6 +13,7 @@ export const accessPointTypeReducer = createReducer(
         accessPointTypes: [], 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(AccessPointTypeActions.saveSuccess, (state, action) => ({
@@ -23,6 +24,7 @@ export const accessPointTypeReducer = createReducer(
         accessPointTypes: [], 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(AccessPointTypeActions.removeSuccess, (state, action) => ({
@@ -33,6 +35,7 @@ export const accessPointTypeReducer = createReducer(
         accessPointTypes: [], 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(AccessPointTypeActions.getAllSuccess, (state, action) => ({
@@ -43,6 +46,7 @@ export const accessPointTypeReducer = createReducer(
         accessPointTypes: action.accessPointTypes, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(AccessPointTypeActions.searchSuccess, (state, action) => ({
@@ -53,6 +57,7 @@ export const accessPointTypeReducer = createReducer(
         accessPointTypes: action.accessPointTypes, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(AccessPointTypeActions.getAllPagedSuccess, (state, action) => ({
@@ -63,6 +68,7 @@ export const accessPointTypeReducer = createReducer(
         accessPointTypes: action.accessPointTypes, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(AccessPointTypeActions.accessPointTypeReset, (state) => ({

@@ -9,14 +9,16 @@ export const authorisationReducer = createReducer(
         ...state,
         authorisation: action.authorisation, 
         success: action.success,
-        loading: false, 
+        loading: false,
+        error: false, 
         messages: action.messages
     })),
     on(AuthorisationActions.saveSuccess, (state, action) => ({
         ...state,
         loading: false, 
         authorisation: action.authorisation, 
-        success: action.success, 
+        success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(AuthorisationActions.removeSuccess, (state, action) => ({
@@ -24,6 +26,7 @@ export const authorisationReducer = createReducer(
         removed: action.removed, 
         loading: false, 
         success: action.success, 
+        error: false,
         messages: action.messages
     })),
     on(AuthorisationActions.getAllSuccess, (state, action) => ({
@@ -31,6 +34,7 @@ export const authorisationReducer = createReducer(
         authorisations: action.authorisations, 
         loading: false, 
         success: action.success, 
+        error: false,
         messages: action.messages
     })),
     on(AuthorisationActions.searchSuccess, (state, action) => ({
@@ -38,6 +42,7 @@ export const authorisationReducer = createReducer(
         authorisations: action.authorisations, 
         loading: false, 
         success: action.success, 
+        error: false,
         messages: action.messages
     })),
     on(AuthorisationActions.getAllPagedSuccess, (state, action) => ({
@@ -45,6 +50,7 @@ export const authorisationReducer = createReducer(
         authorisations: action.authorisations, 
         loading: false, 
         success: action.success, 
+        error: false,
         messages: action.messages
     })),
     on(AuthorisationActions.authorisationReset, (state) => ({

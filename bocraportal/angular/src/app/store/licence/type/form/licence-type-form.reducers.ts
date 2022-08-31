@@ -10,6 +10,7 @@ export const licenceTypeFormReducer = createReducer(
     licenceTypeForm: action.licenceTypeForm,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenceTypeFormActions.findByLicenceTypeSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const licenceTypeFormReducer = createReducer(
     licenceTypeForms: action.licenceTypeForms,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenceTypeFormActions.findByFormSuccess, (state, action) => ({
@@ -24,6 +26,7 @@ export const licenceTypeFormReducer = createReducer(
     licenceTypeForms: action.licenceTypeForms,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenceTypeFormActions.createSuccess, (state, action) => ({
@@ -31,6 +34,7 @@ export const licenceTypeFormReducer = createReducer(
     licenceTypeForm: action.licenceTypeForm,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenceTypeFormActions.updateSuccess, (state, action) => ({
@@ -38,6 +42,7 @@ export const licenceTypeFormReducer = createReducer(
     licenceTypeForm: action.licenceTypeForm,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenceTypeFormActions.removeSuccess, (state, action) => ({
@@ -45,6 +50,7 @@ export const licenceTypeFormReducer = createReducer(
     removed: action.removed,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenceTypeFormActions.getAllSuccess, (state, action) => ({
@@ -52,6 +58,7 @@ export const licenceTypeFormReducer = createReducer(
     licenceTypeForms: action.licenceTypeForms,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenceTypeFormActions.licenceTypeFormReset, (state) => ({

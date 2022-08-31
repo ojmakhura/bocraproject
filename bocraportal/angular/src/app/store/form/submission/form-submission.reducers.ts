@@ -10,6 +10,7 @@ export const formSubmissionReducer = createReducer(
         formSubmission: action.formSubmission,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormSubmissionActions.saveSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const formSubmissionReducer = createReducer(
         formSubmission: action.formSubmission, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormSubmissionActions.saveNoteSuccess, (state, action) => ({
@@ -25,6 +27,7 @@ export const formSubmissionReducer = createReducer(
         notes: [...state.notes, action.note], 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormSubmissionActions.removeSuccess, (state, action) => ({
@@ -32,6 +35,7 @@ export const formSubmissionReducer = createReducer(
         removed: action.removed, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormSubmissionActions.getAllSuccess, (state, action) => ({
@@ -39,6 +43,7 @@ export const formSubmissionReducer = createReducer(
         formSubmissions: action.formSubmissions, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormSubmissionActions.searchSuccess, (state, action) => ({
@@ -46,6 +51,7 @@ export const formSubmissionReducer = createReducer(
         formSubmissions: action.formSubmissions, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormSubmissionActions.getAllPagedSuccess, (state, action) => ({
@@ -53,6 +59,7 @@ export const formSubmissionReducer = createReducer(
         formSubmissions: action.formSubmissions, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormSubmissionActions.formSubmissionReset, (state) => ({

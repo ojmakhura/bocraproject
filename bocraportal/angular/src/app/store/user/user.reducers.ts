@@ -13,6 +13,7 @@ export const userReducer = createReducer(
     criteria: null,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(UserActions.updateUserNameSuccess, (state, action) => ({
@@ -23,6 +24,7 @@ export const userReducer = createReducer(
     criteria: null,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(UserActions.loadUsersSuccess, (state, action) => ({
@@ -33,6 +35,7 @@ export const userReducer = createReducer(
     criteria: null,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(UserActions.findByIdSuccess, (state, action) => ({
@@ -43,6 +46,7 @@ export const userReducer = createReducer(
       criteria: null,
       loading: false,
       success: action.success,
+      error: false,
       messages: action.messages
   })),
   // on(UserActions.saveSuccess, (state, action) => ({
@@ -83,6 +87,7 @@ export const userReducer = createReducer(
     criteria: null,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   // on(UserActions.getAllPagedSuccess, (state, action) => ({

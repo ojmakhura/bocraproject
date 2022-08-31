@@ -35,7 +35,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
-  sectorRemoved$: Observable<boolean>;
+  override sectorRemoved$: Observable<boolean>;
   formRemoved$: Observable<boolean>;
 
   constructor(private injector: Injector) {
