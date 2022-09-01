@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jboss.resteasy.specimpl.AbstractBuiltResponse;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UserResource;
@@ -155,12 +156,17 @@ public class KeycloakUserService {
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
 
         Response res = usersResource.create(userRepresentation);
+        System.out.println(res.getStatus());
+        System.out.println(res.getStatusInfo());
+        
+        // InputStreamWrapper
 
         List<UserRepresentation> users = usersResource.search(user.getUsername(), user.getFirstName(),
                 user.getLastName(), user.getEmail(), 0, 1);
         if (CollectionUtils.isNotEmpty(users)) {
 
             UserRepresentation rep = users.get(0);
+            user.setUserId(rep.getId());
             UserResource userResource = usersResource.get(rep.getId());
 
             List<RoleRepresentation> roleReps = new ArrayList<>();
