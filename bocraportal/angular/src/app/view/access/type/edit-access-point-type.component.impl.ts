@@ -17,7 +17,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
-  
+
   constructor(private injector: Injector) {
     super(injector);
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
@@ -28,7 +28,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
     return form;
   }
 
-  override doNgOnDestroy() {}
+  override doNgOnDestroy() { }
 
   override doNgAfterViewInit(): void {
 
@@ -61,7 +61,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/access/type/edit-access-point-type/{button:delete}') {
+        if (item === '/access/type/edit-access-point-type/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -73,7 +73,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/access/type/edit-access-point-type/{button:delete}') {
+        if (item === '/access/type/edit-access-point-type/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -81,21 +81,38 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
   }
 
   override beforeEditAccessPointTypeSave(form: EditAccessPointTypeSaveForm): void {
+    if (this.editAccessPointTypeForm.valid && this.editAccessPointTypeForm.dirty) {
+      if (form.accessPointType?.id) {
+        form.accessPointType.updatedBy = this.keycloakService.getUsername();
+        form.accessPointType.updatedDate = new Date();
+      } else {
+        form.accessPointType.createdBy = this.keycloakService.getUsername();
+        form.accessPointType.createdDate = new Date();
+      }
 
-    this.store.dispatch(
-      AccessPointTypeActions.save({
-        accessPointType: form.accessPointType,
-        loading: true,
-      })
-    );
+      this.store.dispatch(
+        AccessPointTypeActions.save({
+          accessPointType: form.accessPointType,
+          loading: true,
+        })
+      );
+
+    } else {
+      this.store.dispatch(AccessPointTypeActions.accessPointTypeFailure({ messages: ['Form has to be filled'] }));
+    }
   }
 
   override beforeEditAccessPointTypeDelete(form: EditAccessPointTypeDeleteForm): void {
-    this.store.dispatch(
-      AccessPointTypeActions.remove({
-        id: form?.accessPointType?.id,
-        loading: false,
-      })
-    );
+    if (form?.accessPointType?.id && confirm("Are you sure you want to delete the access point type?")) {
+      this.store.dispatch(
+        AccessPointTypeActions.remove({
+          id: form?.accessPointType?.id,
+          loading: false,
+        })
+      );
+      this.editAccessPointTypeFormReset();
+    } else {
+      this.store.dispatch(AccessPointTypeActions.accessPointTypeFailure({ messages: ['Please select something to delete'] }));
+    }
   }
 }

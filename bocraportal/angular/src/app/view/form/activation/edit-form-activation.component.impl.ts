@@ -121,7 +121,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
 
   override beforeEditFormActivationDelete(form: EditFormActivationDeleteForm): void {
 
-    if(confirm('Are you sure you want to delete the form activation?')) {
+    if(form?.formActivation?.id && confirm('Are you sure you want to delete the form activation?')) {
 
       this.store.dispatch(
         FormActivationActions.remove({
@@ -130,6 +130,8 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         })
       );
       this.editFormActivationFormReset();
+    }else {
+      this.store.dispatch(FormActivationActions.formActivationFailure({ messages: ['Please select something to delete'] }));
     }
   }
 

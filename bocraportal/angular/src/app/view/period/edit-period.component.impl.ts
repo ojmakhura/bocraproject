@@ -38,7 +38,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     return form;
   }
 
-  override doNgOnDestroy() {}
+  override doNgOnDestroy() { }
 
   override doNgAfterViewInit() {
 
@@ -77,7 +77,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
 
     this.periodPeriodStartControl.valueChanges.subscribe(start => {
       console.log(start);
-      if(this.periodPeriodConfig?.periodConfigName) {
+      if (this.periodPeriodConfig?.periodConfigName) {
         let end = this.calculateEndDate(new Date(this.periodPeriodStart), this.periodPeriodConfig);
         this.periodPeriodEndControl.patchValue(formatDate(end, 'yyyy-MM-dd', 'en-bw'));
         let name = this.getPeriodName(new Date(this.periodPeriodStart), end);
@@ -87,7 +87,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/period/edit-period/{button:delete}') {
+        if (item === '/period/edit-period/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -99,9 +99,9 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
 
     if (config.repeatPeriod === RepeatPeriod.MONTHS) {
       next.setMonth(start.getMonth() + config.repeat);
-      
+
     } else if (config.repeatPeriod === RepeatPeriod.YEARS) {
-      
+
       next.setFullYear(start.getFullYear() + config.repeat);
       next.setMonth(start.getMonth());
     }
@@ -111,16 +111,16 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
   }
 
   getPeriodName(start: Date, next: Date): string {
-    
+
     let val: string = `${start.getFullYear()}`;
 
-    if(start.getFullYear() != next.getFullYear()) {
-      
-        val = `${start.toLocaleString('en-bw', { month: 'short' })} ${start.getFullYear()} - ${next.toLocaleString('en-bw', { month: 'short' })} ${next.toLocaleString('en-bw', { year: 'numeric' })}`;
+    if (start.getFullYear() != next.getFullYear()) {
+
+      val = `${start.toLocaleString('en-bw', { month: 'short' })} ${start.getFullYear()} - ${next.toLocaleString('en-bw', { month: 'short' })} ${next.toLocaleString('en-bw', { year: 'numeric' })}`;
     } else {
 
       val = `${start.toLocaleString('en-bw', { month: 'short' })}`;
-      if(start.getMonth() != next.getMonth()) {
+      if (start.getMonth() != next.getMonth()) {
         val = `${val} - ${next.toLocaleString('en-bw', { month: 'short' })}`;
       }
 
@@ -154,7 +154,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
   }
 
   override handleFormChanges(change: any): void {
-      console.log(change);
+    console.log(change);
   }
 
   override periodPeriodConfigSearch(): void {
@@ -169,7 +169,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
   override periodPreviousSearch() {
     this.store.dispatch(
       PeriodActions.search({
-        criteria: {periodName: this.periodPreviousSearchField.value},
+        criteria: { periodName: this.periodPreviousSearchField.value },
         loading: true
       })
     );
@@ -178,34 +178,24 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
   override periodNextSearch() {
     this.store.dispatch(
       PeriodActions.search({
-        criteria: {periodName: this.periodNextSearchField.value},
+        criteria: { periodName: this.periodNextSearchField.value },
         loading: true
       })
     );
   }
-  
-  override beforeEditPeriodDelete(form: EditPeriodDeleteForm): void {
-    if (this.editPeriodForm.valid && this.editPeriodForm.dirty){
-      if (form.period?.id) {
-        form.period.updatedBy = this.keycloakService.getUsername();
-        form.period.updatedDate = new Date();
-      } else {
-        form.period.createdBy = this.keycloakService.getUsername();
-        form.period.createdDate = new Date();
-      }
-      if(form?.period?.id && confirm("Are you sure you want to delete the period?")){
-    this.store.dispatch(
-      PeriodActions.remove({
-        id: form?.period?.id,
-        loading: false,
-      })
 
-    );
-      }
-  }else{
-        
-    this.store.dispatch(PeriodActions.periodFailure({ messages:['Please select something to delete'] }));
-  }
+  override beforeEditPeriodDelete(form: EditPeriodDeleteForm): void {
+    if (form?.period?.id && confirm("Are you sure you want to delete the period?")) {
+      this.store.dispatch(
+        PeriodActions.remove({
+          id: form?.period?.id,
+          loading: false,
+        })
+      );
+      this.editPeriodFormReset();
+    } else {
+      this.store.dispatch(PeriodActions.periodFailure({ messages: ['Please select something to delete'] }));
+    }
   }
 
 
@@ -213,7 +203,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
 
     this.editPeriodFormReset();
 
-    if(form?.period?.id) {
+    if (form?.period?.id) {
       console.log(form.period);
 
       let current: PeriodVO = form.period;
@@ -231,7 +221,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
       next.periodName = this.getPeriodName(start, end);
       next.previous = current;
 
-      this.editPeriodForm = this.newForm({period: next});
+      this.editPeriodForm = this.newForm({ period: next });
     }
   }
 }

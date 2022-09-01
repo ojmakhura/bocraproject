@@ -40,12 +40,12 @@ export class EditUserComponentImpl extends EditUserComponent {
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
 
       role.forEach((val) => {
-        if(this.keycloakService.getUserRoles().includes(val.name)) {
+        if (this.keycloakService.getUserRoles().includes(val.name)) {
 
           let item = new SelectItem();
           item.label = val['description'];
           item.value = val['name'];
-  
+
           this.userRolesBackingList.push(item);
         }
       });
@@ -78,14 +78,14 @@ export class EditUserComponentImpl extends EditUserComponent {
     );
 
     this.user$.subscribe((user) => {
-      this.setEditUserFormValue({user: user});
+      this.setEditUserFormValue({ user: user });
     });
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/user/edit-user/{button:search}') {
+        if (item === '/user/edit-user/{button:search}') {
           this.searchUnrestricted = false;
-        } else if(item === '/user/edit-user/{button:delete}') {
+        } else if (item === '/user/edit-user/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -97,25 +97,15 @@ export class EditUserComponentImpl extends EditUserComponent {
   }
 
   override beforeEditUserDelete(form: EditUserDeleteForm): void {
-    if (this.editUserForm.valid && this.editUserForm.dirty) {
-      if (form.user?.id) {
-        form.user.updatedBy = this.keycloakService.getUsername();
-        form.user.updatedDate = new Date();
-      } else {
-        form.user.createdBy = this.keycloakService.getUsername();
-        form.user.createdDate = new Date();
-      }
-      if (form?.user?.id && confirm("Are you sure you want to delete the period?")) {
-        this.store.dispatch(
-          UserActions.remove({
-            id: form?.user?.id,
-            loading: false,
-          })
-
-        );
-      }
+    if (form?.user?.userId && confirm("Are you sure you want to delete the period?")) {
+      this.store.dispatch(
+        UserActions.remove({
+          id: form?.user?.id,
+          loading: false,
+        })
+      );
+      this.editUserFormReset();
     } else {
-
       this.store.dispatch(UserActions.userFailure({ messages: ['Please select something to delete'] }));
     }
   }

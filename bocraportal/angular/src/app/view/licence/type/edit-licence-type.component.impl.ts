@@ -22,7 +22,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./edit-licence-type.component.scss'],
 })
 export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
-  deleteUnrestricted: boolean = false;
+  deleteUnrestricted: boolean = true;
   unauthorisedUrls$: Observable<string[]>;
   protected keycloakService: KeycloakService;
   formsModalColumns = [
@@ -103,10 +103,19 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   }
 
   override beforeEditLicenceTypeDelete(form: EditLicenceTypeDeleteForm): void {
-    this.store.dispatch(licenceTypeActions.remove({
-      id: form?.licenceType?.id,
-      loading: true
-    }));
+
+    if(form?.licenceType?.id && confirm('Are you sure you want to delete the license type?')){
+      this.store.dispatch(licenceTypeActions.remove({
+        id: form?.licenceType?.id,
+        loading: true
+      }));
+      this.editLicenceTypeFormReset();
+    }else {
+      this.store.dispatch(licenceTypeActions.licenceTypeFailure({ messages: ['Please select something to delete'] }))
+    }
+  }
+  editLicenseTypeFormReset() {
+    throw new Error('Method not implemented.');
   }
 
   override licenceTypeFormsSearch(): void {

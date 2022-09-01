@@ -200,10 +200,14 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
           loading: true,
         })
       );
+      this.editFormSubmissionFormReset();
     }else {
       this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
     }
   }
+  // editFormSubmissionFormReset() {
+  //   throw new Error('Method not implemented.');
+  // }
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
     let formSubmission: FormSubmissionVO = form.formSubmission;
     formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;

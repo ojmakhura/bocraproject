@@ -92,6 +92,19 @@ export class CreateOrEditMenuSectionComponentImpl extends CreateOrEditMenuSectio
     );
   }
 
+  // override beforeCreateOrEditMenuSectionDelete(form: CreateOrEditMenuSectionDeleteForm): void {
+  //   if (form?.menuSection?.id && confirm("Are you sure you want to delete the period?")) {
+  //     this.store.dispatch(MenuSectionActions.remove({
+  //       id: form?.menuSection?.id,
+  //       loading: false,
+  //     }));
+  //     this.createOrEditMenuSectionFormReset();
+  //   } else {
+  //     this.store.dispatch(MenuSectionActions.menuSectionFailure({ messages: ['Please select something to delete'] }));
+  //   }
+  // }
+
+
   override menuSectionAuthorisationsSearch(): void {
     let criteria: AuthorisationCriteria = new AuthorisationCriteria();
     criteria.accessPointName = this.menuSectionAuthorisationsSearchField.value;

@@ -121,10 +121,10 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     this.authorisation$.subscribe((authorisation) => {
       this.setEditAuthorisationFormValue({ authorisation: authorisation });
     });
-    
+
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/auth/edit-authorisation/{button:delete}') {
+        if (item === '/auth/edit-authorisation/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -157,23 +157,14 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
   }
 
   override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
-    if (this.editAuthorisationForm.valid && this.editAuthorisationForm.dirty) {
-      if (form.authorisation?.id) {
-        form.authorisation.updatedBy = this.keycloakService.getUsername();
-        form.authorisation.updatedDate = new Date();
-      } else {
-        form.authorisation.createdBy = this.keycloakService.getUsername();
-        form.authorisation.createdDate = new Date();
-      }
-      if (form?.authorisation?.id && confirm("Are you sure you want to delete the period?")) {
-        this.store.dispatch(
-          AuthorisationActions.remove({
-            id: form?.authorisation?.id,
-            loading: false,
-          })
-
-        );
-      }
+    if (form?.authorisation?.id && confirm("Are you sure you want to delete the authorisation?")) {
+      this.store.dispatch(
+        AuthorisationActions.remove({
+          id: form?.authorisation?.id,
+          loading: false,
+        })
+      );
+      this.editAuthorisationFormReset();
     } else {
 
       this.store.dispatch(AuthorisationActions.authorisationFailure({ messages: ['Please select something to delete'] }));
