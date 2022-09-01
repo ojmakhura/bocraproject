@@ -111,8 +111,8 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

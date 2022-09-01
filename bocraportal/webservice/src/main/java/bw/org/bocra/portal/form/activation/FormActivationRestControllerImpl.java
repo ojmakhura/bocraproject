@@ -6,6 +6,7 @@
 package bw.org.bocra.portal.form.activation;
 
 import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,6 +40,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -58,6 +60,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -77,6 +80,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -96,6 +100,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -115,6 +120,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -134,6 +140,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

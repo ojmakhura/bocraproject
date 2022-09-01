@@ -102,8 +102,9 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
+            
             logger.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -144,6 +145,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
