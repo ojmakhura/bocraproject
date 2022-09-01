@@ -12,11 +12,13 @@ import bw.org.bocra.portal.sector.SectorRepository;
 import bw.org.bocra.portal.sector.SectorVO;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see LicenseeSector
  */
 @Repository("licenseeSectorDao")
+@Transactional
 public class LicenseeSectorDaoImpl
     extends LicenseeSectorDaoBase
 {
@@ -65,9 +67,9 @@ public class LicenseeSectorDaoImpl
         if(source.getSector() != null && source.getSector().getId() != null) {
             SectorVO sector = new SectorVO();
             sector.setId(source.getSector().getId());
-            sector.setCode(source.getSector().getCode());
+            // sector.setCode(source.getSector().getCode());
             sector.setName(source.getSector().getName());
-            sector.setDescription(source.getSector().getDescription());
+            // sector.setDescription(source.getSector().getDescription());
             sector.setThemeColour(source.getSector().getThemeColour());
 
             target.setSector(sector);

@@ -12,6 +12,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentTypeActions.saveSuccess, (state, action) => ({
@@ -21,6 +22,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentTypeActions.removeSuccess, (state, action) => ({
@@ -30,6 +32,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentTypeActions.getAllSuccess, (state, action) => ({
@@ -39,6 +42,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentTypeActions.searchSuccess, (state, action) => ({
@@ -48,6 +52,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentTypeActions.getAllPagedSuccess, (state, action) => ({
@@ -57,6 +62,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentTypeActions.documentTypeReset, (state) => ({

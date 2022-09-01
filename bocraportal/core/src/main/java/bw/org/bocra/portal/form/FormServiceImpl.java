@@ -13,11 +13,14 @@ import java.util.Collection;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see bw.org.bocra.portal.form.FormService
  */
 @Service("formService")
+@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 public class FormServiceImpl
     extends FormServiceBase
 {

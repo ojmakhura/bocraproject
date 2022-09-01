@@ -24,6 +24,7 @@ import { FormGroup } from '@angular/forms';
 import * as LicenseeSectorActions from '@app/store/licensee/sector/licensee-sector.actions';
 import * as LicenseeSectorSelectors from '@app/store/licensee/sector/licensee-sector.selectors';
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
+import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 
 @Component({
   selector: 'app-edit-sector',
@@ -49,10 +50,13 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override beforeOnInit(form: EditSectorVarsForm): EditSectorVarsForm {
+    form.sector = new SectorVO;
+    form.sector.themeColour = "#000000";
     return form;
   }
 
   override doNgAfterViewInit() {
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -74,9 +78,8 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       });
     });
 
-
     this.sectorLicensee$.subscribe(ls => {
-      if(ls?.id)
+      if (ls?.id)
         this.addToSectorLicensees(ls);
     });
 
@@ -90,7 +93,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/sector/edit-sector/{button:delete}') {
+        if (item === '/sector/edit-sector/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -99,20 +102,20 @@ export class EditSectorComponentImpl extends EditSectorComponent {
 
   override addToSectorLicensees(licensee: LicenseeSectorVO) {
     this.store.dispatch(
-      SectorActions.addLicensee({ 
-        sectorId: this.sectorId, 
-        licenseeId: licensee.id, 
-        loading: true 
+      SectorActions.addLicensee({
+        sectorId: this.sectorId,
+        licenseeId: licensee.id,
+        loading: true
       })
     );
-    
+
     // this.sectorLicenseesControl.push(this.createLicenseeSectorVOGroup(tmp));
   }
 
-  override doNgOnDestroy() {}
+  override doNgOnDestroy() { }
 
   override sectorLicenseesAddDialog(): void {
-    
+
   }
 
   override sectorLicenseesSearch(): void {
@@ -127,27 +130,17 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     );
   }
   override beforeEditSectorDelete(form: EditSectorDeleteForm): void {
-    if (this.editSectorForm.valid && this.editSectorForm.dirty){
-      if (form.sector?.id) {
-        form.sector.updatedBy = this.keycloakService.getUsername();
-        form.sector.updatedDate = new Date();
-      } else {
-        form.sector.createdBy = this.keycloakService.getUsername();
-        form.sector.createdDate = new Date();
-      }
-      if(form?.sector?.id && confirm("Are you sure you want to delete the period?")){
-    this.store.dispatch(
-      SectorActions.remove({
-        id: form?.sector?.id,
-        loading: false,
-      })
-
-    );
-      }
-  }else{
-        
-    this.store.dispatch(SectorActions.sectorFailure({ messages:['Please select something to delete'] }));
-  }
+    if (form?.sector?.id && confirm("Are you sure you want to delete the period?")) {
+      this.store.dispatch(
+        SectorActions.remove({
+          id: form?.sector?.id,
+          loading: false,
+        })
+      );
+      this.editSectorFormReset();
+    } else {
+      this.store.dispatch(SectorActions.sectorFailure({ messages: ['Please select something to delete'] }));
+    }
   }
 
   /**
@@ -185,20 +178,20 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override createLicenseeSectorVOGroup(value: LicenseeSectorVO): FormGroup {
-      return this.formBuilder.group({
-          id: [value?.id],
-          licensee: {
-            id: value?.licensee?.id,
-            uin: value?.licensee?.uin,
-            licenseeName: value?.licensee?.licenseeName
-          }
-      });
+    return this.formBuilder.group({
+      id: [value?.id],
+      licensee: {
+        id: value?.licensee?.id,
+        uin: value?.licensee?.uin,
+        licenseeName: value?.licensee?.licenseeName
+      }
+    });
   }
 
   override sectorFormsSearch() {
 
     let criteria: FormCriteria = new FormCriteria()
-    
+
     criteria.code = this.sectorFormsSearchField.value
     criteria.formName = this.sectorFormsSearchField.value
 

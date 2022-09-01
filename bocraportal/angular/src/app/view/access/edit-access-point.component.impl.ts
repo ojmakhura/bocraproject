@@ -17,7 +17,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./edit-access-point.component.scss']
 })
 export class EditAccessPointComponentImpl extends EditAccessPointComponent {
-    
+
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
@@ -32,7 +32,7 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
 
   override beforeOnInit(form: EditAccessPointVarsForm): EditAccessPointVarsForm {
 
-    this.store.dispatch(AccessPointTypeActions.getAll({loading: true}));
+    this.store.dispatch(AccessPointTypeActions.getAll({ loading: true }));
     this.accessPointAccessPointTypes$.subscribe(types => {
       this.accessPointAccessPointTypeBackingList = [];
       types.forEach(type => {
@@ -43,13 +43,22 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
         this.accessPointAccessPointTypeBackingList.push(item);
       });
     });
-    
+
     return form;
   }
-    
-  override doNgOnDestroy() {}
+
+  override doNgOnDestroy() { }
 
   override doNgAfterViewInit(): void {
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/access/edit-access-point",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -71,7 +80,7 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/access/edit-access-point/{button:delete}') {
+        if (item === '/access/edit-access-point/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -80,6 +89,15 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
     this.accessPoint$.subscribe((accessPoint) => {
       this.setEditAccessPointFormValue({ accessPoint: accessPoint });
     });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if (item === '/access/edit-access-point/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
+    });
+
   }
 
   override beforeEditAccessPointSave(form: EditAccessPointSaveForm): void {
@@ -112,30 +130,21 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
       
       this.store.dispatch(AccessPointActions.accessPointFailure({ messages: messages }));
     }
-  
+
   }
 
   override beforeEditAccessPointDelete(form: EditAccessPointDeleteForm): void {
-    if (this.editAccessPointForm.valid && this.editAccessPointForm.dirty){
-      if (form.accessPoint?.id) {
-        form.accessPoint.updatedBy = this.keycloakService.getUsername();
-        form.accessPoint.updatedDate = new Date();
-      } else {
-        form.accessPoint.createdBy = this.keycloakService.getUsername();
-        form.accessPoint.createdDate = new Date();
-      }
-      if(form?.accessPoint?.id && confirm("Are you sure you want to delete the period?")){
-    this.store.dispatch(
-      AccessPointActions.remove({
-        id: form?.accessPoint?.id,
-        loading: false,
-      })
+    if (form?.accessPoint?.id && confirm("Are you sure you want to delete the access point?")) {
+      this.store.dispatch(
+        AccessPointActions.remove({
+          id: form?.accessPoint?.id,
+          loading: false,
+        })
+      );
+      this.editAccessPointFormReset();
+    } else {
 
-    );
+      this.store.dispatch(AccessPointActions.accessPointFailure({ messages: ['Please select something to delete'] }));
     }
-  }else {
-    
-    this.store.dispatch(AccessPointActions.accessPointFailure({ messages:['Please select something to delete'] }));
- }
-}
-}
+  }
+}  

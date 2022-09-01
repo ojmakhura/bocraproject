@@ -7,6 +7,7 @@
 package bw.org.bocra.portal.notification;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
@@ -17,6 +18,7 @@ import bw.org.bocra.portal.sector.SectorRepository;
  * @see Notification
  */
 @Repository("notificationDao")
+@Transactional
 public class NotificationDaoImpl
     extends NotificationDaoBase
 {

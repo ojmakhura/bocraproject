@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.FormVO;
@@ -31,6 +33,7 @@ import bw.org.bocra.portal.period.PeriodVO;
  * @see bw.org.bocra.portal.form.submission.SubmissionService
  */
 @Service("submissionService")
+@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 public class SubmissionServiceImpl
         extends SubmissionServiceBase {
 
@@ -51,10 +54,10 @@ public class SubmissionServiceImpl
         FormSubmissionVO submission = getFormSubmissionDao().toFormSubmissionVO(entity);
 
         // for(DataField field : entity.getDataFields()) {
-        //     DataFieldVO vo = getDataFieldDao().toDataFieldVO(field);
+        // DataFieldVO vo = getDataFieldDao().toDataFieldVO(field);
         // }
-        //submission.setDataFields(value);
-        
+        // submission.setDataFields(value);
+
         return submission;
     }
 
@@ -150,7 +153,7 @@ public class SubmissionServiceImpl
     @Override
     protected Collection<FormSubmissionVO> handleSearch(FormSubmissionCriteria criteria)
             throws Exception {
-        
+
         Collection<FormSubmission> submissions = getFormSubmissionDao().findByCriteria(criteria);
 
         return toSubmissionVOCollection(submissions);
@@ -164,7 +167,8 @@ public class SubmissionServiceImpl
     protected Collection<FormSubmissionVO> handleGetAll(Integer pageNumber, Integer pageSize)
             throws Exception {
 
-        return toSubmissionVOCollection((Collection<FormSubmission>) getFormSubmissionDao().loadAll(pageNumber, pageSize));
+        return toSubmissionVOCollection(
+                (Collection<FormSubmission>) getFormSubmissionDao().loadAll(pageNumber, pageSize));
     }
 
     @Override
@@ -175,10 +179,10 @@ public class SubmissionServiceImpl
 
     @Override
     protected Collection<DataFieldVO> handleAddDataFields(Set<DataFieldVO> dataFields) throws Exception {
-        
+
         Collection<DataFieldVO> fields = new ArrayList<>();
 
-        for(DataFieldVO field : dataFields) {
+        for (DataFieldVO field : dataFields) {
             fields.add(this.addDataField(field));
         }
 
@@ -196,42 +200,46 @@ public class SubmissionServiceImpl
         SubmissionSummary summary = new SubmissionSummary();
         Specification<FormSubmission> specs = null;
 
-        if(StringUtils.isNotBlank(criteria.getSubmittedBy())) {
-            specs = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy());
+        if (StringUtils.isNotBlank(criteria.getSubmittedBy())) {
+            specs = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy",
+                    criteria.getSubmittedBy());
         }
 
         summary.setMySubmissions(formSubmissionRepository.count(specs));
         System.out.println(summary);
         specs = null;
 
-        if(criteria.getLicensee() != null) {
+        if (criteria.getLicensee() != null) {
             specs = FormSubmissionSpecifications.findByLicenseeId(criteria.getLicensee());
         }
-        
+
         summary.setAllSubmissions(formSubmissionRepository.count(specs));
         System.out.println(summary);
 
         /**
          * Get all values related to status
          */
-        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.NEW);
+        Specification<FormSubmission> sSpecs = BocraportalSpecifications
+                .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.NEW);
 
-        if(specs != null) {
+        if (specs != null) {
             sSpecs = sSpecs.and(specs);
         }
         summary.setNewSubmissions(formSubmissionRepository.count(sSpecs));
         System.out.println(summary);
 
-        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.DRAFT);
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
+                FormSubmissionStatus.DRAFT);
 
-        if(specs != null) {
+        if (specs != null) {
             sSpecs = sSpecs.and(specs);
         }
         summary.setDraftSubmissions(formSubmissionRepository.count(sSpecs));
 
-        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.SUBMITTED);
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
+                FormSubmissionStatus.SUBMITTED);
 
-        if(specs != null) {
+        if (specs != null) {
             sSpecs = sSpecs.and(specs);
         }
         summary.setReturnedSubmissions(formSubmissionRepository.count(sSpecs));
@@ -239,10 +247,12 @@ public class SubmissionServiceImpl
         /**
          * Get count of overdue submissions
          */
-        sSpecs = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttribute("submissionDate", LocalDateTime.now());
-        sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual("submissionStatus", FormSubmissionStatus.SUBMITTED));
+        sSpecs = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttribute("submissionDate",
+                LocalDateTime.now());
+        sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual(
+                "submissionStatus", FormSubmissionStatus.SUBMITTED));
 
-        if(specs != null) {
+        if (specs != null) {
             sSpecs = sSpecs.and(specs);
         }
         summary.setOverdueSubmissions(formSubmissionRepository.count(sSpecs));

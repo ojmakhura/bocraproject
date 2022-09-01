@@ -16,11 +16,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see bw.org.bocra.portal.period.PeriodService
  */
 @Service("periodService")
+@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 public class PeriodServiceImpl
     extends PeriodServiceBase
 {

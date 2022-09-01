@@ -13,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.Form;
@@ -32,6 +33,7 @@ import bw.org.bocra.portal.report.config.ReportConfigRepository;
  * @see LicenceType
  */
 @Repository("licenceTypeDao")
+@Transactional
 public class LicenceTypeDaoImpl
     extends LicenceTypeDaoBase
 {

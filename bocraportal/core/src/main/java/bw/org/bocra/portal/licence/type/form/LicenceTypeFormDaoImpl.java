@@ -13,11 +13,13 @@ import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeVO;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see LicenceTypeForm
  */
 @Repository("licenceTypeFormDao")
+@Transactional
 public class LicenceTypeFormDaoImpl
     extends LicenceTypeFormDaoBase
 {

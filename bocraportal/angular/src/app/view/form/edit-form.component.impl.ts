@@ -27,6 +27,8 @@ import {
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
 import { SectorFormVO } from '@app/model/bw/org/bocra/portal/sector/form/sector-form-vo';
 import { HttpClient } from '@angular/common/http';
 import { SelectItem } from '@app/utils/select-item';
@@ -43,6 +45,8 @@ export class EditFormComponentImpl extends EditFormComponent {
   private formSection$: Observable<FormSectionVO>;
   private formField$: Observable<FormFieldVO>;
   private licenseeForm$: Observable<LicenseeFormVO>;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -54,6 +58,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.formSection$ = this.store.pipe(select(FormSelectors.selectFormSection));
     this.formFormSections$ = this.store.pipe(select(FormSelectors.selectFormSections));
     this.licenseeForm$ = this.store.pipe(select(LicenseeFormSelectors.selectLicenseeForm));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.formSectors$ = this.store.pipe(select(SectorSelectors.selectSectors));
   }
 
@@ -66,6 +71,14 @@ export class EditFormComponentImpl extends EditFormComponent {
   override afterOnInit() {}
 
   override doNgAfterViewInit() {
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/form/edit-form",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((roles) => {
       roles
         .sort((a, b) => a.name.localeCompare(b.name))
@@ -117,6 +130,14 @@ export class EditFormComponentImpl extends EditFormComponent {
       if (licenseeForm) {
         this.addToFormLicensees(licenseeForm);
       }
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/form/edit-form/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
   }
 

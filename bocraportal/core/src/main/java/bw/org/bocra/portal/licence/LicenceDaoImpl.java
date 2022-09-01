@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentRepository;
@@ -25,6 +26,7 @@ import bw.org.bocra.portal.licensee.LicenseeVO;
  * @see Licence
  */
 @Repository("licenceDao")
+@Transactional
 public class LicenceDaoImpl
     extends LicenceDaoBase
 {

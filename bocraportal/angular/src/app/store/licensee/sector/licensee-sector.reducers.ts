@@ -10,6 +10,7 @@ export const licenseeSectorReducer = createReducer(
     licenseeSector: action.licenseeSector,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeSectorActions.findByLicenseeSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const licenseeSectorReducer = createReducer(
     licenseeSectors: action.licenseeSectors,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeSectorActions.findBySectorSuccess, (state, action) => ({
@@ -24,6 +26,7 @@ export const licenseeSectorReducer = createReducer(
     licenseeSectors: action.licenseeSectors,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeSectorActions.createSuccess, (state, action) => ({
@@ -31,6 +34,7 @@ export const licenseeSectorReducer = createReducer(
     licenseeSector: action.licenseeSector,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeSectorActions.updateSuccess, (state, action) => ({
@@ -38,6 +42,7 @@ export const licenseeSectorReducer = createReducer(
     licenseeSector: action.licenseeSector,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeSectorActions.removeSuccess, (state, action) => ({
@@ -45,6 +50,7 @@ export const licenseeSectorReducer = createReducer(
     removed: action.removed,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeSectorActions.getAllSuccess, (state, action) => ({
@@ -52,6 +58,7 @@ export const licenseeSectorReducer = createReducer(
     licenseeSectors: action.licenseeSectors,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeSectorActions.licenseeSectorReset, (state) => ({

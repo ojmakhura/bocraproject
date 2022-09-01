@@ -14,11 +14,13 @@ import bw.org.bocra.portal.sector.SectorRepository;
 import bw.org.bocra.portal.sector.SectorVO;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see SectorForm
  */
 @Repository("sectorFormDao")
+@Transactional
 public class SectorFormDaoImpl
     extends SectorFormDaoBase
 {

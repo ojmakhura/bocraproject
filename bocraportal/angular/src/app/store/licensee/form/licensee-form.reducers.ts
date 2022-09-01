@@ -10,6 +10,7 @@ export const licenseeFormReducer = createReducer(
     licenseeForm: action.licenseeForm,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeFormActions.findByLicenseeSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const licenseeFormReducer = createReducer(
     licenseeForms: action.licenseeForms,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeFormActions.findByFormSuccess, (state, action) => ({
@@ -24,6 +26,7 @@ export const licenseeFormReducer = createReducer(
     licenseeForms: action.licenseeForms,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeFormActions.createSuccess, (state, action) => ({
@@ -31,6 +34,7 @@ export const licenseeFormReducer = createReducer(
     licenseeForm: action.licenseeForm,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeFormActions.updateSuccess, (state, action) => ({
@@ -38,6 +42,7 @@ export const licenseeFormReducer = createReducer(
     licenseeForm: action.licenseeForm,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeFormActions.removeSuccess, (state, action) => ({
@@ -45,6 +50,7 @@ export const licenseeFormReducer = createReducer(
     removed: action.removed,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeFormActions.getAllSuccess, (state, action) => ({
@@ -52,6 +58,7 @@ export const licenseeFormReducer = createReducer(
     licenseeForms: action.licenseeForms,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(LicenseeFormActions.licenseeFormReset, (state) => ({

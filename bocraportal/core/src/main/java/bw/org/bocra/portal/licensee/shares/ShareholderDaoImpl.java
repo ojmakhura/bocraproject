@@ -8,11 +8,13 @@ package bw.org.bocra.portal.licensee.shares;
 
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see Shareholder
  */
 @Repository("shareholderDao")
+@Transactional
 public class ShareholderDaoImpl
     extends ShareholderDaoBase
 {

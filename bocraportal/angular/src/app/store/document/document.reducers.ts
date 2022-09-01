@@ -10,6 +10,7 @@ export const documentReducer = createReducer(
         document: action.document, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentActions.saveSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const documentReducer = createReducer(
         document: action.document, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentActions.removeSuccess, (state, action) => ({
@@ -24,6 +26,7 @@ export const documentReducer = createReducer(
         removed: action.removed, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentActions.getAllSuccess, (state, action) => ({
@@ -31,6 +34,7 @@ export const documentReducer = createReducer(
         documents: action.documents, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentActions.searchSuccess, (state, action) => ({
@@ -38,6 +42,7 @@ export const documentReducer = createReducer(
         documents: action.documents, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentActions.getAllPagedSuccess, (state, action) => ({
@@ -45,6 +50,7 @@ export const documentReducer = createReducer(
         documents: action.documents, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentActions.getLicenseeDocumentsSuccess, (state, action) => ({
@@ -52,6 +58,7 @@ export const documentReducer = createReducer(
         documents: action.documents, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentActions.getLicenceDocumentsSuccess, (state, action) => ({
@@ -59,6 +66,7 @@ export const documentReducer = createReducer(
         documents: action.documents, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(DocumentActions.documentReset, (state) => ({

@@ -14,11 +14,10 @@ import { select } from '@ngrx/store';
   styleUrls: ['./edit-access-point-type.component.scss'],
 })
 export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeComponent {
-
-  unauthorisedUrls$: Observable<string[]>;
-  deleteUnrestricted: boolean = false;
   protected keycloakService: KeycloakService;
-  
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
+
   constructor(private injector: Injector) {
     super(injector);
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
@@ -29,9 +28,18 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
     return form;
   }
 
-  override doNgOnDestroy() {}
+  override doNgOnDestroy() { }
 
   override doNgAfterViewInit(): void {
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/access/type/edit-access-point-type",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -53,7 +61,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/access/type/edit-access-point-type/{button:delete}') {
+        if (item === '/access/type/edit-access-point-type/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -62,10 +70,18 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
     this.accessPointType$.subscribe((accessPointType) => {
       this.setEditAccessPointTypeFormValue({ accessPointType: accessPointType });
     });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if (item === '/access/type/edit-access-point-type/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
+    });
   }
 
   override beforeEditAccessPointTypeSave(form: EditAccessPointTypeSaveForm): void {
-
+    
     if(this.editAccessPointTypeForm.valid && this.editAccessPointTypeForm.dirty){
       if (form.accessPointType?.id) {
         form.accessPointType.updatedBy = this.keycloakService.getUsername();
@@ -93,15 +109,19 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
       }
       this.store.dispatch(AccessPointTypeActions.accessPointTypeFailure({ messages: messages }));
     }
-  
   }
 
   override beforeEditAccessPointTypeDelete(form: EditAccessPointTypeDeleteForm): void {
-    this.store.dispatch(
-      AccessPointTypeActions.remove({
-        id: form?.accessPointType?.id,
-        loading: false,
-      })
-    );
+    if (form?.accessPointType?.id && confirm("Are you sure you want to delete the access point type?")) {
+      this.store.dispatch(
+        AccessPointTypeActions.remove({
+          id: form?.accessPointType?.id,
+          loading: false,
+        })
+      );
+      this.editAccessPointTypeFormReset();
+    } else {
+      this.store.dispatch(AccessPointTypeActions.accessPointTypeFailure({ messages: ['Please select something to delete'] }));
+    }
   }
 }

@@ -24,7 +24,6 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
-
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);

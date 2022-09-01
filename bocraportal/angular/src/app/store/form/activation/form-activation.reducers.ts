@@ -10,6 +10,7 @@ export const formActivationReducer = createReducer(
         formActivation: action.formActivation, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActivationActions.saveSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const formActivationReducer = createReducer(
         formActivation: action.formActivation, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActivationActions.removeSuccess, (state, action) => ({
@@ -25,6 +27,7 @@ export const formActivationReducer = createReducer(
         formActivation: null,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActivationActions.getAllSuccess, (state, action) => ({
@@ -32,6 +35,7 @@ export const formActivationReducer = createReducer(
         formActivations: action.formActivations, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActivationActions.searchSuccess, (state, action) => ({
@@ -39,6 +43,7 @@ export const formActivationReducer = createReducer(
         formActivations: action.formActivations, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActivationActions.getAllPagedSuccess, (state, action) => ({
@@ -46,6 +51,7 @@ export const formActivationReducer = createReducer(
         formActivations: action.formActivations, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActivationActions.formActivationReset, (state) => ({

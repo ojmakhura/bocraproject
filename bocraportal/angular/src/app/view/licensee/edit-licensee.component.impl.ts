@@ -55,7 +55,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   override afterOnInit() { }
 
   override doNgAfterViewInit(): void {
-    
+
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
         viewUrl: "/licensee/edit-licensee",
@@ -81,19 +81,19 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/licensee/edit-licensee/{button:delete}') {
+        if (item === '/licensee/edit-licensee/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
     });
 
     this.licenseeSector$.subscribe(ls => {
-      if(ls?.id)
+      if (ls?.id)
         this.addToLicenseeSectors(ls);
     });
 
     this.licenseeForm$.subscribe(lf => {
-      if(lf?.id) {
+      if (lf?.id) {
         this.addToLicenseeForms(lf);
       }
     });
@@ -105,14 +105,14 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     if (confirm('Are you sure you want to delete the licensee form?')) {
 
       this.store.dispatch(
-          LicenseeFormActions.remove({
-              id: this.licenseeForms[index].id,
-              loading: true
-          })
+        LicenseeFormActions.remove({
+          id: this.licenseeForms[index].id,
+          loading: true
+        })
       );
 
       this.formRemoved$.subscribe(removed => {
-        if(removed) {
+        if (removed) {
           this.handleDeleteFromLicenseeForms(this.licenseeForms[index]);
           this.licenseeFormsControl.removeAt(index);
         }
@@ -121,23 +121,23 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override deleteFromLicenseeSectors(index: number) {
-    if(confirm('Are you sure you want to delete the licensee sector?')) {
-        this.store.dispatch(
-            LicenseeSectorActions.remove({
-                id: this.licenseeSectors[index].id,
-                loading: true
-            })
-        );
+    if (confirm('Are you sure you want to delete the licensee sector?')) {
+      this.store.dispatch(
+        LicenseeSectorActions.remove({
+          id: this.licenseeSectors[index].id,
+          loading: true
+        })
+      );
 
-        this.sectorRemoved$.subscribe(removed => {
-          if(removed) {
+      this.sectorRemoved$.subscribe(removed => {
+        if (removed) {
 
-            this.handleDeleteFromLicenseeSectors(this.licenseeSectors[index]);
-            this.licenseeSectorsControl.removeAt(index);
-          }
-        });
+          this.handleDeleteFromLicenseeSectors(this.licenseeSectors[index]);
+          this.licenseeSectorsControl.removeAt(index);
+        }
+      });
     }
-}
+  }
 
 
   /**
@@ -185,25 +185,15 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   }
   override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
-    if (this.editLicenseeForm.valid && this.licenseeId) {
-      if (form.licensee?.id) {
-        form.licensee.updatedBy = this.keycloakService.getUsername();
-        form.licensee.updatedDate = new Date();
-      } else {
-        form.licensee.createdBy = this.keycloakService.getUsername();
-        form.licensee.createdDate = new Date();
-      }
-      if (form?.licensee?.id && confirm("Are you sure you want to delete the period?")) {
-        this.store.dispatch(
-          LicenseeActions.remove({
-            id: form?.licensee?.id,
-            loading: false,
-          })
-
-        );
-      }
+    if (form?.licensee?.id && confirm("Are you sure you want to delete the period?")) {
+      this.store.dispatch(
+        LicenseeActions.remove({
+          id: form?.licensee?.id,
+          loading: false,
+        })
+      );
+      this.editLicenseeFormReset();
     } else {
-
       this.store.dispatch(LicenseeActions.licenseeFailure({ messages: ['Please select something to delete'] }));
     }
   }

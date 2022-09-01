@@ -7,6 +7,7 @@
 package bw.org.bocra.portal.report.config;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormReportConfigDao;
@@ -25,6 +26,7 @@ import bw.org.bocra.portal.report.ReportRepository;
  * @see ReportConfig
  */
 @Repository("reportConfigDao")
+@Transactional
 public class ReportConfigDaoImpl
     extends ReportConfigDaoBase
 {

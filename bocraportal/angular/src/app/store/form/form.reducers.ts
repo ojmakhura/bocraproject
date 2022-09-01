@@ -10,6 +10,7 @@ export const formReducer = createReducer(
         form: action.form,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.saveFormSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const formReducer = createReducer(
         form: action.form,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.removeFormSuccess, (state, action) => ({
@@ -24,6 +26,7 @@ export const formReducer = createReducer(
         removed: action.removed,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.getAllFormsSuccess, (state, action) => ({
@@ -31,6 +34,7 @@ export const formReducer = createReducer(
         forms: action.forms,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.searchFormsSuccess, (state, action) => ({
@@ -38,6 +42,7 @@ export const formReducer = createReducer(
         forms: action.forms,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.getAllFormsPagedSuccess, (state, action) => ({
@@ -45,6 +50,7 @@ export const formReducer = createReducer(
         forms: action.forms,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.findFieldByIdSuccess, (state, action) => ({
@@ -52,6 +58,7 @@ export const formReducer = createReducer(
         formField: action.formField,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.saveFieldSuccess, (state, action) => ({
@@ -59,6 +66,7 @@ export const formReducer = createReducer(
         formField: action.formField,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.saveSectionSuccess, (state, action) => ({
@@ -67,6 +75,7 @@ export const formReducer = createReducer(
         formSection: action.formSection,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.setSections, (state, action) => ({
@@ -80,6 +89,7 @@ export const formReducer = createReducer(
         removed: action.removed,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.getAllFieldsSuccess, (state, action) => ({
@@ -87,6 +97,7 @@ export const formReducer = createReducer(
         formFields: action.formFields,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.getAllFieldsPagedSuccess, (state, action) => ({
@@ -94,6 +105,7 @@ export const formReducer = createReducer(
         formFields: action.formFields,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(FormActions.formReset, (state) => ({

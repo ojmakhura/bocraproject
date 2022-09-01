@@ -53,7 +53,6 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
       })
     );
 
-
     this.documentType$.subscribe((documentType) => {
       this.setEditDocumentTypeFormValue({ documentType: documentType });
     });

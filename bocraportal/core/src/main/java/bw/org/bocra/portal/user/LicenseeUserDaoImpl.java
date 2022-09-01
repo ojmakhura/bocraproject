@@ -8,6 +8,7 @@ package bw.org.bocra.portal.user;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
@@ -16,6 +17,7 @@ import bw.org.bocra.portal.licensee.LicenseeRepository;
  * @see LicenseeUser
  */
 @Repository("licenseeUserDao")
+@Transactional
 public class LicenseeUserDaoImpl
     extends LicenseeUserDaoBase
 {

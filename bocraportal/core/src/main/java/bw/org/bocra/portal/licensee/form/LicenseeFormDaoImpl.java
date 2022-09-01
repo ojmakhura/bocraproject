@@ -13,11 +13,13 @@ import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see LicenseeForm
  */
 @Repository("licenseeFormDao")
+@Transactional
 public class LicenseeFormDaoImpl
     extends LicenseeFormDaoBase
 {

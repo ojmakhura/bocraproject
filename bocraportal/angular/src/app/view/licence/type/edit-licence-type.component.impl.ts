@@ -16,16 +16,14 @@ import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
 
-
 @Component({
   selector: 'app-edit-licence-type',
   templateUrl: './edit-licence-type.component.html',
   styleUrls: ['./edit-licence-type.component.scss'],
 })
 export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
-  deleteUnrestricted: boolean = false;
+  deleteUnrestricted: boolean = true;
   unauthorisedUrls$: Observable<string[]>;
-
   protected keycloakService: KeycloakService;
   formsModalColumns = [
       'actions',
@@ -52,6 +50,14 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   }
 
   override doNgAfterViewInit(): void {
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/licence/type/edit-licence-type",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -63,31 +69,16 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
       }
     });
 
-    this.store.dispatch(
-      ViewActions.loadViewAuthorisations({
-        viewUrl: "/licence/type/edit-licence-type",
-        roles: this.keycloakService.getUserRoles(),
-        loading: true
-      })
-    );
-
-
     this.licenceType$.subscribe((licenceType) => {
-      this.setEditLicenceTypeFormValue({documentType: licenceType});
+      this.setEditLicenceTypeFormValue({licenceType: licenceType});
     });
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/licence/edit-licence-type/{button:delete}') {
+        if(item === '/licence/type/edit-licence-type/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
-    }
-    
-    );
-
-    this.licenceType$.subscribe((licenceType) => {
-      this.setEditLicenceTypeFormValue({licenceType: licenceType});
     });
   }
 
@@ -129,10 +120,19 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
 }
 
   override beforeEditLicenceTypeDelete(form: EditLicenceTypeDeleteForm): void {
-    this.store.dispatch(licenceTypeActions.remove({
-      id: form?.licenceType?.id,
-      loading: true
-    }));
+
+    if(form?.licenceType?.id && confirm('Are you sure you want to delete the license type?')){
+      this.store.dispatch(licenceTypeActions.remove({
+        id: form?.licenceType?.id,
+        loading: true
+      }));
+      this.editLicenceTypeFormReset();
+    }else {
+      this.store.dispatch(licenceTypeActions.licenceTypeFailure({ messages: ['Please select something to delete'] }))
+    }
+  }
+  editLicenseTypeFormReset() {
+    throw new Error('Method not implemented.');
   }
 
   override licenceTypeFormsSearch(): void {

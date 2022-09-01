@@ -5,9 +5,11 @@ import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submis
 import { SubmissionSummary } from '@app/model/bw/org/bocra/portal/form/submission/submission-summary';
 import * as DataProcessingActions from '@app/store/form/processing/data-processing.actions';
 import * as DataProcessingSelectors from '@app/store/form/processing/data-processing.selectors';
-import { DataCaptureProcessingComponent, DataCaptureProcessingNewSubmissionForm } from '@app/view/form/processing/data-capture-processing.component';
+import { DataCaptureProcessingAllSubmissionsForm, DataCaptureProcessingComponent, DataCaptureProcessingDraftsForm, DataCaptureProcessingMySubmissionsForm, DataCaptureProcessingNewSubmissionForm, DataCaptureProcessingOverdueSubmissionsForm, DataCaptureProcessingReturnedSubmissionsForm } from '@app/view/form/processing/data-capture-processing.component';
 import { select } from '@ngrx/store';
+import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
+import { FormModule } from '../form.module';
 
 @Component({
   selector: 'app-data-capture-processing',
@@ -18,7 +20,10 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
 
   submissionSummary$: Observable<SubmissionSummary>;
 
-  constructor(private injector: Injector) {
+  summary!: SubmissionSummary;
+
+  constructor(private injector: Injector,
+    private keycloakService: KeycloakService) {
     super(injector);
   }
 
@@ -31,6 +36,11 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
     );
 
     this.submissionSummary$ = this.store.pipe(select(DataProcessingSelectors.selectSubmissionSummary));
+
+    this.submissionSummary$.subscribe(data => {
+      this.summary = data;
+      console.log(data);
+    });
 
   }
 
@@ -45,5 +55,57 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
       criteria: criteria,
       loading: true
     }));
+  }
+
+  override beforeDataCaptureProcessingDrafts(form: DataCaptureProcessingDraftsForm): void {
+    let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
+    criteria.submissionStatus = FormSubmissionStatus.DRAFT;
+
+    this.store.dispatch(DataProcessingActions.loadData({
+      criteria: criteria,
+      loading: true
+    }));
+  }
+
+  override beforeDataCaptureProcessingMySubmissions(form: DataCaptureProcessingMySubmissionsForm): void {
+    let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
+    // criteria.submissionStatus = FormSubmissionStatus.SUBMITTED
+    criteria.submittedBy = this.keycloakService.getUsername();
+  
+    this.store.dispatch(DataProcessingActions.loadData({
+      criteria: criteria,
+      loading: true
+    }));
+  }
+
+  override beforeDataCaptureProcessingAllSubmissions(form: DataCaptureProcessingAllSubmissionsForm): void {
+    let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
+    // criteria.submissionStatus = FormSubmissionStatus.SUBMITTED
+
+    this.store.dispatch(DataProcessingActions.loadData({
+      criteria: criteria,
+      loading: true
+    }));
+  }
+
+  override beforeDataCaptureProcessingOverdueSubmissions(form: DataCaptureProcessingOverdueSubmissionsForm): void {
+    let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
+    // criteria.submissionStatus = FormSubmissionStatus.
+
+    this.store.dispatch(DataProcessingActions.loadData({
+      criteria: criteria,
+      loading: true
+    }));
+  }
+
+  override beforeDataCaptureProcessingReturnedSubmissions(form: DataCaptureProcessingReturnedSubmissionsForm): void {
+    let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
+    criteria.submissionStatus = FormSubmissionStatus.RETURNED
+
+    this.store.dispatch(DataProcessingActions.loadData({
+      criteria: criteria,
+      loading: true
+    }));
+
   }
 }

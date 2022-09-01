@@ -10,6 +10,7 @@ export const licenseeReducer = createReducer(
         licensee: action.licensee, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(LicenseeActions.saveSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const licenseeReducer = createReducer(
         licensee: action.licensee, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(LicenseeActions.addSectorSuccess, (state, action) => ({
@@ -24,6 +26,7 @@ export const licenseeReducer = createReducer(
         sector: action.sector, 
         sectors: [...state.sectors, action.sector], 
         loading: false,
+        error: false,
         messages: action.messages
     })),
     on(LicenseeActions.addDocumentSuccess, (state, action) => ({
@@ -31,6 +34,7 @@ export const licenseeReducer = createReducer(
         document: action.document, 
         documents: [...state.documents, action.document], 
         loading: false,
+        error: false,
         messages: action.messages
     })),
     on(LicenseeActions.removeSuccess, (state, action) => ({
@@ -38,6 +42,7 @@ export const licenseeReducer = createReducer(
         removed: action.removed,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(LicenseeActions.getAllSuccess, (state, action) => ({
@@ -45,6 +50,7 @@ export const licenseeReducer = createReducer(
         licensees: action.licensees, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(LicenseeActions.searchSuccess, (state, action) => ({
@@ -52,6 +58,7 @@ export const licenseeReducer = createReducer(
         licensees: action.licensees, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(LicenseeActions.getAllPagedSuccess, (state, action) => ({
@@ -59,6 +66,7 @@ export const licenseeReducer = createReducer(
         licensees: action.licensees, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(LicenseeActions.licenseeReset, (state) => ({

@@ -10,6 +10,7 @@ export const sectorFormReducer = createReducer(
     sectorForm: action.sectorForm,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(SectorFormActions.findBySectorSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const sectorFormReducer = createReducer(
     sectorForms: action.sectorForms,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(SectorFormActions.findByFormSuccess, (state, action) => ({
@@ -24,6 +26,7 @@ export const sectorFormReducer = createReducer(
     sectorForms: action.sectorForms,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(SectorFormActions.createSuccess, (state, action) => ({
@@ -31,6 +34,7 @@ export const sectorFormReducer = createReducer(
     sectorForm: action.sectorForm,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(SectorFormActions.updateSuccess, (state, action) => ({
@@ -38,6 +42,7 @@ export const sectorFormReducer = createReducer(
     sectorForm: action.sectorForm,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(SectorFormActions.removeSuccess, (state, action) => ({
@@ -45,6 +50,7 @@ export const sectorFormReducer = createReducer(
     removed: action.removed,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(SectorFormActions.getAllSuccess, (state, action) => ({
@@ -52,6 +58,7 @@ export const sectorFormReducer = createReducer(
     sectorForms: action.sectorForms,
     loading: false,
     success: action.success,
+    error: false,
     messages: action.messages,
   })),
   on(SectorFormActions.sectorFormReset, (state) => ({

@@ -2,7 +2,7 @@
 
 
 
-<div class="card containermb-10 px-5 py-2 bg-light">
+<div class="card container mb-10 px-5 py-2 bg-light">
   <div class="card-body">
     <form [formGroup]="editSectorForm">
       <section>
@@ -69,13 +69,21 @@
               translate>description</span></label>
           <textarea id="sectorDescription" class="form-control" formControlName="description"></textarea>
         </div>
+        <div class="mb-3">
+          <label id="sectorThemeColour_label" class="col-sm-2 col-form-label" for="sectorThemeColour"><span translate>theme.colour</span>*</label>
+          <input type="color" id="sectorThemeColour" class="form-control" name="themeColour" formControlName="themeColour" required/>
+          <div *ngIf="editSectorForm.invalid && sectorThemeColourControl.invalid && (sectorThemeColourControl.dirty || sectorThemeColourControl.touched)" class="alert alert-danger" role="alert">
+              <div *ngIf="sectorThemeColourControl.errors['required']">
+                  <span translate>theme.colour.required</span>
+              </div>
+          </div>
+      </div>
 
         <br />
         <div class="text-end">
           <button type="button" color="accent" (click)="editSectorSave()" class="btn btn-outline-primary">
             <span translate>save</span>
           </button>
-
           <button type="button" color="accent" (click)="editSectorDelete()" class="btn btn-outline-primary"
             *ngIf="sectorId && deleteUnrestricted">
             <span translate>delete</span>

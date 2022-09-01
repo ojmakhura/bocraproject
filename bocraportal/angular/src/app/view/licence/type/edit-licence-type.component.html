@@ -182,128 +182,136 @@
 
 	</div>
 </div>
-<div class="modal fade" id="licenceTypeFormsModal" tabindex="-1" aria-labelledby="licenceTypeFormsLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="licenceTypeFormsAddLabel" translate>
-                    action.select
-                    <span translate>forms</span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <form>
-                        <div>
-                            <mat-form-field>
-                            <mat-label translate>search</mat-label>
-                            <input matInput type="text" [formControl]="licenceTypeFormsSearchField"
-                                id="licenceTypeFormsSearchField" />
-                            </mat-form-field>
-                        </div>
-                        <button type="button" (click)="licenceTypeFormsSearch()" class="btn btn-primary">
-                            <mat-icon>search</mat-icon>
-                        </button>
-                    </form>
-                </div>
-             <mat-table matSort [dataSource]="licenceTypeForms$ | async" #licenceTypeFormsModalSort="matSort" class="table table-bordered" style="width: 100%;">
-                 <ng-container matColumnDef="actions">
-                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-                     <mat-cell *matCellDef="let row; let i=index">
-                         <mat-checkbox (change)="licenceTypeFormsSelected($event, row)"></mat-checkbox>
-                     </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="id">
-                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="form.code">
-                     <mat-header-cell *matHeaderCellDef translate>form.code</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.form?.code }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="form.formName">
-                     <mat-header-cell *matHeaderCellDef translate>form.form.name</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.form?.formName }} </mat-cell>
-                 </ng-container>
-                 <mat-header-row *matHeaderRowDef="licenceTypeFormsModalColumns"></mat-header-row>
-                 <mat-row *matRowDef="let row; columns: licenceTypeFormsModalColumns;"></mat-row>
-             </mat-table>
-             <mat-paginator #licenceTypeFormsModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-                <button type="button" class="btn btn-primary" (click)="addSelectedLicenceTypeForms()" data-bs-dismiss="modal" translate>save</button>
-            </div>
-        </div>
-    </div>
+<div class="modal fade" id="licenceTypeFormsModal" tabindex="-1" aria-labelledby="licenceTypeFormsLabel"
+	aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="licenceTypeFormsAddLabel" translate>
+					action.select
+					<span translate>forms</span>
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div>
+					<form>
+						<div>
+							<mat-form-field>
+								<mat-label translate>search</mat-label>
+								<input matInput type="text" [formControl]="licenceTypeFormsSearchField"
+									id="licenceTypeFormsSearchField" />
+							</mat-form-field>
+						</div>
+						<button type="button" (click)="licenceTypeFormsSearch()" class="btn btn-primary">
+							<mat-icon>search</mat-icon>
+						</button>
+					</form>
+				</div>
+				<mat-table matSort [dataSource]="licenceTypeForms$ | async" #licenceTypeFormsModalSort="matSort"
+					class="table table-bordered" style="width: 100%;">
+					<ng-container matColumnDef="actions">
+						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+						<mat-cell *matCellDef="let row; let i=index">
+							<mat-checkbox (change)="licenceTypeFormsSelected($event, row)"></mat-checkbox>
+						</mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="id">
+						<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="form.code">
+						<mat-header-cell *matHeaderCellDef translate>form.code</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row?.form?.code }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="form.formName">
+						<mat-header-cell *matHeaderCellDef translate>form.form.name</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row?.form?.formName }} </mat-cell>
+					</ng-container>
+					<mat-header-row *matHeaderRowDef="licenceTypeFormsModalColumns"></mat-header-row>
+					<mat-row *matRowDef="let row; columns: licenceTypeFormsModalColumns;"></mat-row>
+				</mat-table>
+				<mat-paginator #licenceTypeFormsModalPaginator="matPaginator" [pageSize]="10"
+					[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+				<button type="button" class="btn btn-primary" (click)="addSelectedLicenceTypeForms()"
+					data-bs-dismiss="modal" translate>save</button>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div class="modal fade" id="licenceTypeLicencesModal" tabindex="-1" aria-labelledby="licenceTypeLicencesLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="licenceTypeLicencesAddLabel" translate>
-                    action.select
-                    <span translate>licences</span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <form>
-                        <div>
-                            <mat-form-field>
-                            <mat-label translate>search</mat-label>
-                            <input matInput type="text" [formControl]="licenceTypeLicencesSearchField"
-                                id="licenceTypeLicencesSearchField" />
-                            </mat-form-field>
-                        </div>
-                        <button type="button" (click)="licenceTypeLicencesSearch()" class="btn btn-primary">
-                            <mat-icon>search</mat-icon>
-                        </button>
-                    </form>
-                </div>
-             <mat-table matSort [dataSource]="licenceTypeLicences$ | async" #licenceTypeLicencesModalSort="matSort" class="table table-bordered" style="width: 100%;">
-                 <ng-container matColumnDef="actions">
-                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-                     <mat-cell *matCellDef="let row; let i=index">
-                         <mat-checkbox (change)="licenceTypeLicencesSelected($event, row)"></mat-checkbox>
-                     </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="id">
-                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="status">
-                     <mat-header-cell *matHeaderCellDef translate>status</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.status }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="licenceNumber">
-                     <mat-header-cell *matHeaderCellDef translate>licence.number</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.licenceNumber }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="licensee.licenseeName">
-                     <mat-header-cell *matHeaderCellDef translate>licensee.licensee.name</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.licensee?.licenseeName }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="startDate">
-                     <mat-header-cell *matHeaderCellDef translate>start.date</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.startDate }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="endDate">
-                     <mat-header-cell *matHeaderCellDef translate>end.date</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.endDate }} </mat-cell>
-                 </ng-container>
-                 <mat-header-row *matHeaderRowDef="licenceTypeLicencesModalColumns"></mat-header-row>
-                 <mat-row *matRowDef="let row; columns: licenceTypeLicencesModalColumns;"></mat-row>
-             </mat-table>
-             <mat-paginator #licenceTypeLicencesModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-                <button type="button" class="btn btn-primary" (click)="addSelectedLicenceTypeLicences()" data-bs-dismiss="modal" translate>save</button>
-            </div>
-        </div>
-    </div>
+<div class="modal fade" id="licenceTypeLicencesModal" tabindex="-1" aria-labelledby="licenceTypeLicencesLabel"
+	aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="licenceTypeLicencesAddLabel" translate>
+					action.select
+					<span translate>licences</span>
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div>
+					<form>
+						<div>
+							<mat-form-field>
+								<mat-label translate>search</mat-label>
+								<input matInput type="text" [formControl]="licenceTypeLicencesSearchField"
+									id="licenceTypeLicencesSearchField" />
+							</mat-form-field>
+						</div>
+						<button type="button" (click)="licenceTypeLicencesSearch()" class="btn btn-primary">
+							<mat-icon>search</mat-icon>
+						</button>
+					</form>
+				</div>
+				<mat-table matSort [dataSource]="licenceTypeLicences$ | async" #licenceTypeLicencesModalSort="matSort"
+					class="table table-bordered" style="width: 100%;">
+					<ng-container matColumnDef="actions">
+						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+						<mat-cell *matCellDef="let row; let i=index">
+							<mat-checkbox (change)="licenceTypeLicencesSelected($event, row)"></mat-checkbox>
+						</mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="id">
+						<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="status">
+						<mat-header-cell *matHeaderCellDef translate>status</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row?.status }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="licenceNumber">
+						<mat-header-cell *matHeaderCellDef translate>licence.number</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row?.licenceNumber }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="licensee.licenseeName">
+						<mat-header-cell *matHeaderCellDef translate>licensee.licensee.name</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row?.licensee?.licenseeName }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="startDate">
+						<mat-header-cell *matHeaderCellDef translate>start.date</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row?.startDate }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="endDate">
+						<mat-header-cell *matHeaderCellDef translate>end.date</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row?.endDate }} </mat-cell>
+					</ng-container>
+					<mat-header-row *matHeaderRowDef="licenceTypeLicencesModalColumns"></mat-header-row>
+					<mat-row *matRowDef="let row; columns: licenceTypeLicencesModalColumns;"></mat-row>
+				</mat-table>
+				<mat-paginator #licenceTypeLicencesModalPaginator="matPaginator" [pageSize]="10"
+					[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+				<button type="button" class="btn btn-primary" (click)="addSelectedLicenceTypeLicences()"
+					data-bs-dismiss="modal" translate>save</button>
+			</div>
+		</div>
+	</div>
 </div>
