@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("period")
+@RequestMapping("/period")
 @Tag(name = "Period", description = "Managing time periods in the system.")
 @PreAuthorize("@securityCheck.isAuthorised('/period')")
 @CrossOrigin()

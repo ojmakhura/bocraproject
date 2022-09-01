@@ -17,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class LicenceRestController {
-    protected path = 'license';
+    protected path = '/license';
 
 
     constructor(private http: HttpClient) {

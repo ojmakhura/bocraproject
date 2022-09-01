@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class FormSectionRestController {
-    protected path = 'form/section';
+    protected path = '/form/section';
 
 
     constructor(private http: HttpClient) {

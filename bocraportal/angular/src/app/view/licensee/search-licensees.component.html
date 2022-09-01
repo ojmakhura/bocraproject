@@ -17,32 +17,25 @@
       </div>
       <div formGroupName="criteria">
         <div class="mb-18">
-          <label id="criteriaUin_label" class="col-sm-2 col-form-label" for="criteriaUin"
-            ><span translate>uin</span></label
-          >
+          <label id="criteriaUin_label" class="col-sm-2 col-form-label" for="criteriaUin"><span
+              translate>uin</span></label>
           <input type="text" id="criteriaUin" class="form-control" name="uin" formControlName="uin" />
         </div>
         <div class="mb-18">
-          <label id="criteriaLicenseeName_label" class="col-sm-2 col-form-label" for="criteriaLicenseeName"
-            ><span translate>licensee.name</span></label
-          >
-          <input
-            type="text"
-            id="criteriaLicenseeName"
-            class="form-control"
-            name="licenseeName"
-            formControlName="licenseeName"
-          />
+          <label id="criteriaLicenseeName_label" class="col-sm-2 col-form-label" for="criteriaLicenseeName"><span
+              translate>licensee.name</span></label>
+          <input type="text" id="criteriaLicenseeName" class="form-control" name="licenseeName"
+            formControlName="licenseeName" />
         </div>
 
         <br>
 
-        <div class="text-end" >
-         
-          <button type="button"  (click)="searchLicenseesSearch()" class="btn btn-outline-primary">
+        <div class="text-end">
+
+          <button type="button" (click)="searchLicenseesSearch()" class="btn btn-outline-primary">
             <span translate>search</span>
           </button>
-          <button  type="button" (click)="searchLicenseesFormReset()" class="btn btn-outline-primary">
+          <button type="button" (click)="searchLicenseesFormReset()" class="btn btn-outline-primary">
             <span translate>reset</span>
           </button>
         </div>

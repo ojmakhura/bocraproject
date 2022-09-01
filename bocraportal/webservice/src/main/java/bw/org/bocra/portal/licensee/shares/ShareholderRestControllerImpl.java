@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("shareholder")
+@RequestMapping("/shareholder")
 @Tag(name = "Shareholder", description = "Managing shareholders.")
 @CrossOrigin()
 public class ShareholderRestControllerImpl extends ShareholderRestControllerBase {

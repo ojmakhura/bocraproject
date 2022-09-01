@@ -1,6 +1,5 @@
 package bw.org.bocra.portal.keycloak;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,13 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.resteasy.specimpl.AbstractBuiltResponse;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UserResource;
@@ -31,7 +28,6 @@ import org.springframework.stereotype.Component;
 import bw.org.bocra.portal.licensee.LicenseeService;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.user.LicenseeUserService;
-import bw.org.bocra.portal.user.LicenseeUserVO;
 import bw.org.bocra.portal.user.UserVO;
 
 @Component

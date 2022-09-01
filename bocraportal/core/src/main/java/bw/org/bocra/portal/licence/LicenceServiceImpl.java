@@ -10,7 +10,6 @@ package bw.org.bocra.portal.licence;
 
 import java.util.Collection;
 
-import org.hibernate.Criteria;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class DocumentTypeRestController {
-    protected path = 'document/type';
+    protected path = '/document/type';
     constructor(private http: HttpClient) {
     }
 

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("licence/type")
+@RequestMapping("/licence/type")
 @Tag(name = "Licence Type", description = "Managing licence types.")
 @CrossOrigin()
 public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase {

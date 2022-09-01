@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SectorFormRestController {
     
-    protected path = 'sector/form';
+    protected path = '/sector/form';
 
     constructor(private http: HttpClient) {
     }

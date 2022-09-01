@@ -15,11 +15,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
+import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.licence.Licence;
 import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licence.type.form.LicenceTypeForm;
 import bw.org.bocra.portal.licence.type.form.LicenceTypeFormRepository;
+import bw.org.bocra.portal.licence.type.form.LicenceTypeFormVO;
+import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.report.config.ReportConfigLicenceTypeRepository;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 
@@ -82,7 +87,20 @@ public class LicenceTypeDaoImpl
 
             for(Licence licence : source.getLicences()) {
                 LicenceVO vo = new LicenceVO();
-                getLicenceDao().toLicenceVO(licence, vo);
+                vo.setId(licence.getId());
+                vo.setLicenceNumber(licence.getLicenceNumber());
+                vo.setStartDate(licence.getStartDate());
+                vo.setEndDate(licence.getEndDate());
+                vo.setProvisional(licence.getProvisional());
+
+                LicenseeVO licensee = new LicenseeVO();
+                licensee.setId(licence.getLicensee().getId());
+                licensee.setStatus(licence.getLicensee().getStatus());
+                licensee.setLicenseeName(licence.getLicensee().getLicenseeName());
+                licensee.setUin(licence.getLicensee().getUin());
+
+                vo.setLicensee(licensee);
+
                 licences.add(vo);
             }
 
@@ -95,21 +113,14 @@ public class LicenceTypeDaoImpl
         //     target.setrep
         // }
 
-        // if(CollectionUtils.isNotEmpty(source.getForms())) {
-        //     ArrayList<FormVO> forms = new ArrayList<>();
-        //     for(Form form : source.getForms()) {
-        //         FormVO vo = new FormVO();
-        //         vo.setId(form.getId());
-        //         vo.setCode(form.getCode());
-        //         vo.setFormName(form.getFormName());
-        //         vo.setCreatedBy(form.getCreatedBy());
-        //         vo.setCreatedDate(form.getCreatedDate());
-        //         vo.setUpdatedBy(form.getUpdatedBy());
-        //         vo.setUpdatedDate(form.getUpdatedDate());
-        //         forms.add(vo);
+        // if(CollectionUtils.isNotEmpty(source.getLicenceTypeForms())) {
+        //     ArrayList<LicenceTypeFormVO> forms = new ArrayList<>();
+        //     for(LicenceTypeForm form : source.getLicenceTypeForms()) {
+                
+        //         forms.add(getLicenceTypeFormDao().toLicenceTypeFormVO(form));
         //     }
 
-        //     target.setForms(forms);
+        //     target.setLic;
         // }
     }
 

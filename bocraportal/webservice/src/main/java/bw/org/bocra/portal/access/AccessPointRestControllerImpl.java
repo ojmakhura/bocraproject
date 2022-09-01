@@ -153,6 +153,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

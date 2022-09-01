@@ -5,19 +5,9 @@
 //
 package bw.org.bocra.portal.licensee;
 
-import bw.org.bocra.portal.document.DocumentService;
-import bw.org.bocra.portal.document.DocumentVO;
-import bw.org.bocra.portal.document.type.DocumentTypeVO;
-import bw.org.bocra.portal.keycloak.KeycloakService;
-import bw.org.bocra.portal.keycloak.KeycloakUserService;
-import bw.org.bocra.portal.user.LicenseeUserService;
-import bw.org.bocra.portal.user.UserVO;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
@@ -27,6 +17,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import bw.org.bocra.portal.document.DocumentService;
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
+import bw.org.bocra.portal.keycloak.KeycloakService;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
+import bw.org.bocra.portal.user.LicenseeUserService;
+import bw.org.bocra.portal.user.UserVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/licensee")

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("form/field")
+@RequestMapping("/form/field")
 @Tag(name = "Form Field", description = "Managing form fields.")
 @CrossOrigin()
 public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {

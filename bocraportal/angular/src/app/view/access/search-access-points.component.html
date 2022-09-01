@@ -24,28 +24,25 @@
       </div>
       <div formGroupName="criteria">
         <div class="mb-3">
-          <label id="criteriaType_label" class="col-sm-2 col-form-label" for="criteriaType"
-            ><span translate>type</span></label
-          >
-          <input type="number" id="criteriaType" class="form-control" name="type" formControlName="type" />
+          <label id="criteriaType_label" class="col-sm-2 col-form-label" for="criteriaType"><span
+              translate>type</span></label>
+          <input type="text" id="criteriaType" class="form-control" name="type" formControlName="type" />
         </div>
         <div class="mb-3">
-          <label id="criteriaName_label" class="col-sm-2 col-form-label" for="criteriaName"
-            ><span translate>name</span></label
-          >
+          <label id="criteriaName_label" class="col-sm-2 col-form-label" for="criteriaName"><span
+              translate>name</span></label>
           <input type="text" id="criteriaName" class="form-control" name="name" formControlName="name" />
         </div>
         <div class="mb-3">
-          <label id="criteriaUrl_label" class="col-sm-2 col-form-label" for="criteriaUrl"
-            ><span translate>url</span></label
-          >
+          <label id="criteriaUrl_label" class="col-sm-2 col-form-label" for="criteriaUrl"><span
+              translate>url</span></label>
           <input type="text" id="criteriaUrl" class="form-control" name="url" formControlName="url" />
         </div>
       </div>
     </form>
   </div>
-<br>
-  <div class="text-end" >
+  <br>
+  <div class="text-end">
     <button type="button" color="accent" (click)="searchAccessPointsSearch()" class="btn btn-outline-primary">
       <span translate>search</span>
     </button>

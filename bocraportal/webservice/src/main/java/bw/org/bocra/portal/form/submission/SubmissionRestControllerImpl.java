@@ -21,7 +21,7 @@ import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("form/submission")
+@RequestMapping("/form/submission")
 @Tag(name = "Form Submission", description = "Managing form submission.")
 @CrossOrigin()
 public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
