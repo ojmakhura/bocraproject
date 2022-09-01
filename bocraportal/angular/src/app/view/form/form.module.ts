@@ -6,25 +6,29 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '@shared';
+import { CsvModule } from '@ctrl/ngx-csv';
 import { MaterialModule } from '@app/material.module';
 import { FormRoutingModule } from './form-routing.module';
-import { CsvModule } from '@ctrl/ngx-csv';
-import { EditFormComponentImpl } from '@app/view/form/edit-form.component.impl';
-import { SearchFormsComponentImpl } from '@app/view/form/search-forms.component.impl';
-import { SearchFormsFormsComponentImpl } from '@app/view/form/search-forms-forms.component.impl';
-import { EditFieldComponentImpl } from '@app/view/form/edit-field.component.impl';
-import { EditSectionComponentImpl } from '@app/view/form/edit-section.component.impl';
-import { EditLicenseeComponentImpl } from '@app/view/form/edit-licensee.component.impl';
+import { EditFormComponentImpl } from '@app/view/form/edit-form.component.impl'; // 1
+import { EditSectionComponentImpl } from '@app/view/form/edit-section.component.impl'; // 3
+import { EditLicenseeComponentImpl } from '@app/view/form/edit-licensee.component.impl'; // 3
+import { SearchFormsComponentImpl } from '@app/view/form/search-forms.component.impl'; // 1
+import { SearchFormsFormsComponentImpl } from '@app/view/form/search-forms-forms.component.impl'; // 2
+import { EditFieldComponentImpl } from '@app/view/form/edit-field.component.impl'; // 1
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { formFeature } from '@app/store/form/form.reducers';
 import { FormEffects } from '@app/store/form/form.effects';
+import { FormControllerImpl } from '@app/controller/form/form-controller.impl';
+import { FormSectionRestController } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller';
+import { FormFieldRestController } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller';
+import { FormRestController } from '@app/service/bw/org/bocra/portal/form/form-rest-controller';
 import { licenseeFormFeature } from '@app/store/licensee/form/licensee-form.reducers';
 import { LicenseeFormEffects } from '@app/store/licensee/form/licensee-form.effects';
-import { FormControllerImpl } from '@app/controller/form/form-controller.impl';
-import { FormRestController } from '@app/service/bw/org/bocra/portal/form/form-rest-controller';
-import { FormFieldRestController } from '@app/service/bw/org/bocra/portal/form/field/form-field-rest-controller';
-import { FormSectionRestController } from '@app/service/bw/org/bocra/portal/form/section/form-section-rest-controller';
+import { sectorFormFeature } from '@app/store/sector/form/sector-form.reducers';
+import { SectorFormEffects } from '@app/store/sector/form/sector-form.effects';
+import { licenceTypeFormFeature } from '@app/store/licence/type/form/licence-type-form.reducers';
+import { LicenceTypeFormEffects } from '@app/store/licence/type/form/licence-type-form.effects';
 
 @NgModule({
   imports: [
@@ -39,22 +43,24 @@ import { FormSectionRestController } from '@app/service/bw/org/bocra/portal/form
     FormRoutingModule,
     StoreModule.forFeature(formFeature),
     StoreModule.forFeature(licenseeFormFeature),
-    EffectsModule.forFeature([FormEffects, LicenseeFormEffects]),
+    StoreModule.forFeature(licenceTypeFormFeature),
+    StoreModule.forFeature(sectorFormFeature),
+    EffectsModule.forFeature([FormEffects, LicenseeFormEffects, SectorFormEffects, LicenceTypeFormEffects]),
   ],
   declarations: [
     EditFormComponentImpl,
+    EditSectionComponentImpl,
+    EditLicenseeComponentImpl,
     SearchFormsComponentImpl,
     SearchFormsFormsComponentImpl,
     EditFieldComponentImpl,
-    EditSectionComponentImpl,
-    EditLicenseeComponentImpl,
   ],
   entryComponents: [],
   providers: [
     FormControllerImpl,
-    FormRestController,
-    FormFieldRestController,
     FormSectionRestController,
+    FormFieldRestController,
+    FormRestController,
   ],
 })
 export class FormModule {}

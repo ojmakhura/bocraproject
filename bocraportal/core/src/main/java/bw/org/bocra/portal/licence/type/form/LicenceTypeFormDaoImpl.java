@@ -4,9 +4,14 @@
  * This is only generated once! It will never be overwritten.
  * You can (and have to!) safely modify it by hand.
  */
-package bw.org.bocra.portal.licence.type;
+package bw.org.bocra.portal.licence.type.form;
 
+import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
+import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
+import bw.org.bocra.portal.licence.type.LicenceTypeVO;
+
 import org.springframework.stereotype.Repository;
 
 /**
@@ -18,14 +23,14 @@ public class LicenceTypeFormDaoImpl
 {
     
     public LicenceTypeFormDaoImpl(
-        FormRepository formRepository,
         LicenceTypeRepository licenceTypeRepository,
+        FormRepository formRepository,
         LicenceTypeFormRepository licenceTypeFormRepository
     ) {
 
         super(
-            formRepository,
             licenceTypeRepository,
+            formRepository,
             licenceTypeFormRepository
         );
     }
@@ -41,7 +46,33 @@ public class LicenceTypeFormDaoImpl
         // TODO verify behavior of toLicenceTypeFormVO
         super.toLicenceTypeFormVO(source, target);
         // WARNING! No conversion for target.licenceType (can't convert source.getLicenceType():bw.org.bocra.portal.licence.type.LicenceType to bw.org.bocra.portal.licence.type.LicenceTypeVO
+        if(source.getLicenceType() != null && source.getLicenceType().getId() != null) {
+            LicenceTypeVO type = new LicenceTypeVO();
+            type.setCode(source.getLicenceType().getCode());
+            type.setId(source.getLicenceType().getId());
+            type.setName(source.getLicenceType().getName());
+            type.setDescription(source.getLicenceType().getDescription());
+            target.setLicenceType(type);
+        }
+
         // WARNING! No conversion for target.form (can't convert source.getForm():bw.org.bocra.portal.form.Form to bw.org.bocra.portal.form.FormVO
+        if (source.getForm() != null && source.getForm().getId() != null) {
+            Form form = source.getForm();
+            FormVO vo = new FormVO();
+
+            vo.setId(source.getId());
+            vo.setCreatedBy(form.getCreatedBy());
+            vo.setUpdatedBy(form.getUpdatedBy());
+            vo.setCreatedDate(form.getCreatedDate());
+            vo.setUpdatedDate(form.getUpdatedDate());
+            vo.setCode(form.getCode());
+            vo.setFormName(form.getFormName());
+            vo.setDescription(form.getDescription());
+            vo.setEntryType(form.getEntryType());
+
+            target.setForm(vo);
+        }
+
     }
 
     /**
@@ -61,10 +92,6 @@ public class LicenceTypeFormDaoImpl
      */
     private LicenceTypeForm loadLicenceTypeFormFromLicenceTypeFormVO(LicenceTypeFormVO licenceTypeFormVO)
     {
-        // TODO implement loadLicenceTypeFormFromLicenceTypeFormVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licence.type.loadLicenceTypeFormFromLicenceTypeFormVO(LicenceTypeFormVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (licenceTypeFormVO.getId() == null)
         {
             return  LicenceTypeForm.Factory.newInstance();
@@ -73,7 +100,6 @@ public class LicenceTypeFormDaoImpl
         {
             return this.load(licenceTypeFormVO.getId());
         }
-        */
     }
 
     /**
@@ -98,5 +124,12 @@ public class LicenceTypeFormDaoImpl
     {
         // TODO verify behavior of licenceTypeFormVOToEntity
         super.licenceTypeFormVOToEntity(source, target, copyIfNull);
+        if (source.getForm() != null && source.getForm().getId() != null) {
+            target.setForm(getFormDao().load(source.getForm().getId()));
+        }
+
+        if (source.getLicenceType() != null && source.getLicenceType().getId() != null) {
+            target.setLicenceType(getLicenceTypeDao().load(source.getLicenceType().getId()));
+        }
     }
 }

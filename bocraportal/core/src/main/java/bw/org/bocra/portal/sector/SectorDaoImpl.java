@@ -8,7 +8,6 @@ package bw.org.bocra.portal.sector;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,14 +17,10 @@ import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.FormRepository;
-import bw.org.bocra.portal.licensee.Licensee;
-import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
-import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
-import bw.org.bocra.portal.notification.NotificationDao;
 import bw.org.bocra.portal.notification.NotificationRepository;
 import bw.org.bocra.portal.sector.form.SectorForm;
 import bw.org.bocra.portal.sector.form.SectorFormRepository;
@@ -62,12 +57,7 @@ public class SectorDaoImpl
             Collection<LicenseeSectorVO> licensees = new ArrayList<>();
 
             for(LicenseeSector l : source.getLicenseeSectors()) {
-                LicenseeSectorVO lvo = new LicenseeSectorVO();
-                lvo.setLicenseeSectorId(l.getId());
-                lvo.setId(l.getLicensee().getId());
-                lvo.setLicenseeName(l.getLicensee().getLicenseeName());
-                lvo.setStatus(l.getLicensee().getStatus());
-                lvo.setUin(l.getLicensee().getUin());
+                LicenseeSectorVO lvo = getLicenseeSectorDao().toLicenseeSectorVO(l);
                 licensees.add(lvo);
             }
 
@@ -140,13 +130,13 @@ public class SectorDaoImpl
 
             for(LicenseeSectorVO lvo : source.getLicensees()) {
 
-                if(lvo.getLicenseeSectorId() != null) {
-                    licensees.add(licenseeSectorRepository.getById(lvo.getLicenseeSectorId()));
+                // if(lvo.getId() != null) {
+                licensees.add(licenseeSectorRepository.getReferenceById(lvo.getId()));
 
-                } else if(lvo.getId() != null) {
-                    LicenseeSector ls = LicenseeSector.Factory.newInstance(licenseeDao.load(lvo.getId()), target);
-                    licensees.add(licenseeSectorRepository.save(ls));
-                }
+                // } else if(lvo.getId() != null) {
+                //     LicenseeSector ls = LicenseeSector.Factory.newInstance(licenseeDao.load(lvo.getId()), target);
+                //     licensees.add(licenseeSectorRepository.save(ls));
+                // }
             }
 
             target.setLicenseeSectors(licensees);

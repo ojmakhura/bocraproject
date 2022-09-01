@@ -10,6 +10,7 @@ export const sectorReducer = createReducer(
         sector: action.sector, 
         loading: false,
         success: action.success,
+        error: false,
         messages: []
     })),
     on(SectorActions.saveSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const sectorReducer = createReducer(
         sector: action.sector, 
         loading: false,
         success: action.success,
+        error: false,
         messages: []
     })),
     on(SectorActions.addLicenseeSuccess, (state, action) => ({
@@ -37,6 +39,7 @@ export const sectorReducer = createReducer(
         removed: action.removed, 
         loading: false,
         success: action.success,
+        error: false,
         messages: []
     })),
     on(SectorActions.getAllSuccess, (state, action) => ({
@@ -44,6 +47,7 @@ export const sectorReducer = createReducer(
         sectors: action.sectors, 
         loading: false,
         success: action.success,
+        error: false,
         messages: []
     })),
     on(SectorActions.searchSuccess, (state, action) => ({
@@ -51,6 +55,7 @@ export const sectorReducer = createReducer(
         sectors: action.sectors, 
         loading: false,
         success: action.success,
+        error: false,
         messages: []
     })),
     on(SectorActions.getAllPagedSuccess, (state, action) => ({
@@ -58,6 +63,7 @@ export const sectorReducer = createReducer(
         sectors: action.sectors, 
         loading: false,
         success: action.success,
+        error: false,
         messages: []
     })),
     on(SectorActions.sectorReset, (state) => ({

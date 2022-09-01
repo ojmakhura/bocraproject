@@ -10,6 +10,7 @@ export const periodConfigReducer = createReducer(
         periodConfig: action.periodConfig, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(PeriodConfigActions.saveSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const periodConfigReducer = createReducer(
         periodConfig: action.periodConfig, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(PeriodConfigActions.removeSuccess, (state, action) => ({
@@ -24,6 +26,7 @@ export const periodConfigReducer = createReducer(
         removed: action.removed,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(PeriodConfigActions.getAllSuccess, (state, action) => ({
@@ -31,6 +34,7 @@ export const periodConfigReducer = createReducer(
         periodConfigs: action.periodConfigs, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(PeriodConfigActions.searchSuccess, (state, action) => ({
@@ -38,6 +42,7 @@ export const periodConfigReducer = createReducer(
         periodConfigs: action.periodConfigs, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(PeriodConfigActions.getAllPagedSuccess, (state, action) => ({
@@ -45,6 +50,7 @@ export const periodConfigReducer = createReducer(
         periodConfigs: action.periodConfigs,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(PeriodConfigActions.periodConfigReset, (state) => ({

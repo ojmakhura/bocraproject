@@ -2,6 +2,7 @@
 import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
 import {
   EditFormSubmissionComponent,
+  EditFormSubmissionDeleteForm,
   EditFormSubmissionSubmitForm,
 } from '@app/view/form/submission/edit-form-submission.component';
 import { EditFormSubmissionSaveForm } from '@app/view/form/submission/edit-form-submission.component';
@@ -38,14 +39,14 @@ import * as ViewSelectors from '@app/store/view/view.selectors';
 })
 export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent {
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
   formSubmissions$: Observable<FormSubmissionVO[]>;
   forms$: Observable<FormVO[]>;
   fieldColumns: string[] = ['Row'];
   fieldColumnIds: string[] = ['row'];
   formFields: FormFieldVO[] = [];
   rowGroups: RowGroup[] = [];
-  unauthorisedUrls$: Observable<string[]>;
-  deleteUnrestricted: boolean = true;
   submitUnrestricted: boolean = true;
   returnUnrestricted: boolean = true;
 
@@ -93,10 +94,26 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       if (queryParams?.id) {
         this.loadSubmission(queryParams.id);
       } else {
-        if(this.useCaseScope.pageVariables['id']) {
+        if (this.useCaseScope.pageVariables['id']) {
           this.loadSubmission(this.useCaseScope.pageVariables['id']);
         }
       }
+    });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/form/submission/edit-form-submission",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/form/submission/edit-form-submission/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
 
     this.formSubmission$.subscribe((submission) => {
@@ -120,13 +137,13 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/form/submission/edit-form-submission/{button:delete}') {
+        if (item === '/form/submission/edit-form-submission/{button:delete}') {
           this.deleteUnrestricted = false;
         }
-        if(item === '/form/submission/edit-form-submission/{button:submit}') {
+        if (item === '/form/submission/edit-form-submission/{button:submit}') {
           this.submitUnrestricted = false;
         }
-        if(item === '/form/submission/edit-form-submission/{button:return}') {
+        if (item === '/form/submission/edit-form-submission/{button:return}') {
           this.returnUnrestricted = false;
         }
       });
@@ -139,7 +156,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     let calculationFields: FormGroup[] = [];
 
     // Find the caculation fields controls
-    for(let i = 0; i < this.formSubmissionSectionsControl.length; i++) {
+    for (let i = 0; i < this.formSubmissionSectionsControl.length; i++) {
       let fieldsControls: FormArray = this.formSubmissionSectionsControl.controls[i].get('dataFields') as FormArray;
       for (let i = 0; i < fieldsControls.length; i++) {
         let fieldControl: FormGroup = <FormGroup>fieldsControls.controls[i];
@@ -161,7 +178,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
       for (let i = 0; i < sec.dataFields.length; i++) {
         let field: DataFieldVO = sec.dataFields[i];
-        if(expression.includes(`[${field.formField.fieldId}]`)) {
+        if (expression.includes(`[${field.formField.fieldId}]`)) {
           expression = expression.replace(`[${field.formField.fieldId}]`, field.value);
         }
       }
@@ -170,11 +187,27 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
   }
 
-  doNgOnDestroy() {}
+  doNgOnDestroy() { }
 
   /**
    * This method may be overwritten
    */
+  override beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
+    if (form?.formSubmission?.id && confirm('Are you sure you want to delete the form?')) {
+      this.store.dispatch(
+        FormSubmissionActions.remove({
+          id: form.formSubmission.id,
+          loading: true,
+        })
+      );
+      this.editFormSubmissionFormReset();
+    }else {
+      this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
+    }
+  }
+  // editFormSubmissionFormReset() {
+  //   throw new Error('Method not implemented.');
+  // }
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
     let formSubmission: FormSubmissionVO = form.formSubmission;
     formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;
@@ -285,7 +318,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       id: [dataField?.id],
       row: [dataField?.row],
       formField: this.createFormFieldForm(dataField?.formField),
-      value: [dataField?.value ? {value: dataField?.value, disabled: disable} : {value: this.getFieldDefaultValue(dataField), disabled: disable} ],
+      value: [dataField?.value ? { value: dataField?.value, disabled: disable } : { value: this.getFieldDefaultValue(dataField), disabled: disable }],
     });
   }
 
@@ -293,7 +326,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     return field.formField.defaultValue;
   }
 
-  override handleFormChanges(change: any): void {}
+  override handleFormChanges(change: any): void { }
 
   getDataValue(data: DataFieldVO) {
     return `${data.formField.fieldName}`;
@@ -431,7 +464,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     }
   }
 
-  doEditDataRow(row: number, group: RowGroup) {}
+  doEditDataRow(row: number, group: RowGroup) { }
 
   getColumnValue(columnId: string, group: RowGroup) {
     if (columnId === 'row') return group.row;

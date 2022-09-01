@@ -11,6 +11,9 @@ import { KeycloakService } from 'keycloak-angular';
 import { AuthorisationCriteria } from '@app/model/bw/org/bocra/portal/auth/authorisation-criteria';
 import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 import { FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
+import * as ViewActions from '@app/store/view/view.actions';
+import * as ViewSelectors from '@app/store/view/view.selectors';
 
 @Component({
   selector: 'app-create-or-edit-menu-section',
@@ -19,11 +22,14 @@ import { FormGroup } from '@angular/forms';
 })
 export class CreateOrEditMenuSectionComponentImpl extends CreateOrEditMenuSectionComponent {
   protected keycloakService: KeycloakService;
+  unauthorisedUrls$: Observable<string[]>;
+  deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.menuSectionAuthorisations$ = this.store.pipe(select(AuthorisationSelectors.selectAuthorisations));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
   override beforeOnInit(form: CreateOrEditMenuSectionVarsForm): CreateOrEditMenuSectionVarsForm {
@@ -43,6 +49,24 @@ export class CreateOrEditMenuSectionComponentImpl extends CreateOrEditMenuSectio
           })
         );
       }
+    });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/menu/create-or-edit-menu-section",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+  
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if(item === '/menu/create-or-edit-menu-section/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
     });
 
     this.menuSection$.subscribe((menuSection) => {
@@ -67,6 +91,19 @@ export class CreateOrEditMenuSectionComponentImpl extends CreateOrEditMenuSectio
       })
     );
   }
+
+  // override beforeCreateOrEditMenuSectionDelete(form: CreateOrEditMenuSectionDeleteForm): void {
+  //   if (form?.menuSection?.id && confirm("Are you sure you want to delete the period?")) {
+  //     this.store.dispatch(MenuSectionActions.remove({
+  //       id: form?.menuSection?.id,
+  //       loading: false,
+  //     }));
+  //     this.createOrEditMenuSectionFormReset();
+  //   } else {
+  //     this.store.dispatch(MenuSectionActions.menuSectionFailure({ messages: ['Please select something to delete'] }));
+  //   }
+  // }
+
 
   override menuSectionAuthorisationsSearch(): void {
     let criteria: AuthorisationCriteria = new AuthorisationCriteria();

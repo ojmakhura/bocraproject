@@ -14,11 +14,17 @@ import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { KeycloakService } from 'keycloak-angular';
+import * as FormActions from '@app/store/form/form.actions';
 import { select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
+import { FormGroup } from '@angular/forms';
+import * as LicenseeSectorActions from '@app/store/licensee/sector/licensee-sector.actions';
+import * as LicenseeSectorSelectors from '@app/store/licensee/sector/licensee-sector.selectors';
+import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
+import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 
 @Component({
   selector: 'app-edit-sector',
@@ -29,14 +35,14 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   protected keycloakService: KeycloakService;
   protected licensees$: Observable<LicenseeVO[]>;
   protected licensee$: Observable<LicenseeVO>;
-  protected sectorLicensee$: Observable<LicenseeSectorVO>;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
-    this.sectorLicensees$ = this.store.pipe(select(SectorSelectors.selectLicensees));
+    this.sectorLicensees$ = this.store.pipe(select(SectorSelectors.selectSectors));
+    this.sectorLicensee$ = this.store.pipe(select(LicenseeSectorSelectors.selectLicenseeSector));
     this.licensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.licensee$ = this.store.pipe(select(LicenseeSelectors.selectLicensee));
     this.sectorLicensee$ = this.store.pipe(select(SectorSelectors.selectLicensee));
@@ -44,17 +50,12 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override beforeOnInit(form: EditSectorVarsForm): EditSectorVarsForm {
+    form.sector = new SectorVO;
+    form.sector.themeColour = "#000000";
     return form;
   }
 
   override doNgAfterViewInit() {
-    this.store.dispatch(
-      ViewActions.loadViewAuthorisations({
-        viewUrl: "/sector/edit-sector",
-        roles: this.keycloakService.getUserRoles(),
-        loading: true
-      })
-    );
 
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
@@ -71,19 +72,28 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       this.setEditSectorFormValue({ sector: sector });
     });
 
-    this.licensee$.subscribe((licensee) => {
-      console.log(licensee);
-    });
-
     this.licensees$.subscribe((licensees) => {
       licensees.forEach((lc) => {
         this.store.dispatch(SectorActions.addLicenseeSuccess({ licensee: lc, messages: [''], success: true }));
       });
     });
 
+    this.sectorLicensee$.subscribe(ls => {
+      if (ls?.id)
+        this.addToSectorLicensees(ls);
+    });
+
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/sector/edit-sector",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/sector/edit-sector/{button:delete}') {
+        if (item === '/sector/edit-sector/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -91,25 +101,21 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override addToSectorLicensees(licensee: LicenseeSectorVO) {
-    this.store.dispatch(SectorActions.addLicensee({ sectorId: this.sectorId, licenseeId: licensee.id, loading: true }));
-    console.log(licensee);
-    console.log(this.sectorId);
-    let tmp: LicenseeSectorVO = new LicenseeSectorVO();
-    tmp.id = licensee.id;
-    tmp.address = licensee.address;
-    tmp.code = licensee.code;
-    tmp.licenseeName = licensee.licenseeName;
-    tmp.name = licensee.name;
-    tmp.uin = licensee.uin;
-    tmp.licenseeSectorId = this.sectorId;
+    this.store.dispatch(
+      SectorActions.addLicensee({
+        sectorId: this.sectorId,
+        licenseeId: licensee.id,
+        loading: true
+      })
+    );
 
-    this.sectorLicenseesControl.push(this.createLicenseeSectorVOGroup(tmp));
+    // this.sectorLicenseesControl.push(this.createLicenseeSectorVOGroup(tmp));
   }
 
-  override doNgOnDestroy() {}
+  override doNgOnDestroy() { }
 
   override sectorLicenseesAddDialog(): void {
-    
+
   }
 
   override sectorLicenseesSearch(): void {
@@ -124,27 +130,17 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     );
   }
   override beforeEditSectorDelete(form: EditSectorDeleteForm): void {
-    if (this.editSectorForm.valid && this.editSectorForm.dirty){
-      if (form.sector?.id) {
-        form.sector.updatedBy = this.keycloakService.getUsername();
-        form.sector.updatedDate = new Date();
-      } else {
-        form.sector.createdBy = this.keycloakService.getUsername();
-        form.sector.createdDate = new Date();
-      }
-      if(form?.sector?.id && confirm("Are you sure you want to delete the period?")){
-    this.store.dispatch(
-      SectorActions.remove({
-        id: form?.sector?.id,
-        loading: false,
-      })
-
-    );
-      }
-  }else{
-        
-    this.store.dispatch(SectorActions.sectorFailure({ messages:['Please select something to delete'] }));
-  }
+    if (form?.sector?.id && confirm("Are you sure you want to delete the period?")) {
+      this.store.dispatch(
+        SectorActions.remove({
+          id: form?.sector?.id,
+          loading: false,
+        })
+      );
+      this.editSectorFormReset();
+    } else {
+      this.store.dispatch(SectorActions.sectorFailure({ messages: ['Please select something to delete'] }));
+    }
   }
 
   /**
@@ -168,14 +164,41 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       );
     } else {
       let messages: string[] = []
-      if(!this.sectorNameControl.valid) {
+      if (!this.sectorNameControl.valid) {
         messages.push("Sector name has errors")
       }
-      if(!this.sectorCodeControl.valid) {
+      if (!this.sectorCodeControl.valid) {
         messages.push("Sector code has errors")
       }
       this.store.dispatch(SectorActions.sectorFailure({ messages: messages }));
     }
+  }
+
+  override createLicenseeSectorVOGroup(value: LicenseeSectorVO): FormGroup {
+    return this.formBuilder.group({
+      id: [value?.id],
+      licensee: {
+        id: value?.licensee?.id,
+        uin: value?.licensee?.uin,
+        licenseeName: value?.licensee?.licenseeName
+      }
+    });
+  }
+
+  override sectorFormsSearch() {
+
+    let criteria: FormCriteria = new FormCriteria()
+
+    criteria.code = this.sectorFormsSearchField.value
+    criteria.formName = this.sectorFormsSearchField.value
+
+    this.store.dispatch(
+      FormActions.searchForms({
+        criteria: criteria,
+        loading: true
+      })
+    );
+
   }
 }
 

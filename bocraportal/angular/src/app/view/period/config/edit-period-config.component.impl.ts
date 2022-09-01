@@ -21,87 +21,86 @@ import { select } from '@ngrx/store';
 })
 export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
 
-    protected keycloakService: KeycloakService;
-    unauthorisedUrls$: Observable<string[]>;
-    deleteUnrestricted: boolean = true;
+  protected keycloakService: KeycloakService;
+  deleteUnrestricted: boolean = true;
+  unauthorisedUrls$: Observable<string[]>;
 
-    constructor(private injector: Injector) {
-        super(injector);
-        this.keycloakService = injector.get(KeycloakService);
-        this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
-    }
+  constructor(private injector: Injector) {
+    super(injector);
+    this.keycloakService = injector.get(KeycloakService);
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
+  }
 
-    override beforeOnInit(form: EditPeriodConfigVarsForm){
-      this.periodConfigFinalDayBackingList = days;
-      this.periodConfigStartDayBackingList = days;
-      this.periodConfigStartMonthBackingList = months;
+  override beforeOnInit(form: EditPeriodConfigVarsForm) {
+    this.periodConfigFinalDayBackingList = days;
+    this.periodConfigStartDayBackingList = days;
+    this.periodConfigStartMonthBackingList = months;
 
-      return form;
-    }
-	
-    override doNgAfterViewInit() {
+    return form;
+  }
 
-      this.store.dispatch(
-        ViewActions.loadViewAuthorisations({
-          viewUrl: "/period/config/edit-period-config",
-          roles: this.keycloakService.getUserRoles(),
-          loading: true
-        })
-      );
-      
-      this.route.queryParams.subscribe((queryParams: any) => {
-        if (queryParams?.id) {
-          this.store.dispatch(
-            PeriodConfigActions.findById({
-              id: queryParams?.id,
-              loading: true,
-            })
-          );
-        }
-      });
-  
-      this.periodConfig$.subscribe((periodConfig) => {
-        this.setEditPeriodConfigFormValue({periodConfig: periodConfig});
-      });
+  override doNgAfterViewInit() {
 
-      this.unauthorisedUrls$.subscribe(restrictedItems => {
-        restrictedItems.forEach(item => {
-          if(item === '/period/config/edit-period-config/{button:delete}') {
-            this.deleteUnrestricted = false;
-          }
-        });
-      });
-    }
-
-    override doNgOnDestroy(){}
-
-    override afterEditPeriodConfigDelete(form: EditPeriodConfigDeleteForm): void {
-      if(form?.periodConfig?.id) {
-        if(confirm("Are you sure to delete the period configuration?")) {
-          this.store.dispatch(PeriodConfigActions.remove({id: form.periodConfig.id, loading: true}));
-          this.editPeriodConfigFormReset();
-        }
+    this.route.queryParams.subscribe((queryParams: any) => {
+      if (queryParams?.id) {
+        this.store.dispatch(
+          PeriodConfigActions.findById({
+            id: queryParams?.id,
+            loading: true,
+          })
+        );
       }
+    });
+
+    this.periodConfig$.subscribe((periodConfig) => {
+      this.setEditPeriodConfigFormValue({ periodConfig: periodConfig });
+    });
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/period/type/edit-period-type",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if (item === '/period/type/edit-period-type/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
+    });
+  }
+
+  override doNgOnDestroy() { }
+
+  override beforeEditPeriodConfigDelete(form: EditPeriodConfigDeleteForm): void {
+    if (form?.periodConfig?.id && confirm('Are you sure you want to delete the license type?')) {
+      this.store.dispatch(PeriodConfigActions.remove({ id: form.periodConfig.id, loading: true }));
+      this.editPeriodConfigFormReset();
+    } else {
+      this.store.dispatch(PeriodConfigActions.periodConfigFailure({ messages: ['Please select something to delete'] }));
+    }
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  override beforeEditPeriodConfigSave(form: EditPeriodConfigSaveForm): void {
+    if (this.periodConfigControl.valid) {
+      if (form.periodConfig.id) {
+        form.periodConfig.updatedBy = this.keycloakService.getUsername();
+        form.periodConfig.updatedDate = new Date();
+      } else {
+
+        form.periodConfig.createdBy = this.keycloakService.getUsername();
+        form.periodConfig.createdDate = new Date();
+      }
+      this.store.dispatch(PeriodConfigActions.save({
+        periodConfig: form.periodConfig,
+        loading: true
+      }));
     }
 
-    /**
-     * This method may be overwritten
-     */
-    override beforeEditPeriodConfigSave(form: EditPeriodConfigSaveForm): void {
-      if(this.periodConfigControl.valid) {
-        if(form.periodConfig.id) {
-          form.periodConfig.updatedBy = this.keycloakService.getUsername();
-          form.periodConfig.updatedDate = new Date();
-        } else {
-  
-          form.periodConfig.createdBy = this.keycloakService.getUsername();
-          form.periodConfig.createdDate = new Date();
-        }
-        this.store.dispatch(PeriodConfigActions.save({
-          periodConfig: form.periodConfig,
-          loading: true
-        }));
-      }
-
-    }    
+  }
 }

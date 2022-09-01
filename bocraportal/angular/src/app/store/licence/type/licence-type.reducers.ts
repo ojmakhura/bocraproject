@@ -10,6 +10,7 @@ export const licenceTypeReducer = createReducer(
         licenceType: action.licenceType, 
         loading: false,
         success: action.success,
+        error: false,
         messages:  action.messages
     })),
     on(LicenceTypeActions.saveSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const licenceTypeReducer = createReducer(
         licenceType: action.licenceType, 
         loading: false,
         success: action.success,
+        error: false,
         messages:  action.messages
     })),
     on(LicenceTypeActions.removeSuccess, (state, action) => ({
@@ -25,6 +27,7 @@ export const licenceTypeReducer = createReducer(
         removed: action.removed,
         loading: false,
         success: action.success,
+        error: false,
         messages:  action.messages
     })),
     on(LicenceTypeActions.getAllSuccess, (state, action) => ({
@@ -32,6 +35,7 @@ export const licenceTypeReducer = createReducer(
         licenceTypes: action.licenceTypes, 
         loading: false,
         success: action.success,
+        error: false,
         messages:  action.messages
     })),
     on(LicenceTypeActions.searchSuccess, (state, action) => ({
@@ -39,6 +43,7 @@ export const licenceTypeReducer = createReducer(
         licenceTypes: action.licenceTypes, 
         loading: false,
         success: action.success,
+        error: false,
         messages:  action.messages
     })),
     on(LicenceTypeActions.getAllPagedSuccess, (state, action) => ({
@@ -46,6 +51,7 @@ export const licenceTypeReducer = createReducer(
         licenceTypes: action.licenceTypes, 
         loading: false,
         success: action.success,
+        error: false,
         message:  action.messages
     })),
     on(LicenceTypeActions.licenceTypeReset, (state) => ({

@@ -17,18 +17,6 @@
           <button type="button" (click)="editAccessPointSearch()" class="btn btn-primary">
             <span translate>Search</span>
           </button>
-          <!-- <button type="button" color="accent" (click)="editAccessPointSave()" class="btn btn-info">
-            <span translate>save</span>
-          </button>
-          <button type="button" color="accent" (click)="editAccessPointDelete()" class="btn btn-info">
-            <span translate>delete</span>
-          </button>
-          <button type="button" color="accent" (click)="editAccessPointSearch()" class="btn btn-info">
-            <span translate>search</span>
-          </button>
-          <button color="accent" type="button" (click)="editAccessPointFormReset()" class="btn btn-info">
-            <span translate>reset</span>
-          </button> -->
         </div>
       </section>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
@@ -118,7 +106,7 @@
       <button type="button" (click)="editAccessPointFormReset()" class="btn btn-outline-primary">
         <span translate>reset</span>
       </button>
-      <button type="button" (click)="editAccessPointDelete()" class="btn btn-outline-primary" *ngIf="deleteUnrestricted">
+      <button type="button" (click)="editAccessPointDelete()" class="btn btn-outline-primary" *ngIf="accessPointId && deleteUnrestricted">
         <span translate>delete</span>
       </button>
     </div>

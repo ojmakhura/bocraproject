@@ -23,7 +23,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./edit-authorisation.component.scss'],
 })
 export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
-  
+
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
@@ -41,15 +41,15 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
   }
 
   beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
-    this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
+    this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((roles) => {
 
-      role.forEach((val) => {
-        if(this.keycloakService.getUserRoles().includes(val.name)) {
+      roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
+        if (this.keycloakService.getUserRoles().includes(role.name)) {
 
           let item = new SelectItem();
-          item.label = val['description'];
-          item.value = val['name'];
-  
+          item.label = role['description'];
+          item.value = role['name'];
+
           this.authorisationRolesBackingList.push(item);
         }
       });
@@ -57,30 +57,30 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
 
     return form;
   }
-  
+
   override handleFormChanges(change: any): void {
   }
 
   override afterOnInit() {
-    
+
   }
 
   override createAccessPointVOGroup(value: AccessPointVO): FormGroup {
     return this.formBuilder.group({
-        id: [value?.id],
-        createdBy: [value?.createdBy],
-        updatedBy: [value?.updatedBy],
-        createdDate: [value?.createdDate],
-        updatedDate: [value?.updatedDate],
-        name: [value?.name],
-        url: [value?.url],
-        accessPointType: this.formBuilder.group({
-            id: [value?.accessPointType?.id],
-            code: [value?.accessPointType?.code],
-            name: [value?.accessPointType?.name]
-        })
+      id: [value?.id],
+      createdBy: [value?.createdBy],
+      updatedBy: [value?.updatedBy],
+      createdDate: [value?.createdDate],
+      updatedDate: [value?.updatedDate],
+      name: [value?.name],
+      url: [value?.url],
+      accessPointType: this.formBuilder.group({
+        id: [value?.accessPointType?.id],
+        code: [value?.accessPointType?.code],
+        name: [value?.accessPointType?.name]
+      })
     });
-}
+  }
 
   override doNgAfterViewInit(): void {
     this.store.dispatch(
@@ -102,13 +102,29 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
       }
     });
 
-    this.authorisation$.subscribe((authorisation) => {
-      this.setEditAuthorisationFormValue({authorisation: authorisation});
-    });
-    
+    this.store.dispatch(
+      ViewActions.loadViewAuthorisations({
+        viewUrl: "/authorisation/edit-authorisation",
+        roles: this.keycloakService.getUserRoles(),
+        loading: true
+      })
+    );
+
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/auth/edit-authorisation/{button:delete}') {
+        if (item === '/authorisation/edit-authorisation/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+      });
+    });
+
+    this.authorisation$.subscribe((authorisation) => {
+      this.setEditAuthorisationFormValue({ authorisation: authorisation });
+    });
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if (item === '/auth/edit-authorisation/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -133,41 +149,32 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
           loading: true,
         })
       );
-  
-      }else{
-        
-        this.store.dispatch(AuthorisationActions.authorisationFailure({ messages:['Form has to be filled'] }));
-      }
-    }
 
-    override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
-      if (this.editAuthorisationForm.valid && this.editAuthorisationForm.dirty){
-        if (form.authorisation?.id) {
-          form.authorisation.updatedBy = this.keycloakService.getUsername();
-          form.authorisation.updatedDate = new Date();
-        } else {
-          form.authorisation.createdBy = this.keycloakService.getUsername();
-          form.authorisation.createdDate = new Date();
-        }
-        if(form?.authorisation?.id && confirm("Are you sure you want to delete the period?")){
+    } else {
+
+      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages: ['Form has to be filled'] }));
+    }
+  }
+
+  override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
+    if (form?.authorisation?.id && confirm("Are you sure you want to delete the authorisation?")) {
       this.store.dispatch(
         AuthorisationActions.remove({
           id: form?.authorisation?.id,
           loading: false,
         })
-  
       );
-        }
-    }else{
-          
-      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages:['Please select something to delete'] }));
+      this.editAuthorisationFormReset();
+    } else {
+
+      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages: ['Please select something to delete'] }));
     }
-    }
-    
+  }
+
   override authorisationAccessPointSearch(): void {
     let criteria: AccessPointCriteria = new AccessPointCriteria();
     criteria.name = this.authorisationAccessPointSearchField.value;
     criteria.url = this.authorisationAccessPointSearchField.value;
-    this.store.dispatch(AccessPointActions.search({criteria: criteria, loading: true}));
+    this.store.dispatch(AccessPointActions.search({ criteria: criteria, loading: true }));
   }
 }

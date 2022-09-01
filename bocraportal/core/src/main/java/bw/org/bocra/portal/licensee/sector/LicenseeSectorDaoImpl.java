@@ -7,7 +7,10 @@
 package bw.org.bocra.portal.licensee.sector;
 
 import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.sector.SectorRepository;
+import bw.org.bocra.portal.sector.SectorVO;
+
 import org.springframework.stereotype.Repository;
 
 /**
@@ -41,6 +44,34 @@ public class LicenseeSectorDaoImpl
     {
         // TODO verify behavior of toLicenseeSectorVO
         super.toLicenseeSectorVO(source, target);
+
+        if (source.getLicensee() != null && source.getLicensee().getId() != null) {
+
+            LicenseeVO licensee = new LicenseeVO();
+
+            licensee.setId(source.getLicensee().getId());
+            licensee.setCreatedBy(source.getLicensee().getCreatedBy());
+            licensee.setUpdatedBy(source.getLicensee().getUpdatedBy());
+            licensee.setCreatedDate(source.getLicensee().getCreatedDate());
+            licensee.setUpdatedDate(source.getLicensee().getUpdatedDate());
+            licensee.setStatus(source.getLicensee().getStatus());
+            licensee.setUin(source.getLicensee().getUin());
+            licensee.setLicenseeName(source.getLicensee().getLicenseeName());
+            licensee.setAddress(source.getLicensee().getAddress());
+
+            target.setLicensee(licensee);
+        }
+
+        if(source.getSector() != null && source.getSector().getId() != null) {
+            SectorVO sector = new SectorVO();
+            sector.setId(source.getSector().getId());
+            sector.setCode(source.getSector().getCode());
+            sector.setName(source.getSector().getName());
+            sector.setDescription(source.getSector().getDescription());
+            sector.setThemeColour(source.getSector().getThemeColour());
+
+            target.setSector(sector);
+        }
     }
 
     /**
@@ -60,10 +91,6 @@ public class LicenseeSectorDaoImpl
      */
     private LicenseeSector loadLicenseeSectorFromLicenseeSectorVO(LicenseeSectorVO licenseeSectorVO)
     {
-        // TODO implement loadLicenseeSectorFromLicenseeSectorVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.sector.loadLicenseeSectorFromLicenseeSectorVO(LicenseeSectorVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (licenseeSectorVO.getId() == null)
         {
             return  LicenseeSector.Factory.newInstance();
@@ -72,7 +99,6 @@ public class LicenseeSectorDaoImpl
         {
             return this.load(licenseeSectorVO.getId());
         }
-        */
     }
 
     /**
@@ -97,5 +123,13 @@ public class LicenseeSectorDaoImpl
     {
         // TODO verify behavior of licenseeSectorVOToEntity
         super.licenseeSectorVOToEntity(source, target, copyIfNull);
+
+        if(source.getLicensee() != null && source.getLicensee().getId() != null) {
+            target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
+        } 
+
+        if(source.getSector() != null && source.getSector().getId() != null) {
+            target.setSector(getSectorDao().load(source.getSector().getId()));
+        } 
     }
 }

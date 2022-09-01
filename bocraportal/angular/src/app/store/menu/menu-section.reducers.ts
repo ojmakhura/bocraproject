@@ -10,6 +10,7 @@ export const menuSectionReducer = createReducer(
         menuSection: action.menuSection, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(MenuSectionActions.saveSuccess, (state, action) => ({
@@ -17,6 +18,7 @@ export const menuSectionReducer = createReducer(
         menuSection: action.menuSection, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(MenuSectionActions.addMenuSection, (state, action) => ({
@@ -31,6 +33,7 @@ export const menuSectionReducer = createReducer(
         removed: action.removed, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(MenuSectionActions.getAllSuccess, (state, action) => ({
@@ -38,6 +41,7 @@ export const menuSectionReducer = createReducer(
         menuSections: action.menuSections, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(MenuSectionActions.searchSuccess, (state, action) => ({
@@ -45,6 +49,7 @@ export const menuSectionReducer = createReducer(
         menuSections: action.menuSections, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(MenuSectionActions.getAllPagedSuccess, (state, action) => ({
@@ -55,6 +60,7 @@ export const menuSectionReducer = createReducer(
         menuSections: action.menuSections, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(MenuSectionActions.findByAuthorisationRolesSuccess, (state, action) => ({
@@ -65,6 +71,7 @@ export const menuSectionReducer = createReducer(
         menuSections: action.menuSections, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(MenuSectionActions.menuSectionReset, (state) => ({
