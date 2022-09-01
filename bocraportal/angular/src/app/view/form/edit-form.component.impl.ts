@@ -139,8 +139,21 @@ export class EditFormComponentImpl extends EditFormComponent {
         })
       );
     } else {
-      this.store.dispatch(FormActions.formFailure({ messages: ['Form has an error!'] }));
-    }
+      let messages: string[] = []
+      if(!this.formControl.valid) {
+        messages.push("Form has errors, Please fill in the required form fields")
+      }  
+      if(!this.formCodeControl.valid) {
+        messages.push("Form Code is missing!")
+      }
+      if(!this.formFormNameControl.valid) {
+        messages.push("Forn Name is missing!")
+      }
+      if(!this.formEntryTypeControl.valid) {
+        messages.push("Forn Entry Type is missing!")
+      }
+    this.store.dispatch(FormActions.formFailure({ messages: messages }));
+  }
   }
 
   override formLicenceTypesSearch(): void {

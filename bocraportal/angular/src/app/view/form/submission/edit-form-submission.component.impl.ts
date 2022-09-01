@@ -168,9 +168,30 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
    * This method may be overwritten
    */
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
-    let formSubmission: FormSubmissionVO = form.formSubmission;
-    formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;
-    this.doFormSubmissionSave(formSubmission);
+    if (this.formSubmissionControl.valid) {
+      if (form.formSubmission.id) {
+        form.formSubmission.updatedBy = this.keycloakService.getUsername();
+        form.formSubmission.updatedDate = new Date();
+      } else {
+        form.formSubmission.createdBy = this.keycloakService.getUsername();
+        form.formSubmission.createdDate = new Date();
+      }
+      this.store.dispatch(
+        FormSubmissionActions.save({
+          formSubmission: form.formSubmission,
+          loading: true,
+        })
+      );
+    } else {
+      let messages: string[] = []
+      if(!this.formSubmissionControl.valid) {
+        messages.push("Form Submission has errors, Please fill in the required form fields")
+      }  
+      if(!this.formSubmissionSubmissionStatusControl.valid) {
+        messages.push("Form Submission Status is missing!")
+      }  
+    this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: messages }));
+  }
   }
 
   override beforeEditFormSubmissionSubmit(form: EditFormSubmissionSubmitForm): void {

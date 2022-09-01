@@ -171,11 +171,14 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       );
     } else {
       let messages: string[] = []
+      if(!this.sectorControl.valid) {
+        messages.push("Sector has errors, Please fill in the required form fields.")
+      }
       if(!this.sectorNameControl.valid) {
-        messages.push("Sector name has errors")
+        messages.push("Sector name is missing")
       }
       if(!this.sectorCodeControl.valid) {
-        messages.push("Sector code has errors")
+        messages.push("Sector code is missing")
       }
       this.store.dispatch(SectorActions.sectorFailure({ messages: messages }));
     }

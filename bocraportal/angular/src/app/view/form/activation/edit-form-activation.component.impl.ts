@@ -154,8 +154,24 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         })
       );
     } else {
-      this.store.dispatch(FormActivationActions.formActivationFailure({ messages: ['Form activation has an error!'] }));
-    }
+      let messages: string[] = []
+      if(!this.formActivationControl.valid) {
+        messages.push("Period has errors, Please fill in the required form fields")
+      } 
+      if(!this.formActivationActivationNameControl.valid) {
+        messages.push("Activation Name is missing")
+      }  
+      if(!this.formActivationPeriodControl.valid) {
+        messages.push("Period is missing!")
+      }
+      // if(!this.periodPeriodConfigControl.valid) {
+      //   messages.push("Period Name missing!")
+      // }
+      // if(!this.periodPeriodConfigControl.valid) {
+      //   messages.push("Repeat Period missing!")
+      // }
+    this.store.dispatch(FormActivationActions.formActivationFailure({ messages: messages }));
+  }
   }
 
   override createFormSubmissionVOGroup(value: FormSubmissionVO): FormGroup {

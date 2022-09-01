@@ -33,7 +33,7 @@ export class PeriodConfigEffects {
                     messages: [`Period config ${periodConfig.periodConfigName} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error.error]})])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );

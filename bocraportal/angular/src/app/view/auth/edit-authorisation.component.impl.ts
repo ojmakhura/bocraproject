@@ -120,7 +120,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
    * This method may be overwritten
    */
   override beforeEditAuthorisationSave(form: EditAuthorisationSaveForm): void {
-    if (this.editAuthorisationForm.valid && this.editAuthorisationForm.pristine) {
+    if (this.editAuthorisationForm.valid && this.editAuthorisationForm.dirty) {
       if (form.authorisation?.id) {
         form.authorisation.updatedBy = this.keycloakService.getUsername();
         form.authorisation.updatedDate = new Date();
@@ -128,16 +128,22 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
         form.authorisation.createdBy = this.keycloakService.getUsername();
         form.authorisation.createdDate = new Date();
       }
+
       this.store.dispatch(
         AuthorisationActions.save({
           authorisation: form.authorisation,
           loading: true,
         })
       );
-
     } else {
-
-      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages: ['Form has to be filled'] }));
+      let messages: string[] = []
+      if(!this.authorisationControl.valid) {
+        messages.push("Authorisation has errors, Please fill in the required form fields.")
+      }
+      if(!this.authorisationAccessPointControl.valid) {
+        messages.push("Access Point is missing, click the addbox to add one")
+      }
+      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages: messages }));
     }
   }
 
