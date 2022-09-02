@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AccessPointRestController {
-    protected path = 'access';
+    protected path = '/access';
 
 
     constructor(private http: HttpClient) {

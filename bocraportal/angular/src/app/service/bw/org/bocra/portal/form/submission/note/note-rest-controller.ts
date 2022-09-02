@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class NoteRestController {
-    protected path = 'form/submission/note';
+    protected path = '/form/submission/note';
 
 
     constructor(private http: HttpClient) {

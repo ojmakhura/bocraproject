@@ -8,6 +8,7 @@ package bw.org.bocra.portal.form.field;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
@@ -22,6 +23,7 @@ import bw.org.bocra.portal.form.section.FormSectionVO;
  * @see FormField
  */
 @Repository("formFieldDao")
+@Transactional
 public class FormFieldDaoImpl
     extends FormFieldDaoBase
 {

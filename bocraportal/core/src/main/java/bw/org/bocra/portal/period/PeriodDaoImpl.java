@@ -13,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
@@ -27,6 +28,7 @@ import bw.org.bocra.portal.period.config.PeriodConfigVO;
  * @see Period
  */
 @Repository("periodDao")
+@Transactional
 public class PeriodDaoImpl
         extends PeriodDaoBase {
 

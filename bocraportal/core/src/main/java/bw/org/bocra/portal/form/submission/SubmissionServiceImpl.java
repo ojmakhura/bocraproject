@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.FormVO;
@@ -31,6 +33,7 @@ import bw.org.bocra.portal.period.PeriodVO;
  * @see bw.org.bocra.portal.form.submission.SubmissionService
  */
 @Service("submissionService")
+@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 public class SubmissionServiceImpl
         extends SubmissionServiceBase {
 

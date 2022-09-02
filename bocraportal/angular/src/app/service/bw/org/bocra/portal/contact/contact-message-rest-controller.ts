@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ContactMessageRestController {
-    protected path = 'contact';
+    protected path = '/contact';
 
 
     constructor(private http: HttpClient) {

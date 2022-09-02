@@ -16,7 +16,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ReportConfigRestController {
-    protected path = 'report/config';
+    protected path = '/report/config';
 
 
     constructor(private http: HttpClient) {

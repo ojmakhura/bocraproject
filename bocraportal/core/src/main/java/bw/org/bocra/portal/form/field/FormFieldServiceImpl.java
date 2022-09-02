@@ -12,6 +12,8 @@ import java.util.Collection;
 
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
@@ -20,6 +22,7 @@ import bw.org.bocra.portal.form.FormRepository;
  * @see bw.org.bocra.portal.form.field.FormFieldService
  */
 @Service("formFieldService")
+@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 public class FormFieldServiceImpl
     extends FormFieldServiceBase
 {

@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.field.FormFieldRepository;
@@ -37,6 +38,7 @@ import bw.org.bocra.portal.sector.form.SectorFormVO;
  * @see Form
  */
 @Repository("formDao")
+@Transactional
 public class FormDaoImpl
     extends FormDaoBase
 {

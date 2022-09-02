@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthorisationRestController {
     
-    protected path = 'authorisation';
+    protected path = '/authorisation';
 
     constructor(private http: HttpClient) {
     }

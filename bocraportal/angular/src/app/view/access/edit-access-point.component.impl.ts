@@ -102,7 +102,7 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
 
   override beforeEditAccessPointSave(form: EditAccessPointSaveForm): void {
 
-    if (this.editAccessPointForm.valid && this.editAccessPointForm.dirty) {
+    if(this.editAccessPointForm.valid && this.editAccessPointForm.pristine){
       if (form.accessPoint?.id) {
         form.accessPoint.updatedBy = this.keycloakService.getUsername();
         form.accessPoint.updatedDate = new Date();
@@ -118,12 +118,16 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
       );
     } else {
       let messages: string[] = []
-      if (!this.accessPointNameControl.valid) {
-        messages.push("Access point name has errors")
+      if(!this.accessPointControl.valid) {
+        messages.push("Access Point has errors, Please fill in the required Form Fields")
       }
-      if (!this.accessPointUrlControl.valid) {
-        messages.push("Access point url  has errors")
+      if(!this.accessPointNameControl.valid) {
+        messages.push("Access Point name is missing!")
       }
+      if(!this.accessPointUrlControl.valid) {
+        messages.push("Access Point Url is missing!")
+      }
+      
       this.store.dispatch(AccessPointActions.accessPointFailure({ messages: messages }));
     }
 

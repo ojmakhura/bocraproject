@@ -6,6 +6,8 @@
  */
 package bw.org.bocra.portal.access;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Repository;
 
 import bw.org.bocra.portal.access.type.AccessPointType;
@@ -17,6 +19,7 @@ import bw.org.bocra.portal.access.type.AccessPointTypeVO;
  * @see AccessPoint
  */
 @Repository("accessPointDao")
+@Transactional
 public class AccessPointDaoImpl
     extends AccessPointDaoBase
 {

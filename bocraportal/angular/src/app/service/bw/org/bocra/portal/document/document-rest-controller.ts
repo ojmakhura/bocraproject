@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class DocumentRestController {
-    protected path = 'document';
+    protected path = '/document';
 
 
     constructor(private http: HttpClient) {

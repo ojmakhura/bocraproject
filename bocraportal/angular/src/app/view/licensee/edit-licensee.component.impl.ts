@@ -35,7 +35,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
-  override sectorRemoved$: Observable<boolean>;
+  sectorRemoved$: Observable<boolean>;
   formRemoved$: Observable<boolean>;
 
   constructor(private injector: Injector) {
@@ -167,14 +167,17 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     }
     else {
       let messages: string[] = []
+      if (!this.licenseeControl.valid) {
+        messages.push("Licensee has errors, Please fill in the required form fields.")
+      }
       if (!this.licenseeStatusControl.valid) {
-        messages.push("Licensee status has errors")
+        messages.push("Licensee status is missing!")
       }
       if (!this.licenseeUinControl.valid) {
-        messages.push("Licensee Uin has errors")
+        messages.push("Licensee Uin is missing!")
       }
       if (!this.licenseeLicenseeNameControl.valid) {
-        messages.push("Licensee name has errors")
+        messages.push("Licensee name is missing!")
       }
       this.store.dispatch(LicenseeActions.licenseeFailure({ messages: messages }));
     }

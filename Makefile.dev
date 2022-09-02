@@ -95,8 +95,8 @@ DEV_ENV = printf "%s\n" \
     "export WEB_URL=${DEV_SERVER_ADDRESS}:${WEB_DEV_SERVER_PORT}"\
     "export WEB_PUBLIC_PORT=${WEB_DEV_SERVER_PORT}"\
     "export DEV_SERVER_ADDRESS=${DEV_SERVER_ADDRESS}"\
-    "export API_URL=${DEV_API_URL}/"\
-    "export SSL_SECURE=true"\
+    "export API_URL=${DEV_API_URL}"\
+    "export SSL_SECURE=false"\
     ${COMMON_LOCAL_VARS}\
     >> .env
 
@@ -120,7 +120,7 @@ TEST_ENV = printf "%s\n" \
     "export KEYCLOAK_API_SECRET=${KEYCLOAK_TEST_API_SECRET}"\
     "export ACME_EMAIL=${TEST_ACME_EMAIL}"\
     "export WEB_URL=${BOCRA_WEB_SUBDOMAIN}.${TEST_DOMAIN}"\
-    "export API_URL=${API_SERVER}:${API_SERVER_PORT}/"\
+    "export API_URL=${API_SERVER}:${API_SERVER_PORT}"\
     "export SSL_SECURE=true"\
     ${COMMON_LOCAL_VARS}\
     >> .env
@@ -145,7 +145,7 @@ LIVE_ENV = printf "%s\n" \
     "export KEYCLOAK_API_SECRET=${KEYCLOAK_LIVE_API_SECRET}"\
     "export ACME_EMAIL=${LIVE_ACME_EMAIL}"\
     "export WEB_URL=${BOCRA_WEB_SUBDOMAIN}.${LIVE_DOMAIN}"\
-    "export API_URL=${API_SERVER}:${API_SERVER_PORT}/"\
+    "export API_URL=${API_SERVER}:${API_SERVER_PORT}"\
     "export SSL_SECURE=true"\
     ${COMMON_LOCAL_VARS}\
     >> .env

@@ -88,19 +88,36 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
    * This method may be overwritten
    */
    override beforeEditLicenceTypeSave(form: EditLicenceTypeSaveForm): void {
-    if (form.licenceType?.id) {
-      form.licenceType.updatedBy = this.keycloakService.getUsername();
-      form.licenceType.updatedDate = new Date();
-    } else {
-      form.licenceType.createdBy = this.keycloakService.getUsername();
-      form.licenceType.createdDate = new Date();
-    }
+    if (this.editLicenceTypeForm.valid && this.editLicenceTypeForm.dirty) {
+      if (form.licenceType?.id) {
+        form.licenceType.updatedBy = this.keycloakService.getUsername();
+        form.licenceType.updatedDate = new Date();
+      } else {
+        form.licenceType.createdBy = this.keycloakService.getUsername();
+        form.licenceType.createdDate = new Date();
+      }
 
-    this.store.dispatch(licenceTypeActions.save({
-      licenceType: form.licenceType,
-      loading: true
-    }));
+      this.store.dispatch(
+        licenceTypeActions.save({
+          licenceType: form.licenceType,
+          loading: true,
+        })
+      );
+    }
+    else {
+      let messages: string[] = []
+      if (!this.licenceTypeControl.valid) {
+        messages.push("Licence has errors, Please fill in the required form fields.")
+      }
+      if (!this.licenceTypeCodeControl.valid) {
+        messages.push("Licence Type Code is missing!")
+      }
+      if (!this.licenceTypeNameControl.valid) {
+        messages.push("Licence Type Name is missing!")
+      }
+      this.store.dispatch(licenceTypeActions.licenceTypeFailure({ messages: messages }));
   }
+}
 
   override beforeEditLicenceTypeDelete(form: EditLicenceTypeDeleteForm): void {
 

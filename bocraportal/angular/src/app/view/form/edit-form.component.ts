@@ -1002,9 +1002,11 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
             );
 
             this.sectorRemoved$.subscribe(removed => {
+                if(removed) {
+                    this.handleDeleteFromFormSectors(this.formSectors[index]);
+                    this.formSectorsControl.removeAt(index);
 
-                this.handleDeleteFromFormSectors(this.formSectors[index]);
-                this.formSectorsControl.removeAt(index);
+                }
             });
         }
     }

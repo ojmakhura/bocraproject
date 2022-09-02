@@ -23,32 +23,17 @@
 			</div>
 			<div formGroupName="licence">
 				<fieldset class="mb-3" formGroupName="licenceType">
-				    <legend id="licenceLicenceType_label" class="col-sm-2 col-form-label" for="licenceLicenceType"><span translate>licence.type</span>*</legend>
-				    <div class="col my-3 view-buttons">
-				        <button type="button" (click)="licenceLicenceTypeAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#licenceLicenceTypeModal">
-				            <mat-icon>add_box</mat-icon>
-				        </button>
-				        <button type="button" (click)="licenceLicenceTypeClear()" class="btn btn-primary">
-				            <mat-icon>clear</mat-icon>
-				        </button>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="licenceLicenceTypeId" class="col-sm-2 col-form-label" translate>id</label>
-				        <div class="col-sm-10">
-				            <input type="text"  class="form-control" id="licenceLicenceTypeId" value="{{licenceLicenceType?.id }}"disabled/>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="licenceLicenceTypeCode" class="col-sm-2 col-form-label" translate>code</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="licenceLicenceTypeCode" value="{{licenceLicenceType?.code }}"disabled/>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="licenceLicenceTypeName" class="col-sm-2 col-form-label" translate>name</label>
-				        <div class="col-sm-10">
+				    <legend id="licenceLicenceType_label" class="col-sm-2 col-form-label" for="licenceLicenceType">
+						<span translate>licence.type </span><span>name</span>*</legend>
+				    <div class="input-group">
+				        <!-- <label for="licenceLicenceTypeName" class="col-sm-2 col-form-label" translate>name</label> -->
 				            <input type="text" class="form-control" id="licenceLicenceTypeName" value="{{licenceLicenceType?.name }}"disabled/>
-				        </div>
+							<button type="button" (click)="licenceLicenceTypeAddDialog()" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#licenceLicenceTypeModal">
+								<mat-icon>add_box</mat-icon>
+							</button>
+							<button type="button" (click)="licenceLicenceTypeClear()" class="btn btn-outline-primary">
+								<mat-icon>clear</mat-icon>
+							</button>
 				    </div>
 				    <div *ngIf="editLicenceForm.invalid && licenceLicenceTypeControl.invalid && (licenceLicenceTypeControl.dirty || licenceLicenceTypeControl.touched)" class="alert alert-danger" role="alert">
 				        <div *ngIf="licenceLicenceTypeControl.errors['required']">
@@ -57,32 +42,16 @@
 				    </div>
 				</fieldset>
 				<fieldset class="mb-3" formGroupName="licensee">
-				    <legend id="licenceLicensee_label" class="col-sm-2 col-form-label" for="licenceLicensee"><span translate>licensee</span>*</legend>
-				    <div class="col my-3 view-buttons">
-				        <button type="button" (click)="licenceLicenseeAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#licenceLicenseeModal">
-				            <mat-icon>add_box</mat-icon>
-				        </button>
-				        <button type="button" (click)="licenceLicenseeClear()" class="btn btn-primary">
-				            <mat-icon>clear</mat-icon>
-				        </button>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="licenceLicenseeId" class="col-sm-2 col-form-label" translate>id</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="licenceLicenseeId" value="{{licenceLicensee?.id }}" disabled>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="licenceLicenseeUin" class="col-sm-2 col-form-label" translate>uin</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="licenceLicenseeUin" value="{{licenceLicensee?.uin }}" disabled>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="licenceLicenseeLicenseeName" class="col-sm-2 col-form-label" translate>licensee.name</label>
-				        <div class="col-sm-10">
+				    <legend id="licenceLicensee_label" class="col-sm-2 col-form-label" for="licenceLicensee"><span translate>licensee.name</span>*</legend>
+				    <div class="input-group">
+				        <!-- <label for="licenceLicenseeLicenseeName" class="col-sm-2 col-form-label" translate>licensee.name</label> -->
 				            <input type="text" class="form-control" id="licenceLicenseeLicenseeName" value="{{licenceLicensee?.licenseeName }}"disabled>
-				        </div>
+							<button type="button" (click)="licenceLicenseeAddDialog()" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#licenceLicenseeModal">
+								<mat-icon>add_box</mat-icon>
+							</button>
+							<button type="button" (click)="licenceLicenseeClear()" class="btn btn-outline-primary">
+								<mat-icon>clear</mat-icon>
+							</button>
 				    </div>
 				    <div *ngIf="editLicenceForm.invalid && licenceLicenseeControl.invalid && (licenceLicenseeControl.dirty || licenceLicenseeControl.touched)" class="alert alert-danger" role="alert">
 				        <div *ngIf="licenceLicenseeControl.errors['required']">
@@ -136,7 +105,7 @@
 				    </div>
 				</div>
 
-				<div class="text-end">
+				<div class="text-end mt-5">
 					<button type="button" color="accent" (click)="editLicenceSave()" class="btn btn-outline-primary">
 						<span translate>save</span>
 					</button>

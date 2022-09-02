@@ -8,11 +8,13 @@ package bw.org.bocra.portal.complaint;
 
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see Complaint
  */
 @Repository("complaintDao")
+@Transactional
 public class ComplaintDaoImpl
     extends ComplaintDaoBase
 {

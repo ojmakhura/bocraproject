@@ -14,7 +14,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthController {
-    protected path = 'auth';
+    protected path = '/auth';
 
 
     constructor(private http: HttpClient) {

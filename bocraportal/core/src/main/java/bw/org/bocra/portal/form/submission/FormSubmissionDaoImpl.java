@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
@@ -37,6 +38,7 @@ import bw.org.bocra.portal.period.PeriodVO;
  * @see FormSubmission
  */
 @Repository("formSubmissionDao")
+@Transactional
 public class FormSubmissionDaoImpl
     extends FormSubmissionDaoBase
 {

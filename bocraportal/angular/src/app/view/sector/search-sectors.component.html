@@ -3,12 +3,13 @@
   <div class="card-body">
     <form [formGroup]="searchSectorsForm">
        <section>
-        <div class="text-end">
-					  <button type="button" color="accent" (click)="searchSectorsSearch()" class="btn btn-primary">
-      <span translate>search</span>
-    </button>
+        <div class="col my-view-columns">
+        <button type="button" color="accent" (click)="searchSectorsCreate()" class="btn btn-primary">
+          <span translate>create</span>
+        </button>
         </div>
       </section> 
+      <br>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}
@@ -32,9 +33,10 @@
   <br>
 
   <div class="text-end" >
-    <button type="button" color="accent" (click)="searchSectorsCreate()" class="btn btn-outline-primary">
-      <span translate>create</span>
-    </button>
+    <div class="text-end">
+      <button type="button" color="accent" (click)="searchSectorsSearch()" class="btn btn-outline-primary">
+     <span translate>search</span>
+      </button>
     <button color="accent" type="button" (click)="searchSectorsFormReset()" class="btn btn-outline-primary">
       <span translate>reset</span>
     </button>

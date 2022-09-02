@@ -10,11 +10,13 @@ import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see Note
  */
 @Repository("noteDao")
+@Transactional
 public class NoteDaoImpl
     extends NoteDaoBase
 {

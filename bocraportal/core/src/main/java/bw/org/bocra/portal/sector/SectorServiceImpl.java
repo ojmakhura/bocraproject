@@ -16,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeDao;
@@ -29,6 +31,7 @@ import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
  * @see bw.org.bocra.portal.sector.SectorService
  */
 @Service("sectorService")
+@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 public class SectorServiceImpl
         extends SectorServiceBase {
 

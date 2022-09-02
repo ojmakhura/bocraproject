@@ -81,7 +81,8 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
   }
 
   override beforeEditAccessPointTypeSave(form: EditAccessPointTypeSaveForm): void {
-    if (this.editAccessPointTypeForm.valid && this.editAccessPointTypeForm.dirty) {
+    
+    if(this.editAccessPointTypeForm.valid && this.editAccessPointTypeForm.dirty){
       if (form.accessPointType?.id) {
         form.accessPointType.updatedBy = this.keycloakService.getUsername();
         form.accessPointType.updatedDate = new Date();
@@ -89,16 +90,24 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
         form.accessPointType.createdBy = this.keycloakService.getUsername();
         form.accessPointType.createdDate = new Date();
       }
-
       this.store.dispatch(
         AccessPointTypeActions.save({
           accessPointType: form.accessPointType,
           loading: true,
         })
       );
-
     } else {
-      this.store.dispatch(AccessPointTypeActions.accessPointTypeFailure({ messages: ['Form has to be filled'] }));
+      let messages: string[] = []
+      if(!this.accessPointTypeControl.valid) {
+        messages.push("Access Point Type has errors, Please fill the required form fields.")
+      }
+      if(!this.accessPointTypeNameControl.valid) {
+        messages.push("Access Point Type Name is missing!")
+      }
+      if(!this.accessPointTypeCodeControl.valid) {
+        messages.push("Access Point Type Code is missing!")
+      }
+      this.store.dispatch(AccessPointTypeActions.accessPointTypeFailure({ messages: messages }));
     }
   }
 

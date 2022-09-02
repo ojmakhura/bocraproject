@@ -24,6 +24,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
+  periodConfigPeriodConfigNameControl: any;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -149,8 +150,18 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         })
       );
     } else {
-      this.store.dispatch(PeriodActions.periodFailure({ messages: ['Form has errors.'] }));
-    }
+      let messages: string[] = []
+      if(!this.periodControl.valid) {
+        messages.push("Period has errors, Please fill in the required form fields")
+      }
+      if(!this.periodPeriodNameControl.valid) {
+        messages.push("Period Name missing!")
+      }
+      // if(!this.periodPeriodConfigControl.valid) {
+      //   messages.push("Repeat Period missing!")
+      // }
+    this.store.dispatch(PeriodActions.periodFailure({ messages: messages }));
+  }
   }
 
   override handleFormChanges(change: any): void {
