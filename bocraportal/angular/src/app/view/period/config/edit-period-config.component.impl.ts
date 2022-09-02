@@ -100,7 +100,18 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
         periodConfig: form.periodConfig,
         loading: true
       }));
+    } else {
+      let messages: string[] = []
+      if (!this.periodConfigControl.valid) {
+        messages.push("Period Configuration has errors, Please fill in the required form fields")
+      }
+      if (!this.periodConfigPeriodConfigNameControl.valid) {
+        messages.push("Period Config Name missing!")
+      }
+      if (!this.periodConfigRepeatPeriodControl.valid) {
+        messages.push("Repeat Period missing!")
+      }
+      this.store.dispatch(PeriodConfigActions.periodConfigFailure({ messages: messages }));
     }
-
   }
 }

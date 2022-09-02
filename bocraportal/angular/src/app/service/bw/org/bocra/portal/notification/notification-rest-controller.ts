@@ -16,7 +16,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class NotificationRestController {
-    protected path = 'notification';
+    protected path = '/notification';
 
 
     constructor(private http: HttpClient) {

@@ -16,7 +16,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AccessPointTypeRestController {
-    protected path = 'access/type';
+    protected path = '/access/type';
 
 
     constructor(private http: HttpClient) {

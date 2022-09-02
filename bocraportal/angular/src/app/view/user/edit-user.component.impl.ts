@@ -132,20 +132,23 @@ export class EditUserComponentImpl extends EditUserComponent {
     }
     else {
       let messages: string[] = []
+      if (!this.userControl.valid) {
+        messages.push("User has errors. Please fill in the required form fields. ")
+      }
       if (!this.userUsernameControl.valid) {
-        messages.push("Username has errors")
+        messages.push("Username is missing!")
       }
       if (!this.userEmailControl.valid) {
-        messages.push("Email has errors")
+        messages.push("Email is missing!")
       }
       if (!this.userPasswordControl.valid) {
-        messages.push("Password has errors")
+        messages.push("Password is missing!")
       }
       if (!this.userFirstNameControl.valid) {
-        messages.push("First name has errors")
+        messages.push("First name is missing!")
       }
       if (!this.userLastNameControl.valid) {
-        messages.push("Last Name has errors")
+        messages.push("Last Name is missing!")
       }
 
       this.store.dispatch(UserActions.userFailure({ messages: messages }));

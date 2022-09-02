@@ -1,6 +1,5 @@
 package bw.org.bocra.portal.keycloak;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Response;
 
@@ -30,7 +28,6 @@ import org.springframework.stereotype.Component;
 import bw.org.bocra.portal.licensee.LicenseeService;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.user.LicenseeUserService;
-import bw.org.bocra.portal.user.LicenseeUserVO;
 import bw.org.bocra.portal.user.UserVO;
 
 @Component
@@ -155,12 +152,17 @@ public class KeycloakUserService {
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
 
         Response res = usersResource.create(userRepresentation);
+        System.out.println(res.getStatus());
+        System.out.println(res.getStatusInfo());
+        
+        // InputStreamWrapper
 
         List<UserRepresentation> users = usersResource.search(user.getUsername(), user.getFirstName(),
                 user.getLastName(), user.getEmail(), 0, 1);
         if (CollectionUtils.isNotEmpty(users)) {
 
             UserRepresentation rep = users.get(0);
+            user.setUserId(rep.getId());
             UserResource userResource = usersResource.get(rep.getId());
 
             List<RoleRepresentation> roleReps = new ArrayList<>();

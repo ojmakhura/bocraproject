@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.Form;
@@ -29,6 +30,7 @@ import bw.org.bocra.portal.form.field.FormFieldVO;
  * @see FormSection
  */
 @Repository("formSectionDao")
+@Transactional
 public class FormSectionDaoImpl
         extends FormSectionDaoBase {
 

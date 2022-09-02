@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -44,6 +43,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -66,6 +66,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
@@ -87,6 +88,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -109,6 +111,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             
         } catch (Exception e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -150,6 +153,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }

@@ -7,6 +7,7 @@
 package bw.org.bocra.portal.auth;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.access.AccessPoint;
 import bw.org.bocra.portal.access.AccessPointDao;
@@ -21,6 +22,7 @@ import bw.org.bocra.portal.menu.MenuSectionRepository;
  * @see Authorisation
  */
 @Repository("authorisationDao")
+@Transactional
 public class AuthorisationDaoImpl
     extends AuthorisationDaoBase
 {

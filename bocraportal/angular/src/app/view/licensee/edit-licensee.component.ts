@@ -211,7 +211,6 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     success: Observable<boolean>;
     loading: Observable<boolean>;
     error: Observable<boolean>;
-    sectorRemoved$: Observable<boolean>;
     selected: any = null;
 
     constructor(injector: Injector) {
@@ -233,7 +232,6 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
         this.messages = this.store.pipe(select(LicenseeSelectors.selectMessages));
         this.licenseeSectors$ = this.store.pipe(select(SectorSelectors.selectSectors));
         this.licenseeSector$ = this.store.pipe(select(LicenseeSectorSelectors.selectLicenseeSector));
-        this.sectorRemoved$ = this.store.pipe(select(LicenseeSectorSelectors.selectRemoved));
         this.licenseeForms$ = this.store.pipe(select(FormSelectors.selectForms));
         this.licenseeForm$ = this.store.pipe(select(LicenseeFormSelectors.selectLicenseeForm));
         this.licenseeUsersSearchField = new FormControl();

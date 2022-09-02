@@ -32,7 +32,7 @@ export class AccessPointTypeEffects {
           map((accessPointType) =>
             AccessPointTypeActions.saveSuccess({ accessPointType, messages: [`Access point type ${accessPointType.name} saved.`], success: true })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )

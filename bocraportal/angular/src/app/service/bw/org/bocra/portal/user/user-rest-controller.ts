@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class UserRestController {
-    protected path = 'user';
+    protected path = '/user';
 
     constructor(private http: HttpClient) {
     }

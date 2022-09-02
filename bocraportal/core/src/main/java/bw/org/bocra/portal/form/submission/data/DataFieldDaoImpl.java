@@ -7,6 +7,7 @@
 package bw.org.bocra.portal.form.submission.data;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.field.FormFieldRepository;
@@ -20,6 +21,7 @@ import bw.org.bocra.portal.form.submission.FormSubmissionVO;
  * @see DataField
  */
 @Repository("dataFieldDao")
+@Transactional
 public class DataFieldDaoImpl
     extends DataFieldDaoBase
 {

@@ -94,6 +94,7 @@ public class AccessPointServiceImpl
     protected  Collection<AccessPointVO> handleSearch(AccessPointCriteria criteria)
         throws Exception
     {
+        Collection<AccessPoint> points = accessPointDao.findByCriteria(criteria);
         return (Collection<AccessPointVO>)accessPointDao.findByCriteria(AccessPointDao.TRANSFORM_ACCESSPOINTVO, criteria);
     }
 

@@ -77,18 +77,33 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
    * This method may be overwritten
    */
   override beforeEditDocumentTypeSave(form: EditDocumentTypeSaveForm): void {
-    if (form.documentType?.id) {
+    if (this.editDocumentTypeForm.valid && this.editDocumentTypeForm.dirty) {
+      if (form.documentType?.id) {
+        form.documentType.updatedBy = this.keycloakService.getUsername();
+        form.documentType.updatedDate = new Date();
+      } else {
+        form.documentType.createdBy = this.keycloakService.getUsername();
+        form.documentType.createdDate = new Date();
+      }
 
-      form.documentType.updatedBy = this.keycloakService.getUsername();
-      form.documentType.updatedDate = new Date();
+      this.store.dispatch(
+        DocumentTypeActions.save({
+          documentType: form.documentType,
+          loading: true,
+        })
+      );
     } else {
-      form.documentType.createdBy = this.keycloakService.getUsername();
-      form.documentType.createdDate = new Date();
+      let messages: string[] = []
+      if(!this.documentTypeControl.valid) {
+        messages.push("Sector has errors, Please fill in the required form fields.")
+      }
+      if(!this.documentTypeCodeControl.valid) {
+        messages.push("Document Type Code is missing!")
+      }
+      if(!this.documentTypeNameControl.valid) {
+        messages.push("Document Type Name is missing!")
+      }
+      this.store.dispatch(DocumentTypeActions.documentTypeFailure({ messages: messages }));
     }
-
-    this.store.dispatch(DocumentTypeActions.save({
-      documentType: form.documentType,
-      loading: false
-    }));
   }
 }

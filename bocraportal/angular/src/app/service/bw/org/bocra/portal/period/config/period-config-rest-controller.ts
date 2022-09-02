@@ -16,7 +16,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class PeriodConfigRestController {
-    protected path = 'period/config';
+    protected path = '/period/config';
 
 
     constructor(private http: HttpClient) {

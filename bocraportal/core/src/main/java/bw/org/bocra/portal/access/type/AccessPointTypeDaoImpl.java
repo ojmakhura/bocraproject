@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 
@@ -20,6 +21,7 @@ import bw.org.bocra.portal.BocraportalSpecifications;
  * @see AccessPointType
  */
 @Repository("accessPointTypeDao")
+@Transactional
 public class AccessPointTypeDaoImpl
     extends AccessPointTypeDaoBase
 {

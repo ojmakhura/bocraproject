@@ -2,9 +2,14 @@
 import { Component, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
+import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
 import * as LicenceActions from '@app/store/licence/licence.actions';
+import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
+import * as LicenceTypeSelectors from '@app/store/licence/type/licence-type.selectors';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
+import * as LicenseeActions from '@app/store/licensee/licensee.actions';
+import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import { EditLicenceComponent, EditLicenceSaveForm, EditLicenceVarsForm } from '@app/view/licence/edit-licence.component';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
@@ -23,6 +28,8 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
+    this.licenceLicenceTypes$ = this.store.pipe(select(LicenceTypeSelectors.selectLicenceTypes));
+    this.licenceLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
   }
 
   override beforeOnInit(form: EditLicenceVarsForm): EditLicenceVarsForm {
@@ -99,6 +106,26 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
   //     );
   //   }
   // }
+
+  override licenceLicenceTypeSearch(): void {
+    let criteria: LicenceTypeCriteria = new LicenceTypeCriteria();
+    this.store.dispatch(
+      LicenceTypeActions.search({
+        criteria: criteria,
+        loading: true
+      })
+    );
+  }
+  override licenceLicenseeSearch(): void {
+    let criteria: string = '';
+    criteria = this.licenceLicenseeSearchField.value;
+    this.store.dispatch(
+      LicenseeActions.search({
+        criteria: { uin: criteria, licenseeName: criteria },
+        loading: true
+      })
+    );
+  }
 
   override createDocumentVOGroup(value: DocumentVO): FormGroup {
       return this.formBuilder.group({

@@ -7,11 +7,13 @@
 package bw.org.bocra.portal.contact;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see ContactMessage
  */
 @Repository("contactMessageDao")
+@Transactional
 public class ContactMessageDaoImpl
     extends ContactMessageDaoBase
 {
