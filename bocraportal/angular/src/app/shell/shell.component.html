@@ -28,7 +28,7 @@
 						<li class="nav-item px-2">
 							<a class="nav-link" routerLink="active"><i class="fa fa-commenting fa-lg"
 									aria-hidden="false"></i>&nbsp; File A Complaint</a>
-						</li>      
+						</li>
 						<li class="nav-item px-2" *ngIf="isLoggedIn | async">
 							<a class="nav-link" routerLink="active"><i class="fa fa-bell fa-lg"
 									aria-hidden="false"></i>&nbsp; Notifications</a>
@@ -37,7 +37,8 @@
 				</div>
 				<ul class="navbar-nav">
 					<div class="topbar-divider d-none d-sm-block" *ngIf="!isMobile"></div>
-					<button class="btn btn-primary" *ngIf="(isLoggedIn | async) === false" (click)="login()" >Login</button>
+					<button class="btn btn-primary" *ngIf="(isLoggedIn | async) === false"
+						(click)="login()">Login</button>
 					<li class="nav-item dropdown" *ngIf="isLoggedIn | async">
 						<a class="nav-link dropdown-toggle" [matMenuTriggerFor]="userMenu" id="navbarDropdown"
 							role="button" aria-expanded="false" aria-haspopup="true"><span *ngIf="!isMobile">{{ username
@@ -74,15 +75,13 @@
 			<li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
 			<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
 		</ol>
-	</nav> 
+	</nav>
 	<!-- Title end -->
-	
+
 	<!-- Content start -->
-	<div class="mb-4">
-		<router-outlet></router-outlet>
-	</div>
+	<router-outlet></router-outlet>
 	<!-- Content end -->
-	
+
 
 	<!-- Sidebar start -->
 	<div class="offcanvas offcanvas-start bg-dark text-white" data-bs-scroll="true" tabindex="-1" id="sidenav"
@@ -104,8 +103,7 @@
 					</li>
 					<li class="nav-item" *ngFor="let item of menus$ | async">
 						<a class="nav-link" routerLink="{{ item.routerLink }}" routerLinkActive="active"
-							data-bs-dismiss="offcanvas"><i class="fa {{ item.icon }}"
-								aria-hidden="true"></i>&nbsp;
+							data-bs-dismiss="offcanvas"><i class="fa {{ item.icon }}" aria-hidden="true"></i>&nbsp;
 							<span class="ms-3" translate>{{
 								item.titleKey }}
 							</span>
