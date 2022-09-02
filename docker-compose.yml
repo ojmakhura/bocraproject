@@ -43,25 +43,22 @@ services:
       - "--ping.entrypoint=ping"
       - "--metrics"
       - "--metrics.prometheus"
-      # - "--providers.docker.network=traefik-public"
-      # - "--entrypoints.web.http.redirections.entrypoint.to=${ACTIVE_ROUTER_ENTRY}"
-      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      # - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
-      # - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
-      # - "--certificatesresolvers.le.acme.tlschallenge=true"
+      - "--providers.docker.network=traefik-public"
+      - "--entrypoints.web.http.redirections.entrypoint.to=${ACTIVE_ROUTER_ENTRY}"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
+      - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
     
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
       - "traefik.http.routers.traefik.entrypoints=${ACTIVE_ROUTER_ENTRY}"
       - "traefik.http.routers.traefik.service=api@internal"
-      # - "traefik.http.routers.traefik.tls=${SSL_SECURE}"
-        # - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-        # - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
-        # - "traefik.http.routers.https-redirect.middlewares=https-redirect"
-        # - "traefik.http.routers.dashboard.rule=Host(`dash${PROXY_DOMAIN}`)"
-        # - "traefik.http.routers.dashboard.service=dashboard@internal"
-        # - "traefik.http.routers.dashboard.tls=${SSL_SECURE}"
+      - "traefik.http.routers.traefik.tls=${SSL_SECURE}"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.https-redirect.middlewares=https-redirect"
 
   ###############################################################################
   # Postgres database
@@ -134,7 +131,7 @@ services:
   # Keycloak authentication server
   ###############################################################################
   keycloak:
-    image: bocra-keycloak:latest
+    image: ojmakhura/bocra-keycloak:latest
     hostname: keycloak
     container_name: bocra-keycloak
     restart: unless-stopped
@@ -150,17 +147,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.keycloak
-    environment:      
-      # KC_FEATURES:
-      #   authorization
-      #   token-exchange
-      #   docker
-      #   impersonation
-      #   scripts
-      #   upload-scripts
-      #   web-authn
-      #   client-policies
-      #   dynamic-scopes
+    environment:  
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
@@ -168,10 +155,11 @@ services:
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
       KC_METRICS_ENABLED: true
       KC_PROXY: edge
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
       PROXY_ADDRESS_FORWARDING: false
-      KC_HOSTNAME_STRICT_HTTPS: false
       TZ: Africa/Gaborone
     depends_on:
       db:
@@ -192,7 +180,7 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "bocra-api:latest"
+    image: "ojmakhura/bocra-api:latest"
     container_name: bocra-api
     hostname: api
 
@@ -237,7 +225,7 @@ services:
   # Angular web application
   ###############################################################################
   web:
-    image: "bocra-web:latest"
+    image: "ojmakhura/bocra-web:latest"
     hostname: web
 
     healthcheck:
@@ -276,32 +264,28 @@ services:
   ###############################################################################
   # Local docker container registry
   ###############################################################################
-  registry:
+  registry: 
     image: registry:2
     ports:
-      - 5000:5000
-    env_file:
-      - .env
-    depends_on:
-      - proxy
-    environment:
-      REGISTRY_HTTP_TLS_CERTIFICATE: ${REGISTRY_HTTP_TLS_CERTIFICATE}
-      REGISTRY_HTTP_TLS_KEY: ${REGISTRY_HTTP_TLS_KEY}
-      REGISTRY_AUTH: ${REGISTRY_AUTH}
-      REGISTRY_AUTH_HTPASSWD_PATH: ${REGISTRY_AUTH_HTPASSWD_PATH}
-      REGISTRY_AUTH_HTPASSWD_REALM: ${REGISTRY_AUTH_HTPASSWD_REALM}
+      - "5000:5000"
     volumes:
       - ${BOCRA_DATA}/registry/data:/var/lib/registry
-      - ${BOCRA_DATA}/registry/certs:/certs
-      - ${BOCRA_DATA}/registry/auth:/auth
+      - ${BOCRA_DATA}/registry/certs:${BOCRA_DATA}/registry/certs
+      - ${BOCRA_DATA}/registry/auth:${BOCRA_DATA}/registry/auth
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+      REGISTRY_AUTH: ${REGISTRY_AUTH}
+      REGISTRY_AUTH_HTPASSWD_PATH: ${BOCRA_DATA}/registry/auth/passwd
+      REGISTRY_AUTH_HTPASSWD_REALM: ${REGISTRY_AUTH_HTPASSWD_REALM}
     networks:
-      bocra-network:
-        ipv4_address: ${BOCRA_REGISTRY_ADDRESS}
       traefik-public:
       default:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-registry.rule=Host(`${REGISTRY_DOMAIN}`)"
+      - "traefik.http.routers.registry.entrypoints=websecure"
+      - "traefik.http.routers.registry.rule=Host(`registry.localhost`)"
+      - "traefik.http.routers.registry.tls=true"
+      - "traefik.http.routers.registry.tls.certresolver=le"
   
   ###############################################################################
   # Jenkins for CI/CD
