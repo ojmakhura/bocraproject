@@ -92,7 +92,7 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(NoteVO note) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at ");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 

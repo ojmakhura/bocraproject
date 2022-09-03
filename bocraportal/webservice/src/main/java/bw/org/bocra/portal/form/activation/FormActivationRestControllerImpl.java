@@ -29,7 +29,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Form Activation Service handleFindById "+"For "+id);
             Optional<?> data = Optional.of(formActivationService.findById(id));
             ResponseEntity<?> response;
 
@@ -50,7 +50,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Form Activation Service handleGetAll");
             Optional<?> data = Optional.of(formActivationService.getAll());
             ResponseEntity<?> response;
 
@@ -71,7 +71,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Form Activation Service handleGetAllPaged "+"Page Number:"+pageNumber+"Page Size:"+pageSize);
             Optional<?> data = Optional.of(formActivationService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -92,7 +92,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Form Activation Service handleRemove "+"For "+id);
             Optional<?> data = Optional.of(formActivationService.remove(id));
             ResponseEntity<?> response;
 
@@ -113,7 +113,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleSave(FormActivationVO formActivation) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Form Activation Service handleSave "+formActivation);
             Optional<?> data = Optional.of(formActivationService.save(formActivation));
             ResponseEntity<?> response;
 
@@ -134,7 +134,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleSearch(FormActivationCriteria criteria) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Form Activation Service handleSearch "+criteria);
             Optional<?> data = Optional.of(formActivationService.search(criteria));
             ResponseEntity<?> response;
 
