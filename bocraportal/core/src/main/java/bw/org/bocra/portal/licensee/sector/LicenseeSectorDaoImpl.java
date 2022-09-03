@@ -67,9 +67,8 @@ public class LicenseeSectorDaoImpl
         if(source.getSector() != null && source.getSector().getId() != null) {
             SectorVO sector = new SectorVO();
             sector.setId(source.getSector().getId());
-            // sector.setCode(source.getSector().getCode());
+            sector.setCode(source.getSector().getCode());
             sector.setName(source.getSector().getName());
-            // sector.setDescription(source.getSector().getDescription());
             sector.setThemeColour(source.getSector().getThemeColour());
 
             target.setSector(sector);
