@@ -97,10 +97,10 @@ export class EditUserComponentImpl extends EditUserComponent {
   }
 
   override beforeEditUserDelete(form: EditUserDeleteForm): void {
-    if (form?.user?.userId && confirm("Are you sure you want to delete the period?")) {
+    if (form?.user?.userId && confirm("Are you sure you want to delete the user?")) {
       this.store.dispatch(
         UserActions.remove({
-          id: form?.user?.id,
+          id: form?.user?.userId,
           loading: false,
         })
       );

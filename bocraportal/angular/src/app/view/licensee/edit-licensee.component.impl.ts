@@ -185,7 +185,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   }
   override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
-    if (form?.licensee?.id && confirm("Are you sure you want to delete the period?")) {
+    if (form?.licensee?.id && confirm("Are you sure you want to delete the licensee?")) {
       this.store.dispatch(
         LicenseeActions.remove({
           id: form?.licensee?.id,

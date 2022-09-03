@@ -130,7 +130,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     );
   }
   override beforeEditSectorDelete(form: EditSectorDeleteForm): void {
-    if (form?.sector?.id && confirm("Are you sure you want to delete the period?")) {
+    if (form?.sector?.id && confirm("Are you sure you want to delete the sector?")) {
       this.store.dispatch(
         SectorActions.remove({
           id: form?.sector?.id,

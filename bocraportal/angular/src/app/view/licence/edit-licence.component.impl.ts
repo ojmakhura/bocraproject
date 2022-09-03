@@ -10,7 +10,7 @@ import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
-import { EditLicenceComponent, EditLicenceSaveForm, EditLicenceVarsForm } from '@app/view/licence/edit-licence.component';
+import { EditLicenceComponent, EditLicenceDeleteForm, EditLicenceSaveForm, EditLicenceVarsForm } from '@app/view/licence/edit-licence.component';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
@@ -49,7 +49,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     });
 
     this.licence$.subscribe((licence) => {
-      this.setEditLicenceFormValue({licence: licence});
+      this.setEditLicenceFormValue({ licence: licence });
     });
 
     this.store.dispatch(
@@ -62,14 +62,14 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if(item === '/licence/edit-licence/{button:delete}') {
+        if (item === '/licence/edit-licence/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
     });
   }
 
-  override doNgOnDestroy() {}
+  override doNgOnDestroy() { }
 
   /**
    * This method may be overwritten
@@ -91,8 +91,20 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     );
   }
 
+  override beforeEditLicenceDelete(form: EditLicenceDeleteForm): void {
+    if (form?.licence?.id && confirm('Are you sure you want to delete the licence?')) {
+      this.store.dispatch(LicenceActions.remove({
+        id: form?.licence?.id,
+        loading: false,
+      }));
+      this.editLicenceFormReset();
+    } else {
+      this.store.dispatch(LicenceActions.licenceFailure({ messages: ['Please select something to delete'] }));
+    }
+  }
+
   // override afterEditLicenceNewDocument(form: EditLicenceNewDocumentForm, dialogData: any): void {
-    
+
   //   if(dialogData) {
   //     console.log(dialogData)
   //     this.store.dispatch(
@@ -128,20 +140,20 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
   }
 
   override createDocumentVOGroup(value: DocumentVO): FormGroup {
-      return this.formBuilder.group({
-          id: [value?.id],
-          createdBy: [value?.createdBy],
-          updatedBy: [value?.updatedBy],
-          createdDate: [value?.createdDate],
-          updatedDate: [value?.updatedDate],
-          documentName: [value?.documentName],
-          file: [value?.file],
-          documentId: [value?.documentId],
-          documentType: {
-            id: [value.documentType.id],
-            code: [value.documentType.code],
-            name: [value.documentType.name],
-          }
-      });
+    return this.formBuilder.group({
+      id: [value?.id],
+      createdBy: [value?.createdBy],
+      updatedBy: [value?.updatedBy],
+      createdDate: [value?.createdDate],
+      updatedDate: [value?.updatedDate],
+      documentName: [value?.documentName],
+      file: [value?.file],
+      documentId: [value?.documentId],
+      documentType: {
+        id: [value.documentType.id],
+        code: [value.documentType.code],
+        name: [value.documentType.name],
+      }
+    });
   }
 }
