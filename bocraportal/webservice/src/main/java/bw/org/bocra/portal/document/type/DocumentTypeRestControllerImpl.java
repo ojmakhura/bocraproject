@@ -28,6 +28,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(documentTypeService.findById(id));
             ResponseEntity<?> response;
 
@@ -47,6 +48,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(documentTypeService.getAll());
             ResponseEntity<?> response;
 
@@ -66,6 +68,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(documentTypeService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -85,6 +88,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(documentTypeService.remove(id));
             ResponseEntity<?> response;
 
@@ -104,6 +108,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleSave(DocumentTypeVO documentType) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(documentTypeService.save(documentType));
             ResponseEntity<?> response;
 
@@ -123,6 +128,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(documentTypeService.search(criteria));
             ResponseEntity<?> response;
 

@@ -31,6 +31,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleCreate(Long sectorId, Long formId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(sectorFormService.create(sectorId, formId)); 
             ResponseEntity<?> response;
 
@@ -51,6 +52,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindByForm(Long formId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -71,6 +73,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -91,6 +94,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindBySector(Long licenseeId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -111,6 +115,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -131,6 +136,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -151,6 +157,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleUpdateForm(Long id, Long formId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -171,6 +178,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleUpdateSector(Long id, Long sectorId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 

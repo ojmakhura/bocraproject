@@ -30,6 +30,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
+            logger.debug("");
             Optional<PeriodVO> data = Optional.of(this.periodService.findById(id));
             ResponseEntity<PeriodVO> response;
     
@@ -50,6 +51,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
+            logger.debug("");
             Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll());
             ResponseEntity<Collection<PeriodVO>> response;
     
@@ -70,6 +72,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
+            logger.debug("");
             Optional<Boolean> data = Optional.of(periodService.remove(id));
             ResponseEntity<Boolean> response;
     
@@ -89,8 +92,8 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleSave(PeriodVO periodVO) {
-
         try {
+            logger.debug("");
             Optional<PeriodVO> data = Optional.of(periodService.save(periodVO));
             ResponseEntity<PeriodVO> response;
 
@@ -112,6 +115,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(PeriodCriteria criteria) {
         try{
+            logger.debug("");
             Optional<Collection<PeriodVO>> data = Optional.of(periodService.search(criteria));
             ResponseEntity<Collection<PeriodVO>> response;
     
@@ -132,6 +136,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
+            logger.debug("");
             Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll(pageNumber, pageSize));
             ResponseEntity<Collection<PeriodVO>> response;
     

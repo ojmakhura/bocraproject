@@ -29,6 +29,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
+            logger.debug("");
             Optional<FormSectionVO> data = Optional.of(formSectionService.findById(id));
             ResponseEntity<FormSectionVO> response;
     
@@ -49,6 +50,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
+            logger.debug("");
             Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll());
             ResponseEntity<Collection<FormSectionVO>> response;
     
@@ -69,6 +71,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
+            logger.debug("");
             Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll(pageNumber, pageSize));
             ResponseEntity<Collection<FormSectionVO>> response;
     
@@ -89,6 +92,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
+            logger.debug("");
             Optional<Boolean> data = Optional.of(formSectionService.remove(id));
             ResponseEntity<Boolean> response;
     
@@ -109,6 +113,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleSave(FormSectionVO formSection) {
         try{
+            logger.debug("");
             Optional<FormSectionVO> data = Optional.of(formSectionService.save(formSection));
             ResponseEntity<FormSectionVO> response;
     
@@ -129,6 +134,7 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try{
+            logger.debug("");
             Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.search(criteria));
             ResponseEntity<Collection<FormSectionVO>> response;
     

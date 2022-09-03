@@ -28,6 +28,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
+            logger.debug("");
             Optional<ReportConfigVO> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<ReportConfigVO> response;
     
@@ -48,6 +49,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
+            logger.debug("");
             Optional<Collection<ReportConfigVO>> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<Collection<ReportConfigVO>> response;
     
@@ -68,6 +70,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
+            logger.debug("");
             Optional<Collection<ReportConfigVO>> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<Collection<ReportConfigVO>> response;
     
@@ -88,6 +91,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
+            logger.debug("");
             Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<Boolean> response;
     
@@ -108,6 +112,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleSave(ReportConfigVO reportConfig) {
         try{
+            logger.debug("");
             Optional<ReportConfigVO> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<ReportConfigVO> response;
     
@@ -128,6 +133,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleSearch(ReportConfigCriteria criteria) {
         try{
+            logger.debug("");
             Optional<Collection<ReportConfigVO>> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<Collection<ReportConfigVO>> response;
     

@@ -30,6 +30,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -49,6 +50,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -68,6 +70,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -87,6 +90,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -106,6 +110,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleSave(ContactMessageVO contactMessage) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -125,6 +130,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 

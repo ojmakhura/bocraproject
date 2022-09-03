@@ -28,6 +28,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleCreate(Long licenceTypeId, Long formId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceTypeFormService.create(licenceTypeId, formId));
             ResponseEntity<?> response;
 
@@ -47,6 +48,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleFindByForm(Long formId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.ofNullable(licenceTypeFormService.findByForm(formId));
             ResponseEntity<?> response;
 
@@ -66,6 +68,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceTypeFormService.findById(id));
             ResponseEntity<?> response;
 
@@ -85,6 +88,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleFindByLicenceType(Long licenceTypeId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceTypeFormService.findByLicenceType(licenceTypeId));
             ResponseEntity<?> response;
 
@@ -104,6 +108,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceTypeFormService.getAll());
             ResponseEntity<?> response;
 
@@ -123,6 +128,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceTypeFormService.remove(id));
             ResponseEntity<?> response;
 
@@ -142,6 +148,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleUpdateForm(Long id, Long formId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceTypeFormService.updateForm(id, formId));
             ResponseEntity<?> response;
 
@@ -161,6 +168,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleUpdateLicenceType(Long id, Long licenceTypeId) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceTypeFormService.updateLicenceType(id, licenceTypeId));
             ResponseEntity<?> response;
 

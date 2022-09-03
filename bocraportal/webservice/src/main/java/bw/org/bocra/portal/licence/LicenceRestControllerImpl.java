@@ -29,6 +29,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceService.findById(id));
             ResponseEntity<?> response;
 
@@ -49,6 +50,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceService.getAll());
             ResponseEntity<?> response;
 
@@ -69,6 +71,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -89,6 +92,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceService.remove(id));
             ResponseEntity<?> response;
 
@@ -109,6 +113,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(LicenceVO licence) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceService.save(licence));
             ResponseEntity<?> response;
 
@@ -129,6 +134,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(LicenceCriteria criteria) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(licenceService.search(criteria));
             ResponseEntity<?> response;
 
@@ -150,6 +156,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.empty();
             ResponseEntity<?> response;
 

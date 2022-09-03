@@ -32,6 +32,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(menuSectionService.findById(id));
             ResponseEntity<?> response;
 
@@ -51,6 +52,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(menuSectionService.getAll());
             ResponseEntity<?> response;
 
@@ -70,6 +72,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(menuSectionService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -89,6 +92,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(menuSectionService.remove(id));
             ResponseEntity<?> response;
 
@@ -108,6 +112,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleSave(MenuSectionVO menuSection) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(menuSectionService.save(menuSection));
             ResponseEntity<?> response;
 
@@ -127,6 +132,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(menuSectionService.search(criteria));
             ResponseEntity<?> response;
 
@@ -147,6 +153,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleFindByAuthorisationRoles(Set<String> roles) {
         try {
+            logger.debug("");
             Optional<?> data = Optional.of(menuSectionService.findByAuthorisationRoles(roles));
             ResponseEntity<?> response;
 
