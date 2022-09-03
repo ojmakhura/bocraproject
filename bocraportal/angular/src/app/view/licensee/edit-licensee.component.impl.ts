@@ -149,7 +149,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
    * This method may be overwritten
    */
   override beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
-    if (this.editLicenseeForm.valid && this.editLicenseeForm.dirty) {
+    if (this.editLicenseeForm.valid) {
       if (form.licensee?.id) {
         form.licensee.updatedBy = this.keycloakService.getUsername();
         form.licensee.updatedDate = new Date();

@@ -114,7 +114,7 @@ export class EditUserComponentImpl extends EditUserComponent {
    * This method may be overwritten
    */
   override beforeEditUserSave(form: EditUserSaveForm): void {
-    if (this.editUserForm.valid && this.editUserForm.dirty) {
+    if (this.editUserForm.valid) {
       if (form.user?.id) {
         form.user.updatedBy = this.keycloakService.getUsername();
         form.user.updatedDate = new Date();

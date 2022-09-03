@@ -147,7 +147,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
    * This method may be overwritten
    */
   override beforeEditSectorSave(form: EditSectorSaveForm): void {
-    if (this.editSectorForm.valid && this.editSectorForm.dirty) {
+    if (this.editSectorForm.valid) {
       if (form.sector?.id) {
         form.sector.updatedBy = this.keycloakService.getUsername();
         form.sector.updatedDate = new Date();

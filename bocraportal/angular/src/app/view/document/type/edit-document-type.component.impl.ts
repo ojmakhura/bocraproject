@@ -77,7 +77,7 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
    * This method may be overwritten
    */
   override beforeEditDocumentTypeSave(form: EditDocumentTypeSaveForm): void {
-    if (this.editDocumentTypeForm.valid && this.editDocumentTypeForm.dirty) {
+    if (this.editDocumentTypeForm.valid) {
       if (form.documentType?.id) {
         form.documentType.updatedBy = this.keycloakService.getUsername();
         form.documentType.updatedDate = new Date();

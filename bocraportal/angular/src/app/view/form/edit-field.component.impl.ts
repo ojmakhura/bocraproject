@@ -113,7 +113,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
   override beforeEditFieldSave(form: EditFieldSaveForm): void {
     console.log(form);
 
-    if (this.formFieldControl.dirty && this.formFieldControl.valid) {
+    if (this.formFieldControl.valid) {
       if (this.formField.id) {
         this.formField.updatedBy = this.keycloakService.getUsername();
         this.formField.updatedDate = new Date();
