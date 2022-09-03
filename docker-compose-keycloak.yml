@@ -4,7 +4,7 @@ services:
   # Keycloak authentication server
   ###############################################################################
   keycloak:
-    image: bocra-keycloak:latest
+    image: ${KEYCLOAK_REGISTRY_IMAGE}
     hostname: keycloak
     restart: unless-stopped
     command:
@@ -19,28 +19,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.keycloak
-    environment:      
-      # KC_FEATURES:
-      #   authorization
-      #   token-exchange
-      #   docker
-      #   impersonation
-      #   scripts
-      #   upload-scripts
-      #   web-authn
-      #   client-policies
-      #   dynamic-scopes
+    environment:  
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
-      KC_DB_URL_HOST: db
+      KC_DB_URL_HOST: ${POSTGRES_SERVER}
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-      KC_METRICS_ENABLED: "true"
+      KC_METRICS_ENABLED: true
       KC_PROXY: edge
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
-      PROXY_ADDRESS_FORWARDING: "false"
-      KC_HOSTNAME_STRICT_HTTPS: "false"
+      PROXY_ADDRESS_FORWARDING: false
       TZ: Africa/Gaborone
     networks:
       traefik-public:
