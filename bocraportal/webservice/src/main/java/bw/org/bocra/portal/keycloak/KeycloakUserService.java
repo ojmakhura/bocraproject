@@ -38,7 +38,8 @@ public class KeycloakUserService {
     private final LicenseeService licenseeService;
     private final KeycloakService keycloakService;
 
-    public KeycloakUserService(LicenseeUserService licenseeUserService, LicenseeService licenseeService, KeycloakService keycloakService) {
+    public KeycloakUserService(LicenseeUserService licenseeUserService, LicenseeService licenseeService,
+            KeycloakService keycloakService) {
         this.licenseeService = licenseeService;
         this.keycloakService = keycloakService;
     }
@@ -111,10 +112,10 @@ public class KeycloakUserService {
             List<String> licenseeNames = userRepresentation.getAttributes().get("licenseeName");
 
             LicenseeVO licensee = new LicenseeVO();
-            if(CollectionUtils.isNotEmpty(licenseeIds))
+            if (CollectionUtils.isNotEmpty(licenseeIds))
                 licensee.setId(Long.parseLong(licenseeIds.get(0)));
-            
-            if(CollectionUtils.isNotEmpty(licenseeNames))
+
+            if (CollectionUtils.isNotEmpty(licenseeNames))
                 licensee.setLicenseeName(licenseeNames.get(0));
 
             user.setLicensee(licensee);
@@ -123,7 +124,8 @@ public class KeycloakUserService {
         RealmResource realmResource = keycloakService.getRealmResource();
         UserResource userResource = realmResource.users().get(userRepresentation.getId());
 
-        ClientRepresentation clientRepresentation = keycloakService.getClientsResource().findByClientId(keycloakService.getAuthClient()).get(0);
+        ClientRepresentation clientRepresentation = keycloakService.getClientsResource()
+                .findByClientId(keycloakService.getAuthClient()).get(0);
 
         for (RoleRepresentation roleRep : userResource.roles().clientLevel(clientRepresentation.getId()).listAll()) {
             user.getRoles().add(roleRep.getName());
@@ -146,29 +148,47 @@ public class KeycloakUserService {
         return users;
     }
 
-    public UserVO createUser( UserVO user) {
+    public boolean updateUserPassword(String userId, String newPassword) {
+
+        UsersResource usersResource = keycloakService.getUsersResource();
+        UserResource userResource = usersResource.get(userId);
+        CredentialRepresentation credential = createCredential(CredentialRepresentation.PASSWORD, newPassword, false);
+        userResource.resetPassword(credential);
+
+        return true;
+    }
+
+    public UserVO createUser(UserVO user) {
 
         UsersResource usersResource = keycloakService.getUsersResource();
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
+        UserResource userResource = null;
+        List<UserRepresentation> users = null;
 
-        Response res = usersResource.create(userRepresentation);
-        System.out.println(res.getStatus());
-        System.out.println(res.getStatusInfo());
-        
-        // InputStreamWrapper
+        if (StringUtils.isBlank(user.getUserId())) {
 
-        List<UserRepresentation> users = usersResource.search(user.getUsername(), user.getFirstName(),
-                user.getLastName(), user.getEmail(), 0, 1);
-        if (CollectionUtils.isNotEmpty(users)) {
+            Response res = usersResource.create(userRepresentation);
 
-            UserRepresentation rep = users.get(0);
-            user.setUserId(rep.getId());
-            UserResource userResource = usersResource.get(rep.getId());
+            users = usersResource.search(user.getUsername(), user.getFirstName(),
+                    user.getLastName(), user.getEmail(), 0, 1);
+        } else {
+            userResource = usersResource.get(user.getUserId());
+        }
+
+        if (CollectionUtils.isNotEmpty(users) || userResource != null) {
+
+            if(userResource == null) {
+
+                UserRepresentation rep = users.get(0);
+                user.setUserId(rep.getId());
+                userResource = usersResource.get(rep.getId());
+            }
 
             List<RoleRepresentation> roleReps = new ArrayList<>();
 
             for (String role : user.getRoles()) {
-                RolesResource rolesResource = keycloakService.getClientRolesResource(findAuthenticatedClientResource().getId());
+                RolesResource rolesResource = keycloakService
+                        .getClientRolesResource(findAuthenticatedClientResource().getId());
 
                 RoleRepresentation roleRep = rolesResource.get(role).toRepresentation();
                 if (StringUtils.isNotBlank(roleRep.getId())) {
@@ -230,7 +250,7 @@ public class KeycloakUserService {
         RolesResource rolesResource = keycloakService.getClientRolesResource(clientId);
         UserRepresentation rep = userResource.toRepresentation();
 
-        if(StringUtils.isBlank(rep.getId())) {
+        if (StringUtils.isBlank(rep.getId())) {
             return null;
         }
 
@@ -258,6 +278,5 @@ public class KeycloakUserService {
 
         return null;
     }
-
 
 }
