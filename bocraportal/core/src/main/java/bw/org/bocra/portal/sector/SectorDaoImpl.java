@@ -131,14 +131,7 @@ public class SectorDaoImpl
             Collection<LicenseeSector> licensees = new ArrayList<>();
 
             for(LicenseeSectorVO lvo : source.getLicensees()) {
-
-                // if(lvo.getId() != null) {
                 licensees.add(licenseeSectorRepository.getReferenceById(lvo.getId()));
-
-                // } else if(lvo.getId() != null) {
-                //     LicenseeSector ls = LicenseeSector.Factory.newInstance(licenseeDao.load(lvo.getId()), target);
-                //     licensees.add(licenseeSectorRepository.save(ls));
-                // }
             }
 
             target.setLicenseeSectors(licensees);
@@ -152,8 +145,7 @@ public class SectorDaoImpl
         
         if(StringUtils.isNotBlank(criteria)) {
             specs = BocraportalSpecifications.<Sector, String>findByAttributeContainingIgnoreCase("code", criteria)
-                    .or(BocraportalSpecifications.<Sector, String>findByAttributeContainingIgnoreCase("name", criteria))
-                    .or(BocraportalSpecifications.<Sector, String>findByAttributeContainingIgnoreCase("description", criteria));
+                    .or(BocraportalSpecifications.<Sector, String>findByAttributeContainingIgnoreCase("name", criteria));
         }
 
         return this.sectorRepository.findAll(specs, Sort.by("name").ascending());

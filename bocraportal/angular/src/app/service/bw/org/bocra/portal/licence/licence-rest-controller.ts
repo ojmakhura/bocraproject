@@ -17,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class LicenceRestController {
-    protected path = '/license';
+    protected path = '/licence';
 
 
     constructor(private http: HttpClient) {
@@ -25,8 +25,12 @@ export class LicenceRestController {
 
     public addDocument(id: number | any , documentTypeId: number | any , file: File | any , fileName: string | any ): Observable<DocumentVO | any> {
 
-        return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, {id: id, documentTypeId: documentTypeId, file: file, fileName: fileName});
-
+        const formData: FormData = new FormData();
+        formData.append('documentTypeId', documentTypeId);
+        formData.append('file', file);
+        formData.append('fileName', fileName);
+        
+        return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, formData);
     }
 
     public findById(id: number | any ): Observable<LicenceVO | any> {

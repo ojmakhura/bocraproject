@@ -91,11 +91,11 @@ push_keycloak_image: gen_env
 run_api_local: gen_env
 	. ./.env && cd bocraportal/webservice && mvn spring-boot:run
 
-local_web_deps: gen_env build_web
-	. ./.env && cd bocraportal/angular/target/bocraportal && npm i
+local_web_deps: build_web
+	cd bocraportal/angular/target/bocraportal && npm i
 
-run_web_local: gen_env build_web
-	. ./.env && cd bocraportal/angular/target/bocraportal && npm start
+run_web_local: build_web
+	cd bocraportal/angular/target/bocraportal && npm start
 
 # run_local_web: build_local_images up_local_app
 stop_app:
