@@ -206,7 +206,6 @@ public class SubmissionServiceImpl
         }
 
         summary.setMySubmissions(formSubmissionRepository.count(specs));
-        System.out.println(summary);
         specs = null;
 
         if (criteria.getLicensee() != null) {
@@ -214,7 +213,6 @@ public class SubmissionServiceImpl
         }
 
         summary.setAllSubmissions(formSubmissionRepository.count(specs));
-        System.out.println(summary);
 
         /**
          * Get all values related to status
@@ -226,8 +224,10 @@ public class SubmissionServiceImpl
             sSpecs = sSpecs.and(specs);
         }
         summary.setNewSubmissions(formSubmissionRepository.count(sSpecs));
-        System.out.println(summary);
-
+        
+        /**
+         * Get count of draft submissions
+         */
         sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
                 FormSubmissionStatus.DRAFT);
 
@@ -236,8 +236,11 @@ public class SubmissionServiceImpl
         }
         summary.setDraftSubmissions(formSubmissionRepository.count(sSpecs));
 
+        /**
+         * Get count of returned submissions
+         */
         sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
-                FormSubmissionStatus.SUBMITTED);
+                FormSubmissionStatus.RETURNED);
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);
@@ -247,10 +250,13 @@ public class SubmissionServiceImpl
         /**
          * Get count of overdue submissions
          */
-        sSpecs = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttribute("submissionDate",
+        sSpecs = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("expectedSubmissionDate",
                 LocalDateTime.now());
         sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual(
-                "submissionStatus", FormSubmissionStatus.SUBMITTED));
+                "submissionStatus", FormSubmissionStatus.DRAFT)
+                .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual(
+                    "submissionStatus", FormSubmissionStatus.NEW))
+            );
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);

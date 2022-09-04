@@ -165,7 +165,6 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
   }
 
   override handleFormChanges(change: any): void {
-    console.log(change);
   }
 
   override periodPeriodConfigSearch(): void {

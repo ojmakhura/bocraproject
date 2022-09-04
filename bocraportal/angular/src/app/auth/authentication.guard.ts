@@ -23,8 +23,6 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     state: RouterStateSnapshot
   ) {
 
-    console.log(state.url)
-
     if(state.url === '/' || state.url === '/assets' || state.url === '/about' || state.url === '/home' || state.url === '/contact') {
       return true;
     }

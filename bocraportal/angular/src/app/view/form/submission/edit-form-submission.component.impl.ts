@@ -19,7 +19,7 @@ import { select } from '@ngrx/store';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
 import { FormEntryType } from '@app/model/bw/org/bocra/portal/form/form-entry-type';
 import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
@@ -53,6 +53,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
   @ViewChild(MatSort) dataFieldsSort: MatSort;
+
+  submissionStatus: FormSubmissionStatus = FormSubmissionStatus.NEW;
 
   constructor(
     private changeDetectorRefs: ChangeDetectorRef,
@@ -119,6 +121,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.formSubmission$.subscribe((submission) => {
       this.rowGroups = [];
       this.formFields = submission?.form?.formFields;
+      this.submissionStatus = submission?.submissionStatus;
 
       submission?.sections?.forEach((section) => {
         section.dataFields.forEach((dataField: DataFieldVO) => {
@@ -236,9 +239,14 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   override beforeEditFormSubmissionSubmit(form: EditFormSubmissionSubmitForm): void {
-    let formSubmission: FormSubmissionVO = form.formSubmission;
-    formSubmission.submissionStatus = FormSubmissionStatus.SUBMITTED;
-    this.doFormSubmissionSave(formSubmission);
+
+    if(confirm('Are you sure you want to submit the form? You will not be able to edit the data afterwards.')) {
+
+      let formSubmission: FormSubmissionVO = form.formSubmission;
+      formSubmission.submissionStatus = FormSubmissionStatus.SUBMITTED;
+      this.doFormSubmissionSave(formSubmission);
+    }
+
   }
 
   private doFormSubmissionSave(formSubmission: FormSubmissionVO) {
@@ -324,6 +332,27 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
   }
 
+  override createFormSubmissionForm(formSubmission: FormSubmissionVO): FormGroup {
+    return this.formBuilder.group({
+        id: [{value: formSubmission?.id, disabled: false}],
+        createdBy: [{value: formSubmission?.createdBy, disabled: false}],
+        updatedBy: [{value: formSubmission?.updatedBy, disabled: false}],
+        createdDate: [{value: formSubmission?.createdDate, disabled: false}],
+        updatedDate: [{value: formSubmission?.updatedDate, disabled: false}],
+        submittedBy: [{value: formSubmission?.submittedBy, disabled: false}],
+        submissionDate: [{value: formSubmission?.submissionDate, disabled: false}],
+        form: this.createFormVOGroup(formSubmission?.form),
+        period: this.createPeriodVOGroup(formSubmission?.period),
+        licensee: this.createLicenseeVOGroup(formSubmission?.licensee),
+        dataFields: this.createDataFieldVOArray(formSubmission?.dataFields),
+        submissionStatus: [{value: formSubmission?.submissionStatus, disabled: true}, [Validators.required, ]],
+        upload: [{value: formSubmission?.upload, disabled: false}],
+        notes: this.createNoteVOArray(formSubmission?.notes),
+        sections: this.createDataFieldSectionVOArray(formSubmission?.sections),
+        expectedSubmissionDate: [{value: formSubmission?.expectedSubmissionDate, disabled: false}],
+    });
+}
+
   override createDataFieldSectionVOGroup(value: DataFieldSectionVO): FormGroup {
     return this.formBuilder.group({
       sectionId: [value?.sectionId],
@@ -333,8 +362,13 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
   }
 
+  formDisabled(): boolean {
+    return this.submissionStatus == FormSubmissionStatus.SUBMITTED;
+  }
+
   override createDataFieldVOGroup(dataField: DataFieldVO): FormGroup {
-    let disable = dataField.formField.fieldValueType === FieldValueType.CALCULATED;
+    let disable = dataField.formField.fieldValueType === FieldValueType.CALCULATED || this.formDisabled();
+
     return this.formBuilder.group({
       id: [dataField?.id],
       row: [dataField?.row],

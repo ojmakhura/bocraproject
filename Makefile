@@ -38,19 +38,19 @@ clean_mda:
 up_proxy: gen_env
 	. ./.env && docker compose up -d proxy
 
-up_container: gen_env
+up_service: gen_env
 ifdef service
 	. ./.env && docker compose up -d ${service}
 else
-	@echo 'no service defined. Please run again with `make  service=<name> down_container`'
+	@echo 'no service defined. Please run again with `make  service=<name> up_service`'
 	exit 1
 endif
 
-down_container:
+down_service:
 ifdef service
 	docker stop ${STACK_NAME}-${service}
 else
-	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> service=<name> down_container`'
+	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> service=<name> down_service`'
 	exit 1
 endif
 	
@@ -109,7 +109,7 @@ ifdef run_env
 	if [ -f .env ]; then \
 		rm -f .env; \
 	fi
-	@$(${run_env})
+	@$(${run_env}_ENV)
 	chmod 755 .env
 else
 	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> target`'
