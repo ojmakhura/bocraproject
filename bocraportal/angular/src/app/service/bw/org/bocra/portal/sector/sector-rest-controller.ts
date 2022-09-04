@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SectorRestController {
     
-    protected path = 'sector';
+    protected path = '/sector';
 
     constructor(private http: HttpClient) {
     }
