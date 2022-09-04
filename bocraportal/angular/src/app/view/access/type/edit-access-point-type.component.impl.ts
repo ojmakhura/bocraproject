@@ -82,7 +82,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
 
   override beforeEditAccessPointTypeSave(form: EditAccessPointTypeSaveForm): void {
     
-    if(this.editAccessPointTypeForm.valid && this.editAccessPointTypeForm.dirty){
+    if(this.editAccessPointTypeForm.valid){
       if (form.accessPointType?.id) {
         form.accessPointType.updatedBy = this.keycloakService.getUsername();
         form.accessPointType.updatedDate = new Date();

@@ -88,7 +88,7 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
    * This method may be overwritten
    */
    override beforeEditLicenceTypeSave(form: EditLicenceTypeSaveForm): void {
-    if (this.editLicenceTypeForm.valid && this.editLicenceTypeForm.dirty) {
+    if (this.editLicenceTypeForm.valid) {
       if (form.licenceType?.id) {
         form.licenceType.updatedBy = this.keycloakService.getUsername();
         form.licenceType.updatedDate = new Date();

@@ -5,7 +5,7 @@ services:
   ###############################################################################
   proxy:
     image: traefik:2.8
-    container_name: bocra-proxy
+    container_name: bocraportal-proxy
     hostname: traefik
     networks:
       bocra-network:
@@ -53,7 +53,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
-      - "traefik.http.routers.traefik.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.service=api@internal"
       # - "traefik.http.routers.traefik.tls=${SSL_SECURE}"
         # - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
@@ -67,10 +67,9 @@ services:
   # Postgres database
   ###############################################################################
   db:
-    container_name: bocra-db
+    container_name: bocraportal-db
     hostname: db
     image: postgres:14
-    restart: unless-stopped
     volumes:
       - ${BOCRA_DATA}/db:/var/lib/postgresql/data
       - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
@@ -104,8 +103,7 @@ services:
   ###############################################################################
   pgadmin:
     image: dpage/pgadmin4:6.12
-    container_name: bocra-pgadmin
-    restart: unless-stopped
+    container_name: bocraportal-pgadmin
     networks:
       traefik-public:
       bocra-network:
@@ -134,10 +132,9 @@ services:
   # Keycloak authentication server
   ###############################################################################
   keycloak:
-    image: bocra-keycloak:latest
+    image: ${KEYCLOAK_REGISTRY_IMAGE}
     hostname: keycloak
-    container_name: bocra-keycloak
-    restart: unless-stopped
+    container_name: bocraportal-keycloak
     command:
       - "start"
       - "--optimized"
@@ -150,17 +147,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.keycloak
-    environment:      
-      # KC_FEATURES:
-      #   authorization
-      #   token-exchange
-      #   docker
-      #   impersonation
-      #   scripts
-      #   upload-scripts
-      #   web-authn
-      #   client-policies
-      #   dynamic-scopes
+    environment:  
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
@@ -168,10 +155,11 @@ services:
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
       KC_METRICS_ENABLED: true
       KC_PROXY: edge
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
       PROXY_ADDRESS_FORWARDING: false
-      KC_HOSTNAME_STRICT_HTTPS: false
       TZ: Africa/Gaborone
     depends_on:
       db:
@@ -192,8 +180,8 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "bocra-api:latest"
-    container_name: bocra-api
+    image: "${REGISTRY_TAG}/${API_IMAGE_NAME}:latest${IMAGE_VERSION_SUFFIX}"
+    container_name: bocraportal-api
     hostname: api
 
     healthcheck:
@@ -237,7 +225,7 @@ services:
   # Angular web application
   ###############################################################################
   web:
-    image: "bocra-web:latest"
+    image: "${REGISTRY_TAG}/${WEB_IMAGE_NAME}:latest${IMAGE_VERSION_SUFFIX}"
     hostname: web
 
     healthcheck:
@@ -249,7 +237,7 @@ services:
     build:
       context: .
       dockerfile: bocraportal/angular/Dockerfile
-    container_name: bocra-web
+    container_name: bocraportal-web
     volumes:
       - ${BOCRA_DATA}/web:/web
     depends_on:
@@ -276,32 +264,30 @@ services:
   ###############################################################################
   # Local docker container registry
   ###############################################################################
-  registry:
+  registry: 
     image: registry:2
     ports:
-      - 5000:5000
-    env_file:
-      - .env
-    depends_on:
-      - proxy
-    environment:
-      REGISTRY_HTTP_TLS_CERTIFICATE: ${REGISTRY_HTTP_TLS_CERTIFICATE}
-      REGISTRY_HTTP_TLS_KEY: ${REGISTRY_HTTP_TLS_KEY}
-      REGISTRY_AUTH: ${REGISTRY_AUTH}
-      REGISTRY_AUTH_HTPASSWD_PATH: ${REGISTRY_AUTH_HTPASSWD_PATH}
-      REGISTRY_AUTH_HTPASSWD_REALM: ${REGISTRY_AUTH_HTPASSWD_REALM}
+      - "5000:5000"
     volumes:
       - ${BOCRA_DATA}/registry/data:/var/lib/registry
-      - ${BOCRA_DATA}/registry/certs:/certs
-      - ${BOCRA_DATA}/registry/auth:/auth
+      - ${BOCRA_DATA}/registry/certs:${BOCRA_DATA}/registry/certs
+      - ${BOCRA_DATA}/registry/auth:${BOCRA_DATA}/registry/auth
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_PATH: ${BOCRA_DATA}/registry/auth/registry_passwd
+      REGISTRY_AUTH_HTPASSWD_REALM: registry-realm
     networks:
-      bocra-network:
-        ipv4_address: ${BOCRA_REGISTRY_ADDRESS}
       traefik-public:
       default:
+    depends_on:
+      - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-registry.rule=Host(`${REGISTRY_DOMAIN}`)"
+      - "traefik.http.routers.registry.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.registry.rule=Host(`${REGISTRY_DOMAIN}`)"
+      - "traefik.http.routers.registry.tls=${SSL_SECURE}"
+      - "traefik.http.routers.registry.tls.certresolver=le"
   
   ###############################################################################
   # Jenkins for CI/CD

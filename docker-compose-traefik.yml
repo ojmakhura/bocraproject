@@ -7,9 +7,10 @@ services:
       traefik-public:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik_passwd:/var/traefik_passwd
     ports:
       - 80:80
-      - 8080:8080
+      - 443:443
     healthcheck:
       test: [ "CMD", "wget", "http://localhost:8082/ping","--spider" ]
       interval: 10s
@@ -17,51 +18,77 @@ services:
       retries: 3
       start_period: 5s
     command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.watch=true"
-      - "--providers.docker.exposedbydefault=false"
-      # - "--providers.file.directory=/etc/traefik/dynamic_conf/"
-      # - "--providers.file.watch=true"
-      - "--providers.docker.swarmmode"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
+      # Enable Docker in Traefik, so that it reads labels from Docker services
+      - --providers.docker
+      # Add a constraint to only use services with the label "traefik.constraint-label=traefik-public"
+      #- --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
+      # Do not expose all Docker services, only the ones explicitly exposed
+      - --providers.docker.exposedbydefault=false
+      # Enable Docker Swarm mode
+      - --providers.docker.swarmmode
+      # Create an entrypoint "http" listening on port 80
+      - --entrypoints.web.address=:80
+      # Create an entrypoint "https" listening on port 443
+      - --entrypoints.websecure.address=:443
+      # Create the certificate resolver "le" for Let's Encrypt, uses the environment variable EMAIL
+      - --certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}
+      # Store the Let's Encrypt certificates in the mounted volume
+      - --certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json
+      # Use the TLS Challenge for Let's Encrypt
+      - --certificatesresolvers.le.acme.tlschallenge=true
+      # Enable the access log, with HTTP requests
+      - --accesslog
+      # Enable the Traefik log, for configurations and errors
+      - --log
+      # Enable the Dashboard and API
+      - --api
       - "--entryPoints.ping.address=:8082"
       - "--log.level=DEBUG"
       - "--accessLog"
       - "--accesslog=true"
-      - "--api"
-      - "--api.dashboard"
       - "--ping=true"
       - "--ping.entrypoint=ping"
-      - "--metrics"
-      - "--metrics.prometheus"
-      # - "--providers.docker.network=traefik-public"
-      # - "--entrypoints.web.http.redirections.entrypoint.to=${ACTIVE_ROUTER_ENTRY}"
-      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      # - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
-      # - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
-      # - "--certificatesresolvers.le.acme.tlschallenge=true"
+
     deploy:
       placement:
         constraints:
           # Make the traefik service run only on the node with this label
           # as the node with it has the volume for the certificates
           - node.labels.bocra_proxy == true
+          #- node.role == manager
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
-        - "traefik.http.routers.traefik.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-        - "traefik.http.routers.traefik.service=api@internal"
-        - "traefik.http.routers.traefik.tls=${SSL_SECURE}"
-        - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-        - "traefik.docker.network=traefik-public"
-        # - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-        # - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
-        # - "traefik.http.routers.https-redirect.middlewares=https-redirect"
-        # - "traefik.http.routers.dashboard.rule=Host(`dash${PROXY_DOMAIN}`)"
-        # - "traefik.http.routers.dashboard.service=dashboard@internal"
-        # - "traefik.http.routers.dashboard.tls=${SSL_SECURE}"
+        # Enable Traefik for this service, to make it available in the public network
+        - traefik.enable=true
+        # Use the traefik-public network (declared below)
+        - traefik.docker.network=traefik-public
+        # Use the custom label "traefik.constraint-label=traefik-public"
+        # This public Traefik will only use services with this label
+        # That way you can add other internal Traefik instances per stack if needed
+        - traefik.constraint-label=traefik-public
+        # admin-auth middleware with HTTP Basic auth
+        # Using the environment variables USERNAME and HASHED_PASSWORD
+        - traefik.http.middlewares.admin-auth.basicauth.usersfile=/var/traefik_passwd
+        - traefik.http.routers.traefik-public-https.middlewares=admin-auth
+        # https-redirect middleware to redirect HTTP to HTTPS
+        # It can be re-used by other stacks in other Docker Compose files
+        - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+        - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+        # traefik-http set up only to use the middleware to redirect to https
+        # Uses the environment variable DOMAIN
+        - traefik.http.routers.traefik-public-http.rule=Host(`${PROXY_DOMAIN}`)
+        - traefik.http.routers.traefik-public-http.entrypoints=web
+        - traefik.http.routers.traefik-public-http.middlewares=https-redirect
+        # traefik-https the actual router using HTTPS
+        # Uses the environment variable DOMAIN
+        - traefik.http.routers.traefik-public-https.rule=Host(`${PROXY_DOMAIN}`)
+        - traefik.http.routers.traefik-public-https.entrypoints=websecure
+        - traefik.http.routers.traefik-public-https.tls=true
+        # Use the special Traefik service api@internal with the web UI/Dashboard
+        - traefik.http.routers.traefik-public-https.service=api@internal
+        # Use the "le" (Let's Encrypt) resolver created below
+        - traefik.http.routers.traefik-public-https.tls.certresolver=le
+        # Define the port inside of the Docker service to use
+        - traefik.http.services.traefik-public.loadbalancer.server.port=8080
 
 networks:
   # Use the previously created public network "traefik-public", shared with other
