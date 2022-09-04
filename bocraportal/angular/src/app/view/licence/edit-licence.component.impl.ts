@@ -81,6 +81,10 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     });
   }
 
+  fileDownload(documentId: number) {
+
+  }
+
   override doNgOnDestroy() { }
 
   /**

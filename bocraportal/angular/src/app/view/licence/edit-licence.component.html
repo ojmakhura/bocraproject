@@ -130,9 +130,12 @@
 		                                <button type="button" color="accent" (click)="deleteFromLicenceDocuments(i)" class="btn btn-primary">
 		                                    <mat-icon>delete</mat-icon>
 		                                </button>
-		                                <button type="button" color="accent" (click)="doEditLicenceDocuments(row)" class="btn btn-primary">
+		                                <!-- <button type="button" color="accent" (click)="doEditLicenceDocuments(row)" class="btn btn-primary">
 		                                    <mat-icon>edit</mat-icon>
-		                                </button>
+		                                </button> -->
+                                        <button type="button" color="accent" (click)="fileDownload(row?.id)" class="btn btn-info">
+                                            <mat-icon>file_download</mat-icon>
+                                        </button>
 		                            </mat-cell>
 		            			</ng-container>
 		            			<ng-container matColumnDef="id">
