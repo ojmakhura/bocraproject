@@ -228,11 +228,14 @@
 			  <span translate>delete</span>
 			</button>
 			
-			<button type="button" color="accent" (click)="editFormSubmissionNote()" class="btn btn-outline-primary">
+			<button type="button" color="accent" (click)="editFormSubmissionNote()" class="btn btn-outline-primary" *ngIf="formSubmissionId">
 			  <span translate>note</span>
 			</button>
-			<button type="button" color="accent" (click)="editFormSubmissionSubmit()" class="btn btn-outline-primary">
+			<button type="button" color="accent" (click)="editFormSubmissionSubmit()" class="btn btn-outline-primary" *ngIf="formSubmissionId">
 			  <span translate>submit</span>
+			</button>
+			<button type="button" color="accent" (click)="editFormSubmissionReturn()" class="btn btn-outline-primary" *ngIf="returnUnrestricted && formDisabled()">
+			  <span translate>return</span>
 			</button>
 			<button color="accent" type="button" (click)="editFormSubmissionFormReset()" class="btn btn-outline-primary">
 			  <span translate>reset</span>
