@@ -27,7 +27,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Notification Service handleFindById"+id);
             Optional<?> data = Optional.of(notificationService.findById(id));
             ResponseEntity<?> response;
 
@@ -47,7 +47,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Notification Service handleGetAll ");
             Optional<?> data = Optional.of(notificationService.getAll());
             ResponseEntity<?> response;
 
@@ -67,7 +67,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Notification Service handleGetAllPaged "+pageNumber+" "+pageSize);
             Optional<?> data = Optional.of(notificationService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -87,7 +87,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Notification Service handleRemove "+id);
             Optional<?> data = Optional.of(notificationService.remove(id));
             ResponseEntity<?> response;
 
@@ -110,7 +110,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
     @Override
     public ResponseEntity<?> handleSave(NotificationVO notification) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Notification Service handleSave "+notification);
             Optional<?> data = Optional.of(notificationService.save(notification));
             ResponseEntity<?> response;
 
@@ -133,7 +133,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
     @Override
     public ResponseEntity<?> handleSearch(NotificationCriteria criteria) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Notification Service handleSearch "+criteria);
             Optional<?> data = Optional.of(notificationService.search(criteria));
             ResponseEntity<?> response;
 

@@ -31,7 +31,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Shareholder Service handleFindById "+id);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -51,7 +51,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Shareholder Service handleGetAll");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -71,7 +71,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Shareholder Service handleGetAllPaged "+pageNumber+" "+pageSize);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -91,7 +91,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Shareholder Service handleRemove "+id);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -111,7 +111,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     @Override
     public ResponseEntity<?> handleSave(ShareholderVO shareholder) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Shareholder Service handleSave "+shareholder);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -131,7 +131,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     @Override
     public ResponseEntity<?> handleSearch(ShareholderCriteria criteria) {
         try {
-            logger.debug("");
+            logger.debug("Error detected at Shareholder Service handleSearch "+criteria);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 

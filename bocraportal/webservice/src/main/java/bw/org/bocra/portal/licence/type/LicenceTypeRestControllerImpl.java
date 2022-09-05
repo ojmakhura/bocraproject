@@ -33,7 +33,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
-            logger.debug("");
+            logger.debug("Error detected Licence Type Service handleFindById "+id);
             Optional<LicenceTypeVO> data = Optional.of(this.licenceTypeService.findById(id)); 
             ResponseEntity<LicenceTypeVO> response;
     
@@ -54,7 +54,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
-            logger.debug("");
+            logger.debug("Error detected Licence Type Service handleGetAll");
             Optional<Collection<LicenceTypeVO>> data = Optional.of(this.licenceTypeService.getAll()); 
             ResponseEntity<Collection<LicenceTypeVO>> response;
     
@@ -75,7 +75,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
-            logger.debug("");
+            logger.debug("Error detected Licence Type Service handleRemove "+id );
             Optional<Boolean> data = Optional.of(this.licenceTypeService.remove(id));
             ResponseEntity<Boolean> response;
     
@@ -96,7 +96,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     @Override
     public ResponseEntity<?> handleSave(LicenceTypeVO LicenceTypeVO) {
         try{
-            logger.debug("");
+            logger.debug("Error detected Licence Type Service handleSave "+LicenceTypeVO);
             Optional<LicenceTypeVO> data = Optional.of(this.licenceTypeService.save(LicenceTypeVO));
             ResponseEntity<LicenceTypeVO> response;
     
@@ -117,7 +117,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     @Override
     public ResponseEntity<?> handleSearch(LicenceTypeCriteria criteria) {
         try{
-            logger.debug("");
+            logger.debug("Error detected Licence Type Service handleSearch "+criteria);
             Optional<Collection<LicenceTypeVO>> data = Optional.of(this.licenceTypeService.search(criteria));
             ResponseEntity<Collection<LicenceTypeVO>> response;
     
@@ -138,7 +138,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
-            logger.debug("");
+            logger.debug("Error detected Licence Type Service handleGetAllPaged "+pageNumber+" "+pageSize);
             Optional<Collection<LicenceTypeVO>> data = Optional.of(this.licenceTypeService.getAll(pageNumber, pageSize));
             ResponseEntity<Collection<LicenceTypeVO>> response;
     

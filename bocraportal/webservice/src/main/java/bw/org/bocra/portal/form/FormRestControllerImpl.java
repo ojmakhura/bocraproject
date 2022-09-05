@@ -32,7 +32,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Form Service handleFindById "+id);
             Optional<FormVO> data = Optional.of(formService.findById(id));
             ResponseEntity<?> response;
     
@@ -53,7 +53,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Form Service handleGetAll ");
             Optional<Collection<FormVO>> data = Optional.of(formService.getAll());
             ResponseEntity<Collection<FormVO>> response;
     
@@ -74,7 +74,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Form Service handleGetAllPaged "+pageNumber+" "+pageSize);
             Optional<Collection<FormVO>> data = Optional.of(formService.getAll(pageNumber, pageSize));
             ResponseEntity<Collection<FormVO>> response;
     
@@ -95,7 +95,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Form Service handleRemove "+id);
             Optional<Boolean> data = Optional.of(formService.remove(id)); 
             ResponseEntity<Boolean> response;
     
@@ -116,7 +116,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(FormVO formVO) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Form Service handleSave "+formVO);
             Optional<FormVO> data = Optional.of(formService.save(formVO));
             ResponseEntity<FormVO> response;
     
@@ -137,7 +137,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(FormCriteria criteria) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Form Service handleSearch"+criteria);
             Optional<Collection<FormVO>> data = Optional.of(formService.search(criteria)); 
             ResponseEntity<Collection<FormVO>> response;
     

@@ -29,7 +29,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Period Config Service handleFindById "+id);
             Optional<PeriodConfigVO> data = Optional.of(periodConfigService.findById(id)); 
             ResponseEntity<PeriodConfigVO> response;
     
@@ -50,7 +50,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Period Config Service handleGetAll");
             Optional<Collection<PeriodConfigVO>> data = Optional.of(periodConfigService.getAll());
             ResponseEntity<Collection<PeriodConfigVO>> response;
     
@@ -71,7 +71,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Period Config Service handleRemove "+id);
             Optional<Boolean> data = Optional.of(periodConfigService.remove(id)); 
             ResponseEntity<Boolean> response;
     
@@ -92,7 +92,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleSave(PeriodConfigVO periodConfigVO) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Period Config Service handleSave "+periodConfigVO);
             Optional<PeriodConfigVO> data = Optional.of(periodConfigService.save(periodConfigVO)); 
             ResponseEntity<PeriodConfigVO> response;
     
@@ -113,7 +113,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleSearch(PeriodConfigCriteria criteria) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Period Config Service handleSearch "+criteria);
             Optional<Collection<PeriodConfigVO>> data = Optional.of(periodConfigService.search(criteria));
             ResponseEntity<Collection<PeriodConfigVO>> response;
     
@@ -134,7 +134,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
-            logger.debug("");
+            logger.debug("Error detected at Period Config Service handleGetAllPaged "+pageNumber+" "+pageSize);
             Optional<Collection<PeriodConfigVO>> data = Optional.of(periodConfigService.getAll(pageNumber, pageSize)); 
             ResponseEntity<Collection<PeriodConfigVO>> response;
     
