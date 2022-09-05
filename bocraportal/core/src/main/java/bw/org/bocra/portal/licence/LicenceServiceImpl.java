@@ -42,7 +42,9 @@ public class LicenceServiceImpl
             return null;
         }
 
-        return (LicenceVO) licenceDao.load(LicenceDao.TRANSFORM_LICENCEVO, id);
+        Licence licence = this.licenceRepository.getReferenceById(id);
+
+        return licenceDao.toLicenceVO(licence);
     }
 
     /**

@@ -95,7 +95,7 @@ export class LicenseeEffects {
         )
     );
 
-    getDocument$ = createEffect(() => 
+    addDocument$ = createEffect(() => 
          this.actions$.pipe(
             ofType(LicenseeActions.addDocument),
             mergeMap(({ id, documentTypeId, file, fileName}) => this.licenseeRestController.addDocument(id, documentTypeId, file, fileName).pipe(

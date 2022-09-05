@@ -38,19 +38,19 @@ clean_mda:
 up_proxy: gen_env
 	. ./.env && docker compose up -d proxy
 
-up_container: gen_env
+up_service: gen_env
 ifdef service
 	. ./.env && docker compose up -d ${service}
 else
-	@echo 'no service defined. Please run again with `make  service=<name> down_container`'
+	@echo 'no service defined. Please run again with `make  service=<name> up_service`'
 	exit 1
 endif
 
-down_container:
+down_service:
 ifdef service
 	docker stop ${STACK_NAME}-${service}
 else
-	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> service=<name> down_container`'
+	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> service=<name> down_service`'
 	exit 1
 endif
 	
@@ -91,11 +91,11 @@ push_keycloak_image: gen_env
 run_api_local: gen_env
 	. ./.env && cd bocraportal/webservice && mvn spring-boot:run
 
-local_web_deps: gen_env build_web
-	. ./.env && cd bocraportal/angular/target/bocraportal && npm i
+local_web_deps: build_web
+	cd bocraportal/angular/target/bocraportal && npm i
 
-run_web_local: gen_env build_web
-	. ./.env && cd bocraportal/angular/target/bocraportal && npm start
+run_web_local: build_web
+	cd bocraportal/angular/target/bocraportal && npm start
 
 # run_local_web: build_local_images up_local_app
 stop_app:
@@ -109,7 +109,7 @@ ifdef run_env
 	if [ -f .env ]; then \
 		rm -f .env; \
 	fi
-	@$(${run_env})
+	@$(${run_env}_ENV)
 	chmod 755 .env
 else
 	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> target`'
