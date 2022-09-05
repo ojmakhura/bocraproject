@@ -95,6 +95,20 @@ export class LicenceEffects {
         )
     );
 
+    addDocument$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(LicenceActions.addDocument),
+            mergeMap(({ id, documentTypeId, file, fileName}) => this.licenceRestController.addDocument(id, documentTypeId, file, fileName).pipe(
+                map( document => LicenceActions.addDocumentSuccess({
+                    document,
+                    messages: [`Added ${document.documentType.name} with ID ${document.documentId} licensees.`],
+                    success: true
+                })),
+                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error]})])
+            ))
+        )
+    );
+
     // getLicenceDocuments$ = createEffect(() => 
     //      this.actions$.pipe(
     //         ofType(LicenceActions.getLicenceDocuments),

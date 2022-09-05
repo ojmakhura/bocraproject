@@ -29,6 +29,14 @@ export const licenceReducer = createReducer(
         error: false,
         messages: action.messages
     })),
+    on(LicenceActions.addDocumentSuccess, (state, action) => ({
+        ...state,
+        document: action.document, 
+        documents: [...state.documents, action.document], 
+        loading: false,
+        error: false,
+        messages: action.messages
+    })),
     on(LicenceActions.getAllSuccess, (state, action) => ({
         ...state,
         licences: action.licences, 

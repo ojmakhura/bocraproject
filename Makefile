@@ -24,7 +24,7 @@ build_web_dist: build_web local_web_deps
 build_app: 
 	mvn -f bocraportal install -Dmaven.test.skip=true -o
 
-clean_build: clean_all build_all
+clean_build: clean_all build_app
 
 clean_all:
 	mvn -f bocraportal clean -o
@@ -35,48 +35,42 @@ clean_mda:
 ##
 ## Start the docker containers
 ##
-up_full_app: gen_env
-	. ./.env && docker compose up -d
-
-up_db:gen_env
-	. ./.env && docker compose up -d db
-
-up_keycloak: gen_env
-	. ./.env && docker compose up -d keycloak
-
 up_proxy: gen_env
 	. ./.env && docker compose up -d proxy
 
-up_web: gen_env
-	. ./.env && docker compose up -d web
+up_service: gen_env
+ifdef service
+	. ./.env && docker compose up -d ${service}
+else
+	@echo 'no service defined. Please run again with `make  service=<name> up_service`'
+	exit 1
+endif
 
-up_pgadmin: gen_env
-	. ./.env && docker compose up -d pgadmin
-
-up_api: gen_env
-	. ./.env && docker compose up -d api
-
-up_registry: gen_env
-	. ./.env && docker compose up -d registry
-
-up_jenkins: gen_env
-	. ./.env && docker compose up -d jenkins
-
+down_service:
+ifdef service
+	docker stop ${STACK_NAME}-${service}
+else
+	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> service=<name> down_service`'
+	exit 1
+endif
+	
 ##
 ## Build docker images
 ##
+build_image: gen_env
+	. ./.env && docker compose -f ${stack_file}.yml build
+
 build_api_image: build_api
-	. ./.env && docker compose build api
+	. ./.env && docker compose -f docker-compose-api.yml build
 
 build_web_image: gen_env
-	docker compose build web
+	. ./.env && docker compose -f docker-compose-web.yml build
 
 build_keycloak_image: gen_env
-	. ./.env && docker compose build keycloak
+	. ./.env && docker compose -f docker-compose-keycloak.yml build
 
 
-build_images: gen_env build_app
-	. ./.env && docker compose build
+build_images: gen_env build_keycloak_image build_web_image build_api_image
 
 ###
 ## puch the images
@@ -97,11 +91,11 @@ push_keycloak_image: gen_env
 run_api_local: gen_env
 	. ./.env && cd bocraportal/webservice && mvn spring-boot:run
 
-local_web_deps: gen_env build_web
-	. ./.env && cd bocraportal/angular/target/bocraportal && npm i
+local_web_deps: build_web
+	cd bocraportal/angular/target/bocraportal && npm i
 
-run_web_local: gen_env build_web
-	. ./.env && cd bocraportal/angular/target/bocraportal && npm start
+run_web_local: build_web
+	cd bocraportal/angular/target/bocraportal && npm start
 
 # run_local_web: build_local_images up_local_app
 stop_app:
@@ -115,7 +109,7 @@ ifdef run_env
 	if [ -f .env ]; then \
 		rm -f .env; \
 	fi
-	@$(${run_env})
+	@$(${run_env}_ENV)
 	chmod 755 .env
 else
 	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> target`'

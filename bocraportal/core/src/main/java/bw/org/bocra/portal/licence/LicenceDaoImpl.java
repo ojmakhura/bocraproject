@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.licence.type.LicenceType;
 import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeVO;
@@ -67,11 +68,23 @@ public class LicenceDaoImpl
         }
 
         Collection<DocumentVO> docs = new HashSet<>();
+        System.out.println("=====> source.getDocuments()");
+        System.out.println(source.getDocuments());
+
         for(Document doc : source.getDocuments()) {
+            System.out.println("source.getDocuments()");
+            
             DocumentVO dvo = new DocumentVO();
             dvo.setId(doc.getId());
-            dvo.setDocumentId(doc.getDocumentId());
             dvo.setDocumentName(doc.getDocumentName());
+            dvo.setDocumentId(doc.getDocumentId());
+
+            DocumentTypeVO type = new DocumentTypeVO();
+            type.setCode(doc.getDocumentType().getCode());
+            type.setId(doc.getDocumentType().getId());
+            type.setName(doc.getDocumentType().getName());
+
+            dvo.setDocumentType(type);
             docs.add(dvo);
         }
 

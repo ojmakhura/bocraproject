@@ -97,10 +97,10 @@ export class EditUserComponentImpl extends EditUserComponent {
   }
 
   override beforeEditUserDelete(form: EditUserDeleteForm): void {
-    if (form?.user?.userId && confirm("Are you sure you want to delete the period?")) {
+    if (form?.user?.userId && confirm("Are you sure you want to delete the user?")) {
       this.store.dispatch(
         UserActions.remove({
-          id: form?.user?.id,
+          id: form?.user?.userId,
           loading: false,
         })
       );
@@ -114,7 +114,7 @@ export class EditUserComponentImpl extends EditUserComponent {
    * This method may be overwritten
    */
   override beforeEditUserSave(form: EditUserSaveForm): void {
-    if (this.editUserForm.valid && this.editUserForm.dirty) {
+    if (this.editUserForm.valid) {
       if (form.user?.id) {
         form.user.updatedBy = this.keycloakService.getUsername();
         form.user.updatedDate = new Date();

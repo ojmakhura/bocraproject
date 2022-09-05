@@ -9,6 +9,7 @@ import * as FormActions from '@app/store/form/form.actions';
 import * as LicenceActions from '@app/store/licence/licence.actions';
 import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
+import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as SectorActions from '@app/store/sector/sector.actions';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
@@ -37,6 +38,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   deleteUnrestricted: boolean = true;
   sectorRemoved$: Observable<boolean>;
   formRemoved$: Observable<boolean>;
+  documentDelete$: Observable<boolean>;
+  licenseeDocument$: Observable<DocumentVO>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -46,6 +49,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.sectorRemoved$ = this.store.pipe(select(LicenseeSectorSelectors.selectRemoved));
     this.formRemoved$ = this.store.pipe(select(LicenseeFormSelectors.selectRemoved));
+    this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
+    this.licenseeDocument$ = this.store.pipe(select(LicenseeSelectors.selectDocument));
   }
 
   beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
@@ -97,6 +102,10 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
         this.addToLicenseeForms(lf);
       }
     });
+
+    this.licenseeDocument$.subscribe(document => {
+      this.addToLicenseeDocuments(document);
+    });
   }
 
   doNgOnDestroy() { }
@@ -139,6 +148,22 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     }
   }
 
+  override deleteFromLicenseeDocuments(index: number) {
+    if(confirm('Are you sure you want to delete the licensee document?')) {
+      const doc: DocumentVO = this.licenseeDocuments[index];
+      this.store.dispatch(
+        DocumentActions.remove({
+          id: doc.id,
+          loading: true
+        })
+      );
+      this.documentDelete$.subscribe(removed => {
+        this.licenseeDocumentsControl.removeAt(index);
+      });
+      
+    }
+  }
+
 
   /**
    * This method may be overwritten
@@ -149,7 +174,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
    * This method may be overwritten
    */
   override beforeEditLicenseeSave(form: EditLicenseeSaveForm): void {
-    if (this.editLicenseeForm.valid && this.editLicenseeForm.dirty) {
+    if (this.editLicenseeForm.valid) {
       if (form.licensee?.id) {
         form.licensee.updatedBy = this.keycloakService.getUsername();
         form.licensee.updatedDate = new Date();
@@ -185,7 +210,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   }
   override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
-    if (form?.licensee?.id && confirm("Are you sure you want to delete the period?")) {
+    if (form?.licensee?.id && confirm("Are you sure you want to delete the licensee?")) {
       this.store.dispatch(
         LicenseeActions.remove({
           id: form?.licensee?.id,

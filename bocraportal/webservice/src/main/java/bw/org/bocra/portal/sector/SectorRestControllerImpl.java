@@ -136,17 +136,9 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
-        // Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
-        // ResponseEntity<Collection<SectorVO>> response;
 
-        // if(data.isPresent()) {
-        //     response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-        // } else {
-        //     response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        // }
-
-        // return response;
-
+        System.out.println(criteria);
+        
         try {
             logger.debug("Error detected at Sector Service handleSearch "+criteria);
             Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;

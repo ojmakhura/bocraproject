@@ -11,6 +11,7 @@ export interface LicenceState {
     id: number | any,
     criteria: LicenseeCriteria | any,
     documents: DocumentVO[] | any[],
+    document: DocumentVO,
     removed: boolean,
     success: boolean,
     loading: boolean,
@@ -28,5 +29,6 @@ export const initialState: LicenceState = {
     success: false,
     loading: false,
     error: false,
-    messages: []
+    messages: [],
+    document: null
 };
