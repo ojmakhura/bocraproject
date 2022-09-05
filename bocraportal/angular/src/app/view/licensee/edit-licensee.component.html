@@ -111,10 +111,10 @@
       <mat-tab-group animationDuration="0ms" class="view-tabs">
         <mat-tab label="{{ 'users' | translate }}" *ngIf="licenseeId">
           <div>
-            <button type="button" matTooltip="Add User" (click)="licenseeUsersAddDialog()" class="btn btn-primary"
+            <!-- <button type="button" matTooltip="Add User" (click)="licenseeUsersAddDialog()" class="btn btn-primary"
               data-bs-toggle="modal" data-bs-target="#licenseeUsersModal">
               <mat-icon>add_box</mat-icon>
-            </button>
+            </button> -->
             <mat-table matSort [dataSource]="licenseeUsers" #usersSort="matSort"
               class="table table-bordered table-striped" style="width: 100%">
               <ng-container matColumnDef="actions">

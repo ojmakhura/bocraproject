@@ -49,6 +49,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   rowGroups: RowGroup[] = [];
   submitUnrestricted: boolean = true;
   returnUnrestricted: boolean = true;
+  addUnrestricted: boolean = true;
 
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
@@ -144,6 +145,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
           this.submitUnrestricted = false;
         }
         if (item === '/form/submission/edit-form-submission/{button:return}') {
+          this.returnUnrestricted = false;
+        }
+        if (item === '/form/submission/edit-form-submission/{button:add}') {
           this.returnUnrestricted = false;
         }
       });
