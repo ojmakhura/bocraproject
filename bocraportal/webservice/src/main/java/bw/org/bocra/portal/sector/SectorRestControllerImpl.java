@@ -29,6 +29,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
+            logger.debug("Error detected at Sector Service handleFindById "+id);
             Optional<SectorVO> data = Optional.of(sectorService.findById(id)); // TODO: Add custom code here;
             ResponseEntity<SectorVO> response;
     
@@ -40,6 +41,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -48,6 +50,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
+            logger.debug("Error detected at Sector Service handleGetAll");
             Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll()); // TODO: Add custom code here;
             ResponseEntity<Collection<SectorVO>> response;
     
@@ -59,6 +62,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -67,6 +71,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
+            logger.debug("Error detected at Sector Service handleGetAllPaged "+pageNumber+" "+pageSize);
             Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
             ResponseEntity<Collection<SectorVO>> response;
     
@@ -78,6 +83,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -86,6 +92,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
+            logger.debug("Error detected at Sector Service handleRemove "+id);
             Optional<Boolean> data = Optional.of(sectorService.remove(id)); // TODO: Add custom code here;
             ResponseEntity<Boolean> response;
     
@@ -97,6 +104,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -105,6 +113,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(SectorVO sector) {
         try{
+            logger.debug("Error detected at Sector Service handleSave "+sector);
             Optional<SectorVO> data = Optional.of(sectorService.save(sector)); // TODO: Add custom code here;
             ResponseEntity<SectorVO> response;
     
@@ -116,6 +125,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -130,6 +140,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         System.out.println(criteria);
         
         try {
+            logger.debug("Error detected at Sector Service handleSearch "+criteria);
             Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
             ResponseEntity<Collection<SectorVO>> response;
     
@@ -142,8 +153,8 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
             return response;
             
         } catch (Exception e) {
-            logger.error(e.getMessage());
             e.printStackTrace();
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -153,6 +164,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddLicensee(Long sectorId, Long licenseeId) {
         try{
+            logger.debug("Error detected at Sector Service handleAddLicensee "+sectorId+" "+licenseeId );
         LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
 
         if(lvo == null || lvo.getId() == null) {
@@ -162,8 +174,8 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
             return ResponseEntity.ok().body(lvo);
         }
         } catch (Exception e) {
-            logger.error(e.getMessage());
             e.printStackTrace();
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }

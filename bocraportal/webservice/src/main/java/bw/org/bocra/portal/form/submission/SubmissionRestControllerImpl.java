@@ -35,6 +35,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
+            logger.debug("Error detected at Submission Service handleFindById "+id);
             Optional<FormSubmissionVO> data = Optional.of(submissionService.findById(id));
             ResponseEntity<FormSubmissionVO> response;
     
@@ -55,6 +56,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
+            logger.debug("Error detected at Submission Service handleGetAll");
             Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll());
             ResponseEntity<Collection<FormSubmissionVO>> response;
     
@@ -75,6 +77,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
+            logger.debug("Error detected at Submission Service handleGetAllPaged "+pageNumber+" "+pageSize);
             Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll(pageNumber, pageSize));
             ResponseEntity<Collection<FormSubmissionVO>> response;
     
@@ -95,6 +98,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
+            logger.debug("Error detected at Submission Service handleRemove "+id);
             Optional<Boolean> data = Optional.of(submissionService.remove(id));
             ResponseEntity<Boolean> response;
     
@@ -115,6 +119,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(FormSubmissionVO formSubmissionVO) {
         try{
+            logger.debug("Error detected at Submission Service handleSave "+formSubmissionVO);
             Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmissionVO));
             ResponseEntity<FormSubmissionVO> response;
     
@@ -135,6 +140,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(FormSubmissionCriteria criteria) {
         try{
+            logger.debug("Error detected at Submission Service handleSearch "+criteria);
             Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.search(criteria));
             ResponseEntity<Collection<FormSubmissionVO>> response;
     
@@ -155,6 +161,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDataField(DataFieldVO dataField) {
         try{
+            logger.debug("Error detected at Submission Service handleAddDataField "+dataField);
             Optional<DataFieldVO> data = Optional.of(submissionService.addDataField(dataField));
             ResponseEntity<DataFieldVO> response;
     
@@ -175,6 +182,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDataFields(Set<DataFieldVO> dataFields) {
         try{
+            logger.debug("Error detected at Submission Service handleAddDataFields "+dataFields);
             Optional<Collection<DataFieldVO>> data = Optional.of(submissionService.addDataFields(dataFields));
             ResponseEntity<Collection<DataFieldVO>> response;
     
@@ -195,6 +203,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleDeleteDataField(Long id) {
         try{
+            logger.debug("Error detected at Submission Service handleDeleteDataField "+id);
             Optional<Boolean> data = Optional.of(submissionService.deleteDataField(id));
             ResponseEntity<Boolean> response;
     
@@ -215,6 +224,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetSubmissionSummary(FormSubmissionCriteria criteria) {
         try{
+            logger.debug("Error detected at Submission Service handleGetSubmissionSummary "+criteria);
             SubmissionSummary data = submissionService.getSubmissionSummary(criteria);
             ResponseEntity<SubmissionSummary> response;
     

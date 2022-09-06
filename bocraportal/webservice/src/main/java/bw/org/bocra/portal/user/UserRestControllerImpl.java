@@ -40,6 +40,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     @Override
     public ResponseEntity<?> handleCreateUser(UserVO user) {
         try{
+            logger.debug("Error detected at Keycloak User Service handleCreateUser "+user);
             user = this.keycloakUserService.createUser(user);
 
             if(user == null || StringUtils.isBlank(user.getUserId())) {
@@ -56,6 +57,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     @Override
     public ResponseEntity<?> handleLoadUsers() {
         try{
+            logger.debug("Error detected at Keycloak User Service handleLoadUsers ");
             Collection<UserVO> users = this.keycloakUserService.loadUsers();
 
             Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
@@ -77,6 +79,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     @Override
     public ResponseEntity<?> handleUpdateUserName(String username, String userId) {
         try{
+            logger.debug("Error detected at Keycloak User Service handleUpdateUserName "+username+" "+userId);
             Optional<Boolean> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<Boolean> response;
     
@@ -96,7 +99,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try{
-
+            logger.debug("Error detected at Keycloak User Service handleSearch"+criteria);
         List<UserVO> users = this.keycloakUserService.search(criteria);
 
         return ResponseEntity.ok(users);
@@ -109,6 +112,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddClientRoles(String clientId, Set<String> roles, String userId) {
         try{
+            logger.debug("Error detected at Keycloak User Service handleAddClientRoles "+clientId+" "+roles+" "+userId);
             UserVO rep = this.keycloakUserService.addClientRoles(clientId, roles, userId);
 
             if(rep == null || StringUtils.isBlank(rep.getUserId())) {
@@ -126,6 +130,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindUserById(String userId) {
         try{
+            logger.debug("Error detected at Keycloak User Service handleFindUserById "+userId);
             UserVO rep = this.keycloakUserService.findUserById(userId);
 
             if (rep != null) {

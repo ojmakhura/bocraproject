@@ -27,6 +27,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("Error detected at Access Point Service handleFindById "+" For "+id);
             Optional<?> data = Optional.of(accessPointService.findById(id));
             ResponseEntity<?> response;
 
@@ -47,6 +48,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("Error detected at Access Point Service handleGetAll");
             Optional<?> data = Optional.of(accessPointService.getAll());
             ResponseEntity<?> response;
 
@@ -67,6 +69,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
+            logger.debug("Error detected at Access Point Service handleGetAllPaged "+ " Page Number: "+pageNumber + " Page Size: "+pageSize);
             Optional<?> data = Optional.of(accessPointService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -87,6 +90,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     @Override
     public ResponseEntity<?> handlePagedSearch(Integer pageNumber, Integer pageSize, AccessPointCriteria criteria) {
         try {
+            logger.debug("Error detected at Access Point Service handlePagedSearch "+"Page Number: "+pageNumber+" Page Size: " +pageSize+ " Criteria: " +criteria);
             Optional<?> data = Optional.of(accessPointService.search(pageNumber, pageSize, criteria));
             ResponseEntity<?> response;
 
@@ -107,6 +111,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("Error detected at Access Point Service handleRemove "+"For "+id);
             Optional<?> data = Optional.of(accessPointService.remove(id));
             ResponseEntity<?> response;
 
@@ -127,6 +132,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     @Override
     public ResponseEntity<?> handleSave(AccessPointVO accessPoint) {
         try {
+            logger.debug("Error detected at Access Point Service handleSave "+"For "+accessPoint);
             Optional<?> data = Optional.of(accessPointService.save(accessPoint));
             ResponseEntity<?> response;
 
@@ -147,6 +153,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     @Override
     public ResponseEntity<?> handleSearch(AccessPointCriteria criteria) {
         try {
+            logger.debug("Error detected at Access Point Service handleSearch "+"By "+criteria);
             Optional<?> data = Optional.of(accessPointService.search(criteria)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
