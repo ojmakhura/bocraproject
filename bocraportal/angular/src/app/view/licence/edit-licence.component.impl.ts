@@ -182,9 +182,9 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
       file: [value?.file],
       documentId: [value?.documentId],
       documentType: {
-        id: [value.documentType.id],
-        code: [value.documentType.code],
-        name: [value.documentType.name],
+        id: [value?.documentType?.id],
+        code: [value?.documentType?.code],
+        name: [value?.documentType?.name],
       }
     });
   }

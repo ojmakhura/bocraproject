@@ -40,7 +40,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
   override doNgOnDestroy(): void {
   }
 
-  beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
+  override beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
     this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((roles) => {
 
       roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
@@ -182,5 +182,19 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     criteria.name = this.authorisationAccessPointSearchField.value;
     criteria.url = this.authorisationAccessPointSearchField.value;
     this.store.dispatch(AccessPointActions.search({ criteria: criteria, loading: true }));
+  }
+
+  override editAuthorisationFormReset() {
+
+    this.store.dispatch(AuthorisationActions.authorisationReset());
+    this.editAuthorisationForm.reset()
+    this.editAuthorisationForm.markAsPristine();
+    this.authorisationRolesControl.clear();
+
+    if(this.router.url.substring(0, this.router.url.indexOf('?'))) {
+        this.router.navigate([this.router.url.substring(0, this.router.url.indexOf('?'))]);
+    } else {
+        this.router.navigate([this.router.url]);
+    }
   }
 }

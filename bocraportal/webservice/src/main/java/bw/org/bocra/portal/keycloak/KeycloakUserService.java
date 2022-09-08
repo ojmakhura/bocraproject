@@ -17,12 +17,14 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.ClientMappingsRepresentation;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import bw.org.bocra.portal.licensee.LicenseeService;
@@ -62,6 +64,16 @@ public class KeycloakUserService {
         }
 
         return null;
+    }
+
+    public UserVO getLoggedInUser() {
+
+        String userId = keycloakService.getSecurityContext().getToken().getSubject();
+    
+        UsersResource usersResource = keycloakService.getUsersResource();
+        UserRepresentation userRep = usersResource.get(userId).toRepresentation();
+
+        return userRepresentationUserVO(userRep);
     }
 
     private UserRepresentation userVOUserRepresentation(UserVO user) {
@@ -150,12 +162,26 @@ public class KeycloakUserService {
 
     public boolean updateUserPassword(String userId, String newPassword) {
 
+        if(StringUtils.isNotBlank(userId)) {
+            userId = keycloakService.getSecurityContext().getToken().getSubject();
+        }
+        
         UsersResource usersResource = keycloakService.getUsersResource();
         UserResource userResource = usersResource.get(userId);
         CredentialRepresentation credential = createCredential(CredentialRepresentation.PASSWORD, newPassword, false);
         userResource.resetPassword(credential);
 
         return true;
+    }
+
+    public void updateUser(UserVO user) {
+
+        if(StringUtils.isNotBlank(user.getUserId())) {
+            UsersResource usersResource = keycloakService.getUsersResource();
+            UserResource userResource = usersResource.get(user.getUserId());
+
+            userResource.update(this.userVOUserRepresentation(user));
+        }
     }
 
     public UserVO createUser(UserVO user) {
@@ -168,6 +194,10 @@ public class KeycloakUserService {
         if (StringUtils.isBlank(user.getUserId())) {
 
             Response res = usersResource.create(userRepresentation);
+
+            if(res.getStatus() != HttpStatus.OK.value()) {
+                return null;
+            }
 
             users = usersResource.search(user.getUsername(), user.getFirstName(),
                     user.getLastName(), user.getEmail(), 0, 1);
@@ -278,5 +308,4 @@ public class KeycloakUserService {
 
         return null;
     }
-
 }

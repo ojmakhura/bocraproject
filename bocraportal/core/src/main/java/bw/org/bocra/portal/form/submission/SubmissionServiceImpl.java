@@ -208,8 +208,8 @@ public class SubmissionServiceImpl
         summary.setMySubmissions(formSubmissionRepository.count(specs));
         specs = null;
 
-        if (criteria.getLicensee() != null) {
-            specs = FormSubmissionSpecifications.findByLicenseeId(criteria.getLicensee());
+        if (criteria.getLicenseeId() != null) {
+            specs = FormSubmissionSpecifications.findByLicenseeId(criteria.getLicenseeId());
         }
 
         summary.setAllSubmissions(formSubmissionRepository.count(specs));
@@ -250,13 +250,12 @@ public class SubmissionServiceImpl
         /**
          * Get count of overdue submissions
          */
-        sSpecs = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("expectedSubmissionDate",
-                LocalDateTime.now());
-        sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual(
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual(
                 "submissionStatus", FormSubmissionStatus.DRAFT)
                 .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual(
-                    "submissionStatus", FormSubmissionStatus.NEW))
-            );
+                    "submissionStatus", FormSubmissionStatus.NEW));
+        //sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("expectedSubmissionDate",
+        //            LocalDateTime.now()));
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);

@@ -87,6 +87,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
+        System.out.println("============================= deleting " + id);
         try {
             logger.debug("Error detected at Document Type Service handleRemove "+"For "+id);
             Optional<?> data = Optional.of(documentTypeService.remove(id));

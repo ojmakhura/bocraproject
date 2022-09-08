@@ -68,8 +68,6 @@ public class LicenceDaoImpl
         }
 
         Collection<DocumentVO> docs = new HashSet<>();
-        System.out.println("=====> source.getDocuments()");
-        System.out.println(source.getDocuments());
 
         for(Document doc : source.getDocuments()) {
             System.out.println("source.getDocuments()");

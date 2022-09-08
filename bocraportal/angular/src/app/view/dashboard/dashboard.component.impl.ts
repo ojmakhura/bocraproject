@@ -15,7 +15,7 @@ export class DashboardComponentImpl extends DashboardComponent {
 
   doNgOnDestroy() {}
 
-  beforeOnInit(form: DashboardVarsForm): DashboardVarsForm {
+  override beforeOnInit(form: DashboardVarsForm): DashboardVarsForm {
 
     return form;
   }

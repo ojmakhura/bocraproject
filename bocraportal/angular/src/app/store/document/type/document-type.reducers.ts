@@ -31,6 +31,7 @@ export const documentTypeReducer = createReducer(
         documentTypes: [], 
         criteria: null, 
         id: null, 
+        removed: action.removed,
         success: action.success,
         error: false,
         messages: action.messages

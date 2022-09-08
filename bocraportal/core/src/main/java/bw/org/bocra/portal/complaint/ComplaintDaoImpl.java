@@ -34,12 +34,12 @@ public class ComplaintDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public void toComplainVO(
+    public void toComplaintVO(
         Complaint source,
-        ComplainVO target)
+        ComplaintVO target)
     {
-        // TODO verify behavior of toComplainVO
-        super.toComplainVO(source, target);
+        // TODO verify behavior of toComplaintVO
+        super.toComplaintVO(source, target);
         // WARNING! No conversion for target.licensee (can't convert source.getLicensee():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
     }
 
@@ -47,10 +47,10 @@ public class ComplaintDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public ComplainVO toComplainVO(final Complaint entity)
+    public ComplaintVO toComplaintVO(final Complaint entity)
     {
-        // TODO verify behavior of toComplainVO
-        return super.toComplainVO(entity);
+        // TODO verify behavior of toComplaintVO
+        return super.toComplaintVO(entity);
     }
 
     /**
@@ -58,31 +58,26 @@ public class ComplaintDaoImpl
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private Complaint loadComplaintFromComplainVO(ComplainVO complainVO)
+    private Complaint loadComplaintFromComplaintVO(ComplaintVO complaintVO)
     {
-        // TODO implement loadComplaintFromComplainVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.loadComplaintFromComplainVO(ComplainVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
-        if (complainVO.getId() == null)
+        if (complaintVO.getId() == null)
         {
             return  Complaint.Factory.newInstance();
         }
         else
         {
-            return this.load(complainVO.getId());
+            return this.load(complaintVO.getId());
         }
-        */
     }
 
     /**
      * {@inheritDoc}
      */
-    public Complaint complainVOToEntity(ComplainVO complainVO)
+    public Complaint complaintVOToEntity(ComplaintVO complaintVO)
     {
-        // TODO verify behavior of complainVOToEntity
-        Complaint entity = this.loadComplaintFromComplainVO(complainVO);
-        this.complainVOToEntity(complainVO, entity, true);
+        // TODO verify behavior of complaintVOToEntity
+        Complaint entity = this.loadComplaintFromComplaintVO(complaintVO);
+        this.complaintVOToEntity(complaintVO, entity, true);
         return entity;
     }
 
@@ -90,12 +85,12 @@ public class ComplaintDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public void complainVOToEntity(
-        ComplainVO source,
+    public void complaintVOToEntity(
+        ComplaintVO source,
         Complaint target,
         boolean copyIfNull)
     {
-        // TODO verify behavior of complainVOToEntity
-        super.complainVOToEntity(source, target, copyIfNull);
+        // TODO verify behavior of complaintVOToEntity
+        super.complaintVOToEntity(source, target, copyIfNull);
     }
 }

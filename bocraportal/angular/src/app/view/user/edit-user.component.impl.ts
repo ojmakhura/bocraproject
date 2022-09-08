@@ -172,7 +172,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     }
     return this.formBuilder.group({
       userId: [user?.userId ? user.userId : null],
-      username: [user?.username ? user.username : null, [Validators.required]],
+      username: [{value: user?.username, disabled: user?.username}, [Validators.required]],
       email: [user?.email ? user.email : null, [Validators.required, Validators.email]],
       password: [{ value: user?.password, disabled: false }, [Validators.required]],
       firstName: [user?.firstName ? user.firstName : null, [Validators.required]],
@@ -197,7 +197,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     if (!this.userUserId) {
       this.userPasswordControl.patchValue(dialogData?.newPassword)
     } else {
-
+      console.log('Chang');
     }
   }
 }

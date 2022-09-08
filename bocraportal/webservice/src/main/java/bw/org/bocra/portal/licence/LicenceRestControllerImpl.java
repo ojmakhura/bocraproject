@@ -169,10 +169,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
         try {
-<<<<<<< HEAD
             logger.debug("Error detected Licence Service handleAddDocument "+id+" "+documentTypeId+" "+file+" "+" "+fileName);
-            Optional<?> data = Optional.empty();
-=======
             AccessToken token = keycloakService.getSecurityContext().getToken();
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
@@ -189,7 +186,6 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
 
             document.setDocumentType(docType);
             document = this.documentService.save(document);            
->>>>>>> origin/ojm-dev
             ResponseEntity<?> response;
 
             if(document != null && document.getId() != null) {

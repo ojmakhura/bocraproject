@@ -47,7 +47,11 @@ export class SectorRestController {
     }
 
     public search(criteria: string | any ): Observable<SectorVO[] | any[]> {
-        return this.http.post<SectorVO[] | any[]>(`${this.path}/search?criteria=${criteria}`, {});
+        if(criteria) {
+            return this.http.post<SectorVO[] | any[]>(`${this.path}/search?criteria=${criteria}`, {});    
+        } else {
+            return this.getAll();
+        }      
 
     }
 

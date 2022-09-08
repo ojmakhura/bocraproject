@@ -237,6 +237,9 @@
 			<button type="button" color="accent" (click)="editFormSubmissionReturn()" class="btn btn-outline-primary" *ngIf="returnUnrestricted && formDisabled()">
 			  <span translate>return</span>
 			</button>
+			<button type="button" color="accent" (click)="editFormSubmissionAccept()" class="btn btn-outline-primary" *ngIf="acceptUnrestricted">
+			  <span translate>accept</span>
+			</button>
 			<button color="accent" type="button" (click)="editFormSubmissionFormReset()" class="btn btn-outline-primary">
 			  <span translate>reset</span>
 			</button>

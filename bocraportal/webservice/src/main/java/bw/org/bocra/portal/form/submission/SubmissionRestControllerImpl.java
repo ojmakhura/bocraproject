@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
+import bw.org.bocra.portal.user.UserVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -27,9 +29,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
     protected static Logger logger = LoggerFactory.getLogger(SubmissionRestControllerImpl.class);
+    private final KeycloakUserService keycloakUserService;
 
-    public SubmissionRestControllerImpl(SubmissionService submissionService) {
+    public SubmissionRestControllerImpl(SubmissionService submissionService, KeycloakUserService keycloakUserService) {
         super(submissionService);
+        this.keycloakUserService = keycloakUserService;
     }
 
     @Override
@@ -141,6 +145,13 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     public ResponseEntity<?> handleSearch(FormSubmissionCriteria criteria) {
         try{
             logger.debug("Error detected at Submission Service handleSearch "+criteria);
+
+            UserVO user = keycloakUserService.getLoggedInUser();
+
+            if(user.getLicensee() != null && user.getLicensee().getId() != null) {
+                criteria.setLicenseeId(user.getLicensee().getId());
+            }
+
             Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.search(criteria));
             ResponseEntity<Collection<FormSubmissionVO>> response;
     
@@ -225,6 +236,14 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     public ResponseEntity<?> handleGetSubmissionSummary(FormSubmissionCriteria criteria) {
         try{
             logger.debug("Error detected at Submission Service handleGetSubmissionSummary "+criteria);
+            UserVO user = keycloakUserService.getLoggedInUser();
+
+            if(user.getLicensee() != null && user.getLicensee().getId() != null) {
+                criteria.setLicenseeId(user.getLicensee().getId());
+            }
+
+            System.out.println(criteria);
+            
             SubmissionSummary data = submissionService.getSubmissionSummary(criteria);
             ResponseEntity<SubmissionSummary> response;
     

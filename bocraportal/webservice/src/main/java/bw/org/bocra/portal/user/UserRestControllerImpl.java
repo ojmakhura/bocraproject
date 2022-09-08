@@ -143,4 +143,18 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleChangePassword(String userId, String newPassword) {
+        try{
+            logger.debug("Updating the user password.");
+            this.keycloakUserService.updateUserPassword(userId, newPassword);
+
+            return ResponseEntity.ok().body("User password updated.");
+    
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body("User password not updated.");
+        }
+    }
 }
