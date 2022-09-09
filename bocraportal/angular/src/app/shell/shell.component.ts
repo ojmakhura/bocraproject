@@ -10,6 +10,7 @@ import * as AuthSelectors from '@app/store/auth/auth.selectors';
 import { AuthState } from '@app/store/auth/auth.state';
 import * as MenuActions from '@app/store/menu/menu.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
+import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { from, Observable, of } from 'rxjs';
@@ -66,7 +67,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
   }
 
   logout() {
-    this.keycloakService.logout().then(() => {
+    this.keycloakService.logout(environment.redirectUri).then(() => {
       this.store.dispatch(AuthActions.authReset());
       this.store.dispatch(MenuActions.menuReset());
     });

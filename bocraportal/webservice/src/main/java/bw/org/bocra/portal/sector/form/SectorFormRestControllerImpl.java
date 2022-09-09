@@ -56,7 +56,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     public ResponseEntity<?> handleFindByForm(Long formId) {
         try {
             logger.debug("Error detected at Sector Form Service handleFindByForm "+formId);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(sectorFormService.findByForm(formId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -77,7 +77,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     public ResponseEntity<?> handleFindById(Long id) {
         try {
             logger.debug("Error detected at Sector Form Service handleFindById "+id);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(sectorFormService.findById(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -95,10 +95,10 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleFindBySector(Long licenseeId) {
+    public ResponseEntity<?> handleFindBySector(Long sectorId) {
         try {
-            logger.debug("Error detected at Sector Form Service handleFindBySector "+licenseeId);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Error detected at Sector Form Service handleFindBySector " + sectorId);
+            Optional<?> data = Optional.of(sectorFormService.findBySector(sectorId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -119,7 +119,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Error detected at Sector Form Service handleGetAll ");
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(sectorFormService.getAll()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -140,7 +140,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     public ResponseEntity<?> handleRemove(Long id) {
         try {
             logger.debug("Error detected at Sector Form Service handleRemove "+id);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(sectorFormService.remove(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -161,7 +161,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     public ResponseEntity<?> handleUpdateForm(Long id, Long formId) {
         try {
             logger.debug("Error detected at Sector Form Service handleUpdateForm "+id+" "+formId);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(sectorFormService.updateForm(id, formId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -182,7 +182,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     public ResponseEntity<?> handleUpdateSector(Long id, Long sectorId) {
         try {
             logger.debug("Error detected at Sector Form Service handleUpdateSector "+id+" "+sectorId);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(sectorFormService.updateSector(id, sectorId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
