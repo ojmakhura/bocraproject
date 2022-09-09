@@ -20,6 +20,6 @@ interface Env {
   KEYCLOAK_REALM: string;
   BOCRA_API_ADDRESS: string;
   KEYCLOAK_WEB_CLIENT: string;
-  REDIRECT_URL: string;
+  REDIRECT_URI: string;
   KEYCLOAK_WEB_CLIENT_ID: string;
 }
