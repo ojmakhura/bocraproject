@@ -195,7 +195,7 @@ public class KeycloakUserService {
 
             Response res = usersResource.create(userRepresentation);
 
-            if(res.getStatus() != HttpStatus.OK.value()) {
+            if(res.getStatus() != HttpStatus.CREATED.value()) {
                 return null;
             }
 

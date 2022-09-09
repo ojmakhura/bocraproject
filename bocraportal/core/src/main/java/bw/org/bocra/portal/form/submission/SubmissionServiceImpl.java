@@ -212,12 +212,21 @@ public class SubmissionServiceImpl
             specs = FormSubmissionSpecifications.findByLicenseeId(criteria.getLicenseeId());
         }
 
-        summary.setAllSubmissions(formSubmissionRepository.count(specs));
-
         /**
          * Get all values related to status
          */
         Specification<FormSubmission> sSpecs = BocraportalSpecifications
+                .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.SUBMITTED);
+
+        if (specs != null) {
+            sSpecs = sSpecs.and(specs);
+        }
+        summary.setAllSubmissions(formSubmissionRepository.count(sSpecs));
+
+        /**
+         * Get all values related to status
+         */
+        sSpecs = BocraportalSpecifications
                 .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.NEW);
 
         if (specs != null) {
