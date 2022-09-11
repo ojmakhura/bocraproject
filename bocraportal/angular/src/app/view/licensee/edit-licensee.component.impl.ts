@@ -104,7 +104,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     });
 
     this.licenseeDocument$.subscribe(document => {
-      this.addToLicenseeDocuments(document);
+      if(document?.id)
+        this.addToLicenseeDocuments(document);
     });
   }
 
@@ -158,7 +159,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
         })
       );
       this.documentDelete$.subscribe(removed => {
-        this.licenseeDocumentsControl.removeAt(index);
+        if(removed)
+          this.licenseeDocumentsControl.removeAt(index);
       });
       
     }
@@ -206,9 +208,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       }
       this.store.dispatch(LicenseeActions.licenseeFailure({ messages: messages }));
     }
-
-
   }
+
   override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
     if (form?.licensee?.id && confirm("Are you sure you want to delete the licensee?")) {
       this.store.dispatch(

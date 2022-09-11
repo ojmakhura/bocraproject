@@ -136,12 +136,6 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
         }
     }
 
-    // @PostMapping("/licensee/upload")
-    // public DocumentVO uploadLicenseeDocument(@RequestParam(name = "file") MultipartFile file, @PathVariable Long licenseeId) {
-    //     System.out.println(String.format("Licensee %d\n", licenseeId));
-    //     return new DocumentVO();
-    // }
-
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {

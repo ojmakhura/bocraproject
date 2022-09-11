@@ -117,6 +117,18 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         if(item === '/form/submission/edit-form-submission/{button:delete}') {
           this.deleteUnrestricted = false;
         }
+
+        if(item === '/form/submission/edit-form-submission/{button:return}') {
+          this.returnUnrestricted = false;
+        }
+
+        if(item === '/form/submission/edit-form-submission/{button:accept}') {
+          this.acceptUnrestricted = false;
+        }
+
+        if (item === '/form/submission/edit-form-submission/{button:submit}') {
+          this.submitUnrestricted = false;
+        }
       });
     });
 
@@ -139,26 +151,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
 
     this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
-
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
-        if (item === '/form/submission/edit-form-submission/{button:delete}') {
-          this.deleteUnrestricted = false;
-        }
-
-        if (item === '/form/submission/edit-form-submission/{button:submit}') {
-          this.submitUnrestricted = false;
-        }
-
-        if (item === '/form/submission/edit-form-submission/{button:return}') {
-          this.returnUnrestricted = false;
-        }
-
-        if (item === '/form/submission/edit-form-submission/{button:accept}') {
-          this.acceptUnrestricted = false;
-        }
-      });
-    });
   }
 
   onRowChange(section: any, row: number) {

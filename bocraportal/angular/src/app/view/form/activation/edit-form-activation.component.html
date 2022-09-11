@@ -86,6 +86,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label id="formActivationActivationDeadline_label" class="col-sm-2 col-form-label" for="formActivationActivationDeadline"><span translate>activation.deadline</span></label>
+                        <input type="date" id="formActivationActivationDeadline" class="form-control" formControlName="activationDeadline"  navigator="true" showOn="button"/>
+                    </div>
                 </div>
                 <br>
                 <div class="text-end">
@@ -96,14 +100,9 @@
                         *ngIf="formActivationId && deleteUnrestricted">
                         <span translate>delete</span>
                     </button>
-                    <button type="button" (click)="editFormActivationEdit()" class="btn btn-outline-primary">
-                        <span translate>edit</span>
-                    </button>
                     <button type="button" (click)="editFormActivationFormReset()" class="btn btn-outline-primary"><span
                             translate>reset</span></button>
                 </div>
-
-
                 <mat-tab-group animationDuration="0ms" class="view-tabs">
                     <mat-tab label="{{'form.submissions' | translate}}">
                         <div>
@@ -123,10 +122,10 @@
                                             class="btn btn-primary">
                                             <mat-icon>delete</mat-icon>
                                         </button>
-                                        <button type="button" color="accent"
+                                        <!-- <button type="button" color="accent"
                                             (click)="doEditFormActivationFormSubmissions(row)" class="btn btn-primary">
                                             <mat-icon>edit</mat-icon>
-                                        </button>
+                                        </button> -->
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="id">
@@ -161,13 +160,8 @@
                     </mat-tab>
 
                 </mat-tab-group>
-
             </div>
-
-
-
         </form>
-
     </div>
 </div>
 <div class="modal fade" id="formActivationFormSubmissionsModal" tabindex="-1"

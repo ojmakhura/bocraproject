@@ -259,16 +259,24 @@ public class SubmissionServiceImpl
         /**
          * Get count of overdue submissions
          */
-        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual(
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
                 "submissionStatus", FormSubmissionStatus.DRAFT)
-                .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttributeNotEqual(
+                .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
                     "submissionStatus", FormSubmissionStatus.NEW));
-        //sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("expectedSubmissionDate",
-        //            LocalDateTime.now()));
+                //.or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
+                //    "submissionStatus", FormSubmissionStatus.));
+        sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("expectedSubmissionDate",
+                    LocalDateTime.now()));
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);
         }
+
+        Collection<FormSubmission> overdue = formSubmissionRepository.findAll(sSpecs);
+        for(FormSubmission sub : overdue) {
+            
+        }
+
         summary.setOverdueSubmissions(formSubmissionRepository.count(sSpecs));
 
         return summary;

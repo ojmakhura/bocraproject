@@ -242,8 +242,6 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
                 criteria.setLicenseeId(user.getLicensee().getId());
             }
 
-            System.out.println(criteria);
-            
             SubmissionSummary data = submissionService.getSubmissionSummary(criteria);
             ResponseEntity<SubmissionSummary> response;
     

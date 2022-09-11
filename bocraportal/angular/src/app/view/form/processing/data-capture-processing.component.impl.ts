@@ -39,7 +39,6 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
 
     this.submissionSummary$.subscribe(data => {
       this.summary = data;
-      console.log(data);
     });
 
   }
@@ -48,6 +47,14 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
   }
 
   override beforeDataCaptureProcessingNewSubmission(form: DataCaptureProcessingNewSubmissionForm): void {
+    this.store.dispatch(
+      DataProcessingActions.loadDataSuccess({
+        formSubmissions: [],
+        messages: [],
+        success: true
+      })
+    );
+
     let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
     criteria.submissionStatus = FormSubmissionStatus.NEW;
 
@@ -58,6 +65,14 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
   }
 
   override beforeDataCaptureProcessingDrafts(form: DataCaptureProcessingDraftsForm): void {
+    
+    this.store.dispatch(
+      DataProcessingActions.loadDataSuccess({
+        formSubmissions: [],
+        messages: [],
+        success: true
+      })
+    );
     let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
     criteria.submissionStatus = FormSubmissionStatus.DRAFT;
 
@@ -68,8 +83,16 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
   }
 
   override beforeDataCaptureProcessingMySubmissions(form: DataCaptureProcessingMySubmissionsForm): void {
+    this.store.dispatch(
+      DataProcessingActions.loadDataSuccess({
+        formSubmissions: [],
+        messages: [],
+        success: true
+      })
+    );
+
     let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
-    // criteria.submissionStatus = FormSubmissionStatus.SUBMITTED
+    criteria.submissionStatus = FormSubmissionStatus.SUBMITTED
     criteria.submittedBy = this.keycloakService.getUsername();
   
     this.store.dispatch(DataProcessingActions.loadData({
@@ -79,6 +102,14 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
   }
 
   override beforeDataCaptureProcessingAllSubmissions(form: DataCaptureProcessingAllSubmissionsForm): void {
+    this.store.dispatch(
+      DataProcessingActions.loadDataSuccess({
+        formSubmissions: [],
+        messages: [],
+        success: true
+      })
+    );
+    
     let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
     // criteria.submissionStatus = FormSubmissionStatus.SUBMITTED
 
@@ -89,6 +120,14 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
   }
 
   override beforeDataCaptureProcessingOverdueSubmissions(form: DataCaptureProcessingOverdueSubmissionsForm): void {
+    this.store.dispatch(
+      DataProcessingActions.loadDataSuccess({
+        formSubmissions: [],
+        messages: [],
+        success: true
+      })
+    );
+
     let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
     // criteria.submissionStatus = FormSubmissionStatus.
 
@@ -99,6 +138,14 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
   }
 
   override beforeDataCaptureProcessingReturnedSubmissions(form: DataCaptureProcessingReturnedSubmissionsForm): void {
+    this.store.dispatch(
+      DataProcessingActions.loadDataSuccess({
+        formSubmissions: [],
+        messages: [],
+        success: true
+      })
+    );
+    
     let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
     criteria.submissionStatus = FormSubmissionStatus.RETURNED
 

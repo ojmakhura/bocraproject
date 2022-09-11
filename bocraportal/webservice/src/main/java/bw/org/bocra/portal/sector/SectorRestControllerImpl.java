@@ -136,8 +136,6 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
-
-        System.out.println(criteria);
         
         try {
             logger.debug("Error detected at Sector Service handleSearch "+criteria);

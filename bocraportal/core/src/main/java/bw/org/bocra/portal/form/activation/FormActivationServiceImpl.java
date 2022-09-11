@@ -117,6 +117,11 @@ public class FormActivationServiceImpl
             throws Exception {
 
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
+
+        if(activation.getActivationDeadline() == null) {
+            activation.setActivationDeadline(activation.getPeriod().getPeriodEnd());
+        }
+
         activation = formActivationRepository.save(activation);
 
         /**
@@ -151,6 +156,8 @@ public class FormActivationServiceImpl
                 submission.setFormActivation(activation);
                 submission.setPeriod(activation.getPeriod());
                 submission.setSubmissionStatus(FormSubmissionStatus.NEW);
+
+                submission.setExpectedSubmissionDate(formActivation.getActivationDeadline());
 
                 submission = getFormSubmissionDao().create(submission);
 
