@@ -180,9 +180,16 @@ public class KeycloakUserService {
             UsersResource usersResource = keycloakService.getUsersResource();
             UserResource userResource = usersResource.get(user.getUserId());
 
-            userResource.update(this.userVOUserRepresentation(user));
+            UserRepresentation userRep = userResource.toRepresentation();
+            userRep.setEmail(user.getEmail());
+            userRep.setFirstName(user.getFirstName());
+            userRep.setLastName(user.getLastName());
+            userRep.setEnabled(user.getEnabled());
+
+            userResource.update(userRep);
         }
     }
+
 
     public UserVO createUser(UserVO user) {
 

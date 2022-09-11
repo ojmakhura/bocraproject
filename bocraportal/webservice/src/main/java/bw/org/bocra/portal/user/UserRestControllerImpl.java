@@ -38,10 +38,16 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleCreateUser(UserVO user) {
+    public ResponseEntity<?> handleSaveUser(UserVO user) {
         try{
             logger.debug("Error detected at Keycloak User Service handleCreateUser "+user);
-            user = this.keycloakUserService.createUser(user);
+
+            if(StringUtils.isBlank(user.getUserId()))
+                user = this.keycloakUserService.createUser(user);
+            else {
+                keycloakUserService.updateUser(user);
+            }
+                
 
             if(user == null || StringUtils.isBlank(user.getUserId())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
