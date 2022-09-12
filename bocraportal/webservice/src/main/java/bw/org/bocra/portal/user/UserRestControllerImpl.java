@@ -43,12 +43,11 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             logger.debug("Error detected at Keycloak User Service handleCreateUser "+user);
 
             if(StringUtils.isBlank(user.getUserId()))
-                user = this.keycloakUserService.createUser(user);
+                return this.keycloakUserService.createUser(user);
             else {
                 keycloakUserService.updateUser(user);
             }
                 
-
             if(user == null || StringUtils.isBlank(user.getUserId())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }

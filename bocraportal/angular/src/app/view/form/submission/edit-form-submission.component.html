@@ -207,8 +207,7 @@
 		  <div class="mb-3">
 			<label id="formSubmissionSubmissionStatus_label" class="col-sm-2 col-form-label"
 			  for="formSubmissionSubmissionStatus"><span translate>submission.status</span>*</label>
-			<input type="text" id="formSubmissionSubmissionStatus" class="form-control" name="submissionStatus"
-			  formControlName="submissionStatus" required/>
+			<label>{{formSubmissionSubmissionStatus}}</label>
 			<div *ngIf="
 				editFormSubmissionForm.invalid &&
 				formSubmissionSubmissionStatusControl.invalid &&
@@ -309,6 +308,10 @@
 			  <ng-container matColumnDef="periodEnd">
 				<mat-header-cell *matHeaderCellDef translate>period.end</mat-header-cell>
 				<mat-cell *matCellDef="let row"> {{ row.periodEnd }} </mat-cell>
+			  </ng-container>
+			  <ng-container matColumnDef="periodConfig.periodConfigName">
+				<mat-header-cell *matHeaderCellDef translate>period.config.name</mat-header-cell>
+				<mat-cell *matCellDef="let row"> {{ row.periodConfig?.periodConfigName }} </mat-cell>
 			  </ng-container>
 			  <mat-header-row *matHeaderRowDef="formSubmissionPeriodModalColumns"></mat-header-row>
 			  <mat-row *matRowDef="let row; columns: formSubmissionPeriodModalColumns"></mat-row>

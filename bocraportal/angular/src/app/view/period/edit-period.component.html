@@ -95,8 +95,11 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="mb-2">
+				<div class="mb-3">
+				    <label id="periodPeriodStart_label" class="col-sm-2 col-form-label" for="periodPeriodStart"><span translate>period.start</span></label>
+				    <input type="date" id="periodPeriodStart" class="form-control" formControlName="periodStart"  navigator="true" showOn="button"/>
+				</div>
+				<div class="mb-3">
 					<label id="periodPeriodEnd_label" class="col-sm-2 col-form-label" for="periodPeriodEnd"><span
 							translate>period.end</span></label>
 					<input type="date" id="periodPeriodEnd" class="form-control" formControlName="periodEnd"
@@ -187,7 +190,7 @@
 						</button>
 					</form>
 				</div>
-				<mat-table matSort [dataSource]="periodPeriodConfigs$ | async" #periodPeriodConfigModalSort="matSort"
+				<mat-table matSort [dataSource]="periodPeriodConfigsDataSource" #periodPeriodConfigModalSort="matSort"
 					class="table table-bordered" style="width: 100%">
 					<ng-container matColumnDef="actions">
 						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
@@ -264,7 +267,7 @@
 						</button>
 					</form>
 				</div>
-				<mat-table matSort [dataSource]="periodNexts$ | async" #periodNextModalSort="matSort"
+				<mat-table matSort [dataSource]="periodNextsDataSource" #periodNextModalSort="matSort"
 					class="table table-bordered" style="width: 100%">
 					<ng-container matColumnDef="actions">
 						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
@@ -291,6 +294,10 @@
 						<mat-header-cell *matHeaderCellDef translate>period.end</mat-header-cell>
 						<mat-cell *matCellDef="let row"> {{ row.periodEnd }} </mat-cell>
 					</ng-container>
+					<ng-container matColumnDef="periodConfig.periodConfigName">
+						<mat-header-cell *matHeaderCellDef translate>period.config.name</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row.periodConfig?.periodConfigName }} </mat-cell>
+					</ng-container>					
 					<mat-header-row *matHeaderRowDef="periodNextModalColumns"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: periodNextModalColumns"></mat-row>
 				</mat-table>
@@ -334,7 +341,7 @@
 						</button>
 					</form>
 				</div>
-				<mat-table matSort [dataSource]="periodPreviouses$ | async" #periodPreviousModalSort="matSort"
+				<mat-table matSort [dataSource]="periodPreviousesDataSource" #periodPreviousModalSort="matSort"
 					class="table table-bordered" style="width: 100%">
 					<ng-container matColumnDef="actions">
 						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
@@ -360,6 +367,10 @@
 					<ng-container matColumnDef="periodEnd">
 						<mat-header-cell *matHeaderCellDef translate>period.end</mat-header-cell>
 						<mat-cell *matCellDef="let row"> {{ row.periodEnd }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="periodConfig.periodConfigName">
+						<mat-header-cell *matHeaderCellDef translate>period.config.name</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row.periodConfig?.periodConfigName }} </mat-cell>
 					</ng-container>
 					<mat-header-row *matHeaderRowDef="periodPreviousModalColumns"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: periodPreviousModalColumns"></mat-row>

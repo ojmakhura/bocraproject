@@ -225,7 +225,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   }
 
   override createPeriodVOGroup(value: PeriodVO): FormGroup {
-    console.log(value);
+    
     return this.formBuilder.group({
         id: [value?.id],
         periodName: [value?.periodName],

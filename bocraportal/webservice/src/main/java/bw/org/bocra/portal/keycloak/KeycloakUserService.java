@@ -1,5 +1,6 @@
 package bw.org.bocra.portal.keycloak;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,7 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.StatusType;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +29,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import bw.org.bocra.portal.licensee.LicenseeService;
@@ -189,37 +194,47 @@ public class KeycloakUserService {
             userResource.update(userRep);
         }
     }
+    
+    public static String getCreatedId(Response response) {
+        URI location = response.getLocation();
+        //if (!response.getStatusInfo().equals(Status.CREATED)) {
+        if (response.getStatus() != HttpStatus.CREATED.value()) {
+            StatusType statusInfo = response.getStatusInfo();
+            response.bufferEntity();
+            String body = response.readEntity(String.class);
+            throw new WebApplicationException("Create method returned status "
+                    + statusInfo.getReasonPhrase() + " (Code: " + statusInfo.getStatusCode() + "); expected status: Created (201). Response body: " + body, response);
+        }
 
+        if (location == null) {
+            return null;
+        }
 
-    public UserVO createUser(UserVO user) {
+        String path = location.getPath();
+        return path.substring(path.lastIndexOf('/') + 1);
+    }
+
+    public ResponseEntity<?> createUser(UserVO user) {
 
         UsersResource usersResource = keycloakService.getUsersResource();
         UserRepresentation userRepresentation = this.userVOUserRepresentation(user);
         UserResource userResource = null;
-        List<UserRepresentation> users = null;
 
         if (StringUtils.isBlank(user.getUserId())) {
 
             Response res = usersResource.create(userRepresentation);
 
             if(res.getStatus() != HttpStatus.CREATED.value()) {
-                return null;
+                return ResponseEntity.status(res.getStatus()).body(getCreatedId(res));
             }
 
-            users = usersResource.search(user.getUsername(), user.getFirstName(),
-                    user.getLastName(), user.getEmail(), 0, 1);
+            userResource = usersResource.get(getCreatedId(res));
+            user.setUserId(getCreatedId(res));
         } else {
             userResource = usersResource.get(user.getUserId());
         }
 
-        if (CollectionUtils.isNotEmpty(users) || userResource != null) {
-
-            if(userResource == null) {
-
-                UserRepresentation rep = users.get(0);
-                user.setUserId(rep.getId());
-                userResource = usersResource.get(rep.getId());
-            }
+        if (userResource != null) {
 
             List<RoleRepresentation> roleReps = new ArrayList<>();
 
@@ -238,10 +253,10 @@ public class KeycloakUserService {
             }
 
         } else {
-            return null;
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User not created!");
         }
 
-        return user;
+        return ResponseEntity.ok(user);
     }
 
     public Collection<UserVO> loadUsers() {

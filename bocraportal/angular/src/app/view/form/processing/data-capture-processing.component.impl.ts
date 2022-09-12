@@ -5,7 +5,7 @@ import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submis
 import { SubmissionSummary } from '@app/model/bw/org/bocra/portal/form/submission/submission-summary';
 import * as DataProcessingActions from '@app/store/form/processing/data-processing.actions';
 import * as DataProcessingSelectors from '@app/store/form/processing/data-processing.selectors';
-import { DataCaptureProcessingAllSubmissionsForm, DataCaptureProcessingComponent, DataCaptureProcessingDraftsForm, DataCaptureProcessingMySubmissionsForm, DataCaptureProcessingNewSubmissionForm, DataCaptureProcessingOverdueSubmissionsForm, DataCaptureProcessingReturnedSubmissionsForm } from '@app/view/form/processing/data-capture-processing.component';
+import { DataCaptureProcessingAcceptedSubmissionsForm, DataCaptureProcessingAllSubmissionsForm, DataCaptureProcessingComponent, DataCaptureProcessingDraftsForm, DataCaptureProcessingMySubmissionsForm, DataCaptureProcessingNewSubmissionForm, DataCaptureProcessingOverdueSubmissionsForm, DataCaptureProcessingReturnedSubmissionsForm } from '@app/view/form/processing/data-capture-processing.component';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
@@ -111,7 +111,7 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
     );
     
     let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
-    // criteria.submissionStatus = FormSubmissionStatus.SUBMITTED
+    criteria.submissionStatus = FormSubmissionStatus.SUBMITTED
 
     this.store.dispatch(DataProcessingActions.loadData({
       criteria: criteria,
@@ -129,7 +129,7 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
     );
 
     let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
-    // criteria.submissionStatus = FormSubmissionStatus.
+    criteria.submissionStatus = FormSubmissionStatus.OVERDUE
 
     this.store.dispatch(DataProcessingActions.loadData({
       criteria: criteria,
@@ -154,5 +154,24 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
       loading: true
     }));
 
+  }
+
+  override beforeDataCaptureProcessingAcceptedSubmissions(form: DataCaptureProcessingAcceptedSubmissionsForm): void {
+    this.store.dispatch(
+      DataProcessingActions.loadDataSuccess({
+        formSubmissions: [],
+        messages: [],
+        success: true
+      })
+    );
+
+    
+    let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
+    criteria.submissionStatus = FormSubmissionStatus.ACCEPTED
+
+    this.store.dispatch(DataProcessingActions.loadData({
+      criteria: criteria,
+      loading: true
+    }));
   }
 }

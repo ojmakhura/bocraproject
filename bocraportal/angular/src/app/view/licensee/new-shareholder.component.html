@@ -128,7 +128,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="shareholderLicensees$ | async" #shareholderLicenseesModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="shareholderLicenseesDataSource" #shareholderLicenseesModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">

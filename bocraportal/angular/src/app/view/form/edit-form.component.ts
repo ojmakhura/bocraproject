@@ -25,6 +25,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatSelectChange } from '@angular/material/select';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatTableDataSource } from '@angular/material/table';
 import { UseCaseScope } from '@app/utils/use-case-scope';
 import { SelectItem } from '@app/utils/select-item';
 import { Store, select } from '@ngrx/store';
@@ -129,6 +130,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     @ViewChild('formLicenceTypesModalSort', {static: true}) formLicenceTypesModalSort: MatSort;
 
     formLicenceTypes$: Observable<LicenceTypeFormVO[]>;
+    formLicenceTypesDataSource = new MatTableDataSource<LicenceTypeFormVO>([]);
     formLicenceTypesSearchField: FormControl;
     formLicenceTypesSelect: LicenceTypeFormVO[] = [];
 
@@ -151,6 +153,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     @ViewChild('formFormSectionsModalSort', {static: true}) formFormSectionsModalSort: MatSort;
 
     formFormSections$: Observable<FormSectionVO[]>;
+    formFormSectionsDataSource = new MatTableDataSource<FormSectionVO>([]);
     formFormSectionsSearchField: FormControl;
     formFormSectionsSelect: FormSectionVO[] = [];
 
@@ -173,6 +176,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     @ViewChild('formFormFieldsModalSort', {static: true}) formFormFieldsModalSort: MatSort;
 
     formFormFields$: Observable<FormFieldVO[]>;
+    formFormFieldsDataSource = new MatTableDataSource<FormFieldVO>([]);
     formFormFieldsSearchField: FormControl;
     formFormFieldsSelect: FormFieldVO[] = [];
 
@@ -195,6 +199,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     @ViewChild('formLicenseesModalSort', {static: true}) formLicenseesModalSort: MatSort;
 
     formLicensees$: Observable<LicenseeFormVO[]>;
+    formLicenseesDataSource = new MatTableDataSource<LicenseeFormVO>([]);
     formLicenseesSearchField: FormControl;
     formLicenseesSelect: LicenseeFormVO[] = [];
 
@@ -218,6 +223,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     @ViewChild('formSectorsModalSort', {static: true}) formSectorsModalSort: MatSort;
 
     formSectors$: Observable<SectorVO[]>;
+    formSectorsDataSource = new MatTableDataSource<SectorVO>([]);
     sectorForm$: Observable<SectorFormVO>;
     formSectorsSearchField: FormControl;
     formSectorsSelect: SectorVO[] = [];
@@ -271,6 +277,36 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
                 this.handleFormChanges(change);
             }
         );
+
+        this.formLicenceTypes$.subscribe(data => {
+            this.formLicenceTypesDataSource.data = data;
+            this.formLicenceTypesDataSource.paginator = this.formLicenceTypesModalPaginator;
+            this.formLicenceTypesDataSource.sort = this.formLicenceTypesModalSort;
+        });
+
+        this.formFormSections$.subscribe(data => {
+            this.formFormSectionsDataSource.data = data;
+            this.formFormSectionsDataSource.paginator = this.formFormSectionsModalPaginator;
+            this.formFormSectionsDataSource.sort = this.formFormSectionsModalSort;
+        });
+
+        this.formFormFields$.subscribe(data => {
+            this.formFormFieldsDataSource.data = data;
+            this.formFormFieldsDataSource.paginator = this.formFormFieldsModalPaginator;
+            this.formFormFieldsDataSource.sort = this.formFormFieldsModalSort;
+        });
+
+        this.formLicensees$.subscribe(data => {
+            this.formLicenseesDataSource.data = data;
+            this.formLicenseesDataSource.paginator = this.formLicenseesModalPaginator;
+            this.formLicenseesDataSource.sort = this.formLicenseesModalSort;
+        });
+
+        this.formSectors$.subscribe(data => {
+            this.formSectorsDataSource.data = data;
+            this.formSectorsDataSource.paginator = this.formSectorsModalPaginator;
+            this.formSectorsDataSource.sort = this.formSectorsModalSort;
+        });
         
         this.afterOnInit();
     }

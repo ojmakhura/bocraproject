@@ -271,14 +271,11 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override beforeEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm): void {
-    console.log(form);
-    console.log(this.useCaseScope.pageVariables);
-    console.log(this.licensee);
   }
 
   override afterEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm, dialogData: any): void {
     if (dialogData) {
-      console.log(dialogData);
+      
       this.store.dispatch(
         LicenseeActions.addDocument({
           id: this.licenseeId,

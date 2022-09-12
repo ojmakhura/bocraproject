@@ -107,7 +107,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="formSectionFormFields$ | async" #formSectionFormFieldsModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="formSectionFormFieldsDataSource" #formSectionFormFieldsModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">
@@ -173,7 +173,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="formSectionForms$ | async" #formSectionFormModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="formSectionFormsDataSource" #formSectionFormModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">
