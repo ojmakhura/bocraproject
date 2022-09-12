@@ -29,7 +29,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Error detected at Form Activation Service handleFindById "+"For "+id);
+            logger.debug("Searches Form Activation by "+id);
             Optional<?> data = Optional.of(formActivationService.findById(id));
             ResponseEntity<?> response;
 
