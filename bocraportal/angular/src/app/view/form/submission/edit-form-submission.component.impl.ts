@@ -234,6 +234,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     if(confirm('Are you sure you want to submit the form submission? You will not be able to edit the data afterwards.')) {
 
       let formSubmission: FormSubmissionVO = form.formSubmission;
+
+      formSubmission.submittedBy = this.keycloakService.getUsername();
+      formSubmission.submissionDate = new Date();
       formSubmission.submissionStatus = FormSubmissionStatus.SUBMITTED;
       this.doFormSubmissionSave(formSubmission);
     }

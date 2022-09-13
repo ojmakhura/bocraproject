@@ -258,7 +258,11 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.router.navigate(['form/edit-field'], { queryParams: this.useCaseScope.queryParams });
   }
 
-  override doEditFormFormSections(formSections: FormSectionVO) {}
+  override doEditFormFormSections(formSections: FormSectionVO) {
+
+    this.useCaseScope.queryParams['formSection'] = formSections;
+    this.editFormAddSection();
+  }
 
   override afterEditFormDelete(form: EditFormDeleteForm): void {
     this.editFormFormReset();
