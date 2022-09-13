@@ -11,7 +11,7 @@
 							<div class="card-body py-4">
 								<!-- <span translate>new.submission</span> -->
 								<li class="list-group-item d-flex justify-content-between align-items-center" translate>
-									new.submission
+									New
 									<span class="badge bg-danger" *ngIf="summary?.newSubmissions>0">{{ summary?.newSubmissions}}</span>
 								</li>
 							</div>
@@ -38,7 +38,7 @@
 							<div class="card-body py-4">
 								<!-- <span translate>my.submissions</span> -->
 								<li class="list-group-item d-flex justify-content-between align-items-center" translate>
-									my.submissions
+									Mine
 									<!-- <span class="badge bg-danger" *ngIf="summary?.mySubmissions>0">{{ summary?.mySubmissions}}</span> -->
 								</li>
 							</div>
@@ -48,10 +48,8 @@
 						<div class="card list-group-item-action list-group-item-primary mb-4"
 							(click)="dataCaptureProcessingAllSubmissions()" type="button">
 							<div class="card-body py-4">
-								<!-- <span translate>all.submissions</span> -->
 								<li class="list-group-item d-flex justify-content-between align-items-center" translate>
-									all.submissions
-									<!-- <span class="badge bg-danger" *ngIf="summary?.allSubmissions>0">{{ summary?.allSubmissions}}</span> -->
+									All
 								</li>
 							</div>
 						</div>
@@ -65,7 +63,7 @@
 							<div class="card-body py-4">
 								<!-- <span translate>overdue.submissions</span> -->
 								<li class="list-group-item d-flex justify-content-between align-items-center" translate>
-									overdue.submissions
+									Overdue
 									<span class="badge bg-danger" *ngIf="summary?.overdueSubmissions>0">{{ summary?.overdueSubmissions}}</span>
 								</li>
 							</div>
@@ -77,8 +75,22 @@
 							<div class="card-body py-4">
 								<!-- <span translate>returned.submissions</span> -->
 								<li class="list-group-item d-flex justify-content-between align-items-center" translate>
-									returned.submissions
+									Returned
 									<span class="badge bg-danger" *ngIf="summary?.returnedSubmissions>0">{{ summary?.returnedSubmissions}}</span>
+								</li>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="card list-group-item-action list-group-item-primary mb-4"
+							(click)="dataCaptureProcessingAcceptedSubmissions()" type="button">
+							<div class="card-body py-4">
+								<li class="list-group-item d-flex justify-content-between align-items-center" translate>
+									Accepted
+									<span class="badge bg-danger" *ngIf="summary?.acceptedSubmissions>0">{{ summary?.acceptedSubmissions}}</span>
 								</li>
 							</div>
 						</div>

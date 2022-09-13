@@ -72,7 +72,7 @@ export class SectorEffects {
             mergeMap(() => this.sectorRestController.getAll().pipe(
                 map( sectors => SectorActions.getAllSuccess({
                     sectors,
-                    messages: [`${sectors.length} authorisation found.`],
+                    messages: [`${sectors.length} sectors found.`],
                     success: true
                 })),
                 catchError(({error}) => [SectorActions.sectorFailure({messages: [error.error]})])
@@ -86,7 +86,7 @@ export class SectorEffects {
             mergeMap(({ criteria }) => this.sectorRestController.search(criteria).pipe(
                 map( sectors => SectorActions.searchSuccess({
                     sectors,
-                    messages: [`${sectors.length} authorisation found.`],
+                    messages: [`${sectors.length} sectors found.`],
                     success: true
                 })),
                 catchError(({error}) => [SectorActions.sectorFailure({messages: [error.error]})])

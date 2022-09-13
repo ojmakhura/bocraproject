@@ -34,6 +34,12 @@
                     {{ row?.period?.periodName }}
                 </mat-cell>
             </ng-container>
+            <ng-container matColumnDef="submissionStatus">
+                <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>submission.status</span></mat-header-cell>
+                <mat-cell *matCellDef="let row"> 
+                    {{ row?.submissionStatus }}
+                </mat-cell>
+            </ng-container>
             <mat-header-row *matHeaderRowDef="formSubmissionsColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: formSubmissionsColumns;"></mat-row>
         </mat-table>

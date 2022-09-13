@@ -41,6 +41,7 @@ import * as SectorSelectors from '@app/store/sector/sector.selectors';
 import { NewDocumentComponentImpl } from '@app/view/licensee/new-document.component.impl';
 import { NewShareholderComponentImpl } from '@app/view/licensee/new-shareholder.component.impl';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { MatTableDataSource } from '@angular/material/table';
 
 export class EditLicenseeSaveForm {
     licensee: LicenseeVO | any;
@@ -109,6 +110,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     @ViewChild('licenseeUsersModalSort', {static: true}) licenseeUsersModalSort: MatSort;
 
     licenseeUsers$: Observable<UserVO[]>;
+    licenseeUsersDataSource = new MatTableDataSource<UserVO>([]);
     licenseeUsersSearchField: FormControl;
     licenseeUsersSelect: UserVO[] = [];
 
@@ -132,6 +134,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     @ViewChild('licenseeFormsModalSort', {static: true}) licenseeFormsModalSort: MatSort;
 
     licenseeForms$: Observable<FormVO[]>;
+    licenseeFormsDataSource = new MatTableDataSource<FormVO>([]);
     licenseeForm$: Observable<LicenseeFormVO>;
     licenseeFormsSearchField: FormControl;
     licenseeFormsSelect: FormVO[] = [];
@@ -157,6 +160,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     @ViewChild('licenseeLicencesModalSort', {static: true}) licenseeLicencesModalSort: MatSort;
 
     licenseeLicences$: Observable<LicenceVO[]>;
+    licenseeLicencesDataSource = new MatTableDataSource<LicenceVO>([]);
     licenseeLicencesSearchField: FormControl;
     licenseeLicencesSelect: LicenceVO[] = [];
 
@@ -179,6 +183,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     @ViewChild('licenseeDocumentsModalSort', {static: true}) licenseeDocumentsModalSort: MatSort;
 
     licenseeDocuments$: Observable<DocumentVO[]>;
+    licenseeDocumentsDataSource = new MatTableDataSource<DocumentVO>([]);
     licenseeDocumentsSearchField: FormControl;
     licenseeDocumentsSelect: DocumentVO[] = [];
 
@@ -200,6 +205,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     @ViewChild('licenseeSectorsModalSort', {static: true}) licenseeSectorsModalSort: MatSort;
 
     licenseeSectors$: Observable<SectorVO[]>;
+    licenseeSectorsDataSource = new MatTableDataSource<SectorVO>([]);
     licenseeSector$: Observable<LicenseeSectorVO>;
     licenseeSectorsSearchField: FormControl;
     licenseeSectorsSelect: SectorVO[] = [];
@@ -252,6 +258,36 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
                 this.handleFormChanges(change);
             }
         );
+
+        this.licenseeUsers$?.subscribe(data => {
+            this.licenseeUsersDataSource.data = data;
+            this.licenseeUsersDataSource.paginator = this.licenseeUsersModalPaginator;
+            this.licenseeUsersDataSource.sort = this.licenseeUsersModalSort;
+        });
+
+        this.licenseeForms$?.subscribe(data => {
+            this.licenseeFormsDataSource.data = data;
+            this.licenseeFormsDataSource.paginator = this.licenseeFormsModalPaginator;
+            this.licenseeFormsDataSource.sort = this.licenseeFormsModalSort;
+        });
+
+        this.licenseeLicences$?.subscribe(data => {
+            this.licenseeLicencesDataSource.data = data;
+            this.licenseeLicencesDataSource.paginator = this.licenseeLicencesModalPaginator;
+            this.licenseeLicencesDataSource.sort = this.licenseeLicencesModalSort;
+        });
+
+        this.licenseeDocuments$?.subscribe(data => {
+            this.licenseeDocumentsDataSource.data = data;
+            this.licenseeDocumentsDataSource.paginator = this.licenseeDocumentsModalPaginator;
+            this.licenseeDocumentsDataSource.sort = this.licenseeDocumentsModalSort;
+        });
+
+        this.licenseeSectors$?.subscribe(data => {
+            this.licenseeSectorsDataSource.data = data;
+            this.licenseeSectorsDataSource.paginator = this.licenseeSectorsModalPaginator;
+            this.licenseeSectorsDataSource.sort = this.licenseeSectorsModalSort;
+        });
         
         this.afterOnInit();
     }
@@ -1175,5 +1211,4 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
             return new FormArray([]);
         }
     }
-
 }

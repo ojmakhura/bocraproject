@@ -108,9 +108,9 @@
                     <button type="button" color="accent" (click)="deleteFromSectorLicensees(i)" class="btn btn-primary">
                       <mat-icon>delete</mat-icon>
                     </button>
-                    <button type="button" color="accent" (click)="doEditSectorLicensees(row)" class="btn btn-primary">
+                    <!-- <button type="button" color="accent" (click)="doEditSectorLicensees(row)" class="btn btn-primary">
                       <mat-icon>edit</mat-icon>
-                    </button>
+                    </button> -->
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="id">
@@ -146,9 +146,9 @@
                     <button type="button" color="accent" (click)="deleteFromSectorForms(i)" class="btn btn-primary">
                       <mat-icon>delete</mat-icon>
                     </button>
-                    <button type="button" color="accent" (click)="doEditSectorForms(row)" class="btn btn-primary">
+                    <!-- <button type="button" color="accent" (click)="doEditSectorForms(row)" class="btn btn-primary">
                       <mat-icon>edit</mat-icon>
-                    </button>
+                    </button> -->
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="id">
@@ -201,7 +201,7 @@
             </button>
           </form>
         </div>
-        <mat-table matSort [dataSource]="sectorLicensees$ | async" #sectorLicenseesModalSort="matSort"
+        <mat-table matSort [dataSource]="sectorLicenseesDataSource" #sectorLicenseesModalSort="matSort"
           class="table table-bordered" style="width: 100%">
           <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
@@ -262,7 +262,7 @@
             </button>
           </form>
         </div>
-        <mat-table matSort [dataSource]="sectorForms$ | async" #sectorFormsModalSort="matSort"
+        <mat-table matSort [dataSource]="sectorFormsDataSource" #sectorFormsModalSort="matSort"
           class="table table-bordered" style="width: 100%">
           <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>

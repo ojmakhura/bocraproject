@@ -13,6 +13,8 @@ export enum UserActionType {
   FIND_BY_ID_SUCCESS = '[User] Find By Id Success',
   SAVE = '[User] Save',
   SAVE_SUCCESS = '[User] Save Success',
+  CHANGE_PASSWORD = '[User] Change Password',
+  CHANGE_PASSWORD_SUCCESS = '[User] Change Password Success',
   REMOVE = '[User] Remove',
   REMOVE_SUCCESS = '[User] Remove Success',
   GET_ALL = '[User] Get All',
@@ -51,6 +53,16 @@ export const updateUserNameSuccess = createAction(
   props<{ updated: Boolean | any; messages: any[]; success: boolean }>()
 );
 
+export const changePassword = createAction(
+  UserActionType.CHANGE_PASSWORD,
+  props<{ userId: string | any; newPassword: string | any; loading: boolean }>()
+);
+
+export const changePasswordSuccess = createAction(
+  UserActionType.UPDATE_USER_NAME_SUCCESS,
+  props<{ messages: any[]; success: boolean }>()
+);
+
 export const loadUsers = createAction(UserActionType.LOAD_USERS, props<{ loading: boolean }>());
 
 export const loadUsersSuccess = createAction(
@@ -62,7 +74,7 @@ export const findById = createAction(UserActionType.FIND_BY_ID, props<{ userId: 
 
 export const findByIdSuccess = createAction(
     UserActionType.FIND_BY_ID_SUCCESS,
-    props<{ user: UserVO | any, messages: [], success: boolean}>()
+    props<{ user: UserVO | any, messages: string[], success: boolean}>()
 );
 
 // export const save = createAction(

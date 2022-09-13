@@ -155,9 +155,6 @@ public class AuthorisationServiceImpl
     @Override
     protected Collection<AuthorisationVO> handleFindByRolesAndUrl(String url, Set<String> roles) throws Exception {
 
-        System.out.println(url);
-        System.out.println(roles);
-        
         Specification<Authorisation> specs = BocraportalSpecifications.<Authorisation, AccessPoint>findByJoinAttributeLike("accessPoint", "url", url);
         specs = specs.and(
             BocraportalSpecifications.<Authorisation, String>findByAttributeIn("roles", roles)

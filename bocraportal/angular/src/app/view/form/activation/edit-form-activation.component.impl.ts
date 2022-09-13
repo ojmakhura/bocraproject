@@ -22,6 +22,7 @@ import { FormGroup } from '@angular/forms';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import { Observable } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-edit-form-activation',
@@ -32,6 +33,10 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
+  acceptUnrestricted: boolean = true;
+  returnUnrestricted: boolean = true;
+  submitUnrestricted: boolean = true;
+  datePipe: DatePipe;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -39,6 +44,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     this.formActivationPeriods$ = this.store.pipe(select(PeriodSelectors.selectPeriods));
     this.formActivationForms$ = this.store.pipe(select(FormSelectors.selectForms));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
+    this.datePipe = this._injector.get(DatePipe);
   }
 
   override beforeOnInit(form: EditFormActivationVarsForm): EditFormActivationVarsForm {
@@ -89,13 +95,14 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         }
 
         activationName = `${activationName} Activation`;
-
+        let end: Date = new Date(period.periodEnd);
+        end.setDate(end.getDate() + period.periodConfig.finalDay);
+        this.formActivationActivationDeadlineControl.patchValue(this.datePipe.transform(end, 'yyyy-MM-dd'));
         this.formActivationActivationNameControl.patchValue(activationName);
       }
     });
 
     this.formActivation$.subscribe(formActivation => {
-        console.log(formActivation)
         this.setEditFormActivationFormValue({formActivation});
     });
 
@@ -215,5 +222,24 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
             status: value?.licensee?.status,
           }
       });
+  }
+
+  override createPeriodVOGroup(value: PeriodVO): FormGroup {
+    
+    return this.formBuilder.group({
+        id: [value?.id],
+        periodName: [value?.periodName],
+        periodStart: [value?.periodStart],
+        periodEnd: [value?.periodEnd],
+        createdBy: [value?.createdBy],
+        updatedBy: [value?.updatedBy],
+        createdDate: [value?.createdDate],
+        updatedDate: [value?.updatedDate],
+        periodConfig: {
+          id: [value?.periodConfig?.id],
+          finalDay: [value?.periodConfig?.finalDay],
+          periodConfigName: [value?.periodConfig?.periodConfigName],
+        }
+    });
   }
 }

@@ -63,6 +63,12 @@ export class DataCaptureProcessingOverdueSubmissionsForm {
 export class DataCaptureProcessingReturnedSubmissionsForm {
     submissions: Array<FormSubmissionVO>[] | any[];
 }
+
+export class DataCaptureProcessingAcceptedSubmissionsForm {
+  formSubmissions: Array<FormSubmissionVO>[] | any[];
+  id: number | any;
+}
+
 @Component({
   selector: 'app-data-capture-processing-base',
   template: ''
@@ -501,5 +507,57 @@ export abstract class DataCaptureProcessingComponent implements OnInit, AfterVie
             return new FormArray([]);
         }
     }
+
+
+    get dataCaptureProcessingAcceptedSubmissionsForm(): DataCaptureProcessingAcceptedSubmissionsForm {
+
+      let form: DataCaptureProcessingAcceptedSubmissionsForm = new DataCaptureProcessingAcceptedSubmissionsForm();
+
+      return form;
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  beforeDataCaptureProcessingAcceptedSubmissions(form: DataCaptureProcessingAcceptedSubmissionsForm): void {}
+
+  /**
+   * This method may be overwritten
+   */
+  getDataCaptureProcessingAcceptedSubmissionsFormDialogConfig(data: any): any{
+      return {
+          data: {
+              width: '800px'
+          }
+      };
+  }
+
+  /**
+   * This method may be overwritten
+   */
+  afterDataCaptureProcessingAcceptedSubmissions(form: DataCaptureProcessingAcceptedSubmissionsForm, dialogData: any): void {
+      
+  }
+
+  dataCaptureProcessingAcceptedSubmissions(): void {
+      let form: DataCaptureProcessingAcceptedSubmissionsForm = this.dataCaptureProcessingAcceptedSubmissionsForm;
+      this.beforeDataCaptureProcessingAcceptedSubmissions(form);
+
+      this.submissionProcessing.dataCaptureProcessingAcceptedSubmissions(form);
+      let dialogConfig = this.getDataCaptureProcessingAcceptedSubmissionsFormDialogConfig(form);
+      const dialogRef = this.dialog.open(SubmissionDataComponentImpl, dialogConfig);
+
+      dialogRef.afterClosed().subscribe((result) => {
+          this.afterDataCaptureProcessingAcceptedSubmissions(form, result?.dialogData);
+      });
+  }
+
+  getDataCaptureProcessingAcceptedSubmissionsForm(value: any): DataCaptureProcessingAcceptedSubmissionsForm {
+      
+      let form: DataCaptureProcessingAcceptedSubmissionsForm = new DataCaptureProcessingAcceptedSubmissionsForm();
+
+      return form;
+
+  }
 
 }

@@ -10,6 +10,9 @@ import bw.org.bocra.portal.sector.SectorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Optional;
+
+import javax.swing.JList.DropLocation;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +34,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleCreate(Long sectorId, Long formId) {
         try {
+            logger.debug("Error detected at Sector Form Service handleCreate "+sectorId+" "+formId);
             Optional<?> data = Optional.of(sectorFormService.create(sectorId, formId)); 
             ResponseEntity<?> response;
 
@@ -42,6 +46,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -50,7 +55,8 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindByForm(Long formId) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Error detected at Sector Form Service handleFindByForm "+formId);
+            Optional<?> data = Optional.of(sectorFormService.findByForm(formId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -61,6 +67,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -69,7 +76,8 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Error detected at Sector Form Service handleFindById "+id);
+            Optional<?> data = Optional.of(sectorFormService.findById(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -80,15 +88,17 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     @Override
-    public ResponseEntity<?> handleFindBySector(Long licenseeId) {
+    public ResponseEntity<?> handleFindBySector(Long sectorId) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Error detected at Sector Form Service handleFindBySector " + sectorId);
+            Optional<?> data = Optional.of(sectorFormService.findBySector(sectorId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -99,6 +109,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -107,7 +118,8 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Error detected at Sector Form Service handleGetAll ");
+            Optional<?> data = Optional.of(sectorFormService.getAll()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -118,6 +130,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -126,7 +139,8 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Error detected at Sector Form Service handleRemove "+id);
+            Optional<?> data = Optional.of(sectorFormService.remove(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -137,6 +151,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -145,7 +160,8 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleUpdateForm(Long id, Long formId) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Error detected at Sector Form Service handleUpdateForm "+id+" "+formId);
+            Optional<?> data = Optional.of(sectorFormService.updateForm(id, formId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -156,6 +172,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -164,7 +181,8 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleUpdateSector(Long id, Long sectorId) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Error detected at Sector Form Service handleUpdateSector "+id+" "+sectorId);
+            Optional<?> data = Optional.of(sectorFormService.updateSector(id, sectorId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -175,6 +193,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

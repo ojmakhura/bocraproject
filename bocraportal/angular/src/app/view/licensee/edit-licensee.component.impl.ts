@@ -9,6 +9,7 @@ import * as FormActions from '@app/store/form/form.actions';
 import * as LicenceActions from '@app/store/licence/licence.actions';
 import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
+import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as SectorActions from '@app/store/sector/sector.actions';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
@@ -37,6 +38,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   deleteUnrestricted: boolean = true;
   sectorRemoved$: Observable<boolean>;
   formRemoved$: Observable<boolean>;
+  documentDelete$: Observable<boolean>;
+  licenseeDocument$: Observable<DocumentVO>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -46,6 +49,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.sectorRemoved$ = this.store.pipe(select(LicenseeSectorSelectors.selectRemoved));
     this.formRemoved$ = this.store.pipe(select(LicenseeFormSelectors.selectRemoved));
+    this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
+    this.licenseeDocument$ = this.store.pipe(select(LicenseeSelectors.selectDocument));
   }
 
   beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
@@ -97,6 +102,11 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
         this.addToLicenseeForms(lf);
       }
     });
+
+    this.licenseeDocument$.subscribe(document => {
+      if(document?.id)
+        this.addToLicenseeDocuments(document);
+    });
   }
 
   doNgOnDestroy() { }
@@ -136,6 +146,23 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
           this.licenseeSectorsControl.removeAt(index);
         }
       });
+    }
+  }
+
+  override deleteFromLicenseeDocuments(index: number) {
+    if(confirm('Are you sure you want to delete the licensee document?')) {
+      const doc: DocumentVO = this.licenseeDocuments[index];
+      this.store.dispatch(
+        DocumentActions.remove({
+          id: doc.id,
+          loading: true
+        })
+      );
+      this.documentDelete$.subscribe(removed => {
+        if(removed)
+          this.licenseeDocumentsControl.removeAt(index);
+      });
+      
     }
   }
 
@@ -181,9 +208,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       }
       this.store.dispatch(LicenseeActions.licenseeFailure({ messages: messages }));
     }
-
-
   }
+
   override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
     if (form?.licensee?.id && confirm("Are you sure you want to delete the licensee?")) {
       this.store.dispatch(
@@ -245,14 +271,11 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override beforeEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm): void {
-    console.log(form);
-    console.log(this.useCaseScope.pageVariables);
-    console.log(this.licensee);
   }
 
   override afterEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm, dialogData: any): void {
     if (dialogData) {
-      console.log(dialogData);
+      
       this.store.dispatch(
         LicenseeActions.addDocument({
           id: this.licenseeId,
@@ -276,9 +299,9 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       file: [value?.file],
       documentId: [value?.documentId],
       documentType: {
-        id: [value.documentType.id],
-        code: [value.documentType.code],
-        name: [value.documentType.name],
+        id: [value?.documentType?.id],
+        code: [value?.documentType?.code],
+        name: [value?.documentType?.name],
       },
     });
   }

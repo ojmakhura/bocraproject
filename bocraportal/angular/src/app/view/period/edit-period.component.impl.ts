@@ -67,7 +67,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     });
 
     this.periodPeriodConfigControl.valueChanges.subscribe((change) => {
-      console.log(change);
+      
       if (change?.id && this.periodPeriodStart) {
         let end = this.calculateEndDate(new Date(this.periodPeriodStart), this.periodPeriodConfig);
         this.periodPeriodEndControl.patchValue(formatDate(end, 'yyyy-MM-dd', 'en-bw'));
@@ -77,7 +77,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     });
 
     this.periodPeriodStartControl.valueChanges.subscribe(start => {
-      console.log(start);
+      
       if (this.periodPeriodConfig?.periodConfigName) {
         let end = this.calculateEndDate(new Date(this.periodPeriodStart), this.periodPeriodConfig);
         this.periodPeriodEndControl.patchValue(formatDate(end, 'yyyy-MM-dd', 'en-bw'));
@@ -165,7 +165,6 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
   }
 
   override handleFormChanges(change: any): void {
-    console.log(change);
   }
 
   override periodPeriodConfigSearch(): void {
@@ -215,7 +214,6 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     this.editPeriodFormReset();
 
     if (form?.period?.id) {
-      console.log(form.period);
 
       let current: PeriodVO = form.period;
       let next: PeriodVO = new PeriodVO();

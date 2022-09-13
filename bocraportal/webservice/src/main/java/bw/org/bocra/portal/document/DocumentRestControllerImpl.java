@@ -39,6 +39,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("Error detected at Document Service handleFindById "+"For "+id);
             Optional<?> data = Optional.of(documentService.findById(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -58,6 +59,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("Error detected at Document Service handleGetAll");
             Optional<?> data = Optional.of(documentService.getAll()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -77,6 +79,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
+            logger.debug("Error detected at Document Service handleGetAllPaged "+"Page Number: "+pageNumber+" Page Size: "+pageSize);
             Optional<?> data = Optional.of(documentService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -96,6 +99,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("Error detected at Document Service handleRemove "+"For "+id);
             Optional<?> data = Optional.of(documentService.remove(id));
             ResponseEntity<?> response;
 
@@ -115,6 +119,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(DocumentVO document) {
         try {
+            logger.debug("Error detected at Document Service handleSave "+ "For "+document);
             Optional<?> data = Optional.of(documentService.save(document));
             ResponseEntity<?> response;
 
@@ -131,15 +136,10 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
         }
     }
 
-    // @PostMapping("/licensee/upload")
-    // public DocumentVO uploadLicenseeDocument(@RequestParam(name = "file") MultipartFile file, @PathVariable Long licenseeId) {
-    //     System.out.println(String.format("Licensee %d\n", licenseeId));
-    //     return new DocumentVO();
-    // }
-
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
+            logger.debug("Error detected at Document Service handleSearch "+"By "+criteria);
             Optional<?> data = Optional.of(documentService.search(criteria));
             ResponseEntity<?> response;
 
@@ -160,7 +160,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleUploadLicenceDocument(Long licenceId, MultipartFile file) {
         try {
-            
+            logger.debug("Error detected at Document Service handleUploadLicenceDocument "+"LIcence Id: "+licenceId+" File: "+file);
             AccessToken token = keycloakService.getSecurityContext().getToken();
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
@@ -189,6 +189,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleUploadLicenseeDocument(Long licenseeId, MultipartFile file) {
         try {
+            logger.debug("Error detected at Document Service handleUploadLicenseeDocument "+"Licence Id:"+licenseeId+" File:"+file );
             AccessToken token = keycloakService.getSecurityContext().getToken();
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
@@ -217,9 +218,8 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleDownloadFile(Long id) {
-
         try {
-            
+            logger.debug("Error detected at Document Service handleDownloadFile "+"For "+id);
             Optional<?> data = Optional.of(documentService.downloadFile(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 

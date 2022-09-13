@@ -115,15 +115,12 @@
 					<button type="button" color="accent" (click)="editLicenceDelete()" class="btn btn-outline-primary" *ngIf="licenceId && deleteUnrestricted">
 						<span translate>delete</span>
 					</button>
-					<button type="button" color="accent" (click)="editLicenceDocuments()" class="btn btn-outline-primary">
-						<span translate>documents</span>
-					</button>
 					<button color="accent" type="button" (click)="editLicenceFormReset()" class="btn btn-outline-primary" ><span translate>reset</span></button>
 				</div>
                 <mat-tab-group animationDuration="0ms" class = "view-tabs">
                     <mat-tab label="{{'documents' | translate}}">
 		            	<div>
-		                    <button type="button" (click)="licenceDocumentsAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#licenceDocumentsModal">
+		                    <button type="button" (click)="editLicenceNewDocument()" class="btn btn-primary">
 		                        <mat-icon>add_box</mat-icon>
 		                    </button>
 		            		<mat-table matSort [dataSource]="licenceDocuments" #documentsSort="matSort" class="table table-bordered table-striped" style="width: 100%;">
@@ -133,9 +130,12 @@
 		                                <button type="button" color="accent" (click)="deleteFromLicenceDocuments(i)" class="btn btn-primary">
 		                                    <mat-icon>delete</mat-icon>
 		                                </button>
-		                                <button type="button" color="accent" (click)="doEditLicenceDocuments(row)" class="btn btn-primary">
+		                                <!-- <button type="button" color="accent" (click)="doEditLicenceDocuments(row)" class="btn btn-primary">
 		                                    <mat-icon>edit</mat-icon>
-		                                </button>
+		                                </button> -->
+                                        <button type="button" color="accent" (click)="fileDownload(row?.id)" class="btn btn-info">
+                                            <mat-icon>file_download</mat-icon>
+                                        </button>
 		                            </mat-cell>
 		            			</ng-container>
 		            			<ng-container matColumnDef="id">
@@ -192,7 +192,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="licenceDocuments$ | async" #licenceDocumentsModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="licenceDocumentsDataSource" #licenceDocumentsModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">
@@ -254,7 +254,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="licenceLicenceTypes$ | async" #licenceLicenceTypeModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="licenceLicenceTypesDataSource" #licenceLicenceTypeModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">
@@ -314,7 +314,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="licenceLicensees$ | async" #licenceLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="licenceLicenseesDataSource" #licenceLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">

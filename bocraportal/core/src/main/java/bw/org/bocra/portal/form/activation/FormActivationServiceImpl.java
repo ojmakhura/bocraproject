@@ -81,6 +81,7 @@ public class FormActivationServiceImpl
             vo.setSubmissionDate(submission.getSubmissionDate());
             vo.setId(submission.getId());
             vo.setSubmissionStatus(submission.getSubmissionStatus());
+            vo.setExpectedSubmissionDate(submission.getExpectedSubmissionDate());
 
             Licensee le = submission.getLicensee();
             LicenseeVO licensee = new LicenseeVO();
@@ -117,7 +118,12 @@ public class FormActivationServiceImpl
             throws Exception {
 
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
-        activation = formActivationRepository.save(activation);
+
+        if(activation.getActivationDeadline() == null) {
+            activation.setActivationDeadline(activation.getPeriod().getPeriodEnd());
+        }
+
+        activation = formActivationRepository.saveAndFlush(activation);
 
         /**
          * The form activations is a new one so we need to
@@ -152,7 +158,10 @@ public class FormActivationServiceImpl
                 submission.setPeriod(activation.getPeriod());
                 submission.setSubmissionStatus(FormSubmissionStatus.NEW);
 
-                submission = getFormSubmissionDao().create(submission);
+                submission.setExpectedSubmissionDate(formActivation.getActivationDeadline());
+
+                submission = formSubmissionRepository.saveAndFlush(submission);
+                
 
                 /**
                  * If the for requires single entry, the we create the data fields
@@ -165,7 +174,8 @@ public class FormActivationServiceImpl
                         dataField.setValue(field.getDefaultValue());
                         dataField.setRow(0);
 
-                        dataField = getDataFieldDao().create(dataField);
+                        dataField = dataFieldRepository.saveAndFlush(dataField);
+                        
                     }
                 }
 

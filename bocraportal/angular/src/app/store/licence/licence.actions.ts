@@ -19,11 +19,13 @@ export enum LicenceActionType {
     GET_ALL_PAGED_SUCCESS = '[Licence] Get All Paged Success',
     GET_LICENCE_DOCUMENTS = '[Licence] Get Licence Documents',
     GET_LICENCE_DOCUMENTS_SUCCESS = '[Licence] Get Licence Documents Success',
-    GET_LICENSEE_DOCUMENTS = '[Licence] Get Licensee Documents',
-    GET_LICENSEE_DOCUMENTS_SUCCESS = '[Licence] Get Licensee Documents Success',
-    LICENCE_RESET = '[Licence] Licence Reset',
     LICENCE_FAILURE = '[Licence] Licence Action Failure',
-    LICENCE_LOADING = '[Licence] Licence Loading'
+    LICENCE_LOADING = '[Licence] Licence Loading',
+    LICENCE_RESET = '[Licence] Licence Reset',
+    ADD_DOCUMENT = '[Licence] Add Licence Document',
+    ADD_DOCUMENT_SUCCESS = '[Licence] Add Licence Document Succcess',
+    REMOVE_DOCUMENT = '[Licensee] Remove Licence Document',
+    REMOVE_DOCUMENT_SUCCESS = '[Licence] Remove Licence Document Succcess'
 }
 
 export const findById = createAction(
@@ -86,16 +88,6 @@ export const getAllPagedSuccess = createAction(
     props<{ licences: LicenceVO[] | any[], messages: any[], success: boolean}>()
 );
 
-export const getLicenseeDocuments = createAction(
-    LicenceActionType.GET_LICENSEE_DOCUMENTS,
-    props<{ licenseeId: number | any , loading: boolean }>()
-);
-
-export const getLicenseeDocumentsSuccess = createAction(
-    LicenceActionType.GET_LICENSEE_DOCUMENTS_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
-);
-
 export const getLicenceDocuments = createAction(
     LicenceActionType.GET_LICENCE_DOCUMENTS,
     props<{ licenceId: number | any , loading: boolean }>()
@@ -106,6 +98,25 @@ export const getLicenceDocumentsSuccess = createAction(
     props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
 );
 
+export const addDocument = createAction(
+    LicenceActionType.ADD_DOCUMENT,
+    props<{ id: number, documentTypeId: number, file: File, fileName: string, loading: boolean }>()
+);
+
+export const addDocumentSuccess = createAction(
+    LicenceActionType.ADD_DOCUMENT_SUCCESS,
+    props<{ document: DocumentVO | any, messages: any[], success: boolean }>()
+);
+
+export const removeDocument = createAction(
+    LicenceActionType.REMOVE_DOCUMENT,
+    props<{ id: number, loading: boolean }>()
+);
+
+export const removeDocumentSuccess = createAction(
+    LicenceActionType.REMOVE_DOCUMENT_SUCCESS,
+    props<{ messages: any[], success: boolean }>()
+);
 
 export const licenceReset = createAction(LicenceActionType.LICENCE_RESET);
 

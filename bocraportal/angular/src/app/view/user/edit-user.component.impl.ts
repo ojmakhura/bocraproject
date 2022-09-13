@@ -114,6 +114,7 @@ export class EditUserComponentImpl extends EditUserComponent {
    * This method may be overwritten
    */
   override beforeEditUserSave(form: EditUserSaveForm): void {
+    
     if (this.editUserForm.valid) {
       if (form.user?.id) {
         form.user.updatedBy = this.keycloakService.getUsername();
@@ -132,26 +133,49 @@ export class EditUserComponentImpl extends EditUserComponent {
     }
     else {
       let messages: string[] = []
-      if (!this.userControl.valid) {
-        messages.push("User has errors. Please fill in the required form fields. ")
+      
+      if(!this.userUserId) {
+        if (!this.userPasswordControl.valid) {
+          messages.push("Password is missing!")
+        }
+
+        if (!this.userUsernameControl.valid) {
+          messages.push("Username is missing!")
+        }
       }
-      if (!this.userUsernameControl.valid) {
-        messages.push("Username is missing!")
-      }
+
       if (!this.userEmailControl.valid) {
         messages.push("Email is missing!")
       }
-      if (!this.userPasswordControl.valid) {
-        messages.push("Password is missing!")
-      }
+
       if (!this.userFirstNameControl.valid) {
         messages.push("First name is missing!")
       }
+
       if (!this.userLastNameControl.valid) {
         messages.push("Last Name is missing!")
       }
 
-      this.store.dispatch(UserActions.userFailure({ messages: messages }));
+      if(messages.length > 0) {
+        if (!this.userControl.valid) {
+          messages = ['User has errors. Please fill in the required form fields.', ...messages]
+        }
+        this.store.dispatch(UserActions.userFailure({ messages: messages }));
+      } else {
+        if(this.userUserId) {
+          
+          form.user.updatedBy = this.keycloakService.getUsername();
+          form.user.updatedDate = new Date();
+    
+          this.store.dispatch(
+            UserActions.createUser({
+              user: form.user,
+              loading: true,
+            })
+          );
+        }
+      }
+      
     }
   }
 
@@ -172,7 +196,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     }
     return this.formBuilder.group({
       userId: [user?.userId ? user.userId : null],
-      username: [user?.username ? user.username : null, [Validators.required]],
+      username: [{value: user?.username, disabled: user?.userId}, [Validators.required]],
       email: [user?.email ? user.email : null, [Validators.required, Validators.email]],
       password: [{ value: user?.password, disabled: false }, [Validators.required]],
       firstName: [user?.firstName ? user.firstName : null, [Validators.required]],
@@ -197,7 +221,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     if (!this.userUserId) {
       this.userPasswordControl.patchValue(dialogData?.newPassword)
     } else {
-
+      console.log('Chang');
     }
   }
 }
