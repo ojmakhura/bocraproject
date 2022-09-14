@@ -14,6 +14,9 @@ services:
       default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ${BOCRA_DATA}/auth/system_passwd:/var/system_passwd
+      - ${BOCRA_DATA}/certs:/etc/certs
+      - ${BOCRA_DATA}/traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
     ports:
       - 80:80
       - 443:443
@@ -29,8 +32,8 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.watch=true"
       - "--providers.docker.exposedbydefault=false"
-      # - "--providers.file.directory=/etc/traefik/dynamic_conf/"
-      # - "--providers.file.watch=true"
+      - "--providers.file.directory=/etc/traefik/dynamic_conf/"
+      - "--providers.file.watch=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entryPoints.ping.address=:8082"
@@ -43,25 +46,58 @@ services:
       - "--ping.entrypoint=ping"
       - "--metrics"
       - "--metrics.prometheus"
-      # - "--providers.docker.network=traefik-public"
-      # - "--entrypoints.web.http.redirections.entrypoint.to=${ACTIVE_ROUTER_ENTRY}"
-      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--providers.docker.network=traefik-public"
+      - "--entrypoints.web.http.redirections.entrypoint.to=${ACTIVE_ROUTER_ENTRY}"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       # - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
       # - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
       # - "--certificatesresolvers.le.acme.tlschallenge=true"
     
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
-      - "traefik.http.routers.traefik.entrypoints=web"
-      - "traefik.http.routers.traefik.service=api@internal"
-      # - "traefik.http.routers.traefik.tls=${SSL_SECURE}"
-        # - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-        # - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
-        # - "traefik.http.routers.https-redirect.middlewares=https-redirect"
-        # - "traefik.http.routers.dashboard.rule=Host(`dash${PROXY_DOMAIN}`)"
-        # - "traefik.http.routers.dashboard.service=dashboard@internal"
-        # - "traefik.http.routers.dashboard.tls=${SSL_SECURE}"
+      # Enable Traefik for this service, to make it available in the public network
+      - traefik.enable=true
+      # Use the traefik-public network (declared below)
+      # - traefik.docker.network=traefik-public
+      # Use the custom label "traefik.constraint-label=traefik-public"
+      # This public Traefik will only use services with this label
+      # That way you can add other internal Traefik instances per stack if needed
+      # - traefik.constraint-label=traefik-public
+      # admin-auth middleware with HTTP Basic auth
+      # Using the environment variables USERNAME and HASHED_PASSWORD
+      # - traefik.http.middlewares.admin-auth.basicauth.usersfile=/var/system_passwd
+      # - traefik.http.routers.traefik-public-https.middlewares=admin-auth
+      # https-redirect middleware to redirect HTTP to HTTPS
+      # It can be re-used by other stacks in other Docker Compose files
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+      # traefik-http set up only to use the middleware to redirect to https
+      # Uses the environment variable DOMAIN
+      - traefik.http.routers.traefik-public-http.rule=Host(`${PROXY_DOMAIN}`)
+      - traefik.http.routers.traefik-public-http.entrypoints=web
+      - traefik.http.routers.traefik-public-http.middlewares=https-redirect
+      # traefik-https the actual router using HTTPS
+      # Uses the environment variable DOMAIN
+      - traefik.http.routers.traefik-public-https.rule=Host(`${PROXY_DOMAIN}`)
+      - traefik.http.routers.traefik-public-https.entrypoints=websecure
+      - traefik.http.routers.traefik-public-https.tls=${SSL_SECURE}
+      # Use the special Traefik service api@internal with the web UI/Dashboard
+      - traefik.http.routers.traefik-public-https.service=api@internal
+      # Use the "le" (Let's Encrypt) resolver created below
+      - traefik.http.routers.traefik-public-https.tls.certresolver=le
+      # Define the port inside of the Docker service to use
+      - traefik.http.services.traefik-public.loadbalancer.server.port=8080
+
+      #- "traefik.enable=true"
+      #- "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
+      #- "traefik.http.routers.traefik.entrypoints=web"
+      #- "traefik.http.routers.traefik.service=api@internal"
+      #- "traefik.http.routers.traefik.tls=${SSL_SECURE}"
+      #- "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      #- "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      #- "traefik.http.routers.https-redirect.middlewares=https-redirect"
+      #- "traefik.http.routers.dashboard.rule=Host(`dash${PROXY_DOMAIN}`)"
+      #- "traefik.http.routers.dashboard.service=dashboard@internal"
+      #- "traefik.http.routers.dashboard.tls=${SSL_SECURE}"
 
   ###############################################################################
   # Postgres database
@@ -180,7 +216,7 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "ojmakhura/${API_IMAGE_NAME}:latest"
+    image: "${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
     container_name: bocraportal-api
     hostname: api
 
@@ -227,7 +263,7 @@ services:
   # Angular web application
   ###############################################################################
   web:
-    image: "ojmakhura/${WEB_IMAGE_NAME}:latest"
+    image: "${WEB_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
     hostname: web
 
     healthcheck:

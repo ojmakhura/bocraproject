@@ -48,13 +48,13 @@ COMMON_LOCAL_VARS = "export EMAIL=${TEST_EMAIL}"\
     "export API_IMAGE_NAME=${API_IMAGE_NAME}"\
     "export KEYCLOAK_IMAGE_NAME=${KEYCLOAK_IMAGE_NAME}"\
     "export BOCRA_REGISTRY_SUBDOMAIN=${BOCRA_REGISTRY_SUBDOMAIN}"\
-    "export ACTIVE_ROUTER_ENTRY=${INSECURE_ROUTER_ENTRY}"\
+    "export ACTIVE_ROUTER_ENTRY=${SECURE_ROUTER_ENTRY}"\
     "export TRAEFIK_USERNAME=${TRAEFIK_USERNAME}"\
     
 LOCAL_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
-    "export BOCRA_DATA=${HOME}/${BOCRA_DATA}"\
-    "export IMAGE_VERSION=${DEV_IMAGE_VERSION}"\
+    "export BOCRA_DATA=${HOME}${BOCRA_DATA}"\
+    "export IMAGE_VERSION=${IMAGE_VERSION}"\
     "export DOMAIN=${LOCAL_DOMAIN}"\
     "export DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${LOCAL_DOMAIN}"\
     "export PGADMIN_DOMAIN=${BOCRA_PGADMIN_SUBDOMAIN}.${LOCAL_DOMAIN}"\
@@ -71,18 +71,19 @@ LOCAL_ENV = printf "%s\n" \
     "export KEYCLOAK_API_SECRET=${KEYCLOAK_LOCAL_API_SECRET}"\
     "export ACME_EMAIL=${LOCAL_ACME_EMAIL}"\
     "export WEB_URL=${BOCRA_WEB_SUBDOMAIN}.${LOCAL_DOMAIN}"\
-    "export API_URL=${LOCAL_API_URL}/"\
-    "export SSL_SECURE=false"\
-    "export IMAGE_VERSION_SUFFIX=-local"\
+    "export API_URL=${LOCAL_API_URL}"\
+    "export SSL_SECURE=true"\
+    "export IMAGE_VERSION_SUFFIX=-lc"\
     "export REGISTRY_TAG=${BOCRA_REGISTRY_SUBDOMAIN}.${LOCAL_DOMAIN}"\
     "export KEYCLOAK_REGISTRY_IMAGE=${KEYCLOAK_LOCAL_REGISTRY_IMAGE}"\
+    "export KEYCLOAK_API_CLIENT_SECRET=mhhhCwz015E7dQYgK0RGYb5FPH1bsQj2"\
     ${COMMON_LOCAL_VARS}\
     >> .env
 
 DEV_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
     "export BOCRA_DATA=${BOCRA_DATA}"\
-    "export IMAGE_VERSION=${DEV_IMAGE_VERSION}"\
+    "export IMAGE_VERSION=${IMAGE_VERSION}-dev"\
     "export DOMAIN=${DEV_DOMAIN}"\
     "export DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${DEV_DOMAIN}"\
     "export PGADMIN_DOMAIN=${BOCRA_PGADMIN_SUBDOMAIN}.${DEV_DOMAIN}"\
@@ -113,7 +114,7 @@ DEV_ENV = printf "%s\n" \
 TEST_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
     "export BOCRA_DATA=${BOCRA_DATA}"\
-    "export IMAGE_VERSION=${DEV_IMAGE_VERSION}"\
+    "export IMAGE_VERSION=${IMAGE_VERSION}-ts"\
     "export DOMAIN=${TEST_DOMAIN}"\
     "export DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${TEST_DOMAIN}"\
     "export PGADMIN_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${TEST_DOMAIN}"\
@@ -139,8 +140,6 @@ TEST_ENV = printf "%s\n" \
     "export IMAGE_VERSION_SUFFIX=-test"\
     "export REGISTRY_TAG=${BOCRA_REGISTRY_SUBDOMAIN}.${TEST_DOMAIN}"\
     "export KEYCLOAK_REGISTRY_IMAGE=${KEYCLOAK_TEST_REGISTRY_IMAGE}"\
-    "export WEB_IMAGE_NAME=bocraportal-web"\
-    "export API_IMAGE_NAME=bocraportal-api"\
     "export KEYCLOAK_WEB_CLIENT_ID=17b28a77-1d2e-4e91-8a22-ff6db44108e5"\
     ${COMMON_LOCAL_VARS}\
     >> .env
@@ -148,7 +147,7 @@ TEST_ENV = printf "%s\n" \
 LIVE_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
     "export BOCRA_DATA=${BOCRA_DATA}"\
-    "export IMAGE_VERSION=${DEV_IMAGE_VERSION}"\
+    "export IMAGE_VERSION=${IMAGE_VERSION}"\
     "export DOMAIN=${LIVE_DOMAIN}"\
     "export DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${LIVE_DOMAIN}"\
     "export PGADMIN_DOMAIN=${BOCRA_PGADMIN_SUBDOMAIN}.${LIVE_DOMAIN}"\

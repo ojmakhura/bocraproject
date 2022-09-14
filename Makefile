@@ -73,13 +73,13 @@ build_keycloak_image: gen_env
 build_images: gen_env build_keycloak_image build_web_image build_api_image
 
 ###
-## puch the images
+## tag and push the images
 ###
 push_web_image: gen_env
-	. ./.env && docker push ${REGISTRY_TAG}/${WEB_IMAGE_NAME}:latest${IMAGE_VERSION_SUFFIX}
+	. ./.env && docker push ${REGISTRY_TAG}/${WEB_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}
 
 push_api_image: gen_env
-	. ./.env && docker push ${REGISTRY_TAG}/${API_IMAGE_NAME}:latest${IMAGE_VERSION_SUFFIX}
+	. ./.env && docker push ${REGISTRY_TAG}/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}
 
 push_keycloak_image: gen_env
 	. ./.env && echo ${KEYCLOAK_REGISTRY_IMAGE}
