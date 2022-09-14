@@ -180,7 +180,7 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "${REGISTRY_TAG}/${API_IMAGE_NAME}:latest${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${API_IMAGE_NAME}:latest"
     container_name: bocraportal-api
     hostname: api
 
@@ -212,6 +212,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_API_CLIENT: ${KEYCLOAK_API_CLIENT}
+      KEYCLOAK_API_CLIENT_SECRET: ${KEYCLOAK_API_CLIENT_SECRET}
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
       TZ: Africa/Gaborone
     labels:
@@ -225,7 +227,7 @@ services:
   # Angular web application
   ###############################################################################
   web:
-    image: "${REGISTRY_TAG}/${WEB_IMAGE_NAME}:latest${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${WEB_IMAGE_NAME}:latest"
     hostname: web
 
     healthcheck:

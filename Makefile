@@ -61,10 +61,10 @@ build_image: gen_env
 	. ./.env && docker compose -f ${stack_file}.yml build
 
 build_api_image: build_api
-	. ./.env && docker compose -f docker-compose-api.yml build
+	. ./.env && docker compose build api
 
 build_web_image: gen_env
-	. ./.env && docker compose -f docker-compose-web.yml build
+	. ./.env && docker compose build web
 
 build_keycloak_image: gen_env
 	. ./.env && docker compose -f docker-compose-keycloak.yml build
