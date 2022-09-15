@@ -32,7 +32,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Error detected Menu section Service handleFindById "+id);
+            logger.debug("Search Menu Section by Id "+id);
             Optional<?> data = Optional.of(menuSectionService.findById(id));
             ResponseEntity<?> response;
 
@@ -52,7 +52,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Error detected Menu section Service handleGetAll");
+            logger.debug("Display all Menu Sections");
             Optional<?> data = Optional.of(menuSectionService.getAll());
             ResponseEntity<?> response;
 
@@ -72,7 +72,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Error detected Menu section Service handleGetAllPaged "+pageNumber+" "+pageSize);
+            logger.debug("Display all Menu Sections with specified page number "+pageNumber+" and page size "+pageSize);
             Optional<?> data = Optional.of(menuSectionService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -92,7 +92,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Error detected Menu section Service handleRemove "+id );
+            logger.debug("Delete Menu Section with Id "+id );
             Optional<?> data = Optional.of(menuSectionService.remove(id));
             ResponseEntity<?> response;
 
@@ -112,7 +112,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleSave(MenuSectionVO menuSection) {
         try {
-            logger.debug("Error detected Menu section Service handleSave "+menuSection);
+            logger.debug("Save Menu Section "+menuSection);
             Optional<?> data = Optional.of(menuSectionService.save(menuSection));
             ResponseEntity<?> response;
 
@@ -132,7 +132,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
-            logger.debug("Error detected Menu section Service handleSearch "+criteria);
+            logger.debug("SErach Menu Section by criteria "+criteria);
             Optional<?> data = Optional.of(menuSectionService.search(criteria));
             ResponseEntity<?> response;
 
@@ -153,7 +153,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleFindByAuthorisationRoles(Set<String> roles) {
         try {
-            logger.debug("Error detected Menu section Service handleFindByAuthorisationRoles "+roles);
+            logger.debug("Search Menu Section by Authorisation Roles  "+roles);
             Optional<?> data = Optional.of(menuSectionService.findByAuthorisationRoles(roles));
             ResponseEntity<?> response;
 
