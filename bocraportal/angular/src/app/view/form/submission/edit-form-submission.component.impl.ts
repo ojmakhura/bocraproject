@@ -4,6 +4,7 @@ import {
   EditFormSubmissionAcceptForm,
   EditFormSubmissionComponent,
   EditFormSubmissionDeleteForm,
+  EditFormSubmissionReturnForm,
   EditFormSubmissionSubmitForm,
 } from '@app/view/form/submission/edit-form-submission.component';
 import { EditFormSubmissionSaveForm } from '@app/view/form/submission/edit-form-submission.component';
@@ -208,24 +209,14 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
     }
   }
-  // editFormSubmissionFormReset() {
-  //   throw new Error('Method not implemented.');
-  // }
+  
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
     if (this.formSubmissionControl.valid) {
-      if (form.formSubmission.id) {
-        form.formSubmission.updatedBy = this.keycloakService.getUsername();
-        form.formSubmission.updatedDate = new Date();
-      } else {
-        form.formSubmission.createdBy = this.keycloakService.getUsername();
-        form.formSubmission.createdDate = new Date();
+      if(form.formSubmission.submissionStatus != FormSubmissionStatus.SUBMITTED && form.formSubmission.submissionStatus != FormSubmissionStatus.ACCEPTED) {
+        form.formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;
       }
-      this.store.dispatch(
-        FormSubmissionActions.save({
-          formSubmission: form.formSubmission,
-          loading: true,
-        })
-      );
+      
+      this.doFormSubmissionSave(form.formSubmission);
     } else {
       let messages: string[] = []
       if(!this.formSubmissionControl.valid) {
@@ -243,6 +234,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     if(confirm('Are you sure you want to submit the form submission? You will not be able to edit the data afterwards.')) {
 
       let formSubmission: FormSubmissionVO = form.formSubmission;
+
+      formSubmission.submittedBy = this.keycloakService.getUsername();
+      formSubmission.submissionDate = new Date();
       formSubmission.submissionStatus = FormSubmissionStatus.SUBMITTED;
       this.doFormSubmissionSave(formSubmission);
     }
@@ -252,8 +246,18 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   override beforeEditFormSubmissionAccept(form: EditFormSubmissionAcceptForm): void {
     if(confirm('Are you sure you want to accept the form submission?')) {
 
-      let formSubmission: FormSubmissionVO = form.formSubmission;
+      let formSubmission: FormSubmissionVO = this.formSubmission;
       formSubmission.submissionStatus = FormSubmissionStatus.ACCEPTED;
+      this.doFormSubmissionSave(formSubmission);
+    }
+  }
+
+  override beforeEditFormSubmissionReturn(form: EditFormSubmissionReturnForm): void {
+      
+    if(confirm('Are you sure you want to return the form submission?')) {
+
+      let formSubmission: FormSubmissionVO = form.formSubmission;
+      formSubmission.submissionStatus = FormSubmissionStatus.RETURNED;
       this.doFormSubmissionSave(formSubmission);
     }
   }
@@ -354,7 +358,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         period: this.createPeriodVOGroup(formSubmission?.period),
         licensee: this.createLicenseeVOGroup(formSubmission?.licensee),
         dataFields: this.createDataFieldVOArray(formSubmission?.dataFields),
-        submissionStatus: [{value: formSubmission?.submissionStatus, disabled: true}, [Validators.required, ]],
+        submissionStatus: [{value: formSubmission?.submissionStatus, disabled: false}, [Validators.required, ]],
         upload: [{value: formSubmission?.upload, disabled: false}],
         notes: this.createNoteVOArray(formSubmission?.notes),
         sections: this.createDataFieldSectionVOArray(formSubmission?.sections),

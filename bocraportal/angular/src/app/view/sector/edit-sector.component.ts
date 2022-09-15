@@ -31,6 +31,7 @@ import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/sector
 import { SectorFormVO } from '@app/model/bw/org/bocra/portal/sector/form/sector-form-vo';
 import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 import { SectorRestController } from '@app/service/bw/org/bocra/portal/sector/sector-rest-controller';
+import { MatTableDataSource } from '@angular/material/table';
 
 export class EditSectorSaveForm {
     sector: SectorVO | any;
@@ -84,6 +85,7 @@ export abstract class EditSectorComponent implements OnInit, AfterViewInit, OnDe
     @ViewChild('sectorLicenseesModalSort', {static: true}) sectorLicenseesModalSort: MatSort;
 
     sectorLicensees$: Observable<LicenseeVO[]>;
+    sectorLicenseesDataSource = new MatTableDataSource<LicenseeVO>([]);
     sectorLicensee$: Observable<LicenseeSectorVO>;
     sectorLicenseesSearchField: FormControl;
     sectorLicenseesSelect: SectorVO[] = [];
@@ -106,6 +108,7 @@ export abstract class EditSectorComponent implements OnInit, AfterViewInit, OnDe
     @ViewChild('sectorFormsModalSort', {static: true}) sectorFormsModalSort: MatSort;
 
     sectorForms$: Observable<FormVO[]>;
+    sectorFormsDataSource = new MatTableDataSource<FormVO>([]);
     sectorForm$: Observable<SectorFormVO>;
     sectorFormsSearchField: FormControl;
     sectorFormsSelect: FormVO[] = [];
@@ -154,6 +157,18 @@ export abstract class EditSectorComponent implements OnInit, AfterViewInit, OnDe
                 this.handleFormChanges(change);
             }
         );
+
+        this.sectorLicensees$?.subscribe(data => {
+            this.sectorLicenseesDataSource.data = data;
+            this.sectorLicenseesDataSource.paginator = this.sectorLicenseesModalPaginator;
+            this.sectorLicenseesDataSource.sort = this.sectorLicenseesModalSort;
+        });
+
+        this.sectorForms$?.subscribe(data => {
+            this.sectorFormsDataSource.data = data;
+            this.sectorFormsDataSource.paginator = this.sectorFormsModalPaginator;
+            this.sectorFormsDataSource.sort = this.sectorFormsModalSort;
+        });
         
         this.afterOnInit();
     }

@@ -225,7 +225,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   }
 
   override createPeriodVOGroup(value: PeriodVO): FormGroup {
-    console.log(value);
+    
     return this.formBuilder.group({
         id: [value?.id],
         periodName: [value?.periodName],
@@ -242,4 +242,18 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         }
     });
   }
+
+  override editFormActivationFormReset() {
+
+    this.store.dispatch(FormActivationActions.formActivationReset());
+    this.formActivationFormSubmissionsControl.clear()
+    this.editFormActivationForm.reset()
+    this.editFormActivationForm.markAsPristine();
+
+    if(this.router.url.substring(0, this.router.url.indexOf('?'))) {
+        this.router.navigate([this.router.url.substring(0, this.router.url.indexOf('?'))]);
+    } else {
+        this.router.navigate([this.router.url]);
+    }
+}
 }

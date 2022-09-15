@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.form.submission;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -103,6 +104,7 @@ public class SubmissionServiceImpl
         vo.setSubmittedBy(formSubmission.getSubmittedBy());
         vo.setSubmissionDate(formSubmission.getSubmissionDate());
         vo.setSubmissionStatus(formSubmission.getSubmissionStatus());
+        vo.setExpectedSubmissionDate(formSubmission.getExpectedSubmissionDate());
 
         LicenseeVO lvo = new LicenseeVO();
         lvo.setId(formSubmission.getLicensee().getId());
@@ -222,29 +224,7 @@ public class SubmissionServiceImpl
             sSpecs = sSpecs.and(specs);
         }
         summary.setAllSubmissions(formSubmissionRepository.count(sSpecs));
-
-        /**
-         * Get all values related to status
-         */
-        sSpecs = BocraportalSpecifications
-                .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.NEW);
-
-        if (specs != null) {
-            sSpecs = sSpecs.and(specs);
-        }
-        summary.setNewSubmissions(formSubmissionRepository.count(sSpecs));
         
-        /**
-         * Get count of draft submissions
-         */
-        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
-                FormSubmissionStatus.DRAFT);
-
-        if (specs != null) {
-            sSpecs = sSpecs.and(specs);
-        }
-        summary.setDraftSubmissions(formSubmissionRepository.count(sSpecs));
-
         /**
          * Get count of returned submissions
          */
@@ -257,16 +237,27 @@ public class SubmissionServiceImpl
         summary.setReturnedSubmissions(formSubmissionRepository.count(sSpecs));
 
         /**
+         * Get count of accepted submissions
+         */
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
+                FormSubmissionStatus.ACCEPTED);
+
+        if (specs != null) {
+            sSpecs = sSpecs.and(specs);
+        }
+        summary.setReturnedSubmissions(formSubmissionRepository.count(sSpecs));
+
+        /**
          * Get count of overdue submissions
          */
         sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
                 "submissionStatus", FormSubmissionStatus.DRAFT)
                 .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
-                    "submissionStatus", FormSubmissionStatus.NEW));
-                //.or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
-                //    "submissionStatus", FormSubmissionStatus.));
-        sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("expectedSubmissionDate",
-                    LocalDateTime.now()));
+                    "submissionStatus", FormSubmissionStatus.NEW))
+                .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
+                    "submissionStatus", FormSubmissionStatus.OVERDUE));
+        sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, LocalDate>findByAttributeLessThan("expectedSubmissionDate",
+        LocalDate.now()));
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);
@@ -274,10 +265,35 @@ public class SubmissionServiceImpl
 
         Collection<FormSubmission> overdue = formSubmissionRepository.findAll(sSpecs);
         for(FormSubmission sub : overdue) {
-            
+            if(sub.getSubmissionStatus() != FormSubmissionStatus.OVERDUE) {
+                sub.setSubmissionStatus(FormSubmissionStatus.OVERDUE);
+                formSubmissionRepository.saveAndFlush(sub);
+            }
         }
 
         summary.setOverdueSubmissions(formSubmissionRepository.count(sSpecs));
+
+        /**
+         * Get all values related to status
+         */
+        sSpecs = BocraportalSpecifications
+                .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.NEW);
+
+        if (specs != null) {
+            sSpecs = sSpecs.and(specs);
+        }
+        summary.setNewSubmissions(formSubmissionRepository.count(sSpecs));
+
+        /**
+         * Get count of draft submissions
+         */
+        sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
+                    FormSubmissionStatus.DRAFT);
+
+        if (specs != null) {
+            sSpecs = sSpecs.and(specs);
+        }
+        summary.setDraftSubmissions(formSubmissionRepository.count(sSpecs));
 
         return summary;
     }

@@ -34,4 +34,7 @@ export class SubmissionProcessingImpl extends SubmissionProcessing {
 	public doNewSubmissions(form: any): void {
 	}
 
+	public doAcceptedSubmissions(form: any): void {
+	}
+
 }

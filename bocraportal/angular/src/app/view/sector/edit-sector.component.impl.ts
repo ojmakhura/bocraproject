@@ -65,7 +65,6 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     });
 
     this.sectorLicensee$.subscribe((ls) => {
-      console.log(ls);
       if (ls?.id) this.addToSectorLicensees(ls);
     });
 
