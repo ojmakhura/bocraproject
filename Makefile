@@ -60,8 +60,8 @@ endif
 build_image: gen_env
 	. ./.env && docker compose -f ${stack_file}.yml build
 
-build_api_image: build_api
-	. ./.env && docker compose build api
+build_api_image: build_api gen_env
+	. ./.env && docker compose build --build-arg CERT=${CERT} --build-arg CERT_PASSWORD=${CERT_PASSWORD} api
 
 build_web_image: gen_env
 	. ./.env && docker compose build web

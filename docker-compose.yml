@@ -223,7 +223,7 @@ services:
     healthcheck:
       test: "curl -m 5 --silent --fail --request GET http://localhost:8085/actuator/health | grep UP || exit 1"
       interval: 5s
-      timeout: 10s
+      timeout: 25s
       retries: 3
       start_period: 5s
     depends_on:
@@ -252,6 +252,8 @@ services:
       KEYCLOAK_API_CLIENT_SECRET: ${KEYCLOAK_API_CLIENT_SECRET}
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
       TZ: Africa/Gaborone
+      # CERT: ${CERT}
+      # CERT_PASSWORD: ${CERT_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"

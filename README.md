@@ -41,7 +41,11 @@ The build process for this application uses the make command. Make sure it has b
 2. Run the command 'make run_web_local'
 
 # Self Signed cert
+## localhost domain
 mkcert -key-file localhost.key -cert-file localhost.crt localhost keycloak.localhost api.localhost db.localhost proxy.localhost prometheus.localhost portainer.localhost unsee.localhost grafana.localhost *.localhost
 
-# Import self signed certs
+## csdev.roguesystems.co.bw domain
+mkcert -key-file csdev.roguesystems.co.bw.key -cert-file csdev.roguesystems.co.bw.crt csdev.roguesystems.co.bw keycloak.csdev.roguesystems.co.bw api.csdev.roguesystems.co.bw db.csdev.roguesystems.co.bw proxy.csdev.roguesystems.co.bw prometheus.csdev.roguesystems.co.bw portainer.csdev.roguesystems.co.bw unsee.csdev.roguesystems.co.bw grafana.csdev.roguesystems.co.bw *.csdev.roguesystems.co.bw
+
+# Import self signed certs on for running api locally
 keytool -importcert -file /home/junior/bocra/certs/localhost.crt -noprompt -alias localhostbocra -storepass changeit -keystore /usr/lib/jvm/java-1.11.0-openjdk-amd64/lib/security/cacerts
