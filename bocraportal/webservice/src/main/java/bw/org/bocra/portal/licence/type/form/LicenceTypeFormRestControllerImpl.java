@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
 @RestController
 @RequestMapping("/licence/type/form")
 @CrossOrigin()
@@ -28,6 +30,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleCreate(Long licenceTypeId, Long formId) {
         try {
+            logger.debug("Error detected Licence Type Form Service ");
             Optional<?> data = Optional.of(licenceTypeFormService.create(licenceTypeId, formId));
             ResponseEntity<?> response;
 
@@ -47,6 +50,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleFindByForm(Long formId) {
         try {
+            logger.debug("Error detected Licence Type Form Service handleFindByForm "+formId);
             Optional<?> data = Optional.ofNullable(licenceTypeFormService.findByForm(formId));
             ResponseEntity<?> response;
 
@@ -66,6 +70,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("Error detected Licence Type Form Service handleFindById "+id);
             Optional<?> data = Optional.of(licenceTypeFormService.findById(id));
             ResponseEntity<?> response;
 
@@ -85,6 +90,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleFindByLicenceType(Long licenceTypeId) {
         try {
+            logger.debug("Error detected Licence Type Form Service handleFindByLicenceType "+licenceTypeId);
             Optional<?> data = Optional.of(licenceTypeFormService.findByLicenceType(licenceTypeId));
             ResponseEntity<?> response;
 
@@ -104,6 +110,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("Error detected Licence Type Form Service handleGetAll");
             Optional<?> data = Optional.of(licenceTypeFormService.getAll());
             ResponseEntity<?> response;
 
@@ -123,6 +130,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("Error detected Licence Type Form Service handleRemove "+id);
             Optional<?> data = Optional.of(licenceTypeFormService.remove(id));
             ResponseEntity<?> response;
 
@@ -142,6 +150,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleUpdateForm(Long id, Long formId) {
         try {
+            logger.debug("Error detected Licence Type Form Service handleUpdateForm "+id+" "+formId);
             Optional<?> data = Optional.of(licenceTypeFormService.updateForm(id, formId));
             ResponseEntity<?> response;
 
@@ -161,6 +170,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     @Override
     public ResponseEntity<?> handleUpdateLicenceType(Long id, Long licenceTypeId) {
         try {
+            logger.debug("Error detected Licence Type Form Service handleUpdateLicenceType "+id+" "+licenceTypeId);
             Optional<?> data = Optional.of(licenceTypeFormService.updateLicenceType(id, licenceTypeId));
             ResponseEntity<?> response;
 

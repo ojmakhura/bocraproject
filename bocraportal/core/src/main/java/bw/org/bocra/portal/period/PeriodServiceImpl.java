@@ -60,7 +60,7 @@ public class PeriodServiceImpl
         Period period = periodDao.periodVOToEntity(periodVO);
         period = this.periodRepository.save(period);
 
-        if(periodVO.getId() != null) {
+        if(periodVO.getId() == null) {
             periodVO = getPeriodDao().toPeriodVO(period);
         }
 

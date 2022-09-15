@@ -13,12 +13,12 @@ export class UserEffects {
     private actions$: Actions,
     private userRestController: UserRestController,
     private licenseeRestController: LicenseeRestController
-  ) {}
+  ) { }
 
   createUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.createUser),
-      mergeMap(({ user }) => 
+      mergeMap(({ user }) =>
         this.userRestController.createUser(user).pipe(
           map((user) =>
             UserActions.createUserSuccess({
@@ -33,16 +33,6 @@ export class UserEffects {
     )
   );
 
-  // updateUserName$ = createEffect(() =>
-  //      this.actions$.pipe(
-  //         ofType(UserActions.updateUserName),
-  //         mergeMap(({ username, userId }) => this.userRestController.updateUserName(username, userId).pipe(
-  //             map( results => UserActions.updateUserNameSuccess({results})),
-  //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
-  //         ))
-  //     )
-  // );
-
   loadUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.loadUsers),
@@ -56,44 +46,24 @@ export class UserEffects {
   );
 
   findById$ = createEffect(() =>
-       this.actions$.pipe(
-          ofType(UserActions.findById),
-          mergeMap(({ userId }) => this.userRestController.findUserById(userId).pipe(
-              map( (user) => UserActions.findByIdSuccess({ user: user, messages: [], success: false })),
-              catchError(({error}) => [UserActions.userFailure({messages: [error]})])
-          ))
-      )
+    this.actions$.pipe(
+      ofType(UserActions.findById),
+      mergeMap(({ userId }) => this.userRestController.findUserById(userId).pipe(
+        map((user) => UserActions.findByIdSuccess({ user: user, messages: [`User ${user.username}`], success: true })),
+        catchError(({ error }) => [UserActions.userFailure({ messages: [error] })])
+      ))
+    )
   );
 
-  // save$ = createEffect(() =>
-  //      this.actions$.pipe(
-  //         ofType(UserActions.save),
-  //         mergeMap(({ licensee }) => this.licenseeRestController.save(licensee).pipe(
-  //             map( results => UserActions.saveSuccess({results})),
-  //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
-  //         ))
-  //     )
-  // );
-
-  // remove$ = createEffect(() =>
-  //      this.actions$.pipe(
-  //         ofType(UserActions.remove),
-  //         mergeMap(({ id }) => this.licenseeRestController.remove(id).pipe(
-  //             map( results => UserActions.removeSuccess({results})),
-  //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
-  //         ))
-  //     )
-  // );
-
-  // getAll$ = createEffect(() =>
-  //      this.actions$.pipe(
-  //         ofType(UserActions.getAll),
-  //         mergeMap(() => this.licenseeRestController.getAll().pipe(
-  //             map( results => UserActions.getAllSuccess({results})),
-  //             catchError(({error}) => [UserActions.userFailure({messages: [error]})])
-  //         ))
-  //     )
-  // );
+  changePassword$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.changePassword),
+      mergeMap(({ userId, newPassword }) => this.userRestController.changePassword(userId, newPassword).pipe(
+        map((message) => UserActions.changePasswordSuccess({ messages: [message], success: true })),
+        catchError(({ error }) => [UserActions.userFailure({ messages: [error] })])
+      ))
+    )
+  );
 
   search$ = createEffect(() =>
     this.actions$.pipe(

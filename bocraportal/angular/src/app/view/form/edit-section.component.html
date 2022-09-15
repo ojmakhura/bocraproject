@@ -78,7 +78,7 @@
 	</div>
 </div>
 <div mat-dialog-actions>
-	<button type="button" class="btn btn-primary" color="accent" (click)="cancelDialog()" translate>action.cancel</button>
+	<button type="button" class="btn btn-primary" color="accent" mat-dialog-close translate>action.cancel</button>
     &nbsp;&nbsp;&nbsp;&nbsp;
 	<button type="button" class="btn btn-primary" color="accent" (click)="dialogDone()" translate>action.done</button>
 </div>
@@ -107,7 +107,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="formSectionFormFields$ | async" #formSectionFormFieldsModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="formSectionFormFieldsDataSource" #formSectionFormFieldsModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">
@@ -173,7 +173,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="formSectionForms$ | async" #formSectionFormModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="formSectionFormsDataSource" #formSectionFormModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">

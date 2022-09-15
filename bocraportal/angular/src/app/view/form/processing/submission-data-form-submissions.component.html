@@ -15,21 +15,33 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="licensee.licenseeName">
-                <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>licensee.licensee.name</span></mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>licensee.name</span></mat-header-cell>
                 <mat-cell *matCellDef="let row"> 
                     {{ row?.licensee?.licenseeName }}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="form.formName">
-                <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>form.form.name</span></mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>form.name</span></mat-header-cell>
                 <mat-cell *matCellDef="let row"> 
                     {{ row?.form?.formName }}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="period.periodName">
-                <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>period.period.name</span></mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>period.name</span></mat-header-cell>
                 <mat-cell *matCellDef="let row"> 
                     {{ row?.period?.periodName }}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="expectedSubmissionDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>expected.submission.date</span></mat-header-cell>
+                <mat-cell *matCellDef="let row"> 
+                    {{ row?.expectedSubmissionDate }}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="submissionStatus">
+                <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>submission.status</span></mat-header-cell>
+                <mat-cell *matCellDef="let row"> 
+                    {{ row?.submissionStatus }}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="actions">

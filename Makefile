@@ -1,7 +1,12 @@
 include ./Makefile.dev
 
-gen_self_certs: gen_env
-	. ./.env && sudo rm ${BOCRA_DATA}/traefik/${DOMAIN}.crt && . ./.env && sudo rm ${BOCRA_DATA}/traefik/${DOMAIN}.key && . ./.env && sudo openssl req -x509 -sha256 -days 356 -nodes -newkey rsa:2048 -out ${BOCRA_DATA}/traefik/${DOMAIN}.crt -keyout ${BOCRA_DATA}/traefik/${DOMAIN}.key
+gen_self_certs:
+ifdef domain
+	mkcert -key-file deployment/certs/${domain}.key -cert-file deployment/certs/${domain}.crt ${domain} keycloak.${domain} api.${domain} db.${domain} proxy.${domain} prometheus.${domain} portainer.${domain} unsee.${domain} grafana.${domain} *.${domain}
+else
+	mkcert -key-file deployment/certs/localhost.key -cert-file deployment/certs/localhost.crt localhost keycloak.localhost api.localhost db.localhost proxy.localhost prometheus.localhost portainer.localhost unsee.localhost grafana.localhost *.localhost
+endif
+	
 
 build_mda:
 	mvn -f bocraportal/mda install -Dmaven.test.skip=true -o
@@ -60,11 +65,11 @@ endif
 build_image: gen_env
 	. ./.env && docker compose -f ${stack_file}.yml build
 
-build_api_image: build_api
-	. ./.env && docker compose -f docker-compose-api.yml build
+build_api_image: build_api gen_env
+	. ./.env && docker compose build --build-arg CERT=${CERT} --build-arg CERT_PASSWORD=${CERT_PASSWORD} api
 
 build_web_image: gen_env
-	. ./.env && docker compose -f docker-compose-web.yml build
+	. ./.env && docker compose build web
 
 build_keycloak_image: gen_env
 	. ./.env && docker compose -f docker-compose-keycloak.yml build
@@ -73,13 +78,13 @@ build_keycloak_image: gen_env
 build_images: gen_env build_keycloak_image build_web_image build_api_image
 
 ###
-## puch the images
+## tag and push the images
 ###
 push_web_image: gen_env
-	. ./.env && docker push ${REGISTRY_TAG}/${WEB_IMAGE_NAME}:latest${IMAGE_VERSION_SUFFIX}
+	. ./.env && docker push ${REGISTRY_TAG}/${WEB_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}
 
 push_api_image: gen_env
-	. ./.env && docker push ${REGISTRY_TAG}/${API_IMAGE_NAME}:latest${IMAGE_VERSION_SUFFIX}
+	. ./.env && docker push ${REGISTRY_TAG}/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}
 
 push_keycloak_image: gen_env
 	. ./.env && echo ${KEYCLOAK_REGISTRY_IMAGE}

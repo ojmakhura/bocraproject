@@ -10,6 +10,7 @@ import * as AuthSelectors from '@app/store/auth/auth.selectors';
 import { AuthState } from '@app/store/auth/auth.state';
 import * as MenuActions from '@app/store/menu/menu.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
+import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { from, Observable, of } from 'rxjs';
@@ -40,43 +41,40 @@ export class ShellComponent implements OnInit, AfterViewInit {
     this.username$ = this.store.pipe(select(AuthSelectors.selectUsername));
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   ngAfterViewInit(): void {
     this.keycloakService.isLoggedIn().then((loggedIn) => {
       if (loggedIn) {
         this.isLoggedIn = of(loggedIn);
         this.store.dispatch(AuthActions.setUsername({ username: this.keycloakService.getUsername() }));
+        this.authorisationRestController
+          .getAccessTypeCodeAuthorisations(this.keycloakService.getUserRoles(), 'MENU')
+          .subscribe((authorisations) => {
+            authorisations.forEach((authorisation: AuthorisationVO) => {
+              let menu: Menu = nav.menuItems.find((item) => authorisation.accessPoint.url === item.routerLink);
+              if (menu) {
+                let m: Menu = new Menu();
+                m.icon = authorisation.accessPoint.icon ? authorisation.accessPoint.icon : 'fa-puzzle-piece';
+                m.routerLink = menu.initialView;
+                m.titleKey = authorisation.accessPoint.name;
+                this.store.dispatch(MenuActions.addMenu({ menu: m }));
+              }
+            });
+          });
       }
     });
-
-    let auths = new Set();
-
-    this.authorisationRestController
-      .getAccessTypeCodeAuthorisations(this.keycloakService.getUserRoles(), 'MENU')
-      .subscribe((authorisations) => {
-        authorisations.forEach((authorisation: AuthorisationVO) => {
-          let menu: Menu = nav.menuItems.find((item) => authorisation.accessPoint.url === item.routerLink);
-          if (menu) {
-            let m: Menu = new Menu();
-            m.icon = authorisation.accessPoint.icon ? authorisation.accessPoint.icon : "fa-puzzle-piece";
-            m.routerLink = menu.routerLink;
-            m.titleKey = authorisation.accessPoint.name;
-            this.store.dispatch(MenuActions.addMenu({ menu: m }));
-          }
-        });
-      });
   }
 
   logout() {
-    this.keycloakService.logout().then(() => {
+    this.keycloakService.logout(environment.redirectUri).then(() => {
       this.store.dispatch(AuthActions.authReset());
       this.store.dispatch(MenuActions.menuReset());
     });
   }
   login() {
     this.keycloakService.login({
-      redirectUri: window.location.origin
+      redirectUri: window.location.origin,
     });
   }
   get username(): string | null {
@@ -93,11 +91,10 @@ export class ShellComponent implements OnInit, AfterViewInit {
   }
 
   editProfile() {
-    this.keycloakService.loadUserProfile().then(profile => {
+    this.keycloakService.loadUserProfile().then((profile) => {
       if (profile?.id) {
-        this.router.navigate(["/user/edit-user"], { queryParams: { userId: profile?.id } });
+        this.router.navigate(['/user/edit-user'], { queryParams: { userId: profile?.id } });
       }
-    })
-
+    });
   }
 }

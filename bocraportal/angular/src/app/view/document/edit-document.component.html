@@ -196,7 +196,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="documentLicences$ | async" #documentLicenceModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="documentLicencesDataSource" #documentLicenceModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">
@@ -268,7 +268,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="documentLicensees$ | async" #documentLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="documentLicenseesDataSource" #documentLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">
@@ -328,7 +328,7 @@
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="documentDocumentTypes$ | async" #documentDocumentTypeModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="documentDocumentTypesDataSource" #documentDocumentTypeModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">

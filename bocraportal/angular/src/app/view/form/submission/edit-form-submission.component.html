@@ -22,7 +22,7 @@
 				</div>
 			</div>
 			<div formGroupName="formSubmission">
-				<fieldset formGroupName="form">
+				<fieldset class="mb-3" formGroupName="form">
 					<div class="row mb-3">
 						<label for="formSubmissionFormFormName" class="col-sm-2 col-form-label"
 							translate>form.name</label>
@@ -34,7 +34,8 @@
 								data-bs-target="#formSubmissionFormModal" *ngIf="addUnrestricted">
 								<mat-icon>add_box</mat-icon>
 							</button>
-							<button type="button" (click)="formSubmissionFormClear()" class="btn btn-outline-primary" *ngIf="addUnrestricted">
+							<button type="button" (click)="formSubmissionFormClear()" class="btn btn-outline-primary"
+								*ngIf="addUnrestricted">
 								<mat-icon>clear</mat-icon>
 							</button>
 						</div>
@@ -49,7 +50,7 @@
 						</div>
 					</div>
 				</fieldset>
-				<fieldset formGroupName="period">
+				<fieldset class="mb-3" formGroupName="period">
 					<div class="row mb-3">
 						<label for="formSubmissionPeriodPeriodName" class="col-sm-2 col-form-label"
 							translate>period.name</label>
@@ -61,13 +62,14 @@
 								data-bs-target="#formSubmissionPeriodModal" *ngIf="addUnrestricted">
 								<mat-icon>add_box</mat-icon>
 							</button>
-							<button type="button" (click)="formSubmissionPeriodClear()" class="btn btn-outline-primary" *ngIf="addUnrestricted">
+							<button type="button" (click)="formSubmissionPeriodClear()" class="btn btn-outline-primary"
+								*ngIf="addUnrestricted">
 								<mat-icon>clear</mat-icon>
 							</button>
 						</div>
 					</div>
 				</fieldset>
-				<fieldset formGroupName="licensee">
+				<fieldset class="mb-3" formGroupName="licensee">
 					<div class="row mb-3">
 						<label for="formSubmissionLicenseeLicenseeName" class="col-sm-2 col-form-label"
 							translate>licensee.name</label>
@@ -131,7 +133,7 @@
 						<label id="formSubmissionUpload_label" class="col-sm-2 col-form-label"
 							for="formSubmissionUpload"><span translate>upload</span></label>
 						<input type="file" id="formSubmissionUpload" class="form-control"
-							(change)="onFileSelected($event)"/>
+							(change)="onFileSelected($event)" />
 					</div>
 					<div>
 						<button type="button" class="btn btn-primary" (click)="uploadData()"
@@ -186,8 +188,7 @@
 				<div class="mb-3">
 					<label id="formSubmissionSubmissionStatus_label" class="col-sm-2 col-form-label"
 						for="formSubmissionSubmissionStatus"><span translate>submission.status</span>*</label>
-					<input type="text" id="formSubmissionSubmissionStatus" class="form-control" name="submissionStatus"
-						formControlName="submissionStatus" required />
+					<label>{{formSubmissionSubmissionStatus}}</label>
 					<div *ngIf="
 				editFormSubmissionForm.invalid &&
 				formSubmissionSubmissionStatusControl.invalid &&
@@ -208,18 +209,25 @@
 						class="btn btn-outline-primary" *ngIf="formSubmissionId && deleteUnrestricted">
 						<span translate>delete</span>
 					</button>
-
 					<button type="button" color="accent" (click)="editFormSubmissionNote()"
 						class="btn btn-outline-primary" *ngIf="formSubmissionId">
 						<span translate>note</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionSubmit()"
-						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted">
+						class="btn btn-outline-primary" *ngIf="formSubmissionId">
 						<span translate>submit</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionReturn()"
 						class="btn btn-outline-primary" *ngIf="returnUnrestricted && formDisabled()">
 						<span translate>return</span>
+					</button>
+					<button type="button" color="accent" (click)="editFormSubmissionAccept()"
+						class="btn btn-outline-primary" *ngIf="formSubmissionId && acceptUnrestricted">
+						<span translate>accept</span>
+					</button>
+					<button type="button" color="accent" (click)="editFormSubmissionViewNotes()"
+						class="btn btn-outline-primary" *ngIf="formSubmissionId">
+						<span translate>view.notes</span>
 					</button>
 					<button color="accent" type="button" (click)="editFormSubmissionFormReset()"
 						class="btn btn-outline-primary">
@@ -235,71 +243,6 @@
 		</form>
 	</div>
 </div>
-
-<!-- Modal for form -->
-<div class="modal fade" id="formSubmissionFormModal" tabindex="-1" aria-labelledby="formSubmissionFormLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="formSubmissionFormAddLabel" translate>
-                    action.select
-                    <span translate>form</span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <form>
-                        <div>
-                            <mat-form-field>
-                            <mat-label translate>search</mat-label>
-                            <input matInput type="text" [formControl]="formSubmissionFormSearchField"
-                                id="formSubmissionFormSearchField" />
-                            </mat-form-field>
-                        </div>
-                        <button type="button" (click)="formSubmissionFormSearch()" class="btn btn-primary">
-                            <mat-icon>search</mat-icon>
-                        </button>
-                    </form>
-                </div>
-             <mat-table matSort [dataSource]="formSubmissionForms$ | async" #formSubmissionFormModalSort="matSort" class="table table-bordered" style="width: 100%;">
-                 <ng-container matColumnDef="actions">
-                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-                     <mat-cell *matCellDef="let row; let i=index">
-                         <mat-radio-group (change)="formSubmissionFormSelected($event, row)">
-                             <mat-radio-button [value]="row" [checked]='formSubmissionFormSelect.id === row?.id'></mat-radio-button>
-                         </mat-radio-group>
-                     </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="id">
-                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="code">
-                     <mat-header-cell *matHeaderCellDef translate>code</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.code }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="formName">
-                     <mat-header-cell *matHeaderCellDef translate>form.name</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.formName }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="entryType">
-                     <mat-header-cell *matHeaderCellDef translate>entry.type</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.entryType }} </mat-cell>
-                 </ng-container>
-                 <mat-header-row *matHeaderRowDef="formSubmissionFormModalColumns"></mat-header-row>
-                 <mat-row *matRowDef="let row; columns: formSubmissionFormModalColumns;"></mat-row>
-             </mat-table>
-             <mat-paginator #formSubmissionFormModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-                <button type="button" class="btn btn-primary" (click)="addSelectedFormSubmissionForm()" data-bs-dismiss="modal" translate>save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Modal for period -->
 <div class="modal fade" id="formSubmissionPeriodModal" tabindex="-1" aria-labelledby="formSubmissionPeriodLabel"
 	aria-hidden="true">
@@ -356,6 +299,10 @@
 							<mat-header-cell *matHeaderCellDef translate>period.end</mat-header-cell>
 							<mat-cell *matCellDef="let row"> {{ row.periodEnd }} </mat-cell>
 						</ng-container>
+						<ng-container matColumnDef="periodConfig.periodConfigName">
+							<mat-header-cell *matHeaderCellDef translate>period.config.name</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.periodConfig?.periodConfigName }} </mat-cell>
+						</ng-container>
 						<mat-header-row *matHeaderRowDef="formSubmissionPeriodModalColumns"></mat-header-row>
 						<mat-row *matRowDef="let row; columns: formSubmissionPeriodModalColumns"></mat-row>
 					</mat-table>
@@ -373,70 +320,72 @@
 			</div>
 		</div>
 	</div>
-</div>
 
-<!-- Modal for licensee -->
-<div class="modal fade" id="formSubmissionLicenseeModal" tabindex="-1" aria-labelledby="formSubmissionLicenseeLabel"
-	aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="formSubmissionLicenseeAddLabel" translate>
-					action.select
-					<span translate>licensee</span>
-				</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<div>
-					<form>
-						<div>
-							<mat-form-field>
-								<mat-label translate>search</mat-label>
-								<input matInput type="text" [formControl]="formSubmissionLicenseeSearchField"
-									id="formSubmissionLicenseeSearchField" />
-							</mat-form-field>
-						</div>
-						<button type="button" (click)="formSubmissionLicenseeSearch()" class="btn btn-primary">
-							<mat-icon>search</mat-icon>
-						</button>
-					</form>
+	<!-- Modal for licensee -->
+	<div class="modal fade" id="formSubmissionLicenseeModal" tabindex="-1" aria-labelledby="formSubmissionLicenseeLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="formSubmissionLicenseeAddLabel" translate>
+						action.select
+						<span translate>licensee</span>
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<mat-table matSort [dataSource]="formSubmissionLicensees$ | async"
-					#formSubmissionLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%">
-					<ng-container matColumnDef="actions">
-						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-						<mat-cell *matCellDef="let row; let i = index">
-							<mat-radio-group (change)="formSubmissionLicenseeSelected($event, row)">
-								<mat-radio-button [value]="row" [checked]="formSubmissionLicenseeSelect.id === row.id">
-								</mat-radio-button>
-							</mat-radio-group>
-						</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="id">
-						<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-						<mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="uin">
-						<mat-header-cell *matHeaderCellDef translate>uin</mat-header-cell>
-						<mat-cell *matCellDef="let row"> {{ row.uin }} </mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="licenseeName">
-						<mat-header-cell *matHeaderCellDef translate>licensee.name</mat-header-cell>
-						<mat-cell *matCellDef="let row"> {{ row.licenseeName }} </mat-cell>
-					</ng-container>
-					<mat-header-row *matHeaderRowDef="formSubmissionLicenseeModalColumns"></mat-header-row>
-					<mat-row *matRowDef="let row; columns: formSubmissionLicenseeModalColumns"></mat-row>
-				</mat-table>
-				<mat-paginator #formSubmissionLicenseeModalPaginator="matPaginator" [pageSize]="10"
-					[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-				<button type="button" class="btn btn-primary" (click)="addSelectedFormSubmissionLicensee()"
-					data-bs-dismiss="modal" translate>
-					save
-				</button>
+				<div class="modal-body">
+					<div>
+						<form>
+							<div>
+								<mat-form-field>
+									<mat-label translate>search</mat-label>
+									<input matInput type="text" [formControl]="formSubmissionLicenseeSearchField"
+										id="formSubmissionLicenseeSearchField" />
+								</mat-form-field>
+							</div>
+							<button type="button" (click)="formSubmissionLicenseeSearch()" class="btn btn-primary">
+								<mat-icon>search</mat-icon>
+							</button>
+						</form>
+					</div>
+					<mat-table matSort [dataSource]="formSubmissionLicensees$ | async"
+						#formSubmissionLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%">
+						<ng-container matColumnDef="actions">
+							<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+							<mat-cell *matCellDef="let row; let i = index">
+								<mat-radio-group (change)="formSubmissionLicenseeSelected($event, row)">
+									<mat-radio-button [value]="row"
+										[checked]="formSubmissionLicenseeSelect.id === row.id">
+									</mat-radio-button>
+								</mat-radio-group>
+							</mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="id">
+							<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="uin">
+							<mat-header-cell *matHeaderCellDef translate>uin</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.uin }} </mat-cell>
+						</ng-container>
+						<ng-container matColumnDef="licenseeName">
+							<mat-header-cell *matHeaderCellDef translate>licensee.name</mat-header-cell>
+							<mat-cell *matCellDef="let row"> {{ row.licenseeName }} </mat-cell>
+						</ng-container>
+						<mat-header-row *matHeaderRowDef="formSubmissionLicenseeModalColumns"></mat-header-row>
+						<mat-row *matRowDef="let row; columns: formSubmissionLicenseeModalColumns"></mat-row>
+					</mat-table>
+					<mat-paginator #formSubmissionLicenseeModalPaginator="matPaginator" [pageSize]="10"
+						[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+						translate>action.close</button>
+					<button type="button" class="btn btn-primary" (click)="addSelectedFormSubmissionLicensee()"
+						data-bs-dismiss="modal" translate>
+						save
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>

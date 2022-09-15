@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
+import bw.org.bocra.portal.user.UserVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -27,14 +29,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
     protected static Logger logger = LoggerFactory.getLogger(SubmissionRestControllerImpl.class);
+    private final KeycloakUserService keycloakUserService;
 
-    public SubmissionRestControllerImpl(SubmissionService submissionService) {
+    public SubmissionRestControllerImpl(SubmissionService submissionService, KeycloakUserService keycloakUserService) {
         super(submissionService);
+        this.keycloakUserService = keycloakUserService;
     }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
+            logger.debug("Error detected at Submission Service handleFindById "+id);
             Optional<FormSubmissionVO> data = Optional.of(submissionService.findById(id));
             ResponseEntity<FormSubmissionVO> response;
     
@@ -55,6 +60,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
+            logger.debug("Error detected at Submission Service handleGetAll");
             Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll());
             ResponseEntity<Collection<FormSubmissionVO>> response;
     
@@ -75,6 +81,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
+            logger.debug("Error detected at Submission Service handleGetAllPaged "+pageNumber+" "+pageSize);
             Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll(pageNumber, pageSize));
             ResponseEntity<Collection<FormSubmissionVO>> response;
     
@@ -95,6 +102,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
+            logger.debug("Error detected at Submission Service handleRemove "+id);
             Optional<Boolean> data = Optional.of(submissionService.remove(id));
             ResponseEntity<Boolean> response;
     
@@ -115,6 +123,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(FormSubmissionVO formSubmissionVO) {
         try{
+            logger.debug("Error detected at Submission Service handleSave "+formSubmissionVO);
             Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmissionVO));
             ResponseEntity<FormSubmissionVO> response;
     
@@ -135,6 +144,14 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(FormSubmissionCriteria criteria) {
         try{
+            logger.debug("Error detected at Submission Service handleSearch "+criteria);
+
+            UserVO user = keycloakUserService.getLoggedInUser();
+
+            if(user.getLicensee() != null && user.getLicensee().getId() != null) {
+                criteria.setLicenseeId(user.getLicensee().getId());
+            }
+
             Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.search(criteria));
             ResponseEntity<Collection<FormSubmissionVO>> response;
     
@@ -155,6 +172,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDataField(DataFieldVO dataField) {
         try{
+            logger.debug("Error detected at Submission Service handleAddDataField "+dataField);
             Optional<DataFieldVO> data = Optional.of(submissionService.addDataField(dataField));
             ResponseEntity<DataFieldVO> response;
     
@@ -175,6 +193,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDataFields(Set<DataFieldVO> dataFields) {
         try{
+            logger.debug("Error detected at Submission Service handleAddDataFields "+dataFields);
             Optional<Collection<DataFieldVO>> data = Optional.of(submissionService.addDataFields(dataFields));
             ResponseEntity<Collection<DataFieldVO>> response;
     
@@ -195,6 +214,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleDeleteDataField(Long id) {
         try{
+            logger.debug("Error detected at Submission Service handleDeleteDataField "+id);
             Optional<Boolean> data = Optional.of(submissionService.deleteDataField(id));
             ResponseEntity<Boolean> response;
     
@@ -215,6 +235,13 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetSubmissionSummary(FormSubmissionCriteria criteria) {
         try{
+            logger.debug("Error detected at Submission Service handleGetSubmissionSummary "+criteria);
+            UserVO user = keycloakUserService.getLoggedInUser();
+
+            if(user.getLicensee() != null && user.getLicensee().getId() != null) {
+                criteria.setLicenseeId(user.getLicensee().getId());
+            }
+
             SubmissionSummary data = submissionService.getSubmissionSummary(criteria);
             ResponseEntity<SubmissionSummary> response;
     

@@ -104,7 +104,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     });
 
     this.licenseeDocument$.subscribe(document => {
-      this.addToLicenseeDocuments(document);
+      if(document?.id)
+        this.addToLicenseeDocuments(document);
     });
   }
 
@@ -158,7 +159,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
         })
       );
       this.documentDelete$.subscribe(removed => {
-        this.licenseeDocumentsControl.removeAt(index);
+        if(removed)
+          this.licenseeDocumentsControl.removeAt(index);
       });
       
     }
@@ -206,9 +208,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       }
       this.store.dispatch(LicenseeActions.licenseeFailure({ messages: messages }));
     }
-
-
   }
+
   override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
     if (form?.licensee?.id && confirm("Are you sure you want to delete the licensee?")) {
       this.store.dispatch(
@@ -270,14 +271,11 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override beforeEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm): void {
-    console.log(form);
-    console.log(this.useCaseScope.pageVariables);
-    console.log(this.licensee);
   }
 
   override afterEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm, dialogData: any): void {
     if (dialogData) {
-      console.log(dialogData);
+      
       this.store.dispatch(
         LicenseeActions.addDocument({
           id: this.licenseeId,
@@ -301,9 +299,9 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       file: [value?.file],
       documentId: [value?.documentId],
       documentType: {
-        id: [value.documentType.id],
-        code: [value.documentType.code],
-        name: [value.documentType.name],
+        id: [value?.documentType?.id],
+        code: [value?.documentType?.code],
+        name: [value?.documentType?.name],
       },
     });
   }

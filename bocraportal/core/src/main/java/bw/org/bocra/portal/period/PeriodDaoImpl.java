@@ -58,6 +58,7 @@ public class PeriodDaoImpl
             config.setStartMonth(source.getPeriodConfig().getStartDay());
             config.setRepeat(source.getPeriodConfig().getRepeat());
             config.setRepeatPeriod(source.getPeriodConfig().getRepeatPeriod());
+            config.setFinalDay(source.getPeriodConfig().getFinalDay());
 
             target.setPeriodConfig(config);
         }
