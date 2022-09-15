@@ -116,7 +116,7 @@ DEV_ENV = printf "%s\n" \
 TEST_ENV = printf "%s\n" \
 	"\#!/bin/sh"\
     "export BOCRA_DATA=${BOCRA_DATA}"\
-    "export IMAGE_VERSION=${IMAGE_VERSION}-ts"\
+    "export IMAGE_VERSION=${IMAGE_VERSION}"\
     "export DOMAIN=${TEST_DOMAIN}"\
     "export DB_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${TEST_DOMAIN}"\
     "export PGADMIN_DOMAIN=${BOCRA_DB_SUBDOMAIN}.${TEST_DOMAIN}"\

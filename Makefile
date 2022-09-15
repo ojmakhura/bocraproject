@@ -1,7 +1,12 @@
 include ./Makefile.dev
 
-gen_self_certs: gen_env
-	. ./.env && sudo rm ${BOCRA_DATA}/traefik/${DOMAIN}.crt && . ./.env && sudo rm ${BOCRA_DATA}/traefik/${DOMAIN}.key && . ./.env && sudo openssl req -x509 -sha256 -days 356 -nodes -newkey rsa:2048 -out ${BOCRA_DATA}/traefik/${DOMAIN}.crt -keyout ${BOCRA_DATA}/traefik/${DOMAIN}.key
+gen_self_certs:
+ifdef domain
+	mkcert -key-file deployment/certs/${domain}.key -cert-file deployment/certs/${domain}.crt ${domain} keycloak.${domain} api.${domain} db.${domain} proxy.${domain} prometheus.${domain} portainer.${domain} unsee.${domain} grafana.${domain} *.${domain}
+else
+	mkcert -key-file deployment/certs/localhost.key -cert-file deployment/certs/localhost.crt localhost keycloak.localhost api.localhost db.localhost proxy.localhost prometheus.localhost portainer.localhost unsee.localhost grafana.localhost *.localhost
+endif
+	
 
 build_mda:
 	mvn -f bocraportal/mda install -Dmaven.test.skip=true -o
