@@ -51,7 +51,11 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   rowGroups: RowGroup[] = [];
   submitUnrestricted: boolean = true;
   returnUnrestricted: boolean = true;
+<<<<<<< HEAD
   acceptUnrestricted: boolean = true;
+=======
+  addUnrestricted: boolean = true;
+>>>>>>> origin/patience-dev
 
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
@@ -113,6 +117,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       })
     );
 
+<<<<<<< HEAD
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
         if(item === '/form/submission/edit-form-submission/{button:delete}') {
@@ -132,6 +137,15 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         }
       });
     });
+=======
+    // this.unauthorisedUrls$.subscribe(restrictedItems => {
+    //   restrictedItems.forEach(item => {
+    //     if (item === '/form/submission/edit-form-submission/{button:delete}') {
+    //       this.deleteUnrestricted = false;
+    //     }
+    //   });
+    // });
+>>>>>>> origin/patience-dev
 
     this.formSubmission$.subscribe((submission) => {
       this.rowGroups = [];
@@ -152,6 +166,26 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
 
     this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
+<<<<<<< HEAD
+=======
+
+    this.unauthorisedUrls$.subscribe(restrictedItems => {
+      restrictedItems.forEach(item => {
+        if (item === '/form/submission/edit-form-submission/{button:delete}') {
+          this.deleteUnrestricted = false;
+        }
+        if (item === '/form/submission/edit-form-submission/{button:submit}') {
+          this.submitUnrestricted = false;
+        }
+        if (item === '/form/submission/edit-form-submission/{button:return}') {
+          this.returnUnrestricted = false;
+        }
+        if (item === '/form/submission/edit-form-submission/{button:add}') {
+          this.addUnrestricted = false;
+        }
+      });
+    });
+>>>>>>> origin/patience-dev
   }
 
   onRowChange(section: any, row: number) {
@@ -205,7 +239,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         })
       );
       this.editFormSubmissionFormReset();
-    }else {
+    } else {
       this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
     }
   }
@@ -219,19 +253,23 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       this.doFormSubmissionSave(form.formSubmission);
     } else {
       let messages: string[] = []
-      if(!this.formSubmissionControl.valid) {
+      if (!this.formSubmissionControl.valid) {
         messages.push("Form Submission has errors, Please fill in the required form fields")
-      }  
-      if(!this.formSubmissionSubmissionStatusControl.valid) {
+      }
+      if (!this.formSubmissionSubmissionStatusControl.valid) {
         messages.push("Form Submission Status is missing!")
-      }  
-    this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: messages }));
-  }
+      }
+      this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: messages }));
+    }
   }
 
   override beforeEditFormSubmissionSubmit(form: EditFormSubmissionSubmitForm): void {
 
+<<<<<<< HEAD
     if(confirm('Are you sure you want to submit the form submission? You will not be able to edit the data afterwards.')) {
+=======
+    if (confirm('Are you sure you want to submit the form? You will not be able to edit the data afterwards.')) {
+>>>>>>> origin/patience-dev
 
       let formSubmission: FormSubmissionVO = form.formSubmission;
 
@@ -347,6 +385,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   override createFormSubmissionForm(formSubmission: FormSubmissionVO): FormGroup {
     return this.formBuilder.group({
+<<<<<<< HEAD
         id: [{value: formSubmission?.id, disabled: false}],
         createdBy: [{value: formSubmission?.createdBy, disabled: false}],
         updatedBy: [{value: formSubmission?.updatedBy, disabled: false}],
@@ -363,8 +402,26 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         notes: this.createNoteVOArray(formSubmission?.notes),
         sections: this.createDataFieldSectionVOArray(formSubmission?.sections),
         expectedSubmissionDate: [{value: formSubmission?.expectedSubmissionDate, disabled: false}],
+=======
+      id: [{ value: formSubmission?.id, disabled: false }],
+      createdBy: [{ value: formSubmission?.createdBy, disabled: false }],
+      updatedBy: [{ value: formSubmission?.updatedBy, disabled: false }],
+      createdDate: [{ value: formSubmission?.createdDate, disabled: false }],
+      updatedDate: [{ value: formSubmission?.updatedDate, disabled: false }],
+      submittedBy: [{ value: formSubmission?.submittedBy, disabled: false }],
+      submissionDate: [{ value: formSubmission?.submissionDate, disabled: false }],
+      form: this.createFormVOGroup(formSubmission?.form),
+      period: this.createPeriodVOGroup(formSubmission?.period),
+      licensee: this.createLicenseeVOGroup(formSubmission?.licensee),
+      dataFields: this.createDataFieldVOArray(formSubmission?.dataFields),
+      submissionStatus: [{ value: formSubmission?.submissionStatus, disabled: true }, [Validators.required,]],
+      upload: [{ value: formSubmission?.upload, disabled: false }],
+      notes: this.createNoteVOArray(formSubmission?.notes),
+      sections: this.createDataFieldSectionVOArray(formSubmission?.sections),
+      expectedSubmissionDate: [{ value: formSubmission?.expectedSubmissionDate, disabled: false }],
+>>>>>>> origin/patience-dev
     });
-}
+  }
 
   override createDataFieldSectionVOGroup(value: DataFieldSectionVO): FormGroup {
     return this.formBuilder.group({
