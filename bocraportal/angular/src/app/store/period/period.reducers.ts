@@ -5,6 +5,11 @@ import {periodKey, initialState} from './period.state';
 
 export const periodReducer = createReducer(
     initialState,
+    on(PeriodActions.findById, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
+    })),
     on(PeriodActions.findByIdSuccess, (state, action) => ({
         ...state,
         period: action.period, 
@@ -12,6 +17,11 @@ export const periodReducer = createReducer(
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(PeriodActions.save, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(PeriodActions.saveSuccess, (state, action) => ({
         ...state,
@@ -21,6 +31,11 @@ export const periodReducer = createReducer(
         error: false,
         messages: action.messages
     })),
+    on(PeriodActions.remove, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
+    })),
     on(PeriodActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
@@ -28,6 +43,11 @@ export const periodReducer = createReducer(
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(PeriodActions.getAll, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(PeriodActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -37,6 +57,11 @@ export const periodReducer = createReducer(
         error: false,
         messages: action.messages
     })),
+    on(PeriodActions.search, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
+    })),
     on(PeriodActions.searchSuccess, (state, action) => ({
         ...state,
         periods: action.periods, 
@@ -44,6 +69,11 @@ export const periodReducer = createReducer(
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(PeriodActions.getAllPaged, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(PeriodActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -61,6 +91,7 @@ export const periodReducer = createReducer(
         id: null, 
         removed: false,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: false,
         messages: []
@@ -68,6 +99,7 @@ export const periodReducer = createReducer(
     on(PeriodActions.periodFailure, (state, action) => ({
         ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: true,
         messages: action.messages

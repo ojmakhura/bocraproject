@@ -5,63 +5,106 @@ import {sectorKey, initialState} from './sector.state';
 
 export const sectorReducer = createReducer(
     initialState,
+    on(SectorActions.findById, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
+    })),
     on(SectorActions.findByIdSuccess, (state, action) => ({
         ...state,
         sector: action.sector, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: []
+    })),
+    on(SectorActions.save, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(SectorActions.saveSuccess, (state, action) => ({
         ...state,
         sector: action.sector, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: []
+    })),
+    on(SectorActions.addLicensee, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(SectorActions.addLicenseeSuccess, (state, action) => ({
         ...state,
         licensee: action.licensee,
         licensees: [...state.licensees, action.licensee],
         loading: false,
+        loaderMessage: undefined,
         messages: []
     })),
     on(SectorActions.setLicensees, (state, action) => ({
         ...state,
         licensees: action.licensees,
         loading: false,
+        loaderMessage: undefined,
         messages: []
+    })),
+    on(SectorActions.remove, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(SectorActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: []
+    })),
+    on(SectorActions.getAll, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(SectorActions.getAllSuccess, (state, action) => ({
         ...state,
         sectors: action.sectors, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: []
+    })),
+    on(SectorActions.search, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(SectorActions.searchSuccess, (state, action) => ({
         ...state,
         sectors: action.sectors, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: []
+    })),
+    on(SectorActions.getAllPaged, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(SectorActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         sectors: action.sectors, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: []
@@ -73,6 +116,7 @@ export const sectorReducer = createReducer(
         sectors: [], 
         sector: null, 
         loading: false,
+        loaderMessage: undefined,
         success: false,
         removed: false,
         error: false,
@@ -81,6 +125,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.sectorFailure, (state, action) => ({
         ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: true,
         messages: action.messages
@@ -88,6 +133,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.sectorLoading, (state, action) => ({
         ...state,
         loading: action.loading,
+        loaderMessage: action.loaderMesage,
         success: false
     }))
 );

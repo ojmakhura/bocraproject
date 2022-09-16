@@ -5,6 +5,11 @@ import {complaintKey, initialState} from './complaint.state';
 
 export const complaintReducer = createReducer(
     initialState,
+    on(ComplaintActions.findById, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
+    })),
     on(ComplaintActions.findByIdSuccess, (state, action) => ({
         ...state,
         complaint: action.complaint, 
@@ -12,8 +17,14 @@ export const complaintReducer = createReducer(
         complaints: [], 
         id: null, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         messages: action.messages
+    })),
+    on(ComplaintActions.save, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(ComplaintActions.saveSuccess, (state, action) => ({
         ...state,
@@ -22,18 +33,30 @@ export const complaintReducer = createReducer(
         complaints: [], 
         id: null, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         messages: action.messages
+    })),
+    on(ComplaintActions.remove, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(ComplaintActions.removeSuccess, (state, action) => ({
         ...state,
         complaint: null, 
         criteria: null, 
+        removed: action.removed,
         complaints: [], 
         id: null, 
-        loading: action.removed,
+        loading: false,
         success: action.success,
         messages: action.messages
+    })),
+    on(ComplaintActions.getAll, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(ComplaintActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -42,8 +65,14 @@ export const complaintReducer = createReducer(
         complaints: action.complaints, 
         id: null, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         messages: action.messages
+    })),
+    on(ComplaintActions.search, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(ComplaintActions.searchSuccess, (state, action) => ({
         ...state,
@@ -52,8 +81,14 @@ export const complaintReducer = createReducer(
         complaints: action.complaints, 
         id: null, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         messages: action.messages
+    })),
+    on(ComplaintActions.getAllPaged, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(ComplaintActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -62,6 +97,7 @@ export const complaintReducer = createReducer(
         complaints: action.complaints, 
         id: null, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         messages: action.messages
     })),
@@ -73,6 +109,7 @@ export const complaintReducer = createReducer(
         id: null, 
         removed: false,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: false,
         messges: []
@@ -80,6 +117,7 @@ export const complaintReducer = createReducer(
     on(ComplaintActions.complaintFailure, (state, action) => ({
         ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: true,
         messages: action.messages

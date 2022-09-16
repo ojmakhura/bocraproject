@@ -5,15 +5,27 @@ import {documentTypeKey, initialState} from './document-type.state';
 
 export const documentTypeReducer = createReducer(
     initialState,
+    on(DocumentTypeActions.findById, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
+    })),
     on(DocumentTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
         documentType: action.documentType, 
         documentTypes: [], 
         criteria: null, 
         id: null, 
+        loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DocumentTypeActions.save, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(DocumentTypeActions.saveSuccess, (state, action) => ({
         ...state,
@@ -21,9 +33,16 @@ export const documentTypeReducer = createReducer(
         documentTypes: [], 
         criteria: null, 
         id: null, 
+        loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DocumentTypeActions.remove, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(DocumentTypeActions.removeSuccess, (state, action) => ({
         ...state,
@@ -31,10 +50,17 @@ export const documentTypeReducer = createReducer(
         documentTypes: [], 
         criteria: null, 
         id: null, 
+        loading: false,
+        loaderMessage: undefined,
         removed: action.removed,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DocumentTypeActions.getAll, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(DocumentTypeActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -42,9 +68,16 @@ export const documentTypeReducer = createReducer(
         documentTypes: action.documentTypes, 
         criteria: null, 
         id: null, 
+        loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DocumentTypeActions.search, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(DocumentTypeActions.searchSuccess, (state, action) => ({
         ...state,
@@ -52,9 +85,16 @@ export const documentTypeReducer = createReducer(
         documentTypes: action.documentTypes, 
         criteria: null, 
         id: null, 
+        loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DocumentTypeActions.getAllPaged, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(DocumentTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -62,6 +102,8 @@ export const documentTypeReducer = createReducer(
         documentTypes: action.documentTypes, 
         criteria: null, 
         id: null, 
+        loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
@@ -73,6 +115,7 @@ export const documentTypeReducer = createReducer(
         criteria: null, 
         id: null, 
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: false,
         messages: []
@@ -80,6 +123,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.documentTypeFailure, (state, action) => ({
         ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: true,
         messages: action.messages

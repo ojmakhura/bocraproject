@@ -5,20 +5,32 @@ import {dataProcessingKey, initialState} from './data-processing.state';
 
 export const dataProcessingReducer = createReducer(
     initialState,
+    on(DataProcessingActions.dataCaptureSummary, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
+    })),
     on(DataProcessingActions.dataCaptureSummarySuccess, (state, action) => ({
         ...state,
         formSubmissions: [], 
         submissionSummary: action.submissionSummary,
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DataProcessingActions.loadData, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMesage,
     })),
     on(DataProcessingActions.loadDataSuccess, (state, action) => ({
         ...state,
         formSubmissions: action.formSubmissions, 
         submissionSummary: state.submissionSummary,
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
@@ -27,6 +39,7 @@ export const dataProcessingReducer = createReducer(
       ...state,
       formSubmissions: [], 
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: false,
         messges: []
@@ -34,6 +47,7 @@ export const dataProcessingReducer = createReducer(
     on(DataProcessingActions.dataProcessingFailure, (state, action) => ({
         ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: true,
         messages: action.messages
