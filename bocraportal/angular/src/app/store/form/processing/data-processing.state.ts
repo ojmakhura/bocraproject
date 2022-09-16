@@ -8,6 +8,7 @@ export interface DataProcessingState {
     submissionSummary: SubmissionSummary;
     formSubmissions: Array<FormSubmissionVO> | Array<any>;
     loading: boolean;
+    loaderMessage: string | undefined,
     success: boolean;
     error: boolean;
     messages: string[];
@@ -19,5 +20,6 @@ export const initialState: DataProcessingState = {
     success: false,
     error: false,
     messages: [],
-    submissionSummary: new SubmissionSummary
+    submissionSummary: new SubmissionSummary,
+    loaderMessage: undefined
 };

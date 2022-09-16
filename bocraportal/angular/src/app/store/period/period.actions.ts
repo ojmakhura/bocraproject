@@ -23,7 +23,7 @@ export enum PeriodActionType {
 
 export const findById = createAction(
     PeriodActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -33,7 +33,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     PeriodActionType.SAVE,
-    props<{ period: PeriodVO | any , loading: boolean }>()
+    props<{ period: PeriodVO | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -43,7 +43,7 @@ export const saveSuccess = createAction(
 
 export const remove = createAction(
     PeriodActionType.REMOVE,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -53,7 +53,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     PeriodActionType.GET_ALL,
-    props<{  loading: boolean }>()
+    props<{  loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -63,7 +63,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     PeriodActionType.SEARCH,
-    props<{ criteria: PeriodCriteria | any , loading: boolean }>()
+    props<{ criteria: PeriodCriteria | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -73,7 +73,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
     PeriodActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -85,7 +85,7 @@ export const periodReset = createAction(PeriodActionType.PERIOD_RESET);
 
 export const periodLoading = createAction(
     PeriodActionType.PERIOD_LOADING,
-    props<{ loading: boolean, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMesage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const periodFailure = createAction(

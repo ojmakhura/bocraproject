@@ -22,7 +22,7 @@ export enum ComplaintActionType {
 
 export const findById = createAction(
     ComplaintActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -32,7 +32,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     ComplaintActionType.SAVE,
-    props<{ complaint: ComplaintVO | any , loading: boolean }>()
+    props<{ complaint: ComplaintVO | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -42,7 +42,7 @@ export const saveSuccess = createAction(
 
 export const remove = createAction(
     ComplaintActionType.REMOVE,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -52,7 +52,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     ComplaintActionType.GET_ALL,
-    props<{  loading: boolean }>()
+    props<{  loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -62,7 +62,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     ComplaintActionType.SEARCH,
-    props<{ criteria: string | any , loading: boolean }>()
+    props<{ criteria: string | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -72,7 +72,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
     ComplaintActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -85,7 +85,7 @@ export const complaintReset = createAction(ComplaintActionType.COMPLAINT_RESET);
 
 export const complaintLoading = createAction(
     ComplaintActionType.COMPLAINT_LOADING,
-    props<{ loading: boolean, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMesage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const complaintFailure = createAction(

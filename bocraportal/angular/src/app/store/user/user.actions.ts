@@ -30,12 +30,12 @@ export enum UserActionType {
 
 export const createUser = createAction(
   UserActionType.CREATE_USER, 
-  props<{ user: UserVO | any; loading: boolean }>()
+  props<{ user: UserVO | any; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const save = createAction(
   UserActionType.SAVE, 
-  props<{ user: UserVO | any; loading: boolean }>()
+  props<{ user: UserVO | any; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const createUserSuccess = createAction(
@@ -45,7 +45,7 @@ export const createUserSuccess = createAction(
 
 export const updateUserName = createAction(
   UserActionType.UPDATE_USER_NAME,
-  props<{ username: string | any; userId: string | any; loading: boolean }>()
+  props<{ username: string | any; userId: string | any; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const updateUserNameSuccess = createAction(
@@ -55,7 +55,7 @@ export const updateUserNameSuccess = createAction(
 
 export const changePassword = createAction(
   UserActionType.CHANGE_PASSWORD,
-  props<{ userId: string | any; newPassword: string | any; loading: boolean }>()
+  props<{ userId: string | any; newPassword: string | any; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const changePasswordSuccess = createAction(
@@ -63,14 +63,14 @@ export const changePasswordSuccess = createAction(
   props<{ messages: any[]; success: boolean }>()
 );
 
-export const loadUsers = createAction(UserActionType.LOAD_USERS, props<{ loading: boolean }>());
+export const loadUsers = createAction(UserActionType.LOAD_USERS, props<{ loading: boolean, loaderMesage: string | undefined }>());
 
 export const loadUsersSuccess = createAction(
   UserActionType.LOAD_USERS_SUCCESS,
   props<{ users: UserVO[] | any; messages: any[]; success: boolean }>()
 );
 
-export const findById = createAction(UserActionType.FIND_BY_ID, props<{ userId: string; loading: boolean }>());
+export const findById = createAction(UserActionType.FIND_BY_ID, props<{ userId: string; loading: boolean, loaderMesage: string | undefined }>());
 
 export const findByIdSuccess = createAction(
     UserActionType.FIND_BY_ID_SUCCESS,
@@ -79,7 +79,7 @@ export const findByIdSuccess = createAction(
 
 // export const save = createAction(
 //     UserActionType.SAVE,
-//     props<{ licensee: LicenseeVO | any , loading: boolean }>()
+//     props<{ licensee: LicenseeVO | any , loading: boolean, loaderMesage: string | undefined }>()
 // );
 
 // export const saveSuccess = createAction(
@@ -87,21 +87,21 @@ export const findByIdSuccess = createAction(
 //     props<{ licenseeVO | any: LicenseeVO | any, success: boolean}>()
 // );
 
-export const remove = createAction(UserActionType.REMOVE, props<{ id: number | any; loading: boolean }>());
+export const remove = createAction(UserActionType.REMOVE, props<{ id: number | any; loading: boolean, loaderMesage: string | undefined }>());
 
 // export const removeSuccess = createAction(
 //     UserActionType.REMOVE_SUCCESS,
 //     props<{ boolean | any: boolean | any, success: boolean}>()
 // );
 
-export const getAll = createAction(UserActionType.GET_ALL, props<{ loading: boolean }>());
+export const getAll = createAction(UserActionType.GET_ALL, props<{ loading: boolean, loaderMesage: string | undefined }>());
 
 // export const getAllSuccess = createAction(
 //     UserActionType.GET_ALL_SUCCESS,
 //     props<{ licenseeVO[] | any: LicenseeVO[] | any, success: boolean}>()
 // );
 
-export const search = createAction(UserActionType.SEARCH, props<{ criteria: string | any; loading: boolean }>());
+export const search = createAction(UserActionType.SEARCH, props<{ criteria: string | any; loading: boolean, loaderMesage: string | undefined }>());
 
 export const searchSuccess = createAction(
   UserActionType.SEARCH_SUCCESS,
@@ -110,7 +110,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
   UserActionType.GET_ALL_PAGED,
-  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean }>()
+  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 // export const getAllPagedSuccess = createAction(
@@ -122,7 +122,7 @@ export const userReset = createAction(UserActionType.USER_RESET);
 
 export const userLoading = createAction(
   UserActionType.USER_LOADING,
-  props<{ loading: boolean; success: boolean; messages: any[] }>()
+  props<{ loading: boolean, loaderMesage: string | undefined; success: boolean; messages: any[] }>()
 );
 
 export const userFailure = createAction(UserActionType.USER_FAILURE, props<{ messages: any[] }>());

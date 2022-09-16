@@ -23,7 +23,7 @@ export enum LicenseeFormActionType {
   LICENSEE_FORM_LOADING = '[Licensee Form] Licensee Form Loading',
 }
 
-export const findById = createAction(LicenseeFormActionType.FIND_BY_ID, props<{ id: number | any; loading: boolean }>());
+export const findById = createAction(LicenseeFormActionType.FIND_BY_ID, props<{ id: number | any; loading: boolean, loaderMesage: string | undefined }>());
 
 export const findByIdSuccess = createAction(
   LicenseeFormActionType.FIND_BY_ID_SUCCESS,
@@ -32,7 +32,7 @@ export const findByIdSuccess = createAction(
 
 export const findByLicensee = createAction(
   LicenseeFormActionType.FIND_BY_LICENSEE,
-  props<{ licenseeId: number | any; loading: boolean }>()
+  props<{ licenseeId: number | any; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const findByLicenseeSuccess = createAction(
@@ -42,7 +42,7 @@ export const findByLicenseeSuccess = createAction(
 
 export const findByForm = createAction(
   LicenseeFormActionType.FIND_BY_FORM,
-  props<{ formId: number | any; loading: boolean }>()
+  props<{ formId: number | any; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const findByFormSuccess = createAction(
@@ -52,7 +52,7 @@ export const findByFormSuccess = createAction(
 
 export const create = createAction(
   LicenseeFormActionType.CREATE,
-  props<{ licenseeId: number; formId: number; loading: boolean }>()
+  props<{ licenseeId: number; formId: number; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const createSuccess = createAction(
@@ -62,12 +62,12 @@ export const createSuccess = createAction(
 
 export const updateLicensee = createAction(
   LicenseeFormActionType.UPDATE_LICENSEE,
-  props<{ id: number; licenseeId: number; loading: boolean }>()
+  props<{ id: number; licenseeId: number; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const updateForm = createAction(
   LicenseeFormActionType.UPDATE_FORM,
-  props<{ id: number; formId: number; loading: boolean }>()
+  props<{ id: number; formId: number; loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const updateSuccess = createAction(
@@ -75,14 +75,14 @@ export const updateSuccess = createAction(
   props<{ licenseeForm: LicenseeFormVO | any; messages: any[]; success: boolean }>()
 );
 
-export const remove = createAction(LicenseeFormActionType.REMOVE, props<{ id: number | any; loading: boolean }>());
+export const remove = createAction(LicenseeFormActionType.REMOVE, props<{ id: number | any; loading: boolean, loaderMesage: string | undefined }>());
 
 export const removeSuccess = createAction(
   LicenseeFormActionType.REMOVE_SUCCESS,
   props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
-export const getAll = createAction(LicenseeFormActionType.GET_ALL, props<{ loading: boolean }>());
+export const getAll = createAction(LicenseeFormActionType.GET_ALL, props<{ loading: boolean, loaderMesage: string | undefined }>());
 
 export const getAllSuccess = createAction(
   LicenseeFormActionType.GET_ALL_SUCCESS,
@@ -93,7 +93,7 @@ export const licenseeFormReset = createAction(LicenseeFormActionType.LICENSEE_FO
 
 export const licenseeFormLoading = createAction(
   LicenseeFormActionType.LICENSEE_FORM_LOADING,
-  props<{ loading: boolean; success: boolean; messages: any[] }>()
+  props<{ loading: boolean, loaderMesage: string | undefined; success: boolean; messages: any[] }>()
 );
 
 export const licenseeFormFailure = createAction(LicenseeFormActionType.LICENSEE_FORM_FAILURE, props<{ messages: any[] }>());

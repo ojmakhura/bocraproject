@@ -10,6 +10,7 @@ export interface ComplaintState {
     id: number | any;
     removed: boolean;
     loading: boolean;
+    loaderMessage: string | undefined;
     success: boolean;
     error: boolean;
     messages: string[];
@@ -24,5 +25,6 @@ export const initialState: ComplaintState = {
     loading: false,
     success: false,
     error: false,
-    messages: []
+    messages: [],
+    loaderMessage: undefined
 };

@@ -49,7 +49,7 @@ export enum FormActionType {
 
 export const findFormById = createAction(
     FormActionType.FIND_FORM_BY_ID,
-    props<{ id: number | any, loading: boolean }>()
+    props<{ id: number | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const findFormByIdSuccess = createAction(
@@ -59,7 +59,7 @@ export const findFormByIdSuccess = createAction(
 
 export const saveForm = createAction(
     FormActionType.SAVE_FORM,
-    props<{ form: FormVO | any, loading: boolean }>()
+    props<{ form: FormVO | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const saveFormSuccess = createAction(
@@ -69,7 +69,7 @@ export const saveFormSuccess = createAction(
 
 export const removeForm = createAction(
     FormActionType.REMOVE_FORM,
-    props<{ id: number | any, loading: boolean  }>()
+    props<{ id: number | any, loading: boolean, loaderMesage: string | undefined  }>()
 );
 
 export const removeFormSuccess = createAction(
@@ -79,7 +79,7 @@ export const removeFormSuccess = createAction(
 
 export const getAllForms = createAction(
     FormActionType.GET_ALL_FORMS,
-    props<{ loading: boolean }>()
+    props<{ loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const getAllFormsSuccess = createAction(
@@ -89,7 +89,7 @@ export const getAllFormsSuccess = createAction(
 
 export const searchForms = createAction(
     FormActionType.SEARCH_FORMS,
-    props<{ criteria: FormCriteria | any , loading: boolean }>()
+    props<{ criteria: FormCriteria | any , loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const searchFormsSuccess = createAction(
@@ -99,7 +99,7 @@ export const searchFormsSuccess = createAction(
 
 export const getAllFormsPaged = createAction(
     FormActionType.GET_ALL_FORMS_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any, loading: boolean }>()
+    props<{ pageNumber: number | any , pageSize: number | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const getAllFormsPagedSuccess = createAction(
@@ -109,7 +109,7 @@ export const getAllFormsPagedSuccess = createAction(
 
 export const findFieldById = createAction(
     FormActionType.FIND_FIELD_BY_ID,
-    props<{ id: number | any, loading: boolean }>()
+    props<{ id: number | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const findFieldByIdSuccess = createAction(
@@ -119,7 +119,7 @@ export const findFieldByIdSuccess = createAction(
 
 export const saveField = createAction(
     FormActionType.SAVE_FIELD,
-    props<{ formField: FormFieldVO | any, loading: boolean }>()
+    props<{ formField: FormFieldVO | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const saveFieldSuccess = createAction(
@@ -129,7 +129,7 @@ export const saveFieldSuccess = createAction(
 
 export const saveSection = createAction(
     FormActionType.SAVE_SECTION,
-    props<{ formSection: FormSectionVO | any, loading: boolean }>()
+    props<{ formSection: FormSectionVO | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const saveSectionSuccess = createAction(
@@ -144,7 +144,7 @@ export const setSections = createAction(
 
 export const removeSection = createAction(
     FormActionType.REMOVE_SECTION,
-    props<{ id: number | any, loading: boolean }>()
+    props<{ id: number | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const removeSectionSuccess = createAction(
@@ -154,7 +154,7 @@ export const removeSectionSuccess = createAction(
 
 export const addLicensee = createAction(
     FormActionType.ADD_LICENSEE,
-    props<{ formId: number, licenseeId: number, loading: boolean }>()
+    props<{ formId: number, licenseeId: number, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const addLicenseeSuccess = createAction(
@@ -164,7 +164,7 @@ export const addLicenseeSuccess = createAction(
 
 export const updateLicensee = createAction(
     FormActionType.UPDATE_LICENSEE,
-    props<{ licenseeFormId: number, licenseeId: number, loading: boolean }>()
+    props<{ licenseeFormId: number, licenseeId: number, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const updateLicenseeSuccess = createAction(
@@ -179,7 +179,7 @@ export const setLicensees = createAction(
 
 export const removeLicensee = createAction(
     FormActionType.REMOVE_LICENSEE,
-    props<{ id: number | any, loading: boolean }>()
+    props<{ id: number | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const removeLicenseeSuccess = createAction(
@@ -189,7 +189,7 @@ export const removeLicenseeSuccess = createAction(
 
 export const removeField = createAction(
     FormActionType.REMOVE_FIELD,
-    props<{ id: number | any, loading: boolean }>()
+    props<{ id: number | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const removeFieldSuccess = createAction(
@@ -199,7 +199,7 @@ export const removeFieldSuccess = createAction(
 
 export const getAllFields = createAction(
     FormActionType.GET_ALL_FIELDS,
-    props<{ loading: boolean }>()
+    props<{ loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const getAllFieldsSuccess = createAction(
@@ -209,7 +209,7 @@ export const getAllFieldsSuccess = createAction(
 
 export const getAllFieldsPaged = createAction(
     FormActionType.GET_ALL_FIELDS_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any, loading: boolean }>()
+    props<{ pageNumber: number | any , pageSize: number | any, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const getAllFieldsPagedSuccess = createAction(
@@ -221,12 +221,12 @@ export const formReset = createAction(FormActionType.FORM_RESET);
 
 export const formLoading = createAction(
     FormActionType.FORM_LOADING,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const formSuccess = createAction(
     FormActionType.FORM_SUCCESS,
-    props<{ messages: any[], success: boolean, loading: boolean }>()
+    props<{ messages: any[], success: boolean, loading: boolean, loaderMesage: string | undefined }>()
 );
 
 export const formFailure = createAction(

@@ -13,6 +13,7 @@ export interface LicenceTypeState {
     licenceTypeId: number | any,
     success: boolean;
     loading: boolean;
+    loaderMessage: string | undefined,
     error: boolean,
     messages: any[]
 }
@@ -27,5 +28,6 @@ export const initialState: LicenceTypeState = {
     success: false,
     loading: false,
     error: false,
-    messages: []
+    messages: [],
+    loaderMessage: undefined
 };

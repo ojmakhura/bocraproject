@@ -12,6 +12,7 @@ export interface SectorState {
   licensee: LicenseeSectorVO | any;
   licensees: Array<LicenseeSectorVO>;
   loading: boolean;
+  loaderMessage: string | undefined,
   success: boolean;
   removed: boolean;
   error: boolean,
@@ -24,10 +25,11 @@ export const initialState: SectorState = {
   sectors: [],
   sector: null,
   licensee: null,
-  licensees:[],
+  licensees: [],
   loading: false,
   success: false,
   removed: false,
   error: false,
   messages: [],
+  loaderMessage: undefined
 };
