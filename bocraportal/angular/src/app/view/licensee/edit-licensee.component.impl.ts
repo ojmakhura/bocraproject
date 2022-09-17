@@ -75,6 +75,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
           LicenseeActions.findById({
             id: queryParams?.id,
             loading: true,
+            loaderMessage: 'Loading licensee by id ...'
           })
         );
       }
@@ -117,7 +118,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       this.store.dispatch(
         LicenseeFormActions.remove({
           id: this.licenseeForms[index].id,
-          loading: true
+          loading: true,
+          loaderMessage: 'Removing licensee ...'
         })
       );
 
@@ -135,7 +137,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       this.store.dispatch(
         LicenseeSectorActions.remove({
           id: this.licenseeSectors[index].id,
-          loading: true
+          loading: true,
+          loaderMessage: 'Removing sector from licensee ...'
         })
       );
 
@@ -155,7 +158,8 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       this.store.dispatch(
         DocumentActions.remove({
           id: doc.id,
-          loading: true
+          loading: true,
+          loaderMessage: 'Remove document from licensee ...'
         })
       );
       this.documentDelete$.subscribe(removed => {
@@ -189,6 +193,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
         LicenseeActions.save({
           licensee: form.licensee,
           loading: true,
+          loaderMessage: 'Saving licensees ...'
         })
       );
     }
@@ -216,6 +221,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
         LicenseeActions.remove({
           id: form?.licensee?.id,
           loading: false,
+          loaderMessage: 'Removing licensee ...'
         })
       );
       this.editLicenseeFormReset();
@@ -231,6 +237,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       LicenceActions.search({
         criteria: { licenceNumber: criteria },
         loading: true,
+        loaderMessage: 'Loading new form submissions ...'
       })
     );
   }
@@ -242,6 +249,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       DocumentActions.search({
         criteria: criteria,
         loading: true,
+        loaderMessage: 'Searching documents ...'
       })
     );
   }
@@ -253,6 +261,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       FormActions.searchForms({
         criteria: { code: criteria, formName: criteria },
         loading: true,
+        loaderMessage: 'Searching forms ...'
       })
     );
   }
@@ -266,6 +275,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       SectorActions.search({
         criteria: criteria,
         loading: true,
+        loaderMessage: 'Searching sectors ...'
       })
     );
   }
@@ -283,6 +293,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
           file: dialogData.document.file,
           fileName: dialogData.document.documentName,
           loading: true,
+          loaderMessage: 'Add licensee to document ...'
         })
       );
     }

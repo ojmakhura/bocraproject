@@ -23,7 +23,7 @@ export enum PeriodConfigActionType {
 
 export const findById = createAction(
     PeriodConfigActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -33,7 +33,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     PeriodConfigActionType.SAVE,
-    props<{ periodConfig: PeriodConfigVO | any, loading: boolean, loaderMesage: string | undefined }>()
+    props<{ periodConfig: PeriodConfigVO | any, loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -43,7 +43,7 @@ export const saveSuccess = createAction(
 
 export const remove = createAction(
     PeriodConfigActionType.REMOVE,
-    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -53,7 +53,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     PeriodConfigActionType.GET_ALL,
-    props<{ loading: boolean, loaderMesage: string | undefined }>()
+    props<{ loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -63,7 +63,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     PeriodConfigActionType.SEARCH,
-    props<{ criteria: PeriodConfigCriteria | any, loading: boolean, loaderMesage: string | undefined }>()
+    props<{ criteria: PeriodConfigCriteria | any, loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -73,7 +73,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
     PeriodConfigActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -85,7 +85,7 @@ export const periodConfigReset = createAction(PeriodConfigActionType.PERIOD_CONF
 
 export const periodConfigLoading = createAction(
     PeriodConfigActionType.PERIOD_CONFIG_LOADING,
-    props<{ loading: boolean, loaderMesage: string | undefined, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const periodConfigFailure = createAction(

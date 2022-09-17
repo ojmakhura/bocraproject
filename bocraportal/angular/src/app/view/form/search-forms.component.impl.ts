@@ -29,7 +29,8 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
   override beforeSearchFormsSearch(form: SearchFormsSearchForm): void {
     this.store.dispatch(FormActions.searchForms({
       criteria: form.criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Searching forms ...'
     }));
   }
 }

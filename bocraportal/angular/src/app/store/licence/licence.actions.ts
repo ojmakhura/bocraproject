@@ -30,7 +30,7 @@ export enum LicenceActionType {
 
 export const findById = createAction(
     LicenceActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -40,7 +40,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     LicenceActionType.SAVE,
-    props<{ licence: LicenceVO | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ licence: LicenceVO | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -50,7 +50,7 @@ export const saveSuccess = createAction(
 
 export const remove = createAction(
     LicenceActionType.REMOVE,
-    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -60,7 +60,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     LicenceActionType.GET_ALL,
-    props<{  loading: boolean, loaderMesage: string | undefined }>()
+    props<{  loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -70,7 +70,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     LicenceActionType.SEARCH,
-    props<{ criteria: LicenceCriteria | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ criteria: LicenceCriteria | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -80,7 +80,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
     LicenceActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -90,7 +90,7 @@ export const getAllPagedSuccess = createAction(
 
 export const getLicenceDocuments = createAction(
     LicenceActionType.GET_LICENCE_DOCUMENTS,
-    props<{ licenceId: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ licenceId: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getLicenceDocumentsSuccess = createAction(
@@ -100,7 +100,7 @@ export const getLicenceDocumentsSuccess = createAction(
 
 export const addDocument = createAction(
     LicenceActionType.ADD_DOCUMENT,
-    props<{ id: number, documentTypeId: number, file: File, fileName: string, loading: boolean, loaderMesage: string | undefined }>()
+    props<{ id: number, documentTypeId: number, file: File, fileName: string, loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const addDocumentSuccess = createAction(
@@ -110,7 +110,7 @@ export const addDocumentSuccess = createAction(
 
 export const removeDocument = createAction(
     LicenceActionType.REMOVE_DOCUMENT,
-    props<{ id: number, loading: boolean, loaderMesage: string | undefined }>()
+    props<{ id: number, loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const removeDocumentSuccess = createAction(
@@ -122,7 +122,7 @@ export const licenceReset = createAction(LicenceActionType.LICENCE_RESET);
 
 export const licenceLoading = createAction(
     LicenceActionType.LICENCE_LOADING,
-    props<{ loading: boolean, loaderMesage: string | undefined, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const licenceFailure = createAction(

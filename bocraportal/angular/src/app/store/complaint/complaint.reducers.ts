@@ -8,7 +8,7 @@ export const complaintReducer = createReducer(
     on(ComplaintActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(ComplaintActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -24,7 +24,7 @@ export const complaintReducer = createReducer(
     on(ComplaintActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(ComplaintActions.saveSuccess, (state, action) => ({
         ...state,
@@ -40,7 +40,7 @@ export const complaintReducer = createReducer(
     on(ComplaintActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(ComplaintActions.removeSuccess, (state, action) => ({
         ...state,
@@ -56,7 +56,7 @@ export const complaintReducer = createReducer(
     on(ComplaintActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(ComplaintActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -72,7 +72,7 @@ export const complaintReducer = createReducer(
     on(ComplaintActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(ComplaintActions.searchSuccess, (state, action) => ({
         ...state,
@@ -88,7 +88,7 @@ export const complaintReducer = createReducer(
     on(ComplaintActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(ComplaintActions.getAllPagedSuccess, (state, action) => ({
         ...state,

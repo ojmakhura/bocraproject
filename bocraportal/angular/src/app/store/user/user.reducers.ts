@@ -8,7 +8,7 @@ export const userReducer = createReducer(
   on(UserActions.createUser, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(UserActions.createUserSuccess, (state, action) => ({
     ...state,
@@ -25,7 +25,7 @@ export const userReducer = createReducer(
   on(UserActions.updateUserName, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(UserActions.updateUserNameSuccess, (state, action) => ({
     ...state,
@@ -42,7 +42,7 @@ export const userReducer = createReducer(
   on(UserActions.loadUsers, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(UserActions.loadUsersSuccess, (state, action) => ({
     ...state,
@@ -59,7 +59,7 @@ export const userReducer = createReducer(
   on(UserActions.findById, (state, action) => ({
       ...state,
       loading: action.loading,
-      loaderMessage: action.loaderMesage,
+      loaderMessage: action.loaderMessage,
   })),
   on(UserActions.findByIdSuccess, (state, action) => ({
       ...state,
@@ -106,7 +106,7 @@ export const userReducer = createReducer(
   on(UserActions.search, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(UserActions.searchSuccess, (state, action) => ({
     ...state,
@@ -153,7 +153,7 @@ export const userReducer = createReducer(
   on(UserActions.userLoading, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
     success: false,
   }))
 );

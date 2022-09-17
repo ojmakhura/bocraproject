@@ -8,7 +8,7 @@ export const formReducer = createReducer(
     on(FormActions.findFormById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.findFormByIdSuccess, (state, action) => ({
         ...state,
@@ -22,7 +22,7 @@ export const formReducer = createReducer(
     on(FormActions.saveForm, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.saveFormSuccess, (state, action) => ({
         ...state,
@@ -36,7 +36,7 @@ export const formReducer = createReducer(
     on(FormActions.removeForm, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.removeFormSuccess, (state, action) => ({
         ...state,
@@ -50,7 +50,7 @@ export const formReducer = createReducer(
     on(FormActions.getAllForms, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.getAllFormsSuccess, (state, action) => ({
         ...state,
@@ -64,7 +64,7 @@ export const formReducer = createReducer(
     on(FormActions.searchForms, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.searchFormsSuccess, (state, action) => ({
         ...state,
@@ -78,7 +78,7 @@ export const formReducer = createReducer(
     on(FormActions.getAllFormsPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.getAllFormsPagedSuccess, (state, action) => ({
         ...state,
@@ -92,7 +92,7 @@ export const formReducer = createReducer(
     on(FormActions.findFieldById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.findFieldByIdSuccess, (state, action) => ({
         ...state,
@@ -106,7 +106,7 @@ export const formReducer = createReducer(
     on(FormActions.saveField, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.saveFieldSuccess, (state, action) => ({
         ...state,
@@ -120,7 +120,7 @@ export const formReducer = createReducer(
     on(FormActions.saveSection, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.saveSectionSuccess, (state, action) => ({
         ...state,
@@ -142,7 +142,7 @@ export const formReducer = createReducer(
     on(FormActions.removeField, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.removeFieldSuccess, (state, action) => ({
         ...state,
@@ -156,7 +156,7 @@ export const formReducer = createReducer(
     on(FormActions.getAllFields, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.getAllFieldsSuccess, (state, action) => ({
         ...state,
@@ -170,7 +170,7 @@ export const formReducer = createReducer(
     on(FormActions.getAllFieldsPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActions.getAllFieldsPagedSuccess, (state, action) => ({
         ...state,

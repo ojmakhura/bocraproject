@@ -8,7 +8,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(SectorActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -22,7 +22,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(SectorActions.saveSuccess, (state, action) => ({
         ...state,
@@ -36,7 +36,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.addLicensee, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(SectorActions.addLicenseeSuccess, (state, action) => ({
         ...state,
@@ -56,7 +56,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(SectorActions.removeSuccess, (state, action) => ({
         ...state,
@@ -70,7 +70,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(SectorActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -84,7 +84,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(SectorActions.searchSuccess, (state, action) => ({
         ...state,
@@ -98,7 +98,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(SectorActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -133,7 +133,7 @@ export const sectorReducer = createReducer(
     on(SectorActions.sectorLoading, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
         success: false
     }))
 );

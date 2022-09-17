@@ -8,7 +8,7 @@ export const periodReducer = createReducer(
     on(PeriodActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -21,7 +21,7 @@ export const periodReducer = createReducer(
     on(PeriodActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodActions.saveSuccess, (state, action) => ({
         ...state,
@@ -34,7 +34,7 @@ export const periodReducer = createReducer(
     on(PeriodActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodActions.removeSuccess, (state, action) => ({
         ...state,
@@ -47,7 +47,7 @@ export const periodReducer = createReducer(
     on(PeriodActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -60,7 +60,7 @@ export const periodReducer = createReducer(
     on(PeriodActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodActions.searchSuccess, (state, action) => ({
         ...state,
@@ -73,7 +73,7 @@ export const periodReducer = createReducer(
     on(PeriodActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodActions.getAllPagedSuccess, (state, action) => ({
         ...state,

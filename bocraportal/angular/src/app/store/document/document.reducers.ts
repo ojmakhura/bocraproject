@@ -8,7 +8,7 @@ export const documentReducer = createReducer(
     on(DocumentActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -21,7 +21,7 @@ export const documentReducer = createReducer(
     on(DocumentActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.saveSuccess, (state, action) => ({
         ...state,
@@ -34,7 +34,7 @@ export const documentReducer = createReducer(
     on(DocumentActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.removeSuccess, (state, action) => ({
         ...state,
@@ -47,7 +47,7 @@ export const documentReducer = createReducer(
     on(DocumentActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -60,7 +60,7 @@ export const documentReducer = createReducer(
     on(DocumentActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.searchSuccess, (state, action) => ({
         ...state,
@@ -73,7 +73,7 @@ export const documentReducer = createReducer(
     on(DocumentActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -86,7 +86,7 @@ export const documentReducer = createReducer(
     on(DocumentActions.getLicenseeDocuments, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.getLicenseeDocumentsSuccess, (state, action) => ({
         ...state,
@@ -99,7 +99,7 @@ export const documentReducer = createReducer(
     on(DocumentActions.getLicenceDocuments, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.getLicenceDocumentsSuccess, (state, action) => ({
         ...state,

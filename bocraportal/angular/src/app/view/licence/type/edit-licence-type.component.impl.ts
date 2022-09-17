@@ -64,6 +64,7 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
           licenceTypeActions.findById({
             id: queryParams?.id,
             loading: true,
+            loaderMessage: 'Load licence type by id ...'
           })
         );
       }
@@ -101,6 +102,7 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
         licenceTypeActions.save({
           licenceType: form.licenceType,
           loading: true,
+          loaderMessage: 'Saving licence type ...'
         })
       );
     }
@@ -124,7 +126,8 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
     if(form?.licenceType?.id && confirm('Are you sure you want to delete the license type?')){
       this.store.dispatch(licenceTypeActions.remove({
         id: form?.licenceType?.id,
-        loading: true
+        loading: true,
+        loaderMessage: 'Removing licence types ...'
       }));
       this.editLicenceTypeFormReset();
     }else {
@@ -142,7 +145,8 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
     criteria.formName = this.licenceTypeFormsSearchField.value;
     this.store.dispatch(FormActions.searchForms({
       criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Searching forms ...'
     }));
   }
 }

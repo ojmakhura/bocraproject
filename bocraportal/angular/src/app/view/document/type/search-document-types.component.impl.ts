@@ -31,6 +31,7 @@ export class SearchDocumentTypesComponentImpl extends SearchDocumentTypesCompone
       DocumentTypeActions.search({
         criteria: form.criteria,
         loading: true,
+        loaderMessage: 'Searching document types ...'
       })
     );
   }

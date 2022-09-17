@@ -28,7 +28,8 @@ export class SearchPeriodsComponentImpl extends SearchPeriodsComponent {
     override beforeSearchPeriodsSearch(form: SearchPeriodsSearchForm): void {
         this.store.dispatch(PeriodActions.search({
             criteria: form.criteria,
-            loading: true
+            loading: true,
+            loaderMessage: 'Searching periods ...'
         }));
     }
     

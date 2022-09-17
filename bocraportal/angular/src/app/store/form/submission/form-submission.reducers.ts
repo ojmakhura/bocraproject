@@ -8,7 +8,7 @@ export const formSubmissionReducer = createReducer(
     on(FormSubmissionActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormSubmissionActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -22,7 +22,7 @@ export const formSubmissionReducer = createReducer(
     on(FormSubmissionActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormSubmissionActions.saveSuccess, (state, action) => ({
         ...state,
@@ -36,7 +36,7 @@ export const formSubmissionReducer = createReducer(
     on(FormSubmissionActions.saveNote, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormSubmissionActions.saveNoteSuccess, (state, action) => ({
         ...state,
@@ -51,7 +51,7 @@ export const formSubmissionReducer = createReducer(
     on(FormSubmissionActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormSubmissionActions.removeSuccess, (state, action) => ({
         ...state,
@@ -65,7 +65,7 @@ export const formSubmissionReducer = createReducer(
     on(FormSubmissionActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormSubmissionActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -79,7 +79,7 @@ export const formSubmissionReducer = createReducer(
     on(FormSubmissionActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormSubmissionActions.searchSuccess, (state, action) => ({
         ...state,
@@ -93,7 +93,7 @@ export const formSubmissionReducer = createReducer(
     on(FormSubmissionActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormSubmissionActions.getAllPagedSuccess, (state, action) => ({
         ...state,

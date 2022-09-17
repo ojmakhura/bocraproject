@@ -8,7 +8,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(AuthorisationActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -22,7 +22,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(AuthorisationActions.saveSuccess, (state, action) => ({
         ...state,
@@ -36,7 +36,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(AuthorisationActions.removeSuccess, (state, action) => ({
         ...state,
@@ -50,7 +50,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(AuthorisationActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -64,7 +64,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(AuthorisationActions.searchSuccess, (state, action) => ({
         ...state,
@@ -78,7 +78,7 @@ export const authorisationReducer = createReducer(
     on(AuthorisationActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(AuthorisationActions.getAllPagedSuccess, (state, action) => ({
         ...state,

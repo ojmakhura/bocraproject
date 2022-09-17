@@ -97,6 +97,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
           AuthorisationActions.findById({
             id: queryParams?.id,
             loading: false,
+            loaderMessage: 'Loading authorisations by id ...'
           })
         );
       }
@@ -148,6 +149,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
         AuthorisationActions.save({
           authorisation: form.authorisation,
           loading: true,
+          loaderMessage: 'Saving authorisation ...'
         })
       );
     } else {
@@ -168,6 +170,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
         AuthorisationActions.remove({
           id: form?.authorisation?.id,
           loading: false,
+          loaderMessage: 'Removing authorisation ...'
         })
       );
       this.editAuthorisationFormReset();
@@ -181,7 +184,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     let criteria: AccessPointCriteria = new AccessPointCriteria();
     criteria.name = this.authorisationAccessPointSearchField.value;
     criteria.url = this.authorisationAccessPointSearchField.value;
-    this.store.dispatch(AccessPointActions.search({ criteria: criteria, loading: true }));
+    this.store.dispatch(AccessPointActions.search({ criteria: criteria, loading: true, loaderMessage: 'Searching access points' }));
   }
 
   override editAuthorisationFormReset() {

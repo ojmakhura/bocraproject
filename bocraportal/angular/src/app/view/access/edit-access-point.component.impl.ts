@@ -32,7 +32,7 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
 
   override beforeOnInit(form: EditAccessPointVarsForm): EditAccessPointVarsForm {
 
-    this.store.dispatch(AccessPointTypeActions.getAll({ loading: true }));
+    this.store.dispatch(AccessPointTypeActions.getAll({ loading: true, loaderMessage: 'Loading all access point types ...' }));
     this.accessPointAccessPointTypes$.subscribe(types => {
       this.accessPointAccessPointTypeBackingList = [];
       types.forEach(type => {
@@ -55,7 +55,7 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
       ViewActions.loadViewAuthorisations({
         viewUrl: "/access/edit-access-point",
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
@@ -65,18 +65,11 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
           AccessPointActions.findById({
             id: queryParams?.id,
             loading: false,
+            loaderMessage: 'Find authorisation by id.'
           })
         );
       }
     });
-
-    this.store.dispatch(
-      ViewActions.loadViewAuthorisations({
-        viewUrl: "/access/edit-access-point",
-        roles: this.keycloakService.getUserRoles(),
-        loading: true
-      })
-    );
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
@@ -114,6 +107,7 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
         AccessPointActions.save({
           accessPoint: form.accessPoint,
           loading: true,
+          loaderMessage: 'Saving access point.'
         })
       );
     } else {
@@ -139,12 +133,15 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
         AccessPointActions.remove({
           id: form?.accessPoint?.id,
           loading: false,
+          loaderMessage: 'Removing access point'
         })
       );
       this.editAccessPointFormReset();
     } else {
 
-      this.store.dispatch(AccessPointActions.accessPointFailure({ messages: ['Please select something to delete'] }));
+      this.store.dispatch(
+        AccessPointActions.accessPointFailure({ messages: ['Please select something to delete'] })
+      );
     }
   }
 }  

@@ -8,7 +8,7 @@ export const licenseeSectorReducer = createReducer(
   on(LicenseeSectorActions.findById, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeSectorActions.findByIdSuccess, (state, action) => ({
     ...state,
@@ -22,7 +22,7 @@ export const licenseeSectorReducer = createReducer(
   on(LicenseeSectorActions.findByLicensee, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeSectorActions.findByLicenseeSuccess, (state, action) => ({
     ...state,
@@ -36,7 +36,7 @@ export const licenseeSectorReducer = createReducer(
   on(LicenseeSectorActions.findBySector, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeSectorActions.findBySectorSuccess, (state, action) => ({
     ...state,
@@ -50,7 +50,7 @@ export const licenseeSectorReducer = createReducer(
   on(LicenseeSectorActions.create, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeSectorActions.createSuccess, (state, action) => ({
     ...state,
@@ -64,12 +64,12 @@ export const licenseeSectorReducer = createReducer(
   on(LicenseeSectorActions.updateLicensee, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeSectorActions.updateSector, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeSectorActions.updateSuccess, (state, action) => ({
     ...state,
@@ -80,10 +80,10 @@ export const licenseeSectorReducer = createReducer(
     error: false,
     messages: action.messages,
   })),
-  on(LicenseeSectorActions.removeSuccess, (state, action) => ({
+  on(LicenseeSectorActions.remove, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeSectorActions.removeSuccess, (state, action) => ({
     ...state,
@@ -97,7 +97,7 @@ export const licenseeSectorReducer = createReducer(
   on(LicenseeSectorActions.getAll, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeSectorActions.getAllSuccess, (state, action) => ({
     ...state,

@@ -809,7 +809,8 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
                     LicenseeFormActions.create({
                         licenseeId: this.licenseeId,
                         formId: data.id,
-                        loading: true
+                        loading: true,
+                        loaderMessage: 'Creating a licensee form associations ....'
                     })
                 );
             }
@@ -955,7 +956,8 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
             this.store.dispatch(
                 LicenseeSectorActions.remove({
                     id: this.licenseeSectors[index].id,
-                    loading: true
+                    loading: true,
+                    loaderMessage: 'Removing licensee sector association ...'
                 })
             );
 
@@ -1001,7 +1003,8 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
                     LicenseeSectorActions.create({
                         licenseeId: this.licenseeId,
                         sectorId: data.id,
-                        loading: true
+                        loading: true,
+                        loaderMessage: 'Creating a licensee sector association ...'
                     })
                 );
             }

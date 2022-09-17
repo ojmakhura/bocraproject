@@ -8,7 +8,7 @@ export const licenseeFormReducer = createReducer(
   on(LicenseeFormActions.findById, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeFormActions.findByIdSuccess, (state, action) => ({
     ...state,
@@ -22,7 +22,7 @@ export const licenseeFormReducer = createReducer(
   on(LicenseeFormActions.findByLicensee, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeFormActions.findByLicenseeSuccess, (state, action) => ({
     ...state,
@@ -36,7 +36,7 @@ export const licenseeFormReducer = createReducer(
   on(LicenseeFormActions.findByForm, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeFormActions.findByFormSuccess, (state, action) => ({
     ...state,
@@ -50,7 +50,7 @@ export const licenseeFormReducer = createReducer(
   on(LicenseeFormActions.create, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeFormActions.createSuccess, (state, action) => ({
     ...state,
@@ -64,12 +64,12 @@ export const licenseeFormReducer = createReducer(
   on(LicenseeFormActions.updateLicensee, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeFormActions.updateForm, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeFormActions.updateSuccess, (state, action) => ({
     ...state,
@@ -83,7 +83,7 @@ export const licenseeFormReducer = createReducer(
   on(LicenseeFormActions.remove, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeFormActions.removeSuccess, (state, action) => ({
     ...state,
@@ -97,7 +97,7 @@ export const licenseeFormReducer = createReducer(
   on(LicenseeFormActions.getAll, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(LicenseeFormActions.getAllSuccess, (state, action) => ({
     ...state,

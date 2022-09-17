@@ -8,7 +8,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -25,7 +25,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentTypeActions.saveSuccess, (state, action) => ({
         ...state,
@@ -42,7 +42,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentTypeActions.removeSuccess, (state, action) => ({
         ...state,
@@ -60,7 +60,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentTypeActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -77,7 +77,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentTypeActions.searchSuccess, (state, action) => ({
         ...state,
@@ -94,7 +94,7 @@ export const documentTypeReducer = createReducer(
     on(DocumentTypeActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,

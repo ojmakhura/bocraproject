@@ -8,7 +8,7 @@ export const periodConfigReducer = createReducer(
     on(PeriodConfigActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodConfigActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -22,7 +22,7 @@ export const periodConfigReducer = createReducer(
     on(PeriodConfigActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodConfigActions.saveSuccess, (state, action) => ({
         ...state,
@@ -36,7 +36,7 @@ export const periodConfigReducer = createReducer(
     on(PeriodConfigActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodConfigActions.removeSuccess, (state, action) => ({
         ...state,
@@ -50,7 +50,7 @@ export const periodConfigReducer = createReducer(
     on(PeriodConfigActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodConfigActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -64,7 +64,7 @@ export const periodConfigReducer = createReducer(
     on(PeriodConfigActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodConfigActions.searchSuccess, (state, action) => ({
         ...state,
@@ -78,7 +78,7 @@ export const periodConfigReducer = createReducer(
     on(PeriodConfigActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(PeriodConfigActions.getAllPagedSuccess, (state, action) => ({
         ...state,

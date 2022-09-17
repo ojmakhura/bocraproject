@@ -8,7 +8,7 @@ export const formActivationReducer = createReducer(
     on(FormActivationActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -22,7 +22,7 @@ export const formActivationReducer = createReducer(
     on(FormActivationActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.saveSuccess, (state, action) => ({
         ...state,
@@ -36,7 +36,7 @@ export const formActivationReducer = createReducer(
     on(FormActivationActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.removeSuccess, (state, action) => ({
         ...state,
@@ -51,7 +51,7 @@ export const formActivationReducer = createReducer(
     on(FormActivationActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -65,7 +65,7 @@ export const formActivationReducer = createReducer(
     on(FormActivationActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.searchSuccess, (state, action) => ({
         ...state,
@@ -79,7 +79,7 @@ export const formActivationReducer = createReducer(
     on(FormActivationActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.getAllPagedSuccess, (state, action) => ({
         ...state,

@@ -8,7 +8,7 @@ export const sectorFormReducer = createReducer(
   on(SectorFormActions.findById, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(SectorFormActions.findByIdSuccess, (state, action) => ({
     ...state,
@@ -22,7 +22,7 @@ export const sectorFormReducer = createReducer(
   on(SectorFormActions.findBySector, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(SectorFormActions.findBySectorSuccess, (state, action) => ({
     ...state,
@@ -36,7 +36,7 @@ export const sectorFormReducer = createReducer(
   on(SectorFormActions.findByForm, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(SectorFormActions.findByFormSuccess, (state, action) => ({
     ...state,
@@ -50,7 +50,7 @@ export const sectorFormReducer = createReducer(
   on(SectorFormActions.create, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(SectorFormActions.createSuccess, (state, action) => ({
     ...state,
@@ -64,12 +64,12 @@ export const sectorFormReducer = createReducer(
   on(SectorFormActions.updateForm, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(SectorFormActions.updateSector, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(SectorFormActions.updateSuccess, (state, action) => ({
     ...state,
@@ -83,7 +83,7 @@ export const sectorFormReducer = createReducer(
   on(SectorFormActions.remove, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(SectorFormActions.removeSuccess, (state, action) => ({
     ...state,
@@ -97,7 +97,7 @@ export const sectorFormReducer = createReducer(
   on(SectorFormActions.getAll, (state, action) => ({
     ...state,
     loading: action.loading,
-    loaderMessage: action.loaderMesage,
+    loaderMessage: action.loaderMessage,
   })),
   on(SectorFormActions.getAllSuccess, (state, action) => ({
     ...state,

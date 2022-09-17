@@ -31,7 +31,8 @@ export class SearchLicencesComponentImpl extends SearchLicencesComponent {
 
       this.store.dispatch(LicenceActions.search({
         criteria: form.criteria,
-        loading: true
+        loading: true,
+        loaderMessage: 'Searching licences ...'
       }));
     }
     

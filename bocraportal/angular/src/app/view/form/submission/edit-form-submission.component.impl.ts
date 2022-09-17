@@ -80,6 +80,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       FormSubmissionActions.findById({
         id: id,
         loading: true,
+        loaderMessage: 'Loading form submissions by id ...'
       })
     );
 
@@ -202,6 +203,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         FormSubmissionActions.remove({
           id: form.formSubmission.id,
           loading: true,
+          loaderMessage: 'Removing form submissions ...'
         })
       );
       this.editFormSubmissionFormReset();
@@ -271,7 +273,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       formSubmission.createdDate = new Date();
     }
 
-    this.store.dispatch(SubmissionActions.save({ formSubmission, loading: true }));
+    this.store.dispatch(SubmissionActions.save({ formSubmission, loading: true, loaderMessage: 'Saving form submission ...' }));
   }
 
   getFormObject(form: string) {

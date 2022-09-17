@@ -23,7 +23,7 @@ export enum SectorFormActionType {
   SECTOR_FORM_LOADING = '[Sector Form] Sector Form Loading',
 }
 
-export const findById = createAction(SectorFormActionType.FIND_BY_ID, props<{ id: number | any; loading: boolean, loaderMesage: string | undefined }>());
+export const findById = createAction(SectorFormActionType.FIND_BY_ID, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
 
 export const findByIdSuccess = createAction(
   SectorFormActionType.FIND_BY_ID_SUCCESS,
@@ -32,7 +32,7 @@ export const findByIdSuccess = createAction(
 
 export const findBySector = createAction(
   SectorFormActionType.FIND_BY_SECTOR,
-  props<{ sectorId: number | any; loading: boolean, loaderMesage: string | undefined }>()
+  props<{ sectorId: number | any; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findBySectorSuccess = createAction(
@@ -42,7 +42,7 @@ export const findBySectorSuccess = createAction(
 
 export const findByForm = createAction(
   SectorFormActionType.FIND_BY_FORM,
-  props<{ formId: number | any; loading: boolean, loaderMesage: string | undefined }>()
+  props<{ formId: number | any; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByFormSuccess = createAction(
@@ -52,7 +52,7 @@ export const findByFormSuccess = createAction(
 
 export const create = createAction(
   SectorFormActionType.CREATE,
-  props<{ sectorId: number; formId: number; loading: boolean, loaderMesage: string | undefined }>()
+  props<{ sectorId: number; formId: number; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const createSuccess = createAction(
@@ -62,12 +62,12 @@ export const createSuccess = createAction(
 
 export const updateSector = createAction(
   SectorFormActionType.UPDATE_SECTOR,
-  props<{ id: number; sectorId: number; loading: boolean, loaderMesage: string | undefined }>()
+  props<{ id: number; sectorId: number; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const updateForm = createAction(
   SectorFormActionType.UPDATE_FORM,
-  props<{ id: number; formId: number; loading: boolean, loaderMesage: string | undefined }>()
+  props<{ id: number; formId: number; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const updateSuccess = createAction(
@@ -75,14 +75,14 @@ export const updateSuccess = createAction(
   props<{ sectorForm: SectorFormVO | any; messages: any[]; success: boolean }>()
 );
 
-export const remove = createAction(SectorFormActionType.REMOVE, props<{ id: number | any; loading: boolean, loaderMesage: string | undefined }>());
+export const remove = createAction(SectorFormActionType.REMOVE, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
 
 export const removeSuccess = createAction(
   SectorFormActionType.REMOVE_SUCCESS,
   props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
-export const getAll = createAction(SectorFormActionType.GET_ALL, props<{ loading: boolean, loaderMesage: string | undefined }>());
+export const getAll = createAction(SectorFormActionType.GET_ALL, props<{ loading: boolean, loaderMessage: string | undefined }>());
 
 export const getAllSuccess = createAction(
   SectorFormActionType.GET_ALL_SUCCESS,
@@ -93,7 +93,7 @@ export const sectorFormReset = createAction(SectorFormActionType.SECTOR_FORM_RES
 
 export const sectorFormLoading = createAction(
   SectorFormActionType.SECTOR_FORM_LOADING,
-  props<{ loading: boolean, loaderMesage: string | undefined; success: boolean; messages: any[] }>()
+  props<{ loading: boolean, loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
 export const sectorFormFailure = createAction(SectorFormActionType.SECTOR_FORM_FAILURE, props<{ messages: any[] }>());

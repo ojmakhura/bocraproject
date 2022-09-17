@@ -32,7 +32,8 @@ export class SearchAccessPointTypesComponentImpl extends SearchAccessPointTypesC
     override beforeSearchAccessPointTypesSearch(form: SearchAccessPointTypesSearchForm): void {
       this.store.dispatch(AccessPointTypeActions.search({
         criteria: form.criteria,
-        loading: true
+        loading: true,
+        loaderMessage: 'Searching access point types ...'
       }));
       
     }

@@ -8,7 +8,7 @@ export const licenceReducer = createReducer(
     on(LicenceActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -22,7 +22,7 @@ export const licenceReducer = createReducer(
     on(LicenceActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceActions.saveSuccess, (state, action) => ({
         ...state,
@@ -36,7 +36,7 @@ export const licenceReducer = createReducer(
     on(LicenceActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceActions.removeSuccess, (state, action) => ({
         ...state,
@@ -50,7 +50,7 @@ export const licenceReducer = createReducer(
     on(LicenceActions.addDocument, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceActions.addDocumentSuccess, (state, action) => ({
         ...state,
@@ -64,7 +64,7 @@ export const licenceReducer = createReducer(
     on(LicenceActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -78,7 +78,7 @@ export const licenceReducer = createReducer(
     on(LicenceActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceActions.searchSuccess, (state, action) => ({
         ...state,
@@ -92,7 +92,7 @@ export const licenceReducer = createReducer(
     on(LicenceActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -106,7 +106,7 @@ export const licenceReducer = createReducer(
     on(LicenceActions.getLicenceDocuments, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceActions.getLicenceDocumentsSuccess, (state, action) => ({
         ...state,

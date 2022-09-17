@@ -26,7 +26,7 @@ export enum FormSubmissionActionType {
 
 export const findById = createAction(
     FormSubmissionActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -36,7 +36,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     FormSubmissionActionType.SAVE,
-    props<{ formSubmission: FormSubmissionVO | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ formSubmission: FormSubmissionVO | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -46,7 +46,7 @@ export const saveSuccess = createAction(
 
 export const saveNote = createAction(
     FormSubmissionActionType.SAVE_NOTE,
-    props<{ note: NoteVO | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ note: NoteVO | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const saveNoteSuccess = createAction(
@@ -56,7 +56,7 @@ export const saveNoteSuccess = createAction(
 
 export const remove = createAction(
     FormSubmissionActionType.REMOVE,
-    props<{ id: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -66,7 +66,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     FormSubmissionActionType.GET_ALL,
-    props<{  loading: boolean, loaderMesage: string | undefined }>()
+    props<{  loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -76,7 +76,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     FormSubmissionActionType.SEARCH,
-    props<{ criteria: FormSubmissionCriteria | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ criteria: FormSubmissionCriteria | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -86,7 +86,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
     FormSubmissionActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMesage: string | undefined }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -99,7 +99,7 @@ export const formSubmissionReset = createAction(FormSubmissionActionType.FORM_SU
 
 export const formSubmissionLoading = createAction(
     FormSubmissionActionType.FORM_SUBMISSION_LOADING,
-    props<{ loading: boolean, loaderMesage: string | undefined, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const formSubmissionFailure = createAction(

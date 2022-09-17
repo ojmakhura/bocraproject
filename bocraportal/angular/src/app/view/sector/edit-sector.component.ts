@@ -490,7 +490,8 @@ export abstract class EditSectorComponent implements OnInit, AfterViewInit, OnDe
                     LicenseeSectorActions.create({
                         licenseeId: data.id,
                         sectorId: this.sectorId,
-                        loading: true
+                        loading: true,
+                        loaderMessage: 'Adding licensee to sector ...'
                     })
                 );
             }
@@ -516,11 +517,12 @@ export abstract class EditSectorComponent implements OnInit, AfterViewInit, OnDe
     handleDeleteFromSectorForms(forms: SectorFormVO): void {}
     
     deleteFromSectorForms(index: number) {
-        if(confirm('Are you sure you want to remove the from this licensee?')) {
+        if(confirm('Are you sure you want to remove the licensee from this sector?')) {
             this.store.dispatch(
                 SectorFormActions.remove({
                     id: this.sectorForms[index].id,
-                    loading: true
+                    loading: true,
+                    loaderMessage: 'Removing licensee from sector ...'
                 })
             );
 
@@ -564,12 +566,12 @@ export abstract class EditSectorComponent implements OnInit, AfterViewInit, OnDe
             const key = Object.keys(data)[0];
             const found = this.sectorForms.find((d: SectorFormVO) => d[key] === data[key])
             if(!found) {
-                //this.addToSectorForms(data);
                 this.store.dispatch(
                     SectorFormActions.create({
                         sectorId: this.sectorId,
                         formId: data.id,
-                        loading: true
+                        loading: true,
+                        loaderMessage: ''
                     })
                 );
             }

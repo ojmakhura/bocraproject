@@ -8,7 +8,7 @@ export const menuSectionReducer = createReducer(
     on(MenuSectionActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -22,7 +22,7 @@ export const menuSectionReducer = createReducer(
     on(MenuSectionActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.saveSuccess, (state, action) => ({
         ...state,
@@ -44,7 +44,7 @@ export const menuSectionReducer = createReducer(
     on(MenuSectionActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.removeSuccess, (state, action) => ({
         ...state,
@@ -58,7 +58,7 @@ export const menuSectionReducer = createReducer(
     on(MenuSectionActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -72,7 +72,7 @@ export const menuSectionReducer = createReducer(
     on(MenuSectionActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.searchSuccess, (state, action) => ({
         ...state,
@@ -86,7 +86,7 @@ export const menuSectionReducer = createReducer(
     on(MenuSectionActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -103,7 +103,7 @@ export const menuSectionReducer = createReducer(
     on(MenuSectionActions.findByAuthorisationRoles, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.findByAuthorisationRolesSuccess, (state, action) => ({
         ...state,

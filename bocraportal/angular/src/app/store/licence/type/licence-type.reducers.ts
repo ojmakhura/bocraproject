@@ -8,7 +8,7 @@ export const licenceTypeReducer = createReducer(
     on(LicenceTypeActions.findById, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceTypeActions.findByIdSuccess, (state, action) => ({
         ...state,
@@ -22,7 +22,7 @@ export const licenceTypeReducer = createReducer(
     on(LicenceTypeActions.save, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceTypeActions.saveSuccess, (state, action) => ({
         ...state,
@@ -36,7 +36,7 @@ export const licenceTypeReducer = createReducer(
     on(LicenceTypeActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceTypeActions.removeSuccess, (state, action) => ({
         ...state,
@@ -51,7 +51,7 @@ export const licenceTypeReducer = createReducer(
     on(LicenceTypeActions.getAll, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceTypeActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -65,7 +65,7 @@ export const licenceTypeReducer = createReducer(
     on(LicenceTypeActions.search, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceTypeActions.searchSuccess, (state, action) => ({
         ...state,
@@ -79,7 +79,7 @@ export const licenceTypeReducer = createReducer(
     on(LicenceTypeActions.getAllPaged, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenceTypeActions.getAllPagedSuccess, (state, action) => ({
         ...state,

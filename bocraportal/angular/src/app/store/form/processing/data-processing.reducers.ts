@@ -8,7 +8,7 @@ export const dataProcessingReducer = createReducer(
     on(DataProcessingActions.dataCaptureSummary, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DataProcessingActions.dataCaptureSummarySuccess, (state, action) => ({
         ...state,
@@ -23,7 +23,7 @@ export const dataProcessingReducer = createReducer(
     on(DataProcessingActions.loadData, (state, action) => ({
         ...state,
         loading: action.loading,
-        loaderMessage: action.loaderMesage,
+        loaderMessage: action.loaderMessage,
     })),
     on(DataProcessingActions.loadDataSuccess, (state, action) => ({
         ...state,
