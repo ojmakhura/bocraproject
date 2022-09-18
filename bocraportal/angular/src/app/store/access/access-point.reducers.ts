@@ -111,6 +111,8 @@ export const accessPointReducer = createReducer(
   })),
   on(AccessPointActions.pagedSearch, (state, action) => ({
     ...state,
+    accessPoints: [],
+    accessPoint: null,
     loading: action.loading,
     loaderMessage: action.loaderMessage,
   })),
@@ -136,7 +138,7 @@ export const accessPointReducer = createReducer(
     loaderMessage: undefined,
     success: false,
     error: false,
-    messges: [],
+    messages: [],
   })),
   on(AccessPointActions.accessPointFailure, (state, action) => ({
     ...state,

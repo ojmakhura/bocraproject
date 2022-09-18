@@ -220,6 +220,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     messages: Observable<any>;
     success: Observable<boolean>;
     loading: Observable<boolean>;
+    loaderMessage: Observable<string>;
     error: Observable<boolean>;
     selected: any = null;
     sectorRemoved$: Observable<boolean>;
@@ -239,6 +240,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
         this._injector = injector;
         this.form$ = this.store.pipe(select(FormSelectors.selectForm));
         this.loading = this.store.pipe(select(FormSelectors.selectLoading));
+        this.loaderMessage = this.store.pipe(select(FormSelectors.selectLoaderMessage));
         this.success = this.store.pipe(select(FormSelectors.selectSuccess));
         this.error = this.store.pipe(select(FormSelectors.selectError));
         this.messages = this.store.pipe(select(FormSelectors.selectMessages));

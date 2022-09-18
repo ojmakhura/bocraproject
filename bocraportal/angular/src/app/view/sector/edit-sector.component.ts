@@ -117,6 +117,7 @@ export abstract class EditSectorComponent implements OnInit, AfterViewInit, OnDe
     messages: Observable<any>;
     success: Observable<boolean>;
     loading: Observable<boolean>;
+    loaderMessage: Observable<string>;
     error: Observable<boolean>;
     selected: any = null;
     formRemoved$: Observable<boolean>;
@@ -139,6 +140,7 @@ export abstract class EditSectorComponent implements OnInit, AfterViewInit, OnDe
         this.formRemoved$ = this.store.pipe(select(SectorFormSelectors.selectRemoved));
         this.sector$ = this.store.pipe(select(SectorSelectors.selectSector));
         this.loading = this.store.pipe(select(SectorSelectors.selectLoading));
+        this.loaderMessage = this.store.pipe(select(SectorSelectors.selectLoaderMessage));
         this.success = this.store.pipe(select(SectorSelectors.selectSuccess));
         this.error = this.store.pipe(select(SectorSelectors.selectError));
         this.messages = this.store.pipe(select(SectorSelectors.selectMessages));
