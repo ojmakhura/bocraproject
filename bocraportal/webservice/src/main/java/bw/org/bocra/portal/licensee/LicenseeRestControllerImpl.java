@@ -48,7 +48,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
         try {
-            logger.debug("Error detected at Licensee Service handleAddDocument "+id+" "+documentTypeId+" "+file+" "+fileName);
+            logger.debug("Add Document to Licensee with id "+id+",document type id "+documentTypeId+", file "+file+" and file name "+fileName);
             AccessToken token = keycloakService.getSecurityContext().getToken();
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
@@ -84,7 +84,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddSector(Long licenseeId, Long sectorId) {
         try {
-            logger.debug("Error detected at Licensee Service handleAddSector "+" "+licenseeId+" "+sectorId);
+            logger.debug("Add sector to Licensee with Id "+licenseeId+" and sector Id "+sectorId);
             Optional<?> data = Optional.of(getLicenseeService().addSector(licenseeId, sectorId));
             ResponseEntity<?> response;
 
@@ -104,7 +104,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleFindById "+id);
+            logger.debug("Search Licensee by "+id);
             LicenseeVO licensee = licenseeService.findById(id);
             ResponseEntity<?> response;
 
@@ -127,7 +127,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Error detected at Licensee Service handleGetAll ");
+            logger.debug("Display all Licensees ");
             Optional<?> data = Optional.of(this.licenseeService.getAll());
             ResponseEntity<?> response;
 
@@ -147,7 +147,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Error detected at Licensee Service handleGetAllPaged "+pageNumber+" "+pageSize);
+            logger.debug("Display all Licensees with specified page number "+pageNumber+" and page size "+pageSize);
             Optional<?> data = Optional.of(this.licenseeService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -167,7 +167,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetDocuments(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleGetDocuments "+id);
+            logger.debug("Display Licensee Document with "+id);
             Optional<?> data = Optional.of(this.licenseeService.getDocuments(id));
             ResponseEntity<?> response;
 
@@ -187,7 +187,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetForms(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleGetForms "+id);
+            logger.debug("Display Licensee Forms with "+id);
             Optional<?> data = Optional.of(this.licenseeService.getForms(id));
             ResponseEntity<?> response;
 
@@ -207,7 +207,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetFormSubmissions(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleGetFormSubmissions "+id);
+            logger.debug("Display Licensee Form Submissions with  "+id);
             Optional<?> data = Optional.of(this.licenseeService.getFormSubmissions(id));
             ResponseEntity<?> response;
 
@@ -227,7 +227,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetLicences(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleGetLicences "+id);
+            logger.debug("Display Licensees with Id "+id);
             Optional<?> data = Optional.of(this.licenseeService.getLicences(id));
             ResponseEntity<?> response;
 
@@ -247,7 +247,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetReportConfigurations(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleGetReportConfigurations "+id);
+            logger.debug("Display Licensee Report Configurations with Id "+id);
             Optional<?> data = Optional.of(this.licenseeService.getReportConfigurations(id));
             ResponseEntity<?> response;
 
@@ -267,7 +267,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetReports(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleGetReports "+id);
+            logger.debug("Display Licensee Reports "+id);
             Optional<?> data = Optional.of(this.licenseeService.getReports(id));
             ResponseEntity<?> response;
 
@@ -287,7 +287,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetSectors(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleGetSectors "+id);
+            logger.debug("Display Licensee Sectors with Id "+id);
             Optional<?> data = Optional.of(this.licenseeService.getSectors(id));
             ResponseEntity<?> response;
 
@@ -307,7 +307,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetShareholders(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleGetShareholders "+id);
+            logger.debug("Display Licensee Shareholders with Id "+id);
             Optional<?> data = Optional.of(this.licenseeService.getShareholders(id));
             ResponseEntity<?> response;
 
@@ -347,7 +347,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemoveSector(Long licenseeSectorId) {
         try {
-            logger.debug("Error detected at Licensee Service handleRemoveSector "+licenseeSectorId);
+            logger.debug("Delete Licensee Sector with Licensee Sector Id "+licenseeSectorId);
             Optional<?> data = Optional.of(this.licenseeService.removeSector(licenseeSectorId));
             ResponseEntity<?> response;
 
@@ -367,7 +367,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(LicenseeVO licensee) {
         try {
-            logger.debug("Error detected at Licensee Service handleSave "+licensee);
+            logger.debug("Save Licensee "+licensee);
             Optional<?> data = Optional.of(this.licenseeService.save(licensee));
             ResponseEntity<?> response;
 
@@ -387,7 +387,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(LicenseeCriteria criteria) {
         try {
-            logger.debug("Error detected at Licensee Service handleSearch "+criteria);
+            logger.debug("Search Licensee by criteria "+criteria);
             Optional<?> data = Optional.of(this.licenseeService.search(criteria));
             ResponseEntity<?> response;
 

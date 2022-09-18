@@ -28,7 +28,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
-            logger.debug("Error detected at Form Field Service handleFindById "+id);
+            logger.debug("Search Form Field by "+id);
             Optional<FormFieldVO> data = Optional.of(formFieldService.findById(id));
             ResponseEntity<FormFieldVO> response;
     
@@ -50,7 +50,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
-            logger.debug("Error detected at Form Field Service handleGetAll ");
+            logger.debug("Display all Form Fields ");
             Optional<Collection<FormFieldVO>> data = Optional.of(formFieldService.getAll());
             ResponseEntity<Collection<FormFieldVO>> response;
     
@@ -72,7 +72,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
-            logger.debug("Error detected at Form Field Service handleGetAllPaged"+" "+pageNumber+" "+pageSize);
+            logger.debug("Display Form Fields of specified "+"Page number: "+pageNumber+" and Page Size "+pageSize);
             Optional<Collection<FormFieldVO>> data = Optional.of(formFieldService.getAll(pageNumber, pageSize));
             ResponseEntity<Collection<FormFieldVO>> response;
     
@@ -93,7 +93,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
-            logger.debug("Error detected at Form Field Service handleRemove "+id);
+            logger.debug("Deletes Form Field by "+id);
             Optional<Boolean> data = Optional.of(formFieldService.remove(id));
             ResponseEntity<Boolean> response;
     
@@ -114,7 +114,7 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(FormFieldVO formFieldVO) {
         try{
-            logger.debug("Error detected at Form Field Service handleSave "+formFieldVO);
+            logger.debug("Save Form Field "+formFieldVO);
             Optional<FormFieldVO> data = Optional.of(formFieldService.save(formFieldVO));
             ResponseEntity<FormFieldVO> response;
     

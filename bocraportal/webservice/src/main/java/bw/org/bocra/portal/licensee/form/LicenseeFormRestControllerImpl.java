@@ -28,7 +28,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
     @Override
     public ResponseEntity<?> handleCreate(Long licenseeId, Long formId) {
         try {
-            logger.debug("Error detected  Licensee Form Service handleCreate "+licenseeId+" "+formId);
+            logger.debug("Create Licence Form with Licence Id "+licenseeId+" and Form Id "+formId);
             Optional<?> data = Optional.of(licenseeFormService.create(licenseeId, formId));
             ResponseEntity<?> response;
 
@@ -48,7 +48,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
     @Override
     public ResponseEntity<?> handleFindByForm(Long formId) {
         try {
-            logger.debug("Error detected  Licensee Form Service handleFindByForm "+formId);
+            logger.debug("Search LIcence Form by Form Id "+formId);
             Optional<?> data = Optional.ofNullable(licenseeFormService.findByForm(formId));
             ResponseEntity<?> response;
 
@@ -68,7 +68,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Error detected  Licensee Form Service handleFindById "+id);
+            logger.debug("Search Licence Form by Id  "+id);
             Optional<?> data = Optional.of(licenseeFormService.findById(id));
             ResponseEntity<?> response;
 
@@ -88,7 +88,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
     @Override
     public ResponseEntity<?> handleFindByLicensee(Long licenseeId) {
         try {
-            logger.debug("Error detected  Licensee Form Service handleFindByLicensee "+licenseeId);
+            logger.debug("Search Licence Form by Licensee "+licenseeId);
             Optional<?> data = Optional.of(licenseeFormService.findByLicensee(licenseeId));
             ResponseEntity<?> response;
 
@@ -108,7 +108,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Error detected  Licensee Form Service handleGetAll");
+            logger.debug("Display all Licence Forms");
             Optional<?> data = Optional.of(licenseeFormService.getAll());
             ResponseEntity<?> response;
 
@@ -128,7 +128,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Error detected  Licensee Form Service handleRemove "+id);
+            logger.debug("Delete Licence Form by Id "+id);
             Optional<?> data = Optional.of(licenseeFormService.remove(id));
             ResponseEntity<?> response;
 
@@ -148,7 +148,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
     @Override
     public ResponseEntity<?> handleUpdateForm(Long id, Long formId) {
         try {
-            logger.debug("Error detected  Licensee Form Service handleUpdateForm "+id+" "+formId);
+            logger.debug("Update Licence Form with Id "+id+" and Form Id"+formId);
             Optional<?> data = Optional.of(licenseeFormService.updateForm(id, formId));
             ResponseEntity<?> response;
 
@@ -168,7 +168,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
     @Override
     public ResponseEntity<?> handleUpdateLicensee(Long id, Long licenseeId) {
         try {
-            logger.debug("Error detected  Licensee Form Service handleUpdateLicensee "+id+" "+licenseeId);
+            logger.debug("Update Licensee in Licence Form with Id "+id+" and Licensee Id"+licenseeId);
             Optional<?> data = Optional.of(licenseeFormService.updateLicensee(id, licenseeId));
             ResponseEntity<?> response;
 

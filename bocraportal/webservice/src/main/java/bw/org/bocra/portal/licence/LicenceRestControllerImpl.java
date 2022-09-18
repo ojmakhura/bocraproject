@@ -42,7 +42,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Error detected Licence Service handleFindById "+id);
+            logger.debug("Search Licence by Id "+id);
             Optional<?> data = Optional.of(licenceService.findById(id));
             ResponseEntity<?> response;
 
@@ -63,7 +63,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Error detected Licence Service handleGetAll ");
+            logger.debug("Display all Licences");
             Optional<?> data = Optional.of(licenceService.getAll());
             ResponseEntity<?> response;
 
@@ -84,7 +84,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Error detected Licence Service handleGetAllPaged "+pageNumber+" "+pageSize);
+            logger.debug("Display all Licences of the specified by page number "+pageNumber+" and page size "+pageSize);
             Optional<?> data = Optional.of(licenceService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -105,7 +105,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Error detected Licence Service handleRemove "+id);
+            logger.debug("Delete Licence by Id "+id);
             Optional<?> data = Optional.of(licenceService.remove(id));
             ResponseEntity<?> response;
 
@@ -126,7 +126,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(LicenceVO licence) {
         try {
-            logger.debug("Error detected Licence Service handleSave "+licence);
+            logger.debug("Save Licence "+licence);
             Optional<?> data = Optional.of(licenceService.save(licence));
             ResponseEntity<?> response;
 
@@ -147,7 +147,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(LicenceCriteria criteria) {
         try {
-            logger.debug("Error detected Licence Service handleSearch "+criteria);
+            logger.debug("Search Licence by criteria "+criteria);
             Optional<?> data = Optional.of(licenceService.search(criteria));
             ResponseEntity<?> response;
 
@@ -169,7 +169,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
         try {
-            logger.debug("Error detected Licence Service handleAddDocument "+id+" "+documentTypeId+" "+file+" "+" "+fileName);
+            logger.debug("Add Document by Id "+id+", document type Id"+documentTypeId+", file"+file+" and file name"+fileName);
             AccessToken token = keycloakService.getSecurityContext().getToken();
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
