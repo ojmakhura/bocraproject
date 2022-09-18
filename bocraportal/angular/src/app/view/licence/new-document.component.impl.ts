@@ -52,6 +52,7 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
         DocumentTypeActions.search({
           criteria: this.documentDocumentTypeSearchField.value,
           loading: true,
+          loaderMessage: 'Search document types ...'
         })
       );
     }

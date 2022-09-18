@@ -51,6 +51,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
           LicenceActions.findById({
             id: queryParams?.id,
             loading: true,
+            loaderMessage: 'Find licence by id ...'
           })
         );
       }
@@ -103,6 +104,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
       LicenceActions.save({
         licence: form.licence,
         loading: true,
+        loaderMessage: 'Saving licence ...'
       })
     );
   }
@@ -112,6 +114,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
       this.store.dispatch(LicenceActions.remove({
         id: form?.licence?.id,
         loading: false,
+        loaderMessage: 'Removing licence ...'
       }));
       this.editLicenceFormReset();
     } else {
@@ -129,6 +132,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
           file: dialogData.document.file,
           fileName: dialogData.document.documentName,
           loading: true,
+          loaderMessage: 'Adding document to licence ...'
         })
       );
     }
@@ -139,7 +143,8 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     this.store.dispatch(
       LicenceTypeActions.search({
         criteria: criteria,
-        loading: true
+        loading: true,
+        loaderMessage: 'Searching licence types ...'
       })
     );
   }
@@ -150,7 +155,8 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     this.store.dispatch(
       LicenseeActions.search({
         criteria: { uin: criteria, licenseeName: criteria },
-        loading: true
+        loading: true,
+        loaderMessage: 'Searching licensees ...'
       })
     );
   }
@@ -161,7 +167,8 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
       this.store.dispatch(
         DocumentActions.remove({
           id: doc.id,
-          loading: true
+          loading: true,
+          loaderMessage: 'Removing document ...'
         })
       );
       this.documentDelete$.subscribe(removed => {

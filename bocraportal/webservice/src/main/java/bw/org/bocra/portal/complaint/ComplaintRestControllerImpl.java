@@ -30,6 +30,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+            logger.debug("Searches for a Complaint by "+id);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -49,6 +50,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
+            logger.debug("Displays all Complaints");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -68,6 +70,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
+            logger.debug("Displays all Complaints of the specified "+"Page number"+pageNumber+" and Page size "+pageSize);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -87,6 +90,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
+            logger.debug("Deletes a Complaint by Id"+ id);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -106,6 +110,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(ComplaintVO complaint) {
         try {
+            logger.debug("Save Complaint "+complaint);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -125,6 +130,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
+            logger.debug("Searchs for a Complaint");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 

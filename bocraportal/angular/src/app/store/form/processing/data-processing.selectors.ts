@@ -61,6 +61,11 @@ export const selectLoading = createSelector(
     (state: DataProcessingState) => state.loading
 );
 
+export const selectLoaderMessage = createSelector(
+    selectDataProcessingState,
+    (state: DataProcessingState) => state.loaderMessage
+);
+
 export const selectError = createSelector(
     selectDataProcessingState,
     (state: DataProcessingState) => state.error

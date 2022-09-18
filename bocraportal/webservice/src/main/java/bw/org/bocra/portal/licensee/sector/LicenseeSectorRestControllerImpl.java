@@ -31,7 +31,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleCreate(Long licenseeId, Long sectorId) {
         try {
-            logger.debug("Error detected  Licensee Sector Service handleCreate "+licenseeId+" "+sectorId);
+            logger.debug("Create Licensee Sector with Licensee Id "+licenseeId+" and Sector Id "+sectorId);
             Optional<?> data = Optional.of(licenseeSectorService.create(licenseeId, sectorId));
             ResponseEntity<?> response;
 
@@ -51,7 +51,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Error detected  Licensee Sector Service handleFindById "+id);
+            logger.debug("Search Licensee Sector by Id "+id);
             Optional<?> data = Optional.of(licenseeSectorService.findById(id));
             ResponseEntity<?> response;
 
@@ -71,7 +71,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleFindByLicensee(Long licenseeId) {
         try {
-            logger.debug("Error detected  Licensee Sector Service handleFindByLicensee "+licenseeId);
+            logger.debug("Search Licensee Sector by Licensee with Licensee Id "+licenseeId);
             Optional<?> data = Optional.of(licenseeSectorService.findByLicensee(licenseeId));
             ResponseEntity<?> response;
 
@@ -91,7 +91,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleFindBySector(Long sectorId) {
         try {
-            logger.debug("Error detected  Licensee Sector Service handleFindBySector "+sectorId);
+            logger.debug("Search Licensee Sector by Sector with Sector Id "+sectorId);
             Optional<?> data = Optional.of(licenseeSectorService.findBySector(sectorId));
             ResponseEntity<?> response;
 
@@ -111,7 +111,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Error detected  Licensee Sector Service handleGetAll ");
+            logger.debug("Display all Licensee Sectors ");
             Optional<?> data = Optional.of(licenseeSectorService.getAll());
             ResponseEntity<?> response;
 
@@ -131,7 +131,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Error detected  Licensee Sector Service handleRemove "+id);
+            logger.debug("Delete Licensee Sector with Id "+id);
             Optional<?> data = Optional.of(licenseeSectorService.remove(id));
             ResponseEntity<?> response;
 
@@ -151,7 +151,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleUpdateLicensee(Long id, Long licenseeId) {
         try {
-            logger.debug("Error detected  Licensee Sector Service handleUpdateLicensee "+id+" "+licenseeId);
+            logger.debug("Update Licensee with Id "+id+" and Licensee Id "+licenseeId);
             Optional<?> data = Optional.of(licenseeSectorService.updateLicensee(id, licenseeId));
             ResponseEntity<?> response;
 
@@ -171,7 +171,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     @Override
     public ResponseEntity<?> handleUpdateSector(Long id, Long sectorId) {
         try {
-            logger.debug("Error detected  Licensee Sector Service handleUpdateSector "+id+" "+sectorId);
+            logger.debug("Update Sector with Ids "+id+" and Sector Id "+sectorId);
             Optional<?> data = Optional.of(licenseeSectorService.updateSector(id, sectorId));
             ResponseEntity<?> response;
 

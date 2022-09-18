@@ -29,7 +29,8 @@ export class SearchPeriodConfigsComponentImpl extends SearchPeriodConfigsCompone
 
         this.store.dispatch(PeriodConfigActions.search({
             criteria: form.criteria,
-            loading: true
+            loading: true,
+            loaderMessage: 'Searching period configs ...'
         }));
     }    
 }

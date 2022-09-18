@@ -5,6 +5,11 @@ import { userKey, initialState } from './user.state';
 
 export const userReducer = createReducer(
   initialState,
+  on(UserActions.createUser, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+  })),
   on(UserActions.createUserSuccess, (state, action) => ({
     ...state,
     userId: null,
@@ -12,9 +17,15 @@ export const userReducer = createReducer(
     users: [],
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
+  })),
+  on(UserActions.updateUserName, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
   })),
   on(UserActions.updateUserNameSuccess, (state, action) => ({
     ...state,
@@ -23,9 +34,15 @@ export const userReducer = createReducer(
     users: [],
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
+  })),
+  on(UserActions.loadUsers, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
   })),
   on(UserActions.loadUsersSuccess, (state, action) => ({
     ...state,
@@ -33,10 +50,16 @@ export const userReducer = createReducer(
     user: null,
     users: action.users,
     criteria: null,
+    loaderMessage: undefined,
     loading: false,
     success: action.success,
     error: false,
     messages: action.messages,
+  })),
+  on(UserActions.findById, (state, action) => ({
+      ...state,
+      loading: action.loading,
+      loaderMessage: action.loaderMessage,
   })),
   on(UserActions.findByIdSuccess, (state, action) => ({
       ...state,
@@ -45,6 +68,7 @@ export const userReducer = createReducer(
       users: [],
       criteria: null,
       loading: false,
+      loaderMessage: undefined,
       success: action.success,
       error: false,
       messages: action.messages
@@ -79,6 +103,11 @@ export const userReducer = createReducer(
   //     success: action.success,
   //     messages: action.messages
   // })),
+  on(UserActions.search, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+  })),
   on(UserActions.searchSuccess, (state, action) => ({
     ...state,
     userId: null,
@@ -86,6 +115,7 @@ export const userReducer = createReducer(
     users: action.users,
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
@@ -107,6 +137,7 @@ export const userReducer = createReducer(
     users: [],
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: false,
     error: false,
     messages: [],
@@ -114,6 +145,7 @@ export const userReducer = createReducer(
   on(UserActions.userFailure, (state, action) => ({
     ...state,
     loading: false,
+    loaderMessage: undefined,
     success: false,
     error: true,
     messages: action.messages,
@@ -121,6 +153,7 @@ export const userReducer = createReducer(
   on(UserActions.userLoading, (state, action) => ({
     ...state,
     loading: action.loading,
+    loaderMessage: action.loaderMessage,
     success: false,
   }))
 );

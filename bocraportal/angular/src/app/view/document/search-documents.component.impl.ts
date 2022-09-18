@@ -30,7 +30,8 @@ export class SearchDocumentsComponentImpl extends SearchDocumentsComponent {
     override beforeSearchDocumentsSearch(form: SearchDocumentsSearchForm): void {
       this.store.dispatch(DocumentActions.search({
         criteria: form.criteria,
-        loading: true
+        loading: true,
+        loaderMessage: 'Searching documents ...'
       }));
     }
     

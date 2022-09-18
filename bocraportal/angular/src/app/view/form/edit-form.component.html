@@ -10,6 +10,9 @@
                     </button>
                 </div>
             </section>
+			<div *ngIf="loading | async">
+				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+			</div>
             <div *ngIf="success | async" class="alert alert-success" role="alert">
                 <div *ngFor="let message of messages | async">
                     {{ message }}
@@ -99,12 +102,12 @@
                     <button type="button" (click)="editFormSave()" class="btn btn-outline-primary">
                         <span translate>save</span>
                     </button>
-                    <button type="button" (click)="editFormAddField()" class="btn btn-outline-primary" *ngIf="formId">
+                    <!-- <button type="button" (click)="editFormAddField()" class="btn btn-outline-primary" *ngIf="formId">
                         <span translate>add.field</span>
-                    </button>
-                    <button type="button" (click)="editFormAddSection()" class="btn btn-outline-primary" *ngIf="formId">
+                    </button> -->
+                    <!-- <button type="button" (click)="editFormAddSection()" class="btn btn-outline-primary" *ngIf="formId">
                         <span translate>add.section</span>
-                    </button>
+                    </button> -->
                     <button type="button" (click)="editFormAddLicensee()" class="btn btn-outline-primary">
                         <span translate>add.licensee</span>
                     </button>
@@ -157,8 +160,7 @@
                     </mat-tab>
                     <mat-tab label="{{'form.sections' | translate}}" *ngIf="formId">
                         <div>
-                            <button type="button" (click)="formFormSectionsAddDialog()" class="btn btn-primary"
-                                data-bs-toggle="modal" data-bs-target="#formFormSectionsModal">
+                            <button type="button" (click)="editFormAddSection()" class="btn btn-primary">
                                 <mat-icon>add_box</mat-icon>
                             </button>
                             <mat-table matSort [dataSource]="formFormSections" #formSectionsSort="matSort"
@@ -201,8 +203,7 @@
                     </mat-tab>
                     <mat-tab label="{{'form.fields' | translate}}" *ngIf="formId">
                         <div>
-                            <button type="button" (click)="formFormFieldsAddDialog()" class="btn btn-primary"
-                                data-bs-toggle="modal" data-bs-target="#formFormFieldsModal">
+                            <button type="button" (click)="editFormAddField()" class="btn btn-primary">
                                 <mat-icon>add_box</mat-icon>
                             </button>
                             <mat-table matSort [dataSource]="formFormFields" #formFieldsSort="matSort"
@@ -214,10 +215,10 @@
                                             class="btn btn-info">
                                             <mat-icon>delete</mat-icon>
                                         </button>
-                                        <!-- <button type="button" color="accent" (click)="doEditFormFormFields(row)"
+                                        <button type="button" color="accent" (click)="doEditFormFormFields(row)"
                                             class="btn btn-info">
                                             <mat-icon>edit</mat-icon>
-                                        </button> -->
+                                        </button>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="id">

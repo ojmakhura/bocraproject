@@ -23,7 +23,7 @@ export enum LicenseeSectorActionType {
   LICENSEE_SECTOR_LOADING = '[Licensee Sector] Licensee Sector Loading',
 }
 
-export const findById = createAction(LicenseeSectorActionType.FIND_BY_ID, props<{ id: number | any; loading: boolean }>());
+export const findById = createAction(LicenseeSectorActionType.FIND_BY_ID, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
 
 export const findByIdSuccess = createAction(
   LicenseeSectorActionType.FIND_BY_ID_SUCCESS,
@@ -32,7 +32,7 @@ export const findByIdSuccess = createAction(
 
 export const findByLicensee = createAction(
   LicenseeSectorActionType.FIND_BY_LICENSEE,
-  props<{ licenseeId: number | any; loading: boolean }>()
+  props<{ licenseeId: number | any; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByLicenseeSuccess = createAction(
@@ -42,7 +42,7 @@ export const findByLicenseeSuccess = createAction(
 
 export const findBySector = createAction(
   LicenseeSectorActionType.FIND_BY_SECTOR,
-  props<{ sectorId: number | any; loading: boolean }>()
+  props<{ sectorId: number | any; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findBySectorSuccess = createAction(
@@ -52,7 +52,7 @@ export const findBySectorSuccess = createAction(
 
 export const create = createAction(
   LicenseeSectorActionType.CREATE,
-  props<{ licenseeId: number; sectorId: number; loading: boolean }>()
+  props<{ licenseeId: number; sectorId: number; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const createSuccess = createAction(
@@ -62,12 +62,12 @@ export const createSuccess = createAction(
 
 export const updateLicensee = createAction(
   LicenseeSectorActionType.UPDATE_LICENSEE,
-  props<{ id: number; licenseeId: number; loading: boolean }>()
+  props<{ id: number; licenseeId: number; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const updateSector = createAction(
   LicenseeSectorActionType.UPDATE_SECTOR,
-  props<{ id: number; sectorId: number; loading: boolean }>()
+  props<{ id: number; sectorId: number; loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const updateSuccess = createAction(
@@ -75,14 +75,14 @@ export const updateSuccess = createAction(
   props<{ licenseeSector: LicenseeSectorVO | any; messages: any[]; success: boolean }>()
 );
 
-export const remove = createAction(LicenseeSectorActionType.REMOVE, props<{ id: number | any; loading: boolean }>());
+export const remove = createAction(LicenseeSectorActionType.REMOVE, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
 
 export const removeSuccess = createAction(
   LicenseeSectorActionType.REMOVE_SUCCESS,
   props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
-export const getAll = createAction(LicenseeSectorActionType.GET_ALL, props<{ loading: boolean }>());
+export const getAll = createAction(LicenseeSectorActionType.GET_ALL, props<{ loading: boolean, loaderMessage: string | undefined }>());
 
 export const getAllSuccess = createAction(
   LicenseeSectorActionType.GET_ALL_SUCCESS,
@@ -93,7 +93,7 @@ export const licenseeSectorReset = createAction(LicenseeSectorActionType.LICENSE
 
 export const licenseeSectorLoading = createAction(
   LicenseeSectorActionType.LICENSEE_SECTOR_LOADING,
-  props<{ loading: boolean; success: boolean; messages: any[] }>()
+  props<{ loading: boolean, loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
 export const licenseeSectorFailure = createAction(LicenseeSectorActionType.LICENSEE_SECTOR_FAILURE, props<{ messages: any[] }>());

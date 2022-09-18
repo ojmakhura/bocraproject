@@ -9,6 +9,7 @@ export interface MenuSectionState {
     menuSection: MenuSectionVO | any;
     menuSections: Array<MenuSectionVO> | Array<any>;
     loading: boolean;
+    loaderMessage: string | undefined,
     removed: boolean;
     success: boolean;
     error: boolean;
@@ -24,5 +25,6 @@ export const initialState: MenuSectionState = {
     removed: false,
     success: false,
     error: false,
-    messages: []
+    messages: [],
+    loaderMessage: undefined
 };

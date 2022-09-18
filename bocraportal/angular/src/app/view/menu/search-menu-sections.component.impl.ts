@@ -27,7 +27,8 @@ export class SearchMenuSectionsComponentImpl extends SearchMenuSectionsComponent
         this.store.dispatch(
             MenuSectionActions.search({
                 criteria: form.criteria ? form.criteria : '',
-                loading: true
+                loading: true,
+                loaderMessage: 'Searching menu sections ...'
             })
         );
     }

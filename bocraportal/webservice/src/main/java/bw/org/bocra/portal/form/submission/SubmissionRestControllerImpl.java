@@ -39,7 +39,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
-            logger.debug("Error detected at Submission Service handleFindById "+id);
+            logger.debug("Search Form Submision by "+id);
             Optional<FormSubmissionVO> data = Optional.of(submissionService.findById(id));
             ResponseEntity<FormSubmissionVO> response;
     
@@ -60,7 +60,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try{
-            logger.debug("Error detected at Submission Service handleGetAll");
+            logger.debug("Display all Form Submissions");
             Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll());
             ResponseEntity<Collection<FormSubmissionVO>> response;
     
@@ -81,7 +81,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
-            logger.debug("Error detected at Submission Service handleGetAllPaged "+pageNumber+" "+pageSize);
+            logger.debug("Display all Form Submissions of the specified "+"Page number "+pageNumber+" and Page size "+pageSize);
             Optional<Collection<FormSubmissionVO>> data = Optional.of(submissionService.getAll(pageNumber, pageSize));
             ResponseEntity<Collection<FormSubmissionVO>> response;
     
@@ -102,7 +102,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
-            logger.debug("Error detected at Submission Service handleRemove "+id);
+            logger.debug("Deletes Form Submission by "+id);
             Optional<Boolean> data = Optional.of(submissionService.remove(id));
             ResponseEntity<Boolean> response;
     
@@ -123,7 +123,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(FormSubmissionVO formSubmissionVO) {
         try{
-            logger.debug("Error detected at Submission Service handleSave "+formSubmissionVO);
+            logger.debug("Save Form Submisson "+formSubmissionVO);
             Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmissionVO));
             ResponseEntity<FormSubmissionVO> response;
     
@@ -144,7 +144,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(FormSubmissionCriteria criteria) {
         try{
-            logger.debug("Error detected at Submission Service handleSearch "+criteria);
+            logger.debug("Search Form Submission by "+criteria);
 
             UserVO user = keycloakUserService.getLoggedInUser();
 
@@ -172,7 +172,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDataField(DataFieldVO dataField) {
         try{
-            logger.debug("Error detected at Submission Service handleAddDataField "+dataField);
+            logger.debug("Adds Data Field "+dataField);
             Optional<DataFieldVO> data = Optional.of(submissionService.addDataField(dataField));
             ResponseEntity<DataFieldVO> response;
     
@@ -193,7 +193,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddDataFields(Set<DataFieldVO> dataFields) {
         try{
-            logger.debug("Error detected at Submission Service handleAddDataFields "+dataFields);
+            logger.debug("Adds Data Fields "+dataFields);
             Optional<Collection<DataFieldVO>> data = Optional.of(submissionService.addDataFields(dataFields));
             ResponseEntity<Collection<DataFieldVO>> response;
     
@@ -214,7 +214,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleDeleteDataField(Long id) {
         try{
-            logger.debug("Error detected at Submission Service handleDeleteDataField "+id);
+            logger.debug("Deletes Data Field by "+id);
             Optional<Boolean> data = Optional.of(submissionService.deleteDataField(id));
             ResponseEntity<Boolean> response;
     
@@ -235,7 +235,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetSubmissionSummary(FormSubmissionCriteria criteria) {
         try{
-            logger.debug("Error detected at Submission Service handleGetSubmissionSummary "+criteria);
+            logger.debug("Display Submission Summary by "+criteria);
             UserVO user = keycloakUserService.getLoggedInUser();
 
             if(user.getLicensee() != null && user.getLicensee().getId() != null) {

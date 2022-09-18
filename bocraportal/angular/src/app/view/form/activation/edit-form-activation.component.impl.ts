@@ -69,6 +69,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
             FormActivationActions.findById({
             id: queryParams.id,
             loading: true,
+            loaderMessage: 'Loading form activation by id ...'
           })
         );
       }
@@ -106,13 +107,13 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         this.setEditFormActivationFormValue({formActivation});
     });
 
-    this.store.dispatch(
-      ViewActions.loadViewAuthorisations({
-        viewUrl: "/form/activation",
-        roles: this.keycloakService.getUserRoles(),
-        loading: true
-      })
-    );
+    // this.store.dispatch(
+    //   ViewActions.loadViewAuthorisations({
+    //     viewUrl: "/form/activation",
+    //     roles: this.keycloakService.getUserRoles(),
+    //     loading: true,
+    //   })
+    // );
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
@@ -133,7 +134,8 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
       this.store.dispatch(
         FormActivationActions.remove({
           id: form.formActivation.id,
-          loading: true
+          loading: true,
+          loaderMessage: 'Removing form activations ...'
         })
       );
       this.editFormActivationFormReset();
@@ -146,14 +148,14 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     let criteria: FormCriteria = new FormCriteria();
     criteria.code = this.formActivationFormSearchField.value;
     criteria.formName = this.formActivationFormSearchField.value;
-    this.store.dispatch(FormActions.searchForms({ criteria: criteria, loading: true }));
+    this.store.dispatch(FormActions.searchForms({ criteria: criteria, loading: true, loaderMessage: 'Searching forms ...' }));
   }
 
   override formActivationPeriodSearch(): void {
     let criteria: PeriodCriteria = new PeriodCriteria();
     criteria.periodName = this.formActivationPeriodSearchField.value;
 
-    this.store.dispatch(PeriodActions.search({ criteria, loading: true }));
+    this.store.dispatch(PeriodActions.search({ criteria, loading: true, loaderMessage: 'Searching periods ...' }));
   }
 
   override beforeEditFormActivationSave(form: EditFormActivationSaveForm): void {
@@ -169,6 +171,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         FormActivationActions.save({
           formActivation: form.formActivation,
           loading: true,
+          loaderMessage: 'Saving form activation ...'
         })
       );
     } else {
@@ -242,4 +245,18 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         }
     });
   }
+
+  override editFormActivationFormReset() {
+
+    this.store.dispatch(FormActivationActions.formActivationReset());
+    this.formActivationFormSubmissionsControl.clear()
+    this.editFormActivationForm.reset()
+    this.editFormActivationForm.markAsPristine();
+
+    if(this.router.url.substring(0, this.router.url.indexOf('?'))) {
+        this.router.navigate([this.router.url.substring(0, this.router.url.indexOf('?'))]);
+    } else {
+        this.router.navigate([this.router.url]);
+    }
+}
 }

@@ -55,6 +55,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
           SectorActions.findById({
             id: queryParams?.id,
             loading: true,
+            loaderMessage: 'Loading sector by id ...'
           })
         );
       }
@@ -103,6 +104,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       LicenseeActions.search({
         criteria: { uin: criteria, licenseeName: criteria },
         loading: true,
+        loaderMessage: 'Searching licensees ...'
       })
     );
   }
@@ -113,6 +115,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
         SectorActions.remove({
           id: form?.sector?.id,
           loading: false,
+          loaderMessage: ''
         })
       );
       this.editSectorFormReset();
@@ -138,6 +141,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
         SectorActions.save({
           sector: form.sector,
           loading: true,
+          loaderMessage: 'Saving sector ...'
         })
       );
     } else {
@@ -176,6 +180,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       FormActions.searchForms({
         criteria: criteria,
         loading: true,
+        loaderMessage: 'Searching forms ...'
       })
     );
   }
@@ -187,6 +192,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
         LicenseeSectorActions.remove({
           id: lic.id,
           loading: true,
+          loaderMessage: 'Removing licensee from sector ...'
         })
       );
     }

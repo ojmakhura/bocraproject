@@ -31,7 +31,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleCreate(Long licenseeId, Long shareholderId) {
         try {
-            logger.debug("Error detected at Licensee Shareholder Service");
+            logger.debug("Create Licensee Shareholder with Id "+licenseeId+" and Shareholder Id "+shareholderId);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -51,7 +51,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleFindByLicensee(Long licenseeId) {
         try {
-            logger.debug("Error detected at Licensee Shareholder Service");
+            logger.debug("Search Licensee Shareholder by Licensee with Licensee Id "+licenseeId);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -71,7 +71,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleFindByShareholder(Long shareholderId) {
         try {
-            logger.debug("Error detected at Licensee Shareholder Service");
+            logger.debug("Search Licensee Shareholder by Shareholder with Shareholder Id "+shareholderId);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -91,7 +91,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleFindShareholderById(Long id) {
         try {
-            logger.debug("Error detected at Licensee Shareholder Service handleFindShareholderById "+id);
+            logger.debug("Search Shareholder by Id "+id);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -111,7 +111,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleGetAllShareholders() {
         try {
-            logger.debug("Error detected at Licensee Shareholder Service handleGetAllShareholders");
+            logger.debug("Display all Shareholders");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -131,7 +131,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleRemoveShareholder(Long id) {
         try {
-            logger.debug("Error detected at Licensee Shareholder Service handleRemoveShareholder "+id);
+            logger.debug("Delete Shareholder with Id "+id);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -151,7 +151,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleUpdateLicensee(Long id, Long licenseeId) {
         try {
-            logger.debug("Error detected at Licensee Shareholder Service handleUpdateLicensee "+id+" "+licenseeId);
+            logger.debug("Update Licensee with Id  "+id+" and Licensee Id "+licenseeId);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -171,7 +171,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleUpdateShareholder(Long id, Long formId) {
         try {
-            logger.debug("Error detected at Licensee Shareholder Service handleUpdateShareholder "+id+" "+formId);
+            logger.debug("Update Shareholder with Id  "+id+" and Form Id "+formId);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 

@@ -28,7 +28,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Error detected at Document Type Service handleFindById "+"For "+id);
+            logger.debug("Searches for Document Type by "+id);
             Optional<?> data = Optional.of(documentTypeService.findById(id));
             ResponseEntity<?> response;
 
@@ -48,7 +48,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Error detected at Document Type Service handleGetAll");
+            logger.debug("Displays all Document Types");
             Optional<?> data = Optional.of(documentTypeService.getAll());
             ResponseEntity<?> response;
 
@@ -68,7 +68,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Error detected at Document Type Service handleGetAllPaged "+" Page Number: "+pageNumber+" Page Size"+pageSize);
+            logger.debug("Displays all Document Types of the specified "+" Page Number: "+pageNumber+" and Page Size"+pageSize);
             Optional<?> data = Optional.of(documentTypeService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -88,7 +88,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Error detected at Document Type Service handleRemove "+"For "+id);
+            logger.debug("Deletes Document Type by "+id);
             Optional<?> data = Optional.of(documentTypeService.remove(id));
             ResponseEntity<?> response;
 
@@ -108,7 +108,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleSave(DocumentTypeVO documentType) {
         try {
-            logger.debug("Error detected at Document Type Service handleSave "+"Document Type "+documentType);
+            logger.debug("Save Document Type "+documentType);
             Optional<?> data = Optional.of(documentTypeService.save(documentType));
             ResponseEntity<?> response;
 
@@ -128,7 +128,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
-            logger.debug("Error detected at Document Type Service handleSearch "+"By "+criteria);
+            logger.debug("Searches for Document Type by "+criteria);
             Optional<?> data = Optional.of(documentTypeService.search(criteria));
             ResponseEntity<?> response;
 

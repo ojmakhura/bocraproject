@@ -26,7 +26,7 @@ export enum DocumentActionType {
 
 export const findById = createAction(
     DocumentActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -36,7 +36,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     DocumentActionType.SAVE,
-    props<{ document: DocumentVO | any , loading: boolean }>()
+    props<{ document: DocumentVO | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -46,7 +46,7 @@ export const saveSuccess = createAction(
 
 export const remove = createAction(
     DocumentActionType.REMOVE,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -56,7 +56,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     DocumentActionType.GET_ALL,
-    props<{  loading: boolean }>()
+    props<{  loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -66,7 +66,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     DocumentActionType.SEARCH,
-    props<{ criteria: string | any , loading: boolean }>()
+    props<{ criteria: string | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -76,7 +76,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
     DocumentActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -86,7 +86,7 @@ export const getAllPagedSuccess = createAction(
 
 export const getLicenseeDocuments = createAction(
     DocumentActionType.GET_LICENSEE_DOCUMENTS,
-    props<{ licenseeId: number | any , loading: boolean }>()
+    props<{ licenseeId: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getLicenseeDocumentsSuccess = createAction(
@@ -96,7 +96,7 @@ export const getLicenseeDocumentsSuccess = createAction(
 
 export const getLicenceDocuments = createAction(
     DocumentActionType.GET_LICENCE_DOCUMENTS,
-    props<{ licenceId: number | any , loading: boolean }>()
+    props<{ licenceId: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getLicenceDocumentsSuccess = createAction(
@@ -109,7 +109,7 @@ export const documentReset = createAction(DocumentActionType.DOCUMENT_RESET);
 
 export const documentLoading = createAction(
     DocumentActionType.DOCUMENT_LOADING,
-    props<{ loading: boolean, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const documentFailure = createAction(

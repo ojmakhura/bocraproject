@@ -25,7 +25,7 @@ export enum AuthorisationActionType {
 
 export const findById = createAction(
     AuthorisationActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -35,7 +35,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     AuthorisationActionType.SAVE,
-    props<{ authorisation: AuthorisationVO | any , loading: boolean }>()
+    props<{ authorisation: AuthorisationVO | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -45,7 +45,7 @@ export const saveSuccess = createAction(
 
 export const remove = createAction(
     AuthorisationActionType.REMOVE,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -55,7 +55,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     AuthorisationActionType.GET_ALL,
-    props<{  loading: boolean }>()
+    props<{  loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -65,7 +65,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     AuthorisationActionType.SEARCH,
-    props<{ criteria: AuthorisationCriteria | any, loading: boolean }>()
+    props<{ criteria: AuthorisationCriteria | any, loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -75,7 +75,7 @@ export const searchSuccess = createAction(
 
 export const assignMenuSection = createAction(
     AuthorisationActionType.ASSIGN_MENU_SECTION,
-    props<{ authorisationId: number, menuSectionId: number, loading: boolean }>()
+    props<{ authorisationId: number, menuSectionId: number, loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const assignMenuSectionSuccess = createAction(
@@ -85,7 +85,7 @@ export const assignMenuSectionSuccess = createAction(
 
 export const getAllPaged = createAction(
     AuthorisationActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -97,7 +97,7 @@ export const authorisationReset = createAction(AuthorisationActionType.AUTHORISA
 
 export const authorisationLoading = createAction(
     AuthorisationActionType.AUTHORISATION_LOADING,
-    props<{ loading: boolean, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const authorisationFailure = createAction(

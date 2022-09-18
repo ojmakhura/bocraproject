@@ -46,6 +46,11 @@ export const selectLoading = createSelector(
     (state: DocumentTypeState) => state.loading
 );
 
+export const selectLoaderMessage = createSelector(
+    selectDocumentTypeState,
+    (state: DocumentTypeState) => state.loaderMessage
+);
+
 export const selectError = createSelector(
     selectDocumentTypeState,
     (state: DocumentTypeState) => state.error
