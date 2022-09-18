@@ -5,6 +5,11 @@ import {documentKey, initialState} from './document.state';
 
 export const documentReducer = createReducer(
     initialState,
+    on(DocumentActions.findById, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
     on(DocumentActions.findByIdSuccess, (state, action) => ({
         ...state,
         document: action.document, 
@@ -12,6 +17,11 @@ export const documentReducer = createReducer(
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DocumentActions.save, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.saveSuccess, (state, action) => ({
         ...state,
@@ -21,6 +31,11 @@ export const documentReducer = createReducer(
         error: false,
         messages: action.messages
     })),
+    on(DocumentActions.remove, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
     on(DocumentActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 
@@ -28,6 +43,11 @@ export const documentReducer = createReducer(
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DocumentActions.getAll, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.getAllSuccess, (state, action) => ({
         ...state,
@@ -37,6 +57,11 @@ export const documentReducer = createReducer(
         error: false,
         messages: action.messages
     })),
+    on(DocumentActions.search, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
     on(DocumentActions.searchSuccess, (state, action) => ({
         ...state,
         documents: action.documents, 
@@ -44,6 +69,11 @@ export const documentReducer = createReducer(
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DocumentActions.getAllPaged, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -53,6 +83,11 @@ export const documentReducer = createReducer(
         error: false,
         messages: action.messages
     })),
+    on(DocumentActions.getLicenseeDocuments, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
     on(DocumentActions.getLicenseeDocumentsSuccess, (state, action) => ({
         ...state,
         documents: action.documents, 
@@ -60,6 +95,11 @@ export const documentReducer = createReducer(
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(DocumentActions.getLicenceDocuments, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(DocumentActions.getLicenceDocumentsSuccess, (state, action) => ({
         ...state,
@@ -76,6 +116,7 @@ export const documentReducer = createReducer(
         id: null, 
         document: null, 
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: false,
         messages: []
@@ -83,6 +124,7 @@ export const documentReducer = createReducer(
     on(DocumentActions.documentFailure, (state, action) => ({
         ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: true,
         messages: action.messages

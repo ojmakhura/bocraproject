@@ -122,10 +122,23 @@ else
 endif
 
 ##
-## Swarm initialisation
+## System initialisation
 ##
 swarm_init:
 	docker swarm init
+
+local_prep: gen_env
+	. ./.env && mkdir ${BOCRA_DATA}
+	. ./.env && mkdir ${BOCRA_DATA}/db
+	. ./.env && mkdir ${BOCRA_DATA}/auth
+	. ./.env && cp traefik_passwd ${BOCRA_DATA}/auth/system_passwd
+	. ./.env && mkdir ${BOCRA_DATA}/keycloak
+	. ./.env && mkdir ${BOCRA_DATA}/certs
+	. ./.env && cp deployment/certs/* ${BOCRA_DATA}/certs
+	. ./.env && mkdir ${BOCRA_DATA}/registry
+	. ./.env && mkdir ${BOCRA_DATA}/traefik
+	. ./.env && cp deployment/traefik/config.yml ${BOCRA_DATA}/traefik
+	. ./.env && mkdir ${BOCRA_DATA}/web
 
 ##
 ## Check the logs

@@ -5,6 +5,12 @@ import { accessPointKey, initialState } from './access-point.state';
 
 export const accessPointReducer = createReducer(
   initialState,
+  on(AccessPointActions.findById, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+    messages: [],
+  })),
   on(AccessPointActions.findByIdSuccess, (state, action) => ({
     ...state,
     accessPoints: [],
@@ -12,9 +18,16 @@ export const accessPointReducer = createReducer(
     accessPoint: action.accessPoint,
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
+  })),
+  on(AccessPointActions.save, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+    messages: [],
   })),
   on(AccessPointActions.saveSuccess, (state, action) => ({
     ...state,
@@ -23,9 +36,15 @@ export const accessPointReducer = createReducer(
     accessPoint: action.accessPoint,
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
+  })),
+  on(AccessPointActions.remove, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
   })),
   on(AccessPointActions.removeSuccess, (state, action) => ({
     ...state,
@@ -34,9 +53,15 @@ export const accessPointReducer = createReducer(
     accessPoint: null,
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
+  })),
+  on(AccessPointActions.getAll, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
   })),
   on(AccessPointActions.getAllSuccess, (state, action) => ({
     ...state,
@@ -45,9 +70,15 @@ export const accessPointReducer = createReducer(
     accessPoint: null,
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
+  })),
+  on(AccessPointActions.search, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
   })),
   on(AccessPointActions.searchSuccess, (state, action) => ({
     ...state,
@@ -56,9 +87,15 @@ export const accessPointReducer = createReducer(
     accessPoint: null,
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
+  })),
+  on(AccessPointActions.getAllPaged, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
   })),
   on(AccessPointActions.getAllPagedSuccess, (state, action) => ({
     ...state,
@@ -67,9 +104,17 @@ export const accessPointReducer = createReducer(
     accessPoint: null,
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
+  })),
+  on(AccessPointActions.pagedSearch, (state, action) => ({
+    ...state,
+    accessPoints: [],
+    accessPoint: null,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
   })),
   on(AccessPointActions.pagedSearchSuccess, (state, action) => ({
     ...state,
@@ -78,6 +123,7 @@ export const accessPointReducer = createReducer(
     accessPoint: null,
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: action.success,
     error: false,
     messages: action.messages,
@@ -89,13 +135,15 @@ export const accessPointReducer = createReducer(
     accessPoint: null,
     criteria: null,
     loading: false,
+    loaderMessage: undefined,
     success: false,
     error: false,
-    messges: [],
+    messages: [],
   })),
   on(AccessPointActions.accessPointFailure, (state, action) => ({
     ...state,
     loading: false,
+    loaderMessage: undefined,
     success: false,
     error: true,
     messages: action.messages,
@@ -103,6 +151,7 @@ export const accessPointReducer = createReducer(
   on(AccessPointActions.accessPointLoading, (state, action) => ({
     ...state,
     loading: action.loading,
+    loaderMessage: action.loaderMessage,
     success: false,
   }))
 );

@@ -32,7 +32,8 @@ export class SearchAccessPointsComponentImpl extends SearchAccessPointsComponent
     override beforeSearchAccessPointsSearch(form: SearchAccessPointsSearchForm): void {
       this.store.dispatch(AccessPointActions.search({
         criteria: form.criteria,
-        loading: true
+        loading: true,
+        loaderMessage: 'Searching access points ...'
       }));
       
     }

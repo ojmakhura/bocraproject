@@ -45,6 +45,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       FormActions.searchForms({
         criteria: criteria,
         loading: true,
+        loaderMessage: 'Searching forms ...'
       })
     );
   }
@@ -57,6 +58,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       LicenseeActions.search({
         criteria: criteria,
         loading: true,
+        loaderMessage: 'Searching licensees ...'
       })
     );
   }

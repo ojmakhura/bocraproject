@@ -23,7 +23,7 @@ export enum FormActivationActionType {
 
 export const findById = createAction(
     FormActivationActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -33,7 +33,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     FormActivationActionType.SAVE,
-    props<{ formActivation: FormActivationVO | any , loading: boolean }>()
+    props<{ formActivation: FormActivationVO | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -43,7 +43,7 @@ export const saveSuccess = createAction(
 
 export const remove = createAction(
     FormActivationActionType.REMOVE,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -53,7 +53,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     FormActivationActionType.GET_ALL,
-    props<{  loading: boolean }>()
+    props<{  loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -63,7 +63,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     FormActivationActionType.SEARCH,
-    props<{ criteria: FormActivationCriteria | any , loading: boolean }>()
+    props<{ criteria: FormActivationCriteria | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -73,7 +73,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
     FormActivationActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -85,7 +85,7 @@ export const formActivationReset = createAction(FormActivationActionType.FORM_AC
 
 export const formActivationLoading = createAction(
     FormActivationActionType.FORM_ACTIVATION_LOADING,
-    props<{ loading: boolean, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const formActivationFailure = createAction(

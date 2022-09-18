@@ -57,6 +57,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
           PeriodActions.findById({
             id: queryParams?.id,
             loading: true,
+            loaderMessage: 'Loading period by id ...'
           })
         );
       }
@@ -147,6 +148,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         PeriodActions.save({
           period: form.period,
           loading: true,
+          loaderMessage: 'Saving period ...'
         })
       );
     } else {
@@ -172,6 +174,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
       PeriodConfigActions.search({
         criteria: { periodConfigName: this.periodPeriodConfigSearchField.value },
         loading: true,
+        loaderMessage: 'Searching period configs ...'
       })
     );
   }
@@ -180,7 +183,8 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     this.store.dispatch(
       PeriodActions.search({
         criteria: { periodName: this.periodPreviousSearchField.value },
-        loading: true
+        loading: true,
+        loaderMessage: 'Searching periods ...'
       })
     );
   }
@@ -189,7 +193,8 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
     this.store.dispatch(
       PeriodActions.search({
         criteria: { periodName: this.periodNextSearchField.value },
-        loading: true
+        loading: true,
+        loaderMessage: 'Searching periods ...'
       })
     );
   }
@@ -200,6 +205,7 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
         PeriodActions.remove({
           id: form?.period?.id,
           loading: false,
+          loaderMessage: 'Removing periods ...'
         })
       );
       this.editPeriodFormReset();

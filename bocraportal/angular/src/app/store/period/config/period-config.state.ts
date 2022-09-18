@@ -12,6 +12,7 @@ export interface PeriodConfigState {
     removed: boolean,
     success: boolean,
     loading: boolean,
+    loaderMessage: string | undefined,
     error: boolean,
     messages: any[]
 }
@@ -25,5 +26,6 @@ export const initialState: PeriodConfigState = {
     success: false,
     loading: false,
     error: false,
-    messages: []
+    messages: [],
+    loaderMessage: undefined
 };

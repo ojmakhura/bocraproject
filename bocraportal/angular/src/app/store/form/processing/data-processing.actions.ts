@@ -17,7 +17,7 @@ export enum DataProcessingActionType {
 
 export const dataCaptureSummary = createAction(
     DataProcessingActionType.SUBMISSION_SUMMARY,
-    props<{ loading: boolean }>()
+    props<{ loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const dataCaptureSummarySuccess = createAction(
@@ -27,7 +27,7 @@ export const dataCaptureSummarySuccess = createAction(
 
 export const loadData = createAction(
     DataProcessingActionType.LOAD_DATA,
-    props<{ criteria: FormSubmissionCriteria,loading: boolean }>()
+    props<{ criteria: FormSubmissionCriteria,loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const loadDataSuccess = createAction(
@@ -37,7 +37,7 @@ export const loadDataSuccess = createAction(
 
 export const dataProcessingLoading = createAction(
     DataProcessingActionType.DATA_PROCESSING_LOADING,
-    props<{ loading: boolean, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const dataProcessingFailure = createAction(

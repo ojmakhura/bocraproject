@@ -29,7 +29,8 @@ export class SearchFormActivationsComponentImpl extends SearchFormActivationsCom
         criteria.activationName = form.activationName;
         this.store.dispatch(FormActivationActions.search({
             criteria: criteria,
-            loading: true
+            loading: true,
+            loaderMessage: 'Searching form activations ...'
         }));
     }
 }

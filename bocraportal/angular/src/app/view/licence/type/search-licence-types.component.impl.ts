@@ -27,7 +27,8 @@ export class SearchLicenceTypesComponentImpl extends SearchLicenceTypesComponent
     override beforeSearchLicenceTypesSearch(form: SearchLicenceTypesSearchForm): void {
         this.store.dispatch(licenceTypeActions.search({
             criteria: form.criteria,
-            loading: true
+            loading: true,
+            loaderMessage: 'Searching licence type ...'
         }));
     }
 }

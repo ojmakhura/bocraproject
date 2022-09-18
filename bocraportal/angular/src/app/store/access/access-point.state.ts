@@ -11,6 +11,7 @@ export interface AccessPointState {
     criteria: AccessPointCriteria | any,
     removed: boolean,
     loading: boolean,
+    loaderMessage: string | undefined;
     success: boolean,
     error: boolean,
     messages: string[]
@@ -23,6 +24,7 @@ export const initialState: AccessPointState = {
     criteria: null,
     removed: false,
     loading: false,
+    loaderMessage: undefined,
     success: false,
     error: false,
     messages: []

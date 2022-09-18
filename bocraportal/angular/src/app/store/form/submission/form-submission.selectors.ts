@@ -41,6 +41,11 @@ export const selectLoading = createSelector(
     (state: FormSubmissionState) => state.loading
 );
 
+export const selectLoaderMessage = createSelector(
+    selectFormSubmissionState,
+    (state: FormSubmissionState) => state.loaderMessage
+);
+
 export const selectSuccess = createSelector(
     selectFormSubmissionState,
     (state: FormSubmissionState) => state.success

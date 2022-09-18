@@ -216,6 +216,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     messages: Observable<any>;
     success: Observable<boolean>;
     loading: Observable<boolean>;
+    loaderMessage: Observable<string>;
     error: Observable<boolean>;
     selected: any = null;
 
@@ -233,6 +234,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
         this._injector = injector;
         this.licensee$ = this.store.pipe(select(LicenseeSelectors.selectLicensee));
         this.loading = this.store.pipe(select(LicenseeSelectors.selectLoading));
+        this.loaderMessage = this.store.pipe(select(LicenseeSelectors.selectLoaderMessage));
         this.success = this.store.pipe(select(LicenseeSelectors.selectSuccess));
         this.error = this.store.pipe(select(LicenseeSelectors.selectError));
         this.messages = this.store.pipe(select(LicenseeSelectors.selectMessages));
@@ -809,7 +811,8 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
                     LicenseeFormActions.create({
                         licenseeId: this.licenseeId,
                         formId: data.id,
-                        loading: true
+                        loading: true,
+                        loaderMessage: 'Creating a licensee form associations ....'
                     })
                 );
             }
@@ -955,7 +958,8 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
             this.store.dispatch(
                 LicenseeSectorActions.remove({
                     id: this.licenseeSectors[index].id,
-                    loading: true
+                    loading: true,
+                    loaderMessage: 'Removing licensee sector association ...'
                 })
             );
 
@@ -1001,7 +1005,8 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
                     LicenseeSectorActions.create({
                         licenseeId: this.licenseeId,
                         sectorId: data.id,
-                        loading: true
+                        loading: true,
+                        loaderMessage: 'Creating a licensee sector association ...'
                     })
                 );
             }

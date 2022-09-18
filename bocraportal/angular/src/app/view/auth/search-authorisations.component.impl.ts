@@ -58,7 +58,8 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
   override beforeSearchAuthorisationsSearch(form: SearchAuthorisationsSearchForm): void {
     this.store.dispatch(authorisationActions.search({
       criteria: form.criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Searching authorisations ...'
     }));
     
   }

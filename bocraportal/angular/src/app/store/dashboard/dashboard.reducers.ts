@@ -8,6 +8,7 @@ export const dashboardReducer = createReducer(
     on(DashboardActions.dashboardReset, (state) => ({
       ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: false,
         messages: []
@@ -15,6 +16,7 @@ export const dashboardReducer = createReducer(
     on(DashboardActions.dashboardFailure, (state, action) => ({
         ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: true,
         messages: action.messages

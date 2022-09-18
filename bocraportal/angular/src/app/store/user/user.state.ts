@@ -17,6 +17,7 @@ export interface UserState {
     removed: boolean,
     success: boolean;
     loading: boolean;
+    loaderMessage: string | undefined,
     error: boolean,
     messages: any[]
 }
@@ -35,5 +36,6 @@ export const initialState: UserState = {
     password: '',
     confirmPassword: '',
     newPassword: '',
-    currentPassword: ''
+    currentPassword: '',
+    loaderMessage: undefined
 };

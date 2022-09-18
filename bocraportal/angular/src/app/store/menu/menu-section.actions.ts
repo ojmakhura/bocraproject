@@ -25,7 +25,7 @@ export enum MenuSectionActionType {
 
 export const findById = createAction(
     MenuSectionActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -35,7 +35,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     MenuSectionActionType.SAVE,
-    props<{ menuSection: MenuSectionVO | any , loading: boolean }>()
+    props<{ menuSection: MenuSectionVO | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -50,7 +50,7 @@ export const addMenuSection = createAction(
 
 export const remove = createAction(
     MenuSectionActionType.REMOVE,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -60,7 +60,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     MenuSectionActionType.GET_ALL,
-    props<{  loading: boolean }>()
+    props<{  loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -70,7 +70,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     MenuSectionActionType.SEARCH,
-    props<{ criteria: string | any , loading: boolean }>()
+    props<{ criteria: string | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -80,7 +80,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
     MenuSectionActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -90,7 +90,7 @@ export const getAllPagedSuccess = createAction(
 
 export const findByAuthorisationRoles = createAction(
     MenuSectionActionType.FIND_BY_AUTHORISATION_ROLES,
-    props<{ roles: Set<string> | any , loading: boolean }>()
+    props<{ roles: Set<string> | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByAuthorisationRolesSuccess = createAction(
@@ -103,7 +103,7 @@ export const menuSectionReset = createAction(MenuSectionActionType.MENU_SECTION_
 
 export const menuSectionLoading = createAction(
     MenuSectionActionType.MENU_SECTION_LOADING,
-    props<{ loading: boolean, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const menuSectionFailure = createAction(

@@ -4,6 +4,7 @@ export const dashboardKey = "dashboard";
 
 export interface DashboardState {
     loading: boolean,
+    loaderMessage: string | undefined,
     success: boolean,
     error: boolean,
     messages: any[]
@@ -13,5 +14,6 @@ export const initialState: DashboardState = {
     loading: false,
     success: false,
     error: false,
-    messages: []
+    messages: [],
+    loaderMessage: undefined
 };

@@ -5,18 +5,30 @@ import {menuSectionKey, initialState} from './menu-section.state';
 
 export const menuSectionReducer = createReducer(
     initialState,
+    on(MenuSectionActions.findById, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
     on(MenuSectionActions.findByIdSuccess, (state, action) => ({
         ...state,
         menuSection: action.menuSection, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(MenuSectionActions.save, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.saveSuccess, (state, action) => ({
         ...state,
         menuSection: action.menuSection, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
@@ -25,32 +37,56 @@ export const menuSectionReducer = createReducer(
         ...state,
         menuSections: [...state.menuSections, action.menuSection], 
         loading: false,
+        loaderMessage: undefined,
         success: false,
         messages: []
+    })),
+    on(MenuSectionActions.remove, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(MenuSectionActions.getAll, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.getAllSuccess, (state, action) => ({
         ...state,
         menuSections: action.menuSections, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(MenuSectionActions.search, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.searchSuccess, (state, action) => ({
         ...state,
         menuSections: action.menuSections, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(MenuSectionActions.getAllPaged, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.getAllPagedSuccess, (state, action) => ({
         ...state,
@@ -59,9 +95,15 @@ export const menuSectionReducer = createReducer(
         menuSection: null, 
         menuSections: action.menuSections, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(MenuSectionActions.findByAuthorisationRoles, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(MenuSectionActions.findByAuthorisationRolesSuccess, (state, action) => ({
         ...state,
@@ -70,6 +112,7 @@ export const menuSectionReducer = createReducer(
         menuSection: null, 
         menuSections: action.menuSections, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
@@ -81,6 +124,7 @@ export const menuSectionReducer = createReducer(
         menuSection: null, 
         menuSections: [], 
         loading: false,
+        loaderMessage: undefined,
         removed: false,
         success: false,
         error: false,
@@ -89,6 +133,7 @@ export const menuSectionReducer = createReducer(
     on(MenuSectionActions.menuSectionFailure, (state, action) => ({
         ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: true,
         messages: action.messages
