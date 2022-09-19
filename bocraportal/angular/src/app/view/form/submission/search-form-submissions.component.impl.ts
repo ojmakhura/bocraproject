@@ -29,7 +29,8 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
 
       this.store.dispatch(SubmissionActions.search({
         criteria: form.criteria,
-        loading: true
+        loading: true,
+        loaderMessage: 'Searching form submissions ...'
       }));
     }    
 }

@@ -11,6 +11,7 @@ export interface FormActivationState {
     formActivations: Array<FormActivationVO> | Array<any>;
     formSubmissions: Array<FormSubmissionVO> | Array<any>;
     loading: boolean;
+    loaderMessage: string | undefined;
     success: boolean;
     removed: boolean;
     error: boolean;
@@ -27,5 +28,6 @@ export const initialState: FormActivationState = {
     removed: false,
     success: false,
     error: false,
-    messages: []
+    messages: [],
+    loaderMessage: undefined
 };

@@ -65,7 +65,7 @@ export class EditUserComponentImpl extends EditUserComponent {
 
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.userId) {
-        this.store.dispatch(UserActions.findById({ userId: queryParams.userId, loading: true }));
+        this.store.dispatch(UserActions.findById({ userId: queryParams.userId, loading: true, loaderMessage: 'Loading user bu id ...' }));
       }
     });
 
@@ -102,6 +102,7 @@ export class EditUserComponentImpl extends EditUserComponent {
         UserActions.remove({
           id: form?.user?.userId,
           loading: false,
+          loaderMessage: 'Removing user ...'
         })
       );
       this.editUserFormReset();
@@ -128,6 +129,7 @@ export class EditUserComponentImpl extends EditUserComponent {
         UserActions.createUser({
           user: form.user,
           loading: true,
+          loaderMessage: 'Creating a user ...'
         })
       );
     }
@@ -171,6 +173,7 @@ export class EditUserComponentImpl extends EditUserComponent {
             UserActions.createUser({
               user: form.user,
               loading: true,
+              loaderMessage: 'Saving a user ...'
             })
           );
         }
@@ -186,6 +189,7 @@ export class EditUserComponentImpl extends EditUserComponent {
       LicenseeActions.search({
         criteria: { uin: criteria, licenseeName: criteria },
         loading: true,
+        loaderMessage: 'Searching users ...'
       })
     );
   }

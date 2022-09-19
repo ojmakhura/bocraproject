@@ -30,7 +30,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Error detected at Contact Message Service handleFindById "+"For "+id);
+            logger.debug("Searches for Contact Message by "+id);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -50,7 +50,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Error detected at Contact Message Service handleGetAll");
+            logger.debug("Displays all Contact Messages");
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -70,7 +70,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Error detected at Contact Message Service handleGetAllPaged "+"Page Number: "+pageSize+" Page Size: "+pageSize);
+            logger.debug("Displays all Contact Messages of the specified "+"Page Number: "+pageNumber+" and Page Size: "+pageSize);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -90,7 +90,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Error detected at Contact Message Service handleRemove "+"For "+id);
+            logger.debug("Deletes a Contact Message by "+id);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -110,7 +110,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleSave(ContactMessageVO contactMessage) {
         try {
-            logger.debug("Error detected at Contact Message Service handleSave"+ "Contact Message: "+contactMessage);
+            logger.debug("Saves Contact Message "+contactMessage);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -130,7 +130,7 @@ public class ContactMessageRestControllerImpl extends ContactMessageRestControll
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
-            logger.debug("Error detected at Contact Message Service handleSearch "+"By "+criteria);
+            logger.debug("Searches for a Contact Message by "+criteria);
             Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 

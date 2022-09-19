@@ -34,7 +34,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleCreate(Long sectorId, Long formId) {
         try {
-            logger.debug("Error detected at Sector Form Service handleCreate "+sectorId+" "+formId);
+            logger.debug("Create Sector Form sector Id "+sectorId+" and form Id"+formId);
             Optional<?> data = Optional.of(sectorFormService.create(sectorId, formId)); 
             ResponseEntity<?> response;
 
@@ -55,7 +55,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindByForm(Long formId) {
         try {
-            logger.debug("Error detected at Sector Form Service handleFindByForm "+formId);
+            logger.debug("Search Sector Form by Form with form Id "+formId);
             Optional<?> data = Optional.of(sectorFormService.findByForm(formId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -76,7 +76,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Error detected at Sector Form Service handleFindById "+id);
+            logger.debug("Search Sector Form by Id  "+id);
             Optional<?> data = Optional.of(sectorFormService.findById(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -97,7 +97,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindBySector(Long sectorId) {
         try {
-            logger.debug("Error detected at Sector Form Service handleFindBySector " + sectorId);
+            logger.debug("Search Sector Form by sector with sector Id " + sectorId);
             Optional<?> data = Optional.of(sectorFormService.findBySector(sectorId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -118,7 +118,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Error detected at Sector Form Service handleGetAll ");
+            logger.debug("Display all Sector Forms  ");
             Optional<?> data = Optional.of(sectorFormService.getAll()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -139,7 +139,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Error detected at Sector Form Service handleRemove "+id);
+            logger.debug("Delete Sector Form with Id "+id);
             Optional<?> data = Optional.of(sectorFormService.remove(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -160,7 +160,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleUpdateForm(Long id, Long formId) {
         try {
-            logger.debug("Error detected at Sector Form Service handleUpdateForm "+id+" "+formId);
+            logger.debug("Update Form with Id "+id+" and Form Id"+formId);
             Optional<?> data = Optional.of(sectorFormService.updateForm(id, formId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
@@ -181,7 +181,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleUpdateSector(Long id, Long sectorId) {
         try {
-            logger.debug("Error detected at Sector Form Service handleUpdateSector "+id+" "+sectorId);
+            logger.debug("Update Sector with Id "+id+" and sector id "+sectorId);
             Optional<?> data = Optional.of(sectorFormService.updateSector(id, sectorId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 

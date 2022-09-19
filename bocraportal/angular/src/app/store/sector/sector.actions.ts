@@ -26,7 +26,7 @@ export enum SectorActionType {
 
 export const findById = createAction(
     SectorActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
@@ -36,7 +36,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
     SectorActionType.SAVE,
-    props<{ sector: SectorVO | any , loading: boolean }>()
+    props<{ sector: SectorVO | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -46,7 +46,7 @@ export const saveSuccess = createAction(
 
 export const addLicensee = createAction(
     SectorActionType.ADD_LICENSEE,
-    props<{ sectorId: number, licenseeId: number, loading: boolean }>()
+    props<{ sectorId: number, licenseeId: number, loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const addLicenseeSuccess = createAction(
@@ -61,7 +61,7 @@ export const setLicensees = createAction(
 
 export const remove = createAction(
     SectorActionType.REMOVE,
-    props<{ id: number | any , loading: boolean }>()
+    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
@@ -71,7 +71,7 @@ export const removeSuccess = createAction(
 
 export const getAll = createAction(
     SectorActionType.GET_ALL,
-    props<{  loading: boolean }>()
+    props<{  loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
@@ -81,7 +81,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     SectorActionType.SEARCH,
-    props<{ criteria: string | any , loading: boolean }>()
+    props<{ criteria: string | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -91,7 +91,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
     SectorActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean }>()
+    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -103,7 +103,7 @@ export const sectorReset = createAction(SectorActionType.SECTOR_RESET);
 
 export const sectorLoading = createAction(
     SectorActionType.SECTOR_LOADING,
-    props<{ loading: boolean, success: boolean, messages: any[] }>()
+    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
 );
 
 export const sectorFailure = createAction(

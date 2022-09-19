@@ -89,6 +89,7 @@ export abstract class DataCaptureProcessingComponent implements OnInit, AfterVie
     messages: Observable<any>;
     success: Observable<boolean>;
     loading: Observable<boolean>;
+    loaderMessage: Observable<string>;
     error: Observable<boolean>;
     selected: any = null;
 
@@ -104,6 +105,7 @@ export abstract class DataCaptureProcessingComponent implements OnInit, AfterVie
         this.submissionRestController = injector.get(SubmissionRestController);
         this._injector = injector;
         this.loading = this.store.pipe(select(DataProcessingSelectors.selectLoading));
+        this.loaderMessage = this.store.pipe(select(DataProcessingSelectors.selectLoaderMessage));
         this.success = this.store.pipe(select(DataProcessingSelectors.selectSuccess));
         this.error = this.store.pipe(select(DataProcessingSelectors.selectError));
         this.messages = this.store.pipe(select(DataProcessingSelectors.selectMessages));

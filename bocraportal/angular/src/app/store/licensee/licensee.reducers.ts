@@ -5,66 +5,114 @@ import {licenseeKey, initialState} from './licensee.state';
 
 export const licenseeReducer = createReducer(
     initialState,
+    on(LicenseeActions.findById, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
     on(LicenseeActions.findByIdSuccess, (state, action) => ({
         ...state,
         licensee: action.licensee, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(LicenseeActions.save, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenseeActions.saveSuccess, (state, action) => ({
         ...state,
         licensee: action.licensee, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(LicenseeActions.addSector, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenseeActions.addSectorSuccess, (state, action) => ({
         ...state,
         sector: action.sector, 
         sectors: [...state.sectors, action.sector], 
         loading: false,
+        loaderMessage: undefined,
         error: false,
         messages: action.messages
+    })),
+    on(LicenseeActions.addDocument, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenseeActions.addDocumentSuccess, (state, action) => ({
         ...state,
         document: action.document, 
         documents: [...state.documents, action.document], 
         loading: false,
+        loaderMessage: undefined,
         error: false,
         messages: action.messages
+    })),
+    on(LicenseeActions.remove, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenseeActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(LicenseeActions.getAll, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenseeActions.getAllSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(LicenseeActions.search, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenseeActions.searchSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(LicenseeActions.getAllPaged, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(LicenseeActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         licensees: action.licensees, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
@@ -79,6 +127,7 @@ export const licenseeReducer = createReducer(
         shareholders: [],
         id: null, 
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: false,
         messages: []
@@ -88,6 +137,7 @@ export const licenseeReducer = createReducer(
         messages: action.messages,
         error: true,
         loading: false,
+        loaderMessage: undefined,
         success: false,
     }))
 );

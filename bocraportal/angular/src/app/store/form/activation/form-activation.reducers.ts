@@ -5,51 +5,87 @@ import {formActivationKey, initialState} from './form-activation.state';
 
 export const formActivationReducer = createReducer(
     initialState,
+    on(FormActivationActions.findById, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
     on(FormActivationActions.findByIdSuccess, (state, action) => ({
         ...state,
         formActivation: action.formActivation, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(FormActivationActions.save, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.saveSuccess, (state, action) => ({
         ...state,
         formActivation: action.formActivation, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(FormActivationActions.remove, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.removeSuccess, (state, action) => ({
         ...state,
         removed: action.removed,
         formActivation: null,
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(FormActivationActions.getAll, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.getAllSuccess, (state, action) => ({
         ...state,
         formActivations: action.formActivations, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(FormActivationActions.search, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.searchSuccess, (state, action) => ({
         ...state,
         formActivations: action.formActivations, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
+    })),
+    on(FormActivationActions.getAllPaged, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
     })),
     on(FormActivationActions.getAllPagedSuccess, (state, action) => ({
         ...state,
         formActivations: action.formActivations, 
         loading: false,
+        loaderMessage: undefined,
         success: action.success,
         error: false,
         messages: action.messages
@@ -62,6 +98,7 @@ export const formActivationReducer = createReducer(
         formActivations: [], 
         removed: false,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: false,
         messges: []
@@ -69,6 +106,7 @@ export const formActivationReducer = createReducer(
     on(FormActivationActions.formActivationFailure, (state, action) => ({
         ...state,
         loading: false,
+        loaderMessage: undefined,
         success: false,
         error: true,
         messages: action.messages

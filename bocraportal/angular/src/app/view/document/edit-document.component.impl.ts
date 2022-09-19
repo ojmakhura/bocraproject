@@ -44,6 +44,7 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
           DocumentActions.findById({
             id: queryParams?.id,
             loading: true,
+            loaderMessage: 'Loading document by id ...'
           })
         );
       }
@@ -88,6 +89,7 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
       DocumentActions.save({
         document: form.document,
         loading: false,
+        loaderMessage: 'Saving document ...'
       })
     );
   }

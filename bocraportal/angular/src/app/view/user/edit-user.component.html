@@ -19,6 +19,9 @@
           </button>
         </div>
       </section>
+			<div *ngIf="loading | async">
+				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+			</div>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}

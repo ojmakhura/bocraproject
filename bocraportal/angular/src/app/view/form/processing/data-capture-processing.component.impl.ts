@@ -32,7 +32,7 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
 
   override doNgAfterViewInit(): void {
     this.store.dispatch(
-      DataProcessingActions.dataCaptureSummary({ loading: true })
+      DataProcessingActions.dataCaptureSummary({ loading: true, loaderMessage: 'Loading data capture summary ...' })
     );
 
     this.submissionSummary$ = this.store.pipe(select(DataProcessingSelectors.selectSubmissionSummary));
@@ -60,7 +60,8 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
 
     this.store.dispatch(DataProcessingActions.loadData({
       criteria: criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Loading new form submissions ...'
     }));
   }
 
@@ -78,7 +79,8 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
 
     this.store.dispatch(DataProcessingActions.loadData({
       criteria: criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Loading draft form submissions ...'
     }));
   }
 
@@ -97,7 +99,8 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
   
     this.store.dispatch(DataProcessingActions.loadData({
       criteria: criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Loading my submitted form submissions ...'
     }));
   }
 
@@ -115,7 +118,8 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
 
     this.store.dispatch(DataProcessingActions.loadData({
       criteria: criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Loading all form submissions ...'
     }));
   }
 
@@ -133,7 +137,8 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
 
     this.store.dispatch(DataProcessingActions.loadData({
       criteria: criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Loading overdue form submissions ...'
     }));
   }
 
@@ -151,7 +156,8 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
 
     this.store.dispatch(DataProcessingActions.loadData({
       criteria: criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Loading returned form submissions ...'
     }));
 
   }
@@ -171,7 +177,8 @@ export class DataCaptureProcessingComponentImpl extends DataCaptureProcessingCom
 
     this.store.dispatch(DataProcessingActions.loadData({
       criteria: criteria,
-      loading: true
+      loading: true,
+      loaderMessage: 'Loading accepted form submissions ...'
     }));
   }
 }

@@ -81,6 +81,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       FormSubmissionActions.findById({
         id: id,
         loading: true,
+        loaderMessage: 'Loading form submissions by id ...'
       })
     );
 
@@ -116,24 +117,20 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if (item === '/form/submission/edit-form-submission/{button:delete}') {
+        if(item === '/form/submission/edit-form-submission/{button:delete}') {
           this.deleteUnrestricted = false;
         }
 
-        if (item === '/form/submission/edit-form-submission/{button:return}') {
+        if(item === '/form/submission/edit-form-submission/{button:return}') {
           this.returnUnrestricted = false;
         }
 
-        if (item === '/form/submission/edit-form-submission/{button:accept}') {
+        if(item === '/form/submission/edit-form-submission/{button:accept}') {
           this.acceptUnrestricted = false;
         }
 
         if (item === '/form/submission/edit-form-submission/{button:submit}') {
           this.submitUnrestricted = false;
-        }
-
-        if (item === '/form/submission/edit-form-submission/{button:add}') {
-          this.addUnrestricted = false;
         }
       });
     });
@@ -207,6 +204,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         FormSubmissionActions.remove({
           id: form.formSubmission.id,
           loading: true,
+          loaderMessage: 'Removing form submissions ...'
         })
       );
       this.editFormSubmissionFormReset();
@@ -214,13 +212,13 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
     }
   }
-
+  
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
     if (this.formSubmissionControl.valid) {
-      if (form.formSubmission.submissionStatus != FormSubmissionStatus.SUBMITTED && form.formSubmission.submissionStatus != FormSubmissionStatus.ACCEPTED) {
+      if(form.formSubmission.submissionStatus != FormSubmissionStatus.SUBMITTED && form.formSubmission.submissionStatus != FormSubmissionStatus.ACCEPTED) {
         form.formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;
       }
-
+      
       this.doFormSubmissionSave(form.formSubmission);
     } else {
       let messages: string[] = []
@@ -236,7 +234,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   override beforeEditFormSubmissionSubmit(form: EditFormSubmissionSubmitForm): void {
 
-    if (confirm('Are you sure you want to submit the form submission? You will not be able to edit the data afterwards.')) {
+    if(confirm('Are you sure you want to submit the form submission? You will not be able to edit the data afterwards.')) {
 
       let formSubmission: FormSubmissionVO = form.formSubmission;
 
@@ -249,7 +247,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   override beforeEditFormSubmissionAccept(form: EditFormSubmissionAcceptForm): void {
-    if (confirm('Are you sure you want to accept the form submission?')) {
+    if(confirm('Are you sure you want to accept the form submission?')) {
 
       let formSubmission: FormSubmissionVO = this.formSubmission;
       formSubmission.submissionStatus = FormSubmissionStatus.ACCEPTED;
@@ -258,8 +256,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   override beforeEditFormSubmissionReturn(form: EditFormSubmissionReturnForm): void {
-
-    if (confirm('Are you sure you want to return the form submission?')) {
+      
+    if(confirm('Are you sure you want to return the form submission?')) {
 
       let formSubmission: FormSubmissionVO = form.formSubmission;
       formSubmission.submissionStatus = FormSubmissionStatus.RETURNED;
@@ -276,7 +274,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       formSubmission.createdDate = new Date();
     }
 
-    this.store.dispatch(SubmissionActions.save({ formSubmission, loading: true }));
+    this.store.dispatch(SubmissionActions.save({ formSubmission, loading: true, loaderMessage: 'Saving form submission ...' }));
   }
 
   getFormObject(form: string) {
@@ -352,22 +350,22 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   override createFormSubmissionForm(formSubmission: FormSubmissionVO): FormGroup {
     return this.formBuilder.group({
-      id: [{ value: formSubmission?.id, disabled: false }],
-      createdBy: [{ value: formSubmission?.createdBy, disabled: false }],
-      updatedBy: [{ value: formSubmission?.updatedBy, disabled: false }],
-      createdDate: [{ value: formSubmission?.createdDate, disabled: false }],
-      updatedDate: [{ value: formSubmission?.updatedDate, disabled: false }],
-      submittedBy: [{ value: formSubmission?.submittedBy, disabled: false }],
-      submissionDate: [{ value: formSubmission?.submissionDate, disabled: false }],
-      form: this.createFormVOGroup(formSubmission?.form),
-      period: this.createPeriodVOGroup(formSubmission?.period),
-      licensee: this.createLicenseeVOGroup(formSubmission?.licensee),
-      dataFields: this.createDataFieldVOArray(formSubmission?.dataFields),
-      submissionStatus: [{ value: formSubmission?.submissionStatus, disabled: false }, [Validators.required,]],
-      upload: [{ value: formSubmission?.upload, disabled: false }],
-      notes: this.createNoteVOArray(formSubmission?.notes),
-      sections: this.createDataFieldSectionVOArray(formSubmission?.sections),
-      expectedSubmissionDate: [{ value: formSubmission?.expectedSubmissionDate, disabled: false }],
+        id: [{value: formSubmission?.id, disabled: false}],
+        createdBy: [{value: formSubmission?.createdBy, disabled: false}],
+        updatedBy: [{value: formSubmission?.updatedBy, disabled: false}],
+        createdDate: [{value: formSubmission?.createdDate, disabled: false}],
+        updatedDate: [{value: formSubmission?.updatedDate, disabled: false}],
+        submittedBy: [{value: formSubmission?.submittedBy, disabled: false}],
+        submissionDate: [{value: formSubmission?.submissionDate, disabled: false}],
+        form: this.createFormVOGroup(formSubmission?.form),
+        period: this.createPeriodVOGroup(formSubmission?.period),
+        licensee: this.createLicenseeVOGroup(formSubmission?.licensee),
+        dataFields: this.createDataFieldVOArray(formSubmission?.dataFields),
+        submissionStatus: [{value: formSubmission?.submissionStatus, disabled: false}, [Validators.required, ]],
+        upload: [{value: formSubmission?.upload, disabled: false}],
+        notes: this.createNoteVOArray(formSubmission?.notes),
+        sections: this.createDataFieldSectionVOArray(formSubmission?.sections),
+        expectedSubmissionDate: [{value: formSubmission?.expectedSubmissionDate, disabled: false}],
     });
   }
 

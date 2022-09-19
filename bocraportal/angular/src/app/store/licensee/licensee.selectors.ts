@@ -56,6 +56,11 @@ export const selectLoading = createSelector(
     (state: LicenseeState) => state.loading
 );
 
+export const selectLoaderMessage = createSelector(
+    selectLicenseeState,
+    (state: LicenseeState) => state.loaderMessage
+);
+
 export const selectDocument = createSelector(
     selectLicenseeState,
     (state: LicenseeState) => state.document

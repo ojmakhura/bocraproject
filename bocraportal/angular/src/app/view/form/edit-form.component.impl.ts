@@ -98,6 +98,7 @@ export class EditFormComponentImpl extends EditFormComponent {
           FormActions.findFormById({
             id: queryParams.id,
             loading: true,
+            loaderMessage: 'Loading form by id'
           })
         );
       }
@@ -157,6 +158,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         FormActions.saveForm({
           form: form.form,
           loading: true,
+          loaderMessage: 'Save form ...'
         })
       );
     } else {
@@ -184,6 +186,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       LicenceTypeActions.search({
         criteria: criteria,
         loading: true,
+        loaderMessage: 'Searching licence types ...'
       })
     );
   }
@@ -200,6 +203,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       LicenseeActions.search({
         criteria: criteria,
         loading: true,
+        loaderMessage: 'Searching licensees ...'
       })
     );
   }
@@ -209,6 +213,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       SectorActions.search({
         criteria: this.formSectorsSearchField.value,
         loading: true,
+        loaderMessage: 'Searchning sectors ...'
       })
     );
   }
@@ -226,6 +231,7 @@ export class EditFormComponentImpl extends EditFormComponent {
           licenseeId: licensee.licensee.id,
           formId: licensee.form.id,
           loading: true,
+          loaderMessage: 'Creating licensee form association ...'
         })
       );
     }
@@ -247,6 +253,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         FormActions.saveSection({
           formSection: section,
           loading: true,
+          loaderMessage: 'Saving form section ...'
         })
       );
     }
@@ -272,6 +279,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         FormActions.removeForm({
           id: form.form.id,
           loading: true,
+          loaderMessage: 'Removing form section ...'
         })
       );
     }

@@ -32,8 +32,8 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.watch=true"
       - "--providers.docker.exposedbydefault=false"
-      # - "--providers.file.directory=/etc/traefik/dynamic_conf/"
-      # - "--providers.file.watch=true"
+      - "--providers.file.directory=/etc/traefik/dynamic_conf/"
+      - "--providers.file.watch=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entryPoints.ping.address=:8082"
@@ -55,7 +55,7 @@ services:
     
     labels:
       # Enable Traefik for this service, to make it available in the public network
-      # - traefik.enable=true
+      - traefik.enable=true
       # Use the traefik-public network (declared below)
       # - traefik.docker.network=traefik-public
       # Use the custom label "traefik.constraint-label=traefik-public"
@@ -64,40 +64,28 @@ services:
       # - traefik.constraint-label=traefik-public
       # admin-auth middleware with HTTP Basic auth
       # Using the environment variables USERNAME and HASHED_PASSWORD
-      # - traefik.http.middlewares.admin-auth.basicauth.usersfile=/var/system_passwd
-      # - traefik.http.routers.traefik-public-https.middlewares=admin-auth
+      - traefik.http.middlewares.admin-auth.basicauth.usersfile=/var/system_passwd
+      - traefik.http.routers.traefik-public-https.middlewares=admin-auth
       # https-redirect middleware to redirect HTTP to HTTPS
       # It can be re-used by other stacks in other Docker Compose files
-      # - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
-      # - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
       # traefik-http set up only to use the middleware to redirect to https
       # Uses the environment variable DOMAIN
-      # - traefik.http.routers.traefik-public-http.rule=Host(`${PROXY_DOMAIN}`)
-      # - traefik.http.routers.traefik-public-http.entrypoints=web
-      # - traefik.http.routers.traefik-public-http.middlewares=https-redirect
+      - traefik.http.routers.traefik-public-http.rule=Host(`${PROXY_DOMAIN}`)
+      - traefik.http.routers.traefik-public-http.entrypoints=web
+      - traefik.http.routers.traefik-public-http.middlewares=https-redirect
       # traefik-https the actual router using HTTPS
       # Uses the environment variable DOMAIN
-      # - traefik.http.routers.traefik-public-https.rule=Host(`${PROXY_DOMAIN}`)
-      # - traefik.http.routers.traefik-public-https.entrypoints=websecure
-      # - traefik.http.routers.traefik-public-https.tls=${SSL_SECURE}
+      - traefik.http.routers.traefik-public-https.rule=Host(`${PROXY_DOMAIN}`)
+      - traefik.http.routers.traefik-public-https.entrypoints=websecure
+      - traefik.http.routers.traefik-public-https.tls=${SSL_SECURE}
       # Use the special Traefik service api@internal with the web UI/Dashboard
-      # - traefik.http.routers.traefik-public-https.service=api@internal
+      - traefik.http.routers.traefik-public-https.service=api@internal
       # Use the "le" (Let's Encrypt) resolver created below
       # - traefik.http.routers.traefik-public-https.tls.certresolver=le
       # Define the port inside of the Docker service to use
-      # - traefik.http.services.traefik-public.loadbalancer.server.port=8080
-
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`${PROXY_DOMAIN}`)"
-      - "traefik.http.routers.traefik.entrypoints=web"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.tls=${SSL_SECURE}"
-      #- "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-      #- "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
-      #- "traefik.http.routers.https-redirect.middlewares=https-redirect"
-      #- "traefik.http.routers.dashboard.rule=Host(`dash${PROXY_DOMAIN}`)"
-      #- "traefik.http.routers.dashboard.service=dashboard@internal"
-      #- "traefik.http.routers.dashboard.tls=${SSL_SECURE}"
+      - traefik.http.services.traefik-public.loadbalancer.server.port=8080
 
   ###############################################################################
   # Postgres database
@@ -131,8 +119,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-db.entrypoints=${ACTIVE_ROUTER_ENTRY}"
       - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
-      # - "traefik.http.routers.bocra-db.tls=${SSL_SECURE}"
-      # - "traefik.http.routers.bocra-db.tls.certresolver=le"
+      - "traefik.http.routers.bocra-db.tls=${SSL_SECURE}"
+      - "traefik.http.routers.bocra-db.tls.certresolver=le"
 
   ###############################################################################
   # Postgres administration frontend
@@ -161,8 +149,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-pgadmin.entrypoints=${ACTIVE_ROUTER_ENTRY}"
       - "traefik.http.routers.bocra-pgadmin.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
-      # - "traefik.http.routers.bocra-pgadmin.tls=${SSL_SECURE}"
-      # - "traefik.http.routers.bocra-pgadmin.tls.certresolver=le"
+      - "traefik.http.routers.bocra-pgadmin.tls=${SSL_SECURE}"
+      - "traefik.http.routers.bocra-pgadmin.tls.certresolver=le"
 
   ###############################################################################
   # Keycloak authentication server
@@ -209,8 +197,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.keycloak.entrypoints=${ACTIVE_ROUTER_ENTRY}"
       - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
-      # - "traefik.http.routers.keycloak.tls=${SSL_SECURE}"
-      # - "traefik.http.routers.keycloak.tls.certresolver=le"
+      - "traefik.http.routers.keycloak.tls=${SSL_SECURE}"
+      - "traefik.http.routers.keycloak.tls.certresolver=le"
 
   ###############################################################################
   # The main API 
@@ -252,14 +240,12 @@ services:
       KEYCLOAK_API_CLIENT_SECRET: ${KEYCLOAK_API_CLIENT_SECRET}
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
       TZ: Africa/Gaborone
-      # CERT: ${CERT}
-      # CERT_PASSWORD: ${CERT_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
       - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
-      # - "traefik.http.routers.api.tls=${SSL_SECURE}"
-      # - "traefik.http.routers.api.tls.certresolver=le"
+      - "traefik.http.routers.api.tls=${SSL_SECURE}"
+      - "traefik.http.routers.api.tls.certresolver=le"
 
   ###############################################################################
   # Angular web application
@@ -298,8 +284,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
       - "traefik.http.routers.bocra-web.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      # - "traefik.http.routers.bocra-web.tls=${SSL_SECURE}"
-      # - "traefik.http.routers.bocra-web.tls.certresolver=le"
+      - "traefik.http.routers.bocra-web.tls=${SSL_SECURE}"
+      - "traefik.http.routers.bocra-web.tls.certresolver=le"
 
   ###############################################################################
   # Local docker container registry
@@ -355,6 +341,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-jenkins.rule=Host(`${JENKINS_DOMAIN}`)"
+      - "traefik.http.routers.registry.tls=${SSL_SECURE}"
+      - "traefik.http.routers.registry.tls.certresolver=le"
 
 ###############################################################################
 # Networks

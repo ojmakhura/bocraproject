@@ -91,6 +91,11 @@ export const selectLoading = createSelector(
     (state: FormState) => state.loading
 );
 
+export const selectLoaderMessage = createSelector(
+    selectFormState,
+    (state: FormState) => state.loaderMessage
+);
+
 export const selectSuccess = createSelector(
     selectFormState,
     (state: FormState) => state.success

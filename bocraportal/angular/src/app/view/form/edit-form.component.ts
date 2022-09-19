@@ -220,6 +220,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     messages: Observable<any>;
     success: Observable<boolean>;
     loading: Observable<boolean>;
+    loaderMessage: Observable<string>;
     error: Observable<boolean>;
     selected: any = null;
     sectorRemoved$: Observable<boolean>;
@@ -239,6 +240,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
         this._injector = injector;
         this.form$ = this.store.pipe(select(FormSelectors.selectForm));
         this.loading = this.store.pipe(select(FormSelectors.selectLoading));
+        this.loaderMessage = this.store.pipe(select(FormSelectors.selectLoaderMessage));
         this.success = this.store.pipe(select(FormSelectors.selectSuccess));
         this.error = this.store.pipe(select(FormSelectors.selectError));
         this.messages = this.store.pipe(select(FormSelectors.selectMessages));
@@ -1018,7 +1020,8 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
             this.store.dispatch(
                 SectorFormActions.remove({
                     id: this.formSectors[index].id,
-                    loading: true
+                    loading: true,
+                    loaderMessage: 'Removing sector from forms ...'
                 })
             );
 
@@ -1062,31 +1065,17 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
             const key = Object.keys(data)[0];
             const found = this.formSectors.find((d: SectorFormVO) => d.sector.id === data.id);
             if(!found) {
-                //this.addToFormSectors(data);
                 this.store.dispatch(
                     SectorFormActions.create({
                         formId: this.formId,
                         sectorId: data.id,
-                        loading: true
+                        loading: true,
+                        loaderMessage: 'Adding sector to form ...'
                     })
                 );
             }
         });
     }
-
-    // createSectorVOGroup(value: SectorVO): FormGroup {
-    //     return this.formBuilder.group({
-    //         id: [value?.id],
-    //         createdBy: [value?.createdBy],
-    //         updatedBy: [value?.updatedBy],
-    //         createdDate: [value?.createdDate],
-    //         updatedDate: [value?.updatedDate],
-    //         code: [value?.code],
-    //         name: [value?.name],
-    //         themeColour: [value?.themeColour],
-    //         description: [value?.description],
-    //     });
-    // }
 
     getItemControl(name: string): FormControl {
         return this.editFormForm.get(name) as FormControl;

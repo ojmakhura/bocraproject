@@ -36,7 +36,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
       ViewActions.loadViewAuthorisations({
         viewUrl: "/access/type/edit-access-point-type",
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
@@ -46,6 +46,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
           AccessPointTypeActions.findById({
             id: queryParams?.id,
             loading: false,
+            loaderMessage: 'Loading access point type by id ...'
           })
         );
       }
@@ -94,6 +95,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
         AccessPointTypeActions.save({
           accessPointType: form.accessPointType,
           loading: true,
+          loaderMessage: 'Saving access point type ...'
         })
       );
     } else {
@@ -117,6 +119,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
         AccessPointTypeActions.remove({
           id: form?.accessPointType?.id,
           loading: false,
+          loaderMessage: 'Removing access point type by id ...'
         })
       );
       this.editAccessPointTypeFormReset();

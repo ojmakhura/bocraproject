@@ -21,6 +21,7 @@ export interface LicenseeState {
     removed: boolean,
     success: boolean,
     loading: boolean,
+    loaderMessage: string | undefined,
     error: boolean,
     messages: any[]
 }
@@ -40,5 +41,6 @@ export const initialState: LicenseeState = {
     error: false,
     messages: [],
     document: undefined,
-    documents: []
+    documents: [],
+    loaderMessage: undefined
 };

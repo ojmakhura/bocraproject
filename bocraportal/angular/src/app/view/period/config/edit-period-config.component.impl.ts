@@ -47,6 +47,7 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
           PeriodConfigActions.findById({
             id: queryParams?.id,
             loading: true,
+            loaderMessage: 'Loading period config by id ...'
           })
         );
       }
@@ -76,7 +77,13 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
 
   override beforeEditPeriodConfigDelete(form: EditPeriodConfigDeleteForm): void {
     if (form?.periodConfig?.id && confirm('Are you sure you want to delete the license type?')) {
-      this.store.dispatch(PeriodConfigActions.remove({ id: form.periodConfig.id, loading: true }));
+      this.store.dispatch(
+        PeriodConfigActions.remove({ 
+          id: form.periodConfig.id, 
+          loading: true,
+          loaderMessage: 'Removing period config ...'
+        })
+      );
       this.editPeriodConfigFormReset();
     } else {
       this.store.dispatch(PeriodConfigActions.periodConfigFailure({ messages: ['Please select something to delete'] }));
@@ -98,7 +105,8 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
       }
       this.store.dispatch(PeriodConfigActions.save({
         periodConfig: form.periodConfig,
-        loading: true
+        loading: true,
+        loaderMessage: 'Saving period config ...'
       }));
     } else {
       let messages: string[] = []

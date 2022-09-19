@@ -38,6 +38,7 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
       LicenseeActions.search({
         criteria: criteria,
         loading: true,
+        loaderMessage: 'Searching licensees ...'
       })
     );
   }
@@ -48,6 +49,7 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
       DocumentTypeActions.search({
         criteria: this.documentDocumentTypeSearchField.value,
         loading: true,
+        loaderMessage: 'Searching document types ...'
       })
     );
   }
