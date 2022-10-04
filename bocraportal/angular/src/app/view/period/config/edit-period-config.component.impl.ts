@@ -58,7 +58,7 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
     });
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/period/type/edit-period-type",
+        viewUrl: "/period/config/edit-period-config",
         roles: this.keycloakService.getUserRoles(),
         loading: true
       })
@@ -66,7 +66,7 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
-        if (item === '/period/type/edit-period-type/{button:delete}') {
+        if (item === '/period/config/edit-period-config/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });

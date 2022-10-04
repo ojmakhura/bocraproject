@@ -3,7 +3,11 @@
 	<div class="card-body">
     	<form [formGroup]="searchDocumentTypesForm">
 			<section>
-				
+				<div class="text-end mb-3">
+					<button type="button" color="accent" (click)="searchDocumentTypesCreate()" class="btn btn-primary">
+						<span translate>create</span>
+					</button>
+				</div>
 			</section>
 			<div *ngIf="loading | async">
 				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
@@ -23,12 +27,9 @@
 				    <input type="text" id="criteria" class="form-control" name="criteria" formControlName="criteria"/>
 				</div>
     	</form>
-		<div class="text-end">
+		<div class="text-end mt-5">
 			<button type="button" color="accent" (click)="searchDocumentTypesSearch()" class="btn btn-outline-primary">
 				<span translate>search</span>
-			</button>
-			<button type="button" color="accent" (click)="searchDocumentTypesCreate()" class="btn btn-outline-primary">
-				<span translate>create</span>
 			</button>
 			<button color="accent" type="button" (click)="searchDocumentTypesFormReset()" class="btn btn-outline-primary" ><span translate>reset</span></button>
 		</div>

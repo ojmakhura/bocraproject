@@ -228,5 +228,10 @@ export class EditUserComponentImpl extends EditUserComponent {
       console.log('Chang');
     }
   }
+
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
+  }
+  
 }
 

@@ -2,16 +2,13 @@
 <div class="card container  mb-4  px-5 py-2 bg-light ">
   <div class="card-body">
     <form [formGroup]="searchAccessPointTypesForm">
-      <!-- <section>
-        <div class="col my-3 view-buttons">
-          <button type="button" color="accent" (click)="searchAccessPointTypesSearch()" class="btn btn-info">
-            <span translate>search</span>
-          </button>
-          <button color="accent" type="button" (click)="searchAccessPointTypesFormReset()" class="btn btn-info">
-            <span translate>reset</span>
-          </button>
-        </div>
-      </section> -->
+      <section>
+				<div class="text-end mb-3">
+					<button type="button" (click)="searchAccessPointTypesCreate()" class="btn btn-primary">
+						<span translate>create</span>
+					</button>
+				</div>
+			</section>
 			<div *ngIf="loading | async">
 				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
 			</div>
@@ -45,21 +42,15 @@
         </div>
       </div>
     </form>
+    <div class="text-end mt-5" >
+      <button type="button" color="accent" (click)="searchAccessPointTypesSearch()" class="btn btn-outline-primary">
+              <span translate>search</span>
+            </button>
+            <button color="accent" type="button" (click)="searchAccessPointTypesFormReset()" class="btn btn-outline-primary">
+              <span translate>reset</span>
+            </button>
+    </div>
   </div>
-
-  <br>
-
-  <div class="text-end" >
-    <button type="button" color="accent" (click)="searchAccessPointTypesSearch()" class="btn btn-outline-primary">
-            <span translate>search</span>
-          </button>
-          <button color="accent" type="button" (click)="searchAccessPointTypesFormReset()" class="btn btn-outline-primary">
-            <span translate>reset</span>
-          </button>
-  </div>
-
-
-
 
   <mat-tab-group animationDuration="0ms" class="tables">
     <mat-tab class="accessPointTypes">

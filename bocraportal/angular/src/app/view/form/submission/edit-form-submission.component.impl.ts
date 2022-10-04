@@ -628,4 +628,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
     return `${dataField.row}_${dataField.formField.fieldId}`;
   }
+
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
+  }
+  
 }
