@@ -2,10 +2,10 @@
 <div class="card-body">
     <div class="table table-striped">
         <div class="col my-3 view-buttons" *ngIf="documentTypesDataSource.data.length > 0">
-            <button type="button" color="accent" class="btn btn-primary" csvLink
-                        [data]="documentTypesDataSource.data">
+            <a type="button" color="accent" class="btn btn-primary" csvLink
+                        [data]="getDocumentTypesExportData()" [filename]="'documentTypes'">
                 CSV
-            </button>
+            </a>
         </div>
         <mat-table matSort [dataSource]="documentTypesDataSource" #documentTypesSort="matSort" class="table table-bordered table-striped" style="width: 100%;">
             <ng-container matColumnDef="id">

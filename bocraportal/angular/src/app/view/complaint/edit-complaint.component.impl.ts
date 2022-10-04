@@ -14,6 +14,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 })
 export class EditComplaintComponentImpl extends EditComplaintComponent {
 
+  deleteUnrestricted: boolean = false;
+
     constructor(private injector: Injector) {
         super(injector);
     }
