@@ -36,27 +36,6 @@
 				    <input type="date" id="criteriaEndDate" class="form-control" formControlName="endDate"  navigator="true" showOn="button"/>
 				</div>
 				<div class="mb-3">
-				    <label id="criteriaForm_label" class="col-sm-2 col-form-label" for="criteriaForm"><span translate>form</span></label>
-				    <input type="number" id="criteriaForm" class="form-control" name="form" formControlName="form"/>
-				</div>
-
-				<!-- <fieldset class="mb-3" formGroupName="form">
-					<div class="row mb-3">
-						<label for="formSubmissionFormFormName" class="col-sm-2 col-form-label"
-							translate>form.name</label>
-						<div class="input-group">
-							<input type="text" class="form-control" id="formSubmissionFormFormName"
-								value="{{ criteriaForm?.formName }}" disabled />
-						</div>
-					</div>
-					<div *ngIf="error | async" class="alert alert-danger" role="alert">
-						<div *ngFor="let message of messages | async">
-							{{ message }}
-						</div>
-					</div>
-				</fieldset> -->
-
-				<div class="mb-3">
 				    <label id="criteriaSubmissionStatus_label" class="col-sm-2 col-form-label" for="criteriaSubmissionStatus"><span translate>submission.status</span></label>
 				    <select id="criteriaSubmissionStatus" class="form-select" formControlName="submissionStatus" >
 				        <option></option>
@@ -70,6 +49,30 @@
 				    <input type="text" id="criteriaLicenseeName" class="form-control" name="licenseeName" formControlName="licenseeName"/>
 				</div>
         	</div>
+			<fieldset class="mb-3" formGroupName="submissionForm">
+				<div class="row mb-3">
+					<label for="formFormName" class="col-sm-2 col-form-label"
+						translate>form.name</label>
+					<div class="input-group">
+						<input type="text" class="form-control" id="formFormName"
+							value="{{ submissionForm?.formName }}" disabled />
+						<button type="button" (click)="formAddDialog()"
+							class="btn btn-outline-primary" data-bs-toggle="modal"
+							data-bs-target="#formModal" *ngIf="addUnrestricted">
+							<mat-icon>add_box</mat-icon>
+						</button>
+						<button type="button" (click)="formClear()"
+							class="btn btn-outline-primary" *ngIf="addUnrestricted">
+							<mat-icon>clear</mat-icon>
+						</button>
+					</div>
+				</div>
+				<div *ngIf="error | async" class="alert alert-danger" role="alert">
+					<div *ngFor="let message of messages | async">
+						{{ message }}
+					</div>
+				</div>
+			</fieldset>
     	</form>
 
 		<div class="text-end">
@@ -91,12 +94,12 @@
 	</mat-tab-group>
 </div>
 <!-- Modal for form -->
-<div class="modal fade" id="formSubmissionFormModal" tabindex="-1" aria-labelledby="formSubmissionFormLabel"
+<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formLabel"
 	aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="formSubmissionFormAddLabel" translate>
+				<h5 class="modal-title" id="formAddLabel" translate>
 					action.select
 					<span translate>form</span>
 				</h5>
@@ -109,7 +112,7 @@
 							<mat-form-field>
 								<mat-label translate>search</mat-label>
 								<input matInput type="text" [formControl]="formSearchField"
-									id="formSubmissionFormSearchField" />
+									id="formSearchField" />
 							</mat-form-field>
 						</div>
 						<button type="button" (click)="formSearch()" class="btn btn-primary">
@@ -117,7 +120,7 @@
 						</button>
 					</form>
 				</div>
-				<mat-table matSort [dataSource]="forms$ | async" #formSubmissionFormModalSort="matSort"
+				<mat-table matSort [dataSource]="forms$ | async" #formModalSort="matSort"
 					class="table table-bordered" style="width: 100%;">
 					<ng-container matColumnDef="actions">
 						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
@@ -147,12 +150,12 @@
 					<mat-header-row *matHeaderRowDef="formModalColumns"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: formModalColumns;"></mat-row>
 				</mat-table>
-				<mat-paginator #formSubmissionFormModalPaginator="matPaginator" [pageSize]="10"
+				<mat-paginator #formModalPaginator="matPaginator" [pageSize]="10"
 					[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-				<button type="button" class="btn btn-primary" (click)="addSelectedFormSubmissionForm()"
+				<button type="button" class="btn btn-primary" (click)="addSelectedForm()"
 					data-bs-dismiss="modal" translate>save</button>
 			</div>
 		</div>
