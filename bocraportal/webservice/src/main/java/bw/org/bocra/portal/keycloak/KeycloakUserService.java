@@ -141,11 +141,17 @@ public class KeycloakUserService {
         RealmResource realmResource = keycloakService.getRealmResource();
         UserResource userResource = realmResource.users().get(userRepresentation.getId());
 
-        ClientRepresentation clientRepresentation = keycloakService.getClientsResource()
-                .findByClientId(keycloakService.getAuthClient()).get(0);
+        Collection<ClientRepresentation> cReps = keycloakService.getClientsResource()
+                                                    .findByClientId(keycloakService.getAuthClient());
 
-        for (RoleRepresentation roleRep : userResource.roles().clientLevel(clientRepresentation.getId()).listAll()) {
-            user.getRoles().add(roleRep.getName());
+        if(CollectionUtils.isNotEmpty(cReps)) {
+
+            ClientRepresentation clientRepresentation = keycloakService.getClientsResource()
+                    .findByClientId(keycloakService.getAuthClient()).get(0);
+    
+            for (RoleRepresentation roleRep : userResource.roles().clientLevel(clientRepresentation.getId()).listAll()) {
+                user.getRoles().add(roleRep.getName());
+            }
         }
 
         return user;
