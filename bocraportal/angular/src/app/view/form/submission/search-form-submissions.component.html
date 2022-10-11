@@ -2,17 +2,13 @@
 <div class="card container px-5 py-2 bg-light mb-4">
 	<div class="card-body">
     	<form [formGroup]="searchFormSubmissionsForm">
-			<!-- <section>
-				<div class="col my-3 view-buttons">
-					<button type="button" color="accent" (click)="searchFormSubmissionsSearch()" class="btn btn-info">
-						<span translate>search</span>
-					</button>
-					<button type="button" color="accent" (click)="searchFormSubmissionsCreate()" class="btn btn-info">
+			<section>
+				<div class="text-end mb-3">
+					<button type="button" color="accent" (click)="searchFormSubmissionsCreate()" class="btn btn-primary">
 						<span translate>create</span>
 					</button>
-					<button color="accent" type="button" (click)="searchFormSubmissionsFormReset()" class="btn btn-info" ><span translate>reset</span></button>
 				</div>
-			</section> -->
+			</section>
 			<div *ngIf="loading | async">
 				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
 			</div>
@@ -75,12 +71,9 @@
 			</fieldset>
     	</form>
 
-		<div class="text-end">
+		<div class="text-end mt-5">
 			<button type="button" color="accent" (click)="searchFormSubmissionsSearch()" class="btn btn-outline-primary">
 				<span translate>search</span>
-			</button>
-			<button type="button" color="accent" (click)="searchFormSubmissionsCreate()" class="btn btn-outline-primary">
-				<span translate>create</span>
 			</button>
 			<button color="accent" type="button" (click)="searchFormSubmissionsFormReset()" class="btn btn-outline-primary" ><span translate>reset</span></button>
 		</div>

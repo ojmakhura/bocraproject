@@ -9,7 +9,7 @@
   </div>
 </div> -->
 
-<div class="card container px-5 py-2 bg-light mb-4">
+<div class="card container px-5 py-2 bg-light mb-4" #target>
   <div class="card-body">
     <form [formGroup]="editUserForm">
       <section>
@@ -169,7 +169,7 @@
     <br />
 
     <div class="text-end">
-      <button type="button" color="accent" (click)="editUserSave()" class="btn btn-outline-primary">
+      <button type="button" color="accent" (click)="editUserSave()" (click)="scroll(target)" class="btn btn-outline-primary">
         <span translate>save</span>
       </button>
       <button type="button" color="accent" (click)="editUserDelete()" class="btn btn-outline-primary"

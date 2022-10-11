@@ -11,7 +11,7 @@
 
 <div class="card container px-5 py-2 bg-light mb-4">
   <section>
-    <div class="text-end">
+    <div class="text-end mt-3">
       <!-- <button color="accent" type="button" (click)="editLicenseeNewDocument()" *ngIf="licenseeId" class="btn btn-primary">
         <span translate>New Document</span>
       </button> -->
@@ -123,12 +123,14 @@
               <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                 <mat-cell *matCellDef="let row; index as i">
-                  <button type="button" color="accent" (click)="deleteFromLicenseeUsers(i)" class="btn btn-info">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                  <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeUsers(row)" class="btn btn-info">
-                    <mat-icon>edit</mat-icon>
-                  </button> -->
+                  <div>
+                    <button type="button" (click)="deleteFromLicenseeUsers(i)" class="btn btn-outline-primary">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                    <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeUsers(row)" class="btn btn-info">
+                      <mat-icon>edit</mat-icon>
+                    </button> -->
+                  </div>
                 </mat-cell>
               </ng-container>
 
@@ -175,12 +177,14 @@
               <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                 <mat-cell *matCellDef="let row; index as i">
-                  <button type="button" color="accent" (click)="deleteFromLicenseeForms(i)" class="btn btn-info">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                  <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeForms(row)" class="btn btn-info">
-                    <mat-icon>edit</mat-icon>
-                  </button> -->
+                  <div>
+                    <button type="button" color="accent" (click)="deleteFromLicenseeForms(i)" class="btn btn-outline-primary">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                    <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeForms(row)" class="btn btn-info">
+                      <mat-icon>edit</mat-icon>
+                    </button> -->
+                  </div>
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="id">
@@ -213,12 +217,14 @@
               <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                 <mat-cell *matCellDef="let row; index as i">
-                  <button type="button" color="accent" (click)="deleteFromLicenseeLicences(i)" class="btn btn-info">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                  <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeLicences(row)" class="btn btn-info">
-                    <mat-icon>edit</mat-icon>
-                  </button> -->
+                  <div>
+                    <button type="button" (click)="deleteFromLicenseeLicences(i)" class="btn btn-outline-primary">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                    <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeLicences(row)" class="btn btn-info">
+                      <mat-icon>edit</mat-icon>
+                    </button> -->
+                  </div>
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="id">
@@ -263,15 +269,17 @@
               <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                 <mat-cell *matCellDef="let row; index as i">
-                  <button type="button" color="accent" (click)="deleteFromLicenseeDocuments(i)" class="btn btn-info">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                  <!-- <button type="button" color="accent" (click)="doEditLicenseeDocuments(row)" class="btn btn-info">
-                      <mat-icon>edit</mat-icon>
-                    </button> -->
-                  <button type="button" color="accent" (click)="fileDownload(row)" class="btn btn-info">
-                    <mat-icon>file_download</mat-icon>
-                  </button>
+                  <div>
+                    <button type="button" (click)="deleteFromLicenseeDocuments(i)" class="btn btn-outline-primary">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                    <!-- <button type="button" color="accent" (click)="doEditLicenseeDocuments(row)" class="btn btn-info">
+                        <mat-icon>edit</mat-icon>
+                      </button> -->
+                    <button type="button" (click)="fileDownload(row)" class="btn btn-outline-primary">
+                      <mat-icon>file_download</mat-icon>
+                    </button>
+                  </div>
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="id">
@@ -308,12 +316,14 @@
               <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                 <mat-cell *matCellDef="let row; index as i">
-                  <button type="button" color="accent" (click)="deleteFromLicenseeSectors(i)" class="btn btn-info">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                  <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeSectors(row)" class="btn btn-info">
-                    <mat-icon>edit</mat-icon>
-                  </button> -->
+                  <div>
+                    <button type="button" (click)="deleteFromLicenseeSectors(i)" class="btn btn-outline-primary">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                    <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeSectors(row)" class="btn btn-info">
+                      <mat-icon>edit</mat-icon>
+                    </button> -->
+                  </div>
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="id">

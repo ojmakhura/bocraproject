@@ -239,4 +239,8 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
       this.editPeriodForm = this.newForm({ period: next });
     }
   }
+
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
+  }
 }

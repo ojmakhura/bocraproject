@@ -2,9 +2,13 @@
 <div class="card container px-5 py-2 bg-light mb-4">
 	<div class="card-body">
     	<form [formGroup]="searchFormsForm">
-			<!-- <section>
-				
-			</section> -->
+			<section>
+				<div class="text-end mb-3">
+					<button type="button"  (click)="searchFormsCreate()" class="btn btn-primary">
+						<span translate>create</span>
+					</button>
+				</div>
+			</section>
 			<div *ngIf="loading | async">
 				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
 			</div>
@@ -29,12 +33,9 @@
 				</div>
         	</div>
     	</form>
-		<div class="text-end">
+		<div class="text-end mt-5">
 			<button type="button"  (click)="searchFormsSearch()" class="btn btn-outline-primary">
 				<span translate>search</span>
-			</button>
-			<button type="button"  (click)="searchFormsCreate()" class="btn btn-outline-primary">
-				<span translate>create</span>
 			</button>
 			<button color="accent" (click)="searchFormsFormReset()" class="btn btn-outline-primary" ><span translate>reset</span></button>
 		</div>

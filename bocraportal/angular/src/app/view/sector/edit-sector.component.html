@@ -25,9 +25,9 @@
           </button>
         </div>
       </section>
-			<div *ngIf="loading | async">
-				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
-			</div>
+      <div *ngIf="loading | async">
+        <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+      </div>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}
@@ -73,14 +73,18 @@
           <textarea id="sectorDescription" class="form-control" formControlName="description"></textarea>
         </div>
         <div class="mb-3">
-          <label id="sectorThemeColour_label" class="col-sm-2 col-form-label" for="sectorThemeColour"><span translate>theme.colour</span>*</label>
-          <input type="color" id="sectorThemeColour" class="form-control" name="themeColour" formControlName="themeColour" required/>
-          <div *ngIf="editSectorForm.invalid && sectorThemeColourControl.invalid && (sectorThemeColourControl.dirty || sectorThemeColourControl.touched)" class="alert alert-danger" role="alert">
-              <div *ngIf="sectorThemeColourControl.errors['required']">
-                  <span translate>theme.colour.required</span>
-              </div>
+          <label id="sectorThemeColour_label" class="col-sm-2 col-form-label" for="sectorThemeColour"><span
+              translate>theme.colour</span>*</label>
+          <input type="color" id="sectorThemeColour" class="form-control" name="themeColour"
+            formControlName="themeColour" required />
+          <div
+            *ngIf="editSectorForm.invalid && sectorThemeColourControl.invalid && (sectorThemeColourControl.dirty || sectorThemeColourControl.touched)"
+            class="alert alert-danger" role="alert">
+            <div *ngIf="sectorThemeColourControl.errors['required']">
+              <span translate>theme.colour.required</span>
+            </div>
           </div>
-      </div>
+        </div>
 
         <br />
         <div class="text-end">
@@ -108,9 +112,11 @@
                 <ng-container matColumnDef="actions">
                   <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                   <mat-cell *matCellDef="let row; index as i">
-                    <button type="button" color="accent" (click)="deleteFromSectorLicensees(i)" class="btn btn-primary">
-                      <mat-icon>delete</mat-icon>
-                    </button>
+                    <div>
+                      <button type="button" (click)="deleteFromSectorLicensees(i)" class="btn btn-outline-primary">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
                     <!-- <button type="button" color="accent" (click)="doEditSectorLicensees(row)" class="btn btn-primary">
                       <mat-icon>edit</mat-icon>
                     </button> -->
@@ -146,9 +152,11 @@
                 <ng-container matColumnDef="actions">
                   <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                   <mat-cell *matCellDef="let row; index as i">
-                    <button type="button" color="accent" (click)="deleteFromSectorForms(i)" class="btn btn-primary">
-                      <mat-icon>delete</mat-icon>
-                    </button>
+                    <div>
+                      <button type="button" (click)="deleteFromSectorForms(i)" class="btn btn-outline-primary">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
                     <!-- <button type="button" color="accent" (click)="doEditSectorForms(row)" class="btn btn-primary">
                       <mat-icon>edit</mat-icon>
                     </button> -->
