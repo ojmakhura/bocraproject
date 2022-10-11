@@ -12,4 +12,8 @@ export class SearchFormSubmissionsFormSubmissionsComponentImpl extends SearchFor
   constructor(private injector: Injector) {
     super(injector);
   }
+
+  getFormSubmissionsAnalyse() {
+    
+  }
 }

@@ -5,7 +5,6 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as UserActions from './user.actions';
 import { UserRestController } from '@app/service/bw/org/bocra/portal/user/user-rest-controller';
 import { LicenseeRestController } from '@app/service/bw/org/bocra/portal/licensee/licensee-rest-controller';
-import { environment } from '@env/environment';
 
 @Injectable()
 export class UserEffects {

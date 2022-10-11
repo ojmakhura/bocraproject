@@ -120,15 +120,17 @@
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                                     <mat-cell *matCellDef="let row; index as i">
-                                        <button type="button" color="accent"
+                                        <div>
+                                            <button type="button"
                                             (click)="deleteFromFormActivationFormSubmissions(i)"
-                                            class="btn btn-primary">
+                                            class="btn btn-outline-primary">
                                             <mat-icon>delete</mat-icon>
                                         </button>
-                                        <!-- <button type="button" color="accent"
-                                            (click)="doEditFormActivationFormSubmissions(row)" class="btn btn-primary">
+                                        <!-- <button type="button"
+                                            (click)="doEditFormActivationFormSubmissions(row)" class="btn btn-outline-primary">
                                             <mat-icon>edit</mat-icon>
                                         </button> -->
+                                        </div>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="id">

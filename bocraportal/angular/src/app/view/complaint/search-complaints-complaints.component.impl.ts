@@ -9,8 +9,6 @@ import { SearchComplaintsComplaintsComponent } from '@app/view/complaint/search-
 })
 export class SearchComplaintsComplaintsComponentImpl extends SearchComplaintsComplaintsComponent {
 
-  deleteUnrestricted: boolean = true;
-
   constructor(private injector: Injector) {
     super(injector);
   }

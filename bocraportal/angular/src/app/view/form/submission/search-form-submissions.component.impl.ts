@@ -4,33 +4,90 @@ import { SearchFormSubmissionsComponent } from '@app/view/form/submission/search
 import { SearchFormSubmissionsSearchForm } from '@app/view/form/submission/search-form-submissions.component';
 import { SearchFormSubmissionsVarsForm } from '@app/view/form/submission/search-form-submissions.component';
 import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
+import * as FormSelectors from '@app/store/form/form.selectors';
+import * as FormActions from '@app/store/form/form.actions';
+import { Observable } from 'rxjs';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatRadioChange } from '@angular/material/radio';
+import { select } from '@ngrx/store';
+import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
+import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
 
 @Component({
   selector: 'app-search-form-submissions',
   templateUrl: './search-form-submissions.component.html',
-  styleUrls: ['./search-form-submissions.component.scss']
+  styleUrls: ['./search-form-submissions.component.scss'],
 })
 export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsComponent {
+  forms$: Observable<FormVO[]>;
+  formSearchField: FormControl = new FormControl();
+  formSelect: FormVO = new FormVO();
+  formModalColumns = ['actions', 'id', 'code', 'formName', 'entryType'];
+  formControl: FormGroup = this.createFormVOGroup(new FormVO());
+  addUnrestricted: boolean = true;
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  constructor(private injector: Injector) {
+    super(injector);
+    this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
+    
+  }
 
-    override beforeOnInit(form: SearchFormSubmissionsVarsForm): SearchFormSubmissionsVarsForm {
-      return form;
-    }
-	
-    override doNgOnDestroy(){}
+  override beforeOnInit(form: SearchFormSubmissionsVarsForm): SearchFormSubmissionsVarsForm {
+    this.formControl = this.createFormVOGroup(new FormVO());
+    return form;
+  }
 
-    /**
-     * This method may be overwritten
-     */
-    override beforeSearchFormSubmissionsSearch(form: SearchFormSubmissionsSearchForm): void {
+  override afterOnInit(): void {
+    this.searchFormSubmissionsForm.addControl('submissionForm', this.createFormVOGroup(new FormVO()));
+  }
 
-      this.store.dispatch(SubmissionActions.search({
+  override doNgOnDestroy() {}
+
+  /**
+   * This method may be overwritten
+   */
+  override beforeSearchFormSubmissionsSearch(form: SearchFormSubmissionsSearchForm): void {
+    this.store.dispatch(
+      SubmissionActions.search({
         criteria: form.criteria,
         loading: true,
-        loaderMessage: 'Searching form submissions ...'
-      }));
-    }    
+        loaderMessage: 'Searching form submissions ...',
+      })
+    );
+  }
+
+  formSelected(event: MatRadioChange, data: FormVO): void {
+    this.formSelect = data;
+  }
+
+  /**
+   * May be overridden to customise behaviour
+   *
+   */
+  addSelectedForm(): void {
+    this.criteriaControl.patchValue({ form: this.formSelect.id });
+    this.searchFormSubmissionsForm.patchValue({ submissionForm: this.formSelect });
+  }
+
+  formSearch(): void {
+    let criteria: FormCriteria = new FormCriteria();
+    criteria.code = this.formSearchField.value;
+    criteria.formName = this.formSearchField.value;
+    this.store.dispatch(FormActions.searchForms({ criteria: criteria, loading: true, loaderMessage: 'Searching forms ...' }));
+  }
+
+  formAddDialog(): void {}
+
+  formClear(): void {
+    this.criteriaControl.patchValue({form: new FormVO()});
+  }
+
+  get submissionFormControl(): FormGroup {
+      return this.searchFormSubmissionsForm.get('submissionForm') as FormGroup;
+  }
+
+  get submissionForm(): FormVO {
+      return this.submissionFormControl?.value;
+  }
 }

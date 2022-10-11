@@ -3,7 +3,7 @@
   <div class="card-body">
     <form [formGroup]="searchPeriodsForm">
       <section>
-        <div class="text-end">
+        <div class="text-end mb-3">
 					<button type="button" color="accent" (click)="searchPeriodsCreate()" class="btn btn-primary">
 						<span translate>create</span>
 					</button>
@@ -50,21 +50,17 @@
         </div>
       </div>
     </form>
+    <div class="text-end mt-5" >
+
+      <button type="button" color="accent" (click)="searchPeriodsSearch()" class="btn btn-outline-primary">
+        <span translate>search</span>
+      </button>
+      <button color="accent" type="button" (click)="searchPeriodsFormReset()" class="btn btn-outline-primary">
+        <span translate>reset</span>
+      </button>
+     
+    </div>
   </div>
-
-  <br>
-
-  <div class="text-end" >
-
-    <button type="button" color="accent" (click)="searchPeriodsSearch()" class="btn btn-outline-primary">
-      <span translate>search</span>
-    </button>
-    <button color="accent" type="button" (click)="searchPeriodsFormReset()" class="btn btn-outline-primary">
-      <span translate>reset</span>
-    </button>
-   
-  </div>
-
 
   <mat-tab-group animationDuration="0ms" class="tables">
     <mat-tab class="periods">

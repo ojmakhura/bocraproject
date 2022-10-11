@@ -2,10 +2,10 @@
 <div class="card-body">
     <div class="table table-striped">
         <div class="col my-3 view-buttons" *ngIf="formSubmissionsDataSource.data.length > 0">
-            <button type="button" color="accent" class="btn btn-info" csvLink
+            <a type="button" color="accent" class="btn btn-info" csvLink
                         [data]="formSubmissionsDataSource.data">
                 CSV
-            </button>
+            </a>
         </div>
         <mat-table matSort [dataSource]="formSubmissionsDataSource" #formSubmissionsSort="matSort" class="table table-bordered table-striped" style="width: 100%;">
             <ng-container matColumnDef="id">
@@ -48,7 +48,7 @@
                 <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                 <mat-cell *matCellDef="let row">
                     <div class = "form-group">
-                        <button type = "button" class="btn btn-info" (click)="submissionDataEdit(row.id)" translate>
+                        <button type = "button" class="btn btn-primary" (click)="submissionDataEdit(row.id)" translate>
                             edit
                         </button>
                     </div>    
