@@ -222,6 +222,9 @@ services:
     build:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile
+      args:
+        CERT: ${CERT}
+        CERT_PASSWORD: ${CERT_PASSWORD}
     networks:
       traefik-public:
       bocra-network:
@@ -239,7 +242,10 @@ services:
       KEYCLOAK_API_CLIENT: ${KEYCLOAK_API_CLIENT}
       KEYCLOAK_API_CLIENT_SECRET: ${KEYCLOAK_API_CLIENT_SECRET}
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
+      CERT: ${CERT}
+      CERT_PASSWORD: ${CERT_PASSWORD}
       TZ: Africa/Gaborone
+    
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
