@@ -15,39 +15,27 @@ export class ComplaintRestController {
     }
 
     public findById(id: number | any ): Observable<ComplaintVO | any> {
-
-        return this.http.get<ComplaintVO | any>(`${this.path}/${id}`);
-
+        return this.http.get<ComplaintVO | any>(`${this.path}/${id}`, {});
     }
 
     public getAll(): Observable<ComplaintVO[] | any[]> {
-
         return this.http.get<ComplaintVO[] | any[]>(`${this.path}/all`);
-
     }
 
     public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<ComplaintVO[] | any[]> {
-
-        return this.http.get<ComplaintVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`);
-
+        return this.http.get<ComplaintVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(`${this.path}/${id}`);
-
+        return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
     }
 
     public save(complaint: ComplaintVO | any ): Observable<ComplaintVO | any> {
-
         return this.http.post<ComplaintVO | any>(`${this.path}`, complaint);
-
     }
 
     public search(criteria: string | any ): Observable<ComplaintVO[] | any[]> {
-
-        return this.http.get<ComplaintVO[] | any[]>(`${this.path}/search/criteria/${criteria}`);
-
+        return this.http.get<ComplaintVO[] | any[]>(`${this.path}/search/criteria/${criteria}`, {});
     }
 
 }

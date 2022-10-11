@@ -6,6 +6,7 @@
  */
 package bw.org.bocra.portal.complaint;
 
+import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +21,12 @@ public class ComplaintDaoImpl
 {
     
     public ComplaintDaoImpl(
-        LicenseeRepository licenseeRepository,
-        ComplaintRepository complaintRepository
+        LicenseeRepository licenseeRepository, ComplaintReplyRepository complaintReplyRepository, DocumentRepository documentRepository, ComplaintRepository complaintRepository
     ) {
 
         super(
             licenseeRepository,
-            complaintRepository
+            complaintReplyRepository, documentRepository, complaintRepository
         );
     }
 

@@ -2,10 +2,10 @@
 <div class="card-body">
     <div class="table table-striped">
         <div class="col my-3 view-buttons" *ngIf="licencesDataSource.data.length > 0">
-            <button type="button" color="accent" class="btn btn-primary" csvLink
-                        [data]="licencesDataSource.data">
+            <a type="button" color="accent" class="btn btn-primary" csvLink
+                        [data]="getLicencesExportData()" [filename]="'licences'">
                 CSV
-            </button>
+            </a>
         </div>
         <mat-table matSort [dataSource]="licencesDataSource" #licencesSort="matSort" class="table table-bordered table-striped" style="width: 100%;">
             <ng-container matColumnDef="id">

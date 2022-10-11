@@ -6,6 +6,7 @@
  */
 package bw.org.bocra.portal.form.submission;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,9 +15,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
@@ -209,5 +215,65 @@ public class FormSubmissionDaoImpl
                 }
             }
         }
+    }
+
+    @Override
+    protected Collection<FormSubmission> handleFindByCriteria(FormSubmissionCriteria criteria) throws Exception {
+        Specification<FormSubmission> specifications = null;
+        
+        if(criteria.getStartDate() != null) {
+            specifications = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeGreaterThanEqual("submissionDate", criteria.getStartDate().atStartOfDay());
+        }
+
+        if(criteria.getEndDate() != null) {
+            LocalDateTime end = criteria.getEndDate().plusDays(1).atStartOfDay();
+            if(specifications == null) {
+                specifications = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("submissionDate", end);
+            } else {
+                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("submissionDate", end));
+            }
+        }
+
+        if(criteria.getForm() != null) {
+            if(specifications == null) {
+                specifications = FormSubmissionSpecifications.findByFormId(criteria.getForm());
+            } else {
+                specifications = specifications.and(FormSubmissionSpecifications.findByFormId(criteria.getForm()));
+            }
+        }
+
+        if(criteria.getSubmissionStatus() != null) {
+            if(specifications == null) {
+                specifications = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", criteria.getSubmissionStatus());
+            } else {
+                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", criteria.getSubmissionStatus()));
+            }
+        }
+
+        if(criteria.getLicenseeId() != null) {
+            if(specifications == null) {
+                specifications = FormSubmissionSpecifications.findByLicenseeId(criteria.getLicenseeId());
+            } else {
+                specifications = specifications.and(FormSubmissionSpecifications.findByLicenseeId(criteria.getLicenseeId()));
+            }
+        }
+
+        if(StringUtils.isNotBlank(criteria.getSubmittedBy())) {
+            if(specifications == null) {
+                specifications = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy());
+            } else {
+                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy()));
+            }
+        }
+
+        if(StringUtils.isNotBlank(criteria.getLicenseeName())) {
+            if(specifications == null) {
+                specifications = BocraportalSpecifications.findByJoinAttributeContainingIgnoreCase("licensee", "licenseeName", criteria.getLicenseeName());
+            } else {
+                specifications = specifications.and(BocraportalSpecifications.findByJoinAttributeContainingIgnoreCase("licensee", "licenseeName", criteria.getLicenseeName()));
+            }
+        }
+
+        return formSubmissionRepository.findAll(specifications, Sort.by(Direction.ASC, "submissionDate"));
     }
 }

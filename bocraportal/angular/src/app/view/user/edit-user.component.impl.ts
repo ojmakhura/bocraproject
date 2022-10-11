@@ -27,6 +27,7 @@ export class EditUserComponentImpl extends EditUserComponent {
   searchUnrestricted: boolean = true;
   deleteUnrestricted: boolean = true;
   unauthorisedUrls$: Observable<string[]>;
+  starPass: string = '';
 
   constructor(private injector: Injector) {
     super(injector);
@@ -117,17 +118,15 @@ export class EditUserComponentImpl extends EditUserComponent {
   override beforeEditUserSave(form: EditUserSaveForm): void {
     
     if (this.editUserForm.valid) {
-      if (form.user?.id) {
-        form.user.updatedBy = this.keycloakService.getUsername();
-        form.user.updatedDate = new Date();
-      } else {
-        form.user.createdBy = this.keycloakService.getUsername();
-        form.user.createdDate = new Date();
-      }
+      let user = Object.assign({}, form.user);
+      user.licensee = {
+        id: user.licensee?.id,
+        licenseeName: user.licensee?.licenseeName
+      };
 
       this.store.dispatch(
         UserActions.createUser({
-          user: form.user,
+          user: user,
           loading: true,
           loaderMessage: 'Creating a user ...'
         })
@@ -206,7 +205,10 @@ export class EditUserComponentImpl extends EditUserComponent {
       firstName: [user?.firstName ? user.firstName : null, [Validators.required]],
       lastName: [user?.lastName ? user.lastName : null, [Validators.required]],
       enabled: [user?.enabled ? user.enabled : null],
-      licensee: this.createLicenseeVOGroup(user?.licensee),
+      licensee: {
+        id: user?.licensee?.id,
+        licenseeName: user?.licensee?.licenseeName
+      },
       roles: user?.roles ? this.formBuilder.array(user?.roles ? user.roles : []) : new FormArray([]),
     });
   }
@@ -223,6 +225,8 @@ export class EditUserComponentImpl extends EditUserComponent {
 
   override afterEditUserChangePassword(form: EditUserChangePasswordForm, dialogData: any): void {
     if (!this.userUserId) {
+
+      this.starPass = '*'.repeat(dialogData?.newPassword?.length);
       this.userPasswordControl.patchValue(dialogData?.newPassword)
     } else {
       console.log('Chang');

@@ -48,6 +48,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   fieldColumns: string[] = ['Row'];
   fieldColumnIds: string[] = ['row'];
   formFields: FormFieldVO[] = [];
+  submissionName: string = 'defaultTemplate';
+  templateHeaders: string[][] = [];
   rowGroups: RowGroup[] = [];
   submitUnrestricted: boolean = true;
   returnUnrestricted: boolean = true;
@@ -138,6 +140,13 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.formSubmission$.subscribe((submission) => {
       this.rowGroups = [];
       this.formFields = submission?.form?.formFields;
+      if(this.formFields) {
+        this.templateHeaders = [this.formFields.map(field => field.fieldId)];
+        
+        this.submissionName = `${submission.licensee.licenseeName}-${submission?.form?.formName} - ${submission?.period?.periodName}`;
+      } else {
+        this.templateHeaders = [];
+      }
       this.submissionStatus = submission?.submissionStatus;
 
       submission?.sections?.forEach((section) => {
