@@ -57,7 +57,7 @@ export class ChangePasswordComponentImpl extends ChangePasswordComponent {
 
             return this.formBuilder.group({
                 currentPassword: [{value: changePasswordVarsForm$?.currentPassword, disabled: false}, [Validators.required, ]],
-                newPassword: [{value: changePasswordVarsForm$?.newPassword, disabled: false}, [Validators.required, ]],
+                newPassword: [{value: changePasswordVarsForm$?.newPassword, disabled: false}, [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/), ]],
                 confirmPassword: [{value: changePasswordVarsForm$?.confirmPassword, disabled: false}, [Validators.required, ]],
             });
 
@@ -65,7 +65,7 @@ export class ChangePasswordComponentImpl extends ChangePasswordComponent {
 
             return this.formBuilder.group({
                 currentPassword: [{value: changePasswordVarsForm$?.currentPassword, disabled: false}],
-                newPassword: [{value: changePasswordVarsForm$?.newPassword, disabled: false}, [Validators.required, ]],
+                newPassword: [{value: changePasswordVarsForm$?.newPassword, disabled: false}, [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/), ]],
                 confirmPassword: [{value: changePasswordVarsForm$?.confirmPassword, disabled: false}, [Validators.required, ]],
             });
 
