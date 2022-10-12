@@ -7,7 +7,6 @@ export const reportReducer = createReducer(
     initialState,
     on(ReportActions.reportReset, (state) => ({
       ...state,
-        formSubmissions: [], 
         loaderMessage: undefined,
         loading: false,
         success: false,
