@@ -47,6 +47,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   private licenseeForm$: Observable<LicenseeFormVO>;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
+  licenseeRemoved$: Observable<boolean>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -60,6 +61,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.licenseeForm$ = this.store.pipe(select(LicenseeFormSelectors.selectLicenseeForm));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.formSectors$ = this.store.pipe(select(SectorSelectors.selectSectors));
+    this.licenseeRemoved$ = this.store.pipe(select(LicenseeFormSelectors.selectRemoved));
   }
 
   override beforeOnInit(form: EditFormVarsForm): EditFormVarsForm {
@@ -73,9 +75,9 @@ export class EditFormComponentImpl extends EditFormComponent {
   override doNgAfterViewInit() {
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/form/edit-form",
+        viewUrl: '/form/edit-form',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
@@ -98,7 +100,7 @@ export class EditFormComponentImpl extends EditFormComponent {
           FormActions.findFormById({
             id: queryParams.id,
             loading: true,
-            loaderMessage: 'Loading form by id'
+            loaderMessage: 'Loading form by id',
           })
         );
       }
@@ -133,9 +135,9 @@ export class EditFormComponentImpl extends EditFormComponent {
       }
     });
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
-        if(item === '/form/edit-form/{button:delete}') {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
+        if (item === '/form/edit-form/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -158,25 +160,25 @@ export class EditFormComponentImpl extends EditFormComponent {
         FormActions.saveForm({
           form: form.form,
           loading: true,
-          loaderMessage: 'Save form ...'
+          loaderMessage: 'Save form ...',
         })
       );
     } else {
-      let messages: string[] = []
-      if(!this.formControl.valid) {
-        messages.push("Form has errors, Please fill in the required form fields")
-      }  
-      if(!this.formCodeControl.valid) {
-        messages.push("Form Code is missing!")
+      let messages: string[] = [];
+      if (!this.formControl.valid) {
+        messages.push('Form has errors, Please fill in the required form fields');
       }
-      if(!this.formFormNameControl.valid) {
-        messages.push("Forn Name is missing!")
+      if (!this.formCodeControl.valid) {
+        messages.push('Form Code is missing!');
       }
-      if(!this.formEntryTypeControl.valid) {
-        messages.push("Forn Entry Type is missing!")
+      if (!this.formFormNameControl.valid) {
+        messages.push('Forn Name is missing!');
       }
-    this.store.dispatch(FormActions.formFailure({ messages: messages }));
-  }
+      if (!this.formEntryTypeControl.valid) {
+        messages.push('Forn Entry Type is missing!');
+      }
+      this.store.dispatch(FormActions.formFailure({ messages: messages }));
+    }
   }
 
   override formLicenceTypesSearch(): void {
@@ -186,7 +188,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       LicenceTypeActions.search({
         criteria: criteria,
         loading: true,
-        loaderMessage: 'Searching licence types ...'
+        loaderMessage: 'Searching licence types ...',
       })
     );
   }
@@ -203,7 +205,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       LicenseeActions.search({
         criteria: criteria,
         loading: true,
-        loaderMessage: 'Searching licensees ...'
+        loaderMessage: 'Searching licensees ...',
       })
     );
   }
@@ -213,7 +215,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       SectorActions.search({
         criteria: this.formSectorsSearchField.value,
         loading: true,
-        loaderMessage: 'Searchning sectors ...'
+        loaderMessage: 'Searchning sectors ...',
       })
     );
   }
@@ -231,7 +233,7 @@ export class EditFormComponentImpl extends EditFormComponent {
           licenseeId: licensee.licensee.id,
           formId: licensee.form.id,
           loading: true,
-          loaderMessage: 'Creating licensee form association ...'
+          loaderMessage: 'Creating licensee form association ...',
         })
       );
     }
@@ -253,7 +255,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         FormActions.saveSection({
           formSection: section,
           loading: true,
-          loaderMessage: 'Saving form section ...'
+          loaderMessage: 'Saving form section ...',
         })
       );
     }
@@ -266,8 +268,9 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   override doEditFormFormSections(formSections: FormSectionVO) {
-
+    console.log(formSections);
     this.useCaseScope.queryParams['formSection'] = formSections;
+    this.useCaseScope.pageVariables['formSection'] = formSections;
     this.editFormAddSection();
   }
 
@@ -279,7 +282,7 @@ export class EditFormComponentImpl extends EditFormComponent {
         FormActions.removeForm({
           id: form.form.id,
           loading: true,
-          loaderMessage: 'Removing form section ...'
+          loaderMessage: 'Removing form section ...',
         })
       );
     }
@@ -300,6 +303,51 @@ export class EditFormComponentImpl extends EditFormComponent {
         formName: value?.form?.formName,
       },
     });
+  }
+
+  override deleteFromFormFormSections(index: number) {
+    if (confirm('Are you sure you want to remove the section?')) {
+      let sectionFields = this.formFormFields.filter(
+        (field) => field.formSection.id == this.formFormSections[index].id
+      );
+
+      if (sectionFields.length == 0) {
+        this.store.dispatch(
+          FormActions.removeSection({
+            id: this.formFormSections[index].id,
+            loading: true,
+            loaderMessage: `Deleting section ${this.formFormSections[index].sectionLabel} ...`,
+          })
+        );
+
+        this.formFormSectionsControl.removeAt(index);
+      } else {
+        alert('Cannot remove the section. It still has fields attached.');
+      }
+    }
+  }
+
+  override deleteFromFormFormFields(index: number) {
+    // this.handleDeleteFromFormFormFields(this.formFormFields[index]);
+    // this.formFormFieldsControl.removeAt(index);
+  }
+
+  override deleteFromFormLicensees(index: number) {
+    if (confirm('Are you sure you want to remove the licensee from the form?')) {
+      this.store.dispatch(
+        LicenseeFormActions.remove({
+          id: this.formLicensees[index].id,
+          loading: true,
+          loaderMessage: `Removing licensee ${this.formLicensees[index].licensee.licenseeName} ...`,
+        })
+      );
+
+      this.licenseeRemoved$.subscribe((removed) => {
+        if (removed) {
+          this.formLicenseesControl.removeAt(index);
+        }
+      });
+    }
   }
 
   override createFormFieldVOGroup(value: FormFieldVO): FormGroup {
