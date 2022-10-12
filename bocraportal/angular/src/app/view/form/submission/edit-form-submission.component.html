@@ -73,7 +73,7 @@
 							{{ message }}
 						</div>
 					</div> -->
-					<div formGroupName="formSubmission">
+					<!-- <div formGroupName="formSubmission">
 						<fieldset formGroupName="form">
 							<div class="row mb-3">
 								<label for="formSubmissionFormFormName" class="col-sm-2 col-form-label"
@@ -259,7 +259,7 @@
 								<mat-icon>clear</mat-icon>
 							</button>
 						</div>
-					</div>
+					</div> -->
 				</fieldset>
 				<div formArrayName="sections" *ngIf="isSingleEntry(); else isMultipleEntry">
 					<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index"
