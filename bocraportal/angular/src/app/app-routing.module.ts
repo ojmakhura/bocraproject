@@ -91,6 +91,10 @@ const routes: Routes = [
       path: 'complaint', 
       loadChildren: async () => (await import('@app/view/complaint/complaint.module')).ComplaintModule
     },
+    {
+      path: 'report', 
+      loadChildren: async () => (await import('@app/view/report/report.module')).ReportModule
+    },
   ]),
   // Fallback when no prior route is matched
   { 
