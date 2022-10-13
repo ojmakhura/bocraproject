@@ -44,7 +44,6 @@ export class EditUserComponentImpl extends EditUserComponent {
       this.keycloakService.loadUserProfile().then(profile => {
         
         this.http.get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`).subscribe((roles) => {
-          console.log(roles); 
 
           roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
             if (this.keycloakService.getUserRoles().includes(role.name)) {
@@ -222,7 +221,6 @@ export class EditUserComponentImpl extends EditUserComponent {
   }
 
   override getEditUserChangePasswordFormDialogConfig(data: any): any {
-    console.log(data)
     return {
       data: {
         userId: this.userUserId,
@@ -237,7 +235,6 @@ export class EditUserComponentImpl extends EditUserComponent {
       this.starPass = '*'.repeat(dialogData?.newPassword?.length);
       this.userPasswordControl.patchValue(dialogData?.newPassword)
     } else {
-      console.log('Chang');
     }
   }
 

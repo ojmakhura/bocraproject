@@ -34,7 +34,6 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
       this.keycloakService.loadUserProfile().then(profile => {
         
         this.http.get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`).subscribe((roles) => {
-          console.log(roles); 
 
           roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
             if (this.keycloakService.getUserRoles().includes(role.name)) {

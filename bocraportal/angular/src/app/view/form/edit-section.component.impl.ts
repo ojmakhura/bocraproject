@@ -21,7 +21,6 @@ export class EditSectionComponentImpl extends EditSectionComponent {
     }
 
     override beforeOnInit(form: EditSectionVarsForm): EditSectionVarsForm { 
-        console.log(this.useCaseScope.pageVariables)
 
         if(this.useCaseScope.pageVariables['formSection']) {
             form.formSection = this.useCaseScope.pageVariables['formSection'];

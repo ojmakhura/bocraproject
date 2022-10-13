@@ -87,8 +87,6 @@ export class EditFormComponentImpl extends EditFormComponent {
       this.keycloakService.loadUserProfile().then(profile => {
         
         this.http.get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`).subscribe((roles) => {
-          console.log(roles); 
-
           roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
             if (this.keycloakService.getUserRoles().includes(role.name)) {
     
@@ -249,7 +247,6 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   override afterEditFormAddSection(form: EditFormAddSectionForm, dialogData: any): void {
-    console.log(dialogData)
     if (dialogData?.formSection) {
       let section: FormSectionVO = dialogData.formSection;
       if (section.id) {
@@ -280,7 +277,6 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   override doEditFormFormSections(formSections: FormSectionVO) {
-    console.log(formSections);
     this.useCaseScope.queryParams['formSection'] = formSections;
     this.useCaseScope.pageVariables['formSection'] = formSections;
     this.editFormAddSection();

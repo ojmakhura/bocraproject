@@ -98,7 +98,6 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         activationName = `${activationName} Activation`;
         let end: Date = new Date(period.periodEnd);
         end.setDate(end.getDate() + period.periodConfig.finalDay);
-        console.log(end);
         this.formActivationActivationDeadlineControl.patchValue(this.datePipe.transform(end, 'yyyy-MM-dd'));
         this.formActivationActivationNameControl.patchValue(activationName);
       }

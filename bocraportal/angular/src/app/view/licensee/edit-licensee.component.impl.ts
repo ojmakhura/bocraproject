@@ -329,9 +329,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   fileDownload(doc: DocumentVO) {
-    console.log(doc);
     this.documentRestController.downloadFile(doc.id).subscribe((response: any) => {
-      //console.log(response);
     });
   }
 }
