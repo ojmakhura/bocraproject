@@ -38,18 +38,26 @@ export class EditUserComponentImpl extends EditUserComponent {
   }
 
   override beforeOnInit(form: EditUserVarsForm): EditUserVarsForm {
-    this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((role) => {
 
-      role.forEach((val) => {
-        if (this.keycloakService.getUserRoles().includes(val.name)) {
+    this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
+      let client = clients.filter(client => client.clientId === environment.keycloak.clientId)[0]
+      this.keycloakService.loadUserProfile().then(profile => {
+        
+        this.http.get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`).subscribe((roles) => {
+          console.log(roles); 
 
-          let item = new SelectItem();
-          item.label = val['description'];
-          item.value = val['name'];
-
-          this.userRolesBackingList.push(item);
-        }
-      });
+          roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
+            if (this.keycloakService.getUserRoles().includes(role.name)) {
+    
+              let item = new SelectItem();
+              item.label = role['description'];
+              item.value = role['name'];
+    
+              this.userRolesBackingList.push(item);
+            }
+          });
+        });
+      })
     });
 
     return form;

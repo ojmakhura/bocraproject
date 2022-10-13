@@ -33,7 +33,7 @@ import { SectorFormVO } from '@app/model/bw/org/bocra/portal/sector/form/sector-
 import { HttpClient } from '@angular/common/http';
 import { SelectItem } from '@app/utils/select-item';
 import { environment } from '@env/environment';
-import { FormVO } from '@model/bw/org/bocra/portal/form/form-vo';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 
 @Component({
   selector: 'app-edit-form',
@@ -82,19 +82,27 @@ export class EditFormComponentImpl extends EditFormComponent {
       })
     );
 
-    this.http.get<any[]>(environment.keycloakClientRoleUrl).subscribe((roles) => {
-      roles
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .forEach((role) => {
-          if (this.keycloakService.getUserRoles().includes(role.name)) {
-            let item = new SelectItem();
-            item.label = role['description'];
-            item.value = role['name'];
+    this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
+      let client = clients.filter(client => client.clientId === environment.keycloak.clientId)[0]
+      this.keycloakService.loadUserProfile().then(profile => {
+        
+        this.http.get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`).subscribe((roles) => {
+          console.log(roles); 
 
-            this.formRolesBackingList.push(item);
-          }
+          roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
+            if (this.keycloakService.getUserRoles().includes(role.name)) {
+    
+              let item = new SelectItem();
+              item.label = role['description'];
+              item.value = role['name'];
+    
+              this.formRolesBackingList.push(item);
+            }
+          });
         });
+      })
     });
+
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
@@ -241,6 +249,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   override afterEditFormAddSection(form: EditFormAddSectionForm, dialogData: any): void {
+    console.log(dialogData)
     if (dialogData?.formSection) {
       let section: FormSectionVO = dialogData.formSection;
       if (section.id) {
@@ -249,7 +258,6 @@ export class EditFormComponentImpl extends EditFormComponent {
       } else {
         section.createdBy = this.keycloakService.getUsername();
         section.createdDate = new Date();
-        section.form = this.form;
       }
 
       section.form = new FormVO();

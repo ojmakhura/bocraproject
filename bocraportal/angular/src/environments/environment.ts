@@ -17,13 +17,8 @@ export const environment = {
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US'],
   bocraApiServer: 'http://localhost:8085',
-  bocraKeycloakServer: 'https://keycloak.localhost',
-  keycloakRealm: 'bocraportal',
-  webClientId: '5bf59357-eafb-4de3-baff-dc98f1d9bab7',
   redirectUri: 'http://localhost:4200',
-  keycloakClientRoleUrl:
-    'https://keycloak.localhost/admin/realms/bocraportal/clients/5bf59357-eafb-4de3-baff-dc98f1d9bab7/roles',
-  keycloakRealmRoleUrl: 'http://keycloak.localhost/admin/realms/bocraportal/roles',
+  keycloakRealmUrl: 'https://keycloak.localhost/admin/realms/bocraportal',
   keycloak: {
     issuer: 'https://keycloak.localhost',
     redirectUri: window.location.origin,
