@@ -33,6 +33,7 @@ import { SectorFormVO } from '@app/model/bw/org/bocra/portal/sector/form/sector-
 import { HttpClient } from '@angular/common/http';
 import { SelectItem } from '@app/utils/select-item';
 import { environment } from '@env/environment';
+import { FormVO } from '@model/bw/org/bocra/portal/form/form-vo';
 
 @Component({
   selector: 'app-edit-form',
@@ -250,6 +251,9 @@ export class EditFormComponentImpl extends EditFormComponent {
         section.createdDate = new Date();
         section.form = this.form;
       }
+
+      section.form = new FormVO();
+      section.form.id = this.form.id
 
       this.store.dispatch(
         FormActions.saveSection({
