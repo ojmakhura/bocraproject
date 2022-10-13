@@ -298,4 +298,18 @@ public class SubmissionServiceImpl
         return summary;
     }
 
+    @Override
+    protected Collection<FormSubmissionVO> handleFindByIds(Set<Long> ids) throws Exception {
+        
+        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, Long>findByAttributeIn("id", ids);
+        Collection<FormSubmission> submissions = formSubmissionRepository.findAll(sSpecs);
+        Collection<FormSubmissionVO> vos = new ArrayList<>();
+
+        for (FormSubmission formSubmission : submissions) {
+            vos.add(getFormSubmissionDao().toFormSubmissionVO(formSubmission));
+        }
+
+        return vos;
+    }
+
 }

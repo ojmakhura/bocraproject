@@ -1,0 +1,43 @@
+<div class="card container">
+	<div class="card-body">
+		<form [formGroup]="reportForm">
+			<section>
+				<div class="col my-3 view-buttons">
+				</div>
+			</section>
+			<div *ngIf="loading | async">
+				<app-loader [isLoading]="loading | async"></app-loader>
+			</div>
+			<div formArrayName="reportElements">
+				<div>
+					<table class="table table-striped">
+						<tbody>
+						  <tr>
+							<td>Number of Submissions:</td>
+							<td>{{submissions.length}}</td>
+						  </tr>
+						  <tr>
+							<td>Number of Licensees:</td>
+							<td>{{licensees.length}}</td>
+						  </tr>
+						</tbody>
+					</table>
+				</div>
+				<div>
+					<div *ngFor="let element of reportElements.controls; let i=index" [formGroupName]="i">
+						<div>
+							<label for="alias-{{ i }}">Alias:</label>
+							<input id="alias-{{ i }}" type="text" formControlName="element">
+							<button type="button" class="btn btn-primary" (click)="removeReportElement(i)"> 
+								<mat-icon>delete</mat-icon>
+							</button>
+						</div>
+					</div>
+				</div>
+				<div>
+					<button type="button" class="btn bi bi-plus-circle" (click)="addReportElement()"></button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
