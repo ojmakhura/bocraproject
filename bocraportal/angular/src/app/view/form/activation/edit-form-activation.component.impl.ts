@@ -98,6 +98,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         activationName = `${activationName} Activation`;
         let end: Date = new Date(period.periodEnd);
         end.setDate(end.getDate() + period.periodConfig.finalDay);
+        console.log(end);
         this.formActivationActivationDeadlineControl.patchValue(this.datePipe.transform(end, 'yyyy-MM-dd'));
         this.formActivationActivationNameControl.patchValue(activationName);
       }
@@ -167,6 +168,13 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         form.formActivation.createdBy = this.keycloakService.getUsername();
         form.formActivation.createdDate = new Date();
       }
+
+      form.formActivation.form = new FormVO();
+      form.formActivation.form.id = this.formActivationForm.id;
+
+      form.formActivation.period = new PeriodVO();
+      form.formActivation.period.id = this.formActivationPeriod.id;
+
       this.store.dispatch(
         FormActivationActions.save({
           formActivation: form.formActivation,
