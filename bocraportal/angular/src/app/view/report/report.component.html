@@ -1,6 +1,41 @@
 <div class="card container">
 	<div class="card-body">
-		<form [formGroup]="reportForm">
+		<div *ngFor="let report of fullReport; let i=index">
+			<form>
+				<table class="table table-striped">
+					<tbody>
+						<tr>
+						  <td>Form Name:</td>
+						  <td>{{report.formName}}</td>
+						</tr>
+						<tr>
+						  <td>Number of Submissions:</td>
+						  <td>{{report.submissions.length}}</td>
+						</tr>
+					  <tr>
+						<td>Number of Licensees:</td>
+						<td>{{report.licensees.length}}</td>
+					  </tr>
+					</tbody>
+				</table>
+				<div>
+					<label for="{{report.formCode}}">Chart Type</label>
+					<select id="{{report.formCode}}" class="form-select" aria-label="Default select example">
+						<option selected>Open this select menu</option>
+						<option value="bar">Bar</option>
+						<option value="bubble">Bubble</option>
+						<option value="doughnut">Doughnut</option>
+						<option value="line">Line</option>
+						<option value="polarArea">Polar Area</option>
+						<option value="radar">Radar</option>
+						<option value="scatter">Scatter</option>
+					</select>
+				</div>
+			</form>
+		</div>
+
+
+		<!-- <form [formGroup]="reportForm">
 			<section>
 				<div class="col my-3 view-buttons">
 				</div>
@@ -20,6 +55,10 @@
 							<td>Number of Licensees:</td>
 							<td>{{licensees.length}}</td>
 						  </tr>
+						  <tr>
+							<td>Number of Forms:</td>
+							<td>{{forms.length}}</td>
+						  </tr>
 						</tbody>
 					</table>
 				</div>
@@ -38,6 +77,6 @@
 					<button type="button" class="btn bi bi-plus-circle" (click)="addReportElement()"></button>
 				</div>
 			</div>
-		</form>
+		</form> -->
 	</div>
 </div>

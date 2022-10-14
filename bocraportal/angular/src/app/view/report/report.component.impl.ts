@@ -9,6 +9,21 @@ import { Observable } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { select } from '@ngrx/store';
 import { FormArray, FormGroup } from '@angular/forms';
+import { ChartData } from 'chart.js';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+
+export class ReportElement {
+  chartType = '';
+  datasets: ChartData[] = [];
+}
+
+export class FormReport {
+  formName: string = '';
+  formCode: string = '';
+  submissions: FormSubmissionVO[] = [];
+  licensees: string[] = [];
+  reportElements: ReportElement[] = [];
+}
 
 @Component({
   selector: 'app-report',
@@ -20,6 +35,9 @@ export class ReportComponentImpl extends ReportComponent {
   submissions$: Observable<FormSubmissionVO[]>;
   submissions: FormSubmissionVO[] = [];
   licensees: string[] = [];
+  forms: FormVO[] = [];
+  fullReport: FormReport[] = [];
+  // formReportArrayControl: FormArray;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -44,6 +62,18 @@ export class ReportComponentImpl extends ReportComponent {
     this.submissions$.subscribe(submissions => {
       this.submissions = submissions;
       this.licensees = [...new Set(submissions.map(submission => submission.licensee.licenseeName))];
+      this.forms = [...new Set(submissions.map(submission => submission.form))];
+
+      this.forms.forEach(form => {
+        console.log(form, submissions.filter(submission => submission.form.formName === form.formName));
+        let rep: FormReport = new FormReport();
+        rep.submissions = submissions.filter(submission => submission.form.formName === form.formName);
+        rep.formName = form.formName;
+        rep.formCode = form.code;
+        rep.licensees = [...new Set(rep.submissions.map(submission => submission.licensee.licenseeName))];
+        this.fullReport.push(rep);
+
+      })
     });
   }
 
@@ -60,6 +90,31 @@ export class ReportComponentImpl extends ReportComponent {
     this.reportElements.push(
       this.getReportElementControl()
     );
+  }
+
+  createSubmissionsControl(submission: FormSubmissionVO): FormGroup {
+
+    return this.formBuilder.group({
+      id: submission.id,
+    })
+  }
+
+  createSubmissionsArrayControl(submissions: FormSubmissionVO[]) {
+    let formArray: FormArray = this.formBuilder.array([]);
+    submissions.forEach(sub => {
+      formArray.push(this.createSubmissionsControl(sub));
+    })
+
+    return formArray;
+  }
+
+  createFormReportGroup(formReport: FormReport): FormGroup {
+
+    return this.formBuilder.group({
+      formName: [{value: formReport?.formName, disabled: false}],
+      formCode: [{value: formReport?.formCode, disabled: false}],
+      submissions: this.createSubmissionsArrayControl(formReport?.submissions),
+    });
   }
 
   override newForm(): FormGroup {
