@@ -1,82 +1,31 @@
 <div class="card container">
 	<div class="card-body">
-		<div *ngFor="let report of fullReport; let i=index">
-			<form>
-				<table class="table table-striped">
-					<tbody>
-						<tr>
-						  <td>Form Name:</td>
-						  <td>{{report.formName}}</td>
-						</tr>
-						<tr>
-						  <td>Number of Submissions:</td>
-						  <td>{{report.submissions.length}}</td>
-						</tr>
-					  <tr>
-						<td>Number of Licensees:</td>
-						<td>{{report.licensees.length}}</td>
-					  </tr>
-					</tbody>
-				</table>
-				<div>
-					<label for="{{report.formCode}}">Chart Type</label>
-					<select id="{{report.formCode}}" class="form-select" aria-label="Default select example">
-						<option selected>Open this select menu</option>
-						<option value="bar">Bar</option>
-						<option value="bubble">Bubble</option>
-						<option value="doughnut">Doughnut</option>
-						<option value="line">Line</option>
-						<option value="polarArea">Polar Area</option>
-						<option value="radar">Radar</option>
-						<option value="scatter">Scatter</option>
-					</select>
-				</div>
-			</form>
-		</div>
-
-
-		<!-- <form [formGroup]="reportForm">
-			<section>
-				<div class="col my-3 view-buttons">
-				</div>
-			</section>
-			<div *ngIf="loading | async">
-				<app-loader [isLoading]="loading | async"></app-loader>
-			</div>
-			<div formArrayName="reportElements">
-				<div>
-					<table class="table table-striped">
-						<tbody>
-						  <tr>
-							<td>Number of Submissions:</td>
-							<td>{{submissions.length}}</td>
-						  </tr>
-						  <tr>
-							<td>Number of Licensees:</td>
-							<td>{{licensees.length}}</td>
-						  </tr>
-						  <tr>
-							<td>Number of Forms:</td>
-							<td>{{forms.length}}</td>
-						  </tr>
-						</tbody>
-					</table>
-				</div>
-				<div>
-					<div *ngFor="let element of reportElements.controls; let i=index" [formGroupName]="i">
-						<div>
-							<label for="alias-{{ i }}">Alias:</label>
-							<input id="alias-{{ i }}" type="text" formControlName="element">
-							<button type="button" class="btn btn-primary" (click)="removeReportElement(i)"> 
-								<mat-icon>delete</mat-icon>
-							</button>
-						</div>
+		<form [formGroup]="formReportForm">
+			<div formArrayName="formReports" class="container">
+				<div class="card-body" *ngFor="let formReportControl of formReportsArray.controls; let i=index" [formGroupName]="i">
+					<div class="row mb-3">
+						<label id="formName-{{i}}-label" for="formName-{{i}}" class="col-sm-2 col-form-label">Form Name:</label>
+						<input type="text" id="formName-{{i}}" class="form-control" name="formName" value="{{getFormReport(i)?.formName}}" disabled/>
+					</div>
+					<div class="row mb-3">
+						<label id="submission_num-{{i}}-label" for="submission_num-{{i}}" class="col-sm-2 col-form-label">Number of Submissions:</label>
+						<input type="text" id="submission_num-{{i}}" class="form-control" name="formName" value="{{getFormReport(i)?.submissions?.length}}" disabled/>
+					</div>
+					<div class="row mb-3">
+						<label for="formCode-{{i}}">Chart Type</label>
+						<select id="formCode-{{i}}" class="form-select" aria-label="Default select example" (change)="selectedChartType($event)">
+							<option selected>Open this select menu</option>
+							<option value="bar">Bar</option>
+							<option value="bubble">Bubble</option>
+							<option value="doughnut">Doughnut</option>
+							<option value="line">Line</option>
+							<option value="polarArea">Polar Area</option>
+							<option value="radar">Radar</option>
+							<option value="scatter">Scatter</option>
+						</select>
 					</div>
 				</div>
-				<div>
-					<button type="button" class="btn bi bi-plus-circle" (click)="addReportElement()"></button>
-				</div>
 			</div>
-		</form> -->
+		</form>
 	</div>
 </div>

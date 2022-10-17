@@ -37,11 +37,14 @@ export class ReportComponentImpl extends ReportComponent {
   licensees: string[] = [];
   forms: FormVO[] = [];
   fullReport: FormReport[] = [];
-  // formReportArrayControl: FormArray;
+  formReportForm: FormGroup;
 
   constructor(private injector: Injector) {
     super(injector);
     this.submissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
+    this.formReportForm = this.formBuilder.group({
+      formReports: this.formBuilder.array([])
+    });
   }
 
   doNgOnDestroy(): void {}
@@ -49,11 +52,11 @@ export class ReportComponentImpl extends ReportComponent {
   override doNgAfterViewInit() {
 
     this.route.queryParams.subscribe((queryParams: any) => {
-      let ids = queryParams.submissions.map((id: string) => +id);
+      let ids = queryParams?.submissions?.map((id: string) => +id);
       this.store.dispatch(
         SubmissionActions.findByIds({
           ids: ids,
-          loaderMessage: `Loading ${ids.length} submissions for report generation ....`,
+          loaderMessage: `Loading ${ids?.length} submissions for report generation ....`,
           loading: true,
         })
       );
@@ -62,22 +65,33 @@ export class ReportComponentImpl extends ReportComponent {
     this.submissions$.subscribe(submissions => {
       this.submissions = submissions;
       this.licensees = [...new Set(submissions.map(submission => submission.licensee.licenseeName))];
-      this.forms = [...new Set(submissions.map(submission => submission.form))];
+      
+      submissions.map(submission => submission.form).forEach(form => {
+        let fs: FormVO[] = this.forms.filter(f => f.code === form.code);
+        if(!fs || fs.length === 0) {
+          this.forms.push(form);
+        }
+      });
 
       this.forms.forEach(form => {
-        console.log(form, submissions.filter(submission => submission.form.formName === form.formName));
+
         let rep: FormReport = new FormReport();
+
         rep.submissions = submissions.filter(submission => submission.form.formName === form.formName);
         rep.formName = form.formName;
         rep.formCode = form.code;
         rep.licensees = [...new Set(rep.submissions.map(submission => submission.licensee.licenseeName))];
         this.fullReport.push(rep);
-
-      })
+        this.formReportsArray.push(this.createFormReportGroup(rep));
+      });
     });
   }
 
   override afterOnInit(): void {
+  }
+
+  get formReportsArray(): FormArray {
+    return this.formReportForm.get('formReports') as FormArray;
   }
 
   getReportElementControl(): FormGroup {
@@ -129,5 +143,20 @@ export class ReportComponentImpl extends ReportComponent {
 
   removeReportElement(i: number) {
     this.reportElements.removeAt(i);
+  }
+
+  getFormReport(i: number): FormReport {
+    return this.formReportsArray.controls[i]?.value;
+  }
+
+  getFormReportFormName(i: number): string {
+    return this.formReportsArray.controls[i]?.value?.formName;
+  }
+
+  getFormReportFormCode(i: number): string {
+    return this.formReportsArray.controls[i]?.value?.formCode;
+  }
+
+  selectedChartType($event: any) {
   }
 }
