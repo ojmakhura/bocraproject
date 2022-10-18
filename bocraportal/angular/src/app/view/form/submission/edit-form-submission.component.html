@@ -251,6 +251,9 @@
 						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted">
 						<span translate>submit</span>
 					</button>
+					<button type="button" color="accent" (click)="editFormSubmissionAccept()" class="btn btn-info" *ngIf="formSubmissionId && acceptUnrestricted">
+						<span translate>accept</span>
+					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionReturn()"
 						class="btn btn-outline-primary" *ngIf="returnUnrestricted && formDisabled()">
 						<span translate>return</span>

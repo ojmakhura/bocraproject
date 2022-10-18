@@ -1,8 +1,8 @@
 <div class="card container">
 	<div class="card-body">
-		<form [formGroup]="formReportForm">
+		<form [formGroup]="reportForm">
 			<div formArrayName="formReports" class="container">
-				<div class="card-body" *ngFor="let formReportControl of formReportsArray.controls; let i=index" [formGroupName]="i">
+				<div class="card-body" *ngFor="let formReportControl of formReports.controls; let i=index" [formGroupName]="i">
 					<div class="row mb-3">
 						<label id="formName-{{i}}-label" for="formName-{{i}}" class="col-sm-2 col-form-label">Form Name:</label>
 						<input type="text" id="formName-{{i}}" class="form-control" name="formName" value="{{getFormReport(i)?.formName}}" disabled/>
@@ -12,17 +12,29 @@
 						<input type="text" id="submission_num-{{i}}" class="form-control" name="formName" value="{{getFormReport(i)?.submissions?.length}}" disabled/>
 					</div>
 					<div class="row mb-3">
-						<label for="formCode-{{i}}">Chart Type</label>
-						<select id="formCode-{{i}}" class="form-select" aria-label="Default select example" (change)="selectedChartType($event)">
-							<option selected>Open this select menu</option>
-							<option value="bar">Bar</option>
-							<option value="bubble">Bubble</option>
-							<option value="doughnut">Doughnut</option>
-							<option value="line">Line</option>
-							<option value="polarArea">Polar Area</option>
-							<option value="radar">Radar</option>
-							<option value="scatter">Scatter</option>
-						</select>
+					</div>
+
+					<div formArrayName="reportElements">
+						<div *ngFor="let element of getReportElementsControl(i)?.controls; let j=index" [formGroupName]="j">
+							<div>
+								<label for="chart-type-{{i}}-{{j}}">Chart Type</label>
+								<select id="chart-type-{{i}}-{{j}}" class="form-select" formControlName="chartType" aria-label="Default select example" (change)="selectedChartType(i, j)">
+									<option value="bar">Bar</option>
+									<option value="bubble">Bubble</option>
+									<option value="doughnut">Doughnut</option>
+									<option value="line">Line</option>
+									<option value="polarArea">Polar Area</option>
+									<option value="radar">Radar</option>
+									<option value="scatter">Scatter</option>
+								</select>
+								<button type="button" class="btn btn-primary" (click)="removeReportElement(i, j)"> 
+									<mat-icon>delete</mat-icon>
+								</button>
+							</div>
+						</div>
+						<div>
+							<button type="button" class="btn bi bi-plus-circle" (click)="addReportElement(i)"></button>
+						</div>
 					</div>
 				</div>
 			</div>

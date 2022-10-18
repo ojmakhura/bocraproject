@@ -8,7 +8,7 @@ import * as ViewSelectors from '@app/store/view/view.selectors';
 import { Observable } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { select } from '@ngrx/store';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ChartData } from 'chart.js';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 
@@ -37,14 +37,10 @@ export class ReportComponentImpl extends ReportComponent {
   licensees: string[] = [];
   forms: FormVO[] = [];
   fullReport: FormReport[] = [];
-  formReportForm: FormGroup;
 
   constructor(private injector: Injector) {
     super(injector);
     this.submissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
-    this.formReportForm = this.formBuilder.group({
-      formReports: this.formBuilder.array([])
-    });
   }
 
   doNgOnDestroy(): void {}
@@ -82,28 +78,17 @@ export class ReportComponentImpl extends ReportComponent {
         rep.formCode = form.code;
         rep.licensees = [...new Set(rep.submissions.map(submission => submission.licensee.licenseeName))];
         this.fullReport.push(rep);
-        this.formReportsArray.push(this.createFormReportGroup(rep));
+        this.formReports.push(this.createFormReportGroup(rep));
       });
+      console.log(this.reportForm);
     });
   }
 
   override afterOnInit(): void {
   }
 
-  get formReportsArray(): FormArray {
-    return this.formReportForm.get('formReports') as FormArray;
-  }
-
-  getReportElementControl(): FormGroup {
-    return this.formBuilder.group({
-      element: []
-    });
-  }
-
-  addReportElement() {
-    this.reportElements.push(
-      this.getReportElementControl()
-    );
+  get formReports(): FormArray {
+    return this.reportForm.get('formReports') as FormArray;
   }
 
   createSubmissionsControl(submission: FormSubmissionVO): FormGroup {
@@ -116,7 +101,7 @@ export class ReportComponentImpl extends ReportComponent {
   createSubmissionsArrayControl(submissions: FormSubmissionVO[]) {
     let formArray: FormArray = this.formBuilder.array([]);
     submissions.forEach(sub => {
-      formArray.push(this.createSubmissionsControl(sub));
+      formArray.push(new FormControl(sub.id));
     })
 
     return formArray;
@@ -127,36 +112,113 @@ export class ReportComponentImpl extends ReportComponent {
     return this.formBuilder.group({
       formName: [{value: formReport?.formName, disabled: false}],
       formCode: [{value: formReport?.formCode, disabled: false}],
-      submissions: this.createSubmissionsArrayControl(formReport?.submissions),
+      submissions: this.formBuilder.array(formReport?.submissions?.map(sub => sub.id)),
+      reportElements: this.formBuilder.array([])
     });
   }
 
   override newForm(): FormGroup {
       return this.formBuilder.group({
-        reportElements: this.formBuilder.array([this.getReportElementControl()])
+        formReports: this.formBuilder.array([])
       });
   }
 
-  get reportElements(): FormArray {
-    return this.reportForm.get('reportElements') as FormArray;
+  getReportElementsControl(formIndex: number): FormArray {
+    return this.formReports?.at(formIndex)?.get('reportElements') as FormArray;
   }
 
-  removeReportElement(i: number) {
-    this.reportElements.removeAt(i);
+  getReportElements(formIndex: number) {
+    return this.formReports?.value[formIndex];
+  }
+
+  getReportElementControl(formIndex: number, i: number) {
+    return this.getReportElementsControl(formIndex)?.at(i);
+  }
+
+  getReportElement(formIndex: number, i: number) {
+    return this.getReportElementsControl(formIndex)?.at(i)?.value;
+  }
+
+  removeReportElement(formIndex: number, i: number) {
+    this.getReportElementsControl(formIndex).removeAt(i);
+  }
+
+  addReportElement(formIndex: number) {
+    this.getReportElementsControl(formIndex).push(this.createReportElementControl());
+  }
+
+  createReportElementControl(): FormGroup {
+    return this.formBuilder.group({
+      chartType: [],
+      graphData: this.formBuilder.group({
+        labels: this.formBuilder.array([]),
+        datasets: this.formBuilder.array([]),
+      })
+    });
+  }
+
+  getStringArrayControls(values: string[]): FormControl[] {
+    let arr: FormControl[] = [];
+
+    return arr;
+  }
+
+  getFormReportControl(i: number) {
+    return this.formReports.at(i);
   }
 
   getFormReport(i: number): FormReport {
-    return this.formReportsArray.controls[i]?.value;
+    return this.formReports.at(i)?.value;
+  }
+
+  getFormReportFormNameControl(i: number) {
+    return this.formReports.at(i)?.get('formName');
   }
 
   getFormReportFormName(i: number): string {
-    return this.formReportsArray.controls[i]?.value?.formName;
+    return this.formReports.at(i)?.value?.formName;
+  }
+
+  getFormReportFormCodeControl(i: number) {
+    return this.formReports.at(i)?.get('formCode');
   }
 
   getFormReportFormCode(i: number): string {
-    return this.formReportsArray.controls[i]?.value?.formCode;
+    return this.formReports.at(i)?.value?.formCode;
   }
 
-  selectedChartType($event: any) {
+  getFormReportSubmissionsControl(i: number) {
+    return this.formReports.at(i)?.get('submissions');
+  }
+
+  getFormReportSubmissions(i: number): number[] {
+    return this.formReports.at(i)?.value?.submissions;
+  }
+
+  getChartType(i: number, j: number) {
+    return this.getReportElement(i, j)?.chartType;
+  }
+
+  getGraphDataControl(i: number, j: number) {
+    return this.getReportElementControl(i, j)?.get('graphData');
+  }
+
+  getGraphData(i: number, j: number) {
+    return this.getReportElement(i, j)?.graphData;
+  }
+
+  selectedChartType(i: number, j: number) {
+    let labelsControls: FormArray = this.getGraphDataControl(i, j)?.get('labels') as FormArray;
+
+    let labels: string[] = this.getGraphData(i, j)?.labels;
+
+    if(!labels || labels?.length === 0) {
+      // TODO: 
+      this.submissions.filter(sub => this.getFormReportSubmissions(i).find(val => val === sub.id)).forEach(sub => {
+        labelsControls.push(new FormControl(sub?.licensee?.licenseeName));
+      });
+      labels = this.getGraphData(i, j)?.labels;
+
+    }
   }
 }

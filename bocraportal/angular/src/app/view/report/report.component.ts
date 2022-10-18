@@ -101,6 +101,7 @@ export abstract class ReportComponent implements OnInit, AfterViewInit, OnDestro
 
     newForm(): FormGroup {
         return this.formBuilder.group({
+            formReports: this.formBuilder.array([])
         });
     }
 
