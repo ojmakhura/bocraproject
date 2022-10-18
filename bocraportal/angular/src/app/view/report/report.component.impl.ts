@@ -8,9 +8,12 @@ import * as ViewSelectors from '@app/store/view/view.selectors';
 import { Observable } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { select } from '@ngrx/store';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ChartData } from 'chart.js';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
+import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
+import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
 
 export class ReportElement {
   chartType = '';
@@ -31,7 +34,6 @@ export class FormReport {
   styleUrls: ['./report.component.scss'],
 })
 export class ReportComponentImpl extends ReportComponent {
-
   submissions$: Observable<FormSubmissionVO[]>;
   submissions: FormSubmissionVO[] = [];
   licensees: string[] = [];
@@ -46,7 +48,6 @@ export class ReportComponentImpl extends ReportComponent {
   doNgOnDestroy(): void {}
 
   override doNgAfterViewInit() {
-
     this.route.queryParams.subscribe((queryParams: any) => {
       let ids = queryParams?.submissions?.map((id: string) => +id);
       this.store.dispatch(
@@ -58,69 +59,66 @@ export class ReportComponentImpl extends ReportComponent {
       );
     });
 
-    this.submissions$.subscribe(submissions => {
+    this.submissions$.subscribe((submissions) => {
       this.submissions = submissions;
-      this.licensees = [...new Set(submissions.map(submission => submission.licensee.licenseeName))];
-      
-      submissions.map(submission => submission.form).forEach(form => {
-        let fs: FormVO[] = this.forms.filter(f => f.code === form.code);
-        if(!fs || fs.length === 0) {
-          this.forms.push(form);
-        }
-      });
+      this.licensees = [...new Set(submissions.map((submission) => submission.licensee.licenseeName))];
 
-      this.forms.forEach(form => {
+      submissions
+        .map((submission) => submission.form)
+        .forEach((form) => {
+          let fs: FormVO[] = this.forms.filter((f) => f.code === form.code);
+          if (!fs || fs.length === 0) {
+            this.forms.push(form);
+          }
+        });
 
+      this.forms.forEach((form) => {
         let rep: FormReport = new FormReport();
 
-        rep.submissions = submissions.filter(submission => submission.form.formName === form.formName);
+        rep.submissions = submissions.filter((submission) => submission.form.formName === form.formName);
         rep.formName = form.formName;
         rep.formCode = form.code;
-        rep.licensees = [...new Set(rep.submissions.map(submission => submission.licensee.licenseeName))];
+        rep.licensees = [...new Set(rep.submissions.map((submission) => submission.licensee.licenseeName))];
         this.fullReport.push(rep);
         this.formReports.push(this.createFormReportGroup(rep));
       });
-      console.log(this.reportForm);
     });
   }
 
-  override afterOnInit(): void {
-  }
+  override afterOnInit(): void {}
 
   get formReports(): FormArray {
     return this.reportForm.get('formReports') as FormArray;
   }
 
   createSubmissionsControl(submission: FormSubmissionVO): FormGroup {
-
     return this.formBuilder.group({
       id: submission.id,
-    })
+    });
   }
 
   createSubmissionsArrayControl(submissions: FormSubmissionVO[]) {
     let formArray: FormArray = this.formBuilder.array([]);
-    submissions.forEach(sub => {
+    submissions.forEach((sub) => {
       formArray.push(new FormControl(sub.id));
-    })
+    });
 
     return formArray;
   }
 
   createFormReportGroup(formReport: FormReport): FormGroup {
-
     return this.formBuilder.group({
-      formName: [{value: formReport?.formName, disabled: false}],
-      formCode: [{value: formReport?.formCode, disabled: false}],
-      submissions: this.formBuilder.array(formReport?.submissions?.map(sub => sub.id)),
-      reportElements: this.formBuilder.array([])
+      formName: [{ value: formReport?.formName, disabled: false }],
+      formCode: [{ value: formReport?.formCode, disabled: false }],
+      submissions: this.formBuilder.array(formReport?.submissions?.map((sub) => sub.id)),
+      reportElements: this.formBuilder.array([]),
     });
   }
 
   override newForm(): FormGroup {
-      return this.formBuilder.group({
-        formReports: this.formBuilder.array([])
-      });
+    return this.formBuilder.group({
+      formReports: this.formBuilder.array([]),
+    });
   }
 
   getReportElementsControl(formIndex: number): FormArray {
@@ -144,23 +142,110 @@ export class ReportComponentImpl extends ReportComponent {
   }
 
   addReportElement(formIndex: number) {
-    this.getReportElementsControl(formIndex).push(this.createReportElementControl());
+    let submissions: FormSubmissionVO[] = this.submissions.filter((sub) =>
+      this.getFormReportSubmissions(formIndex).find((val) => val === sub.id)
+    );
+    let submission: FormSubmissionVO = submissions[0];
+    // console.log(submissions)
+
+    let sectionDatasets: any = {};
+
+    submission?.sections.forEach((section: DataFieldSectionVO) => {
+      let sectionDataset = sectionDatasets[section.sectionId];
+      if(!sectionDataset) {
+        sectionDataset = []
+
+        sectionDatasets[section.sectionId] = sectionDataset;
+      }
+
+      submissions.forEach(sub => {
+        let sec: DataFieldSectionVO = sub.sections.find((sc: DataFieldSectionVO) => section.sectionLabel === sc.sectionLabel);
+        sectionDataset.push({
+          label: sub.licensee.licenseeName,
+          data: sec.dataFields.map(field => field.value)
+        });
+      });
+
+    })
+
+    console.log(sectionDatasets)
+    /// TODO: Create a form control for each of the datasets
+    this.getReportElementsControl(formIndex).push(this.createReportElementControl(submission?.sections));
   }
 
-  createReportElementControl(): FormGroup {
-    return this.formBuilder.group({
-      chartType: [],
-      graphData: this.formBuilder.group({
-        labels: this.formBuilder.array([]),
-        datasets: this.formBuilder.array([]),
-      })
+  createSectionGraphsControls(sections: DataFieldSectionVO[]): FormArray {
+    let arr: FormArray = this.formBuilder.array([]);
+
+    console.log(sections);
+
+    sections.forEach((section) => {
+      // console.log(this.createSectionDatasetsControls(section));
+      arr.push(
+        this.formBuilder.group({
+          section: [section.sectionLabel],
+          graphData: this.formBuilder.group({
+            labels: this.formBuilder.array(section.dataFields.map((field: DataFieldVO) => field.formField.fieldName)),
+            datasets: this.formBuilder.array([]),
+          }),
+        })
+      );
     });
-  }
-
-  getStringArrayControls(values: string[]): FormControl[] {
-    let arr: FormControl[] = [];
 
     return arr;
+  }
+
+  createSectionDatasetsControls(section: DataFieldSectionVO) {
+    let datasets: any[] = [];
+    // this.submissions.filter(sub => section. === sub.id)
+    section.dataFields.forEach((field: DataFieldVO) => {
+      // console.log(field);
+      let submissions: FormSubmissionVO[] = this.submissions.filter((sub) => field.formSubmission.id === sub.id);
+      console.log(section);
+      let dataset: any = datasets.find((dt) => dt.label === submissions[0].licensee?.licenseeName);
+      if (!dataset) {
+        dataset = {
+          label: submissions[0].licensee?.licenseeName,
+          data: [],
+        };
+
+        datasets.push(dataset);
+      }
+
+      dataset.data.push(+field.value);
+    });
+
+    // console.log(datasets);
+  }
+
+  getSectionGraphsControls(i: number, j: number) {
+    return this.getReportElementControl(i, j).get('sectionGraphs') as FormArray;
+  }
+
+  getSectionGraphs(i: number, j: number) {
+    return this.getSectionGraphsControls(i, j)?.value;
+  }
+
+  getSectionGraphControl(i: number, j: number, k: number) {
+    return this.getSectionGraphsControls(i, j).at(k) as FormGroup;
+  }
+
+  getSectionGraph(i: number, j: number, k: number) {
+    return this.getSectionGraphControl(i, j, k)?.value;
+  }
+
+  getSectionGraphSection(i: number, j: number, k: number) {
+    return this.getSectionGraph(i, j, k)?.section;
+  }
+
+  getSectionGraphGraphData(i: number, j: number, k: number) {
+    return this.getSectionGraph(i, j, k)?.graphData;
+  }
+
+  createReportElementControl(sections: DataFieldSectionVO[]): FormGroup {
+    return this.formBuilder.group({
+      chartType: [],
+      sectionGraphs: this.createSectionGraphsControls(sections),
+    });
   }
 
   getFormReportControl(i: number) {
@@ -208,17 +293,33 @@ export class ReportComponentImpl extends ReportComponent {
   }
 
   selectedChartType(i: number, j: number) {
-    let labelsControls: FormArray = this.getGraphDataControl(i, j)?.get('labels') as FormArray;
-
     let labels: string[] = this.getGraphData(i, j)?.labels;
 
-    if(!labels || labels?.length === 0) {
-      // TODO: 
-      this.submissions.filter(sub => this.getFormReportSubmissions(i).find(val => val === sub.id)).forEach(sub => {
-        labelsControls.push(new FormControl(sub?.licensee?.licenseeName));
-      });
-      labels = this.getGraphData(i, j)?.labels;
+    if (!labels || labels?.length === 0) {
+      let submissions: FormSubmissionVO[] = this.submissions.filter((sub) =>
+        this.getFormReportSubmissions(i).find((val) => val === sub.id)
+      );
 
+      if (submissions && submissions.length > 0) {
+        let submission: FormSubmissionVO = submissions[0];
+        submission.sections.forEach((section: DataFieldSectionVO) => {
+          console.log(section);
+          console.log(section.dataFields.map((field) => field.formField.fieldName));
+        });
+      }
+
+      // this.submissions.filter(sub => this.getFormReportSubmissions(i).find(val => val === sub.id)).forEach(sub => {
+      //   labelsControls.push(new FormControl(sub?.licensee?.licenseeName));
+      //   console.log(sub);
+      //   let data: number[] = []
+      //   sub.sections.forEach((sec: DataFieldSectionVO) => {
+      //   })
+      // });
+      // labels = this.getGraphData(i, j)?.labels;
+      // console.log(labels);
+      // console.log(this.getReportElement(i, j));
     }
+
+    // console.log(this.getGraphData(i, j))
   }
 }
