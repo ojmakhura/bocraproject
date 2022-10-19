@@ -2,47 +2,63 @@
 	<div class="card-body">
 		<form [formGroup]="reportForm">
 			<div formArrayName="formReports" class="container">
-				<div class="card-body" *ngFor="let formReportControl of formReports.controls; let i=index" [formGroupName]="i">
+				<div class="card-body" *ngFor="let formReportControl of formReports.controls; let i=index"
+					[formGroupName]="i">
 					<div class="row mb-3">
 						<label id="formName-{{i}}-label" class="col-sm-2 col-form-label">Form Name: </label>
-						<label id="formName-{{i}}-label" class="col-sm-2 col-form-label">{{getFormReport(i)?.formName}}</label>
+						<label id="formName-{{i}}-label"
+							class="col-sm-2 col-form-label">{{getFormReport(i)?.formName}}</label>
 					</div>
 					<div class="row mb-3">
-						<label id="submission_num-{{i}}-label" class="col-sm-2 col-form-label">Number of Submissions: </label>
-						<label id="submission_num-{{i}}-label" class="col-sm-2 col-form-label">{{getFormReport(i)?.submissions?.length}}</label>
+						<label id="submission_num-{{i}}-label" class="col-sm-2 col-form-label">Number of Submissions:
+						</label>
+						<label id="submission_num-{{i}}-label"
+							class="col-sm-2 col-form-label">{{getFormReport(i)?.submissions?.length}}</label>
 					</div>
 					<div class="row mb-3">
 					</div>
 
 					<div formArrayName="reportElements">
-						<div *ngFor="let element of getReportElementsControl(i)?.controls; let j=index" [formGroupName]="j">
+						<div *ngFor="let element of getReportElementsControl(i)?.controls; let j=index"
+							[formGroupName]="j">
 							<div class="mb-3">
 								<div class="mb-3">
 									<label for="chart-type-{{i}}-{{j}}">Chart Type</label>
-									<select id="chart-type-{{i}}-{{j}}" class="form-select" formControlName="chartType" aria-label="Default select example" (change)="selectedChartType(i, j)">
+									<select id="chart-type-{{i}}-{{j}}" class="form-select" formControlName="chartType"
+										aria-label="Default select example" (change)="selectedChartType(i, j)">
 										<option value="bar">Bar</option>
-										<option value="bubble">Bubble</option>
-										<option value="doughnut">Doughnut</option>
-										<option value="line">Line</option>
-										<option value="polarArea">Polar Area</option>
-										<option value="radar">Radar</option>
-										<option value="scatter">Scatter</option>
+										<!-- <option value="bubble">Bubble</option> -->
+										<!-- <option value="doughnut">Doughnut</option> -->
+										<!-- <option value="line">Line</option> -->
+										<option value="pie">Pie</option>
+										<!-- <option value="polarArea">Polar Area</option> -->
+										<!-- <option value="radar">Radar</option> -->
+										<!-- <option value="scatter">Scatter</option> -->
 									</select>
 								</div>
 								<div formArrayName="sectionGraphs">
-									<div *ngFor="let sectionGraph of getSectionGraphsControls(i, j)?.controls; let k=index" [formGroupName]="k">
+									<div *ngFor="let sectionGraph of getSectionGraphsControls(i, j)?.controls; let k=index"
+										[formGroupName]="k">
 										<div class="mb-3">
-											<label for="section-{{i}}-{{j}}-{{k}}">Section: {{getSectionGraphSection(i, j, k)}}</label>
+											<h5 >Section: {{getSectionGraphSection(i,j, k)}}</h5>
+										</div>
+										<canvas *ngIf="selectedChartType(i, j) === 'bar'" baseChart 
+											[data]="selectSectionDataset(i, j, k)" 
+											[type]="selectedChartType(i, j)">
+										</canvas>
+										<div *ngIf="selectedChartType(i, j) === 'pie'">
+											<div *ngFor="let label of selectSectionDatasetLabels(i, j, k); let l=index">
+												<h6>{{label}}</h6>
+												<canvas baseChart 
+													[datasets]="selectSectionPieDataset(i, j, k, l)" 
+													[labels]="selectSectionPieDatasetLabels(i, j, k, l)"
+													[type]="selectedChartType(i, j)">
+												</canvas>
+											</div>
 										</div>
 									</div>
 								</div>
-								<!-- <div class="mb-3">
-									<label for="section-{{i}}-{{j}}">Section</label>
-									<select id="section-{{i}}-{{j}}" class="form-select" formControlName="section" aria-label="Default select example">
-										<option value="bar">Bar</option>
-									</select>
-								</div> -->
-								<button type="button" class="btn btn-primary" (click)="removeReportElement(i, j)"> 
+								<button type="button" class="btn btn-primary" (click)="removeReportElement(i, j)">
 									<mat-icon>delete</mat-icon>
 								</button>
 							</div>
