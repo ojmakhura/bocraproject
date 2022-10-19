@@ -5,8 +5,17 @@ import {reportKey, initialState} from './report.state';
 
 export const reportReducer = createReducer(
     initialState,
+    on(ReportActions.addElement, (state, action) => ({
+      ...state,
+      reportElements: [...state.reportElements, action.reportElement],
+    })),
+    on(ReportActions.setElements, (state, action) => ({
+      ...state,
+      reportElements: action.reportElements,
+    })),
     on(ReportActions.reportReset, (state) => ({
       ...state,
+        reportElements: [],
         loaderMessage: undefined,
         loading: false,
         success: false,

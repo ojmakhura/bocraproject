@@ -3,6 +3,7 @@
 export const reportKey = "report";
 
 export interface ReportState {
+    reportElements: any[],
     loaderMessage: string | undefined;
     loading: boolean;
     success: boolean;
@@ -15,5 +16,6 @@ export const initialState: ReportState = {
     success: false,
     loaderMessage: undefined,
     error: false,
-    messages: []
+    messages: [],
+    reportElements: []
 };

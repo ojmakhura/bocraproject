@@ -39,6 +39,7 @@ export class ReportComponentImpl extends ReportComponent {
   licensees: string[] = [];
   forms: FormVO[] = [];
   fullReport: FormReport[] = [];
+  report: any = {}
 
   constructor(private injector: Injector) {
     super(injector);
@@ -82,6 +83,9 @@ export class ReportComponentImpl extends ReportComponent {
         this.fullReport.push(rep);
         this.formReports.push(this.createFormReportGroup(rep));
       });
+
+      this.report = this.reportForm.value
+      console.log(this.report);
     });
   }
 
