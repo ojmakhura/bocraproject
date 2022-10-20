@@ -5,9 +5,7 @@
 				<div class="card-body" *ngFor="let formReportControl of formReportsControl.controls; let i=index"
 					[formGroupName]="i">
 					<div class="row mb-3">
-						<label id="formName-{{i}}-label" class="col-sm-2 col-form-label">Form Name: </label>
-						<label id="formName-{{i}}-label"
-							class="col-sm-2 col-form-label">{{getFormReport(i)?.formName}}</label>
+						<h4>{{getFormReport(i)?.formName}} Report</h4>
 					</div>
 					<div class="row mb-3">
 						<label id="submission_num-{{i}}-label" class="col-sm-2 col-form-label">Number of Submissions:
@@ -40,22 +38,22 @@
 									<div *ngFor="let sectionGraph of getSectionGraphsControls(i, j)?.controls; let k=index"
 										[formGroupName]="k">
 										<div class="mb-3">
-											<h5 >Section: {{getSectionGraphSection(i,j, k)}}</h5>
+											<h5 >Section: {{formReports[i]?.reportElements[j]?.sectionGraphs[k]?.section}}</h5>
 										</div>
-										<div *ngIf="formReports[i]?.reportElements[j].chartType === 'bar'">
+										<div *ngIf="formReports[i]?.reportElements[j]?.chartType === 'bar'">
 											<canvas #chart baseChart 
-												[datasets]="formReports[i]?.reportElements[j].sectionGraphs[k].licenseeGraphData"
-												[labels]="formReports[i]?.reportElements[j].sectionGraphs[k].fieldList"
-												[type]="formReports[i]?.reportElements[j].chartType">
+												[datasets]="formReports[i]?.reportElements[j]?.sectionGraphs[k]?.licenseeGraphData"
+												[labels]="formReports[i]?.reportElements[j]?.sectionGraphs[k]?.fieldList"
+												[type]="formReports[i]?.reportElements[j]?.chartType">
 											</canvas>
 										</div>
-										<div *ngIf="selectedChartType(i, j) === 'pie'">
-											<div *ngFor="let graph of formReports[i]?.reportElements[j].sectionGraphs[k].fieldGraphs; let l=index">
-												<h6>{{formReports[i]?.reportElements[j].sectionGraphs[k].fieldList[l]}}</h6>
+										<div *ngIf="formReports[i]?.reportElements[j]?.chartType === 'pie'">
+											<div *ngFor="let graph of formReports[i]?.reportElements[j]?.sectionGraphs[k]?.fieldGraphs; let l=index">
+												<h6>{{formReports[i]?.reportElements[j]?.sectionGraphs[k]?.fieldList[l]}}</h6>
 												<canvas baseChart 
 													[datasets]="[{data: graph}]"
-													[labels]="formReports[i].licensees"
-													[type]="formReports[i]?.reportElements[j].chartType">
+													[labels]="formReports[i]?.licensees"
+													[type]="formReports[i]?.reportElements[j]?.chartType">
 												</canvas>
 											</div>
 										</div>
