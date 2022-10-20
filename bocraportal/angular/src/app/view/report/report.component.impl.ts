@@ -311,13 +311,27 @@ export class ReportComponentImpl extends ReportComponent {
     return this.getReportElement(i, j)?.graphData;
   }
 
-  selectedChartType($event: any, i: number, j: number, element: any) {
-    console.log(element)
+  selectedChartType1($event: any, i: number, j: number, element: any) {
+    
+    this.report = this.reportForm.value
+    this.formReports = this.report.formReports;
+    
     this.chart.forEach((c, index) => {
       c.type = $event.target.value
       c.update();
     });
     // return this.getReportElement(i, j).chartType ? this.getReportElement(i, j).chartType : 'bar';
+  }
+
+  selectedChartType(i: number, j: number) {
+    this.report = this.reportForm.value
+    this.formReports = this.report.formReports;
+
+    this.chart.forEach((c, index) => {
+      c.type = this.getReportElement(i, j).chartType
+      c.update();
+    });
+    return this.getReportElement(i, j).chartType ? this.getReportElement(i, j).chartType : 'bar';
   }
 
   isBarChart(type: string): Observable<boolean> {

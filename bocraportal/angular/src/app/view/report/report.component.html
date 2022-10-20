@@ -5,7 +5,9 @@
 				<div class="card-body" *ngFor="let formReportControl of formReportsControl.controls; let i=index"
 					[formGroupName]="i">
 					<div class="row mb-3">
-						<h4>Form Name: {{getFormReport(i)?.formName}}</h4>
+						<label id="formName-{{i}}-label" class="col-sm-2 col-form-label">Form Name: </label>
+						<label id="formName-{{i}}-label"
+							class="col-sm-2 col-form-label">{{getFormReport(i)?.formName}}</label>
 					</div>
 					<div class="row mb-3">
 						<label id="submission_num-{{i}}-label" class="col-sm-2 col-form-label">Number of Submissions:
@@ -40,19 +42,20 @@
 										<div class="mb-3">
 											<h5 >Section: {{getSectionGraphSection(i,j, k)}}</h5>
 										</div>
-										<div *ngIf="selectedChartType(i, j) === 'bar'">
+										<div *ngIf="formReports[i]?.reportElements[j].chartType === 'bar'">
 											<canvas #chart baseChart 
-												[data]="selectSectionDataset(i, j, k)" 
-												[type]="selectedChartType(i, j)">
+												[datasets]="formReports[i]?.reportElements[j].sectionGraphs[k].licenseeGraphData"
+												[labels]="formReports[i]?.reportElements[j].sectionGraphs[k].fieldList"
+												[type]="formReports[i]?.reportElements[j].chartType">
 											</canvas>
 										</div>
 										<div *ngIf="selectedChartType(i, j) === 'pie'">
-											<div *ngFor="let label of selectSectionDatasetLabels(i, j, k); let l=index">
-												<h6>{{label}}</h6>
+											<div *ngFor="let graph of formReports[i]?.reportElements[j].sectionGraphs[k].fieldGraphs; let l=index">
+												<h6>{{formReports[i]?.reportElements[j].sectionGraphs[k].fieldList[l]}}</h6>
 												<canvas baseChart 
-													[datasets]="selectSectionPieDataset(i, j, k, l)" 
-													[labels]="selectSectionPieDatasetLabels(i, j, k, l)"
-													[type]="selectedChartType(i, j)">
+													[datasets]="[{data: graph}]"
+													[labels]="formReports[i].licensees"
+													[type]="formReports[i]?.reportElements[j].chartType">
 												</canvas>
 											</div>
 										</div>
