@@ -37,6 +37,8 @@ export class ReportComponentImpl extends ReportComponent {
   @ViewChildren(BaseChartDirective) chart: QueryList<BaseChartDirective>;
   chartTypeControl: FormControl;
 
+  submissionSearchForm: FormGroup;
+
   constructor(private injector: Injector) {
     super(injector);
     this.submissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
