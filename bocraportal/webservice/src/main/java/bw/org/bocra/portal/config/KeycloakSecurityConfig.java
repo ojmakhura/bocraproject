@@ -1,4 +1,4 @@
-package bw.org.bocra.portal;
+package bw.org.bocra.portal.config;
 
 import java.util.Arrays;
 
@@ -25,6 +25,7 @@ import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
@@ -41,9 +42,6 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     private static final String CORS_ALLOWED_HEADERS = "origin,content-type,accept,x-requested-with,Authorization";
     private long corsMaxAge = 60;
     private static final Logger logger = LoggerFactory.getLogger(KeycloakSecurityConfig.class);
-
-    // @Autowired
-    // private KeycloakClientRequestFactory keycloakClientRequestFactory;
 
     @Override
     @Bean
@@ -72,8 +70,8 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     protected void configure(HttpSecurity http) throws Exception {
         // TODO Auto-generated method stub
         super.configure(http);
-        http.cors().and().csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            http.cors().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
             .mvcMatchers(
                 "/swagger-ui/*", 

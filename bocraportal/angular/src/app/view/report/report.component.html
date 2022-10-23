@@ -20,6 +20,7 @@
 						<div *ngFor="let element of getReportElementsControl(i)?.controls; let j=index"
 							[formGroupName]="j">
 							<div class="mb-3">
+
 								<div class="mb-3">
 									<label for="chart-type-{{i}}-{{j}}">Chart Type</label>
 									<select id="chart-type-{{i}}-{{j}}" class="form-select" formControlName="chartType"
@@ -34,15 +35,41 @@
 										<!-- <option value="scatter">Scatter</option> -->
 									</select>
 								</div>
-								<div formArrayName="sectionGraphs">
+								<div class="mb-3">
+									<label for="report-type-{{i}}-{{j}}">Report Type</label>
+									<select id="report-type-{{i}}-{{j}}" class="form-select" formControlName="reportType"
+										aria-label="Select report type">
+										<option selected value="default">Default</option>
+										<option value="custom">Custom</option>
+									</select>
+								</div>
+								<div class="mb-3" *ngIf="element.value?.reportType === 'custom'">
+									<div class="mb-3">
+										<label for="report-labels-{{i}}-{{j}}">Report Labels</label>
+										<select id="report-labels-{{i}}-{{j}}" class="form-select" formControlName="reportLabels"
+											aria-label="Default select example" (change)="getLabels(i, element)">
+											<option selected value="licensees">Licensees</option>
+											<option value="periods">Periods</option>
+										</select>
+									</div>
+								</div>
+								<div class="col mb-3">
+									<button type="button" class="btn btn-primary" (click)="generateReport(i, j)">
+										Generate
+									</button>
+									<button type="button" class="btn btn-primary" (click)="clearReport(i, j)">
+										Clear
+									</button>
+								</div>
+								<div class="col mb-3" formArrayName="sectionGraphs">
 									<div *ngFor="let sectionGraph of getSectionGraphsControls(i, j)?.controls; let k=index"
 										[formGroupName]="k">
 										<div class="mb-3">
-											<h5 >Section: {{formReports[i]?.reportElements[j]?.sectionGraphs[k]?.section}}</h5>
+											<h5 >Section: {{sectionGraph?.value?.section}}</h5>
 										</div>
 										<div *ngIf="formReports[i]?.reportElements[j]?.chartType === 'bar'">
 											<canvas #chart baseChart 
-												[datasets]="formReports[i]?.reportElements[j]?.sectionGraphs[k]?.licenseeGraphData"
+												[datasets]="sectionGraph.value.licenseeGraphData"
 												[labels]="formReports[i]?.reportElements[j]?.sectionGraphs[k]?.fieldList"
 												[type]="formReports[i]?.reportElements[j]?.chartType">
 											</canvas>
@@ -59,9 +86,11 @@
 										</div>
 									</div>
 								</div>
-								<button type="button" class="btn btn-primary" (click)="removeReportElement(i, j)">
-									<mat-icon>delete</mat-icon>
-								</button>
+								<div class="col">
+									<button type="button" class="btn btn-primary" (click)="removeReportElement(i, j)">
+										<mat-icon>delete</mat-icon>
+									</button>
+								</div>
 							</div>
 						</div>
 						<div>
