@@ -67,20 +67,20 @@
 										<div class="mb-3">
 											<h5 >Section: {{sectionGraph?.value?.section}}</h5>
 										</div>
-										<div *ngIf="formReports[i]?.reportElements[j]?.chartType === 'bar'">
+										<div *ngIf="element?.value?.chartType === 'bar'">
 											<canvas #chart baseChart 
-												[datasets]="sectionGraph.value.licenseeGraphData"
-												[labels]="formReports[i]?.reportElements[j]?.sectionGraphs[k]?.fieldList"
-												[type]="formReports[i]?.reportElements[j]?.chartType">
+												[datasets]="sectionGraph?.value?.licenseeGraphData"
+												[labels]="sectionGraph?.value?.fieldList"
+												[type]="element?.value?.chartType">
 											</canvas>
 										</div>
-										<div *ngIf="formReports[i]?.reportElements[j]?.chartType === 'pie'">
-											<div *ngFor="let graph of formReports[i]?.reportElements[j]?.sectionGraphs[k]?.fieldGraphs; let l=index">
-												<h6>{{formReports[i]?.reportElements[j]?.sectionGraphs[k]?.fieldList[l]}}</h6>
+										<div *ngIf="element?.value?.chartType === 'pie'">
+											<div *ngFor="let graph of sectionGraph?.value?.fieldGraphs; let l=index">
+												<h6>{{sectionGraph?.value?.fieldList[l]}}</h6>
 												<canvas baseChart 
 													[datasets]="[{data: graph}]"
-													[labels]="formReports[i]?.licensees"
-													[type]="formReports[i]?.reportElements[j]?.chartType">
+													[labels]="formReportControl?.value?.licensees"
+													[type]="element?.value?.chartType">
 												</canvas>
 											</div>
 										</div>

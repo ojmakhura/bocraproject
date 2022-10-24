@@ -122,7 +122,7 @@ export class ReportComponentImpl extends ReportComponent {
     return this.formBuilder.group({
       formName: [{ value: formReport?.formName, disabled: false }],
       formCode: [{ value: formReport?.formCode, disabled: false }],
-      licensees: this.formBuilder.array(this.submissions?.map(sub => sub?.licensee?.licenseeName)),
+      licensees: this.formBuilder.array([...new Set(this.submissions?.map(sub => sub?.licensee?.licenseeName))]),
       submissions: this.formBuilder.array(formReport?.submissions?.map((sub) => sub.id)),
       reportElements: this.formBuilder.array([]),
     });
@@ -163,13 +163,10 @@ export class ReportComponentImpl extends ReportComponent {
     this.report = this.reportForm.value
     this.formReports = this.report.formReports;
     const reportElement = element?.value;
-    console.log(element)
 
     if(reportElement?.reportLabels === 'licensees') {
-      console.log(this.submissions.filter(sub => this.getFormReport(index)?.submissions.find(id => id === sub.id))?.map(sub => sub?.licensee?.licenseeName));
 
       let el: FormGroup = element as FormGroup;
-      console.log(el);
       // el.setControl()
 
     } else if(reportElement?.reportLabels === 'periods') {
@@ -205,7 +202,7 @@ export class ReportComponentImpl extends ReportComponent {
       let periodSubmissions: FormSubmissionVO[] = submissions.filter(sub => sub.period.periodName === period);
       let submission: FormSubmissionVO = periodSubmissions[0];
       let sectionDatasets: any = {};
-      console.log(submissions.filter(sub => sub.period.periodName === period));
+
       submission?.sections.forEach((section: DataFieldSectionVO, index: number) => {
         let sectionDataset = sectionDatasets[section.sectionId];
         if(!sectionDataset) {
@@ -259,9 +256,9 @@ export class ReportComponentImpl extends ReportComponent {
     let arr: FormArray = this.formBuilder.array([]);
     Object.keys(sectionDatasets).forEach(prop => {
       const dt: any[] = sectionDatasets[prop]
-      console.log(sectionDatasets)
       let section: DataFieldSectionVO | undefined = sections.find(v => v.sectionId === prop);
       if(section) {
+
         arr.push(
           this.formBuilder.group({
             section: [`${period? period + ' - ' : ''}${section?.sectionLabel}`],
@@ -288,6 +285,8 @@ export class ReportComponentImpl extends ReportComponent {
 
   createFieldDataSets(section: DataFieldSectionVO, dataset: any[]) {
     let arr: FormArray = this.formBuilder.array([]);
+    this.report = this.reportForm.value
+    this.formReports = this.report.formReports;
 
     for (let index = 0; index < section?.dataFields?.length; index++) {
       arr.push(this.formBuilder.array(dataset.map(d => d.data[index])))
