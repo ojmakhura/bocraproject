@@ -30,6 +30,7 @@
 										<!-- <option value="doughnut">Doughnut</option> -->
 										<!-- <option value="line">Line</option> -->
 										<option value="pie">Pie</option>
+										<option value="table">Table</option>
 										<!-- <option value="polarArea">Polar Area</option> -->
 										<!-- <option value="radar">Radar</option> -->
 										<!-- <option value="scatter">Scatter</option> -->
@@ -37,8 +38,8 @@
 								</div>
 								<div class="mb-3">
 									<label for="report-type-{{i}}-{{j}}">Report Type</label>
-									<select id="report-type-{{i}}-{{j}}" class="form-select" formControlName="reportType"
-										aria-label="Select report type">
+									<select id="report-type-{{i}}-{{j}}" class="form-select"
+										formControlName="reportType" aria-label="Select report type">
 										<option selected value="default">Default</option>
 										<option value="custom">Custom</option>
 									</select>
@@ -46,8 +47,9 @@
 								<div class="mb-3" *ngIf="element.value?.reportType === 'custom'">
 									<div class="mb-3">
 										<label for="report-labels-{{i}}-{{j}}">Report Labels</label>
-										<select id="report-labels-{{i}}-{{j}}" class="form-select" formControlName="reportLabels"
-											aria-label="Default select example" (change)="getLabels(i, element)">
+										<select id="report-labels-{{i}}-{{j}}" class="form-select"
+											formControlName="reportLabels" aria-label="Default select example"
+											(change)="getLabels(i, element)">
 											<option selected value="licensees">Licensees</option>
 											<option value="periods">Periods</option>
 										</select>
@@ -65,11 +67,10 @@
 									<div *ngFor="let sectionGraph of getSectionGraphsControls(i, j)?.controls; let k=index"
 										[formGroupName]="k">
 										<div class="mb-3">
-											<h5 >Section: {{sectionGraph?.value?.section}}</h5>
+											<h5>Section: {{sectionGraph?.value?.section}}</h5>
 										</div>
 										<div *ngIf="element?.value?.chartType === 'bar'">
-											<canvas #chart baseChart 
-												[datasets]="sectionGraph?.value?.licenseeGraphData"
+											<canvas #chart baseChart [datasets]="sectionGraph?.value?.licenseeGraphData"
 												[labels]="sectionGraph?.value?.fieldList"
 												[type]="element?.value?.chartType">
 											</canvas>
@@ -77,12 +78,27 @@
 										<div *ngIf="element?.value?.chartType === 'pie'">
 											<div *ngFor="let graph of sectionGraph?.value?.fieldGraphs; let l=index">
 												<h6>{{sectionGraph?.value?.fieldList[l]}}</h6>
-												<canvas baseChart 
-													[datasets]="[{data: graph}]"
+												<canvas baseChart [datasets]="[{data: graph}]"
 													[labels]="formReportControl?.value?.licensees"
 													[type]="element?.value?.chartType">
 												</canvas>
 											</div>
+										</div>
+										<div *ngIf="element?.value?.chartType === 'table'">
+											<table class="table table-striped">
+												<thead>
+													<tr>
+														<th scope="col">Field</th>
+														<th scope="col" *ngFor="let licensee of formReportControl?.value?.licensees; let m=index">{{licensee}}</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr *ngFor="let field of sectionGraph?.value?.fieldList; let m=index">
+														<th scope="row">{{field}}</th>
+														<td *ngFor="let val of sectionGraph?.value?.fieldGraphs[m]">{{val}}</td>
+													</tr>
+												</tbody>
+											</table>
 										</div>
 									</div>
 								</div>
