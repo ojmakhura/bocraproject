@@ -7,6 +7,8 @@ import { NoteVO } from '@model/bw/org/bocra/portal/form/submission/note/note-vo'
 export enum FormSubmissionActionType {
     FIND_BY_ID = '[FormSubmission] Find By Id',
     FIND_BY_ID_SUCCESS = '[FormSubmission] Find By Id Success',
+    FIND_BY_IDS = '[FormSubmission] Find By Ids',
+    FIND_BY_IDS_SUCCESS = '[FormSubmission] Find By Ids Success',
     SAVE = '[FormSubmission] Save',
     SAVE_SUCCESS = '[FormSubmission] Save Success',
     SAVE_NOTE = '[FormSubmission] Save Note',
@@ -32,6 +34,16 @@ export const findById = createAction(
 export const findByIdSuccess = createAction(
     FormSubmissionActionType.FIND_BY_ID_SUCCESS,
     props<{ formSubmission: FormSubmissionVO | any, messages: any[], success: boolean}>()
+);
+
+export const findByIds = createAction(
+    FormSubmissionActionType.FIND_BY_IDS,
+    props<{ ids: number[] | any[], loading: boolean, loaderMessage: string | undefined }>()
+);
+
+export const findByIdsSuccess = createAction(
+    FormSubmissionActionType.FIND_BY_IDS_SUCCESS,
+    props<{ formSubmissions: FormSubmissionVO[] | any[], messages: any[], success: boolean}>()
 );
 
 export const save = createAction(

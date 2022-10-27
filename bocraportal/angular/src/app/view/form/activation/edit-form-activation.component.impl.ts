@@ -167,6 +167,13 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         form.formActivation.createdBy = this.keycloakService.getUsername();
         form.formActivation.createdDate = new Date();
       }
+
+      form.formActivation.form = new FormVO();
+      form.formActivation.form.id = this.formActivationForm.id;
+
+      form.formActivation.period = new PeriodVO();
+      form.formActivation.period.id = this.formActivationPeriod.id;
+
       this.store.dispatch(
         FormActivationActions.save({
           formActivation: form.formActivation,

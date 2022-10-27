@@ -78,8 +78,17 @@ export class EditFieldComponentImpl extends EditFieldComponent {
       }
     });
 
-    this.form$.subscribe((f) => {
-      this.formFieldFormControl.patchValue(f);
+    this.form$?.subscribe((f) => {
+      
+      if(!f) {
+        return;
+      }
+
+      let form: FormVO = new FormVO();
+      form.id = f.id;
+      form.formName = f.formName;
+      form.entryType = f.entryType;
+      this.formFieldFormControl.patchValue(form);
       this.formFieldFormSectionBackingList = [];
       f?.formSections?.forEach((element: FormSectionVO) => {
         let item: SelectItem = new SelectItem();
@@ -111,7 +120,6 @@ export class EditFieldComponentImpl extends EditFieldComponent {
    * This method may be overwritten
    */
   override beforeEditFieldSave(form: EditFieldSaveForm): void {
-    console.log(form);
 
     if (this.formFieldControl.valid) {
       if (this.formField.id) {

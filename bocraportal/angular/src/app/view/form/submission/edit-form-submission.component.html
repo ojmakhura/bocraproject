@@ -27,9 +27,9 @@
 			<div formGroupName="formSubmission">
 				<div>
 					<label for="formSubmissionExpectedSubmissionDate" class="col-sm-2 col-form-label"
-							translate>expected.submission.date</label>
+						translate>expected.submission.date</label>
 					<label for="formSubmissionExpectedSubmissionDate" class="col-sm-2 col-form-label"
-							translate>{{formSubmissionExpectedSubmissionDate}}</label>
+						translate>{{formSubmissionExpectedSubmissionDate}}</label>
 				</div>
 				<fieldset formGroupName="licensee">
 					<div class="row mb-3">
@@ -50,8 +50,9 @@
 						</div>
 					</div>
 				</fieldset>
-				<fieldset class="mb-3" formGroupName="form">
-					<!-- <div class="row mb-3">
+
+				<fieldset formGroupName="form">
+					<div class="row mb-3">
 						<label for="formSubmissionFormFormName" class="col-sm-2 col-form-label"
 							translate>form.name</label>
 						<div class="input-group">
@@ -62,199 +63,51 @@
 								data-bs-target="#formSubmissionFormModal" *ngIf="addUnrestricted">
 								<mat-icon>add_box</mat-icon>
 							</button>
-							<button type="button" (click)="formSubmissionFormClear()"
-								class="btn btn-outline-primary" *ngIf="addUnrestricted">
+							<button type="button" (click)="formSubmissionFormClear()" class="btn btn-outline-primary"
+								*ngIf="addUnrestricted">
 								<mat-icon>clear</mat-icon>
 							</button>
 						</div>
 					</div>
-					<div *ngIf="error | async" class="alert alert-danger" role="alert">
-						<div *ngFor="let message of messages | async">
-							{{ message }}
+					<div *ngIf="editFormSubmissionForm.invalid && formSubmissionFormControl.invalid && (formSubmissionFormControl.dirty || formSubmissionFormControl.touched) "
+						class="alert alert-danger" role="alert">
+						<div *ngIf="formSubmissionFormControl.errors['required']">
+							<span translate>form.required</span>
 						</div>
-					</div> -->
-					<div formGroupName="formSubmission">
-						<fieldset formGroupName="form">
-							<div class="row mb-3">
-								<label for="formSubmissionFormFormName" class="col-sm-2 col-form-label"
-									translate>form.name</label>
-								<div class="input-group">
-									<input type="text" class="form-control" id="formSubmissionFormFormName"
-										value="{{ formSubmissionForm?.formName }}" disabled />
-									<button type="button" (click)="formSubmissionFormAddDialog()"
-										class="btn btn-outline-primary" data-bs-toggle="modal"
-										data-bs-target="#formSubmissionFormModal" *ngIf="addUnrestricted">
-										<mat-icon>add_box</mat-icon>
-									</button>
-									<button type="button" (click)="formSubmissionFormClear()"
-										class="btn btn-outline-primary" *ngIf="addUnrestricted">
-										<mat-icon>clear</mat-icon>
-									</button>
-								</div>
-							</div>
-							<div *ngIf="editFormSubmissionForm.invalid && formSubmissionFormControl.invalid && (formSubmissionFormControl.dirty || formSubmissionFormControl.touched) " class="alert alert-danger" role="alert">
-								<div *ngIf="formSubmissionFormControl.errors['required']">
-									<span translate>form.required</span>
-								</div>
-							</div>
-						</fieldset>
-						<fieldset formGroupName="period">
-							<div class="row mb-3">
-								<label for="formSubmissionPeriodPeriodName" class="col-sm-2 col-form-label"
-									translate>period.name</label>
-								<div class="input-group">
-									<input type="text" class="form-control" id="formSubmissionPeriodPeriodName"
-										value="{{ formSubmissionPeriod?.periodName }}" disabled />
-									<button type="button" (click)="formSubmissionPeriodAddDialog()"
-										class="btn btn-outline-primary" data-bs-toggle="modal"
-										data-bs-target="#formSubmissionPeriodModal" *ngIf="addUnrestricted">
-										<mat-icon>add_box</mat-icon>
-									</button>
-									<button type="button" (click)="formSubmissionPeriodClear()"
-										class="btn btn-outline-primary" *ngIf="addUnrestricted">
-										<mat-icon>clear</mat-icon>
-									</button>
-								</div>
-							</div>
-						</fieldset>
-						<fieldset formGroupName="licensee">
-							<div class="row mb-3">
-								<label for="formSubmissionLicenseeLicenseeName" class="col-sm-2 col-form-label"
-									translate>licensee.name</label>
-								<div class="input-group">
-									<input type="text" class="form-control" id="formSubmissionLicenseeLicenseeName"
-										value="{{ formSubmissionLicensee?.licenseeName }}" disabled />
-									<button type="button" (click)="formSubmissionLicenseeAddDialog()"
-										class="btn btn-outline-primary" data-bs-toggle="modal"
-										data-bs-target="#formSubmissionLicenseeModal" *ngIf="addUnrestricted">
-										<mat-icon>add_box</mat-icon>
-									</button>
-									<button type="button" (click)="formSubmissionLicenseeClear()"
-										class="btn btn-outline-primary" *ngIf="addUnrestricted">
-										<mat-icon>clear</mat-icon>
-									</button>
-								</div>
-							</div>
-						</fieldset>
-						<div formArrayName="sections" *ngIf="isSingleEntry(); else isMultipleEntry">
-							<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index"
-								[formGroupName]="i">
-								<div>
-									<span>
-										{{ getSectionLabel(i) }}
-									</span>
-								</div>
-								<div formArrayName="dataFields">
-									<div *ngFor="let dataField of getSectorFields(i); let j = index; trackBy: trackByFn"
-										[formGroupName]="j">
-										<div class="mb-3" *ngIf="isButton(dataField)">
-											<input type="button" class="btn btn-primary"
-												value="{{ getDataValue(dataField) }}" />
-										</div>
-										<div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-											<label class="form-label">{{ getDataValue(dataField) }}</label>
-											<input class="form-control" type="{{ this.getType(dataField) }}"
-												formControlName="value" id="{{ getDataFieldId(dataField) }}"
-												*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)"
-												(change)="onRowChange(section, i)" />
-											<textarea class="form-control" formControlName="value"
-												*ngIf="isTextArea(dataField)" id="{{ getDataFieldId(dataField) }}"
-												(change)="onRowChange(section, i)"></textarea>
-											<select class="form-select" aria-label="Default select example"
-												formControlName="value" *ngIf="isSelect(dataField)">
-												<option selected></option>
-												<option value="1">One</option>
-												<option value="2">Two</option>
-												<option value="3">Three</option>
-											</select>
-											<input type="range" class="form-range" min="{{ dataField.formField.min }}"
-												id="{{ getDataFieldId(dataField) }}" formControlName="value"
-												max="{{ dataField.formField.max }}" *ngIf="isRange(dataField)"
-												(change)="onRowChange(section, i)" />
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<ng-template #isMultipleEntry>
-							<div class="mb-3" *ngIf="!formDisabled()">
-								<label id="formSubmissionUpload_label" class="col-sm-2 col-form-label"
-									for="formSubmissionUpload"><span translate>upload</span></label>
-								<input type="file" id="formSubmissionUpload" class="form-control"
-									(change)="onFileSelected($event)" />
-							</div>
-							<div>
-								<button type="button" class="btn btn-primary" (click)="uploadData()"
-									*ngIf="hasUnsavedDataFields()">
-									<mat-icon>upload</mat-icon>
-								</button>
-								<button type="button" class="btn btn-danger" (click)="clearData()"
-									*ngIf="rowGroups.length > 0 && !formDisabled()">
-									<mat-icon>clear</mat-icon>
-								</button>
-							</div>
-							<div *ngIf="rowGroups.length > 0">
-								<mat-table [dataSource]="dataFieldsDataSource" class="table" style="width: 100%">
-									<ng-container matColumnDef="status">
-										<mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
-										<mat-cell *matCellDef="let group">
-											<div *ngIf="!group.saved">
-												<i class="bi bi-x-lg" style="color: red"></i>
-											</div>
-											<div *ngIf="group.saved">
-												<i class="bi bi-check-lg" style="color: green"></i>
-											</div>
-										</mat-cell>
-									</ng-container>
-									<ng-container *ngFor="let columnId of fieldColumnIds; let x = index"
-										matColumnDef="{{ columnId }}">
-										<mat-header-cell *matHeaderCellDef> {{ getColumnName(columnId) }}
-										</mat-header-cell>
-										<mat-cell *matCellDef="let group"> {{ getColumnValue(columnId, group) }}
-										</mat-cell>
-									</ng-container>
-									<ng-container matColumnDef="actions">
-										<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-										<mat-cell *matCellDef="let row; index as i">
-											<button type="button" color="accent" (click)="deleteDataRow(i, row)"
-												class="btn btn-primary" *ngIf="!formDisabled()">
-												<mat-icon>delete</mat-icon>
-											</button>
-											<button type="button" color="accent" (click)="doEditDataRow(i, row)"
-												class="btn btn-primary" *ngIf="!formDisabled()">
-												<mat-icon>edit</mat-icon>
-											</button>
-										</mat-cell>
-									</ng-container>
-									<mat-header-row *matHeaderRowDef="actionRowAdded()"></mat-header-row>
-									<mat-row *matRowDef="let row; columns: actionRowAdded()"></mat-row>
-								</mat-table>
-								<mat-paginator #dataFieldsPaginator [pageSize]="10"
-									[pageSizeOptions]="[5, 10, 20, 30, 40, 50, 60, 70, 80, 90]" showFirstLastButtons
-									aria-label="Select page of periodic elements">
-								</mat-paginator>
-							</div>
-						</ng-template>
-						<div class="mb-3">
-							<label id="formSubmissionSubmissionStatus_label" class="col-sm-2 col-form-label"
-								for="formSubmissionSubmissionStatus"><span translate>submission.status</span>*</label>
-							<input type="text" id="formSubmissionSubmissionStatus" class="form-control"
-								name="submissionStatus" formControlName="submissionStatus" required />
-							<div *ngIf="editFormSubmissionForm.invalid && formSubmissionSubmissionStatusControl.invalid &&
-										(formSubmissionSubmissionStatusControl.dirty || formSubmissionSubmissionStatusControl.touched)
-									" class="alert alert-danger" role="alert">
-								<div *ngIf="formSubmissionSubmissionStatusControl.errors['required']">
-									<span translate>submission.status.required</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="text-end">
-							<button type="button" color="accent" (click)="editFormSubmissionSave()" (click)="scroll(target)"
-								class="btn btn-outline-primary">
-								<span translate>save</span>
+					</div>
+				</fieldset>
+				<fieldset formGroupName="period">
+					<div class="row mb-3">
+						<label for="formSubmissionPeriodPeriodName" class="col-sm-2 col-form-label"
+							translate>period.name</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="formSubmissionPeriodPeriodName"
+								value="{{ formSubmissionPeriod?.periodName }}" disabled />
+							<button type="button" (click)="formSubmissionPeriodAddDialog()"
+								class="btn btn-outline-primary" data-bs-toggle="modal"
+								data-bs-target="#formSubmissionPeriodModal" *ngIf="addUnrestricted">
+								<mat-icon>add_box</mat-icon>
 							</button>
-							<button type="button" (click)="formSubmissionPeriodClear()"
+							<button type="button" (click)="formSubmissionPeriodClear()" class="btn btn-outline-primary"
+								*ngIf="addUnrestricted">
+								<mat-icon>clear</mat-icon>
+							</button>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset formGroupName="licensee">
+					<div class="row mb-3">
+						<label for="formSubmissionLicenseeLicenseeName" class="col-sm-2 col-form-label"
+							translate>licensee.name</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="formSubmissionLicenseeLicenseeName"
+								value="{{ formSubmissionLicensee?.licenseeName }}" disabled />
+							<button type="button" (click)="formSubmissionLicenseeAddDialog()"
+								class="btn btn-outline-primary" data-bs-toggle="modal"
+								data-bs-target="#formSubmissionLicenseeModal" *ngIf="addUnrestricted">
+								<mat-icon>add_box</mat-icon>
+							</button>
+							<button type="button" (click)="formSubmissionLicenseeClear()"
 								class="btn btn-outline-primary" *ngIf="addUnrestricted">
 								<mat-icon>clear</mat-icon>
 							</button>
@@ -282,8 +135,8 @@
 										formControlName="value" id="{{ getDataFieldId(dataField) }}"
 										*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)"
 										(change)="onRowChange(section, i)" />
-									<textarea class="form-control" formControlName="value"
-										*ngIf="isTextArea(dataField)" id="{{ getDataFieldId(dataField) }}"
+									<textarea class="form-control" formControlName="value" *ngIf="isTextArea(dataField)"
+										id="{{ getDataFieldId(dataField) }}"
 										(change)="onRowChange(section, i)"></textarea>
 									<select class="form-select" aria-label="Default select example"
 										formControlName="value" *ngIf="isSelect(dataField)">
@@ -309,8 +162,8 @@
 							(change)="onFileSelected($event)" />
 					</div>
 					<div>
-						<a type="button" color="accent" class="btn btn-primary" csvLink
-									[data]="templateHeaders" [filename]="submissionName">
+						<a type="button" color="accent" class="btn btn-primary" csvLink [data]="templateHeaders"
+							[filename]="submissionName">
 							Template
 						</a>
 					</div>
@@ -397,6 +250,9 @@
 					<button type="button" color="accent" (click)="editFormSubmissionSubmit()"
 						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted">
 						<span translate>submit</span>
+					</button>
+					<button type="button" color="accent" (click)="editFormSubmissionAccept()" class="btn btn-outline-primary" *ngIf="formSubmissionId && acceptUnrestricted">
+						<span translate>accept</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionReturn()"
 						class="btn btn-outline-primary" *ngIf="returnUnrestricted && formDisabled()">

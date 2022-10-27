@@ -15,9 +15,7 @@ export const environment = {
   bocraApiServer: $ENV.API_URL,
   keycloakRealm: $ENV.KEYCLOAK_REALM,
   redirectUri: $ENV.REDIRECT_URI,
-  keycloakClientRoleUrl:
-    `${$ENV.KEYCLOAK_AUTH_URL}/admin/realms/${$ENV.KEYCLOAK_REALM}/clients/${$ENV.KEYCLOAK_WEB_CLIENT_ID}/roles`,
-  keycloakRealmRoleUrl: `${$ENV.KEYCLOAK_AUTH_URL}/admin/realms/${$ENV.KEYCLOAK_REALM}/roles`,
+  keycloakRealmUrl: `${$ENV.KEYCLOAK_AUTH_URL}/admin/realms/${$ENV.KEYCLOAK_REALM}`,
   keycloak: {
     issuer: $ENV.KEYCLOAK_AUTH_URL,
     redirectUri: window.location.origin,

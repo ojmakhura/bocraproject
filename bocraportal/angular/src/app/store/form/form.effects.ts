@@ -144,6 +144,20 @@ export class FormEffects {
         )
     );
 
+    removeSection$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormActions.removeSection),
+            mergeMap(({ id }) => this.formSectionRestController.remove(id).pipe(
+                map( removed => FormActions.removeSectionSuccess({
+                    removed,
+                    messages: [`Form section ${id} removed.`],
+                    success: true
+                })),
+                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
+            ))
+        )
+    );
+
     removeField$ = createEffect(() => 
          this.actions$.pipe(
             ofType(FormActions.removeField),

@@ -258,4 +258,20 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleFindByIds(Set<Long> ids) {
+        try {
+
+            Collection<FormSubmissionVO> submissions = submissionService.findByIds(ids);
+            return ResponseEntity.ok(submissions);
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
+        
+    }
 }

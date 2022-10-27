@@ -257,7 +257,7 @@ public class SubmissionServiceImpl
                 .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
                     "submissionStatus", FormSubmissionStatus.OVERDUE));
         sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, LocalDate>findByAttributeLessThan("expectedSubmissionDate",
-        LocalDate.now()));
+                    LocalDate.now()));
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);
@@ -296,6 +296,20 @@ public class SubmissionServiceImpl
         summary.setDraftSubmissions(formSubmissionRepository.count(sSpecs));
 
         return summary;
+    }
+
+    @Override
+    protected Collection<FormSubmissionVO> handleFindByIds(Set<Long> ids) throws Exception {
+        
+        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, Long>findByAttributeIn("id", ids);
+        Collection<FormSubmission> submissions = formSubmissionRepository.findAll(sSpecs);
+        Collection<FormSubmissionVO> vos = new ArrayList<>();
+
+        for (FormSubmission formSubmission : submissions) {
+            vos.add(getFormSubmissionDao().toFormSubmissionVO(formSubmission));
+        }
+
+        return vos;
     }
 
 }

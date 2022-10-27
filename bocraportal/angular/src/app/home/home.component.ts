@@ -27,14 +27,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // console.log(3);
-    // this.sectors$.subscribe(
-    //   sectors => {
-    //     this.sectorList = sectors;
-    //     console.log(this.sectorList);
-    //   }
-    // );
-    
+        
   }
 
   ngOnDestroy(): void {
@@ -45,7 +38,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.store.dispatch(
       SectorActions.getAll({ loading: true, loaderMessage: 'Loading all sectors' })
     );
-    console.log(2);
     
   }
 

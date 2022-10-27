@@ -29,6 +29,20 @@ export class FormSubmissionEffects {
         )
     );
 
+    findByIds$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormSubmissionActions.findByIds),
+            mergeMap(({ ids }) => this.submissionRestController.findByIds(ids).pipe(
+                map( formSubmissions => FormSubmissionActions.findByIdsSuccess({
+                    formSubmissions,
+                    messages: [`${formSubmissions.length} submissions found.`],
+                    success: true
+                })),
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+            ))
+        )
+    );
+
     save$ = createEffect(() => 
          this.actions$.pipe(
             ofType(FormSubmissionActions.save),

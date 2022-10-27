@@ -117,7 +117,6 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
   }
 
   override beforeEditDocumentTypeDelete(form: EditDocumentTypeDeleteForm): void {
-    console.log(form);
     if (form?.documentType?.id && confirm(`Are you sure you want to delete the document type?`)) {
       this.store.dispatch(
         DocumentTypeActions.remove({
