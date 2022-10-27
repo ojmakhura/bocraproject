@@ -234,11 +234,11 @@
 					</div>
 				</div>
 				<div class="text-end">
-					<button type="button" color="accent" (click)="editFormSubmissionSave()"
+					<button type="button" color="accent" (click)="editFormSubmissionSave()" (click)="scroll(target)"
 						class="btn btn-outline-primary">
 						<span translate>save</span>
 					</button>
-					<button type="button" color="accent" (click)="editFormSubmissionDelete()"
+					<button type="button" color="accent" (click)="editFormSubmissionDelete()" (click)="scroll(target)"
 						class="btn btn-outline-primary" *ngIf="formSubmissionId && deleteUnrestricted">
 						<span translate>delete</span>
 					</button>
@@ -247,15 +247,19 @@
 						class="btn btn-outline-primary" *ngIf="formSubmissionId">
 						<span translate>note</span>
 					</button>
-					<button type="button" color="accent" (click)="editFormSubmissionSubmit()"
+					<button type="button" color="accent" (click)="editFormSubmissionSubmit()" (click)="scroll(target)"
 						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted">
 						<span translate>submit</span>
 					</button>
-					<button type="button" color="accent" (click)="editFormSubmissionReturn()"
+					<button type="button" color="accent" (click)="editFormSubmissionReturn()" (click)="scroll(target)"
 						class="btn btn-outline-primary" *ngIf="returnUnrestricted && formDisabled()">
 						<span translate>return</span>
 					</button>
-					<button color="accent" type="button" (click)="editFormSubmissionFormReset()"
+					<button type="button" color="accent" (click)="editFormSubmissionAccept()" (click)="scroll(target)"
+						class="btn btn-outline-primary" *ngIf="acceptUnrestricted && formDisabled()">
+						<span translate>accept</span>
+					</button>
+					<button color="accent" type="button" (click)="editFormSubmissionFormReset()" (click)="scroll(target)"
 						class="btn btn-outline-primary">
 						<span translate>reset</span>
 					</button>

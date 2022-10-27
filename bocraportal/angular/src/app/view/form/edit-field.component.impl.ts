@@ -136,4 +136,9 @@ export class EditFieldComponentImpl extends EditFieldComponent {
       this.store.dispatch(FormActions.formFailure({ messages: ['Form has and error!'] }));
     }
   }
+
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
+  }
+  
 }

@@ -78,7 +78,7 @@ export abstract class ReportComponent implements OnInit, AfterViewInit, OnDestro
 
     reportFormReset() {
 
-        this.store.dispatch(SubmissionActions.reportReset());
+        this.store.dispatch(SubmissionActions.formSubmissionReset());
 
         this.reportForm.reset()
         this.reportForm.markAsPristine();
@@ -108,7 +108,7 @@ export abstract class ReportComponent implements OnInit, AfterViewInit, OnDestro
 
     ngOnDestroy() { 
         this.doNgOnDestroy();
-        this.store.dispatch(SubmissionActions.reportReset());
+        this.store.dispatch(SubmissionActions.formSubmissionReset());
     }
 
     getItemControl(name: string): FormControl {
