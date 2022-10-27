@@ -388,7 +388,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   formDisabled(): boolean {
-    return this.submissionStatus == FormSubmissionStatus.SUBMITTED;
+    return this.submissionStatus == FormSubmissionStatus.SUBMITTED || this.submissionStatus == FormSubmissionStatus.ACCEPTED;
   }
 
   override createDataFieldVOGroup(dataField: DataFieldVO): FormGroup {
