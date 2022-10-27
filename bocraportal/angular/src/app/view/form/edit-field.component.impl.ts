@@ -78,7 +78,12 @@ export class EditFieldComponentImpl extends EditFieldComponent {
       }
     });
 
-    this.form$.subscribe((f) => {
+    this.form$?.subscribe((f) => {
+      
+      if(!f) {
+        return;
+      }
+
       let form: FormVO = new FormVO();
       form.id = f.id;
       form.formName = f.formName;
