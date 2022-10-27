@@ -70,8 +70,8 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     protected void configure(HttpSecurity http) throws Exception {
         // TODO Auto-generated method stub
         super.configure(http);
-            http.cors().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.cors().and().csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
             .mvcMatchers(
                 "/swagger-ui/*", 
@@ -81,8 +81,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 "/swagger-resources/**",
                 "/auth/signin",
                 "/sector/all",
-                "/actuator/health",
-                "/access/type/**"
+                "/actuator/health"
             ).permitAll()
             .anyRequest().authenticated();
     }
