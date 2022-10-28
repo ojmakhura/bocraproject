@@ -134,10 +134,10 @@
 									<input class="form-control" type="{{ this.getType(dataField) }}"
 										formControlName="value" id="{{ getDataFieldId(dataField) }}"
 										*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)"
-										(change)="onRowChange(section, i)" />
+										(change)="onRowChange(section, dataField)" />
 									<textarea class="form-control" formControlName="value" *ngIf="isTextArea(dataField)"
 										id="{{ getDataFieldId(dataField) }}"
-										(change)="onRowChange(section, i)"></textarea>
+										(change)="onRowChange(section, dataField)"></textarea>
 									<select class="form-select" aria-label="Default select example"
 										formControlName="value" *ngIf="isSelect(dataField)">
 										<option selected></option>
@@ -148,7 +148,7 @@
 									<input type="range" class="form-range" min="{{ dataField.formField.min }}"
 										id="{{ getDataFieldId(dataField) }}" formControlName="value"
 										max="{{ dataField.formField.max }}" *ngIf="isRange(dataField)"
-										(change)="onRowChange(section, i)" />
+										(change)="onRowChange(section, dataField)" />
 								</div>
 							</div>
 						</div>

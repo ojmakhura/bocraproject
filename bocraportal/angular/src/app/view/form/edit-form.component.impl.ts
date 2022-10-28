@@ -121,12 +121,25 @@ export class EditFormComponentImpl extends EditFormComponent {
           })
         );
       }
+
       this.setEditFormFormValue({ form: form });
     });
 
     this.formSection$?.subscribe((section) => {
       if (section) {
-        this.addToFormFormSections(section);
+        let sc: FormSectionVO | undefined = this.formFormSections.find((sec, i) => {
+          if(sec.id == section.id) {
+            this.formFormSectionsControl.at(i).patchValue(section);
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        if(!sc) {
+          this.addToFormFormSections(section);
+        }
+        
       }
     });
 
@@ -163,6 +176,10 @@ export class EditFormComponentImpl extends EditFormComponent {
         form.form.createdBy = this.keycloakService.getUsername();
         form.form.createdDate = new Date();
       }
+
+      form.form.formFields = undefined;
+      form.form.formSections = undefined;
+
       this.store.dispatch(
         FormActions.saveForm({
           form: form.form,

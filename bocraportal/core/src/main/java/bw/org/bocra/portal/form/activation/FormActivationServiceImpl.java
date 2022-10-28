@@ -43,7 +43,10 @@ import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.period.Period;
 import bw.org.bocra.portal.period.PeriodVO;
+import bw.org.bocra.portal.sector.SectorService;
 import bw.org.bocra.portal.sector.form.SectorForm;
+import bw.org.bocra.portal.sector.form.SectorFormService;
+import bw.org.bocra.portal.sector.form.SectorFormVO;
 
 /**
  * @see bw.org.bocra.portal.form.activation.FormActivationService
@@ -53,15 +56,20 @@ import bw.org.bocra.portal.sector.form.SectorForm;
 public class FormActivationServiceImpl
         extends FormActivationServiceBase {
 
+    private SectorService sectorService;
+    private SectorFormService sectorFormService;
+
     public FormActivationServiceImpl(FormActivationDao formActivationDao,
             FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository,
-            FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
+            FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, SectorService sectorService, SectorFormService sectorFormService,
             DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
 
         super(formActivationDao, formActivationRepository, formDao, formRepository, formSubmissionDao,
                 formSubmissionRepository,
                 dataFieldDao, dataFieldRepository, messageSource);
         // TODO Auto-generated constructor stub
+        this.sectorService = sectorService;
+        this.sectorFormService = sectorFormService;        
     }
 
     /**
@@ -140,6 +148,10 @@ public class FormActivationServiceImpl
             }
 
             for(SectorForm sectorForm : form.getSectorForms()) {
+                List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
+                if(sf != null && sf.size() > 0)
+                    sf.get(0);
+                    
                 for(LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
                     lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
                 }
