@@ -425,4 +425,6 @@ export class ReportComponentImpl extends ReportComponent {
   selectSectionPieDatasetLabels(i: number, j: number, k: number, l: number) {
     return this.selectSectionDataset(i, j, k).datasets?.map((dt: any) => dt?.label);
   }
+
+  reportSearch() {}
 }

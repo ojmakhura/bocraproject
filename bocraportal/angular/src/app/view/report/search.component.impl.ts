@@ -2,11 +2,14 @@
 import { Component, Inject, Injector } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatRadioChange } from '@angular/material/radio';
+import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
-import * as FormSelectors from '@app/store/form/form.selectors';
 import { SearchComponent } from '@app/view/report/search.component';
 import { select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import * as FormSelectors from '@app/store/form/form.selectors';
+import * as FormActions from '@app/store/form/form.actions';
 
 @Component({
   selector: 'app-search',
@@ -28,5 +31,38 @@ export class SearchComponentImpl extends SearchComponent {
     }
 
     doNgOnDestroy(): void {
+    }
+    formSelected(event: MatRadioChange, data: FormVO): void {
+      this.formSelect = data;
+    }
+  
+    /**
+     * May be overridden to customise behaviour
+     *
+     */
+    addSelectedForm(): void {
+      this.criteriaControl.patchValue({ form: this.formSelect.id });
+      this.searchForm.patchValue({ submissionForm: this.formSelect });
+    }
+  
+    formSearch(): void {
+      let criteria: FormCriteria = new FormCriteria();
+      criteria.code = this.formSearchField.value;
+      criteria.formName = this.formSearchField.value;
+      this.store.dispatch(FormActions.searchForms({ criteria: criteria, loading: true, loaderMessage: 'Searching forms ...' }));
+    }
+  
+    formAddDialog(): void {}
+  
+    formClear(): void {
+      this.criteriaControl.patchValue({form: new FormVO()});
+    }
+
+    get submissionFormControl(): FormGroup {
+        return this.searchForm.get('submissionForm') as FormGroup;
+    }
+  
+    get submissionForm(): FormVO {
+        return this.submissionFormControl?.value;
     }
 }

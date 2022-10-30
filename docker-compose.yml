@@ -204,7 +204,7 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
     container_name: bocraportal-api
     hostname: api
 
@@ -257,7 +257,7 @@ services:
   # Angular web application
   ###############################################################################
   web:
-    image: "${WEB_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${WEB_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
     hostname: web
 
     healthcheck:

@@ -55,7 +55,6 @@ export abstract class ReportFormSubmissionsComponent implements OnInit, OnDestro
     protected useCaseScope: UseCaseScope;
     protected store: Store<ReportState>;
     protected reportController: ReportControllerImpl;
-    protected reportComponent: ReportComponentImpl;
     protected _injector: Injector;
 
     constructor(injector: Injector) {
@@ -64,7 +63,6 @@ export abstract class ReportFormSubmissionsComponent implements OnInit, OnDestro
         this.useCaseScope = injector.get(UseCaseScope);
         this.store = injector.get(Store);
         this.reportController = injector.get(ReportControllerImpl);
-        this.reportComponent = injector.get(ReportComponentImpl);
         this._injector = injector;
         this.formSubmissions$ = this.store.pipe(select(ReportSelectors.selectFormSubmissions));
     }
