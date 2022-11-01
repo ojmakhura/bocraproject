@@ -24,7 +24,7 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
   formSearchField: FormControl = new FormControl();
   formSelect: FormVO = new FormVO();
   formModalColumns = ['actions', 'id', 'code', 'formName', 'entryType'];
-  formControl: FormGroup = this.createFormVOGroup(new FormVO());
+  formControl: FormGroup;
   addUnrestricted: boolean = true;
 
   constructor(private injector: Injector) {

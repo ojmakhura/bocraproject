@@ -165,9 +165,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
   }
 
-  onRowChange(section: any, row: number) {
+  onRowChange(section: any, dataField: DataFieldVO) {
     let sec: DataFieldSectionVO = section.value;
-    let changeField: DataFieldVO = section.value.dataFields[row];
     let calculationFields: FormGroup[] = [];
 
     // Find the caculation fields controls
@@ -177,9 +176,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         let fieldControl: FormGroup = <FormGroup>fieldsControls.controls[i];
         let field: DataFieldVO = fieldControl.value;
         let formField: FormFieldVO = field.formField;
+        
         if (
           formField.fieldValueType === FieldValueType.CALCULATED &&
-          formField.expression.includes(`[${changeField.formField.fieldId}]`)
+          formField.expression.includes(`[${dataField?.formField?.fieldId}]`)
         ) {
           calculationFields.push(fieldControl);
         }
@@ -388,7 +388,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   formDisabled(): boolean {
-    return this.submissionStatus == FormSubmissionStatus.SUBMITTED;
+    return this.submissionStatus == FormSubmissionStatus.SUBMITTED || this.submissionStatus == FormSubmissionStatus.ACCEPTED;
   }
 
   override createDataFieldVOGroup(dataField: DataFieldVO): FormGroup {

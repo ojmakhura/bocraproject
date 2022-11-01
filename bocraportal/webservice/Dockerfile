@@ -15,7 +15,6 @@ RUN echo ${JAVA_HOME}
 COPY deployment/certs/${CERT}.crt /app/certs/${CERT}.crt
 RUN keytool -importcert -file /app/certs/${CERT}.crt -noprompt -alias bocra -storepass ${CERT_PASSWORD} -keystore ${JAVA_HOME}/lib/security/cacerts
 
-
 ARG JAR_FILE=bocraportal/webservice/target/*.jar
 COPY ${JAR_FILE} bocraportal-webservice.jar
 ENTRYPOINT ["java","-jar","/app/bocraportal-webservice.jar"]

@@ -10,7 +10,7 @@ const proxyConfig = [
   {
     context: '/api',
     pathRewrite: { '^/api': '' },
-    target: 'http://localhost:8085',
+    target: 'https://api.roguez',
     changeOrigin: true,
     secure: false
   }

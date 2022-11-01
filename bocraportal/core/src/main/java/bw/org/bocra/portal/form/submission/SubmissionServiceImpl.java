@@ -257,7 +257,7 @@ public class SubmissionServiceImpl
                 .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
                     "submissionStatus", FormSubmissionStatus.OVERDUE));
         sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, LocalDate>findByAttributeLessThan("expectedSubmissionDate",
-        LocalDate.now()));
+                    LocalDate.now()));
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);

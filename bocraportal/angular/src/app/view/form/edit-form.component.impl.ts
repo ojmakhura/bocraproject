@@ -86,8 +86,8 @@ export class EditFormComponentImpl extends EditFormComponent {
       let client = clients.filter(client => client.clientId === environment.keycloak.clientId)[0]
       this.keycloakService.loadUserProfile().then(profile => {
         
-        this.http.get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`).subscribe((roles) => {
-          roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
+        this.http.get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`)?.subscribe((roles) => {
+          roles?.sort((a, b) => a.name.localeCompare(b.name))?.forEach((role) => {
             if (this.keycloakService.getUserRoles().includes(role.name)) {
     
               let item = new SelectItem();
@@ -101,7 +101,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       })
     });
 
-    this.route.queryParams.subscribe((queryParams: any) => {
+    this.route?.queryParams?.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
           FormActions.findFormById({
@@ -113,7 +113,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       }
     });
 
-    this.form$.subscribe((form) => {
+    this.form$?.subscribe((form) => {
       if (form?.formSections) {
         this.store.dispatch(
           FormActions.setSections({
@@ -121,28 +121,41 @@ export class EditFormComponentImpl extends EditFormComponent {
           })
         );
       }
+
       this.setEditFormFormValue({ form: form });
     });
 
-    this.formSection$.subscribe((section) => {
+    this.formSection$?.subscribe((section) => {
       if (section) {
-        this.addToFormFormSections(section);
+        let sc: FormSectionVO | undefined = this.formFormSections.find((sec, i) => {
+          if(sec.id == section.id) {
+            this.formFormSectionsControl.at(i).patchValue(section);
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        if(!sc) {
+          this.addToFormFormSections(section);
+        }
+        
       }
     });
 
-    this.formField$.subscribe((field) => {
+    this.formField$?.subscribe((field) => {
       if (field) {
         this.addToFormFormFields(field);
       }
     });
 
-    this.licenseeForm$.subscribe((licenseeForm) => {
+    this.licenseeForm$?.subscribe((licenseeForm) => {
       if (licenseeForm) {
         this.addToFormLicensees(licenseeForm);
       }
     });
 
-    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+    this.unauthorisedUrls$?.subscribe((restrictedItems) => {
       restrictedItems.forEach((item) => {
         if (item === '/form/edit-form/{button:delete}') {
           this.deleteUnrestricted = false;
@@ -163,6 +176,10 @@ export class EditFormComponentImpl extends EditFormComponent {
         form.form.createdBy = this.keycloakService.getUsername();
         form.form.createdDate = new Date();
       }
+
+      form.form.formFields = undefined;
+      form.form.formSections = undefined;
+
       this.store.dispatch(
         FormActions.saveForm({
           form: form.form,
