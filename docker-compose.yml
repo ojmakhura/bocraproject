@@ -47,8 +47,8 @@ services:
       - "--metrics"
       - "--metrics.prometheus"
       - "--providers.docker.network=traefik-public"
-      # - "--entrypoints.web.http.redirections.entrypoint.to=${ACTIVE_ROUTER_ENTRY}"
-      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.to=${ACTIVE_ROUTER_ENTRY}"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       # - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
       # - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
       # - "--certificatesresolvers.le.acme.tlschallenge=true"
@@ -64,8 +64,8 @@ services:
       # - traefik.constraint-label=traefik-public
       # admin-auth middleware with HTTP Basic auth
       # Using the environment variables USERNAME and HASHED_PASSWORD
-      - traefik.http.middlewares.admin-auth.basicauth.usersfile=/var/system_passwd
-      - traefik.http.routers.traefik-public-https.middlewares=admin-auth
+      # - traefik.http.middlewares.admin-auth.basicauth.usersfile=/var/system_passwd
+      # - traefik.http.routers.traefik-public-https.middlewares=admin-auth
       # https-redirect middleware to redirect HTTP to HTTPS
       # It can be re-used by other stacks in other Docker Compose files
       - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https

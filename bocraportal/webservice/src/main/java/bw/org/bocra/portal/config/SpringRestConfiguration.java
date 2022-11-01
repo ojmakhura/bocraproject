@@ -12,15 +12,15 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 
-@Configuration
+// @Configuration
 public class SpringRestConfiguration implements WebMvcConfigurer  {
 	
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
+        registry.addMapping("/**").allowedOrigins("*");
     }
     
-    @Bean
+    // @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
         return builder -> {
             builder.simpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
