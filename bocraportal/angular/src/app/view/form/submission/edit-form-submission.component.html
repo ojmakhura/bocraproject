@@ -127,28 +127,34 @@
 								[formGroupName]="j">
 								<div class="mb-3" *ngIf="isButton(dataField)">
 									<input type="button" class="btn btn-primary"
-										value="{{ getDataValue(dataField) }}" />
+										value="{{ dataField?.formField?.fieldName }}" />
 								</div>
 								<div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-									<label class="form-label">{{ getDataValue(dataField) }}</label>
-									<input class="form-control" type="{{ this.getType(dataField) }}"
-										formControlName="value" id="{{ getDataFieldId(dataField) }}"
-										*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)"
-										(change)="onRowChange(section, dataField)" />
-									<textarea class="form-control" formControlName="value" *ngIf="isTextArea(dataField)"
-										id="{{ getDataFieldId(dataField) }}"
-										(change)="onRowChange(section, dataField)"></textarea>
-									<select class="form-select" aria-label="Default select example"
-										formControlName="value" *ngIf="isSelect(dataField)">
-										<option selected></option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
-									</select>
-									<input type="range" class="form-range" min="{{ dataField.formField.min }}"
-										id="{{ getDataFieldId(dataField) }}" formControlName="value"
-										max="{{ dataField.formField.max }}" *ngIf="isRange(dataField)"
-										(change)="onRowChange(section, dataField)" />
+									<label class="form-label">{{ dataField?.formField?.fieldName }} </label>
+									<div *ngIf="isCalculatedField(dataField); else manualField">
+										<span>{{ dataField?.value }}</span>
+									</div>
+									<ng-template #manualField>
+										<input class="form-control" type="{{ this.getType(dataField) }}"
+											formControlName="value" id="{{ getDataFieldId(dataField) }}"
+											*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)"
+											(change)="onRowChange(section, dataField)" />
+										<textarea class="form-control" formControlName="value" *ngIf="isTextArea(dataField)"
+											id="{{ getDataFieldId(dataField) }}"
+											(change)="onRowChange(section, dataField)"></textarea>
+										<select class="form-select" aria-label="Default select example"
+											formControlName="value" *ngIf="isSelect(dataField)">
+											<option selected></option>
+											<option value="1">One</option>
+											<option value="2">Two</option>
+											<option value="3">Three</option>
+										</select>
+										<input type="range" class="form-range" min="{{ dataField.formField.min }}"
+											id="{{ getDataFieldId(dataField) }}" formControlName="value"
+											max="{{ dataField.formField.max }}" *ngIf="isRange(dataField)"
+											(change)="onRowChange(section, dataField)" />
+
+									</ng-template>
 								</div>
 							</div>
 						</div>

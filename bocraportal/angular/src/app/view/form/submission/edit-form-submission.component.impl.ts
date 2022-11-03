@@ -165,6 +165,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
   }
 
+  isCalculatedField(dataField: DataFieldVO): boolean {
+    return dataField.formField.fieldValueType === FieldValueType.CALCULATED;
+  }
+
   onRowChange(section: any, dataField: DataFieldVO) {
     let sec: DataFieldSectionVO = section.value;
     let calculationFields: FormGroup[] = [];
@@ -392,13 +396,13 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   override createDataFieldVOGroup(dataField: DataFieldVO): FormGroup {
-    let disable = dataField.formField.fieldValueType === FieldValueType.CALCULATED || this.formDisabled();
+    let value = dataField?.value ? dataField?.value : this.getFieldDefaultValue(dataField);
 
     return this.formBuilder.group({
       id: [dataField?.id],
       row: [dataField?.row],
       formField: this.createFormFieldForm(dataField?.formField),
-      value: [dataField?.value ? { value: dataField?.value, disabled: disable } : { value: this.getFieldDefaultValue(dataField), disabled: disable }],
+      value: [{ value: value, disabled: disable } ],
     });
   }
 
@@ -408,8 +412,12 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   override handleFormChanges(change: any): void { }
 
-  getDataValue(data: DataFieldVO) {
+  getDataFieldName(data: DataFieldVO) {
     return `${data.formField.fieldName}`;
+  }
+
+  getDataFieldValue(data: DataFieldVO) {
+    return `${data.value}`;
   }
 
   getSectorFieldsControls(i: number): FormArray {

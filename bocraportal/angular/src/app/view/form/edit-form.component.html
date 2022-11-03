@@ -232,7 +232,7 @@
                                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="formSection.sectionLabel">
-                                    <mat-header-cell *matHeaderCellDef translate>form.section.section.label
+                                    <mat-header-cell *matHeaderCellDef translate>form.section
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.formSection?.sectionLabel }} </mat-cell>
                                 </ng-container>
@@ -278,16 +278,16 @@
                                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="licensee.uin">
-                                    <mat-header-cell *matHeaderCellDef translate>licensee.uin</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef translate>uin</mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.licensee?.uin }} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="licensee.licenseeName">
-                                    <mat-header-cell *matHeaderCellDef translate>licensee.licensee.name
+                                    <mat-header-cell *matHeaderCellDef translate>licensee.name
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.licensee?.licenseeName }} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="licensee.status">
-                                    <mat-header-cell *matHeaderCellDef translate>licensee.status</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef translate>status</mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.licensee?.status }} </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="formLicenseesModalColumns"></mat-header-row>
@@ -325,11 +325,11 @@
                                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="code">
-                                    <mat-header-cell *matHeaderCellDef translate>sector.code</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef translate>code</mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.sector?.code }} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="name">
-                                    <mat-header-cell *matHeaderCellDef translate>sector.name</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef translate>name</mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.sector?.name }} </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="formSectorsModalColumns"></mat-header-row>
@@ -510,7 +510,7 @@
                         <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="formSection.sectionLabel">
-                        <mat-header-cell *matHeaderCellDef translate>form.section.section.label</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef translate>form.section</mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{ row?.formSection?.sectionLabel }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="fieldType">
@@ -574,15 +574,15 @@
                         <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="licensee.uin">
-                        <mat-header-cell *matHeaderCellDef translate>licensee.uin</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef translate>uin</mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{ row?.licensee?.uin }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="licensee.licenseeName">
-                        <mat-header-cell *matHeaderCellDef translate>licensee.licensee.name</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef translate>licensee.name</mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{ row?.licensee?.licenseeName }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="licensee.status">
-                        <mat-header-cell *matHeaderCellDef translate>licensee.status</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef translate>status</mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{ row?.licensee?.status }} </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="formLicenseesModalColumns"></mat-header-row>
@@ -638,11 +638,11 @@
                         <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="code">
-                        <mat-header-cell *matHeaderCellDef translate>sector.code</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef translate>code</mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{ row?.code }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="name">
-                        <mat-header-cell *matHeaderCellDef translate>sector.name</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef translate>name</mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{ row?.name }} </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="formSectorsModalColumns"></mat-header-row>
