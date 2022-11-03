@@ -402,7 +402,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       id: [dataField?.id],
       row: [dataField?.row],
       formField: this.createFormFieldForm(dataField?.formField),
-      value: [{ value: value, disabled: disable } ],
+      value: [{ value: value, disabled: false } ],
     });
   }
 
@@ -425,7 +425,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   getSectorFields(i: number): DataFieldVO[] {
-    return this.formSubmissionSectionsControl.controls[i].get('dataFields')?.value;
+    let fields: DataFieldVO[] = this.formSubmissionSectionsControl.controls[i].get('dataFields')?.value;
+    return fields.sort((a: DataFieldVO, b: DataFieldVO) =>a.formField.id - b.formField.id);
   }
 
   getSectionId(i: number): string {
