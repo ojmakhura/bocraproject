@@ -137,7 +137,7 @@
 											</ng-template>
 										</td>
 										<td class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-											<div *ngIf="isCalculatedField(dataField) || formDisabled(); else editable">
+											<div *ngIf="isCalculatedField(dataField) || formDisabled(); else editable" >
 												<span>{{ dataField?.value }}</span>
 											</div>
 											<ng-template #editable>
@@ -148,7 +148,7 @@
 												<textarea class="form-control" formControlName="value" *ngIf="isTextArea(dataField)"
 													id="{{ getDataFieldId(dataField) }}"
 													(change)="onRowChange(section, dataField)"></textarea>
-												<select class="form-select" aria-label="Default select example"
+												<select class="form-select" aria-label="Default select example" id="{{ getDataFieldId(dataField) }}"
 													formControlName="value" *ngIf="isSelect(dataField)">
 													<option selected></option>
 													<option value="1">One</option>
@@ -174,7 +174,7 @@
 										value="{{ dataField?.formField?.fieldName }}" />
 								</div>
 								<div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-									<label class="form-label">{{ dataField?.formField?.fieldName }} </label>
+									<label class="form-label" for="{{ getDataFieldId(dataField) }}">{{ dataField?.formField?.fieldName }} </label>
 									<div *ngIf="isCalculatedField(dataField) || formDisabled(); else editable">
 										<span>{{ dataField?.value }}</span>
 									</div>
@@ -186,7 +186,7 @@
 										<textarea class="form-control" formControlName="value" *ngIf="isTextArea(dataField)"
 											id="{{ getDataFieldId(dataField) }}"
 											(change)="onRowChange(section, dataField)"></textarea>
-										<select class="form-select" aria-label="Default select example"
+										<select class="form-select" aria-label="Default select example" id="{{ getDataFieldId(dataField) }}"
 											formControlName="value" *ngIf="isSelect(dataField)">
 											<option selected></option>
 											<option value="1">One</option>
@@ -195,7 +195,7 @@
 										</select>
 										<input type="range" class="form-range" min="{{ dataField.formField.min }}"
 											id="{{ getDataFieldId(dataField) }}" formControlName="value"
-											max="{{ dataField.formField.max }}" *ngIf="isRange(dataField)"
+											max="{{ dataField?.value.formField.max }}" *ngIf="isRange(dataField)"
 											(change)="onRowChange(section, dataField)" />
 
 									</ng-template>

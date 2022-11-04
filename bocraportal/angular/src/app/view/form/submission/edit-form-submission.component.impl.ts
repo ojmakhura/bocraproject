@@ -190,6 +190,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       }
     }
 
+    console.log(calculationFields);
+
     // Make the calculations
     calculationFields.forEach((fieldControl) => {
       let field: DataFieldVO = fieldControl.value;
@@ -426,7 +428,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   getSectorFields(i: number): DataFieldVO[] {
     let fields: DataFieldVO[] = this.formSubmissionSectionsControl.controls[i].get('dataFields')?.value;
-    fields = fields.slice().sort((a: DataFieldVO, b: DataFieldVO) => a.formField.id - b.formField.id);
     return fields;
   }
 
@@ -644,7 +645,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   getDataFieldId(dataField: DataFieldVO): string {
-
+    
     return `${dataField.row}_${dataField.formField.fieldId}`;
   }
 

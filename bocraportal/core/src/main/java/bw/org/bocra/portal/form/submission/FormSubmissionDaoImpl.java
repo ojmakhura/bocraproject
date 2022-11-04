@@ -9,6 +9,7 @@ package bw.org.bocra.portal.form.submission;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -75,8 +76,10 @@ public class FormSubmissionDaoImpl
             target.setForm(formVO);
             
             if(CollectionUtils.isNotEmpty(source.getDataFields())) {
+                
                 Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
                 for (DataField dataField : source.getDataFields()) {
+                    
                     DataFieldVO data = new DataFieldVO();
                     getDataFieldDao().toDataFieldVO(dataField, data);
 
@@ -93,12 +96,15 @@ public class FormSubmissionDaoImpl
 
                     sectioned.get(sec).add(data);
                 }
-                //target.setDataFields(datas);
+                
                 Collection<DataFieldSectionVO> sections = new ArrayList<>();
                 
                 for(Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
                     DataFieldSectionVO sec = entry.getKey();
                     sec.setDataFields(entry.getValue());
+                    Collections.sort((List<DataFieldVO>) sec.getDataFields(), (d1, d2) -> {
+                        return (int) (d1.getFormField().getId() - d2.getFormField().getId());
+                    });
                     sections.add(sec);
                 }
 
