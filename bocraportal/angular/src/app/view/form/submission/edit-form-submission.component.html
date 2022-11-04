@@ -118,11 +118,55 @@
 					<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index"
 						[formGroupName]="i">
 						<div>
-							<span>
-								{{ getSectionLabel(i) }}
-							</span>
+							<h5>
+								{{ section?.value?.sectionLabel }}
+							</h5>
 						</div>
-						<div formArrayName="dataFields">
+						<div formArrayName="dataFields" class="mb-3">
+							<table class="table">
+								<tbody>
+									<tr *ngFor="let dataField of getSectorFields(i); let j = index; trackBy: trackByFn"
+									[formGroupName]="j">
+										<td >
+											<div class="mb-3" *ngIf="isButton(dataField); else notButton">
+												<input type="button" class="btn btn-primary"
+													value="{{ dataField?.formField?.fieldName }}" />
+											</div>
+											<ng-template #notButton>
+												{{ dataField?.formField?.fieldName }}
+											</ng-template>
+										</td>
+										<td class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
+											<div *ngIf="isCalculatedField(dataField) || formDisabled(); else editable">
+												<span>{{ dataField?.value }}</span>
+											</div>
+											<ng-template #editable>
+												<input class="form-control" type="{{ this.getType(dataField) }}"
+													formControlName="value" id="{{ getDataFieldId(dataField) }}"
+													*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)"
+													(change)="onRowChange(section, dataField)" />
+												<textarea class="form-control" formControlName="value" *ngIf="isTextArea(dataField)"
+													id="{{ getDataFieldId(dataField) }}"
+													(change)="onRowChange(section, dataField)"></textarea>
+												<select class="form-select" aria-label="Default select example"
+													formControlName="value" *ngIf="isSelect(dataField)">
+													<option selected></option>
+													<option value="1">One</option>
+													<option value="2">Two</option>
+													<option value="3">Three</option>
+												</select>
+												<input type="range" class="form-range" min="{{ dataField.formField.min }}"
+													id="{{ getDataFieldId(dataField) }}" formControlName="value"
+													max="{{ dataField.formField.max }}" *ngIf="isRange(dataField)"
+													(change)="onRowChange(section, dataField)" />
+		
+											</ng-template>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- <div formArrayName="dataFields">
 							<div *ngFor="let dataField of getSectorFields(i); let j = index; trackBy: trackByFn"
 								[formGroupName]="j">
 								<div class="mb-3" *ngIf="isButton(dataField)">
@@ -157,7 +201,7 @@
 									</ng-template>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 				<ng-template #isMultipleEntry>
