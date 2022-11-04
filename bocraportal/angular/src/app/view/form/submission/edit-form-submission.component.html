@@ -131,10 +131,10 @@
 								</div>
 								<div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
 									<label class="form-label">{{ dataField?.formField?.fieldName }} </label>
-									<div *ngIf="isCalculatedField(dataField); else manualField">
+									<div *ngIf="isCalculatedField(dataField) || formDisabled(); else editable">
 										<span>{{ dataField?.value }}</span>
 									</div>
-									<ng-template #manualField>
+									<ng-template #editable>
 										<input class="form-control" type="{{ this.getType(dataField) }}"
 											formControlName="value" id="{{ getDataFieldId(dataField) }}"
 											*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)"

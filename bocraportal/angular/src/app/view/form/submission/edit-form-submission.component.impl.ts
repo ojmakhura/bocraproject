@@ -426,7 +426,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   getSectorFields(i: number): DataFieldVO[] {
     let fields: DataFieldVO[] = this.formSubmissionSectionsControl.controls[i].get('dataFields')?.value;
-    return fields.sort((a: DataFieldVO, b: DataFieldVO) =>a.formField.id - b.formField.id);
+    fields = fields.slice().sort((a: DataFieldVO, b: DataFieldVO) => a.formField.id - b.formField.id);
+    return fields;
   }
 
   getSectionId(i: number): string {
