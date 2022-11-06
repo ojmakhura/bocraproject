@@ -102,9 +102,9 @@ public class FormSubmissionDaoImpl
                 for(Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
                     DataFieldSectionVO sec = entry.getKey();
                     sec.setDataFields(entry.getValue());
-                    Collections.sort((List<DataFieldVO>) sec.getDataFields(), (d1, d2) -> {
-                        return (int) (d1.getFormField().getId() - d2.getFormField().getId());
-                    });
+                    // Collections.sort((List<DataFieldVO>) sec.getDataFields(), (d1, d2) -> {
+                    //     return (int) (d1.getFormField().getId() - d2.getFormField().getId());
+                    // });
                     sections.add(sec);
                 }
 

@@ -190,8 +190,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       }
     }
 
-    console.log(calculationFields);
-
     // Make the calculations
     calculationFields.forEach((fieldControl) => {
       let field: DataFieldVO = fieldControl.value;
@@ -350,6 +348,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       updatedBy: [formField?.updatedBy ? formField.updatedBy : null],
       createdDate: [formField?.createdDate ? formField.createdDate : null],
       updatedDate: [formField?.updatedDate ? formField.updatedDate : null],
+      position: [formField?.position ? formField.position : null],
       fieldType: [formField?.fieldType ? formField.fieldType : null],
       fieldValueType: [formField?.fieldValueType ? formField.fieldValueType : null],
       fieldName: [formField?.fieldName ? formField.fieldName : null],
@@ -407,6 +406,19 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       value: [{ value: value, disabled: false } ],
     });
   }
+
+  override createDataFieldVOArray(values: DataFieldVO[]): FormArray {
+    if(values) {
+        let formArray: FormArray = this.formBuilder.array([]);
+        values?.slice()?.sort((a: DataFieldVO, b: DataFieldVO) => {
+            return a?.formField?.position - b?.formField?.position;
+        })?.forEach(value => formArray.push(this.createDataFieldVOGroup(value)))
+
+        return formArray;
+    } else {
+        return new FormArray([]);
+    }
+}
 
   getFieldDefaultValue(field: DataFieldVO) {
     return field.formField.defaultValue;

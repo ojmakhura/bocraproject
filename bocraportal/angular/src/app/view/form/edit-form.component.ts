@@ -144,6 +144,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
 
     formFormFieldsColumns = [
         'id',
+        'position',
         'formSection.sectionLabel',
         'fieldType',
         'fieldName',
@@ -1161,6 +1162,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
             updatedBy: [value?.updatedBy],
             createdDate: [value?.createdDate],
             updatedDate: [value?.updatedDate],
+            position: [value?.position],
             fieldType: [value?.fieldType],
             fieldId: [value?.fieldId],
             fieldName: [value?.fieldName],
@@ -1179,7 +1181,9 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     createFormFieldVOArray(values: FormFieldVO[]): FormArray {
         if(values) {
             let formArray: FormArray = this.formBuilder.array([]);
-            values?.forEach(value => formArray.push(this.createFormFieldVOGroup(value)))
+            values?.slice()
+                ?.sort((a: FormFieldVO, b: FormFieldVO) => a.id - b.id)
+                ?.forEach(value => formArray.push(this.createFormFieldVOGroup(value)));
 
             return formArray;
         } else {
@@ -1196,7 +1200,10 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     createLicenceTypeFormVOArray(values: LicenceTypeFormVO[]): FormArray {
         if(values) {
             let formArray: FormArray = this.formBuilder.array([]);
-            values?.forEach(value => formArray.push(this.createLicenceTypeFormVOGroup(value)))
+            values
+                ?.slice()
+                ?.sort((a: LicenceTypeFormVO, b: LicenceTypeFormVO) => a.id - a.id)
+                ?.forEach(value => formArray.push(this.createLicenceTypeFormVOGroup(value)))
 
             return formArray;
         } else {
@@ -1238,7 +1245,10 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
     createFormSectionVOArray(values: FormSectionVO[]): FormArray {
         if(values) {
             let formArray: FormArray = this.formBuilder.array([]);
-            values?.forEach(value => formArray.push(this.createFormSectionVOGroup(value)))
+            values
+                ?.slice()
+                ?.sort((a: FormSectionVO, b: FormSectionVO) => a.id - b.id)
+                ?.forEach(value => formArray.push(this.createFormSectionVOGroup(value)))
 
             return formArray;
         } else {

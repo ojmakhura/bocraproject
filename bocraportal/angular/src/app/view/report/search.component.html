@@ -29,12 +29,14 @@
 				    <label id="criteriaLicenseeName_label" class="col-sm-2 col-form-label" for="criteriaLicenseeName"><span translate>licensee.name</span></label>
 				    <input type="text" id="criteriaLicenseeName" class="form-control" name="licenseeName" formControlName="licenseeName"/>
 				</div>
+        	</div>
+			<fieldset class="mb-3" formGroupName="selectedForm">
 				<div class="row mb-3">
 					<label for="formFormName" class="col-sm-2 col-form-label"
 						translate>form.name</label>
 					<div class="input-group">
 						<input type="text" class="form-control" id="formFormName"
-							value="{{ submissionForm?.formName }}" disabled />
+							value="{{ selectedForm?.formName }}" disabled />
 						<button type="button" (click)="formAddDialog()"
 							class="btn btn-outline-primary" data-bs-toggle="modal"
 							data-bs-target="#formModal" *ngIf="addUnrestricted">
@@ -46,14 +48,19 @@
 						</button>
 					</div>
 				</div>
-        	</div>
+				<div *ngIf="error | async" class="alert alert-danger" role="alert">
+					<div *ngFor="let message of messages | async">
+						{{ message }}
+					</div>
+				</div>
+			</fieldset>
     	</form>
 	</div>
 	<mat-tab-group animationDuration="0ms" class = "tables">
 		<mat-tab class="formSubmissions">
 			<ng-template mat-tab-label><span translate>form.submissions</span></ng-template>
-			<report-form-submissions>
-			</report-form-submissions>
+			<search-form-submissions>
+			</search-form-submissions>
 		</mat-tab>
 	</mat-tab-group>
 </div>

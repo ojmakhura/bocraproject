@@ -11,7 +11,7 @@ import { MaterialModule } from '@app/material.module';
 import { ReportRoutingModule } from './report-routing.module';
 import { ReportComponentImpl } from '@app/view/report/report.component.impl'; // 1
 import { SearchComponentImpl } from '@app/view/report/search.component.impl'; // 3
-import { ReportFormSubmissionsComponentImpl } from '@app/view/report/report-form-submissions.component.impl'; // 2
+import { SearchFormSubmissionsComponentImpl } from '@app/view/report/search-form-submissions.component.impl'; // 2
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reportFeature } from '@app/store/report/report.reducers';
@@ -39,7 +39,7 @@ import { NgChartsModule } from 'ng2-charts';
     ReportComponentImpl,
     SearchComponentImpl,
     SearchComponentImpl,
-    ReportFormSubmissionsComponentImpl,
+    SearchFormSubmissionsComponentImpl,
   ],
   entryComponents: [],
   providers: [

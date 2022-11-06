@@ -231,6 +231,11 @@
                                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
                                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                                 </ng-container>
+                                <ng-container matColumnDef="position">
+                                    <mat-header-cell *matHeaderCellDef translate>position
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> {{ row?.position }} </mat-cell>
+                                </ng-container>
                                 <ng-container matColumnDef="formSection.sectionLabel">
                                     <mat-header-cell *matHeaderCellDef translate>form.section
                                     </mat-header-cell>
@@ -508,6 +513,11 @@
                     <ng-container matColumnDef="id">
                         <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="position">
+                        <mat-header-cell *matHeaderCellDef translate>position
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{ row?.position }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="formSection.sectionLabel">
                         <mat-header-cell *matHeaderCellDef translate>form.section</mat-header-cell>

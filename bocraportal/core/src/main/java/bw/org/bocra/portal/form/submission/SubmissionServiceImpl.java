@@ -312,4 +312,13 @@ public class SubmissionServiceImpl
         return vos;
     }
 
+    @Override
+    protected Boolean handleUpdateSubmissionStatus(Long id, FormSubmissionStatus submissionStatus) throws Exception {
+        FormSubmission submission = formSubmissionRepository.getReferenceById(id);
+        submission.setSubmissionStatus(submissionStatus);
+        formSubmissionRepository.save(submission);
+
+        return true;
+    }
+
 }

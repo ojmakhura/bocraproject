@@ -10,6 +10,7 @@ import { select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as FormSelectors from '@app/store/form/form.selectors';
 import * as FormActions from '@app/store/form/form.actions';
+import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
 
 @Component({
   selector: 'app-search',
@@ -32,8 +33,26 @@ export class SearchComponentImpl extends SearchComponent {
 
     doNgOnDestroy(): void {
     }
+
+    override afterOnInit(): void {
+      this.searchForm.addControl('selectedForm', this.createFormVOGroup(new FormVO()));
+    }
+
     formSelected(event: MatRadioChange, data: FormVO): void {
       this.formSelect = data;
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    override beforeSearchSearch(): void {
+      this.store.dispatch(
+        SubmissionActions.search({
+          criteria: this.criteria,
+          loading: true,
+          loaderMessage: 'Searching form submissions ...',
+        })
+      );
     }
   
     /**
@@ -42,7 +61,7 @@ export class SearchComponentImpl extends SearchComponent {
      */
     addSelectedForm(): void {
       this.criteriaControl.patchValue({ form: this.formSelect.id });
-      this.searchForm.patchValue({ submissionForm: this.formSelect });
+      this.searchForm.patchValue({ selectedForm: this.formSelect });
     }
   
     formSearch(): void {
@@ -58,11 +77,11 @@ export class SearchComponentImpl extends SearchComponent {
       this.criteriaControl.patchValue({form: new FormVO()});
     }
 
-    get submissionFormControl(): FormGroup {
-        return this.searchForm.get('submissionForm') as FormGroup;
+    get selectedFormControl(): FormGroup {
+        return this.searchForm.get('selectedForm') as FormGroup;
     }
   
-    get submissionForm(): FormVO {
-        return this.submissionFormControl?.value;
+    get selectedForm(): FormVO {
+        return this.selectedFormControl?.value;
     }
 }

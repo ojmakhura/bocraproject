@@ -34,7 +34,7 @@
 				    <label id="formSectionSectionLabel_label" class="col-sm-6 col-form-label" for="formSectionSectionLabel"><span translate>section.label</span></label>
 				    <input type="text" id="formSectionSectionLabel" class="form-control" name="sectionLabel" formControlName="sectionLabel"/>
 				</div>
-                <mat-tab-group animationDuration="0ms" class = "view-tabs">
+                <!-- <mat-tab-group animationDuration="0ms" class = "view-tabs">
                     <mat-tab label="{{'form.fields' | translate}}">
 		            	<div>
 		            		<mat-table matSort [dataSource]="formSectionFormFields" #formFieldsSort="matSort" class="table table-bordered table-striped" style="width: 100%;">
@@ -75,7 +75,7 @@
 		            		<mat-paginator #formSectionFormFieldsPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
 		            	</div>
                     </mat-tab>
-                </mat-tab-group>
+                </mat-tab-group> -->
         	</div>
     	</form>
 	</div>
@@ -85,7 +85,7 @@
     &nbsp;&nbsp;&nbsp;&nbsp;
 	<button type="button" class="btn btn-primary" color="accent" (click)="dialogDone()" translate>action.done</button>
 </div>
-<div class="modal fade" id="formSectionFormFieldsModal" tabindex="-1" aria-labelledby="formSectionFormFieldsLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="formSectionFormFieldsModal" tabindex="-1" aria-labelledby="formSectionFormFieldsLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -148,7 +148,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Modal for form -->
 <div class="modal fade" id="formSectionFormModal" tabindex="-1" aria-labelledby="formSectionFormLabel" aria-hidden="true">

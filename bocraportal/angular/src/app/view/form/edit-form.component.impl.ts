@@ -394,6 +394,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       max: [value?.max],
       minLength: [value?.minLength],
       maxLength: [value?.maxLength],
+      position: [value?.position],
       formSection: {
         id: [value?.formSection?.id],
         position: [value?.formSection?.position],
