@@ -278,6 +278,27 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     }
   }
 
+  private doFormSubmissionStatusChange(formSubmission: FormSubmissionVO){
+    if (formSubmission?.id) {
+      formSubmission.updatedBy = this.keycloakService.getUsername();
+      formSubmission.updatedDate = new Date();
+    } else {
+      formSubmission.createdBy = this.keycloakService.getUsername();
+      formSubmission.createdDate = new Date();
+    }
+
+    this.store.dispatch(
+      SubmissionActions.updateStatus({
+        id: formSubmission.id,
+        submissionStatus: formSubmission.submissionStatus,
+        updateTime: new Date(),
+        username: this.keycloakService.getUsername(),
+        loaderMessage: 'Update status ...',
+        loading: true
+      })
+    );
+  }
+
   private doFormSubmissionSave(formSubmission: FormSubmissionVO) {
     if (formSubmission?.id) {
       formSubmission.updatedBy = this.keycloakService.getUsername();

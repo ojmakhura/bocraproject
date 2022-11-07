@@ -130,7 +130,7 @@ export class FormSubmissionEffects {
     updateSubmissionStatus$ = createEffect(() => 
          this.actions$.pipe(
             ofType(FormSubmissionActions.updateStatus),
-            mergeMap(({ id, submissionStatus }) => this.submissionRestController.updateSubmissionStatus(id, submissionStatus).pipe(
+            mergeMap(({ id, submissionStatus, updateTime, username }) => this.submissionRestController.updateSubmissionStatus(id, submissionStatus, updateTime, username).pipe(
                 map( updated => FormSubmissionActions.updateStatusSuccess({
                     updated,
                     messages: [`Form submission updated.`],

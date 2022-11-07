@@ -61,7 +61,7 @@ export const saveSuccess = createAction(
 
 export const updateStatus = createAction(
     FormSubmissionActionType.UPDATE_STATUS,
-    props<{ id: number | any, submissionStatus: FormSubmissionStatus | any, loading: boolean, loaderMessage: string | undefined }>()
+    props<{ id: number | any, submissionStatus: FormSubmissionStatus | any, updateTime: Date, username: string | any, loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const updateStatusSuccess = createAction(
