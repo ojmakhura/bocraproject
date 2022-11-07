@@ -11,6 +11,9 @@ import { Observable } from 'rxjs';
 import * as FormSelectors from '@app/store/form/form.selectors';
 import * as FormActions from '@app/store/form/form.actions';
 import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
+import * as ReportActions from '@app/store/report/report.actions';
+import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 
 @Component({
   selector: 'app-search',
@@ -25,10 +28,13 @@ export class SearchComponentImpl extends SearchComponent {
   formModalColumns = ['actions', 'id', 'code', 'formName', 'entryType'];
   formControl: FormGroup = this.createFormVOGroup(new FormVO());
   addUnrestricted: boolean = true;
+  submissionController: SubmissionRestController;
+  submissions: FormSubmissionVO[] = [];
 
     constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
         super(data, injector);
       this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
+      this.submissionController = this.injector.get(SubmissionRestController);
     }
 
     doNgOnDestroy(): void {
@@ -46,13 +52,21 @@ export class SearchComponentImpl extends SearchComponent {
      * This method may be overwritten
      */
     override beforeSearchSearch(): void {
-      this.store.dispatch(
-        SubmissionActions.search({
-          criteria: this.criteria,
-          loading: true,
-          loaderMessage: 'Searching form submissions ...',
-        })
-      );
+      this.submissionController.search(this.criteria).subscribe(submissions => {
+        this.submissions = submissions;
+        console.log(submissions);
+        this.store.dispatch(
+          ReportActions.setSubmissions({
+            formSubmissions: submissions,
+            messages: [],
+            success: true
+          })
+        )
+      });
+    }
+
+    override handleDialogDone(data: any): any {
+      return {formSubmissions: this.submissions};
     }
   
     /**
@@ -66,7 +80,6 @@ export class SearchComponentImpl extends SearchComponent {
   
     formSearch(): void {
       let criteria: FormCriteria = new FormCriteria();
-      criteria.code = this.formSearchField.value;
       criteria.formName = this.formSearchField.value;
       this.store.dispatch(FormActions.searchForms({ criteria: criteria, loading: true, loaderMessage: 'Searching forms ...' }));
     }

@@ -13,6 +13,15 @@ export const reportReducer = createReducer(
       ...state,
       reportElements: action.reportElements,
     })),
+    on(ReportActions.setSubmissions, (state, action) => ({
+      ...state,
+      formSubmissions: action.formSubmissions,
+        loaderMessage: undefined,
+        loading: false,
+        success: action.success,
+        error: false,
+        messges: action.messages
+    })),
     on(ReportActions.reportReset, (state) => ({
       ...state,
         reportElements: [],
