@@ -18,7 +18,9 @@ export class ReportElement {
   groupBy: string = '';
   reportType: string = '';
   reportLabels: string = '';
-  selectAll: string = '';
+  selectAllLicensees: boolean = false;
+  selectAllPeriods: boolean = false;
+  selectAllForms: boolean = false;
   formSubmissions: FormSubmissionVO[] = [];
   selectedLicensees: any[] = [];
   selectedPeriods: string[] = [];
@@ -58,7 +60,9 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     return this.formBuilder.group({
       groupBy: [reportElement?.groupBy],
       reportType: [reportElement?.reportType],
-      selectAll: [reportElement?.selectAll],
+      selectAllLicensees: [reportElement?.selectAllLicensees],
+      selectAllPeriods: [reportElement?.selectAllPeriods],
+      selectAllForms: [reportElement?.selectAllForms],
       reportLabels: [reportElement?.reportLabels],
       licenseeSelections: this.createLicenseeSelectionArray(reportElement?.selectedLicensees),
       periodSelections: this.createPeriodSelectionArray(reportElement?.selectedPeriods),
@@ -184,13 +188,13 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  selectAllChange(event: any) {
+  selectAllChange(event: any, table: string) {
 
     let arrayControls: FormArray = this.licenseeSelectionsArray;
 
-    if(this.reportLabels === 'periods') {
+    if(table === 'periods') {
       arrayControls = this.periodSelectionsArray;
-    } else if(this.reportLabels === 'forms') {
+    } else if(table === 'forms') {
       arrayControls = this.formSelectionsArray;
     }
 

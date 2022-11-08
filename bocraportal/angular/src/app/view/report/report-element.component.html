@@ -32,72 +32,78 @@
 						</select>
 					</div>
 					<div class="row-sm-2">
-						<table class="table" *ngIf="reportLabels === 'licensees'">
-							<thead>
-								<tr>
-									<th scope="col">
-										<input type="checkbox" formControlName="selectAll" aria-label="Select All" (change)="selectAllChange($event)">
-									</th>
-									<th scope="col">
-										Licensee
-									</th>
-								</tr>
-							</thead>
-							<tbody formArrayName="licenseeSelections">
-								<tr *ngFor="let licensee of licenseeSelectionsArray.controls; let j=index" [formGroupName]="j">
-									<td scope="col">
-										<input type="checkbox" formControlName="selected" aria-label="Checkbox for following text input">
-									</td>
-									<td scope="col">
-										{{ licensee.value.licensee }}
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<table class="table" *ngIf="reportLabels === 'periods'">
-							<thead>
-								<tr>
-									<th scope="col">
-										<input type="checkbox" formControlName="selectAll" aria-label="Select All" (change)="selectAllChange($event)">
-									</th>
-									<th scope="col">
-										Periods
-									</th>
-								</tr>
-							</thead>
-							<tbody formArrayName="periodSelections">
-								<tr *ngFor="let period of periodSelectionsArray.controls; let k=index" [formGroupName]="k">
-									<td scope="col">
-										<input type="checkbox" formControlName="selected" aria-label="Checkbox for following text input">
-									</td>
-									<td scope="col">
-										{{ period.value.period }}
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<table class="table" *ngIf="reportLabels === 'forms'">
-							<thead>
-								<tr>
-									<th scope="col">
-										<input type="checkbox" formControlName="selectAll" aria-label="Select All" (change)="selectAllChange($event)">
-									</th>
-									<th scope="col">
-										Forms
-									</th>
-								</tr>
-							</thead>
-							<tbody formArrayName="formSelections">
-								<tr *ngFor="let form of formSelectionsArray.controls; let l=index" [formGroupName]="l">
-									<td scope="col">
-										<input type="checkbox" formControlName="selected" aria-label="Checkbox for following text input">
-									</td>
-									<td scope="col">
-										{{ form.value.form }}
-									</td>
-								</tr>
-							</tbody>
-						</table>
+						<div class="mb-3">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">
+											<input type="checkbox" formControlName="selectAllLicensees" aria-label="Select All" (change)="selectAllChange($event, 'licensees')">
+										</th>
+										<th scope="col">
+											Licensee
+										</th>
+									</tr>
+								</thead>
+								<tbody formArrayName="licenseeSelections">
+									<tr *ngFor="let licensee of licenseeSelectionsArray.controls; let j=index" [formGroupName]="j">
+										<td scope="col">
+											<input type="checkbox" formControlName="selected" aria-label="Checkbox for following text input">
+										</td>
+										<td scope="col">
+											{{ licensee.value.licensee }}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="mb-3">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">
+											<input type="checkbox" formControlName="selectAllPeriods" aria-label="Select All" (change)="selectAllChange($event, 'periods')">
+										</th>
+										<th scope="col">
+											Periods
+										</th>
+									</tr>
+								</thead>
+								<tbody formArrayName="periodSelections">
+									<tr *ngFor="let period of periodSelectionsArray.controls; let k=index" [formGroupName]="k">
+										<td scope="col">
+											<input type="checkbox" formControlName="selected" aria-label="Checkbox for following text input">
+										</td>
+										<td scope="col">
+											{{ period.value.period }}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="mb-3">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">
+											<input type="checkbox" formControlName="selectAllForms" aria-label="Select All" (change)="selectAllChange($event, 'forms')">
+										</th>
+										<th scope="col">
+											Forms
+										</th>
+									</tr>
+								</thead>
+								<tbody formArrayName="formSelections">
+									<tr *ngFor="let form of formSelectionsArray.controls; let l=index" [formGroupName]="l">
+										<td scope="col">
+											<input type="checkbox" formControlName="selected" aria-label="Checkbox for following text input">
+										</td>
+										<td scope="col">
+											{{ form.value.form }}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
