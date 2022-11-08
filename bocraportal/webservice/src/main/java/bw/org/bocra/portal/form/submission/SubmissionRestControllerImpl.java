@@ -5,6 +5,7 @@
 //
 package bw.org.bocra.portal.form.submission;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -276,10 +277,10 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleUpdateSubmissionStatus(Long id, FormSubmissionStatus submissionStatus) {
+    public ResponseEntity<?> handleUpdateSubmissionStatus(Long id, FormSubmissionStatus submissionStatus, final LocalDateTime updateTime, final String username) {
         try {
 
-            Boolean updated = submissionService.updateSubmissionStatus(id, submissionStatus);
+            Boolean updated = submissionService.updateSubmissionStatus(id, submissionStatus, updateTime, username);
             return ResponseEntity.ok(updated);
 
         } catch(Exception e) {

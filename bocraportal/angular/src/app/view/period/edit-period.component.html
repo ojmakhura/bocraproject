@@ -38,44 +38,30 @@
 						</button>
 					</div>
 					<div class="row mb-3">
-						<label for="periodPeriodConfigPeriodConfigName" class="col-sm-2 col-form-label"
-							translate>period.config.name</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="periodPeriodConfigPeriodConfigName"
-								value="{{ periodPeriodConfig?.periodConfigName }}" disabled />
-						</div>
-					</div>
-					<div class="row mb-3">
-						<label for="periodPeriodConfigStartDay" class="col-sm-2 col-form-label"
-							translate>start.day</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="periodPeriodConfigStartDay"
-								value="{{ periodPeriodConfig?.startDay }}" disabled />
-						</div>
-					</div>
-					<div class="row mb-3">
-						<label for="periodPeriodConfigStartMonth" class="col-sm-2 col-form-label"
-							translate>start.month</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="periodPeriodConfigStartMonth"
-								value="{{ periodPeriodConfig?.startMonth }}" disabled />
-						</div>
-					</div>
-					<div class="row mb-3">
-						<label for="periodPeriodConfigRepeat" class="col-sm-2 col-form-label" translate>repeat</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="periodPeriodConfigRepeat"
-								value="{{ periodPeriodConfig?.repeat }}" disabled />
-						</div>
-					</div>
-
-					<div class="row mb-3">
-						<label for="periodPeriodConfigRepeatPeriod" class="col-sm-2 col-form-label"
-							translate>repeat.period</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="periodPeriodConfigRepeatPeriod"
-								value="{{ periodPeriodConfig?.repeatPeriod }}" disabled />
-						</div>
+						<table class="table">
+							<tbody>
+								<tr>
+									<td scope="row"translate>period.config.name</td>
+									<td >{{ periodPeriodConfig?.periodConfigName }}</td>
+								</tr>
+								<tr>
+									<td scope="row"translate>start.day</td>
+									<td >{{ periodPeriodConfig?.startDay }}</td>
+								</tr>
+								<tr>
+									<td scope="row"translate>start.month</td>
+									<td >{{ periodPeriodConfig?.startMonth }}</td>
+								</tr>
+								<tr>
+									<td scope="row"translate>repeat</td>
+									<td >{{ periodPeriodConfig?.repeat }}</td>
+								</tr>
+								<tr>
+									<td scope="row"translate>repeat.period</td>
+									<td >{{ periodPeriodConfig?.repeatPeriod }}</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<div *ngIf="editPeriodForm.invalid && periodPeriodConfigControl.invalid && (periodPeriodConfigControl.dirty || periodPeriodConfigControl.touched)"
 						class="alert alert-danger" role="alert">
