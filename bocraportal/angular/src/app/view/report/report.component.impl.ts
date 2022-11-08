@@ -12,6 +12,7 @@ import { select } from '@ngrx/store';
 import { ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Observable, of } from 'rxjs';
+import { ReportElement } from './report-element.component';
 
 export class FormReport {
   formName: string = '';
@@ -30,6 +31,7 @@ export class GraphData {
   data: number[] = [];
 }
 
+
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -38,6 +40,7 @@ export class GraphData {
 export class ReportComponentImpl extends ReportComponent {
   submissions$: Observable<FormSubmissionVO[]>;
   submissions: FormSubmissionVO[] = [];
+  reportElements: ReportElement[] = [];
   licensees: string[] = [];
   forms: FormVO[] = [];
   fullReport: FormReport[] = [];
@@ -102,6 +105,11 @@ export class ReportComponentImpl extends ReportComponent {
     return this.reportForm.get('formReports') as FormArray;
   }
 
+  actionOnElement(index: number) {
+      console.log(`Action on ${index}`);
+      console.log(this.reportElements)
+  }
+
   createSubmissionsControl(submission: FormSubmissionVO): FormGroup {
     return this.formBuilder.group({
       id: submission.id,
@@ -149,13 +157,18 @@ export class ReportComponentImpl extends ReportComponent {
     return this.getReportElementsControl(formIndex)?.at(i)?.value;
   }
 
-  removeReportElement(formIndex: number, i: number) {
-    this.getReportElementsControl(formIndex).removeAt(i);
+  // removeReportElement(formIndex: number, i: number) {
+  //   this.getReportElementsControl(formIndex).removeAt(i);
+  // }
+
+  removeReportElement(elementIndex: number) {
+    this.reportElements.forEach((element, index) => {
+      if(index == elementIndex) this.reportElements.splice(index, 1);
+    });
   }
 
   addReportElement(formIndex: number) {
-    
-    this.getReportElementsControl(formIndex).push(this.createReportElementControl([], [], 'bar', ''));
+    this.reportElements.push(new ReportElement());
   }
 
   getLabels(index: number, element: AbstractControl) {

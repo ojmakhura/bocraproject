@@ -1,0 +1,39 @@
+<div class="card container">
+	<div class="card-body">
+		<form [formGroup]="reportChartGroup">
+			<section>
+				<div class="col my-3 view-buttons">
+					
+				</div>
+			</section>
+			<div class="mb-3">
+				<label for="chart-label">Label</label>
+				<input type="text" id="chartLabel" class="form-control" name="chartLabel" formControlName="chartLabel"/>
+			</div>
+			<div class="mb-3">
+				<label for="chart-type">Chart Type</label>
+				<select id="chart-type" class="form-select" formControlName="chartType"
+					aria-label="Default select example" (change)="selectedChartType()">
+					<option value="bar">Bar</option>
+					<!-- <option value="bubble">Bubble</option> -->
+					<!-- <option value="doughnut">Doughnut</option> -->
+					<!-- <option value="line">Line</option> -->
+					<option value="pie">Pie</option>
+					<option value="table">Table</option>
+					<!-- <option value="polarArea">Polar Area</option> -->
+					<!-- <option value="radar">Radar</option> -->
+					<!-- <option value="scatter">Scatter</option> -->
+				</select>
+			</div>
+			
+			<div class="col mb-3">
+				<!-- <button type="button" class="btn btn-primary" (click)="generateReport(i, j)">
+					Generate
+				</button> -->
+				<button type="button" class="btn btn-primary" (click)="clearReport()">
+					Clear
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

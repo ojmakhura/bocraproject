@@ -9,7 +9,50 @@
 				</div>
 			</section>
 			<div formArrayName="formReports" class="container">
-				<div class="card-body" *ngFor="let formReportControl of formReportsControl.controls; let i=index"
+				<div class="card-body" *ngFor="let formRep<div class="card container">
+					<div class="card-body">
+						<form [formGroup]="reportForm">
+							<section>
+								<div class="col my-3 view-buttons">
+									<button type="button" color="accent" (click)="reportSearch()" class="btn btn-info">
+										<span translate>search</span>
+									</button>
+								</div>
+							</section>
+							<div formArrayName="formReports" class="container">
+								<div class="card-body" *ngFor="let formReportControl of formReportsControl.controls; let i=index"
+									[formGroupName]="i">
+									<div class="row mb-3">
+										<h4>{{getFormReport(i)?.formName}} Report</h4>
+									</div>
+									<div class="row mb-3">
+										<label id="submission_num-{{i}}-label" class="col-sm-2 col-form-label">Number of Submissions:
+										</label>
+										<label id="submission_num-{{i}}-label"
+											class="col-sm-2 col-form-label">{{getFormReport(i)?.submissions?.length}}</label>
+									</div>
+									<div class="row mb-3" *ngFor="let reportElement of reportElements; let i=index">
+										<app-report-element
+											[formSubmissions]="submissions"
+											[elementIndex]="i"
+											[reportElement]="reportElement"
+											(actionIndexEvent)="actionOnElement($event)">
+				
+										</app-report-element>
+										<div class="col">
+											<button type="button" class="btn btn-primary" (click)="removeReportElement(i)">
+												<mat-icon>delete</mat-icon>
+											</button>
+										</div>
+									</div>
+									<div>
+										<button type="button" class="btn bi bi-plus-circle" (click)="addReportElement(i)"></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>ortControl of formReportsControl.controls; let i=index"
 					[formGroupName]="i">
 					<div class="row mb-3">
 						<h4>{{getFormReport(i)?.formName}} Report</h4>
