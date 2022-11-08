@@ -274,4 +274,20 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
         }
         
     }
+
+    @Override
+    public ResponseEntity<?> handleUpdateSubmissionStatus(Long id, FormSubmissionStatus submissionStatus) {
+        try {
+
+            Boolean updated = submissionService.updateSubmissionStatus(id, submissionStatus);
+            return ResponseEntity.ok(updated);
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new SubmissionServiceException("Could not update the form submission.");
+            // return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
+    }
 }

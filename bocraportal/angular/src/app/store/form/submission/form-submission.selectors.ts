@@ -16,6 +16,11 @@ export const selectId = createSelector(
     (state: FormSubmissionState) => state.id
 );
 
+export const selectUpdated = createSelector(
+    selectFormSubmissionState,
+    (state: FormSubmissionState) => state.updated
+);
+
 export const selectFormSubmission = createSelector(
     selectFormSubmissionState,
     (state: FormSubmissionState) => state.formSubmission

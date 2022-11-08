@@ -165,6 +165,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
   }
 
+  isCalculatedField(dataField: DataFieldVO): boolean {
+    return dataField.formField.fieldValueType === FieldValueType.CALCULATED;
+  }
+
   onRowChange(section: any, dataField: DataFieldVO) {
     let sec: DataFieldSectionVO = section.value;
     let calculationFields: FormGroup[] = [];
@@ -274,6 +278,27 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     }
   }
 
+  private doFormSubmissionStatusChange(formSubmission: FormSubmissionVO){
+    if (formSubmission?.id) {
+      formSubmission.updatedBy = this.keycloakService.getUsername();
+      formSubmission.updatedDate = new Date();
+    } else {
+      formSubmission.createdBy = this.keycloakService.getUsername();
+      formSubmission.createdDate = new Date();
+    }
+
+    this.store.dispatch(
+      SubmissionActions.updateStatus({
+        id: formSubmission.id,
+        submissionStatus: formSubmission.submissionStatus,
+        updateTime: new Date(),
+        username: this.keycloakService.getUsername(),
+        loaderMessage: 'Update status ...',
+        loading: true
+      })
+    );
+  }
+
   private doFormSubmissionSave(formSubmission: FormSubmissionVO) {
     if (formSubmission?.id) {
       formSubmission.updatedBy = this.keycloakService.getUsername();
@@ -344,6 +369,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       updatedBy: [formField?.updatedBy ? formField.updatedBy : null],
       createdDate: [formField?.createdDate ? formField.createdDate : null],
       updatedDate: [formField?.updatedDate ? formField.updatedDate : null],
+      position: [formField?.position ? formField.position : null],
       fieldType: [formField?.fieldType ? formField.fieldType : null],
       fieldValueType: [formField?.fieldValueType ? formField.fieldValueType : null],
       fieldName: [formField?.fieldName ? formField.fieldName : null],
@@ -392,15 +418,28 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   override createDataFieldVOGroup(dataField: DataFieldVO): FormGroup {
-    let disable = dataField.formField.fieldValueType === FieldValueType.CALCULATED || this.formDisabled();
+    let value = dataField?.value ? dataField?.value : this.getFieldDefaultValue(dataField);
 
     return this.formBuilder.group({
       id: [dataField?.id],
       row: [dataField?.row],
       formField: this.createFormFieldForm(dataField?.formField),
-      value: [dataField?.value ? { value: dataField?.value, disabled: disable } : { value: this.getFieldDefaultValue(dataField), disabled: disable }],
+      value: [{ value: value, disabled: false } ],
     });
   }
+
+  override createDataFieldVOArray(values: DataFieldVO[]): FormArray {
+    if(values) {
+        let formArray: FormArray = this.formBuilder.array([]);
+        values?.slice()?.sort((a: DataFieldVO, b: DataFieldVO) => {
+            return a?.formField?.position - b?.formField?.position;
+        })?.forEach(value => formArray.push(this.createDataFieldVOGroup(value)))
+
+        return formArray;
+    } else {
+        return new FormArray([]);
+    }
+}
 
   getFieldDefaultValue(field: DataFieldVO) {
     return field.formField.defaultValue;
@@ -408,8 +447,12 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   override handleFormChanges(change: any): void { }
 
-  getDataValue(data: DataFieldVO) {
+  getDataFieldName(data: DataFieldVO) {
     return `${data.formField.fieldName}`;
+  }
+
+  getDataFieldValue(data: DataFieldVO) {
+    return `${data.value}`;
   }
 
   getSectorFieldsControls(i: number): FormArray {
@@ -417,7 +460,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   getSectorFields(i: number): DataFieldVO[] {
-    return this.formSubmissionSectionsControl.controls[i].get('dataFields')?.value;
+    let fields: DataFieldVO[] = this.formSubmissionSectionsControl.controls[i].get('dataFields')?.value;
+    return fields;
   }
 
   getSectionId(i: number): string {
@@ -634,7 +678,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   getDataFieldId(dataField: DataFieldVO): string {
-
+    
     return `${dataField.row}_${dataField.formField.fieldId}`;
   }
 

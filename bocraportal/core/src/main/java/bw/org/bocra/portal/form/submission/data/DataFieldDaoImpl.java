@@ -65,6 +65,7 @@ public class DataFieldDaoImpl
             field.setMax(source.getFormField().getMax());
             field.setMaxLength(source.getFormField().getMaxLength());
             field.setExpression(source.getFormField().getExpression());
+            field.setPosition(source.getFormField().getPosition());
             
             target.setFormField(field);
         }

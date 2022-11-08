@@ -119,7 +119,21 @@ export class FormSubmissionEffects {
             mergeMap(({ pageNumber, pageSize }) => this.submissionRestController.getAllPaged(pageNumber, pageSize).pipe(
                 map( formSubmissions => FormSubmissionActions.getAllPagedSuccess({
                     formSubmissions,
-                    messages: [`Page ${pageNumber} found with ${formSubmissions.length} documents.`],
+                    messages: [`Page ${pageNumber} found with ${formSubmissions.length} submissions.`],
+                    success: true
+                })),
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+            ))
+        )
+    );
+
+    updateSubmissionStatus$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(FormSubmissionActions.updateStatus),
+            mergeMap(({ id, submissionStatus, updateTime, username }) => this.submissionRestController.updateSubmissionStatus(id, submissionStatus, updateTime, username).pipe(
+                map( updated => FormSubmissionActions.updateStatusSuccess({
+                    updated,
+                    messages: [`Form submission updated.`],
                     success: true
                 })),
                 catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])

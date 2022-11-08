@@ -93,7 +93,6 @@ export class ReportComponentImpl extends ReportComponent {
 
       this.report = this.reportForm.value
       this.formReports = this.report.formReports;
-      console.log(this.report.formReports);
     });
   }
 
@@ -426,5 +425,4 @@ export class ReportComponentImpl extends ReportComponent {
     return this.selectSectionDataset(i, j, k).datasets?.map((dt: any) => dt?.label);
   }
 
-  reportSearch() {}
 }
