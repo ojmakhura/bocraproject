@@ -9,7 +9,7 @@ import * as SubmissionActions from '@app/store/form/submission/form-submission.a
 import * as SubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
 import { ReportComponent } from '@app/view/report/report.component';
 import { select } from '@ngrx/store';
-import { ChartData } from 'chart.js';
+import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Observable, of } from 'rxjs';
 
@@ -27,27 +27,29 @@ export class ReportChart {
 })
 export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
 
-  reportChartGroup: FormGroup | any;
+  @Input() reportChartGroup: FormGroup | any;
   protected formBuilder: FormBuilder;
-  @Input() chart: ReportChart;
   @Input() reportType: string;
+  @Input() formSubmissions: FormSubmissionVO[] | undefined;
+  @Input() labels: string[] | undefined;
   
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
   }
 
   ngOnInit(): void {
-    this.reportChartGroup = this.newForm(this.chart);
+    // console.log(this.reportChartGroup.value);
+    console.log(this.formSubmissions);
   }
 
-  newForm(report: ReportChart): FormGroup {
+  newForm(chart: ReportChart): FormGroup {
     
     return this.formBuilder.group({
-      chartLabel: [report?.chartLabel],
-      chartType: [report?.chartType],
-      chartCaption: [report?.chartCaption],
-      labels: this.formBuilder.array(report?.labels),
-      data: this.formBuilder.array(report?.data)
+      chartLabel: [chart?.chartLabel],
+      chartType: [chart?.chartType],
+      chartCaption: [chart?.chartCaption],
+      labels: this.formBuilder.array(chart?.labels),
+      data: this.formBuilder.array(chart?.data)
     });
   }
 
@@ -71,6 +73,24 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
 
   clearReport() {
     
+  }
+
+  generateReport() {
+
+  }
+
+  barChartDataSets() {
+    
+  }
+
+  get barChartData(): ChartData {
+
+    let data: ChartData = {
+      labels: this.labels,
+      datasets: []
+    };
+
+    return data
   }
 
 }

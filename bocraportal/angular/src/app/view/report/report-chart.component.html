@@ -25,11 +25,20 @@
 					<!-- <option value="scatter">Scatter</option> -->
 				</select>
 			</div>
+			<div>
+				<span>===>{{labels}}</span>
+			</div>
+			<div *ngIf="chartType === 'pie'">
+				<span>Pie</span>
+			</div>
+			<div *ngIf="chartType === 'bar'">
+				<span>Bar</span>
+			</div>
 			
 			<div class="col mb-3">
-				<!-- <button type="button" class="btn btn-primary" (click)="generateReport(i, j)">
+				<button type="button" class="btn btn-primary" (click)="generateReport()">
 					Generate
-				</button> -->
+				</button>
 				<button type="button" class="btn btn-primary" (click)="clearReport()">
 					Clear
 				</button>

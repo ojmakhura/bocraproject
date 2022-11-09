@@ -17,14 +17,14 @@ import { ReportChart } from './report-chart.component';
 export class ReportElement {
   groupBy: string = '';
   reportType: string = '';
-  reportLabels: string = '';
+  reportLabels: string[] = [];
   selectAllLicensees: boolean = false;
   selectAllPeriods: boolean = false;
   selectAllForms: boolean = false;
   formSubmissions: FormSubmissionVO[] = [];
   selectedLicensees: any[] = [];
   selectedPeriods: string[] = [];
-  selectedForms: string[] = [];
+  selectedFields: string[] = [];
   charts: ReportChart[] = []
 }
 
@@ -34,25 +34,52 @@ export class ReportElement {
 })
 export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy {
 
-  reportElementGroup: FormGroup | any;
+  @Input() reportElementGroup: FormGroup | any;
   protected formBuilder: FormBuilder;
-  @Input() formSubmissions: FormSubmissionVO[];
-  @Input() elementIndex: number;
-  @Input() reportElement: ReportElement;
+  @Input() formSubmissions: FormSubmissionVO[] | undefined;
   @Output() actionIndexEvent = new EventEmitter<number>()
-  licensees: string[] = [];
-  periods: string[] = []
-  forms: string[] = []
   
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
   }
 
   ngOnInit(): void {
-    this.licensees = [...new Set(this.formSubmissions?.map(sub => sub?.licensee?.licenseeName))];
-    this.periods = [...new Set(this.formSubmissions?.map(sub => sub?.period?.periodName))];
-    this.forms = [...new Set(this.formSubmissions?.map(sub => sub?.form.formName))];
-    this.reportElementGroup = this.newForm(this.reportElement);
+    this.licensees.forEach((lic, index) => {
+      this.licenseeSelectionsArray.insert(index, this.createLicenseeSelectionGroup(true, lic))
+    });
+
+    this.periods.forEach((per, index) => {
+      this.periodSelectionsArray.insert(index, this.createPeriodSelectionGroup(true, per))
+    });
+
+    if(!this.fieldSelectionsArray) {
+      this.reportElementGroup.addControl('fieldSelection', this.formBuilder.array([]));
+    }
+
+    this.fields.forEach((field, index) => {
+      this.fieldSelectionsArray.insert(index, this.createFieldSelectionGroup(true, field))
+    });
+  }
+
+  get licensees() {
+    return [...new Set(this.formSubmissions?.map(sub => sub?.licensee?.licenseeName))];
+  }
+
+  get periods() {
+    return [...new Set(this.formSubmissions?.map(sub => sub?.period?.periodName))]
+  }
+
+  get fields() {
+
+    let formFields: string[] = []
+
+    if(this.formSubmissions && this.formSubmissions?.length > 0) {
+      this.formSubmissions[0]?.form?.formSections?.forEach(sec => {
+        formFields = [...formFields, ...sec?.formFields?.map((field: any) => field?.fieldId)];
+      });
+    }
+
+    return formFields;
   }
 
   newForm(reportElement: ReportElement): FormGroup {
@@ -64,9 +91,10 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
       selectAllPeriods: [reportElement?.selectAllPeriods],
       selectAllForms: [reportElement?.selectAllForms],
       reportLabels: [reportElement?.reportLabels],
+      charts: this.createChartsArrayControl([]),
       licenseeSelections: this.createLicenseeSelectionArray(reportElement?.selectedLicensees),
       periodSelections: this.createPeriodSelectionArray(reportElement?.selectedPeriods),
-      formSelections: this.createFormSelectionArray(reportElement?.selectedForms)
+      fieldSelections: this.createFieldSelectionArray(reportElement?.selectedFields),
     });
   }
 
@@ -77,43 +105,93 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   }
 
   test(){
-    console.log(this.reportElementGroup?.value);
+    console.log(this.reportElementGroup);
+  }
+
+  createChartsArrayControl(charts: ReportChart[]) {
+    let chartControl: FormArray = this.formBuilder.array([]);
+    charts.forEach(chart => {
+      chartControl.push(this.formBuilder.group({
+        chartLabel: [chart?.chartLabel],
+        chartType: [chart?.chartType],
+        chartCaption: [chart?.chartCaption],
+      }))
+    })
+    return chartControl;
+  }
+
+  createFieldSelectionArray(fields: any[]) {
+
+    let selections: FormArray = this.formBuilder.array([]);
+    this.fields?.forEach(field => {
+      selections?.push(this.createLicenseeSelectionGroup(fields?.find(f => f === field) ? true : false, field));
+    });
+    return selections;
+  }
+
+  createFieldSelectionGroup(selected: boolean, field: string): FormGroup {
+    return this.formBuilder.group({
+      selected: [selected],
+      field: [field]
+    });
   }
 
   createLicenseeSelectionArray(licensees: any[]): FormArray {
 
     let selections: FormArray = this.formBuilder.array([]);
-    this.licensees.forEach(licensee => {
-      selections.push(this.formBuilder.group({
-        selected: [licensees.find(lic => lic === licensee) ? true : false],
-        licensee: [licensee]
-      }));
+    this.licensees?.forEach(licensee => {
+      selections?.push(this.createLicenseeSelectionGroup(licensees?.find(lic => lic === licensee) ? true : false, licensee));
     });
     return selections;
+  }
+
+  createLicenseeSelectionGroup(selected: boolean, licensee: string): FormGroup {
+    return this.formBuilder.group({
+      selected: [selected],
+      licensee: [licensee]
+    });
   }
 
   createPeriodSelectionArray(periods: any[]): FormArray {
 
     let selections: FormArray = this.formBuilder.array([]);
-    this.periods.forEach(period => {
-      selections.push(this.formBuilder.group({
-        selected: [periods.find(p => p === period) ? true : false],
-        period: [period]
-      }));
+    this.periods?.forEach(period => {
+      selections?.push(
+        this.createPeriodSelectionGroup(periods?.find(p => p === period) ? true : false, period)
+      );
     });
     return selections;
   }
 
-  createFormSelectionArray(forms: any[]): FormArray {
-
-    let selections: FormArray = this.formBuilder.array([]);
-    this.forms.forEach(form => {
-      selections.push(this.formBuilder.group({
-        selected: [forms.find(f => f === form) ? true : false],
-        form: [form]
-      }));
+  createPeriodSelectionGroup(selected: boolean, period: string): FormGroup {
+    return this.formBuilder.group({
+      selected: [selected],
+      period: [period]
     });
-    return selections;
+  }
+
+  periodSelectionChange() {
+    let selected = this.periodSelections?.filter(sel => sel.selected);
+
+    this.licenseeSelectionsArray?.controls?.forEach(lc => {
+      if(this.filteredFormSubmissions?.find(sub => sub.licensee.licenseeName === lc.value.licensee)) {
+        lc.get('selected')?.patchValue(true);
+      } else {
+        lc.get('selected')?.patchValue(false);
+      }
+    });
+  }
+
+  licenseeSelectionChange() {
+    let selected = this.licenseeSelections?.filter(sel => sel.selected);
+
+    this.periodSelectionsArray?.controls?.forEach(pr => {
+      if(this.filteredFormSubmissions?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
+        pr.get('selected')?.patchValue(true);
+      } else {
+        pr.get('selected')?.patchValue(false);
+      }
+    });
   }
 
   selectedChartType() {
@@ -127,64 +205,84 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     // return this.getReportElement(i, j).chartType ? this.getReportElement(i, j).chartType : 'bar';
   }
 
+  get allLiceseesSelected() {
+    return this.licenseeSelections?.filter(sel => sel.selected)?.length === this.licensees.length
+  }
+
   addReportChart() {
-    this.reportElement.charts.push(new ReportChart());
+    this.chartsControl?.controls?.push(this.formBuilder.group({
+      chartLabel: [],
+      chartType: [],
+      chartCaption: [],
+    }));
+  }
+
+  get reportElement(): ReportElement {
+    return this.reportElementGroup.value;
   }
 
   get reportTypeControl() {
-    return this.reportElementGroup.get('reportType') as FormControl;
+    return this.reportElementGroup?.get('reportType') as FormControl;
   }
 
   get reportType() {
-    return this.reportTypeControl.value
+    return this.reportTypeControl?.value
   }
 
   get reportLabelsControl() {
-    return this.reportElementGroup.get('reportLabels') as FormControl;
+    return this.reportElementGroup?.get('reportLabels') as FormControl;
   }
 
   get reportLabels() {
-    return this.reportLabelsControl.value
+    return this.reportLabelsControl?.value
   }
 
   get groupByControl() {
-    return this.reportElementGroup.get('groupBy') as FormControl;
+    return this.reportElementGroup?.get('groupBy') as FormControl;
   }
 
   get groupBy() {
-    return this.groupByControl.value
+    return this.groupByControl?.value
+  }
+
+  get fieldSelectionsArray(): FormArray {
+    return this.reportElementGroup?.get('fieldSelections') as FormArray;
+
+  }
+
+  get fieldSelections(): any[] {
+    return this.fieldSelectionsArray?.value
   }
 
   get licenseeSelectionsArray(): FormArray {
-    return this.reportElementGroup.get('licenseeSelections') as FormArray;
+    return this.reportElementGroup?.get('licenseeSelections') as FormArray;
 
   }
 
-  get licenseeSelections() {
-    return this.licenseeSelectionsArray.value
+  get licenseeSelections(): any[] {
+    return this.licenseeSelectionsArray?.value
   }
 
   get periodSelectionsArray(): FormArray {
-    return this.reportElementGroup.get('periodSelections') as FormArray;
+    return this.reportElementGroup?.get('periodSelections') as FormArray;
 
   }
 
-  get periodSelections() {
-    return this.licenseeSelectionsArray.value
+  get periodSelections(): any[] {
+    return this.periodSelectionsArray?.value
   }
 
-  get formSelectionsArray(): FormArray {
-    return this.reportElementGroup.get('formSelections') as FormArray;
-
+  get chartsControl(): FormArray {
+    return this.reportElementGroup?.get('charts') as FormArray;
   }
 
-  get formSelections() {
-    return this.licenseeSelectionsArray.value
+  get charts(): ReportChart[] {
+    return this.chartsControl.value;
   }
 
   removeReportChart(chartIndex: number) {
-    this.reportElement.charts.forEach((element, index) => {
-      if(index == chartIndex) this.reportElement.charts.splice(index, 1);
+    this.reportElement?.charts?.forEach((element, index) => {
+      if(index == chartIndex) this.reportElement?.charts?.splice(index, 1);
     });
   }
 
@@ -194,19 +292,56 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
     if(table === 'periods') {
       arrayControls = this.periodSelectionsArray;
-    } else if(table === 'forms') {
-      arrayControls = this.formSelectionsArray;
+    } else if(table === 'licensees') {
+      arrayControls = this.licenseeSelectionsArray;
     }
 
     if(event?.target?.checked) {
-      arrayControls.controls.forEach(value => {
+      arrayControls?.controls?.forEach(value => {
         value.get('selected')?.patchValue(true);
       });
     } else {
 
-      arrayControls.controls.forEach(value => {
+      arrayControls?.controls?.forEach(value => {
         value.get('selected')?.patchValue(false);
       });
     }
+  }
+
+  selectReportLabels(event: any) {
+    // if(event?.target?.value === 'licensees') {
+    //   this.labels = this.licenseeSelections.filter(lc => lc.selected).map(lc => lc.licensee);
+    // } if(event?.target?.value === 'periods') {
+    //   this.labels = this.periodSelections.filter(pr => pr.selected).map(pr => pr.period);
+    // }
+  }
+
+  /**
+   * Filter the form submissions based on the selected periods and
+   * selected licensees
+   */
+  get filteredFormSubmissions(): FormSubmissionVO[] {
+    let selectedPeriods = this.periodSelections?.filter(pr => pr.selected);
+    let selectedLicensees = this.licenseeSelections?.filter(lc => lc.selected);
+
+    let filtered = this.formSubmissions
+      ?.filter(submission => selectedPeriods
+        ?.find(pr => pr.period === submission?.period?.periodName))
+      ?.filter(submission => selectedLicensees
+        ?.find(lc => lc.licensee === submission?.licensee?.licenseeName));
+
+    return filtered ? filtered : [];
+  }
+
+  get selectedLabels() {
+    if(this.reportLabels === 'licensees') {
+      return this.licenseeSelections?.filter(lc => lc.selected).map(lc => lc.licensee);
+    } else if(this.reportLabels === 'periods') {
+      return this.periodSelections?.filter(pr => pr.selected).map(pr => pr.period);
+    } else if(this.reportLabels === 'fields') {
+      return this.fieldSelections?.filter(field => field.selected).map(field => field.field);
+    }
+
+    return [];
   }
 }

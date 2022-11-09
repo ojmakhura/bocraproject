@@ -20,6 +20,7 @@ import { ReportControllerImpl } from '@app/controller/report/report-controller.i
 import { NgChartsModule } from 'ng2-charts';
 import { ReportElementComponent } from './report-element.component';
 import { ReportChartComponent } from './report-chart.component';
+import { FormReportComponent } from './form-report.component';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { ReportChartComponent } from './report-chart.component';
     ReportComponentImpl,
     ReportElementComponent,
     ReportChartComponent,
+    FormReportComponent,
     SearchComponentImpl,
     SearchComponentImpl,
     SearchFormSubmissionsComponentImpl,
