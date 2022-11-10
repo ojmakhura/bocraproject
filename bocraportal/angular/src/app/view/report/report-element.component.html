@@ -2,150 +2,159 @@
 	<div class="card-body">
 		<form [formGroup]="reportElementGroup">
 			<div>
-				<div class="mb-3">
-					<label for="report-type">Report Type</label>
-					<select id="report-type" class="form-select"
-						formControlName="reportType" aria-label="Select report type">
-						<option selected value="default">Default</option>
-						<option value="custom">Custom</option>
-					</select>
-				</div>
-				<div class="mb-3" *ngIf="reportType === 'custom'">
-					<div class="mb-3">
-						
-						<mat-tab-group animationDuration="0ms" class="view-tabs">
-							<mat-tab label="{{ 'periods' | translate }}">
-								<table class="table">
-									<thead>
-										<tr>
-											<th scope="col">
-												Select
-												<!-- <input type="checkbox" 
-													aria-label="Select All"
-													(change)="selectAllChange($event, 'periods')"> -->
-											</th>
-											<th scope="col">
-												Periods
-											</th>
-										</tr>
-									</thead>
-									<tbody formArrayName="periodSelections">
-										<tr *ngFor="let period of periodSelectionsArray.controls; let k=index" [formGroupName]="k">
-											<td scope="col">
-												<input type="checkbox" 
-													formControlName="selected" 
-													aria-label="Checkbox for following text input"
-													(change)="periodSelectionChange()">
-											</td>
-											<td scope="col">
-												{{ period.value.period }}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</mat-tab>
-							<mat-tab label="{{ 'licensees' | translate }}">
-								<table class="table">
-									<thead>
-										<tr>
-											<th scope="col">
-												Select
-												<!-- <input type="checkbox" 
-													formControlName="selected" 
-													aria-label="Select All" 
-													(change)="selectAllChange($event, 'licensees')"> -->
-											</th>
-											<th scope="col">
-												Licensee
-											</th>
-										</tr>
-									</thead>
-									<tbody formArrayName="licenseeSelections">
-										<tr *ngFor="let licensee of licenseeSelectionsArray.controls; let j=index" [formGroupName]="j">
-											<td scope="col">
-												<input type="checkbox" 
-													formControlName="selected" 
-													aria-label="Checkbox for following text input"
-													(change)="licenseeSelectionChange()">
-											</td>
-											<td scope="col">
-												{{ licensee.value.licensee }}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</mat-tab>
-							<mat-tab label="{{ 'data.fields' | translate }}">
-								<table class="table">
-									<thead>
-										<tr>
-											<th scope="col">
-												Select
-												<!-- <input type="checkbox" 
-													formControlName="selected" 
-													aria-label="Select All" 
-													(change)="selectAllChange($event, 'licensees')"> -->
-											</th>
-											<th scope="col">
-												Field
-											</th>
-										</tr>
-									</thead>
-									<tbody formArrayName="fieldSelections">
-										<tr *ngFor="let fieldControl of fieldSelectionsArray.controls; let j=index" [formGroupName]="j">
-											<td scope="col">
-												<input type="checkbox" 
-													formControlName="selected" 
-													aria-label="Checkbox for following text input">
-											</td>
-											<td scope="col">
-												{{ fieldControl.value.field }}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</mat-tab>
-						</mat-tab-group>
+				<div class="mb-3 row">
+					<label for="report-type" class="col-sm-2 col-form-label">Report Type</label>
+					<div class="col-sm-10">
+						<select id="report-type" class="form-select" (change)="reportTypeChange()"
+							formControlName="reportType" aria-label="Select report type">
+							<option></option>
+							<option value="default">Default</option>
+							<option value="custom">Custom</option>
+						</select>
 					</div>
 				</div>
-				<div class="mb-3">
-					<label for="group-by">Group By</label>
-					<select id="group-by" class="form-select"
-							formControlName="groupBy" aria-label="Default select example">
-						<option value=""></option>
-						<option value="licensees">Licensees</option>
-						<option value="periods">Periods</option>
-						<option value="fields">Fields</option>
-					</select>
+				<div *ngIf="reportType">
+					<div class="mb-3" *ngIf="reportType === 'custom'">
+						<div class="mb-3">
+
+							<mat-tab-group animationDuration="0ms" class="view-tabs">
+								<mat-tab label="{{ 'periods' | translate }}">
+									<table class="table">
+										<thead>
+											<tr>
+												<th scope="col">
+													Select
+												</th>
+												<th scope="col">
+													Periods
+												</th>
+											</tr>
+										</thead>
+										<tbody formArrayName="periodSelections">
+											<tr *ngFor="let period of periodSelectionsArray.controls; let k=index"
+												[formGroupName]="k">
+												<td scope="col">
+													<input type="checkbox" formControlName="selected"
+														aria-label="Checkbox for following text input"
+														(change)="periodSelectionChange()">
+												</td>
+												<td scope="col">
+													{{ period.value.period }}
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</mat-tab>
+								<mat-tab label="{{ 'licensees' | translate }}">
+									<table class="table">
+										<thead>
+											<tr>
+												<th scope="col">
+													Select
+												</th>
+												<th scope="col">
+													Licensee
+												</th>
+											</tr>
+										</thead>
+										<tbody formArrayName="licenseeSelections">
+											<tr *ngFor="let licensee of licenseeSelectionsArray.controls; let j=index"
+												[formGroupName]="j">
+												<td scope="col">
+													<input type="checkbox" formControlName="selected"
+														aria-label="Checkbox for following text input"
+														(change)="licenseeSelectionChange()">
+												</td>
+												<td scope="col">
+													{{ licensee.value.licensee }}
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</mat-tab>
+								<mat-tab label="{{ 'data.fields' | translate }}">
+									<table class="table">
+										<thead>
+											<tr>
+												<th scope="col">
+													Select
+												</th>
+												<th scope="col">
+													Field
+												</th>
+											</tr>
+										</thead>
+										<tbody formArrayName="fieldSelections">
+											<tr *ngFor="let fieldControl of fieldSelectionsArray.controls; let j=index"
+												[formGroupName]="j">
+												<td scope="col">
+													<input type="checkbox" formControlName="selected"
+														aria-label="Checkbox for following text input">
+												</td>
+												<td scope="col">
+													{{ fieldControl.value.field }}
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</mat-tab>
+							</mat-tab-group>
+						</div>
+					</div>
+					<!-- <div class="mb-3 row">
+						<label for="group-by" class="col-sm-2 col-form-label">Group By</label>
+						<div class="col-sm-10">
+							<select id="group-by" class="form-select"
+									formControlName="groupBy" aria-label="Default select example">
+								<option value=""></option>
+								<option value="licensees">Licensees</option>
+								<option value="periods">Periods</option>
+								<option value="fields">Fields</option>
+							</select>
+						</div>
+					</div> -->
+					<div class="mb-3 row">
+						<label for="report-labels" class="col-sm-2 col-form-label">Report Labels</label>
+						<div class="col-sm-10">
+							<select id="report-labels" class="form-select" formControlName="reportLabels"
+								aria-label="Default select example">
+								<option value="licensees">Licensees</option>
+								<option value="periods">Periods</option>
+								<option value="fields">Data Fields</option>
+							</select>
+						</div>
+					</div>
+					<div class="mb-3 row" *ngIf="reportLabels !== null">
+						<label for="data-labels" class="col-sm-2 col-form-label">Data Labels</label>
+						<div class="col-sm-10">
+							<select id="data-labels" class="form-select" formControlName="dataLabels"
+								aria-label="Default select example">
+								<option></option>
+								<option value="licensees"
+									*ngIf="reportLabels !== 'licensees'">Licensees</option>
+								<option value="periods">
+									Periods</option>
+								<option value="fields">Data
+									Fields</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div *ngFor="let chartControl of chartsControl?.controls; let i=index">
+					<app-report-chart [labels]="selectedLabels" [dataLabels]="dataLabels"
+						[selectedDataLabels]="selectedDataLabels" [reportType]="reportType"
+						[reportChartGroup]="chartControl" [formSubmissions]="filteredFormSubmissions">
+					</app-report-chart>
+					<div class="mb-3">
+						<button type="button" class="btn btn-info" (click)="removeReportChart(i)">
+							<mat-icon>delete</mat-icon>
+						</button>
+					</div>
+	
 				</div>
 				<div class="mb-3">
-					<label for="report-labels">Report Labels</label>
-					<select id="report-labels" class="form-select" (change)="selectReportLabels($event)"
-							formControlName="reportLabels" aria-label="Default select example">
-						<option value=""></option>
-						<option value="licensees" *ngIf="groupBy !== 'licensees'">Licensees</option>
-						<option value="periods" *ngIf="groupBy !== 'periods'">Periods</option>
-						<option value="fields" *ngIf="groupBy !== 'fields'">Data Fields</option>
-					</select>
+					<button type="button" class="btn bi bi-plus-circle" (click)="addReportChart()"></button>
 				</div>
-			</div>
-			<div *ngFor="let chartControl of chartsControl?.controls; let i=index">
-				<app-report-chart
-					[labels]="selectedLabels"
-					[reportType]="reportType"
-					[reportChartGroup]="chartControl"
-					[formSubmissions]="formSubmissions"
-					>
-				</app-report-chart>
-				<div class="mb-3">
-					<button type="button" class="btn btn-info" (click)="removeReportChart(i)">
-						<mat-icon>delete</mat-icon>
-					</button>
-				</div>
-				
-			</div>	
-			<div class="mb-3">
-				<button type="button" class="btn bi bi-plus-circle" (click)="addReportChart()"></button>
 			</div>
 		</form>
 	</div>

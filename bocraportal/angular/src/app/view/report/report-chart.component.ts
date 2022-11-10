@@ -9,7 +9,7 @@ import * as SubmissionActions from '@app/store/form/submission/form-submission.a
 import * as SubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
 import { ReportComponent } from '@app/view/report/report.component';
 import { select } from '@ngrx/store';
-import { ChartConfiguration, ChartData } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Observable, of } from 'rxjs';
 
@@ -31,15 +31,44 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
   protected formBuilder: FormBuilder;
   @Input() reportType: string;
   @Input() formSubmissions: FormSubmissionVO[] | undefined;
-  @Input() labels: string[] | undefined;
+  @Input() labels: string[];
+  @Input() selectedDataLabels: string[];
+  @Input() dataLabels: string;
+  sections: any[] = []
+  periods: any[] = []
+
+  datasets: ChartDataset[] =[];
   
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
   }
 
   ngOnInit(): void {
-    // console.log(this.reportChartGroup.value);
-    console.log(this.formSubmissions);
+    let sections = {};
+    let periods: string[] = [];
+    if(this.formSubmissions && this.formSubmissions.length > 0) {
+      this.formSubmissions[0].sections.forEach((section: DataFieldSectionVO) => {
+        sections[section.sectionId] = section.sectionLabel;
+      });
+
+      this.formSubmissions?.forEach(submission => {
+        periods.push(submission?.period?.periodName);
+      });
+
+      this.periods = [...new Set(periods)]
+    }
+
+    Object.keys(sections).forEach(key => {
+      this.sections.push({
+        sectionId: key,
+        sectionLabel: sections[key]
+      });
+    });
+
+    this.reportChartGroup.addControl("period", this.formBuilder.control([]));
+    this.reportChartGroup.addControl("section", this.formBuilder.control([]));
+    this.chartTypeControl.patchValue('bar');
+    this.periodControl.patchValue('all');
   }
 
   newForm(chart: ReportChart): FormGroup {
@@ -53,6 +82,14 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  selectedPeriod() {
+    this.datasets = this.barChartDataSets();
+  }
+
+  selectedFormSection() {
+
+  }
+
   get chartTypeControl() {
     return this.reportChartGroup.get('chartType') as FormControl;
   }
@@ -61,36 +98,133 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
     return this.chartTypeControl.value;
   }
 
+  get periodControl() {
+    return this.reportChartGroup.get('period') as FormControl;
+  }
+
+  get period() {
+    return this.periodControl.value;
+  }
+
+  get sectionControl() {
+    return this.reportChartGroup.get('section') as FormControl;
+  }
+
+  get section() {
+    return this.sectionControl.value;
+  }
+
   ngAfterViewInit(): void {
+    
+    
   }
 
   ngOnDestroy(): void {
   }
 
   selectedChartType() {
+    // this.barChartData.labels = this.labels;
     
+    if(this.chartType === 'bar') {
+      this.datasets = this.barChartDataSets();
+    }
   }
 
   clearReport() {
     
   }
 
-  generateReport() {
-
+  refreshChart() {
+    this.datasets = this.barChartDataSets();
   }
 
-  barChartDataSets() {
+  get filteredSubmissions() {
     
+    // console.log(this.formSubmissions)
+    if(this.formSubmissions) {
+
+      if(this.period !== 'all') {
+        return this.formSubmissions?.filter(submission => submission?.period?.periodName === this.period);
+      } else {
+        return this.formSubmissions;
+      }
+    }
+
+    return [];
   }
 
-  get barChartData(): ChartData {
+  get pieChartDatasets() {
+    let datasets: any[] = [];
 
-    let data: ChartData = {
-      labels: this.labels,
-      datasets: []
-    };
+    if(this.dataLabels === 'licensees') {
 
-    return data
+      this.filteredSubmissions?.forEach(submission => {
+        console.log(submission)
+        let fields: DataFieldVO[] = [];
+        let fieldValues: number[] = [];
+        
+        submission?.sections?.forEach((section: DataFieldSectionVO) => {
+          fields = [...fields, ...section.dataFields]
+        });
+
+        this.labels?.forEach(label => {
+          let field = fields?.find(f => f.formField.fieldId === label);
+          if(field) {
+            fieldValues.push(+field.value);
+          }
+        });
+
+        datasets.push({
+          label: submission?.licensee?.licenseeName,
+          data: fieldValues
+        })
+      });
+
+    } else if(this.dataLabels === 'periods') {
+
+    } else if(this.dataLabels === 'fields') {
+      console.log('data');
+    }
+
+    return datasets;
+
+    return []
   }
 
+  barChartDataSets(): any[] {
+    
+    let datasets: any[] = [];
+
+    if(this.dataLabels === 'licensees') {
+
+      this.filteredSubmissions?.forEach(submission => {
+        console.log(submission)
+        let fields: DataFieldVO[] = [];
+        let fieldValues: number[] = [];
+        
+        submission?.sections?.forEach((section: DataFieldSectionVO) => {
+          fields = [...fields, ...section.dataFields]
+        });
+
+        this.labels?.forEach(label => {
+          let field = fields?.find(f => f.formField.fieldId === label);
+          if(field) {
+            fieldValues.push(+field.value);
+          }
+        });
+
+        datasets.push({
+          label: submission?.licensee?.licenseeName,
+          data: fieldValues
+        })
+      });
+
+    } else if(this.dataLabels === 'periods') {
+
+    } else if(this.dataLabels === 'fields') {
+      console.log('data');
+    }
+
+    return datasets;
+  }
 }

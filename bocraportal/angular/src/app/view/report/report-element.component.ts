@@ -17,7 +17,8 @@ import { ReportChart } from './report-chart.component';
 export class ReportElement {
   groupBy: string = '';
   reportType: string = '';
-  reportLabels: string[] = [];
+  reportLabels: string = '';
+  dataLabels: string = '';
   selectAllLicensees: boolean = false;
   selectAllPeriods: boolean = false;
   selectAllForms: boolean = false;
@@ -59,6 +60,10 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     this.fields.forEach((field, index) => {
       this.fieldSelectionsArray.insert(index, this.createFieldSelectionGroup(true, field))
     });
+
+    this.reportTypeControl.patchValue('default')
+    this.reportLabelsControl.setValue('fields');
+
   }
 
   get licensees() {
@@ -91,6 +96,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
       selectAllPeriods: [reportElement?.selectAllPeriods],
       selectAllForms: [reportElement?.selectAllForms],
       reportLabels: [reportElement?.reportLabels],
+      dataLabels: [reportElement?.dataLabels],
       charts: this.createChartsArrayControl([]),
       licenseeSelections: this.createLicenseeSelectionArray(reportElement?.selectedLicensees),
       periodSelections: this.createPeriodSelectionArray(reportElement?.selectedPeriods),
@@ -99,6 +105,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
+    this.dataLabelsControl.patchValue('licensees')
   }
 
   ngOnDestroy(): void {
@@ -237,6 +244,14 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     return this.reportLabelsControl?.value
   }
 
+  get dataLabelsControl() {
+    return this.reportElementGroup?.get('dataLabels') as FormControl;
+  }
+
+  get dataLabels() {
+    return this.dataLabelsControl?.value
+  }
+
   get groupByControl() {
     return this.reportElementGroup?.get('groupBy') as FormControl;
   }
@@ -281,9 +296,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   }
 
   removeReportChart(chartIndex: number) {
-    this.reportElement?.charts?.forEach((element, index) => {
-      if(index == chartIndex) this.reportElement?.charts?.splice(index, 1);
-    });
+    this.chartsControl.removeAt(chartIndex);
   }
 
   selectAllChange(event: any, table: string) {
@@ -316,6 +329,13 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     // }
   }
 
+  reportTypeChange() {
+    // if(this.reportType) {
+    //   this.reportLabelsControl.patchValue('fields');
+    //   this.dataLabelsControl.patchValue('licensees')
+    // } 
+  }
+
   /**
    * Filter the form submissions based on the selected periods and
    * selected licensees
@@ -335,6 +355,19 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
   get selectedLabels() {
     if(this.reportLabels === 'licensees') {
+      return this.licenseeSelections?.filter(lc => lc.selected).map(lc => lc.licensee);
+    } else if(this.reportLabels === 'periods') {
+      return this.periodSelections?.filter(pr => pr.selected).map(pr => pr.period);
+    } else if(this.reportLabels === 'fields') {
+      return this.fieldSelections?.filter(field => field.selected).map(field => field.field);
+    }
+
+    return [];
+  }
+
+  get selectedDataLabels() {
+
+    if(this.dataLabels === 'licensees') {
       return this.licenseeSelections?.filter(lc => lc.selected).map(lc => lc.licensee);
     } else if(this.reportLabels === 'periods') {
       return this.periodSelections?.filter(pr => pr.selected).map(pr => pr.period);
