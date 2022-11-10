@@ -35,7 +35,6 @@ export class FormReportComponent  implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.formReportGroup.value);
   }
 
   ngAfterViewInit(): void {
@@ -90,6 +89,7 @@ export class FormReportComponent  implements OnInit, AfterViewInit, OnDestroy {
       selectAllPeriods: [reportElement?.selectAllPeriods],
       selectAllForms: [reportElement?.selectAllForms],
       reportLabels: [reportElement?.reportLabels],
+      dataLabels: [reportElement?.dataLabels],
       licenseeSelections: this.formBuilder.array([]),
       periodSelections: this.formBuilder.array([]),
       fieldSelections: this.formBuilder.array([]),

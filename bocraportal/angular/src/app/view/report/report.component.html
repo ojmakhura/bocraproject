@@ -11,37 +11,9 @@
 			<div formArrayName="formReports" class="container">
 				<div class="card-body" *ngFor="let formReportControl of formReportsControl.controls; let i=index"
 					[formGroupName]="i">
-					<!-- <div class="row mb-3">
-						<h4>{{ formReportControl?.value?.formName }} Report</h4>
-					</div> -->
-					<!-- <div class="row mb-3">
-						<label id="submission_num-{{i}}-label" class="col-sm-2 col-form-label">Number of Submissions:
-						</label>
-						<label id="submission_num-{{i}}-label"
-							class="col-sm-2 col-form-label">{{formReportControl?.value?.submissions?.length}}</label>
-					</div> -->
 					<app-form-report
 						[formReportGroup]="formReportControl">
-
 					</app-form-report>
-
-					<!-- <div class="row mb-3" *ngFor="let reportElement of reportElements; let i=index">
-						<app-report-element
-							[formSubmissions]="submissions"
-							[elementIndex]="i"
-							[reportElement]="reportElement"
-							(actionIndexEvent)="actionOnElement($event)">
-
-						</app-report-element>
-						<div class="col">
-							<button type="button" class="btn btn-primary" (click)="removeReportElement(i)">
-								<mat-icon>delete</mat-icon>
-							</button>
-						</div>
-					</div> -->
-					<!-- <div>
-						<button type="button" class="btn bi bi-plus-circle" (click)="addReportElement(i)"></button>
-					</div> -->
 				</div>
 			</div>
 		</form>

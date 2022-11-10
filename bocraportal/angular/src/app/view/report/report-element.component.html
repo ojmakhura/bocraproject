@@ -80,7 +80,10 @@
 													Select
 												</th>
 												<th scope="col">
-													Field
+													Field ID
+												</th>
+												<th scope="col">
+													Field Name
 												</th>
 											</tr>
 										</thead>
@@ -92,7 +95,10 @@
 														aria-label="Checkbox for following text input">
 												</td>
 												<td scope="col">
-													{{ fieldControl.value.field }}
+													{{ fieldControl?.value?.field?.fieldId }}
+												</td>
+												<td scope="col">
+													{{ fieldControl?.value?.field?.fieldName }}
 												</td>
 											</tr>
 										</tbody>
@@ -141,9 +147,14 @@
 					</div>
 				</div>
 				<div *ngFor="let chartControl of chartsControl?.controls; let i=index">
-					<app-report-chart [labels]="selectedLabels" [dataLabels]="dataLabels"
-						[selectedDataLabels]="selectedDataLabels" [reportType]="reportType"
-						[reportChartGroup]="chartControl" [formSubmissions]="filteredFormSubmissions">
+					<app-report-chart 
+						[labels]="selectedLabels" 
+						[dataLabels]="dataLabels"
+						[selectedDataLabels]="selectedDataLabels" 
+						[reportType]="reportType"
+						[colors]="colors"
+						[reportChartGroup]="chartControl" 
+						[formSubmissions]="filteredFormSubmissions">
 					</app-report-chart>
 					<div class="mb-3">
 						<button type="button" class="btn btn-info" (click)="removeReportChart(i)">

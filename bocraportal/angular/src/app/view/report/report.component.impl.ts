@@ -24,7 +24,6 @@ export class GraphData {
   data: number[] = [];
 }
 
-
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -33,14 +32,10 @@ export class GraphData {
 export class ReportComponentImpl extends ReportComponent {
   submissions$: Observable<FormSubmissionVO[]>;
   submissions: FormSubmissionVO[] = [];
-  // reportElements: ReportElement[] = [];
   licensees: string[] = [];
   forms: FormVO[] = [];
   fullReport: FormReport[] = [];
   report: any = {};
-  // formReports: any[] = [];
-  // @ViewChildren(BaseChartDirective) chart: QueryList<BaseChartDirective>;
-  // chartTypeControl: FormControl;
 
   submissionSearchForm: FormGroup;
 
@@ -82,14 +77,11 @@ export class ReportComponentImpl extends ReportComponent {
         rep.formSubmissions = submissions.filter((submission) => submission.form.formName === form.formName);
         rep.formName = form.formName;
         rep.formCode = form.code;
-        // rep.licensees = [...new Set(rep.submissions.map((submission) => submission.licensee.licenseeName))];
         this.fullReport.push(rep);
         this.formReportsControl.push(this.createFormReportGroup(rep));
-        console.log(this.formReportsControl.value);
       });
 
       this.report = this.reportForm.value
-      // this.formReports = this.report.formReports;
     });
   }
 
@@ -104,8 +96,6 @@ export class ReportComponentImpl extends ReportComponent {
   }
 
   actionOnElement(index: number) {
-      console.log(`Action on ${index}`);
-      // console.log(this.reportElements)
   }
 
   createSubmissionsControl(submission: FormSubmissionVO): FormGroup {
@@ -141,86 +131,23 @@ export class ReportComponentImpl extends ReportComponent {
 
   getLabels(index: number, element: AbstractControl) {
     this.report = this.reportForm.value
-    // this.formReports = this.report.formReports;
     const reportElement = element?.value;
 
     if(reportElement?.reportLabels === 'licensees') {
 
       let el: FormGroup = element as FormGroup;
-      // el.setControl()
 
     } else if(reportElement?.reportLabels === 'periods') {
-
-      // console.log([...new Set(this.submissions.filter(sub => this.getFormReport(index)?.submissions.find(id => id === sub.id))?.map(sub => sub?.period?.periodName))])
     }
   }
 
   generateReport(formIndex: number, elementIndex: number) {
 
     this.report = this.reportForm.value
-    // this.formReports = this.report.formReports;
     const reportType = this.formReports[formIndex]?.reportElements[elementIndex]?.reportType;
 
     if(reportType === 'default') {
-      this.generateDefaultReport(formIndex, elementIndex);
       
     }
   }
-
-  // reportElementsControl(): FormArray {
-  //   ret
-  // } 
-
-  clearReport(formIndex: number, elementIndex: number) {
-    // this.getReportElementsControl(formIndex).setControl(elementIndex, this.createReportElementControl([], [], 'bar', ''))
-  }
-
-  generateDefaultReport(formIndex: number, elementIndex: number) {
-    // let submissions: FormSubmissionVO[] = this.submissions.filter((sub) =>
-    //   this.getFormReportSubmissions(formIndex).find((val) => val === sub.id)
-    // );
-
-    // const periods = [...new Set(submissions.map(sub => sub.period.periodName))];
-
-    // periods.forEach((period, index) => {
-    //   let periodSubmissions: FormSubmissionVO[] = submissions.filter(sub => sub.period.periodName === period);
-    //   let submission: FormSubmissionVO = periodSubmissions[0];
-    //   let sectionDatasets: any = {};
-
-    //   submission?.sections.forEach((section: DataFieldSectionVO, index: number) => {
-    //     let sectionDataset = sectionDatasets[section.sectionId];
-    //     if(!sectionDataset) {
-    //       sectionDataset = []
-    //       sectionDatasets[section.sectionId] = sectionDataset;
-    //     }
-  
-    //     periodSubmissions.forEach((sub, index: number) => {
-    //       let sec: DataFieldSectionVO = sub.sections.find((sc: DataFieldSectionVO, index: number) => section.sectionLabel === sc.sectionLabel);
-    //       sectionDataset.push({
-    //         label: sub.licensee.licenseeName,
-    //         data: sec.dataFields.map(field => +field.value)
-    //       });
-    //     });
-    //   });
-
-    //   this.report = this.reportForm.value
-    //   this.formReports = this.report.formReports;
-    //   let elementControl: FormGroup = this.createReportElementControl(
-    //     submission?.sections, 
-    //     sectionDatasets, 
-    //     this.formReports[formIndex]?.reportElements[elementIndex]?.chartType,
-    //     'default',
-    //     period
-    //   );
-
-    //   if(index == 0)
-    //     this.getReportElementsControl(formIndex).setControl(elementIndex, elementControl)
-    //   else 
-    //     this.getReportElementsControl(formIndex).push(elementControl)
-    //   this.report = this.reportForm.value
-    //   this.formReports = this.report.formReports;
-    // });
-    
-  }
-
 }

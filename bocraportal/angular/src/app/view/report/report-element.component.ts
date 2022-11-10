@@ -39,6 +39,8 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   protected formBuilder: FormBuilder;
   @Input() formSubmissions: FormSubmissionVO[] | undefined;
   @Output() actionIndexEvent = new EventEmitter<number>()
+
+  colors = {};
   
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -80,11 +82,23 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
     if(this.formSubmissions && this.formSubmissions?.length > 0) {
       this.formSubmissions[0]?.form?.formSections?.forEach(sec => {
-        formFields = [...formFields, ...sec?.formFields?.map((field: any) => field?.fieldId)];
+        formFields = [...formFields, ...sec?.formFields?.map((field: any) => {
+          return {fieldId: field?.fieldId, fieldName: field?.fieldName}
+        })];
       });
     }
 
     return formFields;
+  }
+
+  generateColors() {
+    this.formSubmissions?.forEach(submission => {
+      if(this.dataLabels === 'licensees') {
+        if(!this.colors[submission?.licensee?.licenseeName]) {
+          this.colors[submission?.licensee?.licenseeName] = this.getRandomColor();
+        }
+      }
+    });
   }
 
   newForm(reportElement: ReportElement): FormGroup {
@@ -104,15 +118,29 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
+  getRandomColor() {
+    var length = 6;
+    var chars = '0123456789ABCDEF';
+    var hex = '#';
+    while(length--) hex += chars[(Math.random() * 16) | 0];
+    return hex;
+  }
+
+  refreshColors() {
+    Object.keys(this.colors).forEach(key => {
+      this.colors[key] = this.getRandomColor()
+    });
+  }
+
   ngAfterViewInit(): void {
     this.dataLabelsControl.patchValue('licensees')
+    this.generateColors();
   }
 
   ngOnDestroy(): void {
   }
 
   test(){
-    console.log(this.reportElementGroup);
   }
 
   createChartsArrayControl(charts: ReportChart[]) {
