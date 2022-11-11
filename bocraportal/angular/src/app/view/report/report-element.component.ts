@@ -90,7 +90,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
     return formFields;
   }
-
+  
   generateColors() {
     this.formSubmissions?.forEach(submission => {
       if(this.dataLabels === 'licensees') {
@@ -133,6 +133,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
+    
     this.dataLabelsControl.patchValue('licensees')
     this.generateColors();
   }
@@ -404,12 +405,5 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     }
 
     return [];
-  }
-
-  chartRefresh(index: any): void {
-    console.log(this.chartsControl)
-    this.chartsControl
-    // this.chartsControl.at(index).clear();
-    // this.addReportChart();
   }
 }

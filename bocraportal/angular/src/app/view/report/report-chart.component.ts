@@ -27,8 +27,6 @@ export class ReportChart {
 })
 export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
 
-
-  @Output() refreshEvent = new EventEmitter<number>()
   @Input() reportChartGroup: FormGroup | any;
   protected formBuilder: FormBuilder;
   @Input() reportType: string;
@@ -52,19 +50,12 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     let sections = {};
-    let periods: string[] = [];
     if(this.formSubmissions && this.formSubmissions.length > 0) {
       this.formSubmissions[0].sections.forEach((section: DataFieldSectionVO) => {
         sections[section.sectionId] = section.sectionLabel;
       });
 
-      let lics: any = {}
-
-      this.formSubmissions?.forEach(submission => {
-        periods.push(submission?.period?.periodName);
-      });
-
-      this.periods = [...new Set(periods)]
+      this.setPeriods();
     }
 
     Object.keys(sections).forEach(key => {
@@ -79,10 +70,24 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
     this.chartTypeControl.patchValue('bar');
     this.periodControl.patchValue('all');
 
+    this.setLabels();
+    this.datasets = this.barChartDataSets();
+  }
+
+  setLabels() {
+    this.labelNames = [];
     this.labels?.forEach(label => {
       this.labelNames?.push(label.fieldName)
     });
-    this.datasets = this.barChartDataSets();
+  }
+
+  setPeriods() {
+    let periods: string[] = [];
+    this.formSubmissions?.forEach(submission => {
+      periods.push(submission?.period?.periodName);
+    });
+
+    this.periods = [...new Set(periods)]
   }
 
   newForm(chart: ReportChart): FormGroup {
@@ -146,8 +151,9 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
   }
 
   refreshChart() {
+    this.setPeriods();
+    this.setLabels();
     this.datasets = this.barChartDataSets();
-    this.refreshEvent.emit(this.chartIndex);
   }
 
   get filteredSubmissions() {
@@ -170,7 +176,7 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
     if(this.dataLabels === 'licensees') {
 
       this.filteredSubmissions?.forEach(submission => {
-        console.log(submission)
+        
         let fields: DataFieldVO[] = [];
         let fieldValues: number[] = [];
         
@@ -194,7 +200,6 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
     } else if(this.dataLabels === 'periods') {
 
     } else if(this.dataLabels === 'fields') {
-      console.log('data');
     }
 
     return datasets;
@@ -248,6 +253,4 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
 
     return datasets;
   }
-
-  
 }

@@ -146,6 +146,11 @@
 						</div>
 					</div>
 				</div>
+				<div class="mb-3" *ngIf="this.chartsControl?.length > 0">
+					<button type="button" class="btn btn-primary" (click)="refreshColors()">
+						Colors
+					</button>
+				</div>
 				<div *ngFor="let chartControl of chartsControl?.controls; let i=index">
 					<app-report-chart 
 						[labels]="selectedLabels" 
@@ -155,8 +160,7 @@
 						[colors]="colors"
 						[reportChartGroup]="chartControl" 
 						[formSubmissions]="filteredFormSubmissions"
-						[chartIndex]="i"
-						(refreshEvent)="chartRefresh($event)">
+						[chartIndex]="i">
 					</app-report-chart>
 					<div class="mb-3">
 						<button type="button" class="btn btn-info" (click)="removeReportChart(i)">
