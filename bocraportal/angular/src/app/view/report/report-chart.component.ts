@@ -27,6 +27,8 @@ export class ReportChart {
 })
 export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
 
+
+  @Output() refreshEvent = new EventEmitter<number>()
   @Input() reportChartGroup: FormGroup | any;
   protected formBuilder: FormBuilder;
   @Input() reportType: string;
@@ -35,6 +37,7 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
   @Input() selectedDataLabels: string[];
   @Input() dataLabels: string;
   @Input() colors: any;
+  @Input() chartIndex: number;
   sections: any[] = []
   periods: any[] = []
   labelNames: string[] = [];
@@ -79,7 +82,7 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
     this.labels?.forEach(label => {
       this.labelNames?.push(label.fieldName)
     });
-
+    this.datasets = this.barChartDataSets();
   }
 
   newForm(chart: ReportChart): FormGroup {
@@ -126,7 +129,7 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.chart.datasets = this.barChartDataSets();
+    
   }
 
   ngOnDestroy(): void {
@@ -144,6 +147,7 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
 
   refreshChart() {
     this.datasets = this.barChartDataSets();
+    this.refreshEvent.emit(this.chartIndex);
   }
 
   get filteredSubmissions() {
@@ -221,8 +225,14 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
           }
         });
 
+        let label = submission?.licensee?.licenseeName;
+
+        if(this.period === 'all') {
+          label = `${label} - ${submission?.period?.periodName}`;
+        }
+
         datasets.push({
-          label: submission?.licensee?.licenseeName,
+          label: label,
           backgroundColor: this.colors[submission?.licensee?.licenseeName],
           data: fieldValues
         })
@@ -233,6 +243,8 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
     } else if(this.dataLabels === 'fields') {
       console.log('data');
     }
+
+    datasets.sort((a, b) => (a.label > b.label ? 1 : -1))
 
     return datasets;
   }

@@ -154,7 +154,9 @@
 						[reportType]="reportType"
 						[colors]="colors"
 						[reportChartGroup]="chartControl" 
-						[formSubmissions]="filteredFormSubmissions">
+						[formSubmissions]="filteredFormSubmissions"
+						[chartIndex]="i"
+						(refreshEvent)="chartRefresh($event)">
 					</app-report-chart>
 					<div class="mb-3">
 						<button type="button" class="btn btn-info" (click)="removeReportChart(i)">

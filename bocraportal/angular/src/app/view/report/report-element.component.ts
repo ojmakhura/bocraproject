@@ -245,7 +245,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   }
 
   addReportChart() {
-    this.chartsControl?.controls?.push(this.formBuilder.group({
+    this.chartsControl?.push(this.formBuilder.group({
       chartLabel: [],
       chartType: [],
       chartCaption: [],
@@ -404,5 +404,12 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     }
 
     return [];
+  }
+
+  chartRefresh(index: any): void {
+    console.log(this.chartsControl)
+    this.chartsControl
+    // this.chartsControl.at(index).clear();
+    // this.addReportChart();
   }
 }
