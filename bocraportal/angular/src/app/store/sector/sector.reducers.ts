@@ -17,7 +17,7 @@ export const sectorReducer = createReducer(
         loaderMessage: undefined,
         success: action.success,
         error: false,
-        messages: []
+        messages: action.messages,
     })),
     on(SectorActions.save, (state, action) => ({
         ...state,
@@ -31,7 +31,7 @@ export const sectorReducer = createReducer(
         loaderMessage: undefined,
         success: action.success,
         error: false,
-        messages: []
+        messages: action.messages,
     })),
     on(SectorActions.addLicensee, (state, action) => ({
         ...state,
@@ -44,7 +44,7 @@ export const sectorReducer = createReducer(
         licensees: [...state.licensees, action.licensee],
         loading: false,
         loaderMessage: undefined,
-        messages: []
+        messages: action.messages,
     })),
     on(SectorActions.setLicensees, (state, action) => ({
         ...state,
@@ -65,7 +65,7 @@ export const sectorReducer = createReducer(
         loaderMessage: undefined,
         success: action.success,
         error: false,
-        messages: []
+        messages: action.messages,
     })),
     on(SectorActions.getAll, (state, action) => ({
         ...state,
@@ -79,7 +79,7 @@ export const sectorReducer = createReducer(
         loaderMessage: undefined,
         success: action.success,
         error: false,
-        messages: []
+        messages: action.messages,
     })),
     on(SectorActions.search, (state, action) => ({
         ...state,
@@ -93,7 +93,7 @@ export const sectorReducer = createReducer(
         loaderMessage: undefined,
         success: action.success,
         error: false,
-        messages: []
+        messages: action.messages,
     })),
     on(SectorActions.getAllPaged, (state, action) => ({
         ...state,
@@ -107,7 +107,7 @@ export const sectorReducer = createReducer(
         loaderMessage: undefined,
         success: action.success,
         error: false,
-        messages: []
+        messages: action.messages,
     })),
     on(SectorActions.sectorReset, (state) => ({
       ...state,
