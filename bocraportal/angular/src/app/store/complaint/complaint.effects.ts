@@ -70,4 +70,16 @@ export class ComplaintEffects {
         )
     );
 
+    addDocument$ = createEffect(() => this.actions$.pipe(
+        ofType(ComplaintActions.addDocument),
+        mergeMap(({id, documentTypeId, file, fileName}) => this.complaintRestController.addDocument(id, documentTypeId, file, fileName).pipe(
+            map( document => ComplaintActions.addDocumentSuccess({
+                document,
+                messages: ['Added ${document.documentType.name} with ID ${$document.documentId}.'],
+                success: true
+            })),
+            catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
+        ))
+    ));
+
 }

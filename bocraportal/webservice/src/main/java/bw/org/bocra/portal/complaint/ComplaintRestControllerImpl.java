@@ -18,23 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin()
 @Tag(name = "Complaint", description = "Managing the complaints.")
 public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
-    
-    public ComplaintRestControllerImpl(
-        ComplaintService complaintService    ) {
-        
-        super(
-            complaintService        );
-    }
 
+    public ComplaintRestControllerImpl(
+            ComplaintService complaintService) {
+
+        super(
+                complaintService);
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Searches for a Complaint by "+id);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Searches for a Complaint by " + id);
+            Optional<?> data = Optional.of(complaintService.findById(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -51,10 +50,10 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Displays all Complaints");
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(complaintService.getAll()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -70,11 +69,13 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Displays all Complaints of the specified "+"Page number"+pageNumber+" and Page size "+pageSize);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Displays all Complaints of the specified " + "Page number" + pageNumber + " and Page size "
+                    + pageSize);
+            Optional<?> data = Optional.of(complaintService.getAll(pageNumber, pageSize)); // TODO: Add custom code
+                                                                                           // here;
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -90,11 +91,11 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Deletes a Complaint by Id"+ id);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Deletes a Complaint by Id" + id);
+            Optional<?> data = Optional.of(complaintService.remove(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -110,11 +111,11 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(ComplaintVO complaint) {
         try {
-            logger.debug("Save Complaint "+complaint);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Save Complaint " + complaint);
+            Optional<?> data = Optional.of(complaintService.save(complaint)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -131,10 +132,10 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
             logger.debug("Searchs for a Complaint");
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(complaintService.search(criteria)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();

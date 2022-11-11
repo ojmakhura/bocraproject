@@ -7,6 +7,13 @@ import * as ComplaintActions from '@app/store/complaint/complaint.actions';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as LicenceActions from '@app/store/licence/licence.actions';
+import * as LicenceSelectors from '@app/store/licence/licence.selectors';
+import * as LicenseeActions from '@app/store/licensee/licensee.actions';
+import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
+import * as DocumentTypeSelectors from '@app/store/document/type/document-type.selectors';
+import * as DocumentTypeActions from '@app/store/document/type/document-type.actions';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-complaint-document',
@@ -15,10 +22,63 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ComplaintDocumentComponentImpl extends ComplaintDocumentComponent {
 
-    constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
-        super(data, injector);
-    }
+  currentFile?: File = undefined;
 
-    doNgOnDestroy(): void {
+  constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
+    super(data, injector);
+    this.documentLicences$ = this.store.pipe(select(LicenceSelectors.selectLicences));
+    this.documentLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
+    this.documentDocumentTypes$ = this.store.pipe(select(DocumentTypeSelectors.selectDocumentTypes));
+  }
+
+  doNgOnDestroy(): void {
+  }
+
+  override documentLicenceSearch(): void {
+    this.store.dispatch(
+      LicenceActions.search({
+        criteria: { licenceNumber: this.documentLicenceSearchField.value },
+        loading: true,
+        loaderMessage: 'Searching licences ...'
+      })
+    )
+  }
+
+  override documentLicenseeSearch() : void {
+    let criteria: string = '';
+    criteria = this.documentLicenseeSearchField.value;
+    this.store.dispatch(
+      LicenseeActions.search({
+        criteria: {licenseeName: criteria },
+        loading: true,
+        loaderMessage: 'Searching licensees ...'
+      })
+    );
+  }
+
+  override documentDocumentTypeSearch() : void {
+    let criteria: string = '';
+    criteria = this.documentDocumentTypeSearchField.value;
+    this.store.dispatch(
+      DocumentTypeActions.search({
+        criteria: criteria,
+        loading: true,
+        loaderMessage: 'Searching document types ...'
+      })
+    );
+  }
+
+  onFileSelected(event: any) {
+    if (event) {
+      this.currentFile = event.target.files[0];
+      this.documentDocumentNameControl.patchValue(this.currentFile?.name)
     }
+  }
+
+  override handleDialogDone(data: any): any {
+    if(data.document) {
+      data.document.file = this.currentFile;
+    }
+    return data;
+  }
 }
