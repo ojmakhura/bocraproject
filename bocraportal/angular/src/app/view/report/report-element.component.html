@@ -134,7 +134,7 @@
 						<label for="data-labels" class="col-sm-2 col-form-label">Data Labels</label>
 						<div class="col-sm-10">
 							<select id="data-labels" class="form-select" formControlName="dataLabels"
-								aria-label="Default select example">
+								aria-label="Default select example" (change)="generateColors(true)">
 								<option></option>
 								<option value="licensees"
 									*ngIf="reportLabels !== 'licensees'">Licensees</option>
@@ -151,11 +151,21 @@
 						Colors
 					</button>
 				</div>
+				<!-- <div>
+					<span>{{selectedLabels}}</span>
+				</div>
+				<div>
+					<span>{{dataLabels}}</span>
+				</div>
+				<div>
+					<span>{{selectedDataLabels}}</span>
+				</div> -->
 				<div *ngFor="let chartControl of chartsControl?.controls; let i=index">
 					<app-report-chart 
-						[labels]="selectedLabels" 
+						[labels]="extractLabels(reportLabels)"
+						[labelSource]="reportLabels"
 						[dataLabels]="dataLabels"
-						[selectedDataLabels]="selectedDataLabels" 
+						[selectedDataLabels]="extractLabels(dataLabels)" 
 						[reportType]="reportType"
 						[colors]="colors"
 						[reportChartGroup]="chartControl" 

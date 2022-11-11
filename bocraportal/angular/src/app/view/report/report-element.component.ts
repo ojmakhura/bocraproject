@@ -91,14 +91,36 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     return formFields;
   }
   
-  generateColors() {
-    this.formSubmissions?.forEach(submission => {
-      if(this.dataLabels === 'licensees') {
-        if(!this.colors[submission?.licensee?.licenseeName]) {
-          this.colors[submission?.licensee?.licenseeName] = this.getRandomColor();
-        }
+  generateColors(reset: boolean) {
+    if(reset) {
+      this.colors = {};
+    }
+    
+    if(this.formSubmissions) {
+
+      if(this.dataLabels === 'fields') {
+        this.formSubmissions[0].sections?.forEach((section: DataFieldSectionVO) => {
+          section?.dataFields?.forEach((field: DataFieldVO) => {
+            this.colors[field.formField.fieldId] = this.getRandomColor()
+          })
+        });
+  
+      } else if(this.dataLabels === 'licensees') {
+  
+        this.formSubmissions?.forEach(submission => {
+          if(!this.colors[submission?.licensee?.licenseeName]) {
+            this.colors[submission?.licensee?.licenseeName] = this.getRandomColor();
+          }
+        });
+      } else if(this.dataLabels === 'periods') {
+         this.formSubmissions?.forEach(submission => {
+          this.colors[submission?.period?.periodName] = this.getRandomColor();
+        });
+    
       }
-    });
+
+      console.log(this.colors)
+    }
   }
 
   newForm(reportElement: ReportElement): FormGroup {
@@ -135,7 +157,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   ngAfterViewInit(): void {
     
     this.dataLabelsControl.patchValue('licensees')
-    this.generateColors();
+    this.generateColors(false);
   }
 
   ngOnDestroy(): void {
@@ -382,25 +404,13 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     return filtered ? filtered : [];
   }
 
-  get selectedLabels() {
-    if(this.reportLabels === 'licensees') {
+  extractLabels(source: string) {
+
+    if(source === 'licensees') {
       return this.licenseeSelections?.filter(lc => lc.selected).map(lc => lc.licensee);
-    } else if(this.reportLabels === 'periods') {
+    } else if(source === 'periods') {
       return this.periodSelections?.filter(pr => pr.selected).map(pr => pr.period);
-    } else if(this.reportLabels === 'fields') {
-      return this.fieldSelections?.filter(field => field.selected).map(field => field.field);
-    }
-
-    return [];
-  }
-
-  get selectedDataLabels() {
-
-    if(this.dataLabels === 'licensees') {
-      return this.licenseeSelections?.filter(lc => lc.selected).map(lc => lc.licensee);
-    } else if(this.reportLabels === 'periods') {
-      return this.periodSelections?.filter(pr => pr.selected).map(pr => pr.period);
-    } else if(this.reportLabels === 'fields') {
+    } else if(source === 'fields') {
       return this.fieldSelections?.filter(field => field.selected).map(field => field.field);
     }
 

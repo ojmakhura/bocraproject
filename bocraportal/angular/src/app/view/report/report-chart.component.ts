@@ -10,6 +10,7 @@ import * as SubmissionSelectors from '@app/store/form/submission/form-submission
 import { ReportComponent } from '@app/view/report/report.component';
 import { select } from '@ngrx/store';
 import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js';
+import { e } from 'mathjs';
 import { BaseChartDirective } from 'ng2-charts';
 import { Observable, of } from 'rxjs';
 
@@ -31,8 +32,9 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
   protected formBuilder: FormBuilder;
   @Input() reportType: string;
   @Input() formSubmissions: FormSubmissionVO[] | undefined;
+  @Input() labelSource: string;
   @Input() labels: any[];
-  @Input() selectedDataLabels: string[];
+  @Input() selectedDataLabels: any[];
   @Input() dataLabels: string;
   @Input() colors: any;
   @Input() chartIndex: number;
@@ -49,6 +51,39 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    
+    this.setSections();
+
+    this.reportChartGroup.addControl("period", this.formBuilder.control([]));
+    this.reportChartGroup.addControl("section", this.formBuilder.control([]));
+    this.chartTypeControl.patchValue('bar');
+    this.periodControl.patchValue('all');
+
+    this.setLabels();
+    this.datasets = this.barChartDataSets();
+    
+  }
+
+  ngAfterViewInit(): void {
+    
+  }
+
+  ngOnDestroy(): void {
+  }
+
+  setLabels() {
+    this.labelNames = [];
+    this.labels?.forEach(label => {
+      if(label?.fieldName) {
+        this.labelNames?.push(label.fieldName)
+      } else {
+        this.labelNames?.push(label)
+      }
+      
+    });
+  }
+
+  setSections() {
     let sections = {};
     if(this.formSubmissions && this.formSubmissions.length > 0) {
       this.formSubmissions[0].sections.forEach((section: DataFieldSectionVO) => {
@@ -63,21 +98,6 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
         sectionId: key,
         sectionLabel: sections[key]
       });
-    });
-
-    this.reportChartGroup.addControl("period", this.formBuilder.control([]));
-    this.reportChartGroup.addControl("section", this.formBuilder.control([]));
-    this.chartTypeControl.patchValue('bar');
-    this.periodControl.patchValue('all');
-
-    this.setLabels();
-    this.datasets = this.barChartDataSets();
-  }
-
-  setLabels() {
-    this.labelNames = [];
-    this.labels?.forEach(label => {
-      this.labelNames?.push(label.fieldName)
     });
   }
 
@@ -133,13 +153,6 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
     return this.sectionControl.value;
   }
 
-  ngAfterViewInit(): void {
-    
-  }
-
-  ngOnDestroy(): void {
-  }
-
   selectedChartType() {
     if(this.chartType === 'bar') {
       this.datasets = this.barChartDataSets();
@@ -177,23 +190,28 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
 
       this.filteredSubmissions?.forEach(submission => {
         
-        let fields: DataFieldVO[] = [];
-        let fieldValues: number[] = [];
+        let values: number[] = [];
         
-        submission?.sections?.forEach((section: DataFieldSectionVO) => {
-          fields = [...fields, ...section.dataFields]
-        });
-
-        this.labels?.forEach(label => {
-          let field = fields?.find(f => f.formField.fieldId === label.fieldId);
-          if(field) {
-            fieldValues.push(+field.value);
-          }
-        });
+        if(this.labelSource === 'fields') {
+          let fields: DataFieldVO[] = [];
+          submission?.sections?.forEach((section: DataFieldSectionVO) => {
+            fields = [...fields, ...section.dataFields]
+          });
+  
+          this.labels?.forEach(label => {
+            let field = fields?.find(f => f.formField.fieldId === label.fieldId);
+            if(field) {
+              values.push(+field.value);
+            }
+          });
+        } else if(this.labelSource === 'periods') {
+          let extraction = {};
+          
+        }
 
         datasets.push({
           label: submission?.licensee?.licenseeName,
-          data: fieldValues
+          data: values
         })
       });
 
@@ -208,27 +226,39 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
   }
 
   barChartDataSets(): any[] {
-    
+
+    console.log(this.labels);
     let datasets: any[] = [];
 
-
     if(this.dataLabels === 'licensees') {
+      console.log('licensees')
 
       this.filteredSubmissions?.forEach(submission => {
         
-        let fields: DataFieldVO[] = [];
-        let fieldValues: number[] = [];
+        let values: number[] = [];
+
+        if(this.labelSource == 'fields') {
+          let fields: DataFieldVO[] = [];
         
-        submission?.sections?.forEach((section: DataFieldSectionVO) => {
-          fields = [...fields, ...section.dataFields]
-        });
-        
-        this.labels?.forEach(label => {
-          let field = fields?.find(f => f.formField.fieldId === label.fieldId);
-          if(field) {
-            fieldValues.push(+field.value);
+          submission?.sections?.forEach((section: DataFieldSectionVO) => {
+            fields = [...fields, ...section.dataFields]
+          });
+          
+          this.labels?.forEach(label => {
+            let field = fields?.find(f => f.formField.fieldId === label.fieldId);
+            if(field) {
+              values.push(+field.value);
+            }
+          });
+        } else if(this.labelSource === 'periods') {
+          
+          let extraction = {};
+          if(this.labels.find(label => label === submission?.period?.periodName)) {
+            if(!extraction[submission?.period?.periodName]) {
+              extraction[submission?.period?.periodName] = []
+            }
           }
-        });
+        }
 
         let label = submission?.licensee?.licenseeName;
 
@@ -239,14 +269,55 @@ export class ReportChartComponent  implements OnInit, AfterViewInit, OnDestroy {
         datasets.push({
           label: label,
           backgroundColor: this.colors[submission?.licensee?.licenseeName],
-          data: fieldValues
+          data: values
         })
       });
 
     } else if(this.dataLabels === 'periods') {
 
+      let extraction = {};
+
+      this.filteredSubmissions?.forEach(submission => {
+        console.log(submission);
+        submission?.sections?.forEach((section: DataFieldSectionVO) => {
+          
+        });
+      });
+
     } else if(this.dataLabels === 'fields') {
-      console.log('data');
+
+      let extraction = {};
+
+      this.filteredSubmissions?.forEach(submission => {
+        submission?.sections?.forEach((section: DataFieldSectionVO) => {
+          section?.dataFields?.forEach((field: DataFieldVO) => {
+            
+            if(this.selectedDataLabels.find(label => label.fieldId === field?.formField?.fieldId)) {
+              let label = field?.formField?.fieldId;
+      
+              if(this.period === 'all') {
+                label = `${label} - ${submission?.period?.periodName}`;
+              }
+              if(!extraction[label]) {
+                extraction[label] = [];
+              }
+  
+              extraction[label].push(field.value);
+            }
+          })
+        });
+      });
+
+      
+      Object.keys(extraction).forEach(key => {
+        datasets.push({
+          label: key,
+          backgroundColor: this.colors[key],
+          data: extraction[key]
+        })
+      });
+
+      console.log(datasets);
     }
 
     datasets.sort((a, b) => (a.label > b.label ? 1 : -1))
