@@ -93,7 +93,7 @@ services:
   db:
     container_name: bocraportal-db
     hostname: db
-    image: postgres:14
+    image: postgres:15
     volumes:
       - ${BOCRA_DATA}/db:/var/lib/postgresql/data
       - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql

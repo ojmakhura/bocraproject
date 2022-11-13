@@ -41,6 +41,9 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   @Output() actionIndexEvent = new EventEmitter<number>()
 
   colors = {};
+  selectedLicensees: any[] = [];
+  selectedFields: any[] = [];
+  selectedPeriods: any[] = [];
   
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -158,6 +161,9 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     
     this.dataLabelsControl.patchValue('licensees')
     this.generateColors(false);
+    this.periodSelectionChange();
+    this.fieldSelectionChange();
+    this.licenseeSelectionChange();
   }
 
   ngOnDestroy(): void {
@@ -182,15 +188,17 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
     let selections: FormArray = this.formBuilder.array([]);
     this.fields?.forEach(field => {
-      selections?.push(this.createLicenseeSelectionGroup(fields?.find(f => f === field) ? true : false, field));
+      selections?.push(this.createFieldSelectionGroup(fields?.find(f => f === field) ? true : false, field));
     });
     return selections;
   }
 
-  createFieldSelectionGroup(selected: boolean, field: string): FormGroup {
+  createFieldSelectionGroup(selected: boolean, field: any): FormGroup {
     return this.formBuilder.group({
       selected: [selected],
-      field: [field]
+      fieldId: [field?.fieldId],
+      fieldName: [field?.fieldName],
+      alias: []
     });
   }
 
@@ -229,7 +237,8 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   }
 
   periodSelectionChange() {
-    let selected = this.periodSelections?.filter(sel => sel.selected);
+    this.selectedPeriods = this.periodSelections?.filter(sel => sel.selected);
+    this.selectedLicensees = this.licenseeSelections?.filter(sel => sel.selected);
 
     this.licenseeSelectionsArray?.controls?.forEach(lc => {
       if(this.filteredFormSubmissions?.find(sub => sub.licensee.licenseeName === lc.value.licensee)) {
@@ -240,8 +249,13 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
+  fieldSelectionChange() {
+    this.selectedFields = this.fieldSelections?.filter(sel => sel.selected);
+  }
+
   licenseeSelectionChange() {
-    let selected = this.licenseeSelections?.filter(sel => sel.selected);
+    this.selectedLicensees = this.licenseeSelections?.filter(sel => sel.selected);
+    this.selectedPeriods = this.periodSelections?.filter(sel => sel.selected);
 
     this.periodSelectionsArray?.controls?.forEach(pr => {
       if(this.filteredFormSubmissions?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
@@ -404,14 +418,14 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     return filtered ? filtered : [];
   }
 
-  extractLabels(source: string) {
+  extractReportLabels(source: string) {
 
     if(source === 'licensees') {
       return this.licenseeSelections?.filter(lc => lc.selected).map(lc => lc.licensee);
     } else if(source === 'periods') {
       return this.periodSelections?.filter(pr => pr.selected).map(pr => pr.period);
     } else if(source === 'fields') {
-      return this.fieldSelections?.filter(field => field.selected).map(field => field.field);
+      return this.fieldSelections?.filter(field => field.selected).map(field => field.alial ? field.alias : field.fieldName);
     }
 
     return [];

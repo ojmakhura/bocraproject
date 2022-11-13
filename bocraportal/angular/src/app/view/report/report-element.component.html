@@ -85,6 +85,9 @@
 												<th scope="col">
 													Field Name
 												</th>
+												<th scope="col">
+													Alias
+												</th>
 											</tr>
 										</thead>
 										<tbody formArrayName="fieldSelections">
@@ -92,13 +95,17 @@
 												[formGroupName]="j">
 												<td scope="col">
 													<input type="checkbox" formControlName="selected"
-														aria-label="Checkbox for following text input">
+														aria-label="Checkbox for following text input"
+														(change)="fieldSelectionChange()">
 												</td>
 												<td scope="col">
-													{{ fieldControl?.value?.field?.fieldId }}
+													{{ fieldControl?.value?.fieldId }}
 												</td>
 												<td scope="col">
-													{{ fieldControl?.value?.field?.fieldName }}
+													{{ fieldControl?.value?.fieldName }}
+												</td>
+												<td scope="col">
+													<input type="text" class="form-control" formControlName="alias" (change)="fieldSelectionChange()">
 												</td>
 											</tr>
 										</tbody>
@@ -107,18 +114,6 @@
 							</mat-tab-group>
 						</div>
 					</div>
-					<!-- <div class="mb-3 row">
-						<label for="group-by" class="col-sm-2 col-form-label">Group By</label>
-						<div class="col-sm-10">
-							<select id="group-by" class="form-select"
-									formControlName="groupBy" aria-label="Default select example">
-								<option value=""></option>
-								<option value="licensees">Licensees</option>
-								<option value="periods">Periods</option>
-								<option value="fields">Fields</option>
-							</select>
-						</div>
-					</div> -->
 					<div class="mb-3 row">
 						<label for="report-labels" class="col-sm-2 col-form-label">Report Labels</label>
 						<div class="col-sm-10">
@@ -136,12 +131,9 @@
 							<select id="data-labels" class="form-select" formControlName="dataLabels"
 								aria-label="Default select example" (change)="generateColors(true)">
 								<option></option>
-								<option value="licensees"
-									*ngIf="reportLabels !== 'licensees'">Licensees</option>
-								<option value="periods">
-									Periods</option>
-								<option value="fields">Data
-									Fields</option>
+								<option value="licensees" *ngIf="reportLabels !== 'licensees'">Licensees</option>
+								<option value="periods">Periods</option>
+								<option value="fields">DataFields</option>
 							</select>
 						</div>
 					</div>
@@ -162,14 +154,15 @@
 				</div> -->
 				<div *ngFor="let chartControl of chartsControl?.controls; let i=index">
 					<app-report-chart 
-						[labels]="extractLabels(reportLabels)"
 						[labelSource]="reportLabels"
 						[dataLabels]="dataLabels"
-						[selectedDataLabels]="extractLabels(dataLabels)" 
 						[reportType]="reportType"
 						[colors]="colors"
 						[reportChartGroup]="chartControl" 
 						[formSubmissions]="filteredFormSubmissions"
+						[selectedLicensees]="selectedLicensees"
+						[selectedFields]="selectedFields"
+						[selectedPeriods]="selectedPeriods"
 						[chartIndex]="i">
 					</app-report-chart>
 					<div class="mb-3">
