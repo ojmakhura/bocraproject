@@ -97,7 +97,7 @@ public class ComplaintServiceImpl
         Collection<ComplaintVO> complaints = new ArrayList<>();
 
         if(StringUtils.isNotBlank(criteria)) {
-            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", criteria)
+            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", criteria);
             
             Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
 
