@@ -82,21 +82,20 @@ public class ComplaintServiceImpl
      */
     @Override
     protected Collection<ComplaintVO> handleSearch(String criteria)
-        throws Exception
-    {
+            throws Exception {
 
         Collection<ComplaintVO> complaints = new ArrayList<>();
 
-        if(StringUtils.isNotBlank(criteria)) {
-            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", criteria)
-            
+        if (StringUtils.isNotBlank(criteria)) {
+            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", criteria);
+
             Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
 
             for (Complaint complaint : specs) {
                 complaints.add(complaintDao.toComplaintVO(complaint));
             }
         }
-        
+
         return complaints;
     }
 

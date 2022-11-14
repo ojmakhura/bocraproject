@@ -61,6 +61,20 @@ export const complaintReducer = createReducer(
         loading: action.loading,
         loaderMessage: action.loaderMessage,
     })),
+    on(ComplaintActions.addDocument, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
+    on(ComplaintActions.addDocumentSuccess, (state, action) => ({
+        ...state,
+        document: action.document, 
+        documents: [...state.documents, action.document], 
+        loading: false,
+        loaderMessage: undefined,
+        error: false,
+        messages: action.messages
+    })),
     on(ComplaintActions.getAllSuccess, (state, action) => ({
         ...state,
         complaint: null, 

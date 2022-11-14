@@ -6,6 +6,12 @@
  */
 package bw.org.bocra.portal.complaint;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
@@ -43,6 +49,29 @@ public class ComplaintDaoImpl
         // WARNING! No conversion for target.licensee (can't convert
         // source.getLicensee():bw.org.bocra.portal.licensee.Licensee to
         // bw.org.bocra.portal.licensee.LicenseeVO
+
+        // if (source.getLicensee() != null && source.getLicensee().getId() != null) {
+        // LicenseeVO licensee = getLicenseeDao().toLicenseeVO(source.getLicensee());
+        // target.setLicensee(licensee);
+        // }
+
+        // Collection<DocumentVO> docs = new HashSet<>();
+
+        // for (Document doc : source.getDocuments()) {
+        // DocumentVO dvo = new DocumentVO();
+        // dvo.setId(doc.getId());
+        // dvo.setDocumentName(doc.getDocumentName());
+        // dvo.setDocumentId(doc.getDocumentId());
+
+        // DocumentTypeVO type = new DocumentTypeVO();
+        // type.setCode(doc.getDocumentType().getCode());
+        // type.setId(doc.getDocumentType().getId());
+        // type.setName(doc.getDocumentType().getName());
+
+        // dvo.setDocumentType(type);
+        // docs.add(dvo);
+        // }
+        // target.setDocuments(docs);
     }
 
     /**
