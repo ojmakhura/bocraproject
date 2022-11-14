@@ -8,11 +8,18 @@
  */
 package bw.org.bocra.portal.complaint;
 
+import java.util.ArrayList;
 import java.util.Collection;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.BocraportalSpecifications;
 
 /**
  * @see bw.org.bocra.portal.complaint.ComplaintService
@@ -75,11 +82,22 @@ public class ComplaintServiceImpl
      */
     @Override
     protected Collection<ComplaintVO> handleSearch(String criteria)
-            throws Exception {
-        // TODO implement protected Collection<ComplaintVO> handleSearch(String
-        // criteria)
-        throw new UnsupportedOperationException(
-                "bw.org.bocra.portal.complaint.ComplaintService.handleSearch(String criteria) Not implemented!");
+        throws Exception
+    {
+
+        Collection<ComplaintVO> complaints = new ArrayList<>();
+
+        if(StringUtils.isNotBlank(criteria)) {
+            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", criteria)
+            
+            Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
+
+            for (Complaint complaint : specs) {
+                complaints.add(complaintDao.toComplaintVO(complaint));
+            }
+        }
+        
+        return complaints;
     }
 
     /**
@@ -90,6 +108,18 @@ public class ComplaintServiceImpl
             throws Exception {
         return (Collection<ComplaintVO>) getComplaintDao().loadAll(ComplaintDao.TRANSFORM_COMPLAINTVO, pageNumber,
                 pageSize);
+    }
+
+    @Override
+    protected ComplaintReplyVO handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Boolean handleRemoveComplaintReply(Long id) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

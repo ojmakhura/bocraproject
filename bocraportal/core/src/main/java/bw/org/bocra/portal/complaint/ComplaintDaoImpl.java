@@ -43,10 +43,6 @@ public class ComplaintDaoImpl
         // WARNING! No conversion for target.licensee (can't convert
         // source.getLicensee():bw.org.bocra.portal.licensee.Licensee to
         // bw.org.bocra.portal.licensee.LicenseeVO
-        if (source.getLicensee() != null && source.getLicensee().getId() != null) {
-            LicenseeVO licensee = getLicenseeDao().toLicenseeVO(source.getLicensee());
-            target.setLicensee(licensee);
-        }
     }
 
     /**

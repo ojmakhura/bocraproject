@@ -147,4 +147,18 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+
+    @Override
+    public ResponseEntity<?> handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public ResponseEntity<?> handleRemoveComplaintReply(Long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
