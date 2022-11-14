@@ -78,7 +78,8 @@ public class ComplaintServiceImpl
             throws Exception {
         // TODO implement protected Collection<ComplaintVO> handleSearch(String
         // criteria)
-        return (Collection<ComplaintVO>complaintDao.findByCriteria(ComplaintDao.TRANSFORM_COMPLAINTVO, criteria));
+        throw new UnsupportedOperationException(
+                "bw.org.bocra.portal.complaint.ComplaintService.handleSearch(String criteria) Not implemented!");
     }
 
     /**
