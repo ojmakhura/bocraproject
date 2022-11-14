@@ -21,15 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class ComplaintServiceImpl
         extends ComplaintServiceBase {
-    public ComplaintServiceImpl(
-            ComplaintDao complaint,
-            ComplaintRepository complaintRepository,
+    public ComplaintServiceImpl(ComplaintDao complaintDao, ComplaintRepository complaintRepository,
             MessageSource messageSource) {
-
-        super(
-                complaint,
-                complaintRepository,
-                messageSource);
+        super(complaintDao, complaintRepository, messageSource);
     }
 
     /**
@@ -84,8 +78,7 @@ public class ComplaintServiceImpl
             throws Exception {
         // TODO implement protected Collection<ComplaintVO> handleSearch(String
         // criteria)
-        throw new UnsupportedOperationException(
-                "bw.org.bocra.portal.complaint.ComplaintService.handleSearch(String criteria) Not implemented!");
+        return (Collection<ComplaintVO>complaintDao.findByCriteria(ComplaintDao.TRANSFORM_COMPLAINTVO, criteria));
     }
 
     /**
