@@ -92,9 +92,8 @@ public class ComplaintDaoImpl
             boolean copyIfNull) {
         // TODO verify behavior of complaintVOToEntity
         super.complaintVOToEntity(source, target, copyIfNull);
-        if (source.getLicensee() != null && source.getLicensee().getId() != null) {
-            Licensee licensee = getLicenseeDao().get(source.getLicensee().getId());
-            target.setLicensee(licensee);
+        if (source.getLicensee() != null) {
+            target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
         }
     }
 }
