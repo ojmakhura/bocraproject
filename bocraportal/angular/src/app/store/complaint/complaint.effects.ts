@@ -14,7 +14,7 @@ export class ComplaintEffects {
          this.actions$.pipe(
             ofType(ComplaintActions.findById),
             mergeMap(({id}) => this.complaintRestController.findById(id).pipe(
-                map( complaint => ComplaintActions.findByIdSuccess({complaint, messages: [`Action successful.`], success: true})),
+                map( complaint => ComplaintActions.findByIdSuccess({complaint, messages: [`Complaint ${complaint.id} found.`], success: true})),
                 catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -24,7 +24,7 @@ export class ComplaintEffects {
          this.actions$.pipe(
             ofType(ComplaintActions.save),
             mergeMap(({complaint}) => this.complaintRestController.save(complaint).pipe(
-                map( complaint => ComplaintActions.saveSuccess({complaint, messages: [`Action successful.`], success: true})),
+                map( complaint => ComplaintActions.saveSuccess({complaint, messages: [`Complaint successful saved.`], success: true})),
                 catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -34,7 +34,7 @@ export class ComplaintEffects {
          this.actions$.pipe(
             ofType(ComplaintActions.remove),
             mergeMap(({id}) => this.complaintRestController.remove(id).pipe(
-                map( removed => ComplaintActions.removeSuccess({removed, messages: [`Action successful.`], success: true})),
+                map( removed => ComplaintActions.removeSuccess({removed, messages: [`Complaint successful removed.`], success: true})),
                 catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -44,7 +44,7 @@ export class ComplaintEffects {
          this.actions$.pipe(
             ofType(ComplaintActions.getAll),
             mergeMap(({}) => this.complaintRestController.getAll().pipe(
-                map( complaints => ComplaintActions.getAllSuccess({complaints, messages: [`Action successful.`], success: true})),
+                map( complaints => ComplaintActions.getAllSuccess({complaints, messages: [`${complaints.length} complaints found.`], success: true})),
                 catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -54,7 +54,7 @@ export class ComplaintEffects {
          this.actions$.pipe(
             ofType(ComplaintActions.search),
             mergeMap(({criteria}) => this.complaintRestController.search(criteria).pipe(
-                map( complaints => ComplaintActions.searchSuccess({complaints, messages: [`Action successful.`], success: true})),
+                map( complaints => ComplaintActions.searchSuccess({complaints, messages: [`${complaints.length} complaints found.`], success: true})),
                 catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -64,7 +64,7 @@ export class ComplaintEffects {
          this.actions$.pipe(
             ofType(ComplaintActions.getAllPaged),
             mergeMap(({pageNumber, pageSize}) => this.complaintRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( complaints => ComplaintActions.getAllPagedSuccess({complaints, messages: [`Action successful.`], success: true})),
+                map( complaints => ComplaintActions.getAllPagedSuccess({complaints, messages: [`Page ${pageNumber} found with ${pageSize} complaints.`], success: true})),
                 catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
