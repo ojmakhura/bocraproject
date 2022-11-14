@@ -41,7 +41,6 @@ public class ComplaintDaoImpl
         // TODO verify behavior of toComplaintVO
         super.toComplaintVO(source, target);
         // WARNING! No conversion for target.licensee (can't convert source.getLicensee():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
-        this.licenseeDao.get(null)
     }
 
     /**

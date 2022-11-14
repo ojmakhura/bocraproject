@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import bw.org.bocra.portal.complaint.ComplaintService;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.LicenseeVO;
@@ -27,14 +28,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Document", description = "Managing the documents.")
 public class DocumentRestControllerImpl extends DocumentRestControllerBase {
 
+
+
     private final KeycloakService keycloakService;
     
-    public DocumentRestControllerImpl(DocumentService documentService, KeycloakService keycloakService) {
-        
-        super(documentService);
+    public DocumentRestControllerImpl(DocumentService documentService, ComplaintService complaintService, KeycloakService keycloakService) {
+        super(documentService, complaintService);
         this.keycloakService = keycloakService;
     }
-
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
@@ -234,5 +235,19 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+
+    @Override
+    public ResponseEntity<?> handleUploadComplaintDocument(Long complaintId, MultipartFile file) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public ResponseEntity<?> handleUploadComplaintReplyDocument(Long complaintReplyId, MultipartFile file) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
