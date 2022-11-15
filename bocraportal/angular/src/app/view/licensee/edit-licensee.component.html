@@ -111,7 +111,7 @@
         </div>
       </div>
 
-      <mat-tab-group animationDuration="0ms" class="view-tabs">
+      <mat-tab-group animationDuration="0ms" class="view-tabs" *ngIf="licenseeId">
         <mat-tab label="{{ 'users' | translate }}" *ngIf="licenseeId">
           <div>
             <!-- <button type="button" matTooltip="Add User" (click)="licenseeUsersAddDialog()" class="btn btn-primary"

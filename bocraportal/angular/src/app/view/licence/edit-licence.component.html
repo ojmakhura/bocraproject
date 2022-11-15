@@ -144,53 +144,7 @@
                     <button color="accent" type="button" (click)="editLicenceFormReset()"
                         class="btn btn-outline-primary"><span translate>reset</span></button>
                 </div>
-                <mat-tab-group animationDuration="0ms" class="view-tabs">
-                    <!-- <mat-tab label="{{'documents' | translate}}">
-                        <div>
-                            <button type="button" (click)="editLicenceNewDocument()" class="btn btn-primary">
-                                <mat-icon>add_box</mat-icon>
-                            </button>
-                            <mat-table matSort [dataSource]="licenceDocuments" #documentsSort="matSort"
-                                class="table table-bordered table-striped" style="width: 100%;">
-                                <ng-container matColumnDef="actions">
-                                    <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-                                    <mat-cell *matCellDef="let row; index as i">
-                                        <button type="button" color="accent" (click)="deleteFromLicenceDocuments(i)"
-                                            class="btn btn-primary">
-                                            <mat-icon>delete</mat-icon>
-                                        </button>
-                                        <button type="button" color="accent" (click)="doEditLicenceDocuments(row)" class="btn btn-primary">
-		                                    <mat-icon>edit</mat-icon>
-		                                </button>
-                                        <button type="button" color="accent" (click)="fileDownload(row?.id)"
-                                            class="btn btn-info">
-                                            <mat-icon>file_download</mat-icon>
-                                        </button>
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="id">
-                                    <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="documentId">
-                                    <mat-header-cell *matHeaderCellDef translate>document.id</mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> {{ row?.documentId }} </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="documentName">
-                                    <mat-header-cell *matHeaderCellDef translate>document.name</mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> {{ row?.documentName }} </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="documentType.name">
-                                    <mat-header-cell *matHeaderCellDef translate>document.type.name</mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> {{ row?.documentType?.name }} </mat-cell>
-                                </ng-container>
-                                <mat-header-row *matHeaderRowDef="licenceDocumentsModalColumns"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: licenceDocumentsModalColumns;"></mat-row>
-                            </mat-table>
-                            <mat-paginator #licenceDocumentsPaginator="matPaginator" [pageSize]="10"
-                                [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-                        </div>
-                    </mat-tab> -->
+                <mat-tab-group animationDuration="0ms" class="view-tabs" *ngIf="licenceId">
 
                     <mat-tab label="{{'documents' | translate}}" *ngIf="licenceId">
                         <div>
