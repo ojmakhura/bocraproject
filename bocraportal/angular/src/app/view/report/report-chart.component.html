@@ -54,12 +54,14 @@
 						<tr>
 							<th scope="col"></th>
 							<th scope="col" *ngFor="let label of labelNames; let m=index">{{label}}</th>
+							<th scope="col" *ngFor="let label of additionalReportLabels; let m=index">{{label.name}}</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr *ngFor="let x of datasets; let m=index">
 							<th scope="row">{{ x.label }}</th>
 							<td *ngFor="let val of x.data">{{val}}</td>
+							<td></td>
 						</tr>
 					</tbody>
 				</table>

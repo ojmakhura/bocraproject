@@ -52,6 +52,9 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() dataLabels: string;
   @Input() colors: any;
   @Input() chartIndex: number;
+  @Input() additionalReportLabels: any[]
+  @Input() additionalDataLabels: any[]
+
   sections: any[] = [];
   periods: any[] = [];
   labelNames: string[] = [];
@@ -76,6 +79,8 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setLabels();
     this.createChartData();
     this.datasets = this.barChartDataSets();
+    console.log(this.additionalReportLabels)
+    console.log(this.additionalDataLabels)
   }
 
   ngAfterViewInit(): void {}
@@ -427,15 +432,12 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     let datasets: any[] = [];
 
     if (this.dataLabels === 'licensees') {
-      console.log('==================licensees================')
       datasets = this.getLicenseeCombinedDataSet();
     } else if (this.dataLabels === 'periods') {
-      console.log('==================periods================')
       
       datasets = this.getPeriodCombinedDatasets();
 
     } else if (this.dataLabels === 'fields') {
-      console.log('==================================')
       datasets = this.getFieldsCombinedDataSet();
     }
 

@@ -44,6 +44,8 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   selectedLicensees: any[] = [];
   selectedFields: any[] = [];
   selectedPeriods: any[] = [];
+  additionalReportLabels: any[] = []
+  additionalDataLabels: any[] = []
   
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -68,7 +70,9 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
     this.reportTypeControl.patchValue('default')
     this.reportLabelsControl.setValue('fields');
-
+    
+    this.reportElementGroup.addControl('reportLabelsAnalytics', this.formBuilder.array([]));
+    this.reportElementGroup.addControl('dataLabelsAnalytics', this.formBuilder.array([]));
   }
 
   get licensees() {
@@ -169,7 +173,14 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   ngOnDestroy(): void {
   }
 
-  test(){
+  additionalReportLabelChange(){
+    console.log(this.reportLabelsAnalytics)
+    this.additionalReportLabels = this.reportLabelsAnalytics;
+  }
+
+  additionalDataLabelChange(){
+    console.log(this.dataLabelsAnalytics)
+    this.additionalDataLabels = this.dataLabelsAnalytics;
   }
 
   createChartsArrayControl(charts: ReportChart[]) {
@@ -287,6 +298,58 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
       chartType: [],
       chartCaption: [],
     }));
+  }
+
+  get reportLabelsAnalyticsControl(): FormArray {
+    return this.reportElementGroup?.get('reportLabelsAnalytics') as FormArray
+  }
+
+  addLabelsAnalytic(target: string) {
+
+    if(target === 'report') {
+      this.reportLabelsAnalyticsControl.push(this.createAnalyticsGroup())
+    } else {
+
+      this.dataLabelsAnalyticsControl.push(this.createAnalyticsGroup())
+    }
+
+    this.additionalDataLabelChange();
+  }
+
+  removeLabelsAnalytic(target: string, index: number) {
+
+    if(target === 'report') {
+      this.reportLabelsAnalyticsControl.removeAt(index)
+      this.additionalReportLabelChange();
+    } else {
+
+      this.dataLabelsAnalyticsControl.removeAt(index)
+      this.additionalDataLabelChange();
+    }
+  }
+
+  private createAnalyticsGroup() {
+    return this.formBuilder.group({
+      type: [],
+      sources: [],
+      name: []
+    });
+  }
+
+  removeFromArray(arrayControl: FormArray, index: number) {
+    arrayControl.removeAt(index);
+  }
+
+  get reportLabelsAnalytics(): any[] {
+    return this.reportLabelsAnalyticsControl.value;
+  }
+
+  get dataLabelsAnalyticsControl(): FormArray {
+    return this.reportElementGroup?.get('dataLabelsAnalytics') as FormArray
+  }
+
+  get dataLabelsAnalytics(): any[] {
+    return this.dataLabelsAnalyticsControl.value;
   }
 
   get reportElement(): ReportElement {
