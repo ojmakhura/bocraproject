@@ -96,4 +96,10 @@ public class ComplaintDaoImpl
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
         }
     }
+
+    @Override
+    public Complaint complaintReplyVOToEntity(ComplaintReplyVO complaintReplyVO) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
