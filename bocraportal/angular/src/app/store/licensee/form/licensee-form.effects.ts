@@ -19,8 +19,8 @@ export class LicenseeFormEffects {
           map((licenseeForm) =>
             LicenseeFormActions.findByIdSuccess({
               licenseeForm,
-              messages: [],
-              success: false,
+              messages: [`Licencee form ${id} found.`],
+              success: true,
             })
           ),
           catchError(({ error }) => [
@@ -40,7 +40,7 @@ export class LicenseeFormEffects {
             LicenseeFormActions.findByFormSuccess({
               licenseeForms,
               messages: [`${licenseeForms.length} licensee forms found.`],
-              success: false,
+              success: true,
             })
           ),
           catchError(({ error }) => [
@@ -60,7 +60,7 @@ export class LicenseeFormEffects {
             LicenseeFormActions.findByFormSuccess({
               licenseeForms,
               messages: [`${licenseeForms.length} licensee forms found.`],
-              success: false,
+              success: true,
             })
           ),
           catchError(({ error }) => [

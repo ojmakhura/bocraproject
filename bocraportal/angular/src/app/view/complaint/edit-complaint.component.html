@@ -163,7 +163,7 @@
 						<span translate>save</span>
 					</button>
 					<button type="button" (click)="editComplaintDelete()" class="btn btn-outline-primary"
-						*ngIf="deleteUnrestricted">
+					*ngIf="complaintId && deleteUnrestricted">
 						<span translate>delete</span>
 					</button>
 					<!-- <button type="button" (click)="editComplaintNewDocument()" class="btn btn-outline-primary">

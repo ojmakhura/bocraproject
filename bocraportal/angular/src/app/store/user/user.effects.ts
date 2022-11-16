@@ -70,7 +70,7 @@ export class UserEffects {
       mergeMap(({ criteria }) =>
         this.userRestController.search(criteria).pipe(
           map((users) =>
-            UserActions.searchSuccess({ users: users, messages: [`Found ${users.length} users.`], success: false })
+            UserActions.searchSuccess({ users: users, messages: [`Found ${users.length} users.`], success: true })
           ),
           catchError(({ error }) => [UserActions.userFailure({ messages: [error] })])
         )

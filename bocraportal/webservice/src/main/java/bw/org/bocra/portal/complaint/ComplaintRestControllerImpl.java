@@ -5,24 +5,24 @@
 //
 package bw.org.bocra.portal.complaint;
 
-import bw.org.bocra.portal.document.DocumentService;
-import bw.org.bocra.portal.document.DocumentVO;
-import bw.org.bocra.portal.document.type.DocumentTypeVO;
-import bw.org.bocra.portal.keycloak.KeycloakService;
-import bw.org.bocra.portal.keycloak.KeycloakUserService;
+// import bw.org.bocra.portal.document.DocumentService;
+// import bw.org.bocra.portal.document.DocumentVO;
+// import bw.org.bocra.portal.document.type.DocumentTypeVO;
+// import bw.org.bocra.portal.keycloak.KeycloakService;
+// import bw.org.bocra.portal.keycloak.KeycloakUserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Optional;
 import java.time.LocalDateTime;
 
-import org.keycloak.representations.AccessToken;
+// import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+// import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/complaint")
@@ -30,11 +30,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "Complaint", description = "Managing the complaints.")
 public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
-    public ComplaintRestControllerImpl(
-            ComplaintService complaintService) {
+    public ComplaintRestControllerImpl(ComplaintService complaintService) {
 
-        super(
-                complaintService);
+        super(complaintService);
+
     }
 
     @Override
@@ -160,43 +159,6 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
-        try {
-            logger.debug("Add Document by Id " + id + ", document type Id" + documentTypeId + ", file" + file
-                    + " and file name" + fileName);
-            AccessToken token = keycloakService.getSecurityContext().getToken();
-            DocumentVO document = new DocumentVO();
-            document.setCreatedBy(token.getPreferredUsername());
-            document.setCreatedDate(LocalDateTime.now());
-            document.setFile(file.getBytes());
-            document.setDocumentName(fileName);
-
-            ComplaintVO complaint = new ComplaintVO();
-            complaint.setId(id);
-            // document.setComplaint(complaint);
-
-            DocumentTypeVO docType = new DocumentTypeVO();
-            docType.setId(documentTypeId);
-
-            document.setDocumentType(docType);
-            document = this.documentService.save(document);
-            ResponseEntity<?> response;
-
-            if (document != null && document.getId() != null) {
-                response = ResponseEntity.status(HttpStatus.OK).body(document);
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @Override
     public ResponseEntity<?> handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) {
         // TODO Auto-generated method stub
         return null;
@@ -207,4 +169,43 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
         // TODO Auto-generated method stub
         return null;
     }
+
+    // @Override
+    // public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId,
+    // MultipartFile file, String fileName) {
+    // try {
+    // logger.debug("Add Document by Id " + id + ", document type Id" +
+    // documentTypeId + ", file" + file
+    // + " and file name" + fileName);
+    // AccessToken token = keycloakService.getSecurityContext().getToken();
+    // DocumentVO document = new DocumentVO();
+    // document.setCreatedBy(token.getPreferredUsername());
+    // document.setCreatedDate(LocalDateTime.now());
+    // document.setFile(file.getBytes());
+    // document.setDocumentName(fileName);
+
+    // ComplaintVO complaint = new ComplaintVO();
+    // complaint.setId(id);
+    // document.setComplaint(complaint);
+
+    // DocumentTypeVO docType = new DocumentTypeVO();
+    // docType.setId(documentTypeId);
+
+    // document.setDocumentType(docType);
+    // document = this.documentService.save(document);
+    // ResponseEntity<?> response;
+
+    // if (document != null && document.getId() != null) {
+    // response = ResponseEntity.status(HttpStatus.OK).body(document);
+    // } else {
+    // response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    // }
+
+    // return response;
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // logger.error(e.getMessage());
+    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    // }
+    // }
 }

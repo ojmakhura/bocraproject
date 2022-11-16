@@ -26,11 +26,17 @@ import bw.org.bocra.portal.BocraportalSpecifications;
  */
 @Service("complaintService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-public class ComplaintServiceImpl
-        extends ComplaintServiceBase {
+public class ComplaintServiceImpl extends ComplaintServiceBase {
+
+    private final ComplaintReplyRepository complaintReplyRepository;
+    private final ComplaintReplyDao complaintReplyDao;
+
     public ComplaintServiceImpl(ComplaintDao complaintDao, ComplaintRepository complaintRepository,
-            MessageSource messageSource) {
+            MessageSource messageSource, ComplaintReplyRepository complaintReplyRepository,
+            ComplaintReplyDao complaintReplyDao) {
         super(complaintDao, complaintRepository, messageSource);
+        this.complaintReplyRepository = complaintReplyRepository;
+        this.complaintReplyDao = complaintReplyDao;
     }
 
     /**
@@ -111,14 +117,14 @@ public class ComplaintServiceImpl
 
     @Override
     protected ComplaintReplyVO handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) throws Exception {
-        // TODO Auto-generated method stub
+
         return null;
     }
 
     @Override
     protected Boolean handleRemoveComplaintReply(Long id) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        this.complaintReplyRepository.deleteById(id);
+        return true;
     }
 
 }

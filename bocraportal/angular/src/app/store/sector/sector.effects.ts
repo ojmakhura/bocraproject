@@ -17,7 +17,7 @@ export class SectorEffects {
                 map( sector => SectorActions.findByIdSuccess({
                     sector,
                     messages: [`Sector for ${sector?.name} found.`],
-                    success: false
+                    success: true
                 })),
                 catchError(({error}) => [SectorActions.sectorFailure({messages: [error?.error ? error.error : error]})])
             ))
@@ -58,7 +58,7 @@ export class SectorEffects {
             mergeMap(({ id }) => this.sectorRestController.remove(id).pipe(
                 map( removed => SectorActions.removeSuccess({
                     removed,
-                    messages: [`Sector successfully removed.`],
+                    messages: [`Sector ${id} successfully removed.`],
                     success: true
                 })),
                 catchError(({error}) => [SectorActions.sectorFailure({messages: [error?.error ? error.error : error]})])

@@ -50,28 +50,14 @@ public class ComplaintDaoImpl
         // source.getLicensee():bw.org.bocra.portal.licensee.Licensee to
         // bw.org.bocra.portal.licensee.LicenseeVO
 
-        // if (source.getLicensee() != null && source.getLicensee().getId() != null) {
-        // LicenseeVO licensee = getLicenseeDao().toLicenseeVO(source.getLicensee());
-        // target.setLicensee(licensee);
-        // }
+        if (source.getLicensee() != null && source.getLicensee().getId() != null) {
+            LicenseeVO licensee = new LicenseeVO();
+            licensee.setId(source.getLicensee().getId());
+            licensee.setUin(source.getLicensee().getUin());
+            licensee.setLicenseeName(source.getLicensee().getLicenseeName());
 
-        // Collection<DocumentVO> docs = new HashSet<>();
-
-        // for (Document doc : source.getDocuments()) {
-        // DocumentVO dvo = new DocumentVO();
-        // dvo.setId(doc.getId());
-        // dvo.setDocumentName(doc.getDocumentName());
-        // dvo.setDocumentId(doc.getDocumentId());
-
-        // DocumentTypeVO type = new DocumentTypeVO();
-        // type.setCode(doc.getDocumentType().getCode());
-        // type.setId(doc.getDocumentType().getId());
-        // type.setName(doc.getDocumentType().getName());
-
-        // dvo.setDocumentType(type);
-        // docs.add(dvo);
-        // }
-        // target.setDocuments(docs);
+            target.setLicensee(licensee);
+        }
     }
 
     /**
