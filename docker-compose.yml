@@ -78,7 +78,7 @@ services:
       # traefik-https the actual router using HTTPS
       # Uses the environment variable DOMAIN
       - traefik.http.routers.traefik-public-https.rule=Host(`${PROXY_DOMAIN}`)
-      - traefik.http.routers.traefik-public-https.entrypoints=web
+      - traefik.http.routers.traefik-public-https.entrypoints=websecure
       - traefik.http.routers.traefik-public-https.tls=${SSL_SECURE}
       # Use the special Traefik service api@internal with the web UI/Dashboard
       - traefik.http.routers.traefik-public-https.service=api@internal
