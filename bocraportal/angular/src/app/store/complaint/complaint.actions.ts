@@ -6,6 +6,8 @@ import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-
 export enum ComplaintActionType {
     FIND_BY_ID = '[Complaint] Find By Id',
     FIND_BY_ID_SUCCESS = '[Complaint] Find By Id Success',
+    FIND_BY_COMPLAINT_ID = '[Complaint] Find By Complaint Id',
+    FIND_BY_COMPLAINT_ID_SUCCESS = '[Complaint] Find By Complaint Id Success',
     SAVE = '[Complaint] Save',
     SAVE_SUCCESS = '[Complaint] Save Success',
     REMOVE = '[Complaint] Remove',
@@ -33,6 +35,16 @@ export const findById = createAction(
 
 export const findByIdSuccess = createAction(
     ComplaintActionType.FIND_BY_ID_SUCCESS,
+    props<{ complaint: ComplaintVO | any, messages: any[], success: boolean}>()
+);
+
+export const findByComplaintId = createAction(
+    ComplaintActionType.FIND_BY_COMPLAINT_ID,
+    props<{ complaintId: string | any , loading: boolean, loaderMessage: string | undefined }>()
+);
+
+export const findByComplaintIdSuccess = createAction(
+    ComplaintActionType.FIND_BY_COMPLAINT_ID_SUCCESS,
     props<{ complaint: ComplaintVO | any, messages: any[], success: boolean}>()
 );
 

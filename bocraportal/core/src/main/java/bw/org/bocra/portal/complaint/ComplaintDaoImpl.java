@@ -17,6 +17,7 @@ import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.Licensee;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +58,10 @@ public class ComplaintDaoImpl
             licensee.setLicenseeName(source.getLicensee().getLicenseeName());
 
             target.setLicensee(licensee);
+        }
+
+        if(CollectionUtils.isNotEmpty(source.getComplaintReplies())) {
+
         }
     }
 
@@ -106,11 +111,5 @@ public class ComplaintDaoImpl
         if (source.getLicensee() != null) {
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
         }
-    }
-
-    @Override
-    public Complaint complaintReplyVOToEntity(ComplaintReplyVO complaintReplyVO) {
-        // TODO Auto-generated method stub
-        return null;
     }
 }

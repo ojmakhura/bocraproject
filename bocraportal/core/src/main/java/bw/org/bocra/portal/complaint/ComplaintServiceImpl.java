@@ -10,7 +10,10 @@ package bw.org.bocra.portal.complaint;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Sort;
@@ -55,6 +58,11 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     protected ComplaintVO handleSave(ComplaintVO complaint)
             throws Exception {
         Complaint compl = getComplaintDao().complaintVOToEntity(complaint);
+        if(compl.getId() == null) {
+            String generatedString = RandomStringUtils.random(15, true, true);
+            compl.setComplaintId(generatedString);
+        }
+
         compl = complaintRepository.save(compl);
 
         if (complaint.getId() != null) {
@@ -119,7 +127,7 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     protected ComplaintReplyVO handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) throws Exception {
 
         ComplaintReply cr = complaintReplyDao.complaintReplyVOToEntity(reply);
-        cr.setComplaint(complaintRepository.getById(complaintId));
+        cr.setComplaint(complaintRepository.getReferenceById(complaintId));
         cr = complaintReplyRepository.save(cr);
 
         if (reply.getId() != null) {
@@ -136,6 +144,26 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
         }
         this.complaintReplyRepository.deleteById(id);
         return true;
+    }
+
+    @Override
+    protected ComplaintVO handleFindByComplaintId(String complaintId) throws Exception {
+
+        Collection<ComplaintVO> complaints = new ArrayList<>();
+
+        if (StringUtils.isNotBlank(complaintId)) {
+            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", complaintId);
+
+            List<Complaint> entities = getComplaintRepository().findAll(spec, Sort.by("id").descending());
+
+            if(CollectionUtils.isEmpty(entities)) {
+                return null;
+            }
+
+            return complaintDao.toComplaintVO(entities.get(0));
+        }
+
+        return null;
     }
 
 }

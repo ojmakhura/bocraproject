@@ -54,6 +54,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() chartIndex: number;
   @Input() additionalReportLabels: any[]
   @Input() additionalDataLabels: any[]
+  @Input() customReportLabels: any;
 
   sections: any[] = [];
   periods: any[] = [];
@@ -137,6 +138,8 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     } else if (this.labelSource === 'periods') {
       this.labelNames = [...new Set(this.filteredSubmissions.map((sub) => sub?.period.periodName))];
     }
+
+    Object.keys(this.customReportLabels)?.forEach(key => this.labelNames.push(this.customReportLabels[key].name));
   }
 
   setSections() {
@@ -266,6 +269,10 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
         Object.keys(licenseeData).forEach((key) => {
           extraction[dataLabel]?.data.push(+licenseeData[key]);
+        });
+
+        Object.keys(this.customReportLabels)?.forEach(key => {
+          extraction[dataLabel]?.data.push(this.customReportLabels[key][submission.id]);
         });
       });
     } else if (this.labelSource === 'periods') {

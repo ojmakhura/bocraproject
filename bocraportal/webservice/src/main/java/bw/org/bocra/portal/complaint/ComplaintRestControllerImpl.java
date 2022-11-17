@@ -5,16 +5,9 @@
 //
 package bw.org.bocra.portal.complaint;
 
-// import bw.org.bocra.portal.document.DocumentService;
-// import bw.org.bocra.portal.document.DocumentVO;
-// import bw.org.bocra.portal.document.type.DocumentTypeVO;
-// import bw.org.bocra.portal.keycloak.KeycloakService;
-// import bw.org.bocra.portal.keycloak.KeycloakUserService;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Optional;
-import java.time.LocalDateTime;
 
 // import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
@@ -22,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-// import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/complaint")
@@ -183,6 +175,26 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
         try {
             logger.debug("Deletes a Complaint Reply with Id" + id);
             Optional<?> data = Optional.of(complaintService.removeComplaintReply(id)); // TODO: Add custom code here;
+            ResponseEntity<?> response;
+
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByComplaintId(String complaintId) {
+        try {
+            logger.debug("Searches for a Complaint assigned by " + complaintId);
+            Optional<?> data = Optional.of(complaintService.findByComplaintId(complaintId)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {

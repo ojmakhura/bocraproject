@@ -22,6 +22,23 @@ export const complaintReducer = createReducer(
         error: false,
         messages: action.messages
     })),
+    on(ComplaintActions.findByComplaintId, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
+    on(ComplaintActions.findByComplaintIdSuccess, (state, action) => ({
+        ...state,
+        complaint: action.complaint, 
+        criteria: null, 
+        complaints: [], 
+        id: null, 
+        loading: false,
+        loaderMessage: undefined,
+        success: action.success,
+        error: false,
+        messages: action.messages
+    })),
     on(ComplaintActions.save, (state, action) => ({
         ...state,
         loading: action.loading,

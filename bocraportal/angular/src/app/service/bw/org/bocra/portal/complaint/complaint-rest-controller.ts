@@ -23,6 +23,10 @@ export class ComplaintRestController {
         return this.http.get<ComplaintVO | any>(`${this.path}/${id}`, {});
     }
 
+    public findByComplaintId(complaintId: string | any ): Observable<ComplaintVO | any> {
+        return this.http.get<ComplaintVO | any>(`${this.path}/${complaintId}`, {});
+    }
+
     public getAll(): Observable<ComplaintVO[] | any[]> {
         return this.http.get<ComplaintVO[] | any[]>(`${this.path}/all`);
     }

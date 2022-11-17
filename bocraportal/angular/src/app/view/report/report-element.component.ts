@@ -48,6 +48,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   additionalReportLabels: any[] = [];
   additionalReportCalculations: any[] = [];
   additionalDataLabels: any[] = [];
+  customReportLabels: any = {};
   
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -188,39 +189,54 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
       return math.variance(values)
     } else if(calculationType === 'std') {
       return math.std(values)
+    } else if(calculationType === 'min') {
+      return math.min(values)
+    } else if(calculationType === 'max') {
+      return math.max(values)
     }
   }
 
   additionalReportLabelChange(index: number){
     // console.log(this.reportLabelsAnalytics)
     this.additionalReportLabels = this.reportLabelsAnalytics;
-    // console.log(this.additionalReportLabels);
-    let additional: any[] = []; 
+    console.log(this.additionalReportLabels);
+    
+    let changedlabel: any = this.additionalReportLabels[index];
+
+    if(!changedlabel?.type || !changedlabel?.name) {
+      return;
+    }
 
     if(this.reportLabels === 'fields' && this.dataLabels === 'licensees') {
-      let sourceString: string = this.additionalReportLabels[index]?.sources;
+      let sourceString: string = changedlabel?.sources;
+      this.customReportLabels[index] = {
+        name: changedlabel?.name,
+
+      };
       
       let sources: string[] = sourceString?.split(',')?.map(val => val.trim())?.filter(val => val?.length > 0);
-      // console.log(sources);
-      // console.log(this.filteredFormSubmissions);
       this.filteredFormSubmissions?.forEach(submission => {
         let fields: DataFieldVO[] = [];
         submission?.sections?.forEach((section: DataFieldSectionVO) => {
           fields = [...fields, ...section?.dataFields];
         });
 
-        // console.log(fields);
         let calcFields = fields?.filter((field) => sources?.find(source => field?.formField?.fieldId === source));
         let calValues = calcFields?.map(value => +value?.value);
 
-        if(this.additionalReportLabels[index]?.type === 'custom') {
+        if(changedlabel?.type === 'custom') {
 
         } else {
-          let calc = this.calculate(calValues, this.additionalReportLabels[index]?.type);
-          console.log(calc)
+          if(calValues && calValues.length > 0) {
+            let calc = this.calculate(calValues, changedlabel?.type);
+            this.customReportLabels[index][submission?.id] = calc;
+          }          
         }
       });
     }
+
+    console.log(this.customReportLabels);
+
   }
 
   additionalDataLabelChange(){
@@ -382,6 +398,11 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
       this.dataLabelsAnalyticsControl.removeAt(index)
       this.additionalDataLabelChange();
     }
+
+    this.customReportLabels = {};
+    this.additionalReportLabels?.forEach((value, index) => {
+      this.additionalReportLabelChange(index);
+    })
   }
 
   removeFromArray(arrayControl: FormArray, index: number) {

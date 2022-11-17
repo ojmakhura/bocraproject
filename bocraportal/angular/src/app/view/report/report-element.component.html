@@ -135,10 +135,10 @@
 										Type
 									</th>
 									<th scope="col">
-										Analytic Sources
+										Analytic Name
 									</th>
 									<th scope="col">
-										Analytic Name
+										Analytic Sources
 									</th>
 								</tr>
 							</thead>
@@ -162,14 +162,16 @@
 												<option value="median">Median</option>
 												<option value="variance">Variance</option>
 												<option value="std">Standard Deviation</option>
+												<option value="min">Minimum</option>
+												<option value="max">Maximum</option>
 											</select>
 										</div>
 									</td>
 									<td scope="col">
-										<textarea type="text" class="form-control" formControlName="sources" (change)="additionalReportLabelChange(j)"></textarea>
+										<input type="text" class="form-control" formControlName="name" (change)="additionalReportLabelChange(j)" *ngIf="fieldControl.value?.type">
 									</td>
 									<td scope="col">
-										<input type="text" class="form-control" formControlName="name" (change)="additionalReportLabelChange(j)">
+										<textarea type="text" class="form-control" formControlName="sources" (change)="additionalReportLabelChange(j)" *ngIf="fieldControl.value?.name"></textarea>
 									</td>
 								</tr>
 							</tbody>
@@ -192,7 +194,7 @@
 					</div>
 				</div>
 
-				<div class="card mb-3">
+				<div class="card mb-3" *ngIf="false">
 					<table class="table" *ngIf="dataLabelsAnalyticsControl?.length > 0">
 						<thead>
 							<tr>
@@ -264,6 +266,7 @@
 						[selectedPeriods]="selectedPeriods"
 						[additionalReportLabels]="additionalReportLabels"
 						[additionalDataLabels]="additionalDataLabels"
+						[customReportLabels]="customReportLabels"
 						[chartIndex]="i">
 					</app-report-chart>
 					<div class="mb-3">
