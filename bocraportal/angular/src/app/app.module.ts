@@ -47,6 +47,8 @@ import { UserModule } from '@app/view/user/user.module';
 import { AuthModule } from './auth';
 import { initializeKeycloak } from './auth/keycloak-init.factory';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { NgChartsModule } from 'ng2-charts';
+import 'chart.js';
 
 @NgModule({
     declarations: [
@@ -87,6 +89,7 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
         KeycloakAngularModule,
         AuthModule,
         AppRoutingModule, // must be imported as the last module as it contains the fallback route
+        NgChartsModule,
     ],
     exports: [
     ],

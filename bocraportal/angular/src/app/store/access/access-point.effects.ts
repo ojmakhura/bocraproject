@@ -17,7 +17,7 @@ export class AccessPointEffects {
           map((accessPoint) =>
             AccessPointActions.findByIdSuccess({ accessPoint, messages: [`Access point ${accessPoint.name} found.`], success: true })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error] })])
+          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
@@ -47,7 +47,7 @@ export class AccessPointEffects {
           map((removed) =>
             AccessPointActions.removeSuccess({ removed, messages: [`Access point successfully removed.`], success: true })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
@@ -61,7 +61,7 @@ export class AccessPointEffects {
           map((accessPoints) =>
             AccessPointActions.getAllSuccess({ accessPoints, messages: [`${accessPoints.length} access point types found.`], success: true })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
@@ -75,7 +75,7 @@ export class AccessPointEffects {
           map((accessPoints) =>
             AccessPointActions.searchSuccess({ accessPoints, messages: [`${accessPoints.length} access point types found.`], success: true })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
@@ -89,7 +89,7 @@ export class AccessPointEffects {
           map((accessPoints) =>
             AccessPointActions.getAllPagedSuccess({ accessPoints, messages: [`Page ${pageNumber} found with ${pageSize} access points.`], success: true })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )

@@ -25,21 +25,18 @@ import bw.org.bocra.portal.BocraportalSpecifications;
  * @see bw.org.bocra.portal.complaint.ComplaintService
  */
 @Service("complaintService")
-@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
-public class ComplaintServiceImpl
-    extends ComplaintServiceBase
-{
-    public ComplaintServiceImpl(
-        ComplaintDao complaint,
-        ComplaintRepository complaintRepository,
-        MessageSource messageSource
-    ) {
-        
-        super(
-            complaint,
-            complaintRepository,
-            messageSource
-        );
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+public class ComplaintServiceImpl extends ComplaintServiceBase {
+
+    private final ComplaintReplyRepository complaintReplyRepository;
+    private final ComplaintReplyDao complaintReplyDao;
+
+    public ComplaintServiceImpl(ComplaintDao complaintDao, ComplaintRepository complaintRepository,
+            MessageSource messageSource, ComplaintReplyRepository complaintReplyRepository,
+            ComplaintReplyDao complaintReplyDao) {
+        super(complaintDao, complaintRepository, messageSource);
+        this.complaintReplyRepository = complaintReplyRepository;
+        this.complaintReplyDao = complaintReplyDao;
     }
 
     /**
@@ -47,10 +44,8 @@ public class ComplaintServiceImpl
      */
     @Override
     protected ComplaintVO handleFindById(Long id)
-        throws Exception
-    {
-        // TODO implement protected  ComplaintVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.ComplaintService.handleFindById(Long id) Not implemented!");
+            throws Exception {
+        return complaintDao.toComplaintVO(complaintRepository.getById(id));
     }
 
     /**
@@ -58,10 +53,15 @@ public class ComplaintServiceImpl
      */
     @Override
     protected ComplaintVO handleSave(ComplaintVO complaint)
-        throws Exception
-    {
-        // TODO implement protected  ComplaintVO handleSave(ComplaintVO complaint)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.ComplaintService.handleSave(ComplaintVO complaint) Not implemented!");
+            throws Exception {
+        Complaint compl = getComplaintDao().complaintVOToEntity(complaint);
+        compl = complaintRepository.save(compl);
+
+        if (complaint.getId() != null) {
+            return getComplaintDao().toComplaintVO(compl);
+        }
+
+        return complaint;
     }
 
     /**
@@ -69,10 +69,9 @@ public class ComplaintServiceImpl
      */
     @Override
     protected boolean handleRemove(Long id)
-        throws Exception
-    {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.ComplaintService.handleRemove(Long id) Not implemented!");
+            throws Exception {
+        this.complaintRepository.deleteById(id);
+        return true;
     }
 
     /**
@@ -80,10 +79,8 @@ public class ComplaintServiceImpl
      */
     @Override
     protected Collection<ComplaintVO> handleGetAll()
-        throws Exception
-    {
-        // TODO implement protected  Collection<ComplaintVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.ComplaintService.handleGetAll() Not implemented!");
+            throws Exception {
+        return (Collection<ComplaintVO>) getComplaintDao().loadAll(ComplaintDao.TRANSFORM_COMPLAINTVO);
     }
 
     /**
@@ -91,21 +88,20 @@ public class ComplaintServiceImpl
      */
     @Override
     protected Collection<ComplaintVO> handleSearch(String criteria)
-        throws Exception
-    {
+            throws Exception {
 
         Collection<ComplaintVO> complaints = new ArrayList<>();
 
-        if(StringUtils.isNotBlank(criteria)) {
+        if (StringUtils.isNotBlank(criteria)) {
             Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", criteria);
-            
+
             Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
 
             for (Complaint complaint : specs) {
                 complaints.add(complaintDao.toComplaintVO(complaint));
             }
         }
-        
+
         return complaints;
     }
 
@@ -114,22 +110,32 @@ public class ComplaintServiceImpl
      */
     @Override
     protected Collection<ComplaintVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throws Exception
-    {
-        // TODO implement protected  Collection<ComplaintVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.ComplaintService.handleGetAll(Integer pageNumber, Integer pageSize) Not implemented!");
+            throws Exception {
+        return (Collection<ComplaintVO>) getComplaintDao().loadAll(ComplaintDao.TRANSFORM_COMPLAINTVO, pageNumber,
+                pageSize);
     }
 
     @Override
     protected ComplaintReplyVO handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+
+        ComplaintReply cr = complaintReplyDao.complaintReplyVOToEntity(reply);
+        cr.setComplaint(complaintRepository.getById(complaintId));
+        cr = complaintReplyRepository.save(cr);
+
+        if (reply.getId() != null) {
+            return complaintReplyDao.toComplaintReplyVO(cr);
+        }
+
+        return reply;
     }
 
     @Override
     protected Boolean handleRemoveComplaintReply(Long id) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        if (id == null) {
+            return false;
+        }
+        this.complaintReplyRepository.deleteById(id);
+        return true;
     }
 
 }

@@ -6,8 +6,17 @@
  */
 package bw.org.bocra.portal.complaint;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.licensee.Licensee;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,17 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("complaintDao")
 @Transactional
 public class ComplaintDaoImpl
-    extends ComplaintDaoBase
-{
-    
+        extends ComplaintDaoBase {
+
     public ComplaintDaoImpl(
-        LicenseeRepository licenseeRepository, ComplaintReplyRepository complaintReplyRepository, DocumentRepository documentRepository, ComplaintRepository complaintRepository
-    ) {
+            LicenseeRepository licenseeRepository, ComplaintReplyRepository complaintReplyRepository,
+            DocumentRepository documentRepository, ComplaintRepository complaintRepository) {
 
         super(
-            licenseeRepository,
-            complaintReplyRepository, documentRepository, complaintRepository
-        );
+                licenseeRepository,
+                complaintReplyRepository, documentRepository, complaintRepository);
     }
 
     /**
@@ -35,37 +42,43 @@ public class ComplaintDaoImpl
      */
     @Override
     public void toComplaintVO(
-        Complaint source,
-        ComplaintVO target)
-    {
+            Complaint source,
+            ComplaintVO target) {
         // TODO verify behavior of toComplaintVO
         super.toComplaintVO(source, target);
-        // WARNING! No conversion for target.licensee (can't convert source.getLicensee():bw.org.bocra.portal.licensee.Licensee to bw.org.bocra.portal.licensee.LicenseeVO
+        // WARNING! No conversion for target.licensee (can't convert
+        // source.getLicensee():bw.org.bocra.portal.licensee.Licensee to
+        // bw.org.bocra.portal.licensee.LicenseeVO
+
+        if (source.getLicensee() != null && source.getLicensee().getId() != null) {
+            LicenseeVO licensee = new LicenseeVO();
+            licensee.setId(source.getLicensee().getId());
+            licensee.setUin(source.getLicensee().getUin());
+            licensee.setLicenseeName(source.getLicensee().getLicenseeName());
+
+            target.setLicensee(licensee);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ComplaintVO toComplaintVO(final Complaint entity)
-    {
+    public ComplaintVO toComplaintVO(final Complaint entity) {
         // TODO verify behavior of toComplaintVO
         return super.toComplaintVO(entity);
     }
 
     /**
-     * Retrieves the entity object that is associated with the specified value object
+     * Retrieves the entity object that is associated with the specified value
+     * object
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private Complaint loadComplaintFromComplaintVO(ComplaintVO complaintVO)
-    {
-        if (complaintVO.getId() == null)
-        {
-            return  Complaint.Factory.newInstance();
-        }
-        else
-        {
+    private Complaint loadComplaintFromComplaintVO(ComplaintVO complaintVO) {
+        if (complaintVO.getId() == null) {
+            return Complaint.Factory.newInstance();
+        } else {
             return this.load(complaintVO.getId());
         }
     }
@@ -73,8 +86,7 @@ public class ComplaintDaoImpl
     /**
      * {@inheritDoc}
      */
-    public Complaint complaintVOToEntity(ComplaintVO complaintVO)
-    {
+    public Complaint complaintVOToEntity(ComplaintVO complaintVO) {
         // TODO verify behavior of complaintVOToEntity
         Complaint entity = this.loadComplaintFromComplaintVO(complaintVO);
         this.complaintVOToEntity(complaintVO, entity, true);
@@ -86,13 +98,12 @@ public class ComplaintDaoImpl
      */
     @Override
     public void complaintVOToEntity(
-        ComplaintVO source,
-        Complaint target,
-        boolean copyIfNull)
-    {
+            ComplaintVO source,
+            Complaint target,
+            boolean copyIfNull) {
         // TODO verify behavior of complaintVOToEntity
         super.complaintVOToEntity(source, target, copyIfNull);
-        if(source.getLicensee() != null) {
+        if (source.getLicensee() != null) {
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
         }
     }

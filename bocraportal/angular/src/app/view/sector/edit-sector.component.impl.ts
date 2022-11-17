@@ -102,7 +102,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     criteria = this.sectorLicenseesSearchField.value;
     this.store.dispatch(
       LicenseeActions.search({
-        criteria: { uin: criteria, licenseeName: criteria },
+        criteria: { licenseeName: criteria },
         loading: true,
         loaderMessage: 'Searching licensees ...'
       })
@@ -171,14 +171,9 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override sectorFormsSearch() {
-    let criteria: FormCriteria = new FormCriteria();
-
-    criteria.code = this.sectorFormsSearchField.value;
-    criteria.formName = this.sectorFormsSearchField.value;
-
     this.store.dispatch(
       FormActions.searchForms({
-        criteria: criteria,
+        criteria: {formName: this.sectorFormsSearchField.value},
         loading: true,
         loaderMessage: 'Searching forms ...'
       })

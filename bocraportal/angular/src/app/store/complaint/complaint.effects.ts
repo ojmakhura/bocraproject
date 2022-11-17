@@ -8,66 +8,101 @@ import { ComplaintRestController } from '@app/service/bw/org/bocra/portal/compla
 @Injectable()
 export class ComplaintEffects {
 
-    constructor(private actions$: Actions, private complaintRestController: ComplaintRestController) {}
+    constructor(private actions$: Actions, private complaintRestController: ComplaintRestController) { }
 
-    findById$ = createEffect(() => 
-         this.actions$.pipe(
+    findById$ = createEffect(() =>
+        this.actions$.pipe(
             ofType(ComplaintActions.findById),
-            mergeMap(({id}) => this.complaintRestController.findById(id).pipe(
-                map( complaint => ComplaintActions.findByIdSuccess({complaint, messages: [`Action successful.`], success: true})),
-                catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
+            mergeMap(({ id }) => this.complaintRestController.findById(id).pipe(
+                map(complaint => ComplaintActions.findByIdSuccess({ complaint, messages: [`Complaint ${complaint.complaintId} found.`], success: true })),
+                catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])
             ))
         )
     );
 
-    save$ = createEffect(() => 
-         this.actions$.pipe(
+    save$ = createEffect(() =>
+        this.actions$.pipe(
             ofType(ComplaintActions.save),
-            mergeMap(({complaint}) => this.complaintRestController.save(complaint).pipe(
-                map( complaint => ComplaintActions.saveSuccess({complaint, messages: [`Action successful.`], success: true})),
-                catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
+            mergeMap(({ complaint }) => this.complaintRestController.save(complaint).pipe(
+                map(complaint => ComplaintActions.saveSuccess({ complaint, messages: [`Complaint ${complaint.complaintId} successful saved.`], success: true })),
+                catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])
             ))
         )
     );
 
-    remove$ = createEffect(() => 
-         this.actions$.pipe(
+    remove$ = createEffect(() =>
+        this.actions$.pipe(
             ofType(ComplaintActions.remove),
-            mergeMap(({id}) => this.complaintRestController.remove(id).pipe(
-                map( removed => ComplaintActions.removeSuccess({removed, messages: [`Action successful.`], success: true})),
-                catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
+            mergeMap(({ id }) => this.complaintRestController.remove(id).pipe(
+                map(removed => ComplaintActions.removeSuccess({ removed, messages: [`Complaint successful removed.`], success: true })),
+                catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])
             ))
         )
     );
 
-    getAll$ = createEffect(() => 
-         this.actions$.pipe(
+    getAll$ = createEffect(() =>
+        this.actions$.pipe(
             ofType(ComplaintActions.getAll),
-            mergeMap(({}) => this.complaintRestController.getAll().pipe(
-                map( complaints => ComplaintActions.getAllSuccess({complaints, messages: [`Action successful.`], success: true})),
-                catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
+            mergeMap(({ }) => this.complaintRestController.getAll().pipe(
+                map(complaints => ComplaintActions.getAllSuccess({ complaints, messages: [`${complaints.length} complaints found.`], success: true })),
+                catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])
             ))
         )
     );
 
-    search$ = createEffect(() => 
-         this.actions$.pipe(
+    search$ = createEffect(() =>
+        this.actions$.pipe(
             ofType(ComplaintActions.search),
-            mergeMap(({criteria}) => this.complaintRestController.search(criteria).pipe(
-                map( complaints => ComplaintActions.searchSuccess({complaints, messages: [`Action successful.`], success: true})),
-                catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
+            mergeMap(({ criteria }) => this.complaintRestController.search(criteria).pipe(
+                map(complaints => ComplaintActions.searchSuccess({ complaints, messages: [`${complaints.length} complaints found.`], success: true })),
+                catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])
             ))
         )
     );
 
-    getAllPaged$ = createEffect(() => 
-         this.actions$.pipe(
+    getAllPaged$ = createEffect(() =>
+        this.actions$.pipe(
             ofType(ComplaintActions.getAllPaged),
-            mergeMap(({pageNumber, pageSize}) => this.complaintRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( complaints => ComplaintActions.getAllPagedSuccess({complaints, messages: [`Action successful.`], success: true})),
-                catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
+            mergeMap(({ pageNumber, pageSize }) => this.complaintRestController.getAllPaged(pageNumber, pageSize).pipe(
+                map(complaints => ComplaintActions.getAllPagedSuccess({ complaints, messages: [`Page ${pageNumber} found with ${pageSize} complaints.`], success: true })),
+                catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])
             ))
         )
     );
+
+    addComplaintReply$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ComplaintActions.addComplaintReply),
+            mergeMap(({ complaintId, reply }) => this.complaintRestController.addComplaintReply(complaintId, reply).pipe(
+                map(complaintReplyVO => ComplaintActions.addComplaintReplySuccess({ 
+                    complaintReplyVO, 
+                    messages: [`Complaint Reply added successfully.`], 
+                    success: true })),
+                catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])
+            ))
+        )
+    );
+
+    removeComplaintReply$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ComplaintActions.removeComplaintReply),
+            mergeMap(({ id }) => this.complaintRestController.removeComplaintReply(id).pipe(
+                map(removed => ComplaintActions.removeComplaintReplySuccess({ removed, messages: [`Complaint Reply removed successfully.`], success: true })),
+                catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])
+            ))
+        )
+    );
+    // addDocument$ = createEffect(() => this.actions$.pipe(
+    //     ofType(ComplaintActions.addDocument),
+    //     mergeMap(({id, documentTypeId, file, fileName}) => this.complaintRestController.addDocument(id, documentTypeId, file, fileName).pipe(
+    //         map( document => ComplaintActions.addDocumentSuccess({
+    //             document,
+    //             messages: ['Added ${document.documentType.name} with ID ${$document.documentId}.'],
+    //             success: true
+    //         })),
+    //         catchError(({error}) => [ComplaintActions.complaintFailure({messages: [error?.error ? error?.error : error]})])
+    //     ))
+    // ));
+
 
 }
