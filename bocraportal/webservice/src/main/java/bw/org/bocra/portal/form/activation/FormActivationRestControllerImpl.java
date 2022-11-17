@@ -112,6 +112,9 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
+            if(e instanceof ConstraintViolationException) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form activation cant be deleted.");
+            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

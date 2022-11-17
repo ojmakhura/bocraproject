@@ -6,6 +6,8 @@
 package bw.org.bocra.portal.access;
 
 import java.util.Optional;
+
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -146,6 +148,10 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
+            if(e instanceof ConstraintViolationException) {
+                // throw new eFormActivationServiceException("This form activation has been already done.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Access Point has been already done.");
+            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

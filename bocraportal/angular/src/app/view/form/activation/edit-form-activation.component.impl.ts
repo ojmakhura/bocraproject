@@ -128,18 +128,23 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   }
 
   override beforeEditFormActivationDelete(form: EditFormActivationDeleteForm): void {
+    if(form?.formActivation?.id){
+      if(!(form?.formActivation?.formSubmissions.length>0) && confirm('Are you sure you want to delete the form activation?')) {
 
-    if(form?.formActivation?.id && confirm('Are you sure you want to delete the form activation?')) {
+        this.store.dispatch(
+          FormActivationActions.remove({
+            id: form.formActivation.id,
+            loading: true,
+            loaderMessage: 'Removing form activations ...'
+          })
+        );
+        this.editFormActivationFormReset();
+      }else{
+        this.store.dispatch(FormActivationActions.formActivationFailure({ messages: ['This Form activation can not be deleted, it has submissions'] }));
+      }
+    }
 
-      this.store.dispatch(
-        FormActivationActions.remove({
-          id: form.formActivation.id,
-          loading: true,
-          loaderMessage: 'Removing form activations ...'
-        })
-      );
-      this.editFormActivationFormReset();
-    }else {
+    else {
       this.store.dispatch(FormActivationActions.formActivationFailure({ messages: ['Please select something to delete'] }));
     }
   }

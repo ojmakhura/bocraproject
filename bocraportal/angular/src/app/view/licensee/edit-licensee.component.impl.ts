@@ -216,16 +216,23 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
-    if (form?.licensee?.id && confirm("Are you sure you want to delete the licensee?")) {
-      this.store.dispatch(
-        LicenseeActions.remove({
-          id: form?.licensee?.id,
-          loading: false,
-          loaderMessage: 'Removing licensee ...'
-        })
-      );
-      this.editLicenseeFormReset();
-    } else {
+    if(form?.licensee?.id){
+      if(!(form?.licensee?.users.length>0) && !(form?.licensee?.forms.length>0) && !(form?.licensee?.documents.length>0) && !(form?.licensee?.sectors.length>0) && confirm('Are you sure you want to delete the form activation?')) {
+
+        this.store.dispatch(
+           LicenseeActions.remove({
+             id: form?.licensee?.id,
+             loading: false,
+             loaderMessage: 'Removing licensee ...'
+           })
+        );
+        this.editLicenseeFormReset();
+      }else{
+        this.store.dispatch(LicenseeActions.licenseeFailure({ messages: ['This Licensee can not be deleted it has attachments  '] }));
+      }
+    }
+
+    else {
       this.store.dispatch(LicenseeActions.licenseeFailure({ messages: ['Please select something to delete'] }));
     }
   }
