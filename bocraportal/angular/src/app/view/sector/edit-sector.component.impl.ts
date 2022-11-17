@@ -110,16 +110,23 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override beforeEditSectorDelete(form: EditSectorDeleteForm): void {
-    if (form?.sector?.id && confirm('Are you sure you want to delete the sector?')) {
-      this.store.dispatch(
-        SectorActions.remove({
-          id: form?.sector?.id,
-          loading: false,
-          loaderMessage: ''
-        })
-      );
-      this.editSectorFormReset();
-    } else {
+    if(form?.sector?.id){
+      if(!(form?.sector?.forms.length>0) && confirm('Are you sure you want to delete the Sector?')) {
+
+        this.store.dispatch(
+          SectorActions.remove({
+            id: form?.sector?.id,
+            loading: true,
+            loaderMessage: 'Removing form sectors ...'
+          })
+        );
+        this.editSectorFormReset();
+      }else{
+        this.store.dispatch(SectorActions.sectorFailure({ messages: ['This Sector has forms hence can not be deleted'] }));
+      }
+    }
+
+    else {
       this.store.dispatch(SectorActions.sectorFailure({ messages: ['Please select something to delete'] }));
     }
   }

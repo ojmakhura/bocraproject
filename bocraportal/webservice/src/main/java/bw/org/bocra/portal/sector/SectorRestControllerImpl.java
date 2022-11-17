@@ -7,6 +7,8 @@ package bw.org.bocra.portal.sector;
 
 import java.util.Collection;
 import java.util.Optional;
+
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -127,6 +129,10 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
+            if(e instanceof ConstraintViolationException) {
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Sector has been already created.");
+            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
                

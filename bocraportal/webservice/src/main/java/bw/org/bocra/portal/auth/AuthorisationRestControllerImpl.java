@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -112,6 +114,10 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
+            if(e instanceof ConstraintViolationException) {
+                // throw new eFormActivationServiceException("This form activation has been already done.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Authorisation has been already done.");
+            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

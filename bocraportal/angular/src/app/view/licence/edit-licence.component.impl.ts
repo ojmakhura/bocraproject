@@ -110,18 +110,26 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
   }
 
   override beforeEditLicenceDelete(form: EditLicenceDeleteForm): void {
-    if (form?.licence?.id && confirm('Are you sure you want to delete the licence?')) {
-      this.store.dispatch(LicenceActions.remove({
-        id: form?.licence?.id,
-        loading: false,
-        loaderMessage: 'Removing licence ...'
-      }));
-      this.editLicenceFormReset();
-    } else {
+    if(form?.licence?.id){
+      if(!(form?.licence?.documents.length>0) && confirm('Are you sure you want to delete the form activation?')) {
+
+        this.store.dispatch(
+          LicenceActions.remove({
+            id: form.licence.id,
+            loading: true,
+            loaderMessage: 'Removing form Licence ...'
+          })
+        );
+        this.editLicenceFormReset();
+      }else{
+        this.store.dispatch(LicenceActions.licenceFailure({ messages: ['This Licence can not be deleted it has documents attached'] }));
+      }
+    }
+
+    else {
       this.store.dispatch(LicenceActions.licenceFailure({ messages: ['Please select something to delete'] }));
     }
   }
-
   override afterEditLicenceNewDocument(form: EditLicenceNewDocumentForm, dialogData: any): void {
 
     if(dialogData) {

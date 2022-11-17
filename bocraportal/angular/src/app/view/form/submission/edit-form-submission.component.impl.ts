@@ -211,20 +211,42 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   /**
    * This method may be overwritten
    */
-  override beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
-    if (form?.formSubmission?.id && confirm('Are you sure you want to delete the form?')) {
-      this.store.dispatch(
-        FormSubmissionActions.remove({
-          id: form.formSubmission.id,
-          loading: true,
-          loaderMessage: 'Removing form submissions ...'
-        })
-      );
-      this.editFormSubmissionFormReset();
-    } else {
+
+   override beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
+    if(form?.formSubmission?.id){
+      if(!(form?.formSubmission?.period?.id) && confirm('Are you sure you want to delete the form activation?')) {
+
+        this.store.dispatch(
+          FormSubmissionActions.remove({
+            id: form.formSubmission?.id,
+            loading: true,
+            loaderMessage: 'Removing form submission ...'
+          })
+        );
+        this.editFormSubmissionFormReset();
+      }else{
+        this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['This form submission can not be deleted, it has attachments'] }));
+      }
+    }
+
+    else {
       this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
     }
-  }
+  } 
+  // override beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
+  //   if (form?.formSubmission?.id && confirm('Are you sure you want to delete the form?')) {
+  //     this.store.dispatch(
+  //       FormSubmissionActions.remove({
+  //         id: form.formSubmission.id,
+  //         loading: true,
+  //         loaderMessage: 'Removing form submissions ...'
+  //       })
+  //     );
+  //     this.editFormSubmissionFormReset();
+  //   } else {
+  //     this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
+  //   }
+  // }
   
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
     if (this.formSubmissionControl.valid) {
