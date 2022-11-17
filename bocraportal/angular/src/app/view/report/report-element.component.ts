@@ -10,6 +10,7 @@ import * as SubmissionSelectors from '@app/store/form/submission/form-submission
 import { ReportComponent } from '@app/view/report/report.component';
 import { select } from '@ngrx/store';
 import { ChartData } from 'chart.js';
+import * as math from 'mathjs';
 import { BaseChartDirective } from 'ng2-charts';
 import { Observable, of } from 'rxjs';
 import { ReportChart } from './report-chart.component';
@@ -44,8 +45,9 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   selectedLicensees: any[] = [];
   selectedFields: any[] = [];
   selectedPeriods: any[] = [];
-  additionalReportLabels: any[] = []
-  additionalDataLabels: any[] = []
+  additionalReportLabels: any[] = [];
+  additionalReportCalculations: any[] = [];
+  additionalDataLabels: any[] = [];
   
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -173,9 +175,52 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   ngOnDestroy(): void {
   }
 
-  additionalReportLabelChange(){
-    console.log(this.reportLabelsAnalytics)
+  private calculate(values: number[], calculationType: string) {
+    if(calculationType === 'sum') {
+      return math.sum(values)
+    } else if(calculationType === 'mean') {
+      return math.mean(values)
+    } else if(calculationType === 'mode') {
+      return math.mode(values)
+    } else if(calculationType === 'median') {
+      return math.median(values)
+    } else if(calculationType === 'variance') {
+      return math.variance(values)
+    } else if(calculationType === 'std') {
+      return math.std(values)
+    }
+  }
+
+  additionalReportLabelChange(index: number){
+    // console.log(this.reportLabelsAnalytics)
     this.additionalReportLabels = this.reportLabelsAnalytics;
+    // console.log(this.additionalReportLabels);
+    let additional: any[] = []; 
+
+    if(this.reportLabels === 'fields' && this.dataLabels === 'licensees') {
+      let sourceString: string = this.additionalReportLabels[index]?.sources;
+      
+      let sources: string[] = sourceString?.split(',')?.map(val => val.trim())?.filter(val => val?.length > 0);
+      // console.log(sources);
+      // console.log(this.filteredFormSubmissions);
+      this.filteredFormSubmissions?.forEach(submission => {
+        let fields: DataFieldVO[] = [];
+        submission?.sections?.forEach((section: DataFieldSectionVO) => {
+          fields = [...fields, ...section?.dataFields];
+        });
+
+        // console.log(fields);
+        let calcFields = fields?.filter((field) => sources?.find(source => field?.formField?.fieldId === source));
+        let calValues = calcFields?.map(value => +value?.value);
+
+        if(this.additionalReportLabels[index]?.type === 'custom') {
+
+        } else {
+          let calc = this.calculate(calValues, this.additionalReportLabels[index]?.type);
+          console.log(calc)
+        }
+      });
+    }
   }
 
   additionalDataLabelChange(){
@@ -307,10 +352,21 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   addLabelsAnalytic(target: string) {
 
     if(target === 'report') {
-      this.reportLabelsAnalyticsControl.push(this.createAnalyticsGroup())
+      this.reportLabelsAnalyticsControl.push(
+        this.formBuilder.group({
+          type: [],
+          sources: [],
+          name: []
+        })
+      );
     } else {
 
-      this.dataLabelsAnalyticsControl.push(this.createAnalyticsGroup())
+      this.dataLabelsAnalyticsControl.push(
+        this.formBuilder.group({
+          type: [],
+          name: []
+        })
+      );
     }
 
     this.additionalDataLabelChange();
@@ -320,20 +376,12 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
     if(target === 'report') {
       this.reportLabelsAnalyticsControl.removeAt(index)
-      this.additionalReportLabelChange();
+      this.additionalReportLabelChange(index);
     } else {
 
       this.dataLabelsAnalyticsControl.removeAt(index)
       this.additionalDataLabelChange();
     }
-  }
-
-  private createAnalyticsGroup() {
-    return this.formBuilder.group({
-      type: [],
-      sources: [],
-      name: []
-    });
   }
 
   removeFromArray(arrayControl: FormArray, index: number) {

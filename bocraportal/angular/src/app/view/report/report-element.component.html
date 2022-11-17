@@ -154,21 +154,22 @@
 									<td scope="col">
 										<div class="col-sm-10">
 											<select id="report-labels" class="form-select" formControlName="type"
-												aria-label="Default select example" (change)="additionalReportLabelChange()">
+												aria-label="Default select example" (change)="additionalReportLabelChange(j)">
+												<option value="custom">Custom</option>
 												<option value="sum">Sum</option>
-												<option value="average">Average</option>
 												<option value="mean">Mean</option>
 												<option value="mode">Mode</option>
 												<option value="median">Median</option>
 												<option value="variance">Variance</option>
+												<option value="std">Standard Deviation</option>
 											</select>
 										</div>
 									</td>
 									<td scope="col">
-										<input type="text" class="form-control" formControlName="sources" (change)="additionalReportLabelChange()">
+										<textarea type="text" class="form-control" formControlName="sources" (change)="additionalReportLabelChange(j)"></textarea>
 									</td>
 									<td scope="col">
-										<input type="text" class="form-control" formControlName="name" (change)="additionalReportLabelChange()">
+										<input type="text" class="form-control" formControlName="name" (change)="additionalReportLabelChange(j)">
 									</td>
 								</tr>
 							</tbody>
@@ -200,9 +201,6 @@
 									Type
 								</th>
 								<th scope="col">
-									Analytic Sources
-								</th>
-								<th scope="col">
 									Analytic Name
 								</th>
 							</tr>
@@ -221,16 +219,13 @@
 										<select id="report-labels" class="form-select" formControlName="type"
 											aria-label="Default select example" (change)="additionalDataLabelChange()">
 											<option value="sum">Sum</option>
-											<option value="average">Average</option>
 											<option value="mean">Mean</option>
 											<option value="mode">Mode</option>
 											<option value="median">Median</option>
 											<option value="variance">Variance</option>
+											<option value="std">Standard Deviation</option>
 										</select>
 									</div>
-								</td>
-								<td scope="col">
-									<input type="text" class="form-control" formControlName="sources" (change)="additionalDataLabelChange()">
 								</td>
 								<td scope="col">
 									<input type="text" class="form-control" formControlName="name" (change)="additionalDataLabelChange()">
