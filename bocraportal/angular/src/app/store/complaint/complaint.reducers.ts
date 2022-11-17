@@ -61,20 +61,6 @@ export const complaintReducer = createReducer(
         loading: action.loading,
         loaderMessage: action.loaderMessage,
     })),
-    on(ComplaintActions.addDocument, (state, action) => ({
-        ...state,
-        loading: action.loading,
-        loaderMessage: action.loaderMessage,
-    })),
-    on(ComplaintActions.addDocumentSuccess, (state, action) => ({
-        ...state,
-        document: action.document, 
-        documents: [...state.documents, action.document], 
-        loading: false,
-        loaderMessage: undefined,
-        error: false,
-        messages: action.messages
-    })),
     on(ComplaintActions.getAllSuccess, (state, action) => ({
         ...state,
         complaint: null, 
@@ -119,6 +105,42 @@ export const complaintReducer = createReducer(
         loaderMessage: undefined,
         success: action.success,
         error: false,
+        messages: action.messages
+    })),
+    on(ComplaintActions.addComplaintReply, (state, action) => ({
+        ...state, 
+        loaderMessage: action.loaderMessage,
+        loading: action.loading,
+    })),
+    on(ComplaintActions.addComplaintReplySuccess, (state, action) => ({
+        ...state,
+        complaints: [], 
+        complaintReply: null, 
+        id: null, 
+        criteria: null, 
+        document: null, 
+        complaint: null, 
+        loaderMessage: undefined,
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(ComplaintActions.removeComplaintReply, (state, action) => ({
+        ...state,
+        loaderMessage: action.loaderMessage,
+        loading: action.loading,
+    })),
+    on(ComplaintActions.removeComplaintReplySuccess, (state, action) => ({
+        ...state,
+        complaints: [], 
+        complaintReply: null, 
+        id: null, 
+        criteria: null, 
+        document: null, 
+        complaint: null, 
+        loaderMessage: undefined,
+        loading: false,
+        success: action.success,
         messages: action.messages
     })),
     on(ComplaintActions.complaintReset, (state) => ({

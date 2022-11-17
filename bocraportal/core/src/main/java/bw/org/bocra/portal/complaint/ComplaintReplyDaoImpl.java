@@ -16,20 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("complaintReplyDao")
 @Transactional
 public class ComplaintReplyDaoImpl
-    extends ComplaintReplyDaoBase
-{
-    
+        extends ComplaintReplyDaoBase {
+
     public ComplaintReplyDaoImpl(
-        ComplaintRepository complaintRepository,
-        DocumentRepository documentRepository,
-        ComplaintReplyRepository complaintReplyRepository
-    ) {
+            ComplaintRepository complaintRepository,
+            DocumentRepository documentRepository,
+            ComplaintReplyRepository complaintReplyRepository) {
 
         super(
-            complaintRepository,
-            documentRepository,
-            complaintReplyRepository
-        );
+                complaintRepository,
+                documentRepository,
+                complaintReplyRepository);
     }
 
     /**
@@ -37,52 +34,45 @@ public class ComplaintReplyDaoImpl
      */
     @Override
     public void toComplaintReplyVO(
-        ComplaintReply source,
-        ComplaintReplyVO target)
-    {
+            ComplaintReply source,
+            ComplaintReplyVO target) {
         // TODO verify behavior of toComplaintReplyVO
         super.toComplaintReplyVO(source, target);
-        // WARNING! No conversion for target.complaint (can't convert source.getComplaint():bw.org.bocra.portal.complaint.Complaint to bw.org.bocra.portal.complaint.ComplaintVO
-        // WARNING! No conversion for target.documents (can't convert source.getDocuments():bw.org.bocra.portal.document.Document to bw.org.bocra.portal.document.DocumentVO
+        // WARNING! No conversion for target.complaint (can't convert
+        // source.getComplaint():bw.org.bocra.portal.complaint.Complaint to
+        // bw.org.bocra.portal.complaint.ComplaintVO
+        // WARNING! No conversion for target.documents (can't convert
+        // source.getDocuments():bw.org.bocra.portal.document.Document to
+        // bw.org.bocra.portal.document.DocumentVO
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ComplaintReplyVO toComplaintReplyVO(final ComplaintReply entity)
-    {
+    public ComplaintReplyVO toComplaintReplyVO(final ComplaintReply entity) {
         // TODO verify behavior of toComplaintReplyVO
         return super.toComplaintReplyVO(entity);
     }
 
     /**
-     * Retrieves the entity object that is associated with the specified value object
+     * Retrieves the entity object that is associated with the specified value
+     * object
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private ComplaintReply loadComplaintReplyFromComplaintReplyVO(ComplaintReplyVO complaintReplyVO)
-    {
-        // TODO implement loadComplaintReplyFromComplaintReplyVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.loadComplaintReplyFromComplaintReplyVO(ComplaintReplyVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
-        if (complaintReplyVO.getId() == null)
-        {
-            return  ComplaintReply.Factory.newInstance();
-        }
-        else
-        {
+    private ComplaintReply loadComplaintReplyFromComplaintReplyVO(ComplaintReplyVO complaintReplyVO) {
+        if (complaintReplyVO.getId() == null) {
+            return ComplaintReply.Factory.newInstance();
+        } else {
             return this.load(complaintReplyVO.getId());
         }
-        */
     }
 
     /**
      * {@inheritDoc}
      */
-    public ComplaintReply complaintReplyVOToEntity(ComplaintReplyVO complaintReplyVO)
-    {
+    public ComplaintReply complaintReplyVOToEntity(ComplaintReplyVO complaintReplyVO) {
         // TODO verify behavior of complaintReplyVOToEntity
         ComplaintReply entity = this.loadComplaintReplyFromComplaintReplyVO(complaintReplyVO);
         this.complaintReplyVOToEntity(complaintReplyVO, entity, true);
@@ -94,10 +84,9 @@ public class ComplaintReplyDaoImpl
      */
     @Override
     public void complaintReplyVOToEntity(
-        ComplaintReplyVO source,
-        ComplaintReply target,
-        boolean copyIfNull)
-    {
+            ComplaintReplyVO source,
+            ComplaintReply target,
+            boolean copyIfNull) {
         // TODO verify behavior of complaintReplyVOToEntity
         super.complaintReplyVOToEntity(source, target, copyIfNull);
     }

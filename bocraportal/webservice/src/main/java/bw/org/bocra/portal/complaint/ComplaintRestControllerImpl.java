@@ -160,52 +160,41 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            logger.debug("Reply Complaint with Complaint Id:" + complaintId);
+            Optional<?> data = Optional.of(complaintService.addComplaintReply(complaintId, reply));
+            ResponseEntity<?> response;
+
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
     @Override
     public ResponseEntity<?> handleRemoveComplaintReply(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            logger.debug("Deletes a Complaint Reply with Id" + id);
+            Optional<?> data = Optional.of(complaintService.removeComplaintReply(id)); // TODO: Add custom code here;
+            ResponseEntity<?> response;
+
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
-
-    // @Override
-    // public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId,
-    // MultipartFile file, String fileName) {
-    // try {
-    // logger.debug("Add Document by Id " + id + ", document type Id" +
-    // documentTypeId + ", file" + file
-    // + " and file name" + fileName);
-    // AccessToken token = keycloakService.getSecurityContext().getToken();
-    // DocumentVO document = new DocumentVO();
-    // document.setCreatedBy(token.getPreferredUsername());
-    // document.setCreatedDate(LocalDateTime.now());
-    // document.setFile(file.getBytes());
-    // document.setDocumentName(fileName);
-
-    // ComplaintVO complaint = new ComplaintVO();
-    // complaint.setId(id);
-    // document.setComplaint(complaint);
-
-    // DocumentTypeVO docType = new DocumentTypeVO();
-    // docType.setId(documentTypeId);
-
-    // document.setDocumentType(docType);
-    // document = this.documentService.save(document);
-    // ResponseEntity<?> response;
-
-    // if (document != null && document.getId() != null) {
-    // response = ResponseEntity.status(HttpStatus.OK).body(document);
-    // } else {
-    // response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    // }
-
-    // return response;
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // logger.error(e.getMessage());
-    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    // }
-    // }
 }

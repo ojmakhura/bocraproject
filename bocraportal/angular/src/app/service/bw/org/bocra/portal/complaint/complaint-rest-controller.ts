@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-vo';
+import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
 import { HttpClient } from '@angular/common/http';
-import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +15,8 @@ export class ComplaintRestController {
     constructor(private http: HttpClient) {
     }
 
-    public addDocument(id: number | any , documentTypeId: number | any , file: File | any , fileName: string | any ): Observable<DocumentVO | any> {
-
-        const formData: FormData = new FormData();
-        formData.append('documentTypeId', documentTypeId);
-        formData.append('file', file);
-        formData.append('fileName', fileName);
-        
-        return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, formData);
+    public addComplaintReply(complaintId: number | any , reply: ComplaintReplyVO | any ): Observable<ComplaintReplyVO | any> {
+        return this.http.post<ComplaintReplyVO | any>(`${this.path}/complaint/reply`, {complaintId, reply});
     }
 
     public findById(id: number | any ): Observable<ComplaintVO | any> {
@@ -39,6 +33,10 @@ export class ComplaintRestController {
 
     public remove(id: number | any ): Observable<boolean | any> {
         return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
+    }
+
+    public removeComplaintReply(id: number | any ): Observable<Boolean | any> {
+        return this.http.delete<Boolean | any>(`${this.path}/complaint/reply`, id);
     }
 
     public save(complaint: ComplaintVO | any ): Observable<ComplaintVO | any> {

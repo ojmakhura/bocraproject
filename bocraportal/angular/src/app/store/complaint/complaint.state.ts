@@ -12,7 +12,7 @@ export interface ComplaintState {
     document: DocumentVO | any,
     documents: Array<DocumentVO> | Array<any>,
     complaintReply: ComplaintReplyVO,
-    complaintReplis: Array<ComplaintReplyVO> | Array<any>,
+    complaintReplies: Array<ComplaintReplyVO> | Array<any>,
     id: number | any;
     removed: boolean;
     loading: boolean;
@@ -36,5 +36,5 @@ export const initialState: ComplaintState = {
     document: undefined,
     documents: [],
     complaintReply: undefined,
-    complaintReplis: []
+    complaintReplies: []
 };

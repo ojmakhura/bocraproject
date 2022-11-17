@@ -118,11 +118,22 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     @Override
     protected ComplaintReplyVO handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) throws Exception {
 
-        return null;
+        ComplaintReply cr = complaintReplyDao.complaintReplyVOToEntity(reply);
+        cr.setComplaint(complaintRepository.getById(complaintId));
+        cr = complaintReplyRepository.save(cr);
+
+        if (reply.getId() != null) {
+            return complaintReplyDao.toComplaintReplyVO(cr);
+        }
+
+        return reply;
     }
 
     @Override
     protected Boolean handleRemoveComplaintReply(Long id) throws Exception {
+        if (id == null) {
+            return false;
+        }
         this.complaintReplyRepository.deleteById(id);
         return true;
     }
