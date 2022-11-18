@@ -16,6 +16,9 @@ export class ComplaintRestController {
     }
 
     public addComplaintReply(complaintId: number | any , reply: ComplaintReplyVO | any ): Observable<ComplaintReplyVO | any> {
+        let formData: FormData = new FormData();
+        formData.append('complaintId', complaintId);
+        formData.append('reply', complaintId);
         return this.http.post<ComplaintReplyVO | any>(`${this.path}/complaint/reply`, {complaintId, reply});
     }
 

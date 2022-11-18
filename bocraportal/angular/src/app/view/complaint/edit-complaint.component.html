@@ -43,17 +43,19 @@
 				</div>
 				<fieldset formGroupName="licensee">
 					<div class="row mb-3">
-						<label id="complaintLicensee_label" for="complaintLicenseeLicenseeName" class="col-form-label"><span
-							translate>licensee.name</span>*</label>
+						<label id="complaintLicensee_label" for="complaintLicenseeLicenseeName"
+							class="col-form-label"><span translate>licensee.name</span>*</label>
 						<div class="col-sm-12">
 							<div class="input-group">
 								<input type="text" readonly class="form-control" id="complaintLicenseeLicenseeName"
 									value="{{complaintLicensee?.licenseeName }}" disabled>
-								<button type="button" (click)="complaintLicenseeAddDialog()" class="btn btn-outline-primary"
-									data-bs-toggle="modal" data-bs-target="#complaintLicenseeModal">
+								<button type="button" (click)="complaintLicenseeAddDialog()"
+									class="btn btn-outline-primary" data-bs-toggle="modal"
+									data-bs-target="#complaintLicenseeModal">
 									<mat-icon>add_box</mat-icon>
 								</button>
-								<button type="button" (click)="complaintLicenseeClear()" class="btn btn-outline-primary">
+								<button type="button" (click)="complaintLicenseeClear()"
+									class="btn btn-outline-primary">
 									<mat-icon>clear</mat-icon>
 								</button>
 							</div>
@@ -69,8 +71,9 @@
 				<div class="mb-3">
 					<label id="complaintComplaintId_label" class="col-sm-2 col-form-label"
 						for="complaintComplaintId"><span translate>complaint.id</span></label>
-					<input type="text" id="complaintComplaintId" class="form-control" name="complaintId"
-						formControlName="complaintId" />
+					<!-- <input type="text" id="complaintComplaintId" class="form-control" name="complaintId"
+						formControlName="complaintId" /> -->
+						<label for="complaintId_label_value">{{complaint?.complaintId}}</label>
 				</div>
 				<div class="mb-3">
 					<label id="complaintFirstName_label" class="col-sm-2 col-form-label" for="complaintFirstName"><span
@@ -142,28 +145,31 @@
 				</div>
 				<div class="mb-3">
 					<label id="complaintCreatedDate_label" class="col-sm-2 col-form-label"
-						for="complaintCreatedDate"><span translate>created.date</span>*</label>
-					<input type="date" id="complaintCreatedDate" class="form-control" formControlName="createdDate"
+						for="complaintCreatedDate"><span translate>created.date</span></label>
+					<!-- <input type="date" id="complaintCreatedDate" class="form-control" formControlName="createdDate"
 						required navigator="true" showOn="button" />
 					<div *ngIf="editComplaintForm.invalid && complaintCreatedDateControl.invalid && (complaintCreatedDateControl.dirty || complaintCreatedDateControl.touched)"
 						class="alert alert-danger" role="alert">
 						<div *ngIf="complaintCreatedDateControl.errors['required']">
 							<span translate>created.date.required</span>
 						</div>
-					</div>
+					</div> -->
+					<label for="complaintCreatedDate_label_value">{{complaint?.createdDate}}</label>
 				</div>
 				<div class="mb-4">
 					<label id="complaintUpdatedDate_label" class="col-sm-2 col-form-label"
 						for="complaintUpdatedDate"><span translate>updated.date</span></label>
-					<input type="date" id="complaintUpdatedDate" class="form-control" formControlName="updatedDate"
-						navigator="true" showOn="button" />
+					<!-- <input type="date" id="complaintUpdatedDate" class="form-control" formControlName="updatedDate"
+						navigator="true" showOn="button" /> -->
+						<label for="ComplaintUpdatedDate_label_value">{{complaint?.updatedDate}}</label>
 				</div>
 				<div class="text-end mb-3">
-					<button type="button" (click)="editComplaintSave()" (click)="scroll(target)" class="btn btn-outline-primary">
+					<button type="button" (click)="editComplaintSave()" (click)="scroll(target)"
+						class="btn btn-outline-primary">
 						<span translate>save</span>
 					</button>
-					<button type="button" (click)="editComplaintDelete()" (click)="scroll(target)" class="btn btn-outline-primary"
-					*ngIf="complaintId && deleteUnrestricted">
+					<button type="button" (click)="editComplaintDelete()" (click)="scroll(target)"
+						class="btn btn-outline-primary" *ngIf="complaintId && deleteUnrestricted">
 						<span translate>delete</span>
 					</button>
 					<!-- <button type="button" (click)="editComplaintNewDocument()" class="btn btn-outline-primary">
@@ -172,13 +178,13 @@
 					<button type="button" (click)="editComplaintReply()" class="btn btn-outline-primary">
 						<span translate>reply</span>
 					</button> -->
-					<button type="button" (click)="editComplaintFormReset()" (click)="scroll(target)" class="btn btn-outline-primary"><span
-							translate>reset</span></button>
+					<button type="button" (click)="editComplaintFormReset()" (click)="scroll(target)"
+						class="btn btn-outline-primary"><span translate>reset</span></button>
 				</div>
-				<mat-tab-group animationDuration="0ms" class="view-tabs" *ngIf="complaintId">
+				<mat-tab-group animationDuration="0ms" class="view-tabs">
 					<mat-tab label="{{'documents' | translate}}">
 						<div>
-							<button type="button" (click)="editComplaintNewDocument()" class="btn btn-primary">
+							<button type="button" (click)="editComplaintNewDocument()" class="btn btn-primary my-2">
 								<mat-icon>add_box</mat-icon>
 							</button>
 							<mat-table matSort [dataSource]="complaintDocuments" #documentsSort="matSort"
@@ -221,10 +227,10 @@
 					</mat-tab>
 					<mat-tab label="{{'complaint.replies' | translate}}">
 						<div>
-							<button type="button" (click)="editComplaintReply()" class="btn btn-primary">
+							<button type="button" (click)="editComplaintReply()" class="btn btn-primary my-2">
 								<mat-icon>add_box</mat-icon>
 							</button>
-							<mat-table matSort [dataSource]="complaintComplaintReplies" #complaintRepliesSort="matSort"
+							<!-- <mat-table matSort [dataSource]="complaintComplaintReplies" #complaintRepliesSort="matSort"
 								class="table table-bordered table-striped" style="width: 100%;">
 								<ng-container matColumnDef="actions">
 									<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
@@ -257,7 +263,23 @@
 								</mat-row>
 							</mat-table>
 							<mat-paginator #complaintComplaintRepliesPaginator="matPaginator" [pageSize]="10"
-								[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+								[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator> -->
+
+							<div class="list-group" *ngFor="let reply of replies">
+								<a class="list-group-item list-group-item-action mb-2 px-5" aria-current="true">
+									<div class="d-flex w-100 justify-content-between">
+										<h6 class="mb-2 fw-bold">{{reply.reply_user}}</h6>
+										<small class="text-warning">{{reply.date}}</small>
+									</div>
+									<p class="mb-1">
+										{{reply.reply}}
+									</p>
+									<div class="action">
+										<span class="badge bg-primary" type="button"><i class="fa fa-pencil" aria-hidden="true"></i>  Edit</span>
+										<span class="badge bg-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i>  Delete</span>
+									</div>
+								</a>
+							</div>
 						</div>
 					</mat-tab>
 				</mat-tab-group>
