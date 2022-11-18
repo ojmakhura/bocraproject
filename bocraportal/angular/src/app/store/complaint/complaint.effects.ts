@@ -22,7 +22,7 @@ export class ComplaintEffects {
 
     findByComplaintId$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(ComplaintActions.findById),
+            ofType(ComplaintActions.findByComplaintId),
             mergeMap(({ complaintId }) => this.complaintRestController.findByComplaintId(complaintId).pipe(
                 map(complaint => ComplaintActions.findByComplaintIdSuccess({ complaint, messages: [`Complaint ${complaint.complaintId} found.`], success: true })),
                 catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])

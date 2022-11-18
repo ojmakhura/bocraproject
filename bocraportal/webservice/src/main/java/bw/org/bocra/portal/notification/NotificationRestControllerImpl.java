@@ -149,4 +149,24 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleLoadUserNotifications(String userId) {
+        try {
+            logger.debug("User user notifications " + userId);
+            Optional<?> data = Optional.of(notificationService.loadUserNotifications(userId));
+            ResponseEntity<?> response;
+
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

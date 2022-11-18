@@ -9,8 +9,12 @@
 package bw.org.bocra.portal.notification;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,9 +77,8 @@ public class NotificationServiceImpl
     protected  Collection<NotificationVO> handleGetAll()
         throws Exception
     {
-        
-        // TODO implement protected  Collection<NotificationVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.notification.NotificationService.handleGetAll() Not implemented!");
+        List<Notification> entities = notificationRepository.findAll(Sort.by("notificationDate").descending());
+        return notificationDao.toNotificationVOCollection(entities);
     }
 
     /**
@@ -85,8 +88,8 @@ public class NotificationServiceImpl
     protected  Collection<NotificationVO> handleSearch(NotificationCriteria criteria)
         throws Exception
     {
-        // TODO implement protected  Collection<NotificationVO> handleSearch(NotificationCriteria criteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.notification.NotificationService.handleSearch(NotificationCriteria criteria) Not implemented!");
+        Collection<Notification> entities = getNotificationDao().findByCriteria(criteria);
+        return notificationDao.toNotificationVOCollection(entities);
     }
 
     /**
@@ -96,8 +99,20 @@ public class NotificationServiceImpl
     protected  Collection<NotificationVO> handleGetAll(Integer pageNumber, Integer pageSize)
         throws Exception
     {
-        // TODO implement protected  Collection<NotificationVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.notification.NotificationService.handleGetAll(Integer pageNumber, Integer pageSize) Not implemented!");
+
+        if (pageNumber < 0 || pageSize < 1) {
+            return notificationDao.toNotificationVOCollection(notificationRepository.findAll());
+        } else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("notificationDate").descending());
+            List<Notification> entities = notificationRepository.findAll(pageable).getContent();
+            return notificationDao.toNotificationVOCollection(entities);
+        }
+    }
+
+    @Override
+    protected NotificationVO handleLoadUserNotifications(String userId) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
