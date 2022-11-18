@@ -34,7 +34,7 @@ export class ReportElement {
   selector: 'app-report-element',
   templateUrl: './report-element.component.html',
 })
-export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy {
+export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() reportElementGroup: FormGroup | any;
   protected formBuilder: FormBuilder;
@@ -49,7 +49,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   additionalReportCalculations: any[] = [];
   additionalDataLabels: any[] = [];
   customReportLabels: any = {};
-  
+
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
   }
@@ -63,7 +63,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
       this.periodSelectionsArray.insert(index, this.createPeriodSelectionGroup(true, per))
     });
 
-    if(!this.fieldSelectionsArray) {
+    if (!this.fieldSelectionsArray) {
       this.reportElementGroup.addControl('fieldSelection', this.formBuilder.array([]));
     }
 
@@ -73,7 +73,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
     this.reportTypeControl.patchValue('default')
     this.reportLabelsControl.setValue('fields');
-    
+
     this.reportElementGroup.addControl('reportLabelsAnalytics', this.formBuilder.array([]));
     this.reportElementGroup.addControl('dataLabelsAnalytics', this.formBuilder.array([]));
   }
@@ -90,43 +90,43 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
     let formFields: string[] = []
 
-    if(this.formSubmissions && this.formSubmissions?.length > 0) {
+    if (this.formSubmissions && this.formSubmissions?.length > 0) {
       this.formSubmissions[0]?.form?.formSections?.forEach(sec => {
         formFields = [...formFields, ...sec?.formFields?.map((field: any) => {
-          return {fieldId: field?.fieldId, fieldName: field?.fieldName}
+          return { fieldId: field?.fieldId, fieldName: field?.fieldName }
         })];
       });
     }
 
     return formFields;
   }
-  
+
   generateColors(reset: boolean) {
-    if(reset) {
+    if (reset) {
       this.colors = {};
     }
-    
-    if(this.formSubmissions) {
 
-      if(this.dataLabels === 'fields') {
+    if (this.formSubmissions) {
+
+      if (this.dataLabels === 'fields') {
         this.formSubmissions[0].sections?.forEach((section: DataFieldSectionVO) => {
           section?.dataFields?.forEach((field: DataFieldVO) => {
             this.colors[field.formField.fieldId] = this.getRandomColor()
           })
         });
-  
-      } else if(this.dataLabels === 'licensees') {
-  
+
+      } else if (this.dataLabels === 'licensees') {
+
         this.formSubmissions?.forEach(submission => {
-          if(!this.colors[submission?.licensee?.licenseeName]) {
+          if (!this.colors[submission?.licensee?.licenseeName]) {
             this.colors[submission?.licensee?.licenseeName] = this.getRandomColor();
           }
         });
-      } else if(this.dataLabels === 'periods') {
-         this.formSubmissions?.forEach(submission => {
+      } else if (this.dataLabels === 'periods') {
+        this.formSubmissions?.forEach(submission => {
           this.colors[submission?.period?.periodName] = this.getRandomColor();
         });
-    
+
       }
 
       console.log(this.colors)
@@ -134,7 +134,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   }
 
   newForm(reportElement: ReportElement): FormGroup {
-    
+
     return this.formBuilder.group({
       groupBy: [reportElement?.groupBy],
       reportType: [reportElement?.reportType],
@@ -154,7 +154,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     var length = 6;
     var chars = '0123456789ABCDEF';
     var hex = '#';
-    while(length--) hex += chars[(Math.random() * 16) | 0];
+    while (length--) hex += chars[(Math.random() * 16) | 0];
     return hex;
   }
 
@@ -165,7 +165,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-    
+
     this.dataLabelsControl.patchValue('licensees')
     this.generateColors(false);
     this.periodSelectionChange();
@@ -177,60 +177,111 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
   }
 
   private calculate(values: number[], calculationType: string) {
-    if(calculationType === 'sum') {
+    if (calculationType === 'sum') {
       return math.sum(values)
-    } else if(calculationType === 'mean') {
+    } else if (calculationType === 'mean') {
       return math.mean(values)
-    } else if(calculationType === 'mode') {
+    } else if (calculationType === 'mode') {
       return math.mode(values)
-    } else if(calculationType === 'median') {
+    } else if (calculationType === 'median') {
       return math.median(values)
-    } else if(calculationType === 'variance') {
+    } else if (calculationType === 'variance') {
       return math.variance(values)
-    } else if(calculationType === 'std') {
+    } else if (calculationType === 'std') {
       return math.std(values)
-    } else if(calculationType === 'min') {
+    } else if (calculationType === 'min') {
       return math.min(values)
-    } else if(calculationType === 'max') {
+    } else if (calculationType === 'max') {
       return math.max(values)
     }
   }
 
-  additionalReportLabelChange(index: number){
+  additionalReportLabelChange(index: number) {
     // console.log(this.reportLabelsAnalytics)
     this.additionalReportLabels = this.reportLabelsAnalytics;
-    console.log(this.additionalReportLabels);
-    
+    // console.log(this.additionalReportLabels);
+
     let changedlabel: any = this.additionalReportLabels[index];
 
-    if(!changedlabel?.type || !changedlabel?.name) {
+    if (!changedlabel?.type || !changedlabel?.name || !changedlabel?.sources) {
       return;
     }
+    let sourceString: string = changedlabel?.sources;
 
-    if(this.reportLabels === 'fields' && this.dataLabels === 'licensees') {
-      let sourceString: string = changedlabel?.sources;
+    if (this.reportLabels === 'fields' && this.dataLabels === 'licensees') {
       this.customReportLabels[index] = {
         name: changedlabel?.name,
 
       };
-      
-      let sources: string[] = sourceString?.split(',')?.map(val => val.trim())?.filter(val => val?.length > 0);
+
       this.filteredFormSubmissions?.forEach(submission => {
         let fields: DataFieldVO[] = [];
         submission?.sections?.forEach((section: DataFieldSectionVO) => {
           fields = [...fields, ...section?.dataFields];
         });
 
-        let calcFields = fields?.filter((field) => sources?.find(source => field?.formField?.fieldId === source));
-        let calValues = calcFields?.map(value => +value?.value);
+        if (changedlabel?.type === 'custom') {
+          let expression = sourceString;
+          fields.forEach(field => {
+            if (expression?.includes(`[${field.formField.fieldId}]`)) {
+              expression = expression?.replace(`[${field.formField.fieldId}]`, field.value);
+            }
 
-        if(changedlabel?.type === 'custom') {
+          });
+          // console.log(math.evaluate(expression));
 
+          this.customReportLabels[index][submission?.id] = math.evaluate(expression);
+          // console.log(this.customReportLabels);
         } else {
-          if(calValues && calValues.length > 0) {
+          let sources: string[] = sourceString?.split(',')?.map(val => val.trim())?.filter(val => val?.length > 0);
+
+          let calcFields = fields?.filter((field) => sources?.find(source => field?.formField?.fieldId === source));
+          let calValues = calcFields?.map(value => +value?.value);
+          if (calValues && calValues.length > 0) {
             let calc = this.calculate(calValues, changedlabel?.type);
             this.customReportLabels[index][submission?.id] = calc;
-          }          
+          }
+        }
+      });
+    } else if (this.reportLabels === 'licensees' && this.dataLabels === 'fields') {
+
+      // console.log(this.periods)
+      this.periods?.forEach(period => {
+        let tmp = this.filteredFormSubmissions?.filter(submission => {
+
+          return submission?.period?.periodName === period;
+        })
+
+        // console.log(tmp);
+        this.customReportLabels[period] = {};
+        if (changedlabel?.type === 'custom') {
+
+        } else {
+          let sources: string[] = sourceString?.split(',')?.map(val => val.trim())?.filter(val => val?.length > 0);
+          let sourceData = {};
+          sources?.forEach(source => {
+
+            sourceData[source] = [];
+
+            tmp?.forEach(submission => {
+              let fields: DataFieldVO[] = [];
+              submission?.sections?.forEach((section: DataFieldSectionVO) => {
+                fields = [...fields, ...section?.dataFields];
+              });
+
+              let selectedField = fields?.find(field => field.formField?.fieldId === source);
+              console.log(selectedField);
+              if(selectedField) {
+                sourceData[source].push(+selectedField?.value);
+              }
+            });
+
+          });
+
+          console.log(sourceData);
+          Object.keys(sourceData)?.forEach(key => {
+            this.customReportLabels[period][key] = this.calculate(sourceData[key], changedlabel?.type)
+          })
         }
       });
     }
@@ -239,7 +290,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
   }
 
-  additionalDataLabelChange(){
+  additionalDataLabelChange() {
     console.log(this.dataLabelsAnalytics)
     this.additionalDataLabels = this.dataLabelsAnalytics;
   }
@@ -313,7 +364,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     this.selectedLicensees = this.licenseeSelections?.filter(sel => sel.selected);
 
     this.licenseeSelectionsArray?.controls?.forEach(lc => {
-      if(this.filteredFormSubmissions?.find(sub => sub.licensee.licenseeName === lc.value.licensee)) {
+      if (this.filteredFormSubmissions?.find(sub => sub.licensee.licenseeName === lc.value.licensee)) {
         lc.get('selected')?.patchValue(true);
       } else {
         lc.get('selected')?.patchValue(false);
@@ -330,7 +381,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
     this.selectedPeriods = this.periodSelections?.filter(sel => sel.selected);
 
     this.periodSelectionsArray?.controls?.forEach(pr => {
-      if(this.filteredFormSubmissions?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
+      if (this.filteredFormSubmissions?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
         pr.get('selected')?.patchValue(true);
       } else {
         pr.get('selected')?.patchValue(false);
@@ -367,7 +418,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
   addLabelsAnalytic(target: string) {
 
-    if(target === 'report') {
+    if (target === 'report') {
       this.reportLabelsAnalyticsControl.push(
         this.formBuilder.group({
           type: [],
@@ -390,7 +441,7 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
   removeLabelsAnalytic(target: string, index: number) {
 
-    if(target === 'report') {
+    if (target === 'report') {
       this.reportLabelsAnalyticsControl.removeAt(index)
       this.additionalReportLabelChange(index);
     } else {
@@ -500,13 +551,13 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
     let arrayControls: FormArray = this.licenseeSelectionsArray;
 
-    if(table === 'periods') {
+    if (table === 'periods') {
       arrayControls = this.periodSelectionsArray;
-    } else if(table === 'licensees') {
+    } else if (table === 'licensees') {
       arrayControls = this.licenseeSelectionsArray;
     }
 
-    if(event?.target?.checked) {
+    if (event?.target?.checked) {
       arrayControls?.controls?.forEach(value => {
         value.get('selected')?.patchValue(true);
       });
@@ -552,11 +603,11 @@ export class ReportElementComponent  implements OnInit, AfterViewInit, OnDestroy
 
   extractReportLabels(source: string) {
 
-    if(source === 'licensees') {
+    if (source === 'licensees') {
       return this.licenseeSelections?.filter(lc => lc.selected).map(lc => lc.licensee);
-    } else if(source === 'periods') {
+    } else if (source === 'periods') {
       return this.periodSelections?.filter(pr => pr.selected).map(pr => pr.period);
-    } else if(source === 'fields') {
+    } else if (source === 'fields') {
       return this.fieldSelections?.filter(field => field.selected).map(field => field.alial ? field.alias : field.fieldName);
     }
 
