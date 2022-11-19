@@ -128,8 +128,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         });
 
       }
-
-      console.log(this.colors)
     }
   }
 
@@ -200,6 +198,10 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     // console.log(this.reportLabelsAnalytics)
     this.additionalReportLabels = this.reportLabelsAnalytics;
     // console.log(this.additionalReportLabels);
+    let fields: DataFieldVO[] = [];
+    this.filteredFormSubmissions[0]?.sections?.forEach((section: DataFieldSectionVO) => {
+      fields = [...fields, ...section?.dataFields];
+    });
 
     let changedlabel: any = this.additionalReportLabels[index];
 
@@ -246,14 +248,14 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     } else if (this.reportLabels === 'licensees' && this.dataLabels === 'fields') {
 
       // console.log(this.periods)
-      this.periods?.forEach(period => {
+      this.selectedPeriods?.forEach(period => {
         let tmp = this.filteredFormSubmissions?.filter(submission => {
 
           return submission?.period?.periodName === period;
         })
 
         // console.log(tmp);
-        this.customReportLabels[period] = {};
+        // this.customReportLabels[`${period} - ${changedlabel?.name}`] = {};
         if (changedlabel?.type === 'custom') {
 
         } else {
@@ -270,28 +272,56 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
               });
 
               let selectedField = fields?.find(field => field.formField?.fieldId === source);
-              console.log(selectedField);
               if(selectedField) {
                 sourceData[source].push(+selectedField?.value);
+                
               }
             });
-
           });
 
-          console.log(sourceData);
           Object.keys(sourceData)?.forEach(key => {
-            this.customReportLabels[period][key] = this.calculate(sourceData[key], changedlabel?.type)
+            let selectedField = fields?.find(field => field.formField?.fieldId === key);
+            this.customReportLabels[`${period} - ${selectedField?.formField?.fieldName}`] = this.calculate(sourceData[key], changedlabel?.type)
           })
         }
       });
+    }  else if (this.reportLabels === 'periods' && this.dataLabels === 'fields') {
+    }  else if (this.reportLabels === 'periods' && this.dataLabels === 'licensees') {
+      if (changedlabel?.type === 'custom') {
+
+      } else {
+
+        console.log('..........................');
+        console.log(this.selectedPeriods);
+        let sourceData = {};
+        this.filteredFormSubmissions?.forEach(submission => {
+
+          let fields: DataFieldVO[] = [];
+          submission?.sections?.forEach((section: DataFieldSectionVO) => {
+            fields = [...fields, ...section?.dataFields];
+          });
+
+          fields?.forEach(field => {
+            if(!sourceData[`${submission?.licensee?.licenseeName} - ${field?.formField?.fieldName}`]) {
+              sourceData[`${submission?.licensee?.licenseeName} - ${field?.formField?.fieldName}`] = []
+            }
+
+            sourceData[`${submission?.licensee?.licenseeName} - ${field?.formField?.fieldName}`]?.push(+field.value);
+          })
+        });
+
+        console.log(sourceData);
+
+        Object.keys(sourceData)?.forEach(key => {
+          this.customReportLabels[key] = this.calculate(sourceData[key], changedlabel?.type)
+        });
+
+        console.log(this.customReportLabels)
+      }
     }
-
-    console.log(this.customReportLabels);
-
   }
 
   additionalDataLabelChange() {
-    console.log(this.dataLabelsAnalytics)
     this.additionalDataLabels = this.dataLabelsAnalytics;
   }
 
@@ -321,7 +351,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       selected: [selected],
       fieldId: [field?.fieldId],
       fieldName: [field?.fieldName],
-      alias: []
+      alias: [field?.fieldName]
     });
   }
 
@@ -608,7 +638,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     } else if (source === 'periods') {
       return this.periodSelections?.filter(pr => pr.selected).map(pr => pr.period);
     } else if (source === 'fields') {
-      return this.fieldSelections?.filter(field => field.selected).map(field => field.alial ? field.alias : field.fieldName);
+      return this.fieldSelections?.filter(field => field.selected).map(field => field.alias ? field.alias : field.fieldName);
     }
 
     return [];
