@@ -145,6 +145,7 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   }
 
   override afterEditComplaintReply(form: EditComplaintReplyForm, dialogData: any): void {
+    dialogData.complaintReply.date = new Date();
     if (dialogData) {
       console.log(dialogData);
       this.store.dispatch(
