@@ -11,6 +11,7 @@ import { ReportComponent } from '@app/view/report/report.component';
 import { select } from '@ngrx/store';
 import { ChartData } from 'chart.js';
 import * as math from 'mathjs';
+import { i } from 'mathjs';
 import { BaseChartDirective } from 'ng2-charts';
 import { Observable, of } from 'rxjs';
 import { ReportChart } from './report-chart.component';
@@ -18,8 +19,8 @@ import { ReportChart } from './report-chart.component';
 export class ReportElement {
   groupBy: string = '';
   reportType: string = '';
-  reportLabels: string = '';
-  dataLabels: string = '';
+  dataColumns: string = '';
+  dataRows: string = '';
   selectAllLicensees: boolean = false;
   selectAllPeriods: boolean = false;
   selectAllForms: boolean = false;
@@ -45,10 +46,11 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   selectedLicensees: any[] = [];
   selectedFields: any[] = [];
   selectedPeriods: any[] = [];
-  additionalReportLabels: any[] = [];
+  additionalDataColumns: any[] = [];
   additionalReportCalculations: any[] = [];
-  additionalDataLabels: any[] = [];
-  customReportLabels: any = {};
+  additionalDataRows: any[] = [];
+  customDataColumns: any = {};
+  customDataRows: any = {};
 
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -72,10 +74,10 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     this.reportTypeControl.patchValue('default')
-    this.reportLabelsControl.setValue('fields');
+    this.dataColumnsControl.setValue('fields');
 
-    this.reportElementGroup.addControl('reportLabelsAnalytics', this.formBuilder.array([]));
-    this.reportElementGroup.addControl('dataLabelsAnalytics', this.formBuilder.array([]));
+    this.reportElementGroup.addControl('dataColumnsAnalytics', this.formBuilder.array([]));
+    this.reportElementGroup.addControl('dataRowsAnalytics', this.formBuilder.array([]));
   }
 
   get licensees() {
@@ -108,26 +110,33 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     if (this.formSubmissions) {
 
-      if (this.dataLabels === 'fields') {
+      if (this.dataRows === 'fields') {
         this.formSubmissions[0].sections?.forEach((section: DataFieldSectionVO) => {
           section?.dataFields?.forEach((field: DataFieldVO) => {
             this.colors[field.formField.fieldId] = this.getRandomColor()
           })
         });
 
-      } else if (this.dataLabels === 'licensees') {
+      } else if (this.dataRows === 'licensees') {
 
         this.formSubmissions?.forEach(submission => {
           if (!this.colors[submission?.licensee?.licenseeName]) {
             this.colors[submission?.licensee?.licenseeName] = this.getRandomColor();
           }
         });
-      } else if (this.dataLabels === 'periods') {
+      } else if (this.dataRows === 'periods') {
         this.formSubmissions?.forEach(submission => {
           this.colors[submission?.period?.periodName] = this.getRandomColor();
         });
 
       }
+    }
+
+    if(this.dataRowsAnalytics?.length > 0) {
+      
+      this.dataRowsAnalytics?.forEach(analytic => {
+        this.colors[analytic?.name] = this.getRandomColor();
+      });
     }
   }
 
@@ -139,8 +148,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       selectAllLicensees: [reportElement?.selectAllLicensees],
       selectAllPeriods: [reportElement?.selectAllPeriods],
       selectAllForms: [reportElement?.selectAllForms],
-      reportLabels: [reportElement?.reportLabels],
-      dataLabels: [reportElement?.dataLabels],
+      dataColumns: [reportElement?.dataColumns],
+      dataRows: [reportElement?.dataRows],
       charts: this.createChartsArrayControl([]),
       licenseeSelections: this.createLicenseeSelectionArray(reportElement?.selectedLicensees),
       periodSelections: this.createPeriodSelectionArray(reportElement?.selectedPeriods),
@@ -164,7 +173,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngAfterViewInit(): void {
 
-    this.dataLabelsControl.patchValue('licensees')
+    this.dataRowsControl.patchValue('licensees')
     this.generateColors(false);
     this.periodSelectionChange();
     this.fieldSelectionChange();
@@ -194,24 +203,24 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  additionalReportLabelChange(index: number) {
-    // console.log(this.reportLabelsAnalytics)
-    this.additionalReportLabels = this.reportLabelsAnalytics;
-    // console.log(this.additionalReportLabels);
+  additionalDataColumnChange(index: number) {
+    // console.log(this.dataColumnsAnalytics)
+    this.additionalDataColumns = this.dataColumnsAnalytics;
+    // console.log(this.additionalDataColumns);
     let fields: DataFieldVO[] = [];
     this.filteredFormSubmissions[0]?.sections?.forEach((section: DataFieldSectionVO) => {
       fields = [...fields, ...section?.dataFields];
     });
 
-    let changedlabel: any = this.additionalReportLabels[index];
+    let changedlabel: any = this.additionalDataColumns[index];
 
     if (!changedlabel?.type || !changedlabel?.name || !changedlabel?.sources) {
       return;
     }
     let sourceString: string = changedlabel?.sources;
 
-    if (this.reportLabels === 'fields' && this.dataLabels === 'licensees') {
-      this.customReportLabels[index] = {
+    if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
+      this.customDataColumns[index] = {
         name: changedlabel?.name,
 
       };
@@ -232,8 +241,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           });
           // console.log(math.evaluate(expression));
 
-          this.customReportLabels[index][submission?.id] = math.evaluate(expression);
-          // console.log(this.customReportLabels);
+          this.customDataColumns[index][submission?.id] = math.evaluate(expression);
+          // console.log(this.customDataColumns);
         } else {
           let sources: string[] = sourceString?.split(',')?.map(val => val.trim())?.filter(val => val?.length > 0);
 
@@ -241,11 +250,11 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           let calValues = calcFields?.map(value => +value?.value);
           if (calValues && calValues.length > 0) {
             let calc = this.calculate(calValues, changedlabel?.type);
-            this.customReportLabels[index][submission?.id] = calc;
+            this.customDataColumns[index][submission?.id] = calc;
           }
         }
       });
-    } else if (this.reportLabels === 'licensees' && this.dataLabels === 'fields') {
+    } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
 
       // console.log(this.periods)
       this.selectedPeriods?.forEach(period => {
@@ -255,7 +264,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         })
 
         // console.log(tmp);
-        // this.customReportLabels[`${period} - ${changedlabel?.name}`] = {};
+        // this.customDataColumns[`${period} - ${changedlabel?.name}`] = {};
         if (changedlabel?.type === 'custom') {
 
         } else {
@@ -281,18 +290,15 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
           Object.keys(sourceData)?.forEach(key => {
             let selectedField = fields?.find(field => field.formField?.fieldId === key);
-            this.customReportLabels[`${period} - ${selectedField?.formField?.fieldName}`] = this.calculate(sourceData[key], changedlabel?.type)
+            this.customDataColumns[`${period}: ${selectedField?.formField?.fieldName}`] = this.calculate(sourceData[key], changedlabel?.type)
           })
         }
       });
-    }  else if (this.reportLabels === 'periods' && this.dataLabels === 'fields') {
-    }  else if (this.reportLabels === 'periods' && this.dataLabels === 'licensees') {
+    }  else if (this.dataColumns === 'periods' && this.dataRows === 'fields') {
       if (changedlabel?.type === 'custom') {
 
       } else {
 
-        console.log('..........................');
-        console.log(this.selectedPeriods);
         let sourceData = {};
         this.filteredFormSubmissions?.forEach(submission => {
 
@@ -302,27 +308,130 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           });
 
           fields?.forEach(field => {
-            if(!sourceData[`${submission?.licensee?.licenseeName} - ${field?.formField?.fieldName}`]) {
-              sourceData[`${submission?.licensee?.licenseeName} - ${field?.formField?.fieldName}`] = []
+            if(!sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]) {
+              sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`] = []
             }
 
-            sourceData[`${submission?.licensee?.licenseeName} - ${field?.formField?.fieldName}`]?.push(+field.value);
+            sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]?.push(+field.value);
           })
         });
 
-        console.log(sourceData);
-
         Object.keys(sourceData)?.forEach(key => {
-          this.customReportLabels[key] = this.calculate(sourceData[key], changedlabel?.type)
+          this.customDataColumns[key] = this.calculate(sourceData[key], changedlabel?.type)
         });
 
-        console.log(this.customReportLabels)
+      }
+    }  else if (this.dataColumns === 'periods' && this.dataRows === 'licensees') {
+      if (changedlabel?.type === 'custom') {
+
+      } else {
+
+        let sourceData = {};
+        this.filteredFormSubmissions?.forEach(submission => {
+
+          let fields: DataFieldVO[] = [];
+          submission?.sections?.forEach((section: DataFieldSectionVO) => {
+            fields = [...fields, ...section?.dataFields];
+          });
+
+          fields?.forEach(field => {
+            if(!sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]) {
+              sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`] = []
+            }
+
+            sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]?.push(+field.value);
+          })
+        });
+
+        Object.keys(sourceData)?.forEach(key => {
+          this.customDataColumns[key] = this.calculate(sourceData[key], changedlabel?.type)
+        });
+
       }
     }
+    console.log(this.customDataColumns)
   }
 
-  additionalDataLabelChange() {
-    this.additionalDataLabels = this.dataLabelsAnalytics;
+  extractFieldNames(formSubmission: FormSubmissionVO) {
+    let fieldNames: string[] = []
+
+    let fields: DataFieldVO[] = [];
+    formSubmission?.sections?.forEach((section: DataFieldSectionVO) => {
+      fields = [...fields, ...section.dataFields]
+    });
+
+    // fieldNames = fields?.map(field => field.formField.fi)
+    return fields;
+  }
+
+  concatenate(first: string, second: string): string {
+    return `${first}: ${second}`;
+  }
+
+  additionalRowChange(index: number) {
+    this.additionalDataRows = this.dataRowsAnalytics;
+    let changingRow = this.dataRowsAnalytics[index];
+    
+    let tmp = {};
+
+    if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
+      console.log(changingRow);
+      if(changingRow?.type === 'custom') {
+
+      } else {
+        let sources: string[] = changingRow?.sources?.split(',')?.map((val: any) => val.trim())?.filter((val: any) => val?.length > 0);
+        
+        sources?.forEach(source => {
+          this.filteredFormSubmissions?.forEach(submission => {
+            let key = this.concatenate(changingRow?.name, submission?.period?.periodName);
+            if(!tmp[submission?.period?.periodName]) {
+              tmp[submission?.period?.periodName] = {};
+            }
+
+            let lc = tmp[submission?.period?.periodName];
+
+            if(!lc[changingRow?.name]) {
+              lc[changingRow?.name] = {}
+            }
+
+            let prs = lc[changingRow?.name];
+            submission?.sections?.forEach((section: DataFieldSectionVO) => {
+              section?.dataFields?.forEach((field: DataFieldVO) => {
+                if(!prs[field?.formField?.fieldName]) {
+                  prs[field?.formField?.fieldName] = [];
+                }
+                if(source === 'all' || field?.formField?.fieldId === source) {
+                  prs[field?.formField?.fieldName]?.push(+field.value);
+                }
+              });
+            })
+          });
+        });
+
+        console.log(tmp)
+      }
+
+      Object.keys(tmp)?.forEach(key => {
+        this.customDataRows[key] = {};
+        Object.keys(tmp[key])?.forEach(k2 => {
+          console.log(tmp[key]);
+          let t = tmp[key][k2];
+          console.log(t)
+          this.customDataRows[key][k2] = {}
+          Object.keys(t)?.forEach(tk => {
+            this.customDataRows[key][k2][tk] = this.calculate(t[tk], changingRow?.type);
+          })
+          
+        })
+        
+      });
+
+      console.log(this.customDataRows)
+      
+    } else if (this.dataColumns === 'periods' && this.dataRows === 'licensees') {
+    } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
+    } else if (this.dataColumns === 'periods' && this.dataRows === 'fields') {
+    }
   }
 
   createChartsArrayControl(charts: ReportChart[]) {
@@ -442,14 +551,14 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }));
   }
 
-  get reportLabelsAnalyticsControl(): FormArray {
-    return this.reportElementGroup?.get('reportLabelsAnalytics') as FormArray
+  get dataColumnsAnalyticsControl(): FormArray {
+    return this.reportElementGroup?.get('dataColumnsAnalytics') as FormArray
   }
 
   addLabelsAnalytic(target: string) {
 
     if (target === 'report') {
-      this.reportLabelsAnalyticsControl.push(
+      this.dataColumnsAnalyticsControl.push(
         this.formBuilder.group({
           type: [],
           sources: [],
@@ -458,31 +567,34 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       );
     } else {
 
-      this.dataLabelsAnalyticsControl.push(
+      this.dataRowsAnalyticsControl.push(
         this.formBuilder.group({
           type: [],
+          sources: [],
           name: []
         })
       );
     }
 
-    this.additionalDataLabelChange();
+    this.additionalDataRows = this.dataRowsAnalytics;
+    // this.additionalDataLabelChange();
   }
 
   removeLabelsAnalytic(target: string, index: number) {
 
     if (target === 'report') {
-      this.reportLabelsAnalyticsControl.removeAt(index)
-      this.additionalReportLabelChange(index);
+      this.dataColumnsAnalyticsControl.removeAt(index)
+      this.additionalDataColumnChange(index);
     } else {
 
-      this.dataLabelsAnalyticsControl.removeAt(index)
-      this.additionalDataLabelChange();
+      this.dataRowsAnalyticsControl.removeAt(index)
+      this.additionalDataRows = this.dataRowsAnalytics;
+      // this.additionalDataLabelChange();
     }
 
-    this.customReportLabels = {};
-    this.additionalReportLabels?.forEach((value, index) => {
-      this.additionalReportLabelChange(index);
+    this.customDataColumns = {};
+    this.additionalDataColumns?.forEach((value, index) => {
+      this.additionalDataColumnChange(index);
     })
   }
 
@@ -490,16 +602,16 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     arrayControl.removeAt(index);
   }
 
-  get reportLabelsAnalytics(): any[] {
-    return this.reportLabelsAnalyticsControl.value;
+  get dataColumnsAnalytics(): any[] {
+    return this.dataColumnsAnalyticsControl.value;
   }
 
-  get dataLabelsAnalyticsControl(): FormArray {
-    return this.reportElementGroup?.get('dataLabelsAnalytics') as FormArray
+  get dataRowsAnalyticsControl(): FormArray {
+    return this.reportElementGroup?.get('dataRowsAnalytics') as FormArray
   }
 
-  get dataLabelsAnalytics(): any[] {
-    return this.dataLabelsAnalyticsControl.value;
+  get dataRowsAnalytics(): any[] {
+    return this.dataRowsAnalyticsControl.value;
   }
 
   get reportElement(): ReportElement {
@@ -514,20 +626,20 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return this.reportTypeControl?.value
   }
 
-  get reportLabelsControl() {
-    return this.reportElementGroup?.get('reportLabels') as FormControl;
+  get dataColumnsControl() {
+    return this.reportElementGroup?.get('dataColumns') as FormControl;
   }
 
-  get reportLabels() {
-    return this.reportLabelsControl?.value
+  get dataColumns() {
+    return this.dataColumnsControl?.value
   }
 
-  get dataLabelsControl() {
-    return this.reportElementGroup?.get('dataLabels') as FormControl;
+  get dataRowsControl() {
+    return this.reportElementGroup?.get('dataRows') as FormControl;
   }
 
-  get dataLabels() {
-    return this.dataLabelsControl?.value
+  get dataRows() {
+    return this.dataRowsControl?.value
   }
 
   get groupByControl() {
@@ -599,7 +711,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  selectReportLabels(event: any) {
+  selectDataColumns(event: any) {
     // if(event?.target?.value === 'licensees') {
     //   this.labels = this.licenseeSelections.filter(lc => lc.selected).map(lc => lc.licensee);
     // } if(event?.target?.value === 'periods') {
@@ -609,8 +721,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   reportTypeChange() {
     // if(this.reportType) {
-    //   this.reportLabelsControl.patchValue('fields');
-    //   this.dataLabelsControl.patchValue('licensees')
+    //   this.dataColumnsControl.patchValue('fields');
+    //   this.dataRowsControl.patchValue('licensees')
     // } 
   }
 
@@ -631,7 +743,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return filtered ? filtered : [];
   }
 
-  extractReportLabels(source: string) {
+  extractDataColumns(source: string) {
 
     if (source === 'licensees') {
       return this.licenseeSelections?.filter(lc => lc.selected).map(lc => lc.licensee);

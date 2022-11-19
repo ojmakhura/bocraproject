@@ -6,6 +6,7 @@
  */
 package bw.org.bocra.portal.complaint;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -61,8 +62,9 @@ public class ComplaintDaoImpl
         }
 
         if(CollectionUtils.isNotEmpty(source.getComplaintReplies())) {
-
-        }
+            Collection<ComplaintReplyVO> replies = complaintReplyDao.toComplaintReplyVOCollection(source.getComplaintReplies());
+            target.setComplaintReplies(replies);
+        }   
     }
 
     /**

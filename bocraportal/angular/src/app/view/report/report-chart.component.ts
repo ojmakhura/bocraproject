@@ -48,13 +48,14 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() reportType: string;
   @Input() formSubmissions: FormSubmissionVO[] | undefined;
-  @Input() labelSource: string;
-  @Input() dataLabels: string;
+  @Input() dataColumns: string;
+  @Input() dataRows: string;
   @Input() colors: any;
   @Input() chartIndex: number;
-  @Input() additionalReportLabels: any[]
-  @Input() additionalDataLabels: any[]
-  @Input() customReportLabels: any;
+  @Input() additionalDataColumns: any[]
+  @Input() additionalDataRows: any;
+  @Input() customDataColumns: any;
+  @Input() customDataRows: any;
 
   sections: any[] = [];
   periods: any[] = [];
@@ -80,6 +81,8 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setLabels();
     this.createChartData();
     this.datasets = this.barChartDataSets();
+
+    console.log(this.customDataRows)
   }
 
   ngAfterViewInit(): void {}
@@ -129,15 +132,15 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   setLabels() {
     this.labelNames = [];
 
-    if (this.labelSource === 'fields') {
+    if (this.dataColumns === 'fields') {
       this.labelNames = this.selectedFields.map((field) => (field?.alias ? field?.alias : field?.fieldName));
-    } else if (this.labelSource === 'licensees') {
+    } else if (this.dataColumns === 'licensees') {
       this.labelNames = [...new Set(this.filteredSubmissions.map((sub) => sub?.licensee?.licenseeName))];
-    } else if (this.labelSource === 'periods') {
+    } else if (this.dataColumns === 'periods') {
       this.labelNames = [...new Set(this.filteredSubmissions.map((sub) => sub?.period.periodName))];
     }
 
-    Object.keys(this.additionalReportLabels)?.forEach(key => this.labelNames.push(this.additionalReportLabels[key].name));
+    Object.keys(this.additionalDataColumns)?.forEach(key => this.labelNames.push(this.additionalDataColumns[key].name));
   }
 
   setSections() {
@@ -247,15 +250,15 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getLicenseeCombinedDataSet(): any {
     let extraction = {};
-    
-    if (this.labelSource === 'fields') {
+    console.log(this.chartData)
+    if (this.dataColumns === 'fields') {
       this.filteredSubmissions?.forEach((submission) => {
         let licenseeData = this.chartData[submission.period.periodName][submission?.licensee?.licenseeName];
 
         let dataLabel = submission.licensee?.licenseeName;
 
         if (this.period === 'all') {
-          dataLabel = `${dataLabel} - ${submission?.period?.periodName}`;
+          dataLabel = `${dataLabel}: ${submission?.period?.periodName}`;
         }
 
         if (!extraction[dataLabel]) {
@@ -269,14 +272,43 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
           extraction[dataLabel]?.data.push(+licenseeData[key]);
         });
 
-        Object.keys(this.customReportLabels)?.forEach(key => {
-          extraction[dataLabel]?.data.push(this.customReportLabels[key][submission.id]);
+        Object.keys(this.customDataColumns)?.forEach(key => {
+          extraction[dataLabel]?.data.push(this.customDataColumns[key][submission.id]);
         });
       });
 
-      // Object.keys(this.customReportLabels)?.forEach(key => this.labelNames.push(this.customReportLabels[key].name));
+      console.log(this.chartData)
 
-    } else if (this.labelSource === 'periods') {
+      Object.keys(this.customDataRows)?.forEach(key1 => {
+        Object.keys(this.customDataRows[key1])?.forEach(key2 => {
+          let t2 = this.customDataRows[key1][key2];
+          let label = `${key2}: ${key1}`;
+
+          if (!extraction[label]) {
+            extraction[label] = {
+              backgroundColor: this.colors[key2],
+              data: [],
+            };
+          }
+          console.log(key1, key2)
+          let cd = this.chartData[key1];
+          console.log(cd[Object.keys(cd)[0]])
+          let cdkeys = Object.keys(cd[Object.keys(cd)[0]]);
+
+          if(cdkeys && cdkeys.length > 0) {
+            cdkeys?.forEach(k => {
+              extraction[label]?.data.push(t2[k]);
+            })
+          } else {
+            extraction[label].data = Object.values(t2);
+          }
+        })
+      });
+
+      // Object.keys(this.customDataColumns)?.forEach(key => this.labelNames.push(this.customDataColumns[key].name));
+
+    } else if (this.dataColumns === 'periods') {
+      
       if (this.period === 'all') {
         this.selectedPeriods?.forEach((period) => {
           this.getPeriodLicenseesCombinedDataset(extraction, period.period);
@@ -285,9 +317,11 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getPeriodLicenseesCombinedDataset(extraction, this.period);
       }
 
-      Object.keys(this.customReportLabels)?.forEach(key => {
-        extraction[key]?.data.push(this.customReportLabels[key]);
-      });
+      console.log(this.customDataColumns);
+
+      Object.keys(this.customDataColumns)?.forEach(key => {
+        extraction[key]?.data.push(this.customDataColumns[key]);
+      }); 
       
     }
 
@@ -298,11 +332,14 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private getPeriodLicenseesCombinedDataset(extraction: any, periodName: string) {
     let periodData = this.chartData[periodName];
+    // console.log(extraction)
+    // console.log(periodData)
+    console.log(this.additionalDataRows)
     
     Object.keys(periodData).forEach(licenseeName => {
       let licenseeData = periodData[licenseeName];
       this.selectedFields?.forEach(sf => {
-        let dataLabel = `${licenseeName} - ${sf?.alias ? sf.alias : sf?.fieldName}`;
+        let dataLabel = `${licenseeName}: ${sf?.alias ? sf.alias : sf?.fieldName}`;
 
         if (!extraction[dataLabel]) {
           extraction[dataLabel] = {
@@ -339,7 +376,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.labelNames?.forEach((label) => {
       if(this.chartData[period] && this.chartData[period][label]) {
         Object.keys(this.chartData[period][label])?.forEach((field) => {
-          let tmp = `${period} - ${field}`;
+          let tmp = `${period}: ${field}`;
           if (!extraction[tmp]) {
             let color = this.findSelectedFieldColor(field);
             extraction[tmp] = {
@@ -357,8 +394,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   getFieldsCombinedDataSet(): any {
     let extraction = {};
 
-    if(this.labelSource === 'periods') {
-
+    if(this.dataColumns === 'periods') {
       if (this.period === 'all') {
         this.selectedPeriods?.forEach((sp) => {
           this.getFieldPeriodCombinedDatasets(extraction, sp.period);
@@ -367,25 +403,26 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.getFieldPeriodCombinedDatasets(extraction, this.period);
       }
-    } else if(this.labelSource === 'licensees') {
+
+    } else if(this.dataColumns === 'licensees') {
       if (this.period === 'all') {
         Object.keys(this.chartData)?.forEach((period) => {
           this.getPeriodFieldsCombinedDataSet(period, extraction);
 
-          if(this.customReportLabels[period]) {
-            Object.keys(this.customReportLabels[period])?.forEach(key => {
-              extraction[period][`${period} - ${key}`] = this.customReportLabels[period][key];
+          if(this.customDataColumns[period]) {
+            Object.keys(this.customDataColumns[period])?.forEach(key => {
+              extraction[period][`${period}: ${key}`] = this.customDataColumns[period][key];
             });
           }
         });
       } else {
         this.getPeriodFieldsCombinedDataSet(this.period, extraction);
       }
-      Object.keys(this.customReportLabels)?.forEach(key => {
-        extraction[key]?.data.push(this.customReportLabels[key]);
-      });
 
     }
+    Object.keys(this.customDataColumns)?.forEach(key => {
+      extraction[key]?.data.push(this.customDataColumns[key]);
+    });
 
     return this.extractCombinedDatasets(extraction);
   }
@@ -407,7 +444,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     let extraction = {};
     
 
-    if(this.labelSource === 'licensees') {
+    if(this.dataColumns === 'licensees') {
       if (this.period === 'all') {
         this.selectedPeriods?.forEach((sp) => {
           
@@ -417,7 +454,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.getFieldPeriodCombinedDatasets(extraction, this.period);
       }
-    } else if(this.labelSource === 'fields') {
+    } else if(this.dataColumns === 'fields') {
 
     }
     
@@ -457,16 +494,16 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   barChartDataSets(): any[] {
     let datasets: any[] = [];
 
-    if (this.dataLabels === 'licensees') {
+    if (this.dataRows === 'licensees') {
       datasets = this.getLicenseeCombinedDataSet();
-    } else if (this.dataLabels === 'periods') {
+    } else if (this.dataRows === 'periods') {
       
       datasets = this.getPeriodCombinedDatasets();
 
-    } else if (this.dataLabels === 'fields') {
+    } else if (this.dataRows === 'fields') {
       datasets = this.getFieldsCombinedDataSet();
     }
-
+    console.log(datasets);
     datasets.sort((a, b) => (a.label > b.label ? 1 : -1));
 
     return datasets;

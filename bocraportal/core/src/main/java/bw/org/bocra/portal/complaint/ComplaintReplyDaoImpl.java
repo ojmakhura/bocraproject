@@ -7,6 +7,8 @@
 package bw.org.bocra.portal.complaint;
 
 import bw.org.bocra.portal.document.DocumentRepository;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +43,15 @@ public class ComplaintReplyDaoImpl
         // WARNING! No conversion for target.complaint (can't convert
         // source.getComplaint():bw.org.bocra.portal.complaint.Complaint to
         // bw.org.bocra.portal.complaint.ComplaintVO
+        if(source.getComplaint() != null && source.getComplaint().getId() != null) {
+            ComplaintVO complaint = new ComplaintVO();
+            complaint.setId(source.getComplaint().getId());
+            complaint.setFirstName(source.getComplaint().getFirstName());
+            complaint.setSurname(source.getComplaint().getSurname());;
+            complaint.setSubject(source.getComplaint().getSubject());
+
+            target.setComplaint(complaint);
+        }
         // WARNING! No conversion for target.documents (can't convert
         // source.getDocuments():bw.org.bocra.portal.document.Document to
         // bw.org.bocra.portal.document.DocumentVO
@@ -89,5 +100,9 @@ public class ComplaintReplyDaoImpl
             boolean copyIfNull) {
         // TODO verify behavior of complaintReplyVOToEntity
         super.complaintReplyVOToEntity(source, target, copyIfNull);
+
+        if(source.getComplaint() != null && source.getComplaint().getId() != null) {
+            target.setComplaint(complaintRepository.getReferenceById(source.getComplaint().getId()));
+        }
     }
 }
