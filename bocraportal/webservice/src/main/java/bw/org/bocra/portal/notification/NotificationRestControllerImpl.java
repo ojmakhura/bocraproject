@@ -169,4 +169,9 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleGetUnreadCount() {
+        return ResponseEntity.status(HttpStatus.OK).body(notificationService.getUnreadCount());
+    }
 }

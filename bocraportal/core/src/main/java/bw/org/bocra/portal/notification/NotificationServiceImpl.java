@@ -115,4 +115,9 @@ public class NotificationServiceImpl
         return null;
     }
 
+    @Override
+    protected Long handleGetUnreadCount() throws Exception {
+        return notificationDao.getUnreadCount();
+    }
+
 }
