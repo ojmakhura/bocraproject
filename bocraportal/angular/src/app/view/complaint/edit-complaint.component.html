@@ -181,7 +181,7 @@
 					<button type="button" (click)="editComplaintFormReset()" (click)="scroll(target)"
 						class="btn btn-outline-primary"><span translate>reset</span></button>
 				</div>
-				<mat-tab-group animationDuration="0ms" class="view-tabs">
+				<mat-tab-group animationDuration="0ms" class="view-tabs" *ngIf="complaintId">
 					<mat-tab label="{{'documents' | translate}}">
 						<div>
 							<button type="button" (click)="editComplaintNewDocument()" class="btn btn-primary my-2">
@@ -265,18 +265,18 @@
 							<mat-paginator #complaintComplaintRepliesPaginator="matPaginator" [pageSize]="10"
 								[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator> -->
 
-							<div class="list-group" *ngFor="let reply of replies">
+							<div class="list-group" *ngFor="let reply of complaintComplaintReplies">
 								<a class="list-group-item list-group-item-action mb-2 px-5" aria-current="true">
 									<div class="d-flex w-100 justify-content-between">
-										<h6 class="mb-2 fw-bold">{{reply.reply_user}}</h6>
+										<h6 class="mb-2 fw-bold">{{reply.replyUser}}</h6>
 										<small class="text-warning">{{reply.date}}</small>
 									</div>
 									<p class="mb-1">
 										{{reply.reply}}
 									</p>
 									<div class="action">
-										<span class="badge bg-primary" type="button"><i class="fa fa-pencil" aria-hidden="true"></i>  Edit</span>
-										<span class="badge bg-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i>  Delete</span>
+										<span class="badge bg-primary" type="button" (click)="doEditComplaintComplaintReplies(reply.id)"><i class="fa fa-pencil" aria-hidden="true"></i>  Edit</span>
+										<span class="badge bg-danger" type="button" (click)="deleteFromComplaintComplaintReplies(reply.id)"><i class="fa fa-trash" aria-hidden="true"></i>  Delete</span>
 									</div>
 								</a>
 							</div>

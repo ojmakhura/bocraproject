@@ -84,8 +84,8 @@ export class ComplaintEffects {
         this.actions$.pipe(
             ofType(ComplaintActions.addComplaintReply),
             mergeMap(({ complaintId, reply }) => this.complaintRestController.addComplaintReply(complaintId, reply).pipe(
-                map(complaintReplyVO => ComplaintActions.addComplaintReplySuccess({ 
-                    complaintReplyVO, 
+                map(complaintReply => ComplaintActions.addComplaintReplySuccess({ 
+                    complaintReply, 
                     messages: [`Complaint Reply added successfully.`], 
                     success: true })),
                 catchError(({ error }) => [ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] })])

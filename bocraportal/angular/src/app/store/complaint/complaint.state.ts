@@ -2,6 +2,7 @@
 import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-vo';
 import { DocumentVO } from '@model/bw/org/bocra/portal/document/document-vo';
 import { ComplaintReplyVO } from '@model/bw/org/bocra/portal/complaint/complaint-reply-vo';
+import { ComplaintSeachCriteria } from '@model/bw/org/bocra/portal/complaint/complaint-seach-criteria'
 
 export const complaintKey = "complaint";
 
@@ -20,6 +21,7 @@ export interface ComplaintState {
     success: boolean;
     error: boolean;
     messages: string[];
+    loggedInSearch: ComplaintSeachCriteria | any;
 }
 
 export const initialState: ComplaintState = {
@@ -36,5 +38,6 @@ export const initialState: ComplaintState = {
     document: undefined,
     documents: [],
     complaintReply: undefined,
-    complaintReplies: []
+    complaintReplies: [],
+    loggedInSearch: null
 };

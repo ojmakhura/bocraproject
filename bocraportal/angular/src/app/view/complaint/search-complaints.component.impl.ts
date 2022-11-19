@@ -6,6 +6,7 @@ import * as ComplaintSelectors from '@app/store/complaint/complaint.selectors';
 import * as ComplaintActions from '@app/store/complaint/complaint.actions';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-search-complaints',
@@ -14,8 +15,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 })
 export class SearchComplaintsComponentImpl extends SearchComplaintsComponent {
 
-  constructor(private injector: Injector) {
-    super(injector);
+  constructor(private injector: Injector, public override keycloakService: KeycloakService) {
+    super(injector, keycloakService);
   }
 
   doNgOnDestroy(): void {
@@ -25,11 +26,24 @@ export class SearchComplaintsComponentImpl extends SearchComplaintsComponent {
    * This method may be overwritten
    */
   override beforeSearchComplaintsSearch(form: SearchComplaintsSearchForm): void {
-    this.store.dispatch(ComplaintActions.search({
-      criteria: form.criteria,
-      loading: true,
-      loaderMessage: 'Searching access points ...'
-    }));
+    if(form?.criteria){
+      this.store.dispatch(ComplaintActions.search({
+        criteria: form.criteria,
+        loading: true,
+        loaderMessage: 'Searching access points ...'
+      }));
+    }
+    if(form?.loggedInSearch){
+      this.store.dispatch(ComplaintActions.search({
+        criteria: form.loggedInSearch,
+        loading: true,
+        loaderMessage: 'Searching access points ...'
+      }));
+    }
 
+  }
+
+  override searchComplaintsAnalyse(){
+    this.router.navigate([`/complaint/complaints-analysis`]);
   }
 }

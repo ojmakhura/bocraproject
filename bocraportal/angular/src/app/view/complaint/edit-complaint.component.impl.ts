@@ -16,12 +16,7 @@ import { Observable } from 'rxjs';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 import * as ViewActions from '@app/store/view/view.actions';
 import { KeycloakService } from 'keycloak-angular';
-
-export class Reply {
-  date: string = '';
-  reply: string = '';
-  reply_user: string = '';
-}
+import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
 
 @Component({
   selector: 'app-edit-complaint',
@@ -35,7 +30,7 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   unauthorisedUrls$!: Observable<string[]>;
   deleteUnrestricted: boolean = true;
   documentDelete$: Observable<boolean>;
-  replies: Reply[] = [];
+  complaintReply$: Observable<ComplaintReplyVO>
 
   constructor(private injector: Injector) {
     super(injector);
@@ -43,19 +38,13 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     this.complaintLicensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
     this.complaintDocuments$ = this.store.pipe(select(ComplaintSelectors.selectDocument));
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
+    this.complaintReply$ = this.store.pipe(select(ComplaintSelectors.selectComplaintReply));
   }
 
   doNgOnDestroy(): void {
   }
 
   override doNgAfterViewInit(): void {
-
-    this.replies = [
-      {date: '2022-11-16 09:31:45.834', reply: 'Your complaint has been received. We will get back to you as soon as possible', reply_user:'Patience Obvious'},
-      {date: '2022-11-16 09:31:45.834', reply: 'Thank you for informing me.', reply_user:'Kutlwano Kambela'},
-      {date: '2022-11-16 09:31:45.834', reply: 'Your complaint has been resolved. Thank you for your patience', reply_user:'Patience Obvious'},
-
-    ]
 
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
@@ -87,6 +76,12 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
           this.deleteUnrestricted = false;
         }
       });
+    });
+
+    this.complaintReply$.subscribe(reply => {
+      if (reply) {
+        this.addToComplaintComplaintReplies(reply);
+      }
     });
   }
 

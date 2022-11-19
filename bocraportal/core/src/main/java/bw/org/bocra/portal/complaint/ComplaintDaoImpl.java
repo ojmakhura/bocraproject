@@ -9,6 +9,7 @@ package bw.org.bocra.portal.complaint;
 import java.util.Collection;
 import java.util.HashSet;
 
+import bw.org.bocra.portal.complaint.ComplaintReplyDao;
 import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
@@ -29,13 +30,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComplaintDaoImpl
         extends ComplaintDaoBase {
 
+    private final ComplaintReplyDao complaintReplyDao;
+
     public ComplaintDaoImpl(
             LicenseeRepository licenseeRepository, ComplaintReplyRepository complaintReplyRepository,
-            DocumentRepository documentRepository, ComplaintRepository complaintRepository) {
+            DocumentRepository documentRepository, ComplaintRepository complaintRepository,
+            ComplaintReplyDao complaintReplyDao) {
 
         super(
                 licenseeRepository,
                 complaintReplyRepository, documentRepository, complaintRepository);
+        this.complaintReplyDao = complaintReplyDao;
     }
 
     /**
@@ -60,8 +65,10 @@ public class ComplaintDaoImpl
             target.setLicensee(licensee);
         }
 
-        if(CollectionUtils.isNotEmpty(source.getComplaintReplies())) {
-
+        if (CollectionUtils.isNotEmpty(source.getComplaintReplies())) {
+            Collection<ComplaintReplyVO> replies = complaintReplyDao
+                    .toComplaintReplyVOCollection(source.getComplaintReplies());
+            target.setComplaintReplies(replies);
         }
     }
 
