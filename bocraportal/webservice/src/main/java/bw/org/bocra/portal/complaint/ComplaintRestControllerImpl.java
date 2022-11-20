@@ -131,7 +131,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleSearch(String criteria) {
+    public ResponseEntity<?> handleSearch(ComplaintSeachCriteria criteria) {
         try {
             logger.debug("Searchs for a Complaint");
             Optional<?> data = Optional.of(complaintService.search(criteria)); // TODO: Add custom code here;

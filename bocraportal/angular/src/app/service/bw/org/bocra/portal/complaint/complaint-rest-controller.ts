@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
 import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-vo';
 import { HttpClient } from '@angular/common/http';
+import { ComplaintSeachCriteria } from '@app/model/bw/org/bocra/portal/complaint/complaint-seach-criteria';
 
 @Injectable({
   providedIn: 'root'
@@ -47,8 +48,8 @@ export class ComplaintRestController {
         return this.http.post<ComplaintVO | any>(`${this.path}`, complaint);
     }
 
-    public search(criteria: string | any ): Observable<ComplaintVO[] | any[]> {
-        return this.http.get<ComplaintVO[] | any[]>(`${this.path}/search/criteria/${criteria}`, {});
+    public search(criteria: ComplaintSeachCriteria | any ): Observable<ComplaintVO[] | any[]> {
+        return this.http.post<ComplaintVO[] | any[]>(`${this.path}/search`, criteria);
     }
 
 }

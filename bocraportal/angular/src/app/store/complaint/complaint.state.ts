@@ -15,7 +15,6 @@ export interface ComplaintState {
     documents: Array<DocumentVO> | Array<any>,
     complaintReply: ComplaintReplyVO,
     complaintReplies: Array<ComplaintReplyVO> | Array<any>,
-    loggedInSearch: ComplaintSeachCriteria,
     id: number | any;
     removed: boolean;
     loading: boolean;

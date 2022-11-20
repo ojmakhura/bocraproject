@@ -27,8 +27,8 @@ export class SearchComplaintsComponentImpl extends SearchComplaintsComponent {
    */
   override beforeSearchComplaintsSearch(form: SearchComplaintsSearchForm): void {
     if(form?.criteria){
-      this.store.dispatch(ComplaintActions.search({
-        criteria: form.criteria,
+      this.store.dispatch(ComplaintActions.findByComplaintId({
+        complaintId: form.criteria,
         loading: true,
         loaderMessage: 'Searching access points ...'
       }));
