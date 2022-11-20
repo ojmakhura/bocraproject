@@ -2,6 +2,7 @@
 import { createAction, props } from '@ngrx/store';
 import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
 import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-vo';
+import { ComplaintSeachCriteria } from '@app/model/bw/org/bocra/portal/complaint/complaint-seach-criteria';
 
 export enum ComplaintActionType {
     FIND_BY_ID = '[Complaint] Find By Id',
@@ -80,7 +81,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
     ComplaintActionType.SEARCH,
-    props<{ criteria: string | any , loading: boolean, loaderMessage: string | undefined }>()
+    props<{ criteria: ComplaintSeachCriteria | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
