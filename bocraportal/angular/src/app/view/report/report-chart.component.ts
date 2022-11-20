@@ -288,32 +288,32 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
           extraction[dataLabel]?.data.push(this.customDataColumns[key][submission.id]);
         });
       });
+      
+      this.addCustomDataRows(extraction, chartDataLabels);
+      
+      // Object.keys(this.customDataRows)?.forEach((key1) => {
+      //   let t2 = this.customDataRows[key1];
+      //   if (!extraction[key1]) {
+      //     extraction[key1] = {
+      //       backgroundColor: this.colors[key1.split(':')[0]],
+      //       data: [],
+      //     };
+      //   }
 
-      console.log(this.customDataRows)
+      //   if (chartDataLabels && chartDataLabels.length > 0) {
+      //     chartDataLabels?.forEach((k) => {
+      //       extraction[key1]?.data.push(t2[k]);
+      //     });
+      //   } else {
+      //     if (chartDataLabels.length == 0) {
+      //       chartDataLabels = Object.keys(t2);
+      //     }
 
-      Object.keys(this.customDataRows)?.forEach((key1) => {
-        let t2 = this.customDataRows[key1];
-        if (!extraction[key1]) {
-          extraction[key1] = {
-            backgroundColor: this.colors[key1.split(':')[0]],
-            data: [],
-          };
-        }
-
-        if (chartDataLabels && chartDataLabels.length > 0) {
-          chartDataLabels?.forEach((k) => {
-            extraction[key1]?.data.push(t2[k]);
-          });
-        } else {
-          if (chartDataLabels.length == 0) {
-            chartDataLabels = Object.keys(t2);
-          }
-
-          chartDataLabels?.forEach((k) => {
-            extraction[key1].data.push(t2[k]);
-          });
-        }
-      });
+      //     chartDataLabels?.forEach((k) => {
+      //       extraction[key1].data.push(t2[k]);
+      //     });
+      //   }
+      // });
 
       // Object.keys(this.customDataColumns)?.forEach(key => this.labelNames.push(this.customDataColumns[key].name));
     } else if (this.dataColumns === 'periods') {
@@ -330,9 +330,34 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
 
-    console.log(extraction)
-
     return this.extractCombinedDatasets(extraction);
+  }
+
+  private addCustomDataRows(extraction: any, chartDataLabels: string[]) {
+
+    Object.keys(this.customDataRows)?.forEach((key1) => {
+      let t2 = this.customDataRows[key1];
+      if (!extraction[key1]) {
+        extraction[key1] = {
+          backgroundColor: this.colors[key1.split(':')[0]],
+          data: [],
+        };
+      }
+
+      if (chartDataLabels && chartDataLabels.length > 0) {
+        chartDataLabels?.forEach((k) => {
+          extraction[key1]?.data.push(t2[k]);
+        });
+      } else {
+        if (chartDataLabels.length == 0) {
+          chartDataLabels = Object.keys(t2);
+        }
+
+        chartDataLabels?.forEach((k) => {
+          extraction[key1].data.push(t2[k]);
+        });
+      }
+    });
   }
 
   private getPeriodLicenseesCombinedDataset(extraction: any, periodName: string) {
@@ -394,6 +419,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getFieldsCombinedDataSet(): any {
     let extraction = {};
+    let chartDataLabels: string[] = [];
 
     if (this.dataColumns === 'periods') {
       if (this.period === 'all') {
@@ -404,8 +430,13 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getFieldPeriodCombinedDatasets(extraction, this.period);
       }
     } else if (this.dataColumns === 'licensees') {
+
       if (this.period === 'all') {
         Object.keys(this.chartData)?.forEach((period) => {
+          if(chartDataLabels.length == 0) {
+            chartDataLabels = Object.keys(this.chartData[period]);
+          }
+
           this.getPeriodFieldsCombinedDataSet(period, extraction);
 
           if (this.customDataColumns[period]) {
@@ -416,10 +447,39 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       } else {
         this.getPeriodFieldsCombinedDataSet(this.period, extraction);
+        
+        if(chartDataLabels.length == 0) {
+          chartDataLabels = Object.keys(this.chartData[this.period]);
+        }
       }
     }
+    
     Object.keys(this.customDataColumns)?.forEach((key) => {
       extraction[key]?.data.push(this.customDataColumns[key]);
+    });
+
+    Object.keys(this.customDataRows)?.forEach((key1) => {
+      let t2 = this.customDataRows[key1];
+      if (!extraction[key1]) {
+        extraction[key1] = {
+          backgroundColor: this.colors[key1.split(':')[0]],
+          data: [],
+        };
+      }
+
+      if (chartDataLabels && chartDataLabels.length > 0) {
+        chartDataLabels?.forEach((k) => {
+          extraction[key1]?.data.push(t2[k]);
+        });
+      } else {
+        if (chartDataLabels.length == 0) {
+          chartDataLabels = Object.keys(t2);
+        }
+
+        chartDataLabels?.forEach((k) => {
+          extraction[key1].data.push(t2[k]);
+        });
+      }
     });
 
     return this.extractCombinedDatasets(extraction);

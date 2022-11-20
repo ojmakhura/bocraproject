@@ -149,6 +149,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         this.colors[analytic?.name] = this.getRandomColor();
       });
     }
+
+    this.dataRowsAnalytics?.forEach(row => {
+      if(row?.name) {
+        this.colors[row?.name] = this.getRandomColor();
+      }
+    })
   }
 
   newForm(reportElement: ReportElement): FormGroup {
@@ -400,7 +406,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
                       ?.map((val: any) => val.trim())
                       ?.filter((val: any) => val?.length > 0);
         }
-        console.log(this.filteredFormSubmissions)
         licensees?.forEach((licensee) => {
           this.filteredFormSubmissions?.forEach((submission) => {
             let key = this.concatenate(changingRow?.name, submission?.period?.periodName);
@@ -445,6 +450,75 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     } else if (this.dataColumns === 'periods' && this.dataRows === 'licensees') {
     } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
+      if (changingRow?.type === 'custom') {
+        let sourceString = changingRow?.sources;
+      } else {
+        let licensees: string[] = [];
+        let fields: string[] = [];
+
+        if(!changingRow?.sources) {
+          return;
+        }
+
+        let sourceSplit: string[] = changingRow?.sources
+                                        ?.split('::')
+                                        ?.map((val: any) => val.trim())
+                                        ?.filter((val: any) => val?.length > 0);
+
+        fields = sourceSplit[0]?.split(',')
+                      ?.map((val: any) => val.trim())
+                      ?.filter((val: any) => val?.length > 0);
+
+        if(sourceSplit.length == 2) {
+          licensees = sourceSplit[1]?.split(',')
+                        ?.map((val: any) => val.trim())
+                        ?.filter((val: any) => val?.length > 0);
+        }
+        licensees?.forEach((licensee) => {
+          this.filteredFormSubmissions?.forEach((submission) => {
+            let key = this.concatenate(submission?.period?.periodName, changingRow?.name);
+            if (!tmp[key]) {
+              tmp[key] = {};
+            }
+
+            let lc = tmp[key];
+
+            if (!lc[submission?.licensee?.licenseeName]) {
+              lc[submission?.licensee?.licenseeName] = [];
+            }
+
+            submission?.sections?.forEach((section: DataFieldSectionVO) => {
+              section?.dataFields?.forEach((field: DataFieldVO) => {
+                
+                if (licensee === 'all' || submission?.licensee?.licenseeName === licensee) {
+                  if(fields.length === 0) {
+                    lc[submission?.licensee?.licenseeName]?.push(+field.value);
+                  } else {
+                    fields?.forEach(f => {
+                      if(f === 'all' || f === field?.formField?.fieldId) {
+
+                      lc[submission?.licensee?.licenseeName]?.push(+field.value);
+                      }
+                    });
+                  }
+                }
+              });
+            });
+          });
+        });
+      }
+
+      Object.keys(tmp)?.forEach((key) => {
+        this.customDataRows[`${key}`] = {};
+        let t = tmp[key];
+        this.customDataRows[key] = {};
+        Object.keys(t)?.forEach((tk) => {
+          if(t[tk].length > 0)
+            this.customDataRows[`${key}`][tk] = this.formatCalculation(this.calculate(t[tk], changingRow?.type));
+          
+        });
+      });
+
     } else if (this.dataColumns === 'periods' && this.dataRows === 'fields') {
     }
   }
