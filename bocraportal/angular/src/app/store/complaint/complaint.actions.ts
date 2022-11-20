@@ -106,7 +106,7 @@ export const addComplaintReply = createAction(
 
 export const addComplaintReplySuccess = createAction(
     ComplaintActionType.ADD_COMPLAINT_REPLY_SUCCESS,
-    props<{ complaintReplyVO: ComplaintReplyVO | any, messages: any[], success: boolean}>()
+    props<{ complaintReply: ComplaintReplyVO | any, messages: any[], success: boolean}>()
 );
 
 export const removeComplaintReply = createAction(

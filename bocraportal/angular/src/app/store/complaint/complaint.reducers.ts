@@ -132,7 +132,8 @@ export const complaintReducer = createReducer(
     on(ComplaintActions.addComplaintReplySuccess, (state, action) => ({
         ...state,
         complaints: [], 
-        complaintReply: null, 
+        complaintReplies: [...state.complaintReplies, action.complaintReply], 
+        complaintReply: action.complaintReply,
         id: null, 
         criteria: null, 
         document: null, 

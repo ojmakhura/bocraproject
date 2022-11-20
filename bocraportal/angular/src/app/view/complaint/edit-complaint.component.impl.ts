@@ -16,18 +16,21 @@ import { Observable } from 'rxjs';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 import * as ViewActions from '@app/store/view/view.actions';
 import { KeycloakService } from 'keycloak-angular';
+import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
 
 @Component({
   selector: 'app-edit-complaint',
   templateUrl: './edit-complaint.component.html',
   styleUrls: ['./edit-complaint.component.scss']
 })
+
 export class EditComplaintComponentImpl extends EditComplaintComponent {
 
   protected keycloakService: KeycloakService;
   unauthorisedUrls$!: Observable<string[]>;
   deleteUnrestricted: boolean = true;
   documentDelete$: Observable<boolean>;
+  complaintReply$: Observable<ComplaintReplyVO>
 
   constructor(private injector: Injector) {
     super(injector);
@@ -35,12 +38,14 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     this.complaintLicensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
     this.complaintDocuments$ = this.store.pipe(select(ComplaintSelectors.selectDocument));
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
+    this.complaintReply$ = this.store.pipe(select(ComplaintSelectors.selectComplaintReply));
   }
 
   doNgOnDestroy(): void {
   }
 
   override doNgAfterViewInit(): void {
+
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
         viewUrl: "/complaint/edit-complaint",
@@ -71,6 +76,12 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
           this.deleteUnrestricted = false;
         }
       });
+    });
+
+    this.complaintReply$.subscribe(reply => {
+      if (reply) {
+        this.addToComplaintComplaintReplies(reply);
+      }
     });
   }
 
@@ -129,6 +140,7 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   }
 
   override afterEditComplaintReply(form: EditComplaintReplyForm, dialogData: any): void {
+    dialogData.complaintReply.date = new Date();
     if (dialogData) {
       console.log(dialogData);
       this.store.dispatch(

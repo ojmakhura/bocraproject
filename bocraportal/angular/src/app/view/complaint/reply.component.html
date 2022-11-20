@@ -19,12 +19,13 @@
 			<div formGroupName="complaintReply">
 				<div class="mb-3">
 				    <label id="complaintReplyDate_label" class="col-sm-2 col-form-label" for="complaintReplyDate"><span translate>date</span>*</label>
-				    <input type="date" id="complaintReplyDate" class="form-control" formControlName="date"  required navigator="true" showOn="button"/>
+				    <!-- <input type="date" id="complaintReplyDate" class="form-control" formControlName="date"  required navigator="true" showOn="button"/>
 				    <div *ngIf="replyForm.invalid && complaintReplyDateControl.invalid && (complaintReplyDateControl.dirty || complaintReplyDateControl.touched)" class="alert alert-danger" role="alert">
 				        <div *ngIf="complaintReplyDateControl.errors['required']">
 				            <span translate>date.required</span>
 				        </div>
-				    </div>
+				    </div> -->
+                    <label for="complaintReplyDate_label_vaule">{{complaintReply?.date}}</label>
 				</div>
 				<div class="mb-3">
 				    <label id="complaintReplyReplyUser_label" class="col-sm-2 col-form-label" for="complaintReplyReplyUser"><span translate>reply.user</span>*</label>

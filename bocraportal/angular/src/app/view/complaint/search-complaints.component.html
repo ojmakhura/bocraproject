@@ -3,8 +3,8 @@
 	<div class="card-body">
 		<form [formGroup]="searchComplaintsForm">
 			<section>
-				<div class="text-end">
-					<button type="button" (click)="searchComplaintsCreate()" class="btn btn-primary">
+				<div class="text-end mb-3">
+					<button type="button" color="accent" (click)="searchComplaintsCreate()" class="btn btn-primary">
 						<span translate>create</span>
 					</button>
 				</div>
@@ -22,7 +22,7 @@
 					{{ message }}
 				</div>
 			</div>
-			<div class="mb-4">
+			<div class="mb-3" *ngIf="!(isLoggedIn | async)">
 				<label id="criteria_label" class="col-sm-2 col-form-label" for="criteria"><span
 						translate>criteria</span>*</label>
 				<input type="text" id="criteria" class="form-control" name="criteria" formControlName="criteria"
@@ -34,12 +34,51 @@
 					</div>
 				</div>
 			</div>
-			<div class="text-end">
+			<div formGroupName="loggedInSearch" *ngIf="isLoggedIn | async">
+				<div class="mb-3">
+					<label id="loggedInSearchStatus_label" class="col-sm-2 col-form-label"
+						for="loggedInSearchStatus"><span translate>status</span></label>
+					<select id="loggedInSearchStatus" class="form-select" formControlName="status">
+						<option></option>
+						<option *ngFor="let key of statusOptions" [value]="key">
+							{{ statusT[key] }}
+						</option>
+					</select>
+				</div>
+				<div class="mb-3">
+					<label id="loggedInSearchSurname_label" class="col-sm-2 col-form-label"
+						for="loggedInSearchSurname"><span translate>surname</span></label>
+					<input type="text" id="loggedInSearchSurname" class="form-control" name="surname"
+						formControlName="surname" />
+				</div>
+				<div class="mb-3">
+					<label id="loggedInSearchEmail_label" class="col-sm-2 col-form-label"
+						for="loggedInSearchEmail"><span translate>email</span></label>
+					<input type="text" id="loggedInSearchEmail" class="form-control" name="email"
+						formControlName="email" />
+				</div>
+				<div class="mb-3">
+					<label id="loggedInSearchSubject_label" class="col-sm-2 col-form-label"
+						for="loggedInSearchSubject"><span translate>subject</span></label>
+					<input type="text" id="loggedInSearchSubject" class="form-control" name="subject"
+						formControlName="subject" />
+				</div>
+				<div class="mb-3">
+					<label id="loggedInSearchComplaintId_label" class="col-sm-2 col-form-label"
+						for="loggedInSearchComplaintId"><span translate>complaint.id</span></label>
+					<input type="text" id="loggedInSearchComplaintId" class="form-control" name="complaintId"
+						formControlName="complaintId" />
+				</div>
+			</div>
+			<div class="text-end mb-3">
 				<button type="button" (click)="searchComplaintsSearch()" class="btn btn-outline-primary">
 					<span translate>search</span>
 				</button>
-				<button type="button" (click)="searchComplaintsFormReset()"
-						class="btn btn-outline-primary"><span translate>reset</span></button>
+				<button type="button" (click)="searchComplaintsAnalyse()" class="btn btn-outline-primary" *ngIf="isLoggedIn | async">
+					<span translate>analyse</span>
+				</button>
+				<button color="accent" type="button" (click)="searchComplaintsFormReset()"
+					class="btn btn-outline-primary"><span translate>reset</span></button>
 			</div>
 		</form>
 	</div>
