@@ -95,19 +95,49 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
      * @see bw.org.bocra.portal.complaint.ComplaintService#search(String)
      */
     @Override
-    protected Collection<ComplaintVO> handleSearch(String criteria)
+    protected Collection<ComplaintVO> handleSearch(ComplaintSeachCriteria criteria)
             throws Exception {
 
         Collection<ComplaintVO> complaints = new ArrayList<>();
+        Specification<Complaint> spec = null;
 
-        if (StringUtils.isNotBlank(criteria)) {
-            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", criteria);
+        if (StringUtils.isNotBlank(criteria.getComplaintId())) {
+            spec = BocraportalSpecifications.findByAttributeContainingIgnoreCase("complaintId", criteria.getComplaintId());
+        }
 
-            Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
+        if (StringUtils.isNotBlank(criteria.getSubject())) {
+            if(spec == null)
+                spec = BocraportalSpecifications.findByAttributeContainingIgnoreCase("subject", criteria.getSubject());
+            else
+                spec = spec.and(BocraportalSpecifications.findByAttributeContainingIgnoreCase("subject", criteria.getSubject()));
+        }
 
-            for (Complaint complaint : specs) {
-                complaints.add(complaintDao.toComplaintVO(complaint));
-            }
+        if(criteria.getEmail() != null) {
+            if(spec == null)
+                spec = BocraportalSpecifications.findByAttribute("email", criteria.getEmail());
+            else
+                spec = spec.and(BocraportalSpecifications.findByAttribute("email", criteria.getEmail()));
+        }
+
+        if(criteria.getStatus() != null) {
+            if(spec == null)
+                spec = BocraportalSpecifications.findByAttribute("status", criteria.getStatus());
+            else
+                spec = spec.and(BocraportalSpecifications.findByAttribute("status", criteria.getStatus()));
+        }
+
+        if(criteria.getLicenseeId() != null) {
+            if(spec == null)
+                spec = BocraportalSpecifications.findByJoinAttribute("licensee", "id", criteria.getLicenseeId());
+            else
+                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("licensee", "id", criteria.getLicenseeId()));
+        }
+
+
+        Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
+
+        for (Complaint complaint : specs) {
+            complaints.add(complaintDao.toComplaintVO(complaint));
         }
 
         return complaints;
@@ -148,8 +178,6 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
 
     @Override
     protected ComplaintVO handleFindByComplaintId(String complaintId) throws Exception {
-
-        Collection<ComplaintVO> complaints = new ArrayList<>();
 
         if (StringUtils.isNotBlank(complaintId)) {
             Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", complaintId);

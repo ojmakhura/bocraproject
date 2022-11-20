@@ -262,7 +262,7 @@
 				<div>
 					<span>{{selectedDataRows}}</span>
 				</div> -->
-				<div *ngFor="let chartControl of chartsControl?.controls; let i=index">
+				<div *ngFor="let chartControl of chartsControl?.controls; let i=index" #test>
 					<app-report-chart 
 						[dataColumns]="dataColumns"
 						[dataRows]="dataRows"
