@@ -63,13 +63,13 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
             compl.setComplaintId(generatedString);
         }
 
-        compl = complaintRepository.save(compl);
-
-        if (complaint.getId() != null) {
-            return getComplaintDao().toComplaintVO(compl);
+        if(compl.getStatus() == null) {
+            compl.setStatus(ComplaintStatus.NEW);
         }
 
-        return complaint;
+        compl = complaintRepository.save(compl);
+
+        return getComplaintDao().toComplaintVO(compl);
     }
 
     /**

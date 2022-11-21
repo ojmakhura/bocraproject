@@ -28,18 +28,22 @@
 				<div class="mb-3">
 					<label id="complaintStatus_label" class="col-sm-2 col-form-label" for="complaintStatus"><span
 							translate>status</span>*</label>
-					<select id="complaintStatus" class="form-select" formControlName="status" required>
+					<select id="complaintStatus" class="form-select" formControlName="status" *ngIf="loggedIn; else notLoggedIn">
 						<option></option>
 						<option *ngFor="let key of statusOptions" [value]="key">
 							{{ statusT[key] }}
 						</option>
 					</select>
-					<div *ngIf="editComplaintForm.invalid && complaintStatusControl.invalid && (complaintStatusControl.dirty || complaintStatusControl.touched)"
-						class="alert alert-danger" role="alert">
-						<div *ngIf="complaintStatusControl.errors['required']">
-							<span translate>status.required</span>
-						</div>
-					</div>
+					<ng-template #notLoggedIn>
+						<label>{{complaintStatus}}</label>
+					</ng-template>
+				</div>
+				<div class="mb-3">
+					<label id="complaintComplaintId_label" class="col-sm-2 col-form-label"
+						for="complaintComplaintId"><span translate>complaint.id</span></label>
+					<!-- <input type="text" id="complaintComplaintId" class="form-control" name="complaintId"
+						formControlName="complaintId" /> -->
+						<label for="complaintId_label_value">{{complaint?.complaintId}}</label>
 				</div>
 				<fieldset formGroupName="licensee">
 					<div class="row mb-3">
@@ -68,13 +72,6 @@
 						</div>
 					</div>
 				</fieldset>
-				<div class="mb-3">
-					<label id="complaintComplaintId_label" class="col-sm-2 col-form-label"
-						for="complaintComplaintId"><span translate>complaint.id</span></label>
-					<!-- <input type="text" id="complaintComplaintId" class="form-control" name="complaintId"
-						formControlName="complaintId" /> -->
-						<label for="complaintId_label_value">{{complaint?.complaintId}}</label>
-				</div>
 				<div class="mb-3">
 					<label id="complaintFirstName_label" class="col-sm-2 col-form-label" for="complaintFirstName"><span
 							translate>first.name</span>*</label>
@@ -141,7 +138,10 @@
 					<label id="complaintAssignedTo_label" class="col-sm-2 col-form-label"
 						for="complaintAssignedTo"><span translate>assigned.to</span></label>
 					<input type="text" id="complaintAssignedTo" class="form-control" name="assignedTo"
-						formControlName="assignedTo" />
+						formControlName="assignedTo" *ngIf="loggedIn; else notLoggedIn"/>
+					<ng-template #notLoggedIn>
+						<label> {{ complaintAssignedTo }} </label>
+					</ng-template>
 				</div>
 				<div class="mb-3">
 					<label id="complaintCreatedDate_label" class="col-sm-2 col-form-label"

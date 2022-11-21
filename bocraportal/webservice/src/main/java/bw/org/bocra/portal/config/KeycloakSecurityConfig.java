@@ -87,6 +87,9 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 "/swagger-resources/**",
                 "/auth/signin",
                 "/sector/all",
+                "/licensee/search",
+                "/complaint",
+                "/complaint/reply",
                 "/actuator/health"
             ).permitAll()
             .anyRequest().authenticated();

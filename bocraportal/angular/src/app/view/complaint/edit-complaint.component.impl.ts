@@ -17,6 +17,7 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
 import * as ViewActions from '@app/store/view/view.actions';
 import { KeycloakService } from 'keycloak-angular';
 import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
+import * as ViewSelectors from '@app/store/view/view.selectors';
 
 @Component({
   selector: 'app-edit-complaint',
@@ -31,6 +32,8 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   deleteUnrestricted: boolean = true;
   documentDelete$: Observable<boolean>;
   complaintReply$: Observable<ComplaintReplyVO>
+  loggedIn: boolean = false;
+
 
   constructor(private injector: Injector) {
     super(injector);
@@ -39,6 +42,10 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     this.complaintDocuments$ = this.store.pipe(select(ComplaintSelectors.selectDocument));
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
     this.complaintReply$ = this.store.pipe(select(ComplaintSelectors.selectComplaintReply));
+    this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
+    this.keycloakService.isLoggedIn().then((loggedIn) => {
+      this.loggedIn = loggedIn;
+    });
   }
 
   doNgOnDestroy(): void {
@@ -66,11 +73,11 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
       }
     });
 
-    this.complaint$.subscribe((complaint) => {
+    this.complaint$?.subscribe((complaint) => {
       this.setEditComplaintFormValue({ complaint: complaint });
     });
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
+    this.unauthorisedUrls$?.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
         if (item === '/complaint/edit-complaint/{button:delete}') {
           this.deleteUnrestricted = false;
