@@ -71,14 +71,6 @@ export class EditAccessPointComponentImpl extends EditAccessPointComponent {
       }
     });
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
-        if (item === '/access/edit-access-point/{button:delete}') {
-          this.deleteUnrestricted = false;
-        }
-      });
-    });
-
     this.accessPoint$.subscribe((accessPoint) => {
       this.setEditAccessPointFormValue({ accessPoint: accessPoint });
     });

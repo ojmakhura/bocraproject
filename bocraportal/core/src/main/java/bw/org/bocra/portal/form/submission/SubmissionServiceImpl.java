@@ -312,4 +312,21 @@ public class SubmissionServiceImpl
         return vos;
     }
 
+    @Override
+    protected Boolean handleUpdateSubmissionStatus(Long id, FormSubmissionStatus submissionStatus, final LocalDateTime updateTime, final String username) throws Exception {
+        FormSubmission submission = formSubmissionRepository.getReferenceById(id);
+        submission.setSubmissionStatus(submissionStatus);
+        if(submissionStatus == FormSubmissionStatus.SUBMITTED) {
+            submission.setSubmissionDate(updateTime);
+            submission.setSubmittedBy(username);
+        } else {
+            submission.setUpdatedBy(username);
+            submission.setUpdatedDate(updateTime);
+        }
+
+        formSubmissionRepository.save(submission);
+
+        return true;
+    }
+
 }

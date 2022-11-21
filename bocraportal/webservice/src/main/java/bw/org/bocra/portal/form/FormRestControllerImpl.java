@@ -7,6 +7,8 @@ package bw.org.bocra.portal.form;
 
 import java.util.Collection;
 import java.util.Optional;
+
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -130,6 +132,9 @@ public class FormRestControllerImpl extends FormRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
+            if(e instanceof ConstraintViolationException) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form form has been already created.");
+            }
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }

@@ -19,6 +19,24 @@ export const complaintReducer = createReducer(
         loading: false,
         loaderMessage: undefined,
         success: action.success,
+        error: false,
+        messages: action.messages
+    })),
+    on(ComplaintActions.findByComplaintId, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
+    on(ComplaintActions.findByComplaintIdSuccess, (state, action) => ({
+        ...state,
+        complaint: action.complaint, 
+        criteria: null, 
+        complaints: [], 
+        id: null, 
+        loading: false,
+        loaderMessage: undefined,
+        success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintActions.save, (state, action) => ({
@@ -35,6 +53,7 @@ export const complaintReducer = createReducer(
         loading: false,
         loaderMessage: undefined,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintActions.remove, (state, action) => ({
@@ -51,6 +70,7 @@ export const complaintReducer = createReducer(
         id: null, 
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintActions.getAll, (state, action) => ({
@@ -67,6 +87,7 @@ export const complaintReducer = createReducer(
         loading: false,
         loaderMessage: undefined,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintActions.search, (state, action) => ({
@@ -83,6 +104,7 @@ export const complaintReducer = createReducer(
         loading: false,
         loaderMessage: undefined,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintActions.getAllPaged, (state, action) => ({
@@ -98,6 +120,44 @@ export const complaintReducer = createReducer(
         id: null, 
         loading: false,
         loaderMessage: undefined,
+        success: action.success,
+        error: false,
+        messages: action.messages
+    })),
+    on(ComplaintActions.addComplaintReply, (state, action) => ({
+        ...state, 
+        loaderMessage: action.loaderMessage,
+        loading: action.loading,
+    })),
+    on(ComplaintActions.addComplaintReplySuccess, (state, action) => ({
+        ...state,
+        complaints: [], 
+        complaintReplies: [...state.complaintReplies, action.complaintReply], 
+        complaintReply: action.complaintReply,
+        id: null, 
+        criteria: null, 
+        document: null, 
+        complaint: null, 
+        loaderMessage: undefined,
+        loading: false,
+        success: action.success,
+        messages: action.messages
+    })),
+    on(ComplaintActions.removeComplaintReply, (state, action) => ({
+        ...state,
+        loaderMessage: action.loaderMessage,
+        loading: action.loading,
+    })),
+    on(ComplaintActions.removeComplaintReplySuccess, (state, action) => ({
+        ...state,
+        complaints: [], 
+        complaintReply: null, 
+        id: null, 
+        criteria: null, 
+        document: null, 
+        complaint: null, 
+        loaderMessage: undefined,
+        loading: false,
         success: action.success,
         messages: action.messages
     })),

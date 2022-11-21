@@ -72,7 +72,6 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
 
   formSearch(): void {
     let criteria: FormCriteria = new FormCriteria();
-    criteria.code = this.formSearchField.value;
     criteria.formName = this.formSearchField.value;
     this.store.dispatch(FormActions.searchForms({ criteria: criteria, loading: true, loaderMessage: 'Searching forms ...' }));
   }

@@ -3,6 +3,7 @@ import { createAction, props } from '@ngrx/store';
 import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { NoteVO } from '@model/bw/org/bocra/portal/form/submission/note/note-vo';
+import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
 
 export enum FormSubmissionActionType {
     FIND_BY_ID = '[FormSubmission] Find By Id',
@@ -13,6 +14,8 @@ export enum FormSubmissionActionType {
     SAVE_SUCCESS = '[FormSubmission] Save Success',
     SAVE_NOTE = '[FormSubmission] Save Note',
     SAVE_NOTE_SUCCESS = '[FormSubmission] Save Note Success',
+    UPDATE_STATUS = '[FormSubmission] Update Form Submission Status',
+    UPDATE_STATUS_SUCCESS = '[FormSubmission] Update Form Submission Status Success',
     REMOVE = '[FormSubmission] Remove',
     REMOVE_SUCCESS = '[FormSubmission] Remove Success',
     GET_ALL = '[FormSubmission] Get All',
@@ -54,6 +57,16 @@ export const save = createAction(
 export const saveSuccess = createAction(
     FormSubmissionActionType.SAVE_SUCCESS,
     props<{ formSubmission: FormSubmissionVO | any, messages: any[], success: boolean}>()
+);
+
+export const updateStatus = createAction(
+    FormSubmissionActionType.UPDATE_STATUS,
+    props<{ id: number | any, submissionStatus: FormSubmissionStatus | any, updateTime: Date, username: string | any, loading: boolean, loaderMessage: string | undefined }>()
+);
+
+export const updateStatusSuccess = createAction(
+    FormSubmissionActionType.SAVE_NOTE_SUCCESS,
+    props<{ updated: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const saveNote = createAction(

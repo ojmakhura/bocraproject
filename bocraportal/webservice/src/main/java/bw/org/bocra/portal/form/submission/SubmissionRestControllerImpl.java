@@ -5,10 +5,12 @@
 //
 package bw.org.bocra.portal.form.submission;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -137,6 +139,9 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
+            if(e instanceof ConstraintViolationException) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form submission has been already done.");
+            }
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
@@ -273,5 +278,21 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
         
+    }
+
+    @Override
+    public ResponseEntity<?> handleUpdateSubmissionStatus(Long id, FormSubmissionStatus submissionStatus, final LocalDateTime updateTime, final String username) {
+        try {
+
+            Boolean updated = submissionService.updateSubmissionStatus(id, submissionStatus, updateTime, username);
+            return ResponseEntity.ok(updated);
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new SubmissionServiceException("Could not update the form submission.");
+            // return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
     }
 }

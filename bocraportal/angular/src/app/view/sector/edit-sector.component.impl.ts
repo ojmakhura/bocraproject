@@ -102,7 +102,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     criteria = this.sectorLicenseesSearchField.value;
     this.store.dispatch(
       LicenseeActions.search({
-        criteria: { uin: criteria, licenseeName: criteria },
+        criteria: { licenseeName: criteria },
         loading: true,
         loaderMessage: 'Searching licensees ...'
       })
@@ -110,16 +110,23 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override beforeEditSectorDelete(form: EditSectorDeleteForm): void {
-    if (form?.sector?.id && confirm('Are you sure you want to delete the sector?')) {
-      this.store.dispatch(
-        SectorActions.remove({
-          id: form?.sector?.id,
-          loading: false,
-          loaderMessage: ''
-        })
-      );
-      this.editSectorFormReset();
-    } else {
+    if(form?.sector?.id){
+      if(!(form?.sector?.forms.length>0) && confirm('Are you sure you want to delete the Sector?')) {
+
+        this.store.dispatch(
+          SectorActions.remove({
+            id: form?.sector?.id,
+            loading: true,
+            loaderMessage: 'Removing form sectors ...'
+          })
+        );
+        this.editSectorFormReset();
+      }else{
+        this.store.dispatch(SectorActions.sectorFailure({ messages: ['This Sector has forms hence can not be deleted'] }));
+      }
+    }
+
+    else {
       this.store.dispatch(SectorActions.sectorFailure({ messages: ['Please select something to delete'] }));
     }
   }
@@ -171,14 +178,9 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   }
 
   override sectorFormsSearch() {
-    let criteria: FormCriteria = new FormCriteria();
-
-    criteria.code = this.sectorFormsSearchField.value;
-    criteria.formName = this.sectorFormsSearchField.value;
-
     this.store.dispatch(
       FormActions.searchForms({
-        criteria: criteria,
+        criteria: {formName: this.sectorFormsSearchField.value},
         loading: true,
         loaderMessage: 'Searching forms ...'
       })

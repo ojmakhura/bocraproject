@@ -20,21 +20,23 @@ import { ReportState } from '@app/store/report/report.state';
 import * as ReportSelectors from '@app/store/report/report.selectors';
 
 import { NoteVO } from '@app/model/bw/org/bocra/portal/form/submission/note/note-vo';
-import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
-import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
-import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
-import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
-import { ReportControllerImpl } from '@app/controller/report/report-controller.impl';
-import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
-import { ReportComponentImpl } from '@app/view/report/report.component.impl';
+import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
+import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
+import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
+import { SearchComponentImpl } from '@app/view/report/search.component.impl';
+import { ReportControllerImpl } from '@app/controller/report/report-controller.impl';
+import * as FormSubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
 
 @Component({
-  selector: 'report-form-submissions-base',
+  selector: 'search-form-submissions-base',
   template: ''
 })
-export abstract class ReportFormSubmissionsComponent implements OnInit, OnDestroy {
+export abstract class SearchFormSubmissionsComponent implements OnInit, OnDestroy {
 
     formSubmissionsColumns = [
         'id',
@@ -55,7 +57,7 @@ export abstract class ReportFormSubmissionsComponent implements OnInit, OnDestro
     protected useCaseScope: UseCaseScope;
     protected store: Store<ReportState>;
     protected reportController: ReportControllerImpl;
-    protected reportComponent: ReportComponentImpl;
+    protected searchComponent: SearchComponentImpl;
     protected _injector: Injector;
 
     constructor(injector: Injector) {
@@ -64,9 +66,9 @@ export abstract class ReportFormSubmissionsComponent implements OnInit, OnDestro
         this.useCaseScope = injector.get(UseCaseScope);
         this.store = injector.get(Store);
         this.reportController = injector.get(ReportControllerImpl);
-        this.reportComponent = injector.get(ReportComponentImpl);
+        this.searchComponent = injector.get(SearchComponentImpl);
         this._injector = injector;
-        this.formSubmissions$ = this.store.pipe(select(ReportSelectors.selectFormSubmissions));
+        this.formSubmissions$ = this.store.pipe(select(FormSubmissionSelectors.selectFormSubmissions));
     }
 
     ngOnInit(): void {

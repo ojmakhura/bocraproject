@@ -47,6 +47,20 @@ export const formSubmissionReducer = createReducer(
         error: false,
         messages: action.messages
     })),
+    on(FormSubmissionActions.updateStatus, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
+    on(FormSubmissionActions.updateStatusSuccess, (state, action) => ({
+        ...state,
+        updated: action.updated, 
+        loading: false,
+        loaderMessage: undefined,
+        success: action.success,
+        error: false,
+        messages: action.messages
+    })),
     on(FormSubmissionActions.saveNote, (state, action) => ({
         ...state,
         loading: action.loading,

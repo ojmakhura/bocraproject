@@ -23,7 +23,7 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     state: RouterStateSnapshot
   ) {
 
-    if(state.url === '/' || state.url === '/assets' || state.url === '/about' || state.url === '/home' || state.url === '/contact') {
+    if(state.url === '/' || state.url === '/assets' || state.url === '/about' || state.url === '/home' || state.url === '/contact' || state.url === '/complaint' || '/complaint/search-complaints') {
       return true;
     }
 

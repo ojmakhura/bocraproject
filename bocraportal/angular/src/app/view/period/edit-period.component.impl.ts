@@ -200,19 +200,40 @@ export class EditPeriodComponentImpl extends EditPeriodComponent {
   }
 
   override beforeEditPeriodDelete(form: EditPeriodDeleteForm): void {
-    if (form?.period?.id && confirm("Are you sure you want to delete the period?")) {
-      this.store.dispatch(
-        PeriodActions.remove({
-          id: form?.period?.id,
-          loading: false,
-          loaderMessage: 'Removing periods ...'
-        })
-      );
-      this.editPeriodFormReset();
-    } else {
+    if(form?.period?.id){
+      if(!(form?.period?.periodConfig?.id) && confirm('Are you sure you want to delete the form activation?')) {
+
+        this.store.dispatch(
+          PeriodActions.remove({
+            id: form.period?.id,
+            loading: true,
+            loaderMessage: 'Removing form submission ...'
+          })
+        );
+        this.editPeriodFormReset();
+      }else{
+        this.store.dispatch(PeriodActions.periodFailure({ messages: ['This Period not be deleted, it is attached to a period configuration'] }));
+      }
+    }
+
+    else {
       this.store.dispatch(PeriodActions.periodFailure({ messages: ['Please select something to delete'] }));
     }
   }
+  // override beforeEditPeriodDelete(form: EditPeriodDeleteForm): void {
+  //   if (form?.period?.id && confirm("Are you sure you want to delete the period?")) {
+  //     this.store.dispatch(
+  //       PeriodActions.remove({
+  //         id: form?.period?.id,
+  //         loading: false,
+  //         loaderMessage: 'Removing periods ...'
+  //       })
+  //     );
+  //     this.editPeriodFormReset();
+  //   } else {
+  //     this.store.dispatch(PeriodActions.periodFailure({ messages: ['Please select something to delete'] }));
+  //   }
+  // }
 
 
   override afterEditPeriodCreateNext(form: EditPeriodCreateNextForm): void {

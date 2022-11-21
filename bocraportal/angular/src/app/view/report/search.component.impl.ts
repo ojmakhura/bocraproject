@@ -2,11 +2,18 @@
 import { Component, Inject, Injector } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatRadioChange } from '@angular/material/radio';
+import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
-import * as FormSelectors from '@app/store/form/form.selectors';
 import { SearchComponent } from '@app/view/report/search.component';
 import { select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import * as FormSelectors from '@app/store/form/form.selectors';
+import * as FormActions from '@app/store/form/form.actions';
+import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
+import * as ReportActions from '@app/store/report/report.actions';
+import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 
 @Component({
   selector: 'app-search',
@@ -21,12 +28,73 @@ export class SearchComponentImpl extends SearchComponent {
   formModalColumns = ['actions', 'id', 'code', 'formName', 'entryType'];
   formControl: FormGroup = this.createFormVOGroup(new FormVO());
   addUnrestricted: boolean = true;
+  submissionController: SubmissionRestController;
+  submissions: FormSubmissionVO[] = [];
 
     constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
         super(data, injector);
       this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
+      this.submissionController = this.injector.get(SubmissionRestController);
     }
 
     doNgOnDestroy(): void {
+    }
+
+    override afterOnInit(): void {
+      this.searchForm.addControl('selectedForm', this.createFormVOGroup(new FormVO()));
+    }
+
+    formSelected(event: MatRadioChange, data: FormVO): void {
+      this.formSelect = data;
+    }
+
+    /**
+     * This method may be overwritten
+     */
+    override beforeSearchSearch(): void {
+      this.submissionController.search(this.criteria).subscribe(submissions => {
+        this.submissions = submissions;
+        console.log(submissions);
+        this.store.dispatch(
+          ReportActions.setSubmissions({
+            formSubmissions: submissions,
+            messages: [],
+            success: true
+          })
+        )
+      });
+    }
+
+    override handleDialogDone(data: any): any {
+      return {formSubmissions: this.submissions};
+    }
+  
+    /**
+     * May be overridden to customise behaviour
+     *
+     */
+    addSelectedForm(): void {
+      this.criteriaControl.patchValue({ form: this.formSelect.id });
+      this.searchForm.patchValue({ selectedForm: this.formSelect });
+    }
+  
+    formSearch(): void {
+      let criteria: FormCriteria = new FormCriteria();
+      criteria.formName = this.formSearchField.value;
+      this.store.dispatch(FormActions.searchForms({ criteria: criteria, loading: true, loaderMessage: 'Searching forms ...' }));
+    }
+  
+    formAddDialog(): void {}
+  
+    formClear(): void {
+      this.criteriaControl.patchValue({form: new FormVO()});
+    }
+
+    get selectedFormControl(): FormGroup {
+        return this.searchForm.get('selectedForm') as FormGroup;
+    }
+  
+    get selectedForm(): FormVO {
+        return this.selectedFormControl?.value;
     }
 }
