@@ -485,9 +485,16 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
     }
 
     createComplaintForm(complaint: ComplaintVO): FormGroup {
+        if(!complaint) {
+            complaint = new ComplaintVO()
+        }
+        
+        if(!complaint.status) {
+            complaint.status = this.statusOptions[0]
+        }
         return this.formBuilder.group({
             id: [{value: complaint?.id, disabled: false}],
-            status: [{value: complaint?.status, disabled: false}, [Validators.required, ]],
+            status: [{value: complaint?.status, disabled: false}],
             licensee: this.createLicenseeVOGroup(complaint?.licensee),
             complaintId: [{value: complaint?.complaintId, disabled: false}],
             firstName: [{value: complaint?.firstName, disabled: false}, [Validators.required, ]],
