@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.message.CommunicationMessageVO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +25,7 @@ public class MessageQueueController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> sendEmail(@RequestBody CommunicationMessage message) {
+    public ResponseEntity<?> sendEmail(@RequestBody CommunicationMessageVO message) {
 
         logger.info(message.toString());
         rabbitTemplate.convertAndSend("", "q.communication", message);

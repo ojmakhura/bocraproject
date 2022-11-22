@@ -12,7 +12,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import bw.org.bocra.portal.comm.CommunicationMessage;
+import bw.org.bocra.portal.message.CommunicationMessageVO;
 import bw.org.bocra.portal.smtp.RealmSmtpDTO;
 import bw.org.bocra.portal.smtp.RealmSmtpService;
 
@@ -31,7 +31,7 @@ public class EmailService {
     }
 
     @RabbitListener(queues = "q.send-email")
-    public void sendEmail(CommunicationMessage emailMessage) {
+    public void sendEmail(CommunicationMessageVO emailMessage) {
         logger.info("Sending email to {}", emailMessage.getSubject());
 
         RealmSmtpDTO dto = configService.getRealmSmtpConfig(realmId);
@@ -56,9 +56,9 @@ public class EmailService {
             message.setReplyTo(dto.getReplyTo());
         }
 
-        message.setTo(emailMessage.getTo());
+        message.setTo(emailMessage.getDestination());
         message.setSubject(emailMessage.getSubject());
-        message.setText(emailMessage.getMessage());
+        message.setText(emailMessage.getText());
 
         mailSender.send(message);
     }

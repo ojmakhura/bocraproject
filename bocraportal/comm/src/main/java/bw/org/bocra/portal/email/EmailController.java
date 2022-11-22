@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bw.org.bocra.portal.comm.CommunicationMessage;
+import bw.org.bocra.portal.message.CommunicationMessageVO;
 
 @RestController
 @RequestMapping("/email")
@@ -20,7 +20,7 @@ public class EmailController {
     }
 
     @PostMapping
-    public ResponseEntity<?> sendEmail(@RequestBody CommunicationMessage emailMessage) {
+    public ResponseEntity<?> sendEmail(@RequestBody CommunicationMessageVO emailMessage) {
         try {
 
             emailService.sendEmail(emailMessage);       

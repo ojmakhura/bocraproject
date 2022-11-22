@@ -4,6 +4,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import bw.org.bocra.portal.message.CommunicationMessageVO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +20,7 @@ public class CommunicationListener {
     }
 
     @RabbitListener(queues = {"q.communication"})
-    public void onCommunication(CommunicationMessage event)  {
+    public void onCommunication(CommunicationMessageVO event)  {
         logger.info("Communication Event Received: {}", event);
 
         //executeCommunication(event);
@@ -26,7 +28,7 @@ public class CommunicationListener {
         rabbitTemplate.convertAndSend("x.post-communication","", event);
     }
 
-    private void executeCommunication(CommunicationMessage event) {
+    private void executeCommunication(CommunicationMessageVO event) {
         logger.info("Executing Communication Event: {}", event);
 
         throw new RuntimeException("Communication Failed");
