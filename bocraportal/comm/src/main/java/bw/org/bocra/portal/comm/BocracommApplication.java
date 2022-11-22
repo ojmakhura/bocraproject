@@ -1,4 +1,4 @@
-package bw.org.bocra.portal.bocracomm;
+package bw.org.bocra.portal.comm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

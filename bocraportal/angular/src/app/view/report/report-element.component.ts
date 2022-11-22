@@ -370,6 +370,32 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return `${first}: ${second}`;
   }
 
+  getSources(sources: string) {
+    let sourceList: string[][] = []
+
+    let sourceSplit: string[] = sources
+                  ?.split('::')
+                  ?.map((val: any) => val.trim())
+                  ?.filter((val: any) => val?.length > 0);
+  
+    sourceList.push(
+      sourceSplit[0]?.split(',')
+                        ?.map((val: any) => val.trim())
+                        ?.filter((val: any) => val?.length > 0)
+    );
+
+
+    if(sourceSplit.length == 2) {
+      sourceList.push(
+        sourceSplit[1]?.split(',')
+                          ?.map((val: any) => val.trim())
+                          ?.filter((val: any) => val?.length > 0)
+      );
+    }
+  
+    return sourceList;
+  }
+
   additionalRowChange(index: number) {
     this.generateColors(false);
     this.periodSelectionChange();
@@ -392,19 +418,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           return;
         }
 
-        let sourceSplit: string[] = changingRow?.sources
-                                        ?.split('::')
-                                        ?.map((val: any) => val.trim())
-                                        ?.filter((val: any) => val?.length > 0);
+        let sourceSplit = this.getSources(changingRow?.sources)
 
-        licensees = sourceSplit[0]?.split(',')
-                        ?.map((val: any) => val.trim())
-                        ?.filter((val: any) => val?.length > 0);
+        licensees = sourceSplit[0]
 
         if(sourceSplit.length == 2) {
-          fields = sourceSplit[1]?.split(',')
-                      ?.map((val: any) => val.trim())
-                      ?.filter((val: any) => val?.length > 0);
+          fields = sourceSplit[1]
         }
         licensees?.forEach((licensee) => {
           this.filteredFormSubmissions?.forEach((submission) => {

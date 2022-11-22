@@ -254,7 +254,7 @@ services:
       - "traefik.http.routers.api.tls.certresolver=le"
   
   ###############################################################################
-  # The main API 
+  # The Communication API 
   ###############################################################################
   comm:
     image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
@@ -348,7 +348,6 @@ services:
       - "traefik.http.routers.bocra-web.tls.certresolver=le"
   rabbitmq:
     image: rabbitmq:management
-    restart: no
     networks:
       traefik-public:
       bocra-network:

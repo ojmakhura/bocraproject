@@ -1,4 +1,4 @@
-package bw.org.bocra.portal.config;
+package bw.org.bocra.portal.comm;
 
 import java.time.format.DateTimeFormatter;
 
