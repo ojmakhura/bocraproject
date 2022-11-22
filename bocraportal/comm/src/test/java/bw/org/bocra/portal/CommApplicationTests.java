@@ -1,10 +1,10 @@
-package bw.org.bocra.portal.bocracomm;
+package bw.org.bocra.portal;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BocracommApplicationTests {
+class CommApplicationTests {
 
 	@Test
 	void contextLoads() {

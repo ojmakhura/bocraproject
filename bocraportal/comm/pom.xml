@@ -14,12 +14,27 @@
 	<!-- <properties>
 		<java.version>11</java.version>
 	</properties> -->
+	<dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.keycloak.bom</groupId>
+                <artifactId>keycloak-adapter-bom</artifactId>
+                <version>${keycloak.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 	<dependencies>
 		<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>bocraportal-common</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>   
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -30,8 +45,12 @@
 		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-spring-boot-starter</artifactId>
@@ -68,13 +87,52 @@
 		</dependency>
 	</dependencies>
 
+	
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+        <finalName>${application.id}-comm</finalName>
+        <!-- Change from default src/main/java and src/test/java>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>src-test</testSourceDirectory -->
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <!-- <sources>
+                                <source>target/src/main/java</source>
+                            </sources> -->
+                            <sources>
+                                <source>src/main/resources</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <!-- <resource>
+                <directory>target/src/main/java</directory>
+            </resource> -->
+        </resources>
+    </build>
 
 </project>

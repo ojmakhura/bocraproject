@@ -249,7 +249,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
+      - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`))"
       - "traefik.http.routers.api.tls=${SSL_SECURE}"
       - "traefik.http.routers.api.tls.certresolver=le"
   
@@ -258,8 +258,8 @@ services:
   ###############################################################################
   comm:
     image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
-    container_name: bocraportal-api
-    hostname: api
+    container_name: bocraportal-comm
+    hostname: comm
 
     healthcheck:
       test: "curl -m 5 --silent --fail --request GET http://localhost:8095/actuator/health | grep UP || exit 1"
@@ -276,7 +276,7 @@ services:
         condition: service_healthy
     build:
       context: .
-      dockerfile: bocraportal/bocracomm/Dockerfile
+      dockerfile: bocraportal/comm/Dockerfile
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
@@ -303,10 +303,11 @@ services:
     
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
-      - "traefik.http.routers.api.tls=${SSL_SECURE}"
-      - "traefik.http.routers.api.tls.certresolver=le"
+      - "traefik.http.routers.comm.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.comm.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`"
+      - "traefik.http.routers.comm.tls=${SSL_SECURE}"
+      - "traefik.http.routers.comm.tls.certresolver=le"
+
   ###############################################################################
   # Angular web application
   ###############################################################################
@@ -346,16 +347,26 @@ services:
       - "traefik.http.routers.bocra-web.entrypoints=${ACTIVE_ROUTER_ENTRY}"
       - "traefik.http.routers.bocra-web.tls=${SSL_SECURE}"
       - "traefik.http.routers.bocra-web.tls.certresolver=le"
+
+  ###############################################################################
+  # Rabbit MQ
+  ###############################################################################
   rabbitmq:
     image: rabbitmq:management
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      TZ: Africa/Gaborone
     networks:
       traefik-public:
       bocra-network:
-        # ipv4_address: ${BOCRA_WEB_ADDRESS}
+        ipv4_address: ${BOCRA_RABBIT_ADDRESS}
       default:
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
+      - "${RABBITMQ_WEB_PORT}:${RABBITMQ_WEB_PORT}"
+
   ###############################################################################
   # Local docker container registry
   ###############################################################################

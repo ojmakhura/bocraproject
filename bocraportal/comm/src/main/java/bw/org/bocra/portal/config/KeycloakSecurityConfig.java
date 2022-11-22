@@ -1,4 +1,4 @@
-package bw.org.bocra.portal.comm;
+package bw.org.bocra.portal.config;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -85,11 +85,6 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 "/webjars/**", 
                 "/v3/**", 
                 "/swagger-resources/**",
-                "/auth/signin",
-                "/sector/all",
-                "/licensee/search",
-                "/complaint",
-                "/complaint/reply",
                 "/actuator/health"
             ).permitAll()
             .anyRequest().authenticated();
