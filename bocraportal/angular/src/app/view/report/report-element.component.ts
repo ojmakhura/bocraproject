@@ -68,6 +68,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   constructor(private injector: Injector, @Inject(LOCALE_ID) public locale: string) {
     this.formBuilder = this.injector.get(FormBuilder);
+    console.log(this.formSubmissions)
+    console.log(this.reportElementGroup)
   }
 
   ngOnInit(): void {
@@ -262,7 +264,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
             ?.map((val) => val.trim())
             ?.filter((val) => val?.length > 0);
 
-          let calcFields = fields?.filter((field) => sources?.find((source) => field?.formField?.fieldId === source));
+          let calcFields = fields?.filter((field) => sources?.find((source) => (source === 'all' || field?.formField?.fieldId === source)));
           let calValues = calcFields?.map((value) => +value?.value);
           if (calValues && calValues.length > 0) {
             let calc = this.formatCalculation(this.calculate(calValues, changedlabel?.type));
@@ -293,7 +295,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
               });
 
               let selectedField = fields?.find((field) => field.formField?.fieldId === source);
-              if (selectedField) {
+              if (source === 'all' || selectedField) {
                 sourceData[source].push(+selectedField?.value);
               }
             });
@@ -418,7 +420,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           return;
         }
 
-        let sourceSplit = this.getSources(changingRow?.sources)
+        let sourceSplit = this.getSources(changingRow?.sources);
 
         licensees = sourceSplit[0]
 
@@ -479,19 +481,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           return;
         }
 
-        let sourceSplit: string[] = changingRow?.sources
-                                        ?.split('::')
-                                        ?.map((val: any) => val.trim())
-                                        ?.filter((val: any) => val?.length > 0);
+        let sourceSplit: string[][] = this.getSources(changingRow?.sources)
 
-        fields = sourceSplit[0]?.split(',')
-                      ?.map((val: any) => val.trim())
-                      ?.filter((val: any) => val?.length > 0);
+        fields = sourceSplit[0];
 
         if(sourceSplit.length == 2) {
-          licensees = sourceSplit[1]?.split(',')
-                        ?.map((val: any) => val.trim())
-                        ?.filter((val: any) => val?.length > 0);
+          licensees = sourceSplit[1];
         }
         licensees?.forEach((licensee) => {
           this.filteredFormSubmissions?.forEach((submission) => {
