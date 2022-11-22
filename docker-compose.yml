@@ -274,6 +274,7 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_healthy
+      # rabbitmq:
     build:
       context: .
       dockerfile: bocraportal/comm/Dockerfile

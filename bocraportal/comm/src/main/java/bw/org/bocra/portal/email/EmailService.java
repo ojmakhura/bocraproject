@@ -7,12 +7,12 @@ import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import bw.org.bocra.portal.comm.CommunicationMessage;
-import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.smtp.RealmSmtpDTO;
 import bw.org.bocra.portal.smtp.RealmSmtpService;
 
@@ -21,20 +21,20 @@ public class EmailService {
 
     protected Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-    private final RealmSmtpService configService;
-    private final KeycloakService keycloakService;
+    @Value("${keycloak.realm}")
+    private String realmId;
 
-    public EmailService(RealmSmtpService configService, KeycloakService keycloakService) {
+    private final RealmSmtpService configService;
+
+    public EmailService(RealmSmtpService configService) {
         this.configService = configService;
-        this.keycloakService = keycloakService;
     }
 
     @RabbitListener(queues = "q.send-email")
     public void sendEmail(CommunicationMessage emailMessage) {
         logger.info("Sending email to {}", emailMessage.getSubject());
 
-        RefreshableKeycloakSecurityContext context = keycloakService.getSecurityContext();
-        RealmSmtpDTO dto = configService.getRealmSmtpConfig("bocraportal");
+        RealmSmtpDTO dto = configService.getRealmSmtpConfig(realmId);
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(dto.getHost());
