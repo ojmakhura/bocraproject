@@ -6,6 +6,9 @@
                         [data]="getComplaintsExportData()" [filename]="'complaints'">
                 CSV
             </a>
+            <a type="button" (click)="getComplaintsAnalyse()" class="btn btn-primary" *ngIf="isLoggedIn | async">
+                <span translate>analyse</span>
+            </a>
         </div>
         <mat-table matSort [dataSource]="complaintsDataSource" #complaintsSort="matSort" class="table table-bordered table-striped" style="width: 100%;">
             <ng-container matColumnDef="id">
