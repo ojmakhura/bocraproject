@@ -8,11 +8,18 @@
  */
 package bw.org.bocra.portal.message;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.form.FormRepository;
+import bw.org.bocra.portal.form.submission.FormSubmission;
+import bw.org.bocra.portal.form.submission.FormSubmissionCriteria;
+import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 
 /**
  * @see bw.org.bocra.portal.message.CommunicationMessageService
@@ -22,8 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommunicationMessageServiceImpl
     extends CommunicationMessageServiceBase
 {
+
+    private final FormSubmissionDao formSubmissionDao;
+
     public CommunicationMessageServiceImpl(
-        CommunicationMessageDao communicationMessage,
+        CommunicationMessageDao communicationMessage, FormSubmissionDao formSubmissionDao,
         CommunicationMessageRepository communicationMessageRepository,
         MessageSource messageSource
     ) {
@@ -33,6 +43,8 @@ public class CommunicationMessageServiceImpl
             communicationMessageRepository,
             messageSource
         );
+
+        this.formSubmissionDao = formSubmissionDao;
     }
 
     /**
@@ -143,6 +155,21 @@ public class CommunicationMessageServiceImpl
     {
         // TODO implement protected  Integer handleClearFailedMessages()
         throw new UnsupportedOperationException("bw.org.bocra.portal.message.CommunicationMessageService.handleClearFailedMessages() Not implemented!");
+    }
+
+    @Override
+    protected Collection<CommunicationMessageVO> handleLoadDueSubmissionMessages() throws Exception {
+        FormSubmissionCriteria criteria = new FormSubmissionCriteria();
+        criteria.setPeriodDate(LocalDateTime.now());
+        // TODO Auto-generated method stub
+        Collection<FormSubmission> submissions = formSubmissionDao.findByCriteria(criteria);
+        Collection<CommunicationMessageVO> messages = new ArrayList<>();
+
+        for(FormSubmission submission : submissions) {
+
+        }
+
+        return null;
     }
 
 }

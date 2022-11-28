@@ -216,4 +216,24 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+
+    @Override
+    public ResponseEntity<?> handleLoadDueSubmissionMessages() {
+        try {
+            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            ResponseEntity<?> response;
+
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }
