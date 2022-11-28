@@ -254,7 +254,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`))"
+      - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
       - "traefik.http.routers.api.tls=${SSL_SECURE}"
       - "traefik.http.routers.api.tls.certresolver=le"
   
@@ -315,7 +315,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.comm.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.comm.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`"
+      - "traefik.http.routers.comm.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
       - "traefik.http.routers.comm.tls=${SSL_SECURE}"
       - "traefik.http.routers.comm.tls.certresolver=le"
 
