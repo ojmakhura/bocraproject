@@ -15,10 +15,14 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ReplyComponentImpl extends ReplyComponent {
 
-    constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
-        super(data, injector);
-    }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private injector: Injector) {
+    super(data, injector);
+  }
 
-    doNgOnDestroy(): void {
-    }
+  doNgOnDestroy(): void {
+  }
+
+  override doNgAfterViewInit(): void {
+    this.setReplyFormValue(this.data);
+  }
 }
