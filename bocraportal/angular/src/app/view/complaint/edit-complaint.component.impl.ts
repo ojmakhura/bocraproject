@@ -88,7 +88,18 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
 
     this.complaintReply$.subscribe(reply => {
       if (reply) {
-        this.addToComplaintComplaintReplies(reply);
+        let rp: ComplaintReplyVO | undefined = this.complaintComplaintReplies.find((rep, i) => {
+          if(rep.id == reply.id) {
+            this.complaintComplaintRepliesControl.at(i).patchValue(reply);
+            return true;
+          }else {
+            return false;
+          }
+        });
+
+        if(!rp) {
+          this.addToComplaintComplaintReplies(reply);
+        }
       }
     });
   }
@@ -164,21 +175,15 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
           loading: true,
           loaderMessage: 'Adding reply to complaint ...'
         })
-      )
+      );
     }
   }
 
   override doEditComplaintComplaintReplies(complaintReplies: ComplaintReplyVO) {
-    let form: EditComplaintReplyForm = this.editComplaintReplyForm;
-    this.beforeEditComplaintReply(form);
-    this.complaintController.editComplaintReply(form);
-    let dialogConfig = this.getEditComplaintReplyFormDialogConfig(complaintReplies);
-    const dialogRef = this.dialog.open(ReplyComponentImpl, dialogConfig);
-
-    dialogRef.afterClosed().subscribe((result) => {
-        this.afterEditComplaintReply(form, result?.dialogData);
-    });
-}
+    this.useCaseScope.queryParams['complaintReply'] = complaintReplies;
+    this.useCaseScope.pageVariables['complaintReply'] = complaintReplies;
+    this.editComplaintReply();
+  }
 
   override getEditComplaintReplyFormDialogConfig(data: any): any {
     return {
@@ -189,27 +194,35 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     };
   }
 
-  override handleDeleteFromComplaintComplaintReplies(complaintReplies: ComplaintReplyVO): void {
-    if (confirm('Are you sure you want to delete the complaint reply')) {
-      this.store.dispatch(
-        ComplaintActions.removeComplaintReply({
-          id: complaintReplies.id,
-          loading: true,
-          loaderMessage: 'Removing reply ...'
-        })
-      )
-    }
-  }
+  // override handleDeleteFromComplaintComplaintReplies(complaintReplies: ComplaintReplyVO): void {
+  //   if (confirm('Are you sure you want to delete the complaint reply')) {
+  //     this.store.dispatch(
+  //       ComplaintActions.removeComplaintReply({
+  //         id: complaintReplies.id,
+  //         loading: true,
+  //         loaderMessage: 'Removing reply ...'
+  //       })
+  //     )
+  //   }
+  // }
 
   override deleteFromComplaintComplaintReplies(id: number) {
-    for (let i = 0; i < this.complaintComplaintReplies.length; i++){
-      if(this.complaintComplaintReplies[i].id === id){
-        this.handleDeleteFromComplaintComplaintReplies(this.complaintComplaintReplies[i]);
-        this.complaintComplaintRepliesControl.removeAt(i);
+    for (let i = 0; i < this.complaintComplaintReplies.length; i++) {
+      if (this.complaintComplaintReplies[i].id === id) {
+        // this.handleDeleteFromComplaintComplaintReplies(this.complaintComplaintReplies[i]);
+        if (confirm('Are you sure you want to delete the complaint reply')) {
+          this.store.dispatch(
+            ComplaintActions.removeComplaintReply({
+              id: this.complaintComplaintReplies[i].id,
+              loading: true,
+              loaderMessage: 'Removing reply ...'
+            })
+          )
+          this.complaintComplaintRepliesControl.removeAt(i);
+        }
         return;
       }
     }
-
   }
 
   override deleteFromComplaintDocuments(index: number) {
