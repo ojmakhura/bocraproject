@@ -157,9 +157,9 @@ public class KeycloakUserService {
         return user;
     }
 
-    public Collection<UserVO> getLicenseeUsers(Long id) {
+    public Collection<UserVO> getLicenseeUsers(Long lisenseeId) {
 
-        List<UserRepresentation> userRep = keycloakService.getUsersResource().searchByAttributes("licenseeId:" + id);
+        List<UserRepresentation> userRep = keycloakService.getUsersResource().searchByAttributes("licenseeId:" + lisenseeId);
 
         Collection<UserVO> users = new ArrayList<>();
 

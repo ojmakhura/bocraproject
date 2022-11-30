@@ -16,7 +16,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -36,17 +38,25 @@ import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
+import bw.org.bocra.portal.keycloak.KeycloakService;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.licence.type.form.LicenceTypeForm;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
+import bw.org.bocra.portal.message.CommunicationMessage;
+import bw.org.bocra.portal.message.CommunicationMessageDao;
+import bw.org.bocra.portal.message.CommunicationMessagePlatform;
+import bw.org.bocra.portal.message.CommunicationMessageStatus;
+import bw.org.bocra.portal.message.CommunicationMessageVO;
 import bw.org.bocra.portal.period.Period;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.sector.SectorService;
 import bw.org.bocra.portal.sector.form.SectorForm;
 import bw.org.bocra.portal.sector.form.SectorFormService;
 import bw.org.bocra.portal.sector.form.SectorFormVO;
+import bw.org.bocra.portal.user.UserVO;
 
 /**
  * @see bw.org.bocra.portal.form.activation.FormActivationService
@@ -56,11 +66,16 @@ import bw.org.bocra.portal.sector.form.SectorFormVO;
 public class FormActivationServiceImpl
         extends FormActivationServiceBase {
 
-    private SectorService sectorService;
-    private SectorFormService sectorFormService;
+    @Value("${bocra.web.url}")
+    private String webUrl;
 
-    public FormActivationServiceImpl(FormActivationDao formActivationDao,
-            FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository,
+    private final SectorService sectorService;
+    private final SectorFormService sectorFormService;
+    private final KeycloakUserService keycloakUserService;
+    private final CommunicationMessageDao communicationMessageDao; 
+
+    public FormActivationServiceImpl(FormActivationDao formActivationDao, KeycloakUserService keycloakUserService,
+            FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository, CommunicationMessageDao communicationMessageDao,
             FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, SectorService sectorService, SectorFormService sectorFormService,
             DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
 
@@ -69,7 +84,9 @@ public class FormActivationServiceImpl
                 dataFieldDao, dataFieldRepository, messageSource);
         // TODO Auto-generated constructor stub
         this.sectorService = sectorService;
-        this.sectorFormService = sectorFormService;        
+        this.sectorFormService = sectorFormService; 
+        this.keycloakUserService = keycloakUserService;
+        this.communicationMessageDao = communicationMessageDao;
     }
 
     /**
@@ -125,13 +142,15 @@ public class FormActivationServiceImpl
     protected FormActivationVO handleSave(FormActivationVO formActivation)
             throws Exception {
 
+        boolean fresh = formActivation.getId() == null;
+
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
 
         if(activation.getActivationDeadline() == null) {
             activation.setActivationDeadline(activation.getPeriod().getPeriodEnd());
         }
 
-        activation = formActivationRepository.saveAndFlush(activation);
+        activation = formActivationRepository.save(activation);
 
         /**
          * The form activations is a new one so we need to
@@ -160,6 +179,8 @@ public class FormActivationServiceImpl
             formActivation = formActivationDao.toFormActivationVO(activation);
             formActivation.setFormSubmissions(new ArrayList<>());
 
+            Set<LicenseeVO> licensees = new HashSet<>();
+
             for (Licensee licensee : lmap.values()) {
                 FormSubmission submission = FormSubmission.Factory.newInstance();
                 submission.setCreatedBy(activation.getCreatedBy());
@@ -172,9 +193,6 @@ public class FormActivationServiceImpl
 
                 submission.setExpectedSubmissionDate(formActivation.getActivationDeadline());
 
-                submission = formSubmissionRepository.saveAndFlush(submission);
-                
-
                 /**
                  * If the for requires single entry, the we create the data fields
                  */
@@ -186,19 +204,65 @@ public class FormActivationServiceImpl
                         dataField.setValue(field.getDefaultValue());
                         dataField.setRow(0);
 
-                        dataField = dataFieldRepository.saveAndFlush(dataField);
-                        
+                        submission.getDataFields().add(dataField);
                     }
                 }
+                submission = formSubmissionRepository.save(submission);
 
                 FormSubmissionVO vo = new FormSubmissionVO();
                 getFormSubmissionDao().toFormSubmissionVO(submission, vo);
                 formActivation.getFormSubmissions().add(vo);
+                licensees.add(vo.getLicensee());
             }
+        }
 
+        if(fresh) {
+            this.scheduleNotifications(formActivation);
         }
 
         return formActivation;
+    }
+
+    private String emailTempate = "Dear %s user\n\n"
+                    + "You are notified that BOCRA requests your participation to\n"
+                    + "provide %s data. Please go to %s?id=%d to fill out the form.\n\n"
+                    + "The deadline to submit the information is %s\n\n"
+                    + "Kind Regards\n\n"
+                    + "BOCRA";
+
+    private void scheduleNotifications(FormActivationVO formActivation) {
+
+        String submissionUrl = webUrl + "/form/submission/edit-form-submission";
+
+        for (FormSubmissionVO submission : formActivation.getFormSubmissions()) {
+
+            CommunicationMessage message = CommunicationMessage.Factory.newInstance();
+
+            message.setCreatedBy(formActivation.getCreatedBy());
+            message.setCreatedDate(LocalDateTime.now());
+            message.setSendNow(false);
+            message.setDispatchDate(formActivation.getPeriod().getPeriodEnd().atStartOfDay());
+            message.setMessagePlatform(CommunicationMessagePlatform.EMAIL);
+            message.setStatus(CommunicationMessageStatus.DRAFT);
+            message.setSubject(String.format("%s data request for period %s.", formActivation.getForm().getFormName(), formActivation.getPeriod().getPeriodName()));
+            message.setText(
+                String.format(
+                    emailTempate,
+                    submission.getLicensee().getLicenseeName(),
+                    formActivation.getForm().getFormName(),
+                    submissionUrl,
+                    submission.getId(),
+                    submission.getExpectedSubmissionDate()
+                )
+            );
+
+            Collection<UserVO> users = keycloakUserService.getLicenseeUsers(submission.getLicensee().getId());
+            Collection<String> userEmails = users.stream().map(user -> user.getEmail()).collect(Collectors.toSet());
+
+            message.setDestinations(userEmails);
+
+            communicationMessageDao.create(message);
+        }
     }
 
     /**

@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 
 import bw.org.bocra.portal.message.CommunicationMessageVO;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +34,17 @@ public class MessageQueueController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> sendEmail(@RequestBody CommunicationMessageVO message) {
+    public ResponseEntity<?> sendEmails(@RequestBody Collection<CommunicationMessageVO> messages) {
+
+        for (CommunicationMessageVO message : messages) {
+            this.sendEmail(message);
+        }
+
+        return ResponseEntity.ok(messages.size());
+    }
+
+    // @PostMapping()
+    public ResponseEntity<?> sendEmail(CommunicationMessageVO message) {
 
         logger.info(message.toString());
         rabbitTemplate.convertAndSend("", "q.communication", message);

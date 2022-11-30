@@ -56,7 +56,7 @@ public class EmailService {
             message.setReplyTo(dto.getReplyTo());
         }
 
-        message.setTo(emailMessage.getDestination());
+        message.setTo(emailMessage.getDestinations().toArray(new String[0]));;
         message.setSubject(emailMessage.getSubject());
         message.setText(emailMessage.getText());
 

@@ -6,7 +6,11 @@
 package bw.org.bocra.portal.message;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.util.Collection;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,18 +23,20 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Access Point", description = "Managing the different resources available.")
 public class CommunicationMessageControllerImpl extends CommunicationMessageControllerBase {
     
+    @Value("${bocra.comm.url}")
+    private String commUrl;
+    
     public CommunicationMessageControllerImpl(
         CommunicationMessageService communicationMessageService    ) {
         
-        super(
-            communicationMessageService        );
+        super(communicationMessageService);
     }
 
 
     @Override
     public ResponseEntity<?> handleClearFailedMessages() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.clearFailedMessages()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -49,7 +55,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleClearSentMessages() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.clearSentMessages()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -68,7 +74,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.findById(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -87,7 +93,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.getAll()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -106,7 +112,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -125,7 +131,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleLoadTodayMessages() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.loadTodayMessages()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -144,7 +150,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handlePagedSearch(Integer pageNumber, Integer pageSize, String criteria) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.search(pageNumber, pageSize, criteria)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -163,7 +169,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.remove(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -182,7 +188,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleSave(CommunicationMessageVO communicationMessage) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.save(communicationMessage)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -201,7 +207,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.search(criteria)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -221,7 +227,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleLoadDueSubmissionMessages() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.loadDueSubmissionMessages()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -235,5 +241,12 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+
+    @Override
+    public ResponseEntity<?> handleSendDueMessages() {
+        Collection<CommunicationMessageVO> messages = communicationMessageService.loadDueSubmissionMessages();
+        return ResponseEntity.status(HttpStatus.OK).body(messages.size());
     }
 }
