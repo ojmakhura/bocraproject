@@ -12,8 +12,12 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
 // @Slf4j
@@ -82,4 +86,10 @@ public class RabbitMQConfig {
         return template;
     }
 
+    @Bean
+    @Primary
+    public ObjectMapper objectMapper() {
+        JavaTimeModule module = new JavaTimeModule();
+        return new ObjectMapper().registerModule(module);
+    }
 }

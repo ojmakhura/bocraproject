@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/message")
@@ -25,11 +26,13 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     
     @Value("${bocra.comm.url}")
     private String commUrl;
+
+    private final RestTemplate restTemplate;
     
-    public CommunicationMessageControllerImpl(
-        CommunicationMessageService communicationMessageService    ) {
+    public CommunicationMessageControllerImpl(CommunicationMessageService communicationMessageService, RestTemplate restTemplate) {
         
         super(communicationMessageService);
+        this.restTemplate = restTemplate;
     }
 
 
@@ -247,6 +250,7 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleSendDueMessages() {
         Collection<CommunicationMessageVO> messages = communicationMessageService.loadDueSubmissionMessages();
+
         return ResponseEntity.status(HttpStatus.OK).body(messages.size());
     }
 }
