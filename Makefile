@@ -74,6 +74,9 @@ build_api_image: build_api gen_env
 build_comm_image: build_comm gen_env
 	. ./.env && docker compose build comm
 
+build_cron_image: gen_env
+	. ./.env && docker compose build cron
+
 build_web_image: gen_env
 	. ./.env && docker compose build web
 

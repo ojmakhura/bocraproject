@@ -370,6 +370,11 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
       TZ: Africa/Gaborone
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
     networks:
       traefik-public:
       bocra-network:
@@ -378,6 +383,25 @@ services:
     ports:
       - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
       - "${RABBITMQ_WEB_PORT}:${RABBITMQ_WEB_PORT}"
+
+  ###############################################################################
+  # Cron job system
+  ###############################################################################
+  cron:
+    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    # volumes:
+      # - ${BOCRA_DATA}/cron:/etc/cron
+
+    build: ./cron
+    container_name: bocraportal-cron
+    environment:
+      KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      COMM_URL: ${COMM_URL}
+    networks:
+      traefik-public:
+      bocra-network:
+      default:
 
   ###############################################################################
   # Local docker container registry

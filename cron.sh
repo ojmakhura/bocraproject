@@ -1,3 +1,0 @@
-#/bin/bash
-TOKEN=$(node -pe 'JSON.parse(process.argv[1]).access_token' "$(curl --insecure --location --request POST 'https://keycloak.localhost/realms/bocraportal/protocol/openid-connect/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'client_id=bocraportal-cron' --data-urlencode 'client_secret=9ITKRh3Wha00CoDXGNKzUNZuzyPyMsvS' --data-urlencode 'scope=email' --data-urlencode 'grant_type=client_credentials')")
-echo $TOKEN
