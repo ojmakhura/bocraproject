@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 @RequestMapping("/message")
 @CrossOrigin()
-@Tag(name = "Access Point", description = "Managing the different resources available.")
+@Tag(name = "Communication Messages", description = "Managing communications like emails and sms.")
 public class CommunicationMessageControllerImpl extends CommunicationMessageControllerBase {
     
     @Value("${bocra.comm.url}")
@@ -249,8 +249,41 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
 
     @Override
     public ResponseEntity<?> handleSendDueMessages() {
-        Collection<CommunicationMessageVO> messages = communicationMessageService.loadDueSubmissionMessages();
+        try {
+            Optional<Collection<CommunicationMessageVO>> data = Optional.of(communicationMessageService.loadDueSubmissionMessages()); // TODO: Add custom code here;
+            ResponseEntity<?> response;
 
-        return ResponseEntity.status(HttpStatus.OK).body(messages.size());
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get().size());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<?> handleUpdateMessageStatus(Long id, CommunicationMessageStatus status) {
+        
+        try {
+            Optional<Boolean> data = Optional.of(communicationMessageService.updateMessageStatus(id, status)); // TODO: Add custom code here;
+            ResponseEntity<?> response;
+
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }

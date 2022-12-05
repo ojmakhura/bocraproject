@@ -85,10 +85,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
 
-    console.log(this.customDataColumns)
-    console.log(this.customDataRows)
-    console.log(this.additionalDataColumns)
-    console.log(this.additionalDataRows)
   }
 
   ngOnDestroy(): void {}
@@ -293,8 +289,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       });
       
-      // this.addCustomDataRows(extraction, chartDataLabels);
-      
     } else if (this.dataColumns === 'periods') {
       if (this.period === 'all') {
         this.selectedPeriods?.forEach((period) => {
@@ -311,8 +305,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private addCustomDataRows(extraction: any, chartDataLabels: string[]) {
-
-    console.log(extraction)
 
     Object.keys(this.customDataRows)?.forEach((key1) => {
       let t2 = this.customDataRows[key1];
@@ -344,6 +336,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     Object.keys(periodData).forEach((licenseeName) => {
       let licenseeData = periodData[licenseeName];
       this.selectedFields?.forEach((sf) => {
+        
         let dataLabel = `${licenseeName}: ${sf?.alias ? sf.alias : sf?.fieldName}`;
 
         if (!extraction[dataLabel]) {
@@ -383,7 +376,13 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.chartData[period] && this.chartData[period][label]) {
         this.selectedFields?.forEach(field => {
           if(field?.selected) {
-            let tmp = `${period}: ${field?.fieldName}`;
+            let tmp = `${field?.fieldName}`;
+
+            if (this.period === 'all') {
+              tmp = `${period}: ${field?.fieldName}`;
+            }
+            
+            // let tmp = `${period}: ${field?.fieldName}`;
 
             if(!extraction[tmp]) {
               let color = this.findSelectedFieldColor(field?.fieldName);
@@ -449,10 +448,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
-    console.log(this.customDataColumns)
-
-    console.log(extraction)
-
     return this.extractCombinedDatasets(extraction);
   }
 
@@ -495,7 +490,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    console.log(this.additionalDataColumns);
     this.additionalDataColumns?.forEach(col => {
       let colData = this.customDataColumns[col?.name];
 
@@ -504,8 +498,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         dataset?.data?.push(column)
       });
     });
-
-    console.log(this.additionalDataRows);
     
     Object.keys(this.customDataRows)?.forEach(key => {
 
@@ -542,11 +534,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       }
     });
-
-    console.log(extraction)
-    console.log(datasets)
-    console.log(this.customDataColumns)
-    console.log(this.customDataRows)
 
     return datasets;
   }

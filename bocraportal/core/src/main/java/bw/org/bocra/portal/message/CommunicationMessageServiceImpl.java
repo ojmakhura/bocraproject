@@ -205,4 +205,14 @@ public class CommunicationMessageServiceImpl
         return communicationMessageDao.toCommunicationMessageVOCollection(messages);
     }
 
+    @Override
+    protected Boolean handleUpdateMessageStatus(Long id, CommunicationMessageStatus status) throws Exception {
+        
+        CommunicationMessage message = communicationMessageRepository.getReferenceById(id);
+        message.setStatus(status);
+        message = communicationMessageRepository.save(message);
+
+        return true;
+    }
+
 }
