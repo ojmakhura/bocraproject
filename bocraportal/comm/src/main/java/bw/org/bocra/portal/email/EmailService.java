@@ -8,9 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import bw.org.bocra.portal.message.CommunicationMessageVO;
 import bw.org.bocra.portal.smtp.RealmSmtpDTO;
@@ -24,15 +26,22 @@ public class EmailService {
     @Value("${keycloak.realm}")
     private String realmId;
 
+    private final RestTemplate restTemplate;
+
+    @Value("${bocra.api.url}")
+    private String apiUrl;
+
     private final RealmSmtpService configService;
 
-    public EmailService(RealmSmtpService configService) {
+    public EmailService(RealmSmtpService configService, RestTemplate restTemplate) {
         this.configService = configService;
+        this.restTemplate = restTemplate;
     }
 
     @RabbitListener(queues = "q.send-email")
     public void sendEmail(CommunicationMessageVO emailMessage) {
         logger.info("Sending email to {}", emailMessage.getSubject());
+        String url = apiUrl + "/message/due";
 
         RealmSmtpDTO dto = configService.getRealmSmtpConfig(realmId);
 
@@ -60,6 +69,11 @@ public class EmailService {
         message.setSubject(emailMessage.getSubject());
         message.setText(emailMessage.getText());
 
-        mailSender.send(message);
+        // try {
+            mailSender.send(message);
+        // } catch(MailException e) {
+
+        // }
+        
     }
 }
