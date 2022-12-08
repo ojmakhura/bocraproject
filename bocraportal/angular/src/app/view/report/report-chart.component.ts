@@ -2,6 +2,7 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   Injector,
   Input,
@@ -84,7 +85,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-
   }
 
   ngOnDestroy(): void {}
@@ -115,15 +115,21 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.selectedFields?.forEach((field) => {
         let f: DataFieldVO = this.findField(submission, field.fieldId);
+        if(submission.form.entryType === 'MULTIPLE') {
 
-        if (f) {
-          let fl = field?.alias;
+          // TODO: 
+           
+        } else {
 
-          if (!fl) {
-            fl = field?.fieldName;
+          if (f) {
+            let fl = field?.alias;
+  
+            if (!fl) {
+              fl = field?.fieldName;
+            }
+  
+            licensee[fl] = f.value;
           }
-
-          licensee[fl] = f.value;
         }
       });
     });
@@ -299,8 +305,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    console.log(extraction)
-
     return this.extractCombinedDatasets(extraction);
   }
 
@@ -371,6 +375,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private getPeriodFieldsCombinedDataSet(period: string, extraction: any, chartDataLabels: string[]) {
+    
     this.labelNames?.forEach((label) => {
       
       if (this.chartData[period] && this.chartData[period][label]) {
@@ -381,8 +386,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.period === 'all') {
               tmp = `${period}: ${field?.fieldName}`;
             }
-            
-            // let tmp = `${period}: ${field?.fieldName}`;
 
             if(!extraction[tmp]) {
               let color = this.findSelectedFieldColor(field?.fieldName);

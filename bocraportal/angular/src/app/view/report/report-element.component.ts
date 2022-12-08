@@ -76,7 +76,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit(): void {
-    
     this.licensees.forEach((lic, index) => {
       this.licenseeSelectionsArray.insert(index, this.createLicenseeSelectionGroup(true, lic));
     });
@@ -156,11 +155,11 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       });
     }
 
-    this.dataRowsAnalytics?.forEach(row => {
-      if(row?.name) {
+    this.dataRowsAnalytics?.forEach((row) => {
+      if (row?.name) {
         this.colors[row?.name] = this.getRandomColor();
       }
-    })
+    });
   }
 
   newForm(reportElement: ReportElement): FormGroup {
@@ -199,7 +198,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.periodSelectionChange();
     this.fieldSelectionChange();
     this.licenseeSelectionChange();
-
   }
 
   ngOnDestroy(): void {}
@@ -224,6 +222,34 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
+  getExpressionElements(expression: string) {
+    let results = [];
+    // Stores the indices of
+    let dels = [];
+    for (let i = 0; i < expression.length; i++) {
+      // If opening delimiter
+      // is encountered
+      if (expression[i] == '[') {
+        dels.push(i);
+      }
+
+      // If closing delimiter
+      // is encountered
+      else if (expression[i] == ']' && dels.length > 0) {
+        // Extract the position
+        // of opening delimiter
+        let pos = dels[dels.length - 1];
+        dels.pop();
+
+        // Length of substring
+        let len = i - 1 - pos;
+
+        results.push(expression.substring(pos + 1, i));
+      }
+    }
+    return [...new Set(results)];
+  }
+
   additionalDataColumnChange(index: number) {
     this.generateColors(false);
     this.periodSelectionChange();
@@ -238,126 +264,125 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     if (!changedlabel?.type || !changedlabel?.name || !changedlabel?.sources) {
       return;
     }
-    let sourceString: string = changedlabel?.sources;
-    let sourceSplit = this.getSources(changedlabel?.sources);
 
-    this.customDataColumns[changedlabel?.name] = {
-      
-    };
+    let sourceSplit = this.getSources(changedlabel?.sources);
+    this.customDataColumns[changedlabel?.name] = {};
 
     if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
-
       this.filteredFormSubmissions?.forEach((submission) => {
-        if(!(sourceSplit.rows?.find(source => source === 'all' || source === submission?.licensee?.licenseeName))) {
+        if (!sourceSplit.rows?.find((source) => source === 'all' || source === submission?.licensee?.licenseeName)) {
           return;
         }
 
         let fields: DataFieldVO[] = this.extractFields(submission);
 
         if (changedlabel?.type === 'custom') {
-          let expression = sourceString;
+          let expression = sourceSplit.cols[0];
           fields.forEach((field) => {
             if (expression?.includes(`[${field.formField.fieldId}]`)) {
-              expression = expression?.replace(`[${field.formField.fieldId}]`, field.value);
+              expression = expression?.replaceAll(`[${field.formField.fieldId}]`, field.value);
             }
           });
 
-          this.customDataColumns[changedlabel?.name][this.concatenate(submission?.licensee?.licenseeName, submission?.period?.periodName)] = this.formatCalculation(math.evaluate(expression));
+          this.customDataColumns[changedlabel?.name][
+            this.concatenate(submission?.licensee?.licenseeName, submission?.period?.periodName)
+          ] = this.formatCalculation(math.evaluate(expression));
         } else {
-
-          let calcFields = fields?.filter((field) => sourceSplit.cols?.find((source) => (source === 'all' || field?.formField?.fieldId === source)));
+          let calcFields = fields?.filter((field) =>
+            sourceSplit.cols?.find((source) => source === 'all' || field?.formField?.fieldId === source)
+          );
           let calValues = calcFields?.map((value) => +value?.value);
-          
+
           if (calValues && calValues.length > 0) {
             let calc = this.formatCalculation(this.calculate(calValues, changedlabel?.type));
-            this.customDataColumns[changedlabel?.name][this.concatenate(submission?.licensee?.licenseeName, submission?.period?.periodName)] = calc;
+
+            this.customDataColumns[changedlabel?.name][
+              this.concatenate(submission?.licensee?.licenseeName, submission?.period?.periodName)
+            ] = calc;
           }
         }
       });
     } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
-      
       this.selectedPeriods?.forEach((period) => {
         let tmp = this.filteredFormSubmissions?.filter((submission) => {
           return submission?.period?.periodName === period?.period;
         });
 
-        if (changedlabel?.type === 'custom') {
-        } else {
-          let sources: string[] = sourceSplit.rows;
-          let sourceData = {};
+        let sourceData = {};
 
-          sources?.forEach((source) => {
+        sourceSplit.rows?.forEach((row) => {
+          tmp?.forEach((submission) => {
+            let fields: DataFieldVO[] = this.extractFields(submission);
 
-            tmp?.forEach((submission) => {
-              if(!(sourceSplit.cols?.find(col => col === 'all' || col === submission?.licensee?.licenseeName))) {
-                return;
-              }
-              
-              let fields: DataFieldVO[] = this.extractFields(submission);
+            fields?.forEach((field) => {
+              if (field.formField?.fieldId === row || row === 'all') {
+                if (!sourceData[field?.formField?.fieldId]) {
+                  sourceData[field?.formField?.fieldId] = changedlabel?.type === 'custom' ? sourceSplit.cols[0] : [];
+                }
 
-              fields?.forEach(field => {
-                if(field.formField?.fieldId === source || source === 'all') {
-
-                  if(!sourceData[field?.formField?.fieldId]) {
-                    sourceData[field?.formField?.fieldId] = [];
+                if (changedlabel?.type === 'custom') {
+                  if (sourceSplit.cols[0].includes(`[${submission?.licensee?.licenseeName}`)) {
+                    sourceData[field?.formField?.fieldId] = sourceData[field?.formField?.fieldId]?.replaceAll(
+                      `[${submission?.licensee?.licenseeName}]`,
+                      field.value
+                    );
                   }
+                } else {
                   sourceData[field?.formField?.fieldId].push(+field?.value);
                 }
-              });
+              }
             });
           });
+        });
 
-          Object.keys(sourceData)?.forEach((key) => {
-            let selectedField = fields?.find((field) => field.formField?.fieldId === key);
-            this.customDataColumns[changedlabel?.name][`${period?.period}: ${selectedField?.formField?.fieldName}`] = this.formatCalculation(this.calculate(
-              sourceData[key],
-              changedlabel?.type
-            ));
-          });
-
-          console.log(this.customDataColumns);
-        }
+        Object.keys(sourceData)?.forEach((key) => {
+          let selectedField = fields?.find((field) => field.formField?.fieldId === key);
+          if (changedlabel?.type === 'custom') {
+            let expressionElements = this.getExpressionElements(sourceSplit.cols[0]);
+            expressionElements?.forEach((ex) => {
+              if (sourceData[key]?.includes(`[${ex}]`)) {
+                sourceData[key] = sourceData[key]?.replaceAll(`[${ex}]`, 0);
+              }
+            });
+          }
+          this.customDataColumns[changedlabel?.name][`${period?.period}: ${selectedField?.formField?.fieldName}`] =
+            this.formatCalculation(
+              changedlabel?.type === 'custom'
+                ? math.evaluate(sourceData[key])
+                : this.calculate(sourceData[key], changedlabel?.type)
+            );
+        });
       });
     } else if (this.dataColumns === 'periods' && this.dataRows === 'fields') {
-      if (changedlabel?.type === 'custom') {
-      } else {
+      sourceSplit.rows?.forEach((row) => {
         let sourceData = {};
+
         this.filteredFormSubmissions?.forEach((submission) => {
           let fields: DataFieldVO[] = this.extractFields(submission);
 
           fields?.forEach((field) => {
-            if (!sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]) {
-              sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`] = [];
-            }
+            if (field.formField?.fieldId === row || row === 'all') {
+              if (!sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]) {
+                sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`] =
+                  changedlabel?.type === 'custom' ? sourceSplit.cols[0] : [];
+              }
 
-            sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]?.push(+field.value);
+              if (changedlabel?.type === 'custom') {
+              } else {
+                sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]?.push(+field.value);
+              }
+            }
           });
         });
 
         Object.keys(sourceData)?.forEach((key) => {
-          this.customDataColumns[changedlabel?.name][key] = this.formatCalculation(this.calculate(sourceData[key], changedlabel?.type));
+          this.customDataColumns[changedlabel?.name][key] = this.formatCalculation(
+            changedlabel?.type === 'custom'
+              ? math.evaluate(sourceData[key])
+              : this.calculate(sourceData[key], changedlabel?.type)
+          );
         });
-      }
-    } else if (this.dataColumns === 'periods' && this.dataRows === 'licensees') {
-      if (changedlabel?.type === 'custom') {
-      } else {
-        let sourceData = {};
-        this.filteredFormSubmissions?.forEach((submission) => {
-          let fields: DataFieldVO[] = this.extractFields(submission);
-
-          fields?.forEach((field) => {
-            if (!sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]) {
-              sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`] = [];
-            }
-
-            sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]?.push(+field.value);
-          });
-        });
-
-        Object.keys(sourceData)?.forEach((key) => {
-          this.customDataColumns[changedlabel?.name][key] = this.formatCalculation(this.calculate(sourceData[key], changedlabel?.type));
-        });
-      }
+      });
     }
   }
 
@@ -378,25 +403,26 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     let additionalSource: AdditionalSource = new AdditionalSource();
 
     let sourceSplit: string[] = sources
-                  ?.split('::')
-                  ?.map((val: any) => val.trim())
-                  ?.filter((val: any) => val?.length > 0);
-    
-    additionalSource.rows = sourceSplit[0]?.split(',')
-                              ?.map((val: any) => val.trim())
-                              ?.filter((val: any) => val?.length > 0);
+      ?.split('::')
+      ?.map((val: any) => val.trim())
+      ?.filter((val: any) => val?.length > 0);
 
+    additionalSource.rows = sourceSplit[0]
+      ?.split(',')
+      ?.map((val: any) => val.trim())
+      ?.filter((val: any) => val?.length > 0);
 
-    if(sourceSplit.length == 2) {
-      additionalSource.cols = sourceSplit[1]?.split(',')
-                                  ?.map((val: any) => val.trim())
-                                  ?.filter((val: any) => val?.length > 0);
+    if (sourceSplit.length == 2) {
+      additionalSource.cols = sourceSplit[1]
+        ?.split(',')
+        ?.map((val: any) => val.trim())
+        ?.filter((val: any) => val?.length > 0);
 
-      if(additionalSource.cols.length === 0) {
-        additionalSource.cols?.push('all')
+      if (additionalSource.cols.length === 0) {
+        additionalSource.cols?.push('all');
       }
     }
-  
+
     return additionalSource;
   }
 
@@ -405,209 +431,212 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.periodSelectionChange();
     this.fieldSelectionChange();
     this.licenseeSelectionChange();
-
     this.additionalDataRows = this.dataRowsAnalytics;
     let changingRow = this.dataRowsAnalytics[index];
+
+    if (!changingRow?.type || !changingRow?.name || !changingRow?.sources) {
+      return;
+    }
+    let sourceSplit = this.getSources(changingRow?.sources);
+
+    let rows: string[] = sourceSplit.rows;
+    let cols: string[] = sourceSplit.cols;
 
     let tmp = {};
 
     if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
-      if (changingRow?.type === 'custom') {
-        let sourceString = changingRow?.sources;
-      } else {
-        let licensees: string[] = [];
-        let fields: string[] = [];
+      rows?.forEach((licensee) => {
+        this.filteredFormSubmissions?.forEach((submission) => {
+          let key = this.concatenate(changingRow?.name, submission?.period?.periodName);
+          if (!tmp[key]) {
+            tmp[key] = {};
+          }
 
-        if(!changingRow?.sources) {
-          return;
-        }
-
-        let sourceSplit = this.getSources(changingRow?.sources);
-
-        licensees = sourceSplit.rows;
-        fields = sourceSplit.cols;
-        
-        licensees?.forEach((licensee) => {
-          this.filteredFormSubmissions?.forEach((submission) => {
-            let key = this.concatenate(changingRow?.name, submission?.period?.periodName);
-            if (!tmp[key]) {
-              tmp[key] = {};
-            }
-
-            let lc = tmp[key];
-            submission?.sections?.forEach((section: DataFieldSectionVO) => {
-              section?.dataFields?.forEach((field: DataFieldVO) => {
+          let lc = tmp[key];
+          submission?.sections?.forEach((section: DataFieldSectionVO) => {
+            section?.dataFields?.forEach((field: DataFieldVO) => {
+              if (changingRow?.type !== 'custom') {
                 if (!lc[field?.formField?.fieldName]) {
                   lc[field?.formField?.fieldName] = [];
                 }
-                if (licensee === 'all' || submission?.licensee?.licenseeName === licensee) {
-                  if(fields.length === 0) {
-                    lc[field?.formField?.fieldName]?.push(+field.value);
-                  } else {
-                    fields?.forEach(f => {
-                      if(f === 'all' || f === field?.formField?.fieldId) {
+              }
 
+              if (
+                licensee === 'all' ||
+                submission?.licensee?.licenseeName === licensee ||
+                licensee.includes(`[${submission?.licensee?.licenseeName}]`)
+              ) {
+                cols?.forEach((f) => {
+                  if (f === 'all' || f === field?.formField?.fieldId) {
+                    if (changingRow?.type === 'custom') {
+                      let t = licensee; //.replaceAll(`[${submission?.licensee?.licenseeName}]`, field.value);
+
+                      if (lc[field?.formField?.fieldName]) {
+                        t = lc[field?.formField?.fieldName];
+                      }
+
+                      lc[field?.formField?.fieldName] = t.replaceAll(
+                        `[${submission?.licensee?.licenseeName}]`,
+                        field.value
+                      );
+                    } else {
                       lc[field?.formField?.fieldName]?.push(+field.value);
-                      }
-                    });
-                  }
-                }
-              });
-            });
-          });
-        });
-      }
-
-      Object.keys(tmp)?.forEach((key) => {
-        this.customDataRows[`${key}`] = {};
-        let t = tmp[key];
-        this.customDataRows[key] = {};
-        Object.keys(t)?.forEach((tk) => {
-          if(t[tk].length > 0)
-            this.customDataRows[`${key}`][tk] = this.formatCalculation(this.calculate(t[tk], changingRow?.type));
-          
-        });
-      });
-
-    } else if (this.dataColumns === 'periods' && this.dataRows === 'licensees') {
-      if (changingRow?.type === 'custom') {
-        let sourceString = changingRow?.sources;
-      } else {
-        let licensees: string[] = [];
-        let periods: string[] = [];
-
-        if(!changingRow?.sources) {
-          return;
-        }
-
-        let sourceSplit = this.getSources(changingRow?.sources);
-
-        licensees = sourceSplit.rows;
-
-        periods = sourceSplit.cols;
-
-      }
-    } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
-      if (changingRow?.type === 'custom') {
-        let sourceString = changingRow?.sources;
-      } else {
-        let licensees: string[] = [];
-        let fields: string[] = [];
-
-        if(!changingRow?.sources) {
-          return;
-        }
-
-        let sourceSplit = this.getSources(changingRow?.sources);
-
-        fields = sourceSplit.rows;
-        licensees = sourceSplit.cols;
-
-        licensees?.forEach((licensee) => {
-          this.filteredFormSubmissions?.forEach((submission) => {
-            let key = this.concatenate(submission?.period?.periodName, changingRow?.name);
-            if (!tmp[key]) {
-              tmp[key] = {};
-            }
-
-            let lc = tmp[key];
-
-            if (!lc[submission?.licensee?.licenseeName]) {
-              lc[submission?.licensee?.licenseeName] = [];
-            }
-
-            submission?.sections?.forEach((section: DataFieldSectionVO) => {
-              section?.dataFields?.forEach((field: DataFieldVO) => {
-                
-                if (licensee === 'all' || submission?.licensee?.licenseeName === licensee) {
-                  if(fields.length === 0) {
-                    lc[submission?.licensee?.licenseeName]?.push(+field.value);
-                  } else {
-                    fields?.forEach(f => {
-                      if(f === 'all' || f === field?.formField?.fieldId) {
-
-                      lc[submission?.licensee?.licenseeName]?.push(+field.value);
-                      }
-                    });
-                  }
-                }
-              });
-            });
-          });
-        });
-      }
-
-      Object.keys(tmp)?.forEach((key) => {
-        this.customDataRows[`${key}`] = {};
-        let t = tmp[key];
-        this.customDataRows[key] = {};
-        Object.keys(t)?.forEach((tk) => {
-          if(t[tk].length > 0)
-            this.customDataRows[`${key}`][tk] = this.formatCalculation(this.calculate(t[tk], changingRow?.type));
-          
-        });
-      });
-
-    } else if (this.dataColumns === 'periods' && this.dataRows === 'fields') {
-
-      if (changingRow?.type === 'custom') {
-        let sourceString = changingRow?.sources;
-      } else {
-        let fields: string[] = [];
-        let periods: string[] = [];
-
-        if(!changingRow?.sources) {
-          return;
-        }
-
-        let sourceSplit = this.getSources(changingRow?.sources)
-
-        fields = sourceSplit.rows;
-
-        periods = sourceSplit.cols;
-
-        fields?.forEach(field => {
-          this.filteredFormSubmissions?.forEach(submission => {
-            let submissionFields: DataFieldVO[] = this.extractFields(submission);
-            // let label = this.concatenate()
-            submissionFields?.forEach(fd => {
-              if(field === 'all' || fd.formField.fieldId === field) {
-                let label = this.concatenate(changingRow?.name, fd?.formField?.fieldName);
-                if(!tmp[label]) {
-                  tmp[label] = {};
-                }
-                periods?.forEach(pr => {
-                  if(pr === 'all' || submission?.period?.periodName === pr) {
-                    if(!tmp[label][submission?.period?.periodName]) {
-                      tmp[label][submission?.period?.periodName] = [];
                     }
-
-                    tmp[label][submission?.period?.periodName]?.push(+fd?.value);
                   }
                 });
               }
-            })
+            });
           });
         });
+      });
+
+      Object.keys(tmp)?.forEach((key) => {
+        this.customDataRows[`${key}`] = {};
+        let t = tmp[key];
+        this.customDataRows[key] = {};
+        Object.keys(t)?.forEach((tk) => {
+          if (t[tk]?.length > 0)
+            if (changingRow?.type === 'custom') {
+              let expressionElements = this.getExpressionElements(sourceSplit.rows[0]);
+
+              expressionElements?.forEach((ex) => {
+                if (t[tk]?.includes(`[${ex}]`)) {
+                  t[tk] = t[tk]?.replaceAll(`[${ex}]`, 0);
+                }
+              });
+            }
+          this.customDataRows[`${key}`][tk] = this.formatCalculation(
+            changingRow?.type === 'custom' ? math.evaluate(t[tk]) : this.calculate(t[tk], changingRow?.type)
+          );
+        });
+      });
+    } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
+
+      if (!changingRow?.sources) {
+        return;
+      }
+
+      cols?.forEach((licensee) => {
+        this.filteredFormSubmissions?.forEach((submission) => {
+          let key = this.concatenate(submission?.period?.periodName, changingRow?.name);
+          if (!tmp[key]) {
+            tmp[key] = {};
+          }
+
+          let lc = tmp[key];
+
+          if (!lc[submission?.licensee?.licenseeName] && changingRow?.type !== 'custom') {
+            lc[submission?.licensee?.licenseeName] = [];
+          }
+
+          submission?.sections?.forEach((section: DataFieldSectionVO) => {
+            section?.dataFields?.forEach((field: DataFieldVO) => {
+              if (licensee === 'all' || submission?.licensee?.licenseeName === licensee) {
+                
+                rows?.forEach((f) => {
+                  
+                  if (f === 'all' || f === field?.formField?.fieldId || f.includes(`[${field?.formField?.fieldId}]`)) {
+                    if(changingRow?.type === 'custom') {
+                      let t = f; //.replaceAll(`[${field?.formField?.fieldId}]`, field.value);
+                      
+                      if (lc[submission?.licensee?.licenseeName]) {
+                        t = lc[submission?.licensee?.licenseeName];
+                      }
+
+                      lc[submission?.licensee?.licenseeName] = t.replaceAll(
+                        `[${field?.formField?.fieldId}]`,
+                        field.value
+                      );
+                    } else {
+                      lc[submission?.licensee?.licenseeName]?.push(+field.value);
+                    }
+                  }
+                  
+                });
+              }
+            });
+          });
+        });
+      });
+
+      Object.keys(tmp)?.forEach((key) => {
+
+        this.customDataRows[`${key}`] = {};
+        let t = tmp[key];
+        this.customDataRows[key] = {};
+
+        Object.keys(t)?.forEach((tk) => {
+          if (t[tk].length > 0)
+            this.customDataRows[`${key}`][tk] = this.formatCalculation(
+              changingRow?.type === 'custom' ? math.evaluate(t[tk]) : this.calculate(t[tk], changingRow?.type)
+            );
+        });
+      });
+    } else if (this.dataColumns === 'periods' && this.dataRows === 'fields') {
+      
+        let sourceSplit = this.getSources(changingRow?.sources);
+
+        rows?.forEach((field) => {
+          this.filteredFormSubmissions?.forEach((submission) => {
+            let submissionFields: DataFieldVO[] = this.extractFields(submission);
+
+            submissionFields?.forEach((fd) => {
+              if (field === 'all' || fd.formField.fieldId === field || field.includes(`[${fd?.formField?.fieldId}]`)) {
+                let label = this.concatenate(changingRow?.name, fd?.formField?.fieldName);
+                if (!tmp[label]) {
+                  tmp[label] = {};
+                }
+                cols?.forEach((pr) => {
+                  if (pr === 'all' || submission?.period?.periodName === pr) {
+                    
+                    if(changingRow?.type === 'custom') {
+                      
+                      let t = field;
+
+                      if(tmp[label][submission?.period?.periodName]) {
+                        t = tmp[label][submission?.period?.periodName];
+                      }
+
+                      tmp[label][submission?.period?.periodName] = t?.replaceAll(
+                        `[${fd?.formField?.fieldId}]`,
+                        fd.value
+                      );
+
+                    } else {
+                      if (!tmp[label][submission?.period?.periodName]) {
+                        tmp[label][submission?.period?.periodName] = [];
+                      }
   
+                      tmp[label][submission?.period?.periodName]?.push(+fd?.value);
+
+                    }
+                  }
+                });
+              }
+            });
+          });
+        });
+
+        console.log(tmp)
+
         Object.keys(tmp)?.forEach((key) => {
           this.customDataRows[`${key}`] = {};
           let t = tmp[key];
           this.customDataRows[key] = {};
           Object.keys(t)?.forEach((tk) => {
-            if(t[tk].length > 0)
-              this.customDataRows[`${key}`][tk] = this.formatCalculation(this.calculate(t[tk], changingRow?.type));
-            
+            if (t[tk].length > 0) {
+              this.customDataRows[`${key}`][tk] = this.formatCalculation(
+                changingRow?.type === 'custom' ? math.evaluate(t[tk]) : this.calculate(t[tk], changingRow?.type)
+              );
+            }
+              
           });
         });
-      }
     }
-
-    console.log(this.customDataRows)
   }
 
   private formatCalculation(val: number) {
-    return +formatNumber(val, this.locale, '1.0-2').replace(',', '');
+    return +formatNumber(val, this.locale, '1.0-2').replaceAll(',', '');
   }
 
   createChartsArrayControl(charts: ReportChart[]) {
@@ -751,22 +780,29 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     this.additionalDataRows = this.dataRowsAnalytics;
-    // this.additionalDataLabelChange();
   }
 
   removeLabelsAnalytic(target: string, index: number) {
+    this.dataColumnsAnalyticsControl.removeAt(index);
     if (target === 'report') {
-      this.dataColumnsAnalyticsControl.removeAt(index);
       this.additionalDataColumnChange(index);
     } else {
-      this.dataRowsAnalyticsControl.removeAt(index);
       this.additionalDataRows = this.dataRowsAnalytics;
-      // this.additionalDataLabelChange();
     }
 
     this.customDataColumns = {};
     this.additionalDataColumns?.forEach((value, index) => {
       this.additionalDataColumnChange(index);
+    });
+  }
+
+  removeCustomRows(index: number) {
+    let changingRow = this.dataRowsAnalytics[index];
+    this.dataRowsAnalyticsControl.removeAt(index);
+
+    this.customDataRows = {};
+    this.additionalDataRows?.forEach((row, index) => {
+      this.additionalRowChange(index);
     });
   }
 
