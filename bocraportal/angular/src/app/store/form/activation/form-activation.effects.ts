@@ -14,7 +14,7 @@ export class FormActivationEffects {
          this.actions$.pipe(
             ofType(FormActivationActions.findById),
             mergeMap(({id}) => this.formActivationRestController.findById(id).pipe(
-                map( formActivation => FormActivationActions.findByIdSuccess({formActivation, messages: [], success: true})),
+                map( formActivation => FormActivationActions.findByIdSuccess({formActivation, messages: [`Form activation ${formActivation.activationName} found.`], success: true})),
                 catchError(({error}) => [FormActivationActions.formActivationFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )

@@ -18,6 +18,7 @@ import * as ViewActions from '@app/store/view/view.actions';
 import { KeycloakService } from 'keycloak-angular';
 import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
 import * as ViewSelectors from '@app/store/view/view.selectors';
+import { ReplyComponentImpl } from './reply.component.impl';
 
 @Component({
   selector: 'app-edit-complaint',
@@ -87,7 +88,18 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
 
     this.complaintReply$.subscribe(reply => {
       if (reply) {
-        this.addToComplaintComplaintReplies(reply);
+        let rp: ComplaintReplyVO | undefined = this.complaintComplaintReplies.find((rep, i) => {
+          if(rep.id == reply.id) {
+            this.complaintComplaintRepliesControl.at(i).patchValue(reply);
+            return true;
+          }else {
+            return false;
+          }
+        });
+
+        if(!rp) {
+          this.addToComplaintComplaintReplies(reply);
+        }
       }
     });
   }
@@ -148,13 +160,13 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
 
   override afterEditComplaintReply(form: EditComplaintReplyForm, dialogData: any): void {
     if (dialogData) {
-      if(!form?.complaintReply?.id){
+      if (!form?.complaintReply?.id) {
         dialogData.complaintReply.date = new Date();
       }
-      if(this.keycloakService.getUsername()){
+      if (this.keycloakService.getUsername()) {
         dialogData.complaintReply.replyUser = this.keycloakService.getUsername()
-      }else {
-        dialogData.complaintReply.replyUser = this.complaint?.firstName+' '+this.complaint?.surname;
+      } else {
+        dialogData.complaintReply.replyUser = this.complaint?.firstName + ' ' + this.complaint?.surname;
       }
       this.store.dispatch(
         ComplaintActions.addComplaintReply({
@@ -163,25 +175,55 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
           loading: true,
           loaderMessage: 'Adding reply to complaint ...'
         })
-      )
+      );
     }
   }
 
-  // override afterEditComplaintNewDocument(form: EditComplaintNewDocumentForm, dialogData: any): void {
+  override doEditComplaintComplaintReplies(complaintReplies: ComplaintReplyVO) {
+    this.useCaseScope.queryParams['complaintReply'] = complaintReplies;
+    this.useCaseScope.pageVariables['complaintReply'] = complaintReplies;
+    this.editComplaintReply();
+  }
 
-  //   if (dialogData) {
+  override getEditComplaintReplyFormDialogConfig(data: any): any {
+    return {
+      width: '600px',
+      data: {
+        complaintReply: data,
+      }
+    };
+  }
+
+  // override handleDeleteFromComplaintComplaintReplies(complaintReplies: ComplaintReplyVO): void {
+  //   if (confirm('Are you sure you want to delete the complaint reply')) {
   //     this.store.dispatch(
-  //       ComplaintActions.addDocument({
-  //         id: this.complaintId,
-  //         documentTypeId: dialogData.document.documentType.id,
-  //         file: dialogData.document.file,
-  //         fileName: dialogData.document.documentName,
+  //       ComplaintActions.removeComplaintReply({
+  //         id: complaintReplies.id,
   //         loading: true,
-  //         loaderMessage: 'Adding document to complaint ...'
+  //         loaderMessage: 'Removing reply ...'
   //       })
-  //     );
+  //     )
   //   }
   // }
+
+  override deleteFromComplaintComplaintReplies(id: number) {
+    for (let i = 0; i < this.complaintComplaintReplies.length; i++) {
+      if (this.complaintComplaintReplies[i].id === id) {
+        // this.handleDeleteFromComplaintComplaintReplies(this.complaintComplaintReplies[i]);
+        if (confirm('Are you sure you want to delete the complaint reply')) {
+          this.store.dispatch(
+            ComplaintActions.removeComplaintReply({
+              id: this.complaintComplaintReplies[i].id,
+              loading: true,
+              loaderMessage: 'Removing reply ...'
+            })
+          )
+          this.complaintComplaintRepliesControl.removeAt(i);
+        }
+        return;
+      }
+    }
+  }
 
   override deleteFromComplaintDocuments(index: number) {
     if (confirm('Are you sure you want to delete the complaint document?')) {

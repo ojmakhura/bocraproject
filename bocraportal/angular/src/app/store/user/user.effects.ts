@@ -22,7 +22,7 @@ export class UserEffects {
           map((user) =>
             UserActions.createUserSuccess({
               user,
-              messages: [`User ${user.username} created.`],
+              messages: [`User ${user?.email} saved.`],
               success: true,
             })
           ),
@@ -48,7 +48,7 @@ export class UserEffects {
     this.actions$.pipe(
       ofType(UserActions.findById),
       mergeMap(({ userId }) => this.userRestController.findUserById(userId).pipe(
-        map((user) => UserActions.findByIdSuccess({ user: user, messages: [`User ${user.username}`], success: true })),
+        map((user) => UserActions.findByIdSuccess({ user: user, messages: [`User ${user?.username} found`], success: true })),
         catchError(({ error }) => [UserActions.userFailure({ messages: [error] })])
       ))
     )
