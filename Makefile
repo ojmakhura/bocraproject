@@ -68,7 +68,7 @@ endif
 build_image: gen_env
 	. ./.env && docker compose -f ${stack_file}.yml build
 
-build_api_image: build_api gen_env
+build_api_image: gen_env build_api
 	. ./.env && docker compose build api
 
 build_comm_image: build_comm gen_env
