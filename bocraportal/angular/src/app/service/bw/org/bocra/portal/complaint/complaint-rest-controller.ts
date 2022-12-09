@@ -16,7 +16,7 @@ export class ComplaintRestController {
     constructor(private http: HttpClient) {
     }
 
-    public addComplaintReply(complaintId: number | any , reply: ComplaintReplyVO | any ): Observable<ComplaintReplyVO | any> {
+    public addComplaintReply(complaintId: string | any , reply: ComplaintReplyVO | any ): Observable<ComplaintReplyVO | any> {
         return this.http.post<ComplaintReplyVO | any>(`${this.path}/complaint/reply?complaintId=${complaintId}`, reply);
     }
 

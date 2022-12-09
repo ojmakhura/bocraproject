@@ -170,7 +170,7 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
       }
       this.store.dispatch(
         ComplaintActions.addComplaintReply({
-          complaintId: this.complaintId,
+          complaintId: this.complaintComplaintId,
           reply: dialogData.complaintReply,
           loading: true,
           loaderMessage: 'Adding reply to complaint ...'

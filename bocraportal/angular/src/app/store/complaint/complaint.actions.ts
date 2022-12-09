@@ -101,7 +101,7 @@ export const getAllPagedSuccess = createAction(
 
 export const addComplaintReply = createAction(
     ComplaintActionType.ADD_COMPLAINT_REPLY,
-    props<{ complaintId: number | any , reply: ComplaintReplyVO | any , loading: boolean, loaderMessage: string | undefined }>()
+    props<{ complaintId: string | any , reply: ComplaintReplyVO | any , loading: boolean, loaderMessage: string | undefined }>()
 );
 
 export const addComplaintReplySuccess = createAction(

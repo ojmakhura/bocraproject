@@ -154,10 +154,11 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     }
 
     @Override
-    protected ComplaintReplyVO handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) throws Exception {
+    protected ComplaintReplyVO handleAddComplaintReply(String complaintId, ComplaintReplyVO reply) throws Exception {
 
         ComplaintReply cr = complaintReplyDao.complaintReplyVOToEntity(reply);
-        cr.setComplaint(complaintRepository.getReferenceById(complaintId));
+        cr.setComplaint(this.complaintDao.searchUniqueComplaintId(complaintId));
+        
         cr = complaintReplyRepository.save(cr);
 
         if (reply.getId() != null) {

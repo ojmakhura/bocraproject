@@ -151,7 +151,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) {
+    public ResponseEntity<?> handleAddComplaintReply(String complaintId, ComplaintReplyVO reply) {
         try {
             logger.debug("Reply Complaint with Complaint Id:" + complaintId);
             Optional<?> data = Optional.of(complaintService.addComplaintReply(complaintId, reply));
