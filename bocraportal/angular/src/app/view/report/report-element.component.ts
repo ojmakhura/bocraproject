@@ -362,20 +362,40 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
           fields?.forEach((field) => {
             if (field.formField?.fieldId === row || row === 'all') {
-              if (!sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]) {
-                sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`] =
+              let label = this.concatenate(submission?.licensee?.licenseeName, field?.formField?.fieldName)
+              if (!sourceData[label]) {
+                sourceData[label] =
                   changedlabel?.type === 'custom' ? sourceSplit.cols[0] : [];
               }
 
               if (changedlabel?.type === 'custom') {
+                console.log('custom')
+                if (sourceSplit.cols[0].includes(`[${submission?.period?.periodName}`)) {
+                  console.log(sourceSplit.cols)
+                  sourceData[label] = sourceData[label]?.replaceAll(
+                    `[${submission?.period?.periodName}]`,
+                    field.value
+                  );
+                }
               } else {
-                sourceData[`${submission?.licensee?.licenseeName}: ${field?.formField?.fieldName}`]?.push(+field.value);
+                sourceData[label]?.push(+field.value);
               }
             }
           });
         });
 
+        console.log(sourceData)
+
         Object.keys(sourceData)?.forEach((key) => {
+          if (changedlabel?.type === 'custom') {
+            let expressionElements = this.getExpressionElements(sourceSplit.cols[0]);
+            expressionElements?.forEach((ex) => {
+              if (sourceData[key]?.includes(`[${ex}]`)) {
+                sourceData[key] = sourceData[key]?.replaceAll(`[${ex}]`, 0);
+              }
+            });
+          }
+          
           this.customDataColumns[changedlabel?.name][key] = this.formatCalculation(
             changedlabel?.type === 'custom'
               ? math.evaluate(sourceData[key])
