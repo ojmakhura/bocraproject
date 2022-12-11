@@ -330,7 +330,6 @@ services:
   web:
     image: "ojmakhura/${WEB_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
     hostname: web
-
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost"]
       interval: 5s
