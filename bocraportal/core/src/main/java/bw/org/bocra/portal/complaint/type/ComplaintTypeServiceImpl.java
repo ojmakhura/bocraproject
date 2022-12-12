@@ -85,17 +85,14 @@ public class ComplaintTypeServiceImpl
     @Override
     protected Collection<ComplaintTypeVO> handleSearch(String criteria)
             throws Exception {
-        // Collection<ComplaintType> types = complaintTypeDao.findByCriteria(criteria);
-        // Collection<ComplaintTypeVO> vos = new ArrayList<>();
+        Collection<ComplaintType> types = complaintTypeDao.findByCriteria(criteria);
+        Collection<ComplaintTypeVO> vos = new ArrayList<>();
 
-        // for (ComplaintType type : types) {
-        // vos.add(getComplaintTypeDao().toComplaintTypeVO(type));
-        // }
+        for (ComplaintType type : types) {
+            vos.add(getComplaintTypeDao().toComplaintTypeVO(type));
+        }
 
-        // TODO implement protected Collection<ComplaintTypeVO> handleSearch(String
-        // criteria)
-        throw new UnsupportedOperationException(
-                "bw.org.bocra.portal.complaint.type.ComplaintTypeService.handleSearch(String criteria) Not implemented!");
+        return vos;
     }
 
     /**

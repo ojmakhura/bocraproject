@@ -20,10 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @see bw.org.bocra.portal.access.type.AccessPointTypeService
  */
 @Service("accessPointTypeService")
-@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class AccessPointTypeServiceImpl
-    extends AccessPointTypeServiceBase
-{
+        extends AccessPointTypeServiceBase {
 
     public AccessPointTypeServiceImpl(AccessPointTypeDao accessPointTypeDao,
             AccessPointTypeRepository accessPointTypeRepository, MessageSource messageSource) {
@@ -34,9 +33,8 @@ public class AccessPointTypeServiceImpl
      * @see bw.org.bocra.portal.access.type.AccessPointTypeService#findById(Long)
      */
     @Override
-    protected  AccessPointTypeVO handleFindById(Long id)
-        throws Exception
-    {
+    protected AccessPointTypeVO handleFindById(Long id)
+            throws Exception {
         AccessPointType type = getAccessPointTypeDao().load(id);
         return getAccessPointTypeDao().toAccessPointTypeVO(type);
 
@@ -46,13 +44,12 @@ public class AccessPointTypeServiceImpl
      * @see bw.org.bocra.portal.access.type.AccessPointTypeService#save(AccessPointTypeVO)
      */
     @Override
-    protected  AccessPointTypeVO handleSave(AccessPointTypeVO accessPointType)
-        throws Exception
-    {
+    protected AccessPointTypeVO handleSave(AccessPointTypeVO accessPointType)
+            throws Exception {
         AccessPointType entity = getAccessPointTypeDao().accessPointTypeVOToEntity(accessPointType);
         entity = accessPointTypeRepository.save(entity);
 
-        if(accessPointType.getId() == null) {
+        if (accessPointType.getId() == null) {
             accessPointType = getAccessPointTypeDao().toAccessPointTypeVO(entity);
         }
 
@@ -63,9 +60,8 @@ public class AccessPointTypeServiceImpl
      * @see bw.org.bocra.portal.access.type.AccessPointTypeService#remove(Long)
      */
     @Override
-    protected  boolean handleRemove(Long id)
-        throws Exception
-    {
+    protected boolean handleRemove(Long id)
+            throws Exception {
         accessPointTypeRepository.deleteById(id);
 
         return true;
@@ -75,19 +71,18 @@ public class AccessPointTypeServiceImpl
      * @see bw.org.bocra.portal.access.type.AccessPointTypeService#getAll()
      */
     @Override
-    protected  Collection<AccessPointTypeVO> handleGetAll()
-        throws Exception
-    {
-        return (Collection<AccessPointTypeVO>) getAccessPointTypeDao().loadAll(AccessPointTypeDao.TRANSFORM_ACCESSPOINTTYPEVO);
+    protected Collection<AccessPointTypeVO> handleGetAll()
+            throws Exception {
+        return (Collection<AccessPointTypeVO>) getAccessPointTypeDao()
+                .loadAll(AccessPointTypeDao.TRANSFORM_ACCESSPOINTTYPEVO);
     }
 
     /**
      * @see bw.org.bocra.portal.access.type.AccessPointTypeService#search(String)
      */
     @Override
-    protected  Collection<AccessPointTypeVO> handleSearch(String criteria)
-        throws Exception
-    {
+    protected Collection<AccessPointTypeVO> handleSearch(String criteria)
+            throws Exception {
         Collection<AccessPointType> types = accessPointTypeDao.findByCriteria(criteria);
         Collection<AccessPointTypeVO> vos = new ArrayList<>();
 
@@ -99,13 +94,14 @@ public class AccessPointTypeServiceImpl
     }
 
     /**
-     * @see bw.org.bocra.portal.access.type.AccessPointTypeService#getAll(Integer, Integer)
+     * @see bw.org.bocra.portal.access.type.AccessPointTypeService#getAll(Integer,
+     *      Integer)
      */
     @Override
-    protected  Collection<AccessPointTypeVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throws Exception
-    {
-        return (Collection<AccessPointTypeVO>) accessPointTypeDao.loadAll(accessPointTypeDao.TRANSFORM_ACCESSPOINTTYPEVO, pageNumber, pageSize);
+    protected Collection<AccessPointTypeVO> handleGetAll(Integer pageNumber, Integer pageSize)
+            throws Exception {
+        return (Collection<AccessPointTypeVO>) accessPointTypeDao
+                .loadAll(accessPointTypeDao.TRANSFORM_ACCESSPOINTTYPEVO, pageNumber, pageSize);
     }
 
 }
