@@ -6,8 +6,14 @@
  */
 package bw.org.bocra.portal.complaint.type;
 
+import java.util.Collection;
+
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.BocraportalSpecifications;
 
 /**
  * @see ComplaintType
@@ -88,5 +94,13 @@ public class ComplaintTypeDaoImpl
     {
         // TODO verify behavior of complaintTypeVOToEntity
         super.complaintTypeVOToEntity(source, target, copyIfNull);
+    }
+
+    @Override
+    protected Collection<ComplaintType> handleFindByCriteria(String criteria) throws Exception {
+        Specification<ComplaintType> spec = BocraportalSpecifications.<ComplaintType, String>findByAttributeLikeIgnoreCase("code", criteria)
+                                                .or(BocraportalSpecifications.<ComplaintType, String>findByAttributeLikeIgnoreCase("code", criteria));
+        // TODO Auto-generated method stub
+        return complaintTypeRepository.findAll(spec, Sort.by("code").ascending());
     }
 }
