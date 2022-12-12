@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -236,6 +237,13 @@ public class FormActivationServiceImpl
 
         for (FormSubmissionVO submission : formActivation.getFormSubmissions()) {
 
+            Collection<UserVO> users = keycloakUserService.getLicenseeUsers(submission.getLicensee().getId());
+            Collection<String> userEmails = users.stream().map(user -> user.getEmail()).collect(Collectors.toSet());
+
+            if(CollectionUtils.isEmpty(userEmails)) {
+                continue;
+            }
+
             CommunicationMessage message = CommunicationMessage.Factory.newInstance();
 
             message.setCreatedBy(formActivation.getCreatedBy());
@@ -255,9 +263,6 @@ public class FormActivationServiceImpl
                     submission.getExpectedSubmissionDate()
                 )
             );
-
-            Collection<UserVO> users = keycloakUserService.getLicenseeUsers(submission.getLicensee().getId());
-            Collection<String> userEmails = users.stream().map(user -> user.getEmail()).collect(Collectors.toSet());
 
             message.setDestinations(userEmails);
 

@@ -28,6 +28,7 @@ import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.period.config.PeriodConfigRepository;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 import bw.org.bocra.portal.sector.SectorRepository;
 import bw.org.bocra.portal.sector.form.SectorForm;
@@ -43,16 +44,16 @@ public class FormDaoImpl
     extends FormDaoBase
 {
 
-
     public FormDaoImpl(LicenceTypeRepository licenceTypeRepository, FormFieldRepository formFieldRepository,
             FormSubmissionRepository formSubmissionRepository, LicenseeRepository licenseeRepository,
             ReportConfigRepository reportConfigRepository, FormSectionRepository formSectionRepository,
             LicenceTypeFormRepository licenceTypeFormRepository, LicenseeFormRepository licenseeFormRepository,
             FormReportConfigRepository formReportConfigRepository, SectorFormRepository sectorFormRepository,
-            SectorRepository sectorRepository, FormRepository formRepository) {
+            SectorRepository sectorRepository, PeriodConfigRepository periodConfigRepository,
+            FormRepository formRepository) {
         super(licenceTypeRepository, formFieldRepository, formSubmissionRepository, licenseeRepository, reportConfigRepository,
                 formSectionRepository, licenceTypeFormRepository, licenseeFormRepository, formReportConfigRepository,
-                sectorFormRepository, sectorRepository, formRepository);
+                sectorFormRepository, sectorRepository, periodConfigRepository, formRepository);
         //TODO Auto-generated constructor stub
     }
 

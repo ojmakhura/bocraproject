@@ -6,22 +6,16 @@
  */
 package bw.org.bocra.portal.complaint;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-
-import bw.org.bocra.portal.complaint.ComplaintReplyDao;
-import bw.org.bocra.portal.document.Document;
-import bw.org.bocra.portal.document.DocumentVO;
-import bw.org.bocra.portal.document.type.DocumentTypeVO;
-import bw.org.bocra.portal.document.DocumentRepository;
-import bw.org.bocra.portal.licensee.LicenseeRepository;
-import bw.org.bocra.portal.licensee.LicenseeVO;
-import bw.org.bocra.portal.licensee.Licensee;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.complaint.type.ComplaintTypeRepository;
+import bw.org.bocra.portal.document.DocumentRepository;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.licensee.LicenseeVO;
 
 /**
  * @see Complaint
@@ -32,15 +26,13 @@ public class ComplaintDaoImpl
         extends ComplaintDaoBase {
 
     private final ComplaintReplyDao complaintReplyDao;
+        
 
-    public ComplaintDaoImpl(
-            LicenseeRepository licenseeRepository, ComplaintReplyRepository complaintReplyRepository,
-            DocumentRepository documentRepository, ComplaintRepository complaintRepository,
-            ComplaintReplyDao complaintReplyDao) {
-
-        super(
-                licenseeRepository,
-                complaintReplyRepository, documentRepository, complaintRepository);
+    public ComplaintDaoImpl(LicenseeRepository licenseeRepository, ComplaintReplyRepository complaintReplyRepository,
+            DocumentRepository documentRepository, ComplaintTypeRepository complaintTypeRepository,
+            ComplaintRepository complaintRepository, ComplaintReplyDao complaintReplyDao) {
+        super(licenseeRepository, complaintReplyRepository, documentRepository, complaintTypeRepository, complaintRepository);
+        //TODO Auto-generated constructor stub
         this.complaintReplyDao = complaintReplyDao;
     }
 
@@ -70,6 +62,10 @@ public class ComplaintDaoImpl
             Collection<ComplaintReplyVO> replies = complaintReplyDao
                     .toComplaintReplyVOCollection(source.getComplaintReplies());
             target.setComplaintReplies(replies);
+        }
+
+        if(source.getComplaintType() != null) {
+            target.setComplaintType(getComplaintTypeDao().toComplaintTypeVO(source.getComplaintType()));
         }
     }
 
@@ -116,8 +112,14 @@ public class ComplaintDaoImpl
             boolean copyIfNull) {
         // TODO verify behavior of complaintVOToEntity
         super.complaintVOToEntity(source, target, copyIfNull);
+
         if (source.getLicensee() != null) {
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
         }
+
+        if(source.getComplaintType() != null) {
+            target.setComplaintType(getComplaintTypeDao().complaintTypeVOToEntity(source.getComplaintType()));
+        }
+
     }
 }

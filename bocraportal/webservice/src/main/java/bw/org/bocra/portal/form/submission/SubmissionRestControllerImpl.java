@@ -310,4 +310,20 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             throw new SubmissionServiceException("Could not load due submissions.");
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleCheckOverdueSubmissions() {
+        
+        try {
+
+            Integer overdue = submissionService.checkOverdueSubmissions();
+            return ResponseEntity.ok(overdue);
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new SubmissionServiceException("Could not load overdue submissions.");
+        }
+    }
 }

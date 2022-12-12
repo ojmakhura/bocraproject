@@ -48,25 +48,25 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
         }
     }
 
-    @Override
-    public ResponseEntity<?> handleGetAll() {
-        try {
-            logger.debug("Displays all Complaints");
-            Optional<?> data = Optional.of(complaintService.getAll()); // TODO: Add custom code here;
-            ResponseEntity<?> response;
+    // @Override
+    // public ResponseEntity<?> handleGetAll() {
+    //     try {
+    //         logger.debug("Displays all Complaints");
+    //         Optional<?> data = Optional.of(complaintService.getAll()); // TODO: Add custom code here;
+    //         ResponseEntity<?> response;
 
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
+    //         if (data.isPresent()) {
+    //             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+    //         } else {
+    //             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    //         }
 
-            return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
+    //         return response;
+    //     } catch (Exception e) {
+    //         logger.error(e.getMessage());
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    //     }
+    // }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {

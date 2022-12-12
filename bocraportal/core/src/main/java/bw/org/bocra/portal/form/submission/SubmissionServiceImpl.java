@@ -334,4 +334,26 @@ public class SubmissionServiceImpl
         return toSubmissionVOCollection(submissions);
     }
 
+    @Override
+    protected Integer handleCheckOverdueSubmissions() throws Exception {
+        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
+                "submissionStatus", FormSubmissionStatus.DRAFT)
+                .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
+                    "submissionStatus", FormSubmissionStatus.NEW))
+                .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
+                    "submissionStatus", FormSubmissionStatus.OVERDUE));
+        sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, LocalDate>findByAttributeLessThan("expectedSubmissionDate",
+                    LocalDate.now()));
+
+        Collection<FormSubmission> overdue = formSubmissionRepository.findAll(sSpecs);
+        for(FormSubmission sub : overdue) {
+            if(sub.getSubmissionStatus() != FormSubmissionStatus.OVERDUE) {
+                sub.setSubmissionStatus(FormSubmissionStatus.OVERDUE);
+                formSubmissionRepository.saveAndFlush(sub);
+            }
+        }
+        
+        return overdue.size();
+    }
+
 }
