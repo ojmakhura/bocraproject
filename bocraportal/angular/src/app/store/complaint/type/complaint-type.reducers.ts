@@ -25,6 +25,7 @@ export const complaintTypeReducer = createReducer(
         loaderMessage: undefined,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintTypeActions.save, (state, action) => ({
@@ -47,6 +48,7 @@ export const complaintTypeReducer = createReducer(
         loaderMessage: undefined,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintTypeActions.remove, (state, action) => ({
@@ -70,6 +72,7 @@ export const complaintTypeReducer = createReducer(
         removed: action.removed,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintTypeActions.getAll, (state, action) => ({
@@ -92,6 +95,7 @@ export const complaintTypeReducer = createReducer(
         loaderMessage: undefined,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintTypeActions.search, (state, action) => ({
@@ -114,6 +118,7 @@ export const complaintTypeReducer = createReducer(
         loaderMessage: undefined,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintTypeActions.getAllPaged, (state, action) => ({
@@ -136,6 +141,7 @@ export const complaintTypeReducer = createReducer(
         loaderMessage: undefined,
         loading: false,
         success: action.success,
+        error: false,
         messages: action.messages
     })),
     on(ComplaintTypeActions.complaintTypeReset, (state) => ({

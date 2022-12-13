@@ -90,6 +90,9 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
     reportLicenseesLabel: string[] = [];
     reportLicenseesData: number[] = [];
 
+    reportTypeLabel: string[] = [];
+    reportTypeData: number[] = [];
+
     constructor(injector: Injector) {
 
         this.route = injector.get(ActivatedRoute);
@@ -212,6 +215,11 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
         datasets: []
     };
 
+    public barChartTypeData: ChartData<'bar'> = {
+        labels: [],
+        datasets: []
+    };
+
     public pieChartOptions: ChartConfiguration['options'] = {
         responsive: true,
         plugins: {
@@ -240,6 +248,14 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
             data: []
         }]
     };
+
+    public pieChartTypeData: ChartData<'pie', number[], string | string[]> = {
+        labels: [],
+        datasets: [{
+            data: []
+        }]
+    };
+
     public pieChartType: ChartType = 'pie';
     public pieChartPlugins = [DataLabelsPlugin];
 

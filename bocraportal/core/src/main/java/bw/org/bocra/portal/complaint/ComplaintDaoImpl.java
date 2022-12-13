@@ -9,11 +9,15 @@ package bw.org.bocra.portal.complaint;
 import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.complaint.type.ComplaintTypeRepository;
 import bw.org.bocra.portal.document.DocumentRepository;
+import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
@@ -26,13 +30,13 @@ public class ComplaintDaoImpl
         extends ComplaintDaoBase {
 
     private final ComplaintReplyDao complaintReplyDao;
-        
 
     public ComplaintDaoImpl(LicenseeRepository licenseeRepository, ComplaintReplyRepository complaintReplyRepository,
             DocumentRepository documentRepository, ComplaintTypeRepository complaintTypeRepository,
             ComplaintRepository complaintRepository, ComplaintReplyDao complaintReplyDao) {
-        super(licenseeRepository, complaintReplyRepository, documentRepository, complaintTypeRepository, complaintRepository);
-        //TODO Auto-generated constructor stub
+        super(licenseeRepository, complaintReplyRepository, documentRepository, complaintTypeRepository,
+                complaintRepository);
+        // TODO Auto-generated constructor stub
         this.complaintReplyDao = complaintReplyDao;
     }
 
@@ -64,9 +68,28 @@ public class ComplaintDaoImpl
             target.setComplaintReplies(replies);
         }
 
-        if(source.getComplaintType() != null) {
+        if (source.getComplaintType() != null) {
             target.setComplaintType(getComplaintTypeDao().toComplaintTypeVO(source.getComplaintType()));
         }
+
+        // Collection<DocumentVO> docs = new HashSet<>();
+
+        // for (Document doc : source.getDocuments()) {
+        // DocumentVO dvo = new DocumentVO();
+        // dvo.setId(doc.getId());
+        // dvo.setDocumentName(doc.getDocumentName());
+        // dvo.setDocumentId(doc.getDocumentId());
+
+        // DocumentTypeVO type = new DocumentTypeVO();
+        // type.setCode(doc.getDocumentType().getCode());
+        // type.setId(doc.getDocumentType().getId());
+        // type.setName(doc.getDocumentType().getName());
+
+        // dvo.setDocumentType(type);
+        // docs.add(dvo);
+        // }
+
+        // target.setDocuments(docs);
     }
 
     /**
@@ -117,7 +140,7 @@ public class ComplaintDaoImpl
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
         }
 
-        if(source.getComplaintType() != null) {
+        if (source.getComplaintType() != null && StringUtils.isNotBlank(source.getComplaintType().getCode())) {
             target.setComplaintType(getComplaintTypeDao().complaintTypeVOToEntity(source.getComplaintType()));
         }
 

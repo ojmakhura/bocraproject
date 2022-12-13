@@ -9,7 +9,7 @@ import * as ComplaintTypeActions from '@app/store/complaint/type/complaint-type.
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
-import * as LicenseSelectors from '@app/store/licensee/licensee.selectors';
+import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as DocumentActions from '@app/store/document/document.actions';
 import * as DocumentSelectors from '@app/store/document/document.selectors';
 import { select } from '@ngrx/store';
@@ -42,8 +42,9 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = this._injector.get(KeycloakService);
-    this.complaintLicensees$ = this.store.pipe(select(LicenseSelectors.selectLicensees));
+    this.complaintLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.complaintDocuments$ = this.store.pipe(select(ComplaintSelectors.selectDocument));
+    this.complaintComplaintTypes$ = this.store.pipe(select(ComplaintTypeSelectors.selectComplaintType));
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
     this.complaintReply$ = this.store.pipe(select(ComplaintSelectors.selectComplaintReply));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
@@ -138,11 +139,9 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   }
 
   override complaintComplaintTypeSearch(): void {
-    let criteria: string = '';
-    criteria = this.complaintComplaintTypeSearchField.value;
     this.store.dispatch(
       ComplaintTypeActions.search({
-        criteria: criteria,
+        criteria: this.complaintComplaintTypeSearchField.value,
         loading: true,
         loaderMessage: 'Searching complaint types ...'
       })
@@ -255,6 +254,19 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
         }
         return;
       }
+    }
+  }
+
+  override afterEditComplaintNewDocument(form: EditComplaintNewDocumentForm, dialogData: any){
+    dialogData.document.complaint = this.complaint;
+    if(dialogData){
+      this.store.dispatch(
+        DocumentActions.save({
+          document: dialogData.document,
+          loading: true,
+          loaderMessage: 'Adding document to complaint ...'
+        })
+      )
     }
   }
 

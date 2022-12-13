@@ -19,6 +19,7 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
   }
   yearFilter: string[] = [];
   licenseeFilter: string[] = [];
+  typeFilter: string[] = [];
   override doNgAfterViewInit(): void {
     this.yearFilter.push(this.useCaseScope.pageVariables.map((entry: { createdDate: string; }) => entry.createdDate.substring(0, 4)));
     this.reportLabel = [...new Set(this.yearFilter[0])];

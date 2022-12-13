@@ -74,5 +74,11 @@ export class DocumentRestController {
         return this.http.post<DocumentVO | any>(this.path + `/licensee/upload`, {licenseeId: licenseeId, file: file});
 
     }
+    
+    public uploadComplaintDocument(complaintId: number | any , file: File | any ): Observable<DocumentVO | any> {
+
+        return this.http.post<DocumentVO | any>(this.path + `/complaint/upload`, {complaintId: complaintId, file: file});
+
+    }
 
 }

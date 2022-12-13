@@ -14,7 +14,7 @@ export class ComplaintTypeEffects {
          this.actions$.pipe(
             ofType(ComplaintTypeActions.findById),
             mergeMap(({id}) => this.complaintTypeRestController.findById(id).pipe(
-                map(( complaintType) => ComplaintTypeActions.findByIdSuccess({complaintType, messages: [`Complaint type ${complaintType.name} found.`], success: true})),
+                map(( complaintType) => ComplaintTypeActions.findByIdSuccess({complaintType, messages: [`Complaint type ${complaintType.typeName} found.`], success: true})),
                 catchError(({error}) => [ComplaintTypeActions.complaintTypeFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -24,7 +24,7 @@ export class ComplaintTypeEffects {
          this.actions$.pipe(
             ofType(ComplaintTypeActions.save),
             mergeMap(({complaintType}) => this.complaintTypeRestController.save(complaintType).pipe(
-                map(( complaintType) => ComplaintTypeActions.saveSuccess({complaintType, messages: [`Complaint type ${complaintType.name} saved.`], success: true})),
+                map(( complaintType) => ComplaintTypeActions.saveSuccess({complaintType, messages: [`Complaint type ${complaintType.typeName} saved.`], success: true})),
                 catchError(({error}) => [ComplaintTypeActions.complaintTypeFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
