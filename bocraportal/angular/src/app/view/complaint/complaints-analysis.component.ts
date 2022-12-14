@@ -43,18 +43,6 @@ import { BaseChartDirective } from 'ng2-charts';
 
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 
-export class ComplaintsDummmy {
-    id: number | any = null;
-    status: string | any = null;
-    licenseeName: string | any = null;
-    createdDate: Date | any = null;
-}
-
-export class YearlyAnalysis {
-    year: number | any = null;
-    total: number | any = null;
-}
-
 @Component({
     selector: 'app-complaints-analysis-base',
     template: ''

@@ -111,6 +111,7 @@ public class DocumentDaoImpl
 
         if (source.getComplaint() != null) {
             ComplaintVO complaint = new ComplaintVO();
+            complaint.setId(source.getComplaint().getId());
             complaint.setAssignedTo(source.getComplaint().getAssignedTo());
             complaint.setComplaintId(source.getComplaint().getComplaintId());
             complaint.setDetails(source.getComplaint().getDetails());

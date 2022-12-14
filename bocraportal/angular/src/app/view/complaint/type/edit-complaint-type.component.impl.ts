@@ -55,10 +55,6 @@ export class EditComplaintTypeComponentImpl extends EditComplaintTypeComponent {
       }
     });
 
-    this.complaintType$.subscribe((complaintType) => {
-      this.setEditComplaintTypeFormValue({ complaintType: complaintType });
-    })
-
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
         if (item === '/complaint/type/edit-complaint-type/{button:delete}') {
@@ -66,9 +62,14 @@ export class EditComplaintTypeComponentImpl extends EditComplaintTypeComponent {
         }
       });
     });
+
+    this.complaintType$.subscribe((complaintType) => {
+      this.setEditComplaintTypeFormValue({ complaintType: complaintType });
+    })
   }
 
   override beforeEditComplaintTypeSave(form: EditComplaintTypeSaveForm): void {
+    console.log(form?.complaintType);
     if(this.editComplaintTypeForm.valid){
       if (form.complaintType?.id){
         form.complaintType.updatedBy = this.keycloakService.getUsername();

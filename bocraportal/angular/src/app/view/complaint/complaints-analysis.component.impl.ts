@@ -44,8 +44,23 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
 
     this.barChartLicenseeData.datasets = [{ data: this.reportLicenseesData, label: 'Licensee Complaints Analysis'}];
     this.pieChartLicenseeData.datasets = [{ data: this.reportLicenseesData, label: 'Licensee Complaints Analysis'}];
+
     this.barChartLicenseeData.labels = this.reportLicenseesLabel;
     this.pieChartLicenseeData.labels = this.reportLicenseesLabel;
+
+    this.typeFilter.push(this.useCaseScope.pageVariables.map((entry: { complaintType: { typeName: any; }; }) => entry.complaintType.typeName));
+    this.reportTypeLabel = [...new Set(this.typeFilter[0])];
+
+    for(let type of this.reportTypeLabel) {
+      let data = this.useCaseScope.pageVariables.filter((entry: { complaintType: { typeName: any; }; }) => entry.complaintType.typeName.includes(type)).length;
+      this.reportTypeData.push(data);
+    }
+
+    this.barChartTypeData.datasets = [{ data: this.reportTypeData, label: 'Complaint Type Complaints Analysis'}];
+    this.pieChartTypeData.datasets = [{ data: this.reportTypeData, label: 'Complaint Type Complaints Analysis'}];
+
+    this.barChartTypeData.labels = this.reportTypeLabel;
+    this.pieChartTypeData.labels = this.reportTypeLabel;
   }
 
   doNgOnDestroy(): void {

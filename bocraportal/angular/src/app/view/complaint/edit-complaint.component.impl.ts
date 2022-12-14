@@ -44,32 +44,15 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     this.keycloakService = this._injector.get(KeycloakService);
     this.complaintLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.complaintDocuments$ = this.store.pipe(select(ComplaintSelectors.selectDocument));
-    this.complaintComplaintTypes$ = this.store.pipe(select(ComplaintTypeSelectors.selectComplaintType));
+    this.complaintComplaintTypes$ = this.store.pipe(select(ComplaintTypeSelectors.selectComplaintTypes));
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
     this.complaintReply$ = this.store.pipe(select(ComplaintSelectors.selectComplaintReply));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     // this.accessPointAccessPointTypes$ = this.store.pipe(select(AccessPointTypeSelectors.selectAccessPointTypes));
-    this.complaintComplaintTypes$ = this.store.pipe(select(ComplaintTypeSelectors.selectComplaintTypes));
-    this.complaintComplaintTypeBackingList = [];
     this.keycloakService.isLoggedIn().then((loggedIn) => {
       this.loggedIn = loggedIn;
     });
   }
-
-  // override beforeOnInit(form: EditComplaintVarsForm): EditComplaintVarsForm {
-  //   this.store.dispatch(ComplaintActions.getAll({loading: true, loaderMessage: 'Loading all complaint types ...'}));
-  //   this.complaintComplaintTypes$.subscribe(types => {
-  //     this.complaintComplaintTypeBackingList = [];
-  //     types.forEach(type => {
-  //       let item: SelectItem = new SelectItem;
-  //       item.label = type.typeName
-  //       item.value = type.id
-
-  //       this.complaintComplaintTypeBackingList.push(item);
-  //     });
-  //   });
-  //   return form;  
-  // }
 
   doNgOnDestroy(): void {
   }
