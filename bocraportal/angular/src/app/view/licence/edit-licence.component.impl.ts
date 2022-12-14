@@ -92,40 +92,21 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
    * This method may be overwritten
    */
   override beforeEditLicenceSave(form: EditLicenceSaveForm): void {
-    if (this.licenceControl.valid) {
-      if (form.licence.id) {
-        form.licence.updatedBy = this.keycloakService.getUsername();
-        form.licence.updatedDate = new Date();
-      } else {
-        form.licence.createdBy = this.keycloakService.getUsername();
-        form.licence.createdDate = new Date();
-      }
-      this.store.dispatch(
-        LicenceActions.save({
-          licence: form.licence,
-          loading: true,
-          loaderMessage: 'Saving Licence ...'
-        })
-      );
+    if (form.licence?.id) {
+      form.licence.updatedBy = this.keycloakService.getUsername();
+      form.licence.updatedDate = new Date();
     } else {
-      let messages: string[] = []
-      if (!this.licenceControl.valid) {
-        messages.push("Licence has errors, Please fill in the required form fields.")
-      }
-      if (!this.licenceStatusControl.valid) {
-        messages.push("Licence Status is missing!")
-      }
-      if (!this.licenceLicenceNumberControl.valid) {
-        messages.push("Licence Number is missing!")
-      }
-      if (!this.licenceStartDateControl.valid) {
-        messages.push("Licence Start Date is missing!")
-      }
-      if (!this.licenceEndDateControl.valid) {
-        messages.push("Licence End Date is missing!")
-      }
-      this.store.dispatch(LicenceActions.licenceFailure({ messages: messages }));
-  }
+      form.licence.createdBy = this.keycloakService.getUsername();
+      form.licence.createdDate = new Date();
+    }
+
+    this.store.dispatch(
+      LicenceActions.save({
+        licence: form.licence,
+        loading: true,
+        loaderMessage: 'Saving licence ...'
+      })
+    );
   }
 
   override beforeEditLicenceDelete(form: EditLicenceDeleteForm): void {

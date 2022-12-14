@@ -197,12 +197,6 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
       if(!this.formActivationPeriodControl.valid) {
         messages.push("Period is missing!")
       }
-      if(form?.formActivation?.formActivationActivationNameControl== null){
-        messages.push("Form Name is missing!")
-      }
-      if(form?.formActivation?.formActivationPeriodControl == null){
-        messages.push("Period Name is missing!")
-      }
       // if(!this.periodPeriodConfigControl.valid) {
       //   messages.push("Period Name missing!")
       // }

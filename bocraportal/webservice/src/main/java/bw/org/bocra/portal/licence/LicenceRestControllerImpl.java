@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -141,10 +140,6 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form License has been already done.");
-            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

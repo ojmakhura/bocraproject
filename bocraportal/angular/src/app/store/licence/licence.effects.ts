@@ -34,7 +34,7 @@ export class LicenceEffects {
                     messages: [`Licence ${licence.licenceNumber} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [LicenceActions.licenceFailure({messages: ["Already exists"]})])
+                catchError(({error}) => [LicenceActions.licenceFailure({messages: [error.error]})])
             ))
         )
     );
