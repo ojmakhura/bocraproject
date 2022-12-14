@@ -33,7 +33,7 @@ export class DocumentEffects {
                     messages: [`Document ${document.documentName} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: ["Already Exists"]})])
             ))
         )
     );

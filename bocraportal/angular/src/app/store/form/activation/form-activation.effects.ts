@@ -25,7 +25,7 @@ export class FormActivationEffects {
             ofType(FormActivationActions.save),
             mergeMap(({formActivation}) => this.formActivationRestController.save(formActivation).pipe(
                 map( formActivation => FormActivationActions.saveSuccess({formActivation, messages: [`Form activation ${formActivation.activationName} saved.`], success: true})),
-                catchError(({error}) => [FormActivationActions.formActivationFailure({messages: [error?.error ? error?.error : error]})])
+                catchError(({error}) => [FormActivationActions.formActivationFailure({messages: ["The Server encountered an internal error or misconfiguration and was unable to complete your request. Please contact the administrator for further assistance"]})])
             ))
         )
     );

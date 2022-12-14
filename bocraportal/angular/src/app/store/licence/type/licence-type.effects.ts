@@ -33,7 +33,7 @@ export class LicenceTypeEffects {
                     messages: [`Licence type ${licenceType.name} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure({messages: [error]})])
+                catchError(({error}) => [LicenceTypeActions.licenceTypeFailure({messages: ["Already exists"]})])
             ))
         )
     );

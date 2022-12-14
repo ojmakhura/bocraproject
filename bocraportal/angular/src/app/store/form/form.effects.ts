@@ -41,7 +41,7 @@ export class FormEffects {
                     messages: [`Form ${form.formName} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error.error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: ["This form has been already created."]})])
             ))
         )
     );

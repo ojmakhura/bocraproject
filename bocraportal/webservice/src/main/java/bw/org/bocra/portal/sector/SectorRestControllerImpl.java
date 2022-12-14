@@ -130,7 +130,6 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
             e.printStackTrace();
             logger.error(e.getMessage());
             if(e instanceof ConstraintViolationException) {
-                
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Sector has been already created.");
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

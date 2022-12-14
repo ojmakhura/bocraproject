@@ -105,8 +105,11 @@ export const licenceTypeReducer = createReducer(
     })),
     on(LicenceTypeActions.licenceTypeFailure, (state, action) => ({
         ...state,
-        messages: action.messages,
+        loading: false,
+        loaderMessage: undefined,
+        success: false,
         error: true,
+        messages: action.messages
     }))
 );
 
