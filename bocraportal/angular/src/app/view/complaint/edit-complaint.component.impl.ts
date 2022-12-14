@@ -247,11 +247,13 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   }
 
   override afterEditComplaintNewDocument(form: EditComplaintNewDocumentForm, dialogData: any){
-    dialogData.document.complaint = this.complaint;
     if(dialogData){
       this.store.dispatch(
-        DocumentActions.save({
-          document: dialogData.document,
+        ComplaintActions.addDocument({
+          id: this.complaintId,
+          documentTypeId: dialogData.document.documentType.id,
+          file: dialogData.document.file,
+          fileName: dialogData.document.documentName,
           loading: true,
           loaderMessage: 'Adding document to complaint ...'
         })

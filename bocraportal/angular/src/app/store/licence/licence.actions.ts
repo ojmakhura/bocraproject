@@ -24,7 +24,7 @@ export enum LicenceActionType {
     LICENCE_RESET = '[Licence] Licence Reset',
     ADD_DOCUMENT = '[Licence] Add Licence Document',
     ADD_DOCUMENT_SUCCESS = '[Licence] Add Licence Document Succcess',
-    REMOVE_DOCUMENT = '[Licensee] Remove Licence Document',
+    REMOVE_DOCUMENT = '[Licence] Remove Licence Document',
     REMOVE_DOCUMENT_SUCCESS = '[Licence] Remove Licence Document Succcess'
 }
 

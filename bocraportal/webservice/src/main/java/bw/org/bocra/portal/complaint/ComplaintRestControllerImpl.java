@@ -7,14 +7,23 @@ package bw.org.bocra.portal.complaint;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.keycloak.representations.AccessToken;
 // import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.DocumentService;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
+import bw.org.bocra.portal.keycloak.KeycloakService;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
 
 @RestController
 @RequestMapping("/complaint")
@@ -22,9 +31,17 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Complaint", description = "Managing the complaints.")
 public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
-    public ComplaintRestControllerImpl(ComplaintService complaintService) {
+    private final DocumentService documentService;
+    private final KeycloakUserService keycloakUserService;
+    private final KeycloakService keycloakService;
+
+    public ComplaintRestControllerImpl(ComplaintService complaintService, DocumentService documentService,
+            KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
 
         super(complaintService);
+        this.documentService = documentService;
+        this.keycloakUserService = keycloakUserService;
+        this.keycloakService = keycloakService;
 
     }
 
@@ -50,22 +67,23 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
     // @Override
     // public ResponseEntity<?> handleGetAll() {
-    //     try {
-    //         logger.debug("Displays all Complaints");
-    //         Optional<?> data = Optional.of(complaintService.getAll()); // TODO: Add custom code here;
-    //         ResponseEntity<?> response;
+    // try {
+    // logger.debug("Displays all Complaints");
+    // Optional<?> data = Optional.of(complaintService.getAll()); // TODO: Add
+    // custom code here;
+    // ResponseEntity<?> response;
 
-    //         if (data.isPresent()) {
-    //             response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-    //         } else {
-    //             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    //         }
+    // if (data.isPresent()) {
+    // response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+    // } else {
+    // response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    // }
 
-    //         return response;
-    //     } catch (Exception e) {
-    //         logger.error(e.getMessage());
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    //     }
+    // return response;
+    // } catch (Exception e) {
+    // logger.error(e.getMessage());
+    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    // }
     // }
 
     @Override
@@ -194,7 +212,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     public ResponseEntity<?> handleFindByComplaintId(String complaintId) {
         try {
             logger.debug("Searches for a Complaint assigned by " + complaintId);
-            Optional<?> data = Optional.of(complaintService.findByComplaintId(complaintId)); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(complaintService.findByComplaintId(complaintId)); // TODO: Add custom code
+                                                                                             // here;
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
@@ -205,6 +224,43 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
             return response;
         } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
+        try {
+            logger.debug("Add Document to Complaint with id " + id + ",document type id " + documentTypeId + ", file "
+                    + file + " and file name " + fileName);
+            AccessToken token = keycloakService.getSecurityContext().getToken();
+            DocumentVO document = new DocumentVO();
+            document.setCreatedBy(token.getPreferredUsername());
+            document.setCreatedDate(LocalDateTime.now());
+            document.setFile(file.getBytes());
+            document.setDocumentName(fileName);
+
+            ComplaintVO complaint = new ComplaintVO();
+            complaint.setId(id);
+            document.setComplaint(complaint);
+
+            DocumentTypeVO docType = new DocumentTypeVO();
+            docType.setId(documentTypeId);
+
+            document.setDocumentType(docType);
+            document = this.documentService.save(document);
+            ResponseEntity<?> response;
+
+            if (document != null && document.getId() != null) {
+                response = ResponseEntity.status(HttpStatus.OK).body(document);
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

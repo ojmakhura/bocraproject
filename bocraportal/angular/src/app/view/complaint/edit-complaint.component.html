@@ -208,14 +208,16 @@
 								<ng-container matColumnDef="actions">
 									<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
 									<mat-cell *matCellDef="let row; index as i">
-										<button type="button" color="accent" (click)="deleteFromComplaintDocuments(i)"
-											class="btn btn-info">
+										<div>
+											<button type="button" (click)="deleteFromComplaintDocuments(i)"
+											class="btn btn-outline-primary">
 											<mat-icon>delete</mat-icon>
 										</button>
-										<button type="button" color="accent" (click)="doEditComplaintDocuments(row)"
+										<!-- <button type="button" color="accent" (click)="doEditComplaintDocuments(row)"
 											class="btn btn-info">
 											<mat-icon>edit</mat-icon>
-										</button>
+										</button> -->
+										</div>
 									</mat-cell>
 								</ng-container>
 								<ng-container matColumnDef="id">
