@@ -58,12 +58,12 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     protected ComplaintVO handleSave(ComplaintVO complaint)
             throws Exception {
         Complaint compl = getComplaintDao().complaintVOToEntity(complaint);
-        if(compl.getId() == null) {
+        if (compl.getId() == null) {
             String generatedString = RandomStringUtils.random(15, true, true);
             compl.setComplaintId(generatedString);
         }
 
-        if(compl.getStatus() == null) {
+        if (compl.getStatus() == null) {
             compl.setStatus(ComplaintStatus.NEW);
         }
 
@@ -102,37 +102,48 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
         Specification<Complaint> spec = null;
 
         if (StringUtils.isNotBlank(criteria.getComplaintId())) {
-            spec = BocraportalSpecifications.findByAttributeContainingIgnoreCase("complaintId", criteria.getComplaintId());
+            spec = BocraportalSpecifications.findByAttributeContainingIgnoreCase("complaintId",
+                    criteria.getComplaintId());
         }
 
         if (StringUtils.isNotBlank(criteria.getSubject())) {
-            if(spec == null)
+            if (spec == null)
                 spec = BocraportalSpecifications.findByAttributeContainingIgnoreCase("subject", criteria.getSubject());
             else
-                spec = spec.and(BocraportalSpecifications.findByAttributeContainingIgnoreCase("subject", criteria.getSubject()));
+                spec = spec.and(BocraportalSpecifications.findByAttributeContainingIgnoreCase("subject",
+                        criteria.getSubject()));
         }
 
-        if(criteria.getEmail() != null) {
-            if(spec == null)
+        if (criteria.getEmail() != null) {
+            if (spec == null)
                 spec = BocraportalSpecifications.findByAttribute("email", criteria.getEmail());
             else
                 spec = spec.and(BocraportalSpecifications.findByAttribute("email", criteria.getEmail()));
         }
 
-        if(criteria.getStatus() != null) {
-            if(spec == null)
+        if (criteria.getStatus() != null) {
+            if (spec == null)
                 spec = BocraportalSpecifications.findByAttribute("status", criteria.getStatus());
             else
                 spec = spec.and(BocraportalSpecifications.findByAttribute("status", criteria.getStatus()));
         }
 
-        if(criteria.getLicenseeId() != null) {
-            if(spec == null)
+        if (criteria.getLicenseeId() != null) {
+            if (spec == null)
                 spec = BocraportalSpecifications.findByJoinAttribute("licensee", "id", criteria.getLicenseeId());
             else
-                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("licensee", "id", criteria.getLicenseeId()));
+                spec = spec
+                        .and(BocraportalSpecifications.findByJoinAttribute("licensee", "id", criteria.getLicenseeId()));
         }
 
+        if (criteria.getComplaintTypeId() != null) {
+            if (spec == null)
+                spec = BocraportalSpecifications.findByJoinAttribute("complaintType", "id",
+                        criteria.getComplaintTypeId());
+            else
+                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("complaintType", "id",
+                        criteria.getComplaintTypeId()));
+        }
 
         Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
 
@@ -158,7 +169,7 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
 
         ComplaintReply cr = complaintReplyDao.complaintReplyVOToEntity(reply);
         cr.setComplaint(this.complaintDao.searchUniqueComplaintId(complaintId));
-        
+
         cr = complaintReplyRepository.save(cr);
 
         if (reply.getId() != null) {
@@ -185,7 +196,7 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
 
             List<Complaint> entities = getComplaintRepository().findAll(spec, Sort.by("id").descending());
 
-            if(CollectionUtils.isEmpty(entities)) {
+            if (CollectionUtils.isEmpty(entities)) {
                 return null;
             }
 

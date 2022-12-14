@@ -36,14 +36,15 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   unauthorisedUrls$!: Observable<string[]>;
   deleteUnrestricted: boolean = true;
   documentDelete$: Observable<boolean>;
-  complaintReply$: Observable<ComplaintReplyVO>
+  complaintReply$: Observable<ComplaintReplyVO>;
+  complaintDocument$: Observable<DocumentVO>;
   loggedIn: boolean = false;
 
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = this._injector.get(KeycloakService);
     this.complaintLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
-    this.complaintDocuments$ = this.store.pipe(select(ComplaintSelectors.selectDocument));
+    this.complaintDocument$ = this.store.pipe(select(ComplaintSelectors.selectDocument));
     this.complaintComplaintTypes$ = this.store.pipe(select(ComplaintTypeSelectors.selectComplaintTypes));
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
     this.complaintReply$ = this.store.pipe(select(ComplaintSelectors.selectComplaintReply));
@@ -107,6 +108,11 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
         }
       }
     });
+
+    this.complaintDocument$.subscribe(document => {
+      this.addToComplaintDocuments(document);
+    });
+    
   }
 
   override complaintLicenseeSearch(): void {
