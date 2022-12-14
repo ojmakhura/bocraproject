@@ -55,6 +55,8 @@ public class ComplaintReplyDaoImpl
         // WARNING! No conversion for target.documents (can't convert
         // source.getDocuments():bw.org.bocra.portal.document.Document to
         // bw.org.bocra.portal.document.DocumentVO
+
+        // ief(CollectionUtils.isNotEmpty(source.))
     }
 
     /**

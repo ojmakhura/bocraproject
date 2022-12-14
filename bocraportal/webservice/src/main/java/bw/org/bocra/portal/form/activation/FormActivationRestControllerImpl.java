@@ -176,4 +176,10 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleActivateDueForms() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

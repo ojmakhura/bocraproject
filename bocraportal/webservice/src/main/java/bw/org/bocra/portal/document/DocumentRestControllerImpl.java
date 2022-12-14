@@ -7,6 +7,7 @@ package bw.org.bocra.portal.document;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.keycloak.representations.AccessToken;
@@ -135,8 +136,9 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
+            if (e instanceof ConstraintViolationException) {
+                // throw new eFormActivationServiceException("This form activation has been
+                // already done.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Document already exists.");
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -144,7 +146,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleSearch(String criteria) {
+    public ResponseEntity<?> handleSearch(DocumentCriteria criteria) {
         try {
             logger.debug("Searches Document by " + criteria);
             Optional<?> data = Optional.of(documentService.search(criteria));
@@ -266,6 +268,56 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @Override
+    public ResponseEntity<?> handleUploadFile(Long documentTypeId, MultipartFile file, String fileName,
+            DocumentMetadataTarget metadataTarget, Long metadataTargetId) {
+        try {
+            logger.debug("Upload Complaint Document with name : " + fileName );
+            AccessToken token = keycloakService.getSecurityContext().getToken();
+            DocumentVO document = new DocumentVO();
+            document.setCreatedBy(token.getPreferredUsername());
+            document.setCreatedDate(LocalDateTime.now());
+            document.setFile(file.getBytes());
+            document.setMetadataTarget(metadataTarget);
+            document.setMetadataTargetId(metadataTargetId);
+            document.setSize(file.getSize());
+            
+            // document.setComplaint(complaint);
+            Optional<?> data = Optional.of(documentService.save(document));
+            ResponseEntity<?> response;
+
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByDocumentIds(Set<String> documentIds) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByIds(Set<Long> ids) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindDocumentsByMetadata(DocumentMetadataTarget metadataTarget,
+            Long metadataTargetId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override

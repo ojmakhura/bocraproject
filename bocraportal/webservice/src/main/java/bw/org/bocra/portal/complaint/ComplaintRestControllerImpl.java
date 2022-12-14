@@ -8,6 +8,7 @@ package bw.org.bocra.portal.complaint;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Optional;
+import java.util.Set;
 
 // import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/complaint")
@@ -208,5 +210,17 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @Override
+    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByIds(Set<Long> ids) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -176,4 +176,10 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleCreateNextPeriods() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

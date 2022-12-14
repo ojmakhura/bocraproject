@@ -99,24 +99,28 @@ public class LicenseeDaoImpl
                 target.getSectors().add(vo);
             }
         }
-        
-        target.setDocuments(new ArrayList<>());
-        for(Document document : source.getDocuments()) {
 
-            DocumentVO dvo = new DocumentVO();
-            dvo.setId(document.getId());
-            dvo.setDocumentName(document.getDocumentName());
-            dvo.setDocumentId(document.getDocumentId());
-
-            DocumentTypeVO type = new DocumentTypeVO();
-            type.setCode(document.getDocumentType().getCode());
-            type.setId(document.getDocumentType().getId());
-            type.setName(document.getDocumentType().getName());
-
-            dvo.setDocumentType(type);
-
-            target.getDocuments().add(dvo);
+        if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            target.setDocuments(documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds())));
         }
+        
+        // target.setDocuments(new ArrayList<>());
+        // for(Document document : source.getDocuments()) {
+
+        //     DocumentVO dvo = new DocumentVO();
+        //     dvo.setId(document.getId());
+        //     dvo.setDocumentName(document.getDocumentName());
+        //     dvo.setDocumentId(document.getDocumentId());
+
+        //     DocumentTypeVO type = new DocumentTypeVO();
+        //     type.setCode(document.getDocumentType().getCode());
+        //     type.setId(document.getDocumentType().getId());
+        //     type.setName(document.getDocumentType().getName());
+
+        //     dvo.setDocumentType(type);
+
+        //     target.getDocuments().add(dvo);
+        // }
 
         target.setForms(new ArrayList<>());
         for(LicenseeForm form : source.getLicenseeForms()) {
