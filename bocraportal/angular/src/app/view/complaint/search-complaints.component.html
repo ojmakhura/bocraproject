@@ -69,6 +69,14 @@
 					<input type="text" id="loggedInSearchComplaintId" class="form-control" name="complaintId"
 						formControlName="complaintId" />
 				</div>
+				<div class="mb-3">
+				    <label id="loggedInSearchLicenseeId_label" class="col-sm-2 col-form-label" for="loggedInSearchLicenseeId"><span translate>licensee.id</span></label>
+				    <input type="number" id="loggedInSearchLicenseeId" class="form-control" name="licenseeId" formControlName="licenseeId"/>
+				</div>
+				<div class="mb-3">
+				    <label id="loggedInSearchComplaintTypeId_label" class="col-sm-2 col-form-label" for="loggedInSearchComplaintTypeId"><span translate>complaint.type.id</span></label>
+				    <input type="number" id="loggedInSearchComplaintTypeId" class="form-control" name="complaintTypeId" formControlName="complaintTypeId"/>
+				</div>
 			</div>
 			<div class="text-end mb-3">
 				<button type="button" (click)="searchComplaintsSearch()" class="btn btn-outline-primary">
