@@ -78,7 +78,7 @@ services:
       # traefik-https the actual router using HTTPS
       # Uses the environment variable DOMAIN
       - traefik.http.routers.traefik-public-https.rule=Host(`${PROXY_DOMAIN}`)
-      - traefik.http.routers.traefik-public-https.entrypoints=web
+      - traefik.http.routers.traefik-public-https.entrypoints=websecure
       - traefik.http.routers.traefik-public-https.tls=${SSL_SECURE}
       # Use the special Traefik service api@internal with the web UI/Dashboard
       - traefik.http.routers.traefik-public-https.service=api@internal
@@ -244,6 +244,11 @@ services:
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
       CERT: ${CERT}
       CERT_PASSWORD: ${CERT_PASSWORD}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
+      API_LOG_LEVEL: ${API_LOG_LEVEL}
       TZ: Africa/Gaborone
     
     labels:
@@ -252,6 +257,67 @@ services:
       - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
       - "traefik.http.routers.api.tls=${SSL_SECURE}"
       - "traefik.http.routers.api.tls.certresolver=le"
+  
+  ###############################################################################
+  # The Communication API 
+  ###############################################################################
+  comm:
+    image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    container_name: bocraportal-comm
+    hostname: comm
+
+    healthcheck:
+      test: "curl -m 5 --silent --fail --request GET http://localhost:8095/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 25s
+      retries: 3
+      start_period: 5s
+    depends_on:
+      db:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      # rabbitmq:
+    build:
+      context: .
+      dockerfile: bocraportal/comm/Dockerfile
+      args:
+        CERT: ${CERT}
+        CERT_PASSWORD: ${CERT_PASSWORD}
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_COMM_ADDRESS}
+      default:
+    environment:
+      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      COMM_SERVER_PORT: ${COMM_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${KEYCLOAK_DB}
+      KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_COMM_CLIENT: ${KEYCLOAK_COMM_CLIENT}
+      KEYCLOAK_COMM_CLIENT_SECRET: ${KEYCLOAK_COMM_CLIENT_SECRET}
+      BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
+      CERT: ${CERT}
+      CERT_PASSWORD: ${CERT_PASSWORD}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
+      COMM_LOG_LEVEL: ${COMM_LOG_LEVEL}
+      TZ: Africa/Gaborone
+    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.comm.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.comm.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
+      - "traefik.http.routers.comm.tls=${SSL_SECURE}"
+      - "traefik.http.routers.comm.tls.certresolver=le"
 
   ###############################################################################
   # Angular web application
@@ -292,6 +358,26 @@ services:
       - "traefik.http.routers.bocra-web.entrypoints=${ACTIVE_ROUTER_ENTRY}"
       - "traefik.http.routers.bocra-web.tls=${SSL_SECURE}"
       - "traefik.http.routers.bocra-web.tls.certresolver=le"
+
+  ###############################################################################
+  # Rabbit MQ
+  ###############################################################################
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: bocraportal-rabbitmq
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      TZ: Africa/Gaborone
+    networks:
+      traefik-public:
+      bocra-network:
+        ipv4_address: ${BOCRA_RABBIT_ADDRESS}
+      default:
+    ports:
+      - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
+      - "${RABBITMQ_WEB_PORT}:${RABBITMQ_WEB_PORT}"
 
   ###############################################################################
   # Local docker container registry

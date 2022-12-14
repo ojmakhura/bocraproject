@@ -154,4 +154,26 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleLoadCurrentPeriods() {
+        try{
+            logger.debug("Loading current periods");
+            Optional<Collection<PeriodVO>> data = Optional.of(periodService.loadCurrentPeriods());
+            ResponseEntity<Collection<PeriodVO>> response;
+    
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+    
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
+    }
 }

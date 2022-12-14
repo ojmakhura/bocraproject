@@ -266,6 +266,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   override afterEditFormAddSection(form: EditFormAddSectionForm, dialogData: any): void {
     if (dialogData?.formSection) {
       let section: FormSectionVO = dialogData.formSection;
+      section.sectionId = section.sectionId.trim();
       if (section.id) {
         section.updatedBy = this.keycloakService.getUsername();
         section.updatedDate = new Date();

@@ -193,7 +193,7 @@ export class EditUserComponentImpl extends EditUserComponent {
     criteria = this.userLicenseeSearchField.value;
     this.store.dispatch(
       LicenseeActions.search({
-        criteria: { uin: criteria, licenseeName: criteria },
+        criteria: { licenseeName: criteria },
         loading: true,
         loaderMessage: 'Searching users ...'
       })

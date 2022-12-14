@@ -20,6 +20,9 @@ build_core:
 build_api:
 	mvn -f bocraportal/webservice install -Dmaven.test.skip=true -o
 
+build_comm:
+	mvn -f bocraportal/comm install -Dmaven.test.skip=true -o
+
 build_web: 
 	mvn -f bocraportal/angular install -Dmaven.test.skip=true -o
 
@@ -68,6 +71,9 @@ build_image: gen_env
 build_api_image: build_api gen_env
 	. ./.env && docker compose build api
 
+build_comm_image: build_comm gen_env
+	. ./.env && docker compose build comm
+
 build_web_image: gen_env
 	. ./.env && docker compose build web
 
@@ -75,7 +81,7 @@ build_keycloak_image: gen_env
 	. ./.env && docker compose -f docker-compose-keycloak.yml build
 
 
-build_images: gen_env build_keycloak_image build_web_image build_api_image
+build_images: gen_env build_keycloak_image build_web_image build_api_image build_comm_image
 
 ###
 ## tag and push the images
@@ -86,6 +92,9 @@ push_web_image: gen_env
 push_api_image: gen_env
 	. ./.env && docker push ${REGISTRY_TAG}/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}
 
+push_comm_image: gen_env
+	. ./.env && docker push ${REGISTRY_TAG}/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}
+
 push_keycloak_image: gen_env
 	. ./.env && echo ${KEYCLOAK_REGISTRY_IMAGE}
 	. ./.env && docker push ${KEYCLOAK_REGISTRY_IMAGE}
@@ -95,6 +104,9 @@ push_keycloak_image: gen_env
 ###
 run_api_local: gen_env
 	. ./.env && cd bocraportal/webservice && mvn spring-boot:run
+
+run_comm_local: gen_env
+	. ./.env && cd bocraportal/comm && mvn spring-boot:run
 
 local_web_deps: build_web
 	cd bocraportal/angular/target/bocraportal && npm i
@@ -148,6 +160,9 @@ keycloak_logs:
 
 api_logs:
 	docker compose logs api
+
+comm_logs:
+	docker compose logs comm
 
 web_logs:
 	docker compose logs web

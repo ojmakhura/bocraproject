@@ -6,9 +6,11 @@
  */
 package bw.org.bocra.portal.notification;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.sector.SectorDao;
@@ -22,11 +24,9 @@ import bw.org.bocra.portal.sector.SectorRepository;
 public class NotificationDaoImpl
     extends NotificationDaoBase
 {
-
-    public NotificationDaoImpl(SectorRepository sectorRepository, LicenseeRepository licenseeRepository,
-            NotificationRepository notificationRepository) {
-                
-        super(sectorRepository, licenseeRepository, notificationRepository);
+    public NotificationDaoImpl(NotificationRepository notificationRepository) {
+        super(notificationRepository);
+        //TODO Auto-generated constructor stub
     }
 
     /**
@@ -58,10 +58,6 @@ public class NotificationDaoImpl
      */
     private Notification loadNotificationFromNotificationVO(NotificationVO notificationVO)
     {
-        // TODO implement loadNotificationFromNotificationVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.notification.loadNotificationFromNotificationVO(NotificationVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (notificationVO.getId() == null)
         {
             return  Notification.Factory.newInstance();
@@ -70,7 +66,6 @@ public class NotificationDaoImpl
         {
             return this.load(notificationVO.getId());
         }
-        */
     }
 
     /**
@@ -95,5 +90,15 @@ public class NotificationDaoImpl
     {
         // TODO verify behavior of notificationVOToEntity
         super.notificationVOToEntity(source, target, copyIfNull);
+    }
+
+    @Override
+    protected Long handleGetUnreadCount() throws Exception {
+        Specification<Notification> specs = BocraportalSpecifications.<Notification, Boolean>findByAttribute("read", Boolean.FALSE);
+        Long count = notificationRepository.count(specs);
+        if(count == null) {
+            count = 0L;
+        }
+        return count;
     }
 }

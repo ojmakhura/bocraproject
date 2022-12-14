@@ -292,7 +292,22 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             e.printStackTrace();
             logger.error(e.getMessage());
             throw new SubmissionServiceException("Could not update the form submission.");
-            // return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleLoadDueSubmissions() {
+        // TODO Auto-generated method stub
+        try {
+
+            Collection<FormSubmissionVO> dueSubmissions = submissionService.loadDueSubmissions();
+            return ResponseEntity.ok(dueSubmissions);
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new SubmissionServiceException("Could not load due submissions.");
         }
     }
 }

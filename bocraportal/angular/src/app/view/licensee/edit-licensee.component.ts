@@ -608,6 +608,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
             status: [{value: licensee?.status, disabled: false}, [Validators.required, ]],
             uin: [{value: licensee?.uin, disabled: false}, [Validators.required, ]],
             licenseeName: [{value: licensee?.licenseeName, disabled: false}, [Validators.required, ]],
+            alias: [{value: licensee?.alias, disabled: false}],
             address: [{value: licensee?.address, disabled: false}],
             users: this.createUserVOArray(licensee?.users),
             forms: this.createLicenseeFormVOArray(licensee?.forms),
