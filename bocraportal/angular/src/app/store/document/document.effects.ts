@@ -94,6 +94,20 @@ export class DocumentEffects {
         )
     );
 
+    uploadFile$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(DocumentActions.uploadFile),
+            mergeMap(({ documentTypeId, file, fileName, metadataTarget, metadataTargetId }) => this.documentRestController.uploadFile(documentTypeId, file, fileName, metadataTarget, metadataTargetId).pipe(
+                map( document => DocumentActions.uploadFileSuccess({
+                    document,
+                    messages: [`Added  with ID  licensees.`],
+                    success: true
+                })),
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
+            ))
+        )
+    );
+
     // getLicenseeDocuments$ = createEffect(() => 
     //      this.actions$.pipe(
     //         ofType(DocumentActions.getLicenseeDocuments),

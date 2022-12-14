@@ -8,6 +8,7 @@ package bw.org.bocra.portal.licence;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
@@ -152,5 +153,10 @@ public class LicenceDaoImpl
             LicenceType type = licenceTypeRepository.getReferenceById(source.getLicenceType().getId());
             target.setLicenceType(type);
         }
+
+        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
+            target.setDocumentIds(source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toList()));
+        }
+        
     }
 }

@@ -6,6 +6,7 @@
 package bw.org.bocra.portal.document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import bw.org.bocra.portal.complaint.ComplaintService;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.complaint.ComplaintVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.LicenseeService;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -32,11 +35,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class DocumentRestControllerImpl extends DocumentRestControllerBase {
 
     private final KeycloakService keycloakService;
+    private final LicenseeService licenseeService;
 
     public DocumentRestControllerImpl(DocumentService documentService, ComplaintService complaintService,
-            KeycloakService keycloakService) {
+            KeycloakService keycloakService, LicenseeService licenseeService) {
         super(documentService, complaintService);
         this.keycloakService = keycloakService;
+        this.licenseeService = licenseeService;
     }
 
     @Override
@@ -283,6 +288,11 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             document.setMetadataTarget(metadataTarget);
             document.setMetadataTargetId(metadataTargetId);
             document.setSize(file.getSize());
+            DocumentTypeVO documentType = new DocumentTypeVO();
+            documentType.setId(documentTypeId);
+
+            document.setDocumentType(documentType);
+            document.setDocumentName(fileName);
             
             // document.setComplaint(complaint);
             Optional<?> data = Optional.of(documentService.save(document));
@@ -290,6 +300,15 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
 
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                if(metadataTarget == DocumentMetadataTarget.LICENSEE) {
+                    LicenseeVO licensee = licenseeService.findById(metadataTargetId);
+                    if(licensee.getDocuments() == null) {
+                        licensee.setDocuments(new ArrayList<>());
+                    }
+
+                    licensee.getDocuments().add(document);
+                    System.out.println(licenseeService.save(licensee));
+                }
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }

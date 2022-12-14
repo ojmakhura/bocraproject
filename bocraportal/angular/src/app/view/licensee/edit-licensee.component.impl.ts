@@ -26,6 +26,7 @@ import {
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
+import { DocumentMetadataTarget } from '@model/bw/org/bocra/portal/document/document-metadata-target';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -293,14 +294,26 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   override afterEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm, dialogData: any): void {
     if (dialogData) {
       
+      // this.store.dispatch(
+      //   LicenseeActions.addDocument({
+      //     id: this.licenseeId,
+      //     documentTypeId: dialogData.document.documentType.id,
+      //     file: dialogData.document.file,
+      //     fileName: dialogData.document.documentName,
+      //     loading: true,
+      //     loaderMessage: 'Add licensee to document ...'
+      //   })
+      // );
+
       this.store.dispatch(
-        LicenseeActions.addDocument({
-          id: this.licenseeId,
+        DocumentActions.uploadFile({
+          metadataTarget: DocumentMetadataTarget.LICENSEE,
+          metadataTargetId: this.licenseeId,
           documentTypeId: dialogData.document.documentType.id,
           file: dialogData.document.file,
           fileName: dialogData.document.documentName,
           loading: true,
-          loaderMessage: 'Add licensee to document ...'
+          loaderMessage: 'Add licensee document ...'
         })
       );
     }
