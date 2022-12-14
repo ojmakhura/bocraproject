@@ -112,6 +112,8 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     this.complaintDocument$.subscribe(document => {
       this.addToComplaintDocuments(document);
     });
+
+    console.log(this.complaint);
     
   }
 
@@ -272,7 +274,9 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
         })
       );
       this.documentDelete$.subscribe(removed => {
-        this.complaintDocumentsControl.removeAt(index);
+        if(removed){
+          this.complaintDocumentsControl.removeAt(index);
+        }
       });
 
     }

@@ -7,6 +7,7 @@
 package bw.org.bocra.portal.complaint;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -72,24 +73,24 @@ public class ComplaintDaoImpl
             target.setComplaintType(getComplaintTypeDao().toComplaintTypeVO(source.getComplaintType()));
         }
 
-        // Collection<DocumentVO> docs = new HashSet<>();
+        Collection<DocumentVO> docs = new HashSet<>();
 
-        // for (Document doc : source.getDocuments()) {
-        // DocumentVO dvo = new DocumentVO();
-        // dvo.setId(doc.getId());
-        // dvo.setDocumentName(doc.getDocumentName());
-        // dvo.setDocumentId(doc.getDocumentId());
+        for (Document doc : source.getDocuments()) {
+            DocumentVO dvo = new DocumentVO();
+            dvo.setId(doc.getId());
+            dvo.setDocumentName(doc.getDocumentName());
+            dvo.setDocumentId(doc.getDocumentId());
 
-        // DocumentTypeVO type = new DocumentTypeVO();
-        // type.setCode(doc.getDocumentType().getCode());
-        // type.setId(doc.getDocumentType().getId());
-        // type.setName(doc.getDocumentType().getName());
+            DocumentTypeVO type = new DocumentTypeVO();
+            type.setCode(doc.getDocumentType().getCode());
+            type.setId(doc.getDocumentType().getId());
+            type.setName(doc.getDocumentType().getName());
 
-        // dvo.setDocumentType(type);
-        // docs.add(dvo);
-        // }
+            dvo.setDocumentType(type);
+            docs.add(dvo);
+        }
 
-        // target.setDocuments(docs);
+        target.setDocuments(docs);
     }
 
     /**

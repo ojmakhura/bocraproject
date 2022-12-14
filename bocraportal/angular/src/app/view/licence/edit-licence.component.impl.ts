@@ -180,7 +180,9 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
         })
       );
       this.documentDelete$.subscribe(removed => {
-        this.licenceDocumentsControl.removeAt(index);
+        if(removed){
+          this.licenceDocumentsControl.removeAt(index);
+        }
       });
       
     }
