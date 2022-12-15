@@ -13,8 +13,10 @@ import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -127,6 +129,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     public ResponseEntity<?> handleSave(LicenceVO licence) {
         try {
             logger.debug("Save Licence "+licence);
+
             Optional<?> data = Optional.of(licenceService.save(licence));
             ResponseEntity<?> response;
 

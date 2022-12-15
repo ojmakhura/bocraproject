@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -368,6 +369,18 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleSave(LicenseeVO licensee) {
         try {
             logger.debug("Save Licensee "+licensee);
+
+            if(licensee.getId() == null) {
+                LicenseeCriteria cr = new LicenseeCriteria();
+                cr.setLicenseeName(licensee.getLicenseeName());
+                cr.setUin(licensee.getUin());
+
+                Collection<LicenseeVO> actives = licenseeService.search(cr);
+                if(CollectionUtils.isNotEmpty(actives)) {
+                    throw new LicenseeServiceException("This Licensee has been already done.");
+                }
+            }
+            
             Optional<?> data = Optional.of(this.licenseeService.save(licensee));
             ResponseEntity<?> response;
 

@@ -8,6 +8,7 @@ package bw.org.bocra.portal.form;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,6 +120,18 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     public ResponseEntity<?> handleSave(FormVO formVO) {
         try{
             logger.debug("Save Form "+formVO);
+
+            if(Form.getCode() == null) {
+                FormCriteria cr = new FormCriteria();
+                cr.setFormName(Form.getFormName());
+                cr.setCode(Form.getCode());
+
+                Collection<FormVO> actives = formService.search(cr);
+                if(CollectionUtils.isNotEmpty(actives)) {
+                    throw new FormServiceException("This Form has been already done.");
+                }
+            }            
+
             Optional<FormVO> data = Optional.of(formService.save(formVO));
             ResponseEntity<FormVO> response;
     

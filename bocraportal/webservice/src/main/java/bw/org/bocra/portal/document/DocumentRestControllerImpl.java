@@ -135,7 +135,6 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
         } catch (Exception e) {
             logger.error(e.getMessage());
             if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Document already exists.");
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

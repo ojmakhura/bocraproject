@@ -115,7 +115,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             logger.error(e.getMessage());
             e.printStackTrace();
             if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Authorisation has been already done.");
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
