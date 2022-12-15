@@ -69,25 +69,13 @@ public class LicenceDaoImpl
             target.setLicenceType(type);
         }
 
-        Collection<DocumentVO> docs = new HashSet<>();
-
-        // for(Document doc : source.getDocuments()) {
-        //     DocumentVO dvo = new DocumentVO();
-        //     dvo.setId(doc.getId());
-        //     dvo.setDocumentName(doc.getDocumentName());
-        //     dvo.setDocumentId(doc.getDocumentId());
-
-        //     DocumentTypeVO type = new DocumentTypeVO();
-        //     type.setCode(doc.getDocumentType().getCode());
-        //     type.setId(doc.getDocumentType().getId());
-        //     type.setName(doc.getDocumentType().getName());
-
-        //     dvo.setDocumentType(type);
-        //     docs.add(dvo);
-        // }
-
         if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            target.setDocuments(documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds())));
+            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
+            docs = docs.stream().map(d -> {
+                d.setFile(null);
+                return d;
+            }).collect(Collectors.toSet());
+            target.setDocuments(docs);
         }
 
     }
@@ -155,7 +143,7 @@ public class LicenceDaoImpl
         }
 
         if(CollectionUtils.isNotEmpty(source.getDocuments())) {
-            target.setDocumentIds(source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toList()));
+            target.setDocumentIds(source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toSet()));
         }
         
     }

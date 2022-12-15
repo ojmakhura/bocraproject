@@ -8,6 +8,8 @@ package bw.org.bocra.portal.complaint;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -73,24 +75,14 @@ public class ComplaintDaoImpl
             target.setComplaintType(getComplaintTypeDao().toComplaintTypeVO(source.getComplaintType()));
         }
 
-        Collection<DocumentVO> docs = new HashSet<>();
-
-        // for (Document doc : source.getDocumentIds()) {
-        //     DocumentVO dvo = new DocumentVO();
-        //     dvo.setId(doc.getId());
-        //     dvo.setDocumentName(doc.getDocumentName());
-        //     dvo.setDocumentId(doc.getDocumentId());
-
-        //     DocumentTypeVO type = new DocumentTypeVO();
-        //     type.setCode(doc.getDocumentType().getCode());
-        //     type.setId(doc.getDocumentType().getId());
-        //     type.setName(doc.getDocumentType().getName());
-
-        //     dvo.setDocumentType(type);
-        //     docs.add(dvo);
-        // }
-
-        target.setDocuments(docs);
+        if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
+            docs = docs.stream().map(d -> {
+                d.setFile(null);
+                return d;
+            }).collect(Collectors.toSet());
+            target.setDocuments(docs);
+        }
     }
 
     /**
@@ -145,5 +137,9 @@ public class ComplaintDaoImpl
             target.setComplaintType(getComplaintTypeDao().complaintTypeVOToEntity(source.getComplaintType()));
         }
 
+        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
+            Collection<String> ids = source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toSet());
+            target.setDocumentIds(ids);
+        }
     }
 }

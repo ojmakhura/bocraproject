@@ -71,7 +71,7 @@ export class DocumentRestController {
         formData.append('fileName', fileName);
         formData.append('metadataTarget', metadataTarget);
         formData.append('metadataTargetId', metadataTargetId);
-        return this.http.post<DocumentVO | any>(`${this.path}/upload?documentTypeId=${documentTypeId}&fileName=${fileName}&metadataTarget=${metadataTarget}&metadataTargetId=${metadataTargetId}`, formData);
+        return this.http.post<DocumentVO | any>(`${this.path}/upload`, formData);
     }
 
     public uploadLicenceDocument(licenceId: number | any , file: File | any ): Observable<DocumentVO | any> {

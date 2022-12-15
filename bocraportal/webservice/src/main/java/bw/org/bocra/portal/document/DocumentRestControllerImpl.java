@@ -296,6 +296,8 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
 
             document.setDocumentType(documentType);
             document.setDocumentName(fileName);
+
+            System.out.println(document);
             
             // document.setComplaint(complaint);
             Optional<?> data = Optional.of(documentService.save(document));
