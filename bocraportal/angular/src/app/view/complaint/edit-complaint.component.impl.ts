@@ -141,6 +141,9 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
       } else {
         form.complaint.createdDate = new Date();
       }
+      
+      form.complaint.documents = [];
+
       this.store.dispatch(
         ComplaintActions.save({
           complaint: form.complaint,
