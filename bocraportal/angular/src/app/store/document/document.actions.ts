@@ -22,6 +22,8 @@ export enum DocumentActionType {
     GET_LICENSEE_DOCUMENTS_SUCCESS = '[Document] Get Licensee Documents Success',
     GET_LICENCE_DOCUMENTS = '[Document] Get Licence Documents',
     GET_LICENCE_DOCUMENTS_SUCCESS = '[Document] Get Licence Documents Success',
+    GET_COMPLAINT_DOCUMENTS = '[Document] Get Complaint Documents',
+    GET_COMPLAINT_DOCUMENTS_SUCCESS = '[Document] Get Complaint Documents Success',
     DOCUMENT_RESET = '[Document] Document Reset',
     DOCUMENT_FAILURE = '[Document] Document Action Failure',
     DOCUMENT_LOADING = '[Document] Document Loading'
@@ -114,6 +116,16 @@ export const getLicenceDocuments = createAction(
 
 export const getLicenceDocumentsSuccess = createAction(
     DocumentActionType.GET_LICENCE_DOCUMENTS_SUCCESS,
+    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
+);
+
+export const getComplaintDocuments = createAction(
+    DocumentActionType.GET_COMPLAINT_DOCUMENTS,
+    props<{ complaintId: number | any , loading: boolean, loaderMessage: string | undefined }>()
+);
+
+export const getComplaintDocumentsSuccess = createAction(
+    DocumentActionType.GET_COMPLAINT_DOCUMENTS_SUCCESS,
     props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
 );
 

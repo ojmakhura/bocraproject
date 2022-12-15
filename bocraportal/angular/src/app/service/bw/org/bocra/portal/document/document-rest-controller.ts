@@ -87,5 +87,4 @@ export class DocumentRestController {
     public uploadLicenseeDocument(licenseeId: number | any , file: File | any ): Observable<DocumentVO | any> {
         return this.http.post<DocumentVO | any>(`${this.path}/licensee/upload?licenseeId=${licenseeId}&file=${file}`, {});
     }
-
 }

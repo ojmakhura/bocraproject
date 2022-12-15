@@ -9,6 +9,8 @@
 package bw.org.bocra.portal.complaint.type;
 
 import java.util.Collection;
+import java.util.ArrayList;
+
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,21 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
  * @see bw.org.bocra.portal.complaint.type.ComplaintTypeService
  */
 @Service("complaintTypeService")
-@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class ComplaintTypeServiceImpl
-    extends ComplaintTypeServiceBase
-{
+        extends ComplaintTypeServiceBase {
     public ComplaintTypeServiceImpl(
-        ComplaintTypeDao complaintType,
-        ComplaintTypeRepository complaintTypeRepository,
-        MessageSource messageSource
-    ) {
-        
+            ComplaintTypeDao complaintType,
+            ComplaintTypeRepository complaintTypeRepository,
+            MessageSource messageSource) {
+
         super(
-            complaintType,
-            complaintTypeRepository,
-            messageSource
-        );
+                complaintType,
+                complaintTypeRepository,
+                messageSource);
     }
 
     /**
@@ -40,10 +39,9 @@ public class ComplaintTypeServiceImpl
      */
     @Override
     protected ComplaintTypeVO handleFindById(Long id)
-        throws Exception
-    {
-        // TODO implement protected  ComplaintTypeVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.type.ComplaintTypeService.handleFindById(Long id) Not implemented!");
+            throws Exception {
+        ComplaintType type = getComplaintTypeDao().load(id);
+        return getComplaintTypeDao().toComplaintTypeVO(type);
     }
 
     /**
@@ -51,10 +49,15 @@ public class ComplaintTypeServiceImpl
      */
     @Override
     protected ComplaintTypeVO handleSave(ComplaintTypeVO complaintType)
-        throws Exception
-    {
-        // TODO implement protected  ComplaintTypeVO handleSave(ComplaintTypeVO complaintType)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.type.ComplaintTypeService.handleSave(ComplaintTypeVO complaintType) Not implemented!");
+            throws Exception {
+        ComplaintType entity = getComplaintTypeDao().complaintTypeVOToEntity(complaintType);
+        entity = complaintTypeRepository.save(entity);
+
+        if (complaintType.getId() == null) {
+            complaintType = getComplaintTypeDao().toComplaintTypeVO(entity);
+        }
+
+        return complaintType;
     }
 
     /**
@@ -62,10 +65,9 @@ public class ComplaintTypeServiceImpl
      */
     @Override
     protected boolean handleRemove(Long id)
-        throws Exception
-    {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.type.ComplaintTypeService.handleRemove(Long id) Not implemented!");
+            throws Exception {
+        complaintTypeRepository.deleteById(id);
+        return true;
     }
 
     /**
@@ -73,10 +75,8 @@ public class ComplaintTypeServiceImpl
      */
     @Override
     protected Collection<ComplaintTypeVO> handleGetAll()
-        throws Exception
-    {
-        // TODO implement protected  Collection<ComplaintTypeVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.type.ComplaintTypeService.handleGetAll() Not implemented!");
+            throws Exception {
+        return (Collection<ComplaintTypeVO>) getComplaintTypeDao().loadAll(ComplaintTypeDao.TRANSFORM_COMPLAINTTYPEVO);
     }
 
     /**
@@ -84,21 +84,26 @@ public class ComplaintTypeServiceImpl
      */
     @Override
     protected Collection<ComplaintTypeVO> handleSearch(String criteria)
-        throws Exception
-    {
-        // TODO implement protected  Collection<ComplaintTypeVO> handleSearch(String criteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.type.ComplaintTypeService.handleSearch(String criteria) Not implemented!");
+            throws Exception {
+        Collection<ComplaintType> types = complaintTypeDao.findByCriteria(criteria);
+        Collection<ComplaintTypeVO> vos = new ArrayList<>();
+
+        for (ComplaintType type : types) {
+            vos.add(getComplaintTypeDao().toComplaintTypeVO(type));
+        }
+
+        return vos;
     }
 
     /**
-     * @see bw.org.bocra.portal.complaint.type.ComplaintTypeService#getAll(Integer, Integer)
+     * @see bw.org.bocra.portal.complaint.type.ComplaintTypeService#getAll(Integer,
+     *      Integer)
      */
     @Override
     protected Collection<ComplaintTypeVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throws Exception
-    {
-        // TODO implement protected  Collection<ComplaintTypeVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.complaint.type.ComplaintTypeService.handleGetAll(Integer pageNumber, Integer pageSize) Not implemented!");
+            throws Exception {
+        return (Collection<ComplaintTypeVO>) complaintTypeDao.loadAll(complaintTypeDao.TRANSFORM_COMPLAINTTYPEVO,
+                pageNumber, pageSize);
     }
 
 }

@@ -8,25 +8,24 @@ import * as DocumentSelectors from '@app/store/document/document.selectors';
 import * as FormActions from '@app/store/form/form.actions';
 import * as LicenceActions from '@app/store/licence/licence.actions';
 import * as LicenceSelectors from '@app/store/licence/licence.selectors';
+import * as LicenseeFormActions from '@app/store/licensee/form/licensee-form.actions';
+import * as LicenseeFormSelectors from '@app/store/licensee/form/licensee-form.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
-import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
+import * as LicenseeSectorActions from '@app/store/licensee/sector/licensee-sector.actions';
+import * as LicenseeSectorSelectors from '@app/store/licensee/sector/licensee-sector.selectors';
 import * as SectorActions from '@app/store/sector/sector.actions';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
-import * as LicenseeSectorSelectors from '@app/store/licensee/sector/licensee-sector.selectors';
-import * as LicenseeSectorActions from '@app/store/licensee/sector/licensee-sector.actions';
-import * as LicenseeFormSelectors from '@app/store/licensee/form/licensee-form.selectors';
-import * as LicenseeFormActions from '@app/store/licensee/form/licensee-form.actions';
 import {
   EditLicenseeComponent,
   EditLicenseeDeleteForm,
   EditLicenseeDocumentsForm,
   EditLicenseeNewDocumentForm, EditLicenseeSaveForm, EditLicenseeVarsForm
 } from '@app/view/licensee/edit-licensee.component';
+import { DocumentMetadataTarget } from '@model/bw/org/bocra/portal/document/document-metadata-target';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
-import { DocumentMetadataTarget } from '@model/bw/org/bocra/portal/document/document-metadata-target';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -51,7 +50,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     this.sectorRemoved$ = this.store.pipe(select(LicenseeSectorSelectors.selectRemoved));
     this.formRemoved$ = this.store.pipe(select(LicenseeFormSelectors.selectRemoved));
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
-    this.licenseeDocument$ = this.store.pipe(select(LicenseeSelectors.selectDocument));
+    this.licenseeDocument$ = this.store.pipe(select(DocumentSelectors.selectDocument));
   }
 
   beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
@@ -294,17 +293,6 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   override afterEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm, dialogData: any): void {
     if (dialogData) {
       
-      // this.store.dispatch(
-      //   LicenseeActions.addDocument({
-      //     id: this.licenseeId,
-      //     documentTypeId: dialogData.document.documentType.id,
-      //     file: dialogData.document.file,
-      //     fileName: dialogData.document.documentName,
-      //     loading: true,
-      //     loaderMessage: 'Add licensee to document ...'
-      //   })
-      // );
-
       this.store.dispatch(
         DocumentActions.uploadFile({
           metadataTarget: DocumentMetadataTarget.LICENSEE,

@@ -23,6 +23,7 @@ import bw.org.bocra.portal.complaint.ComplaintService;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.complaint.ComplaintVO;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
+import bw.org.bocra.portal.licence.LicenceService;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.LicenseeService;
 import bw.org.bocra.portal.licensee.LicenseeVO;
@@ -36,12 +37,14 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
 
     private final KeycloakService keycloakService;
     private final LicenseeService licenseeService;
+    private final LicenceService licenceService;
 
     public DocumentRestControllerImpl(DocumentService documentService, ComplaintService complaintService,
-            KeycloakService keycloakService, LicenseeService licenseeService) {
+            KeycloakService keycloakService, LicenseeService licenseeService, LicenceService licenceService) {
         super(documentService, complaintService);
         this.keycloakService = keycloakService;
         this.licenseeService = licenseeService;
+        this.licenceService = licenceService;
     }
 
     @Override
@@ -306,9 +309,29 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
                         licensee.setDocuments(new ArrayList<>());
                     }
 
-                    licensee.getDocuments().add(document);
-                    System.out.println(licenseeService.save(licensee));
+                    licensee.getDocuments().add((DocumentVO) data.get());
+                    licenseeService.save(licensee);
+
+                } else if(metadataTarget == DocumentMetadataTarget.LICENCE) {
+                    LicenceVO licence = licenceService.findById(metadataTargetId);
+                    if(licence.getDocuments() == null) {
+                        licence.setDocuments(new ArrayList<>());
+                    }
+
+                    licence.getDocuments().add((DocumentVO) data.get());
+                    licenceService.save(licence);
+
+                } else if(metadataTarget == DocumentMetadataTarget.COMPLAINT) {
+                    ComplaintVO complaint = complaintService.findById(metadataTargetId);
+                    if(complaint.getDocuments() == null) {
+                        complaint.setDocuments(new ArrayList<>());
+                    }
+
+                    complaint.getDocuments().add((DocumentVO) data.get());
+                    complaintService.save(complaint);
                 }
+
+
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }

@@ -16,22 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/complaint/type")
 @CrossOrigin()
 public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestControllerBase {
-    
-    public ComplaintTypeRestControllerImpl(
-        ComplaintTypeService complaintTypeService    ) {
-        
-        super(
-            complaintTypeService        );
-    }
 
+    public ComplaintTypeRestControllerImpl(
+            ComplaintTypeService complaintTypeService) {
+
+        super(
+                complaintTypeService);
+    }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            Optional<?> data = Optional.empty();
+            logger.debug("Searches for complaint types using ID " + id);
+            Optional<?> data = Optional.of(complaintTypeService.findById(id));
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -47,10 +47,11 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Displays all Complaint Types");
+            Optional<?> data = Optional.of(complaintTypeService.getAll());
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -66,10 +67,12 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Displays all Complaint Types of the specified " + "Page number: " + pageNumber
+                    + "and Page size: " + pageSize);
+            Optional<?> data = Optional.of(complaintTypeService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -85,10 +88,11 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Deletes Complaint Type by ID " + id);
+            Optional<?> data = Optional.of(complaintTypeService.remove(id));
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -104,10 +108,11 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
     @Override
     public ResponseEntity<?> handleSave(ComplaintTypeVO complaintType) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Saves Complaint Type " + complaintType);
+            Optional<?> data = Optional.of(complaintTypeService.save(complaintType));
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -115,6 +120,7 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -123,10 +129,11 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Searches for a Complaint Type by criteria " + criteria);
+            Optional<?> data = Optional.of(complaintTypeService.search(criteria));
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();

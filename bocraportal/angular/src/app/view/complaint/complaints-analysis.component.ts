@@ -43,18 +43,6 @@ import { BaseChartDirective } from 'ng2-charts';
 
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 
-export class ComplaintsDummmy {
-    id: number | any = null;
-    status: string | any = null;
-    licenseeName: string | any = null;
-    createdDate: Date | any = null;
-}
-
-export class YearlyAnalysis {
-    year: number | any = null;
-    total: number | any = null;
-}
-
 @Component({
     selector: 'app-complaints-analysis-base',
     template: ''
@@ -89,6 +77,9 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
 
     reportLicenseesLabel: string[] = [];
     reportLicenseesData: number[] = [];
+
+    reportTypeLabel: string[] = [];
+    reportTypeData: number[] = [];
 
     constructor(injector: Injector) {
 
@@ -212,6 +203,11 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
         datasets: []
     };
 
+    public barChartTypeData: ChartData<'bar'> = {
+        labels: [],
+        datasets: []
+    };
+
     public pieChartOptions: ChartConfiguration['options'] = {
         responsive: true,
         plugins: {
@@ -240,6 +236,14 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
             data: []
         }]
     };
+
+    public pieChartTypeData: ChartData<'pie', number[], string | string[]> = {
+        labels: [],
+        datasets: [{
+            data: []
+        }]
+    };
+
     public pieChartType: ChartType = 'pie';
     public pieChartPlugins = [DataLabelsPlugin];
 
