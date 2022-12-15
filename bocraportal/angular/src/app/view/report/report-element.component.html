@@ -105,7 +105,8 @@
 													{{ fieldControl?.value?.fieldName }}
 												</td>
 												<td scope="col">
-													<input type="text" class="form-control" formControlName="alias" (change)="fieldSelectionChange()">
+													<input type="text" class="form-control" formControlName="alias"
+														(change)="fieldSelectionChange()">
 												</td>
 											</tr>
 										</tbody>
@@ -144,17 +145,18 @@
 							</thead>
 							<tbody formArrayName="dataColumnsAnalytics">
 								<tr *ngFor="let fieldControl of dataColumnsAnalyticsControl.controls; let j=index"
-										[formGroupName]="j">
+									[formGroupName]="j">
 									<td scope="col">
 										<button type="button" (click)="removeLabelsAnalytic('report', j)"
-													class="btn btn-outline-primary">
+											class="btn btn-outline-primary">
 											<mat-icon>delete</mat-icon>
 										</button>
 									</td>
 									<td scope="col">
 										<div class="col-sm-10">
 											<select id="report-labels" class="form-select" formControlName="type"
-												aria-label="Default select example" (change)="additionalDataColumnChange(j)">
+												aria-label="Default select example"
+												(change)="additionalDataColumnChange(j)">
 												<option value="custom">Custom</option>
 												<option value="sum">Sum</option>
 												<option value="mean">Mean</option>
@@ -168,16 +170,20 @@
 										</div>
 									</td>
 									<td scope="col">
-										<input type="text" class="form-control" formControlName="name" (change)="additionalDataColumnChange(j)" *ngIf="fieldControl.value?.type">
+										<input type="text" class="form-control" formControlName="name"
+											(change)="additionalDataColumnChange(j)" *ngIf="fieldControl.value?.type">
 									</td>
 									<td scope="col">
-										<textarea type="text" class="form-control" formControlName="sources" (change)="additionalDataColumnChange(j)" *ngIf="fieldControl.value?.name"></textarea>
+										<textarea type="text" class="form-control" formControlName="sources"
+											(change)="additionalDataColumnChange(j)"
+											*ngIf="fieldControl.value?.name"></textarea>
 									</td>
 								</tr>
 							</tbody>
 						</table>
-						<div class="mb-3" >
-							<button type="button"  class="btn btn-primary" (click)="addLabelsAnalytic('report')">Add</button>
+						<div class="mb-3">
+							<button type="button" class="btn btn-primary"
+								(click)="addLabelsAnalytic('report')">Add</button>
 						</div>
 					</div>
 					<div class="mb-3 row" *ngIf="dataColumns !== null">
@@ -214,38 +220,39 @@
 							<tr *ngFor="let fieldControl of dataRowsAnalyticsControl.controls; let j=index"
 								[formGroupName]="j">
 								<td scope="col">
-									<button type="button" (click)="removeCustomRows(j)"
-                                                class="btn btn-outline-primary">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
+									<button type="button" (click)="removeCustomRows(j)" class="btn btn-outline-primary">
+										<mat-icon>delete</mat-icon>
+									</button>
 								</td>
 								<td scope="col">
 									<div class="col-sm-10">
 										<select id="report-labels" class="form-select" formControlName="type"
 											aria-label="Default select example" (change)="additionalRowChange(j)">
 											<option value="custom">Custom</option>
-												<option value="sum">Sum</option>
-												<option value="mean">Mean</option>
-												<option value="mode">Mode</option>
-												<option value="median">Median</option>
-												<option value="variance">Variance</option>
-												<option value="std">Standard Deviation</option>
-												<option value="min">Minimum</option>
-												<option value="max">Maximum</option>
+											<option value="sum">Sum</option>
+											<option value="mean">Mean</option>
+											<option value="mode">Mode</option>
+											<option value="median">Median</option>
+											<option value="variance">Variance</option>
+											<option value="std">Standard Deviation</option>
+											<option value="min">Minimum</option>
+											<option value="max">Maximum</option>
 										</select>
 									</div>
 								</td>
 								<td scope="col">
-									<input type="text" class="form-control" formControlName="name" (change)="additionalRowChange(j)">
+									<input type="text" class="form-control" formControlName="name"
+										(change)="additionalRowChange(j)">
 								</td>
 								<td scope="col">
-									<textarea type="text" class="form-control" formControlName="sources" (change)="additionalRowChange(j)" *ngIf="fieldControl.value?.name"></textarea>
+									<textarea type="text" class="form-control" formControlName="sources"
+										(change)="additionalRowChange(j)" *ngIf="fieldControl.value?.name"></textarea>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-					<div class="mb-3" >
-						<button type="button"  class="btn btn-primary" (click)="addLabelsAnalytic('data')">Add</button>
+					<div class="mb-3">
+						<button type="button" class="btn btn-primary" (click)="addLabelsAnalytic('data')">Add</button>
 					</div>
 				</div>
 				<div class="mb-3" *ngIf="this.chartsControl?.length > 0">
@@ -254,53 +261,38 @@
 					</button>
 				</div>
 				<div class="mb-3" *ngIf="gridColumnHeaders.length > 0">
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th scope="col"></th>
-								<th scope="col" *ngFor="let label of gridColumnHeaders; let m=index">{{label.label}} ({{label.header}})</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr *ngFor="let x of gridRowHeaders; let m=index">
-								<th scope="row">{{x}} : {{ grid[x].label }}</th>
-								<td *ngFor="let label of gridColumnHeaders">{{grid[x][label.header]?.value}}</td>
-							</tr>
-						</tbody>
+					<table mat-table [dataSource]="gridDataSource" class="table table-bordered table-striped">
+						<ng-container matColumnDef="licensee">
+							<th mat-header-cell *matHeaderCellDef [attr.rowspan]="2"></th>
+							<td mat-cell *matCellDef="let data">{{data.row}}: {{data?.label}}</td>
+						</ng-container>
+						<ng-container *ngFor="let period of gridDataPeriods; let m=index" matColumnDef="{{period}}">
+							<th mat-header-cell *matHeaderCellDef [attr.colspan]="gridColumnHeaders.length/periods.length">{{periods[m]}}</th>
+						</ng-container>
+						<ng-container *ngFor="let ch of gridColumnHeaders; let m=index" matColumnDef="{{ch.elementId}}_{{ch.header}}">
+							<th mat-header-cell *matHeaderCellDef>{{ch.label}} ({{alphabet[m]}})</th>
+							<td mat-cell *matCellDef="let data">{{data[gridDataColumns[m].header]?.value}}</td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="gridDataPeriodHeaders"></tr>
+						<tr mat-header-row *matHeaderRowDef="gridDataColumnHeaders"></tr>
+						<tr mat-row *matRowDef="let row; columns: gridDataColDefs"></tr>
 					</table>
 				</div>
-				<!-- <div>
-					<span>{{selectedLabels}}</span>
-				</div>
-				<div>
-					<span>{{dataRows}}</span>
-				</div>
-				<div>
-					<span>{{selectedDataRows}}</span>
-				</div> -->
 				<div *ngFor="let chartControl of chartsControl?.controls; let i=index" #test>
-					<app-report-chart 
-						[dataColumns]="dataColumns"
-						[dataRows]="dataRows"
-						[reportType]="reportType"
-						[colors]="colors"
-						[reportChartGroup]="chartControl" 
-						[formSubmissions]="filteredFormSubmissions"
-						[selectedLicensees]="selectedLicensees"
-						[selectedFields]="selectedFields"
-						[selectedPeriods]="selectedPeriods"
-						[additionalDataColumns]="additionalDataColumns"
-						[additionalDataRows]="additionalDataRows"
-						[customDataColumns]="customDataColumns"
-						[customDataRows]="customDataRows"
-						[chartIndex]="i">
+					<app-report-chart [dataColumns]="dataColumns" [dataRows]="dataRows" [reportType]="reportType"
+						[colors]="colors" [reportChartGroup]="chartControl" [formSubmissions]="filteredFormSubmissions"
+						[selectedLicensees]="selectedLicensees" [selectedFields]="selectedFields"
+						[selectedPeriods]="selectedPeriods" [additionalDataColumns]="additionalDataColumns"
+						[additionalDataRows]="additionalDataRows" [customDataColumns]="customDataColumns"
+						[customDataRows]="customDataRows" [chartIndex]="i">
 					</app-report-chart>
 					<div class="mb-3">
 						<button type="button" class="btn btn-info" (click)="removeReportChart(i)">
 							<mat-icon>delete</mat-icon>
 						</button>
 					</div>
-	
+
 				</div>
 				<div class="mb-3">
 					<button type="button" class="btn bi bi-plus-circle" (click)="addReportChart()"></button>

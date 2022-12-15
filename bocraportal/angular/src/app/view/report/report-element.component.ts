@@ -13,9 +13,13 @@ import {
   OnInit,
   Output,
   QueryList,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
 import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
@@ -56,6 +60,7 @@ export class AdditionalSource {
 @Component({
   selector: 'app-report-element',
   templateUrl: './report-element.component.html',
+  styleUrls: ['./report-element.component.scss']
 })
 export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() reportElementGroup: FormGroup | any;
@@ -76,6 +81,15 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   gridColumnHeaders: any[] = [];
   gridRowHeaders: any[] = [];
   alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+
+  gridDataSource = new MatTableDataSource<any>([]);
+  @ViewChild('gridPaginator', {static: true}) gridPaginator: MatPaginator;
+  @ViewChild('gridSort', {static: true}) gridSort: MatSort;
+  gridDataPeriodHeaders: any[] = []
+  gridDataPeriods: any[] = []
+  gridDataColumnHeaders: any[] = []
+  gridDataColumns: any[] = []
+  gridDataColDefs: any[] = []
 
   constructor(private injector: Injector, @Inject(LOCALE_ID) public locale: string) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -125,7 +139,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.selectedLicensees?.forEach((sel, index) => {
       rowLabels[sel?.licensee] = index;
       this.grid[index] = {
-        label: sel?.licensee
+        label: sel?.licensee,
+        row: index
       }
     });
 
@@ -135,8 +150,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     let columnHeaders = {}
-
-    
     
     this.periods?.forEach((per, pindex) => {
 
@@ -146,6 +159,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
       fs?.forEach(sub => {
         let fields: DataFieldVO[] = this.extractFields(sub)?.filter(field => colLabels[field?.formField?.fieldName] !== undefined);
+        // this.grid[rowLabels[sub?.licensee?.licenseeName]]['row'] = rowLabels[sub?.licensee?.licenseeName];
         fields?.forEach((field, findex) => {
           let colIndex = pindex*(fields?.length) + colLabels[field?.formField?.fieldName];
           
@@ -159,6 +173,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
             columnHeaders[this.alphabet[colIndex]] = {
               header: this.alphabet[colIndex],
               period: per,
+              elementId: field?.formField?.fieldId,
               label: field?.formField?.fieldName,
             }
           }
@@ -168,7 +183,19 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a.header.localeCompare(b.header));
     this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a.localeCompare(b));
-
+    console.log(this.gridColumnHeaders);
+    this.gridDataColumnHeaders = this.gridColumnHeaders?.map(ch => `${ch.elementId}_${ch.header}`);
+    this.gridDataColumns = this.gridColumnHeaders?.map(ch => {
+      return {field: ch.fieldId, header: ch.header, label: ch.label}
+    });
+    console.log(this.gridColumnHeaders?.map(ch => `${ch.elementId}_${ch.header}`))
+    console.log(Object.values(this.grid))
+    console.log(this.gridDataColumnHeaders)
+    console.log(['licensee', ...this.periods?.map((period: string) => period.replaceAll(' ', '_'))]);
+    this.gridDataPeriods = this.periods?.map((period: string) => period.replaceAll(' ', '_'));
+    this.gridDataPeriodHeaders = ['licensee', ...this.periods?.map((period: string) => period.replaceAll(' ', '_'))];
+    this.gridDataColDefs = ['licensee', ...this.gridDataColumnHeaders];
+    this.gridDataSource.data = Object.values(this.grid)
   }
 
   get licensees() {
@@ -827,7 +854,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   fieldSelectionChange() {
     this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
-    
+    this.createReportGrid();
   }
 
   licenseeSelectionChange() {
