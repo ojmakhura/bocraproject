@@ -11,6 +11,17 @@ import { or } from 'mathjs';
   providedIn: 'root',
 })
 export class AuthenticationGuard extends KeycloakAuthGuard {
+
+  excludedUrls = [
+    '/',
+    '/assetts',
+    '/about',
+    '/home',
+    '/contact',
+    '/complaint',
+    '/complaint/search-complaints'
+  ]
+
   constructor(
     protected readonly router$: Router,
     protected readonly keycloak: KeycloakService
@@ -23,7 +34,8 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     state: RouterStateSnapshot
   ) {
 
-    if(state.url === '/' || state.url === '/assets' || state.url === '/about' || state.url === '/home' || state.url === '/contact') {
+    
+    if(this.excludedUrls.find(url => url === state.url)) {
       return true;
     }
 

@@ -24,10 +24,10 @@ export class FormEffects {
             mergeMap(({ id }) => this.formRestController.findById(id).pipe(
                 map( form => FormActions.findFormByIdSuccess({
                     form,
-                    messages: [`Form ${form.formName} found.`],
-                    success: false
+                    messages: [`Form ${form?.formName} found.`],
+                    success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error.error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -38,10 +38,14 @@ export class FormEffects {
             mergeMap(({ form }) => this.formRestController.save(form).pipe(
                 map( form => FormActions.saveFormSuccess({
                     form,
-                    messages: [`Form ${form.formName} saved.`],
+                    messages: [`Form ${form?.formName} saved.`],
                     success: true
                 })),
+<<<<<<< HEAD
                 catchError(({error}) => [FormActions.formFailure({messages: ["Form already Exists"]})])
+=======
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
+>>>>>>> 450f53d727c55585e864ea306a9d112fb57aee29
             ))
         )
     );
@@ -52,10 +56,10 @@ export class FormEffects {
             mergeMap(({ id }) => this.formRestController.remove(id).pipe(
                 map( removed => FormActions.removeFormSuccess({
                     removed,
-                    messages: [`Form ${id} removed.`],
+                    messages: [`Form ${id} successfully removed.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error.error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -69,7 +73,7 @@ export class FormEffects {
                     messages: [`${forms.length} forms found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error.error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -83,7 +87,7 @@ export class FormEffects {
                     messages: [`${forms.length} forms found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error.error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -97,7 +101,7 @@ export class FormEffects {
                     messages: [`Page ${pageNumber} found with ${forms.length} forms.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error.error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -108,10 +112,10 @@ export class FormEffects {
             mergeMap(({ id }) => this.formFieldRestController.findById(id).pipe(
                 map( formField => FormActions.findFieldByIdSuccess({
                     formField,
-                    messages: [`Form field  ${formField.fieldName} found.`],
+                    messages: [`Form field  ${formField?.fieldName} found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error.error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -122,10 +126,10 @@ export class FormEffects {
             mergeMap(({ formField }) => this.formFieldRestController.save(formField).pipe(
                 map( formField => FormActions.saveFieldSuccess({
                     formField,
-                    messages: [`Form field ${formField.fieldName} saved.`],
+                    messages: [`Form field ${formField?.fieldName} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -136,10 +140,10 @@ export class FormEffects {
             mergeMap(({ formSection }) => this.formSectionRestController.save(formSection).pipe(
                 map( formSection => FormActions.saveSectionSuccess({
                     formSection,
-                    messages: [`Form section ${formSection.sectionName} saved.`],
+                    messages: [`Form section ${formSection?.sectionLabel} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -153,7 +157,7 @@ export class FormEffects {
                     messages: [`Form section ${id} removed.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -167,7 +171,7 @@ export class FormEffects {
                     messages: [`Form field ${id} removed.`],
                     success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -179,9 +183,9 @@ export class FormEffects {
                 map( formFields => FormActions.getAllFieldsSuccess({
                     formFields,
                     messages: [`${formFields.length} form fields found.`],
-                    success: false
+                    success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -193,9 +197,9 @@ export class FormEffects {
                 map( formFields => FormActions.getAllFieldsPagedSuccess({
                     formFields,
                     messages: [`Page ${pageNumber} found with ${formFields.length} form fields.`],
-                    success: false
+                    success: true
                 })),
-                catchError(({error}) => [FormActions.formFailure({messages: [error]})])
+                catchError(({error}) => [FormActions.formFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );

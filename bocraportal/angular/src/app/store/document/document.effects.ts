@@ -100,7 +100,7 @@ export class DocumentEffects {
     //         mergeMap(({ licenseeId }) => this.documentRestController.getLicenseeDocuments(licenseeId).pipe(
     //             map( documents => DocumentActions.getLicenseeDocumentsSuccess({
     //                 documents,
-    //                 success: false
+    //                 success: true
     //             })),
     //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
     //         ))
@@ -113,7 +113,7 @@ export class DocumentEffects {
     //         mergeMap(({ licenceId }) => this.documentRestController.getLicenceDocuments(licenceId).pipe(
     //             map( documents => DocumentActions.getLicenceDocumentsSuccess({
     //                 documents,
-    //                 success: false
+    //                 success: true
     //             })),
     //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
     //         ))

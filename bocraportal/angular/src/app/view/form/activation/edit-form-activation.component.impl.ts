@@ -150,10 +150,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   }
 
   override formActivationFormSearch(): void {
-    let criteria: FormCriteria = new FormCriteria();
-    criteria.code = this.formActivationFormSearchField.value;
-    criteria.formName = this.formActivationFormSearchField.value;
-    this.store.dispatch(FormActions.searchForms({ criteria: criteria, loading: true, loaderMessage: 'Searching forms ...' }));
+    this.store.dispatch(FormActions.searchForms({ criteria: {formName: this.formActivationFormSearchField.value}, loading: true, loaderMessage: 'Searching forms ...' }));
   }
 
   override formActivationPeriodSearch(): void {

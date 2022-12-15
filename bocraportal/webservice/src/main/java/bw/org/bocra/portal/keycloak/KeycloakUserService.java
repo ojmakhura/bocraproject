@@ -285,9 +285,7 @@ public class KeycloakUserService {
         return null;
     }
 
-    public List<UserVO> search(String criteria) {
-
-        List<UserRepresentation> usersRep = keycloakService.getUsersResource().search(criteria);
+    private List<UserVO> userRepsToVOs(List<UserRepresentation> usersRep) {
 
         if (CollectionUtils.isEmpty(usersRep)) {
             return null;
@@ -300,6 +298,19 @@ public class KeycloakUserService {
         }
 
         return users;
+    }
+
+    public List<UserVO> searchByAttributes(String criteria) {
+        List<UserRepresentation> usersRep = keycloakService.getUsersResource().searchByAttributes(criteria);
+
+        return this.userRepsToVOs(usersRep);
+    }
+
+    public List<UserVO> search(String criteria) {
+
+        List<UserRepresentation> usersRep = keycloakService.getUsersResource().search(criteria);
+
+        return this.userRepsToVOs(usersRep);
     }
 
     public UserVO addClientRoles(String clientId, Set<String> roles, String userId) {

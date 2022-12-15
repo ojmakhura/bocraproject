@@ -17,9 +17,9 @@ export class PeriodConfigEffects {
                 map( periodConfig => PeriodConfigActions.findByIdSuccess({
                     periodConfig,
                     messages: [],
-                    success: false
+                    success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error.error]})])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -47,7 +47,7 @@ export class PeriodConfigEffects {
                     messages: [`Period config ${id} removed.`],
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error.error]})])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -61,7 +61,7 @@ export class PeriodConfigEffects {
                     messages: [`${periodConfigs.length} period configs found.`],
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error.error]})])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -75,7 +75,7 @@ export class PeriodConfigEffects {
                     messages: [`${periodConfigs.length} period configs found.`],
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error.error]})])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -89,7 +89,7 @@ export class PeriodConfigEffects {
                     messages: [`Page ${pageNumber} found with ${periodConfigs.length} period configs.`],
                     success: true
                 })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error.error]})])
+                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
@@ -58,11 +59,11 @@ public class DocumentServiceImpl
         Document entity = getDocumentDao().documentVOToEntity(document);
 
         if(StringUtils.isBlank(entity.getDocumentId())) {
-            String uid = UUID.randomUUID().toString();
+            String uid = RandomStringUtils.random(17, true, true);
             List<Document> docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("documentId", uid));
 
             while(CollectionUtils.isNotEmpty(docs)) {
-                uid = UUID.randomUUID().toString();
+                uid = RandomStringUtils.random(17, true, true);
                 docs = this.documentRepository.findAll(BocraportalSpecifications.<Document, String>findByAttribute("documentId", uid));
             }
 

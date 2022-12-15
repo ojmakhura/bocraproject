@@ -19,8 +19,8 @@ export class SectorFormEffects {
           map((sectorForm) =>
             SectorFormActions.findByIdSuccess({
               sectorForm,
-              messages: [],
-              success: false,
+              messages: [`Sector Form ${id} found.`],
+              success: true,
             })
           ),
           catchError(({ error }) => [
@@ -40,7 +40,7 @@ export class SectorFormEffects {
             SectorFormActions.findByFormSuccess({
               sectorForms,
               messages: [`${sectorForms.length} sector forms found.`],
-              success: false,
+              success: true,
             })
           ),
           catchError(({ error }) => [
@@ -60,7 +60,7 @@ export class SectorFormEffects {
             SectorFormActions.findByFormSuccess({
               sectorForms,
               messages: [`${sectorForms.length} sector forms found.`],
-              success: false,
+              success: true,
             })
           ),
           catchError(({ error }) => [

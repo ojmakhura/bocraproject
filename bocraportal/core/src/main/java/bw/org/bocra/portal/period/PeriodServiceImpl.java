@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.period;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -15,9 +16,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.BocraportalSpecifications;
 
 /**
  * @see bw.org.bocra.portal.period.PeriodService
@@ -140,6 +144,19 @@ public class PeriodServiceImpl
             periods = periodRepository.findAll(pageable).getContent();
         }
 
+        return periods == null ? null : getPeriodDao().toPeriodVOCollection(periods);
+    }
+
+    @Override
+    protected Collection<PeriodVO> handleLoadCurrentPeriods() throws Exception {
+
+        LocalDate today = LocalDate.now();
+
+        Specification<Period> specs = BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThan("startDate", today)
+                                    .and(BocraportalSpecifications.<Period, LocalDate>findByAttributeLessThan("endDate", today));
+
+        Collection<Period> periods = periodRepository.findAll(specs, Sort.by("startDate").descending());
+        
         return periods == null ? null : getPeriodDao().toPeriodVOCollection(periods);
     }
 

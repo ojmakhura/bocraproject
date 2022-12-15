@@ -119,7 +119,7 @@
                         <span translate>delete</span>
                     </button>
                 </div>
-                <mat-tab-group animationDuration="0ms" class="view-tabs">
+                <mat-tab-group animationDuration="0ms" class="view-tabs" *ngIf="formId">
                     <mat-tab label="{{'licence.types' | translate}}" *ngIf="false">
                         <div>
                             <button type="button" (click)="formLicenceTypesAddDialog()" class="btn btn-primary"

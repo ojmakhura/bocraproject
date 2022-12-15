@@ -7,7 +7,7 @@ import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
 import * as SubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
-import { ReportComponent } from '@app/view/report/report.component';
+import { ReportComponent, ReportSearchForm } from '@app/view/report/report.component';
 import { select } from '@ngrx/store';
 import { ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
@@ -49,13 +49,7 @@ export class ReportComponentImpl extends ReportComponent {
   override doNgAfterViewInit() {
     this.route.queryParams.subscribe((queryParams: any) => {
       let ids = queryParams?.submissions?.map((id: string) => +id);
-      this.store.dispatch(
-        SubmissionActions.findByIds({
-          ids: ids,
-          loaderMessage: `Loading ${ids?.length} submissions for report generation ....`,
-          loading: true,
-        })
-      );
+      this.loadData(ids);
     });
 
     this.submissions$.subscribe((submissions) => {
@@ -135,8 +129,6 @@ export class ReportComponentImpl extends ReportComponent {
 
     if(reportElement?.reportLabels === 'licensees') {
 
-      let el: FormGroup = element as FormGroup;
-
     } else if(reportElement?.reportLabels === 'periods') {
     }
   }
@@ -148,6 +140,23 @@ export class ReportComponentImpl extends ReportComponent {
 
     if(reportType === 'default') {
       
+    }
+  }
+
+  private loadData(ids: number[]) {
+    this.store.dispatch(
+      SubmissionActions.findByIds({
+        ids: ids,
+        loaderMessage: `Loading ${ids?.length} submissions for report generation ....`,
+        loading: true,
+      })
+    );
+  }
+
+  override afterReportSearch(form: ReportSearchForm, dialogData: any): void {
+
+    if(dialogData?.formSubmissions) {
+      this.loadData(dialogData?.formSubmissions?.map((sub: FormSubmissionVO) => sub?.id))
     }
   }
 }

@@ -54,11 +54,6 @@ public class SubmissionServiceImpl
         FormSubmission entity = getFormSubmissionDao().get(id);
         FormSubmissionVO submission = getFormSubmissionDao().toFormSubmissionVO(entity);
 
-        // for(DataField field : entity.getDataFields()) {
-        // DataFieldVO vo = getDataFieldDao().toDataFieldVO(field);
-        // }
-        // submission.setDataFields(value);
-
         return submission;
     }
 
@@ -327,6 +322,16 @@ public class SubmissionServiceImpl
         formSubmissionRepository.save(submission);
 
         return true;
+    }
+
+    @Override
+    protected Collection<FormSubmissionVO> handleLoadDueSubmissions() throws Exception {
+        FormSubmissionCriteria criteria = new FormSubmissionCriteria();
+        criteria.setPeriodDate(LocalDateTime.now());
+        
+        Collection<FormSubmission> submissions = getFormSubmissionDao().findByCriteria(criteria);
+
+        return toSubmissionVOCollection(submissions);
     }
 
 }
