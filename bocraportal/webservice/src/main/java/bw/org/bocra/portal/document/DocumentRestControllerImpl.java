@@ -6,7 +6,9 @@
 package bw.org.bocra.portal.document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.keycloak.representations.AccessToken;
@@ -20,7 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import bw.org.bocra.portal.complaint.ComplaintService;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.complaint.ComplaintVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
+import bw.org.bocra.portal.licence.LicenceService;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licensee.LicenseeService;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -31,11 +36,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class DocumentRestControllerImpl extends DocumentRestControllerBase {
 
     private final KeycloakService keycloakService;
+    private final LicenseeService licenseeService;
+    private final LicenceService licenceService;
 
     public DocumentRestControllerImpl(DocumentService documentService, ComplaintService complaintService,
-            KeycloakService keycloakService) {
+            KeycloakService keycloakService, LicenseeService licenseeService, LicenceService licenceService) {
         super(documentService, complaintService);
         this.keycloakService = keycloakService;
+        this.licenseeService = licenseeService;
+        this.licenceService = licenceService;
     }
 
     @Override
@@ -135,8 +144,9 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
+            if (e instanceof ConstraintViolationException) {
+                // throw new eFormActivationServiceException("This form activation has been
+                // already done.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Document already exists.");
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -144,7 +154,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleSearch(String criteria) {
+    public ResponseEntity<?> handleSearch(DocumentCriteria criteria) {
         try {
             logger.debug("Searches Document by " + criteria);
             Optional<?> data = Optional.of(documentService.search(criteria));
@@ -266,6 +276,90 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @Override
+    public ResponseEntity<?> handleUploadFile(Long documentTypeId, MultipartFile file, String fileName,
+            DocumentMetadataTarget metadataTarget, Long metadataTargetId) {
+        try {
+            logger.debug("Upload Complaint Document with name : " + fileName );
+            AccessToken token = keycloakService.getSecurityContext().getToken();
+            DocumentVO document = new DocumentVO();
+            document.setCreatedBy(token.getPreferredUsername());
+            document.setCreatedDate(LocalDateTime.now());
+            document.setFile(file.getBytes());
+            document.setMetadataTarget(metadataTarget);
+            document.setMetadataTargetId(metadataTargetId);
+            document.setSize(file.getSize());
+            DocumentTypeVO documentType = new DocumentTypeVO();
+            documentType.setId(documentTypeId);
+
+            document.setDocumentType(documentType);
+            document.setDocumentName(fileName);
+            
+            // document.setComplaint(complaint);
+            Optional<?> data = Optional.of(documentService.save(document));
+            ResponseEntity<?> response;
+
+            if (data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                if(metadataTarget == DocumentMetadataTarget.LICENSEE) {
+                    LicenseeVO licensee = licenseeService.findById(metadataTargetId);
+                    if(licensee.getDocuments() == null) {
+                        licensee.setDocuments(new ArrayList<>());
+                    }
+
+                    licensee.getDocuments().add((DocumentVO) data.get());
+                    licenseeService.save(licensee);
+
+                } else if(metadataTarget == DocumentMetadataTarget.LICENCE) {
+                    LicenceVO licence = licenceService.findById(metadataTargetId);
+                    if(licence.getDocuments() == null) {
+                        licence.setDocuments(new ArrayList<>());
+                    }
+
+                    licence.getDocuments().add((DocumentVO) data.get());
+                    licenceService.save(licence);
+
+                } else if(metadataTarget == DocumentMetadataTarget.COMPLAINT) {
+                    ComplaintVO complaint = complaintService.findById(metadataTargetId);
+                    if(complaint.getDocuments() == null) {
+                        complaint.setDocuments(new ArrayList<>());
+                    }
+
+                    complaint.getDocuments().add((DocumentVO) data.get());
+                    complaintService.save(complaint);
+                }
+
+
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByDocumentIds(Set<String> documentIds) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByIds(Set<Long> ids) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindDocumentsByMetadata(DocumentMetadataTarget metadataTarget,
+            Long metadataTargetId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override

@@ -68,43 +68,21 @@ public class FormDaoImpl
         // TODO verify behavior of toFormVO
         super.toFormVO(source, target);
 
-        // if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
-
-        //     if(target.getLicenceTypes() == null) {
-        //         target.setLicenceTypes(new ArrayList<>());
-        //     }
-            
-        //     for (LicenceType entity : source.getLicenceTypes()) {
-        //         LicenceTypeVO type = new LicenceTypeVO();
-        //         type.setId(entity.getId());
-        //         type.setCode(entity.getCode());
-        //         type.setDescription(entity.getDescription());
-        //         type.setName(entity.getName());
-                
-        //         target.getLicenceTypes().add(type);
-        //     }
-        // }
-
         if(CollectionUtils.isNotEmpty(source.getFormFields())) {
             if(target.getFormFields() == null) {
                 target.setFormFields(new ArrayList<>());
             }
 
             for (FormField entity : source.getFormFields()) {
-                //FormFieldVO field = new FormFieldVO();
-                // field.setId(entity.getId());
-                // field.setCreatedBy(entity.getCreatedBy());
-                // field.setCreatedDate(entity.getCreatedDate());
-                // field.setUpdatedBy(entity.getUpdatedBy());
-                // field.setUpdatedDate(entity.getUpdatedDate());
-                // field.setFieldId(entity.getFieldId());
-                // field.setFieldName(entity.getFieldName());
-                // field.setFieldType(entity.getFieldType());
 
                 FormFieldVO field = formFieldDao.toFormFieldVO(entity);
 
                 target.getFormFields().add(field);
             }
+        }
+
+        if(source.getPeriodConfig() != null && source.getPeriodConfig().getId() != null) {
+            target.setPeriodConfig(periodConfigDao.toPeriodConfigVO(source.getPeriodConfig()));
         }
 
         if(CollectionUtils.isNotEmpty(source.getFormSections())) {
@@ -245,19 +223,9 @@ public class FormDaoImpl
             target.setFormSections(sections);
         }
 
-        // if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
-
-        //     target.setLicenceTypes(new ArrayList<>());
-
-        //     for(LicenceTypeVO type : source.getLicenceTypes()) {
-
-        //         if(type.getId() != null) {
-        //             LicenceType entity = getLicenceTypeDao().load(type.getId());
-        //             target.getLicenceTypes().add(entity);
-        //         }
-
-        //     }
-        // }
+        if(source.getPeriodConfig() != null && source.getPeriodConfig().getId() != null) {
+            target.setPeriodConfig(periodConfigRepository.getReferenceById(source.getPeriodConfig().getId()));
+        }
     }
 
 }

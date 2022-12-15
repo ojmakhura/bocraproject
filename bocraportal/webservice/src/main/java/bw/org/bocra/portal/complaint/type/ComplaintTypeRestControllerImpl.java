@@ -120,6 +120,7 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

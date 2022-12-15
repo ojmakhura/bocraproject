@@ -31,6 +31,19 @@ export const documentReducer = createReducer(
         error: false,
         messages: action.messages
     })),
+    on(DocumentActions.uploadFile, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
+    on(DocumentActions.uploadFileSuccess, (state, action) => ({
+        ...state,
+        document: action.document, 
+        loading: false,
+        success: action.success,
+        error: false,
+        messages: action.messages
+    })),
     on(DocumentActions.remove, (state, action) => ({
         ...state,
         loading: action.loading,

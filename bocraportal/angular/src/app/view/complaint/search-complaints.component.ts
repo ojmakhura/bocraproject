@@ -424,8 +424,8 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
             email: [{value: loggedInSearch?.email, disabled: false}],
             subject: [{value: loggedInSearch?.subject, disabled: false}],
             complaintId: [{value: loggedInSearch?.complaintId, disabled: false}],
-            licenseeId: [{value: loggedInSearch?.licenseeId, disabled: false}],
-            complaintTypeId: [{value: loggedInSearch?.complaintTypeId, disabled: false}],
+            licenseeName: [{value: loggedInSearch?.licenseeName, disabled: false}],
+            complaintType: [{value: loggedInSearch?.complaintType, disabled: false}],
         });
     }
 
@@ -659,8 +659,8 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
             email: [value?.email],
             subject: [value?.subject],
             complaintId: [value?.complaintId],
-            licenseeId: [value?.licenseeId],
-            complaintTypeId: [value?.complaintTypeId],
+            licenseeName: [value?.licenseeName],
+            complaintType: [value?.complaintType],
         });
     }
 

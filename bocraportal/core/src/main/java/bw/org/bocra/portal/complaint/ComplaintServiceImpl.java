@@ -11,6 +11,7 @@ package bw.org.bocra.portal.complaint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -128,21 +129,27 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
                 spec = spec.and(BocraportalSpecifications.findByAttribute("status", criteria.getStatus()));
         }
 
-        if (criteria.getLicenseeId() != null) {
-            if (spec == null)
-                spec = BocraportalSpecifications.findByJoinAttribute("licensee", "id", criteria.getLicenseeId());
+        if(StringUtils.isNotBlank(criteria.getLicenseeName())) {
+            if(spec == null)
+                spec = BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName", criteria.getLicenseeName());
             else
-                spec = spec
-                        .and(BocraportalSpecifications.findByJoinAttribute("licensee", "id", criteria.getLicenseeId()));
+                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName", criteria.getLicenseeName()));
         }
 
-        if (criteria.getComplaintTypeId() != null) {
+        if(StringUtils.isNotBlank(criteria.getComplaintType())) {
+            if(spec == null)
+                spec = BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName", criteria.getComplaintType());
+            else
+                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName", criteria.getComplaintType()));
+        }
+
+        if (criteria.getComplaintType() != null) {
             if (spec == null)
                 spec = BocraportalSpecifications.findByJoinAttribute("complaintType", "id",
-                        criteria.getComplaintTypeId());
+                        criteria.getComplaintType());
             else
                 spec = spec.and(BocraportalSpecifications.findByJoinAttribute("complaintType", "id",
-                        criteria.getComplaintTypeId()));
+                        criteria.getComplaintType()));
         }
 
         Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
@@ -203,6 +210,12 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
             return complaintDao.toComplaintVO(entities.get(0));
         }
 
+        return null;
+    }
+
+    @Override
+    protected Collection<ComplaintVO> handleFindByIds(Set<Long> ids) throws Exception {
+        // TODO Auto-generated method stub
         return null;
     }
 

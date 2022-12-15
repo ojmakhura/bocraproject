@@ -75,20 +75,20 @@ public class ComplaintDaoImpl
 
         Collection<DocumentVO> docs = new HashSet<>();
 
-        for (Document doc : source.getDocuments()) {
-            DocumentVO dvo = new DocumentVO();
-            dvo.setId(doc.getId());
-            dvo.setDocumentName(doc.getDocumentName());
-            dvo.setDocumentId(doc.getDocumentId());
+        // for (Document doc : source.getDocumentIds()) {
+        //     DocumentVO dvo = new DocumentVO();
+        //     dvo.setId(doc.getId());
+        //     dvo.setDocumentName(doc.getDocumentName());
+        //     dvo.setDocumentId(doc.getDocumentId());
 
-            DocumentTypeVO type = new DocumentTypeVO();
-            type.setCode(doc.getDocumentType().getCode());
-            type.setId(doc.getDocumentType().getId());
-            type.setName(doc.getDocumentType().getName());
+        //     DocumentTypeVO type = new DocumentTypeVO();
+        //     type.setCode(doc.getDocumentType().getCode());
+        //     type.setId(doc.getDocumentType().getId());
+        //     type.setName(doc.getDocumentType().getName());
 
-            dvo.setDocumentType(type);
-            docs.add(dvo);
-        }
+        //     dvo.setDocumentType(type);
+        //     docs.add(dvo);
+        // }
 
         target.setDocuments(docs);
     }

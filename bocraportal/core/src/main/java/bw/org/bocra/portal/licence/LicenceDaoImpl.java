@@ -8,7 +8,9 @@ package bw.org.bocra.portal.licence;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,22 +71,25 @@ public class LicenceDaoImpl
 
         Collection<DocumentVO> docs = new HashSet<>();
 
-        for(Document doc : source.getDocuments()) {
-            DocumentVO dvo = new DocumentVO();
-            dvo.setId(doc.getId());
-            dvo.setDocumentName(doc.getDocumentName());
-            dvo.setDocumentId(doc.getDocumentId());
+        // for(Document doc : source.getDocuments()) {
+        //     DocumentVO dvo = new DocumentVO();
+        //     dvo.setId(doc.getId());
+        //     dvo.setDocumentName(doc.getDocumentName());
+        //     dvo.setDocumentId(doc.getDocumentId());
 
-            DocumentTypeVO type = new DocumentTypeVO();
-            type.setCode(doc.getDocumentType().getCode());
-            type.setId(doc.getDocumentType().getId());
-            type.setName(doc.getDocumentType().getName());
+        //     DocumentTypeVO type = new DocumentTypeVO();
+        //     type.setCode(doc.getDocumentType().getCode());
+        //     type.setId(doc.getDocumentType().getId());
+        //     type.setName(doc.getDocumentType().getName());
 
-            dvo.setDocumentType(type);
-            docs.add(dvo);
+        //     dvo.setDocumentType(type);
+        //     docs.add(dvo);
+        // }
+
+        if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            target.setDocuments(documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds())));
         }
 
-        target.setDocuments(docs);
     }
 
     /**
@@ -148,5 +153,10 @@ public class LicenceDaoImpl
             LicenceType type = licenceTypeRepository.getReferenceById(source.getLicenceType().getId());
             target.setLicenceType(type);
         }
+
+        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
+            target.setDocumentIds(source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toList()));
+        }
+        
     }
 }

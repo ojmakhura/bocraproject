@@ -860,7 +860,8 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
             email: [value?.email],
             subject: [value?.subject],
             complaintId: [value?.complaintId],
-            licenseeId: [value?.licenseeId],
+            licenseeName: [value?.licenseeName],
+            complaintType: [value?.complaintType],            
         });
     }
 

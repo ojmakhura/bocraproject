@@ -8,6 +8,8 @@ package bw.org.bocra.portal.complaint;
 
 import bw.org.bocra.portal.document.DocumentRepository;
 
+import java.util.stream.Collectors;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,8 @@ public class ComplaintReplyDaoImpl
         // WARNING! No conversion for target.documents (can't convert
         // source.getDocuments():bw.org.bocra.portal.document.Document to
         // bw.org.bocra.portal.document.DocumentVO
+
+        // ief(CollectionUtils.isNotEmpty(source.))
     }
 
     /**
@@ -103,6 +107,10 @@ public class ComplaintReplyDaoImpl
 
         if(source.getComplaint() != null && source.getComplaint().getId() != null) {
             target.setComplaint(complaintRepository.getReferenceById(source.getComplaint().getId()));
+        }
+
+        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
+            //target.set (source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toList()));
         }
     }
 }
