@@ -20,6 +20,8 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
 import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { PeriodConfigVO } from '@app/model/bw/org/bocra/portal/period/config/period-config-vo';
+import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
 import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
 import * as SubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
 import { ReportComponent } from '@app/view/report/report.component';
@@ -70,6 +72,10 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   additionalDataRows: any[] = [];
   customDataColumns: any = {};
   customDataRows: any = {};
+  grid = {}
+  gridColumnHeaders: any[] = [];
+  gridRowHeaders: any[] = [];
+  alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
   constructor(private injector: Injector, @Inject(LOCALE_ID) public locale: string) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -97,6 +103,72 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.reportElementGroup.addControl('dataColumnsAnalytics', this.formBuilder.array([]));
     this.reportElementGroup.addControl('dataRowsAnalytics', this.formBuilder.array([]));
+
+    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
+    this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
+    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
+
+    // console.log(this.formSubmissions)
+    // this.createReportGrid();
+  }
+
+  createReportGrid() {
+
+    if(!this.filteredFormSubmissions || this.filteredFormSubmissions.length == 0) {
+      return;
+    }
+
+    let rowLabels = {
+
+    };
+
+    this.selectedLicensees?.forEach((sel, index) => {
+      rowLabels[sel?.licensee] = index;
+      this.grid[index] = {
+        label: sel?.licensee
+      }
+    });
+
+    let colLabels = {};
+    this.selectedFields?.forEach((field, index) => {
+      colLabels[field?.fieldName] = index
+    });
+
+    let columnHeaders = {}
+
+    
+    
+    this.periods?.forEach((per, pindex) => {
+
+      let fs = this.formSubmissions?.filter(sub => {
+        return per === sub?.period?.periodName && this.selectedLicensees?.find(sel => sel.licensee === sub?.licensee?.licenseeName)
+      });
+
+      fs?.forEach(sub => {
+        let fields: DataFieldVO[] = this.extractFields(sub)?.filter(field => colLabels[field?.formField?.fieldName] !== undefined);
+        fields?.forEach((field, findex) => {
+          let colIndex = pindex*(fields?.length) + colLabels[field?.formField?.fieldName];
+          
+          this.grid[rowLabels[sub?.licensee?.licenseeName]][this.alphabet[colIndex]] = {
+            period: per,
+            label: field?.formField?.fieldName,
+            value: field?.value
+          };
+
+          if(columnHeaders[this.alphabet[colIndex]] === undefined) {
+            columnHeaders[this.alphabet[colIndex]] = {
+              header: this.alphabet[colIndex],
+              period: per,
+              label: field?.formField?.fieldName,
+            }
+          }
+        });
+      });
+    });
+
+    this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a.header.localeCompare(b.header));
+    this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a.localeCompare(b));
+
   }
 
   get licensees() {
@@ -104,7 +176,21 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   get periods() {
-    return [...new Set(this.formSubmissions?.map((sub) => sub?.period?.periodName))];
+    
+    let prs: PeriodVO[] | undefined = this.formSubmissions?.map((sub) => sub?.period);
+    let prTmp = {};
+    prs?.forEach(p => {
+      prTmp[p?.periodName] = p;
+    });
+
+    prs = Object.values(prTmp);
+    return prs?.sort((p1, p2) => {
+      let start1 = new Date(p1.periodStart);
+      let start2 = new Date(p2.periodStart);
+
+      return start1.getTime() - start2.getTime();
+    }).map(p => p.periodName);
+
   }
 
   get fields() {
@@ -163,6 +249,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   newForm(reportElement: ReportElement): FormGroup {
+
     return this.formBuilder.group({
       groupBy: [reportElement?.groupBy],
       reportType: [reportElement?.reportType],
@@ -176,6 +263,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       periodSelections: this.createPeriodSelectionArray(reportElement?.selectedPeriods),
       fieldSelections: this.createFieldSelectionArray(reportElement?.selectedFields),
     });
+
+    
   }
 
   getRandomColor() {
@@ -198,6 +287,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.periodSelectionChange();
     this.fieldSelectionChange();
     this.licenseeSelectionChange();
+    this.createReportGrid();
   }
 
   ngOnDestroy(): void {}
@@ -737,6 +827,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   fieldSelectionChange() {
     this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
+    
   }
 
   licenseeSelectionChange() {

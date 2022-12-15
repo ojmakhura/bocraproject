@@ -253,6 +253,22 @@
 						Colors
 					</button>
 				</div>
+				<div class="mb-3" *ngIf="gridColumnHeaders.length > 0">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th scope="col"></th>
+								<th scope="col" *ngFor="let label of gridColumnHeaders; let m=index">{{label.label}} ({{label.header}})</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let x of gridRowHeaders; let m=index">
+								<th scope="row">{{x}} : {{ grid[x].label }}</th>
+								<td *ngFor="let label of gridColumnHeaders">{{grid[x][label.header]?.value}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<!-- <div>
 					<span>{{selectedLabels}}</span>
 				</div>
