@@ -260,14 +260,14 @@
 						Colors
 					</button>
 				</div>
-				<div class="accordion-body">
+				<div class="accordion-body" *ngIf="gridDataPeriods.length > 0">
 					<table mat-table matSort [dataSource]="gridDataSource" #gridSort="matSort" class="table table-bordered table-striped">
-						<ng-container matColumnDef="licensee">
+						<ng-container matColumnDef="label">
 							<th mat-header-cell *matHeaderCellDef [attr.rowspan]="2"></th>
 							<td mat-cell *matCellDef="let data">{{data.row}}: {{data?.label}}</td>
 						</ng-container>
 						<ng-container *ngFor="let period of gridDataPeriods; let m=index" matColumnDef="{{period}}">
-							<th mat-header-cell *matHeaderCellDef [attr.colspan]="gridColumnHeaders.length/periods.length">{{periods[m]}}</th>
+							<th mat-header-cell *matHeaderCellDef [attr.colspan]="gridColumnHeaders.length/selectedPeriods.length">{{periods[m]}}</th>
 						</ng-container>
 						<ng-container *ngFor="let ch of gridColumnHeaders; let m=index" matColumnDef="{{ch.elementId}}_{{ch.header}}">
 							<th mat-header-cell *matHeaderCellDef>{{ch.label}} ({{alphabet[m]}})</th>
