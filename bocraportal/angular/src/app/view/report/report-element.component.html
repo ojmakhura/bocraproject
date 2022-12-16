@@ -260,8 +260,8 @@
 						Colors
 					</button>
 				</div>
-				<div class="mb-3" *ngIf="gridColumnHeaders.length > 0">
-					<table mat-table [dataSource]="gridDataSource" class="table table-bordered table-striped">
+				<div class="accordion-body">
+					<table mat-table matSort [dataSource]="gridDataSource" #gridSort="matSort" class="table table-bordered table-striped">
 						<ng-container matColumnDef="licensee">
 							<th mat-header-cell *matHeaderCellDef [attr.rowspan]="2"></th>
 							<td mat-cell *matCellDef="let data">{{data.row}}: {{data?.label}}</td>
@@ -271,13 +271,14 @@
 						</ng-container>
 						<ng-container *ngFor="let ch of gridColumnHeaders; let m=index" matColumnDef="{{ch.elementId}}_{{ch.header}}">
 							<th mat-header-cell *matHeaderCellDef>{{ch.label}} ({{alphabet[m]}})</th>
-							<td mat-cell *matCellDef="let data">{{data[gridDataColumns[m].header]?.value}}</td>
+							<td mat-cell *matCellDef="let data"> {{data[gridDataColumns[m].header]?.value}}</td>
 						</ng-container>
 
 						<tr mat-header-row *matHeaderRowDef="gridDataPeriodHeaders"></tr>
 						<tr mat-header-row *matHeaderRowDef="gridDataColumnHeaders"></tr>
 						<tr mat-row *matRowDef="let row; columns: gridDataColDefs"></tr>
 					</table>
+					<mat-paginator #gridPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 30, 40, 50, 60, 70, 80, 90]" showFirstLastButtons></mat-paginator>
 				</div>
 				<div *ngFor="let chartControl of chartsControl?.controls; let i=index" #test>
 					<app-report-chart [dataColumns]="dataColumns" [dataRows]="dataRows" [reportType]="reportType"

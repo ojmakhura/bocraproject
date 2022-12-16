@@ -91,6 +91,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   gridDataColumns: any[] = []
   gridDataColDefs: any[] = []
 
+  testDataSource: any[] = []
+
   constructor(private injector: Injector, @Inject(LOCALE_ID) public locale: string) {
     this.formBuilder = this.injector.get(FormBuilder);
   }
@@ -124,9 +126,13 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // console.log(this.formSubmissions)
     // this.createReportGrid();
+    
   }
 
   createReportGrid() {
+
+    this.testDataSource = []
+    this.gridDataSource.data = []
 
     if(!this.filteredFormSubmissions || this.filteredFormSubmissions.length == 0) {
       return;
@@ -166,6 +172,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           this.grid[rowLabels[sub?.licensee?.licenseeName]][this.alphabet[colIndex]] = {
             period: per,
             label: field?.formField?.fieldName,
+            elementId: field?.formField?.fieldId,
             value: field?.value
           };
 
@@ -183,19 +190,32 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a.header.localeCompare(b.header));
     this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a.localeCompare(b));
-    console.log(this.gridColumnHeaders);
     this.gridDataColumnHeaders = this.gridColumnHeaders?.map(ch => `${ch.elementId}_${ch.header}`);
     this.gridDataColumns = this.gridColumnHeaders?.map(ch => {
       return {field: ch.fieldId, header: ch.header, label: ch.label}
     });
-    console.log(this.gridColumnHeaders?.map(ch => `${ch.elementId}_${ch.header}`))
-    console.log(Object.values(this.grid))
-    console.log(this.gridDataColumnHeaders)
-    console.log(['licensee', ...this.periods?.map((period: string) => period.replaceAll(' ', '_'))]);
+    
     this.gridDataPeriods = this.periods?.map((period: string) => period.replaceAll(' ', '_'));
     this.gridDataPeriodHeaders = ['licensee', ...this.periods?.map((period: string) => period.replaceAll(' ', '_'))];
     this.gridDataColDefs = ['licensee', ...this.gridDataColumnHeaders];
+    
+    // Object.keys(this.grid)?.forEach(key => {
+    //   let tmp = {}
+    //   let lc = this.grid[key];
+    //   tmp['licensee'] = `${key}: ${lc.label}`;
+    //   Object.keys(lc)?.forEach(lkey => {
+    //     let lcc = lc[lkey];
+    //     tmp[`${lcc.elementId}_${lkey}`] = lcc.value
+    //   })
+
+    //   this.testDataSource.push(tmp)
+      
+    // });
+
+    console.log(this.testDataSource)
     this.gridDataSource.data = Object.values(this.grid)
+    this.gridDataSource.paginator = this.gridPaginator;
+    this.gridDataSource.sort = this.gridSort;
   }
 
   get licensees() {
@@ -1053,18 +1073,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   selectDataColumns(event: any) {
-    // if(event?.target?.value === 'licensees') {
-    //   this.labels = this.licenseeSelections.filter(lc => lc.selected).map(lc => lc.licensee);
-    // } if(event?.target?.value === 'periods') {
-    //   this.labels = this.periodSelections.filter(pr => pr.selected).map(pr => pr.period);
-    // }
   }
 
   reportTypeChange() {
-    // if(this.reportType) {
-    //   this.dataColumnsControl.patchValue('fields');
-    //   this.dataRowsControl.patchValue('licensees')
-    // }
   }
 
   /**
