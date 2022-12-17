@@ -9,10 +9,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.util.ResourceUtils;
 
 import bw.org.bocra.portal.auth.AuthorisationServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
+// @PropertySource(ResourceUtils.CLASSPATH_URL_PREFIX + "core-application.properties")
 public class AuthorisationControllerTest {
     
     @Mock
