@@ -39,6 +39,12 @@
             <groupId>org.andromda.translationlibraries</groupId>
             <artifactId>andromda-ocl-translation-core</artifactId>
             <scope>provided</scope>
+            <exclusions>
+              <exclusion>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+              </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.andromda.translationlibraries</groupId>
@@ -135,6 +141,11 @@
                 <artifactId>junit</artifactId>
               </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

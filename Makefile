@@ -17,11 +17,20 @@ build_common:
 build_core:
 	mvn -f bocraportal/core install -Dmaven.test.skip=true -o
 
+test_core: 
+	. ./.env && mvn -f bocraportal/core test -o
+
 build_api:
 	mvn -f bocraportal/webservice install -Dmaven.test.skip=true -o
 
+test_api: 
+	. ./.env && mvn -f bocraportal/webservice test -o
+
 build_comm:
 	mvn -f bocraportal/comm install -Dmaven.test.skip=true -o
+
+test_comm: 
+	. ./.env && mvn -f bocraportal/comm test -o
 
 build_web: 
 	mvn -f bocraportal/angular install -Dmaven.test.skip=true -o
@@ -61,6 +70,8 @@ else
 	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> service=<name> down_service`'
 	exit 1
 endif
+
+run_tests: gen_env test_${test}
 	
 ##
 ## Build docker images
