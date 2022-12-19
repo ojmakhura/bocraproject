@@ -5,10 +5,9 @@
 //
 package bw.org.bocra.portal.auth;
 
-import bw.org.bocra.portal.BocraportalPostgresqlContainer;
+import bw.org.bocra.portal.BocraportalTestContainer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.ClassRule;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -16,24 +15,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-// @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 public class AuthorisationRestControllerTest {
 
     @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = BocraportalPostgresqlContainer.getInstance();
+    public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
+
+    private String path = "/authorisation";
 
     protected Logger logger = LoggerFactory.getLogger(AuthorisationRestControllerTest.class);
 
     @Autowired
-    private RestTemplate restTemplate;
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;

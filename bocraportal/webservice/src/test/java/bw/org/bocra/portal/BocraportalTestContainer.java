@@ -2,17 +2,17 @@ package bw.org.bocra.portal;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 
-public class BocraportalPostgresqlContainer extends PostgreSQLContainer<BocraportalPostgresqlContainer> {
+public class BocraportalTestContainer extends PostgreSQLContainer<BocraportalTestContainer> {
     private static final String IMAGE_VERSION = "postgres:15";
-    private static BocraportalPostgresqlContainer container;
+    private static BocraportalTestContainer container;
     
-    private BocraportalPostgresqlContainer() {
+    private BocraportalTestContainer() {
         super(IMAGE_VERSION);
     }
 
-    public static BocraportalPostgresqlContainer getInstance() {
+    public static BocraportalTestContainer getInstance() {
         if (container == null) {
-            container = new BocraportalPostgresqlContainer();
+            container = new BocraportalTestContainer();
         }
         return container;
     }

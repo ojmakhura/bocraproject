@@ -10,8 +10,8 @@ package bw.org.bocra.portal.access.type;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,8 +100,13 @@ public class AccessPointTypeServiceImpl
     @Override
     protected Collection<AccessPointTypeVO> handleGetAll(Integer pageNumber, Integer pageSize)
             throws Exception {
-        return (Collection<AccessPointTypeVO>) accessPointTypeDao
-                .loadAll(accessPointTypeDao.TRANSFORM_ACCESSPOINTTYPEVO, pageNumber, pageSize);
+
+        Collection<AccessPointType> types = accessPointTypeRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent();
+        System.out.println("------------------------------------------------------");
+        System.out.println(types);
+        System.out.println("------------------------------------------------------");
+
+        return accessPointTypeDao.toAccessPointTypeVOCollection(types);
     }
 
 }

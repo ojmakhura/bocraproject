@@ -71,7 +71,10 @@ else
 	exit 1
 endif
 
-run_tests: gen_env test_${test}
+run_tests: gen_env test_${module}
+
+run_test: gen_env
+	. ./.env && mvn -f bocraportal/${module} -Dtest=${test} test -o
 	
 ##
 ## Build docker images
