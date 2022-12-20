@@ -11,11 +11,12 @@ import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.keycloak.representations.AccessToken;
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,14 +51,21 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Licence with id %ld not found.", id));
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Licence with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured while loading an licence. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -65,20 +73,11 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Display all Licences");
-            Optional<?> data = Optional.of(licenceService.getAll());
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(licenceService.getAll());
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured when loading all licences.");
         }
     }
 
@@ -87,20 +86,12 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
         try {
             logger.debug("Display all Licences of the specified by page number " + pageNumber + " and page size "
                     + pageSize);
-            Optional<?> data = Optional.of(licenceService.getAll(pageNumber, pageSize));
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return  ResponseEntity.status(HttpStatus.OK).body(licenceService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            String message = String.format("An error occurred when reading page %d of size %d.", pageNumber, pageSize);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -114,14 +105,19 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the licence with id " + id);
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete licence with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting licence with id " + id);
         }
     }
 
@@ -135,35 +131,114 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the licences.");
             }
 
             return response;
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | LicenceServiceException e) {
+
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            String message = e.getMessage();
+
+            if (e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+                message = e.getMessage();
+                
+                if(message.contains("or its id can not be null") || message.contains("'licence.licenceType' can not be null")) {
+
+                    message = "The licence or its id is missing.";
+
+                } else if(message.contains("'licence'")) {
+
+                    message = "The licence information is missing.";
+
+                } else if(message.contains("'licence.licenceType'")) {
+
+                    message = "The licence type is missing.";
+
+                } else if(message.contains("invalid licence type")) {
+
+                    message = "The licence type is invalid.";
+
+                } else if(message.contains("or its id can not be null") || message.contains("'licence.licenceType' can not be null")) {
+
+                    message = "The licence type or its id is missing.";
+
+                } else if(message.contains("'licence.licensee'")) {
+
+                    message = "The licensee is missing.";
+
+                } else if(message.contains("invalid licensee")) {
+
+                    message = "The licensee is invalid.";
+
+                } else if(message.contains("or its id can not be null") || message.contains("'licence.licensee' can not be null")) {
+
+                    message = "The licensee or its id is missing.";
+
+                } else if(message.contains("'licence.status'")) {
+
+                    message = "The licence status is missing.";
+
+                } else if(message.contains("'licence.licenceNumber'")) {
+
+                    message = "The licence licence number is missing.";
+
+                } else if(message.contains("'licence.startDate'")) {
+
+                    message = "The licence start date is missing.";
+
+                } else if(message.contains("'licence.endDate'")) {
+
+                    message = "The licence end date is missing.";
+
+                } else {
+
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+    
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+
+                    if(e.getCause().getMessage().contains("(licence_number)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licence with this licence number has been already created.");
+                    }
+
+                } else if (e.getCause().getMessage().contains("null value in column")) {
+
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    }
+
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This licence is conflicting with an existing one.");
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleSearch(LicenceCriteria criteria) {
         try {
+
             logger.debug("Search Licence by criteria " + criteria);
-            Optional<?> data = Optional.of(licenceService.search(criteria));
-            ResponseEntity<?> response;
+            return ResponseEntity.status(HttpStatus.OK).body(licenceService.search(criteria));
 
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 

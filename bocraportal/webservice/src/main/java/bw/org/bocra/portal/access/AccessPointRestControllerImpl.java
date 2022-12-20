@@ -5,12 +5,9 @@
 //
 package bw.org.bocra.portal.access;
 
-import java.util.Collection;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.hibernate.exception.ConstraintViolationException;
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -18,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/access")
@@ -139,73 +134,62 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             }
 
             return response;
-        } catch (Exception e) {
-            
-            logger.error(e.toString());
+        } catch (IllegalArgumentException | AccessPointServiceException e) {
+
             e.printStackTrace();
+
             String message = e.getMessage();
 
-            if (e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
-                if (e.getCause() instanceof IllegalArgumentException) {
-                    message = e.getCause().getMessage();
-                } 
-            
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
                 if(message.contains("'accessPoint'")) {
+
                     message = "The access point information is missing.";
-                } else if(message.contains("'accessPoint.accessPointType'")) {
-                    message = "The access point type is missing.";
-                } else if(message.contains("invalid access point type")) {
-                    message = "The access point type is invalid.";
+
                 } else if(message.contains("or its id can not be null") || message.contains("'accessPoint.accessPointType' can not be null")) {
+                
                     message = "The access point type or its id is missing.";
+                
                 } else if(message.contains("'accessPoint.name'")) {
+                
                     message = "The access point name is missing.";
+                
                 } else if(message.contains("'accessPoint.url'")) {
+                  
                     message = "The access point url is missing.";
+                
                 } else {
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-                
-            } else if(e instanceof ConstraintViolationException) {
-                
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Access Point has been already created.");
-            } else if (e instanceof AccessPointServiceException) {
 
-                StringBuilder builder = new StringBuilder();
+            } else if(e.getCause() instanceof PSQLException) {
 
-                e.printStackTrace();
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("(name)")) {
 
-                if (e.getCause() instanceof ConstraintViolationException) {
-                    builder.append("An access point with this");
-                    AccessPointCriteria criteria = new AccessPointCriteria();
-                    criteria.setName(accessPoint.getName());
-                    Collection<AccessPointVO> point = accessPointService.search(criteria);
-
-                    if(CollectionUtils.isNotEmpty(point)) {
-                        builder.append(" name ");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An access point with this name has been already created.");
+                    } else {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This access point is conflicting with an existing one.");
                     }
-
-                    builder.append("has already been created.");
-                } else if (e.getCause() instanceof PSQLException) {
-                    String exception = e.getCause().getMessage();
-
-                    if(exception.contains("null value in column \"access_point_type_fk\"")) {
-                        builder.append("The attached access point type is not valid.");
-                    } else if (exception.contains("null value in column \"created_date\"")) {
-                        
-                        builder.append("The created date value is missing.");
-                    } else if (exception.contains("null value in column \"created_by\"")) {
-                        
-                        builder.append("The created-by value is missing.");
+                } else if (e.getCause().getMessage().contains("null value in column")) {
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
                     }
-                }         
-
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(builder.toString());
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This access point is conflicting with an existing one.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            // e.getCause().printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -217,7 +201,6 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             return ResponseEntity.status(HttpStatus.OK).body(accessPointService.search(criteria));
 
         } catch (Exception e) {
-            System.out.println("***************************************");
             e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
