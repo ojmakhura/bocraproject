@@ -10,6 +10,7 @@ package bw.org.bocra.portal.access.type;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -102,9 +103,6 @@ public class AccessPointTypeServiceImpl
             throws Exception {
 
         Collection<AccessPointType> types = accessPointTypeRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent();
-        System.out.println("------------------------------------------------------");
-        System.out.println(types);
-        System.out.println("------------------------------------------------------");
 
         return accessPointTypeDao.toAccessPointTypeVOCollection(types);
     }

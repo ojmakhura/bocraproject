@@ -317,25 +317,6 @@ public class AccessPointTypeRestControllerTest {
         Assertions.assertEquals(types.size(), 3);
     }
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void pagedSearch() {
-    // dummyData(15);
-    // int pageNumber = 3;
-    // int pageSize = 4;
-
-    // ResponseEntity<?> response =
-    // accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
-
-    // Assertions.assertNotNull(response);
-    // Assertions.assertEquals(response.getStatusCode(), HttpStatus.FOUND);
-    // Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>)
-    // response.getBody();
-    // Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
-    // Assertions.assertEquals(types.size(), 3);
-
-    // }
-
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void remove() {
