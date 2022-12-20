@@ -5,10 +5,10 @@
 //
 package bw.org.bocra.portal.access.type;
 
-import bw.org.bocra.portal.access.AccessPointCriteria;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import bw.org.bocra.portal.access.AccessPointCriteria;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/access/type")
@@ -35,7 +38,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             AccessPointTypeVO type = accessPointTypeService.findById(id);
 
             if(type != null && type.getId() != null) {
-                return ResponseEntity.status(HttpStatus.FOUND).body(type);
+                return ResponseEntity.status(HttpStatus.OK).body(type);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Access point type with id %ld not found.", id));
             }
@@ -44,7 +47,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             e.printStackTrace();
 
             String message = e.getMessage();
-            if (e instanceof AccessPointTypeServiceException) {
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Access point type with id %d not found.", id));
             } else {
                 message = "An unknown error has occured while loading an access point type. Please contact the system administrator.";
@@ -60,16 +63,9 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Displays all Access Point Types");
-            Collection<AccessPointTypeVO> types = accessPointTypeService.getAll();
-            ResponseEntity<?> response;
 
-            if(CollectionUtils.isNotEmpty(types)) {
-                response = ResponseEntity.status(HttpStatus.FOUND).body(types);
-            } else {
-                response = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(accessPointTypeService.getAll());
 
-            return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -80,18 +76,10 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Displays all Access Point Types of the specified "+"Page number: "+pageNumber +"and Page size: " +pageSize);
-            // Optional<?> data = Optional.of(accessPointTypeService.getAll(pageNumber, pageSize));
-            Collection<AccessPointTypeVO> types = accessPointTypeService.getAll(pageNumber, pageSize);
-            ResponseEntity<?> response;
+            
+            logger.debug("Displays all Access Point Types of the specified Page number: " + pageNumber + "and Page size: " + pageSize);
+            return ResponseEntity.status(HttpStatus.OK).body(accessPointTypeService.getAll(pageNumber, pageSize));
 
-            if(CollectionUtils.isNotEmpty(types)) {
-                response = ResponseEntity.status(HttpStatus.FOUND).body(types);
-            } else {
-                response = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            }
-
-            return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -104,13 +92,13 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
     public ResponseEntity<?> handleRemove(Long id) {
         try {
             logger.debug("Deletes Access Point Type by ID " +id);
-            Optional<?> data = Optional.of(accessPointTypeService.remove(id));
+            boolean rm = accessPointTypeService.remove(id);
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if(rm) {
+                response = ResponseEntity.status(HttpStatus.OK).body(rm);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the access point type with id " + id);
             }
 
             return response;
@@ -118,7 +106,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             e.printStackTrace();
             logger.error(e.getMessage());
 
-            if(e instanceof EmptyResultDataAccessException) {
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete access point type with id " + id);
             }
 
@@ -136,7 +124,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the access point type.");
             }
 
             return response;
@@ -144,7 +132,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             // e.printStackTrace();
             logger.error(e.toString());
             String message = e.getMessage();
-            if (e instanceof IllegalArgumentException) {
+            if (e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
                 
                 if(message.contains("'accessPointType'")) {
                     message = "The access point type information is missing.";
@@ -191,20 +179,11 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
             logger.debug("Searches for Access Point Type by criteria "+ criteria);
-            Optional<?> data = Optional.of(accessPointTypeService.search(criteria));
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(accessPointTypeService.search(criteria));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 

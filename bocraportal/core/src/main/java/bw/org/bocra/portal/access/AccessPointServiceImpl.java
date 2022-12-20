@@ -36,7 +36,8 @@ public class AccessPointServiceImpl
     protected  AccessPointVO handleFindById(Long id)
         throws Exception
     {
-        return accessPointDao.toAccessPointVO(accessPointRepository.getById(id));
+        AccessPoint point = getAccessPointDao().load(id);
+        return accessPointDao.toAccessPointVO(point);
     }
 
     /**
@@ -66,7 +67,7 @@ public class AccessPointServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        this.accessPointRepository.deleteById(id);
+        this.accessPointDao.remove(id);
         return true;
     }
 
@@ -77,14 +78,15 @@ public class AccessPointServiceImpl
     protected  AccessPointVO handleSave(AccessPointVO accessPoint)
         throws Exception
     {
+        System.out.println(">>>>>>> handleSave 1");
         AccessPoint point = getAccessPointDao().accessPointVOToEntity(accessPoint);
-        point = accessPointRepository.save(point);
+        point = accessPointDao.createOrUpdate(point);
 
         if(accessPoint.getId() != null) {
             return getAccessPointDao().toAccessPointVO(point);
         }
 
-        return accessPoint;
+        return accessPointDao.toAccessPointVO(point);
     }
 
     /**
@@ -95,7 +97,7 @@ public class AccessPointServiceImpl
         throws Exception
     {
         Collection<AccessPoint> points = accessPointDao.findByCriteria(criteria);
-        return (Collection<AccessPointVO>)accessPointDao.findByCriteria(AccessPointDao.TRANSFORM_ACCESSPOINTVO, criteria);
+        return accessPointDao.toAccessPointVOCollection(points);
     }
 
     /**

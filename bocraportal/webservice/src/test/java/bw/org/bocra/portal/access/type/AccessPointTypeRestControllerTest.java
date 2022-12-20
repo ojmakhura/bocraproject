@@ -1,19 +1,8 @@
 package bw.org.bocra.portal.access.type;
 
-import bw.org.bocra.portal.BocraportalTestContainer;
-import bw.org.bocra.portal.licence.type.LicenceType;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
-
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,21 +14,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import bw.org.bocra.portal.BocraportalTestContainer;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 public class AccessPointTypeRestControllerTest {
@@ -75,10 +61,10 @@ public class AccessPointTypeRestControllerTest {
     // @BeforeEach
     public void dummyData(int size) {
 
-        for (int i = 1; i <= size; i++){
-            
+        for (int i = 1; i <= size; i++) {
+
             AccessPointTypeVO type = new AccessPointTypeVO();
-            
+
             type.setCode("test" + i);
             type.setName("Test Type " + i);
             type.setDescription("This is a test " + i);
@@ -94,11 +80,11 @@ public class AccessPointTypeRestControllerTest {
     public void saveAccessPointType() throws Exception {
         dummyData(9);
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setCode("test10");
         type.setName("Test Type 10");
         type.setDescription("This is a test");
-        
+
         ResponseEntity<?> response = accessPointTypeRestController.save(type);
 
         Assertions.assertNotNull(response);
@@ -115,7 +101,7 @@ public class AccessPointTypeRestControllerTest {
     public void saveAccessPointTest_missing() {
         // dummyData();
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setName("Test Type 10");
         type.setDescription("This is a test");
         ResponseEntity<?> response = accessPointTypeRestController.save(null);
@@ -132,7 +118,7 @@ public class AccessPointTypeRestControllerTest {
     public void saveAccessPointTest_missingCode() {
         // dummyData();
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setName("Test Type 10");
         type.setDescription("This is a test");
         ResponseEntity<?> response = accessPointTypeRestController.save(type);
@@ -149,7 +135,7 @@ public class AccessPointTypeRestControllerTest {
     public void saveAccessPointTest_missingName() {
         // dummyData();
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setCode("test");
         type.setDescription("This is a test");
         ResponseEntity<?> response = accessPointTypeRestController.save(type);
@@ -164,9 +150,8 @@ public class AccessPointTypeRestControllerTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_missingDescription() {
-        // dummyData();
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setCode("test12");
         type.setName("Test Type 12");
         ResponseEntity<?> response = accessPointTypeRestController.save(type);
@@ -184,7 +169,7 @@ public class AccessPointTypeRestControllerTest {
     public void saveAccessPointTest_sameCode() {
         dummyData(9);
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setCode("test1");
         type.setName("Test Type 21");
         type.setDescription("This is a test");
@@ -200,7 +185,7 @@ public class AccessPointTypeRestControllerTest {
     public void saveAccessPointTest_sameName() {
         dummyData(9);
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setCode("test31");
         type.setName("Test Type 1");
         type.setDescription("This is a test");
@@ -217,7 +202,7 @@ public class AccessPointTypeRestControllerTest {
     public void saveAccessPointTest_existingDescription() throws Exception {
         dummyData(9);
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setCode("test10");
         type.setName("Test Type 10");
         type.setDescription("This is a test");
@@ -236,7 +221,7 @@ public class AccessPointTypeRestControllerTest {
     public void findById() {
         // dummyData();
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setCode("test10");
         type.setName("Test Type 10");
         type.setDescription("This is a test");
@@ -245,7 +230,7 @@ public class AccessPointTypeRestControllerTest {
         ResponseEntity<?> response = accessPointTypeRestController.findById(type.getId());
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.FOUND);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         AccessPointTypeVO found = (AccessPointTypeVO) response.getBody();
 
         Assertions.assertNotNull(found);
@@ -259,7 +244,7 @@ public class AccessPointTypeRestControllerTest {
     public void findById_notExisting() {
         // dummyData();
         AccessPointTypeVO type = new AccessPointTypeVO();
-        
+
         type.setCode("test10");
         type.setName("Test Type 10");
         type.setDescription("This is a test");
@@ -270,7 +255,7 @@ public class AccessPointTypeRestControllerTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
-        
+
         String message = response.getBody().toString();
         Assertions.assertTrue(message.contains(String.format("Access point type with id %d not found.", id + 10)));
     }
@@ -282,7 +267,7 @@ public class AccessPointTypeRestControllerTest {
         ResponseEntity<?> response = accessPointTypeRestController.getAll();
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.FOUND);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
         Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
         Assertions.assertEquals(types.size(), 9);
@@ -295,7 +280,7 @@ public class AccessPointTypeRestControllerTest {
         ResponseEntity<?> response = accessPointTypeRestController.getAll();
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
         Assertions.assertTrue(CollectionUtils.isEmpty(types));
 
@@ -310,7 +295,7 @@ public class AccessPointTypeRestControllerTest {
         ResponseEntity<?> response = accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.FOUND);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
         Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
         Assertions.assertEquals(types.size(), pageSize);
@@ -326,7 +311,7 @@ public class AccessPointTypeRestControllerTest {
         ResponseEntity<?> response = accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.FOUND);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
         Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
         Assertions.assertEquals(types.size(), 3);
@@ -335,17 +320,19 @@ public class AccessPointTypeRestControllerTest {
     // @WithMockUser(username = "testuser4", password = "testuser1")
     // @Test
     // public void pagedSearch() {
-    //     dummyData(15);
-    //     int pageNumber = 3;
-    //     int pageSize = 4;
+    // dummyData(15);
+    // int pageNumber = 3;
+    // int pageSize = 4;
 
-    //     ResponseEntity<?> response = accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
+    // ResponseEntity<?> response =
+    // accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
 
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.FOUND);
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
-    //     Assertions.assertEquals(types.size(), 3);
+    // Assertions.assertNotNull(response);
+    // Assertions.assertEquals(response.getStatusCode(), HttpStatus.FOUND);
+    // Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>)
+    // response.getBody();
+    // Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
+    // Assertions.assertEquals(types.size(), 3);
 
     // }
 
@@ -365,7 +352,7 @@ public class AccessPointTypeRestControllerTest {
         response = accessPointTypeRestController.getAll();
         Collection<AccessPointTypeVO> types2 = (Collection<AccessPointTypeVO>) response.getBody();
 
-        Assertions.assertEquals(types2.size(), types.size()-1);
+        Assertions.assertEquals(types2.size(), types.size() - 1);
 
     }
 
@@ -379,7 +366,7 @@ public class AccessPointTypeRestControllerTest {
         response = accessPointTypeRestController.remove(30L);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
-        Assertions.assertTrue((boolean) response.getBody());
+        Assertions.assertTrue(response.getBody().toString().contains("Could not delete access point type"));
 
         response = accessPointTypeRestController.getAll();
         Collection<AccessPointTypeVO> types2 = (Collection<AccessPointTypeVO>) response.getBody();
@@ -388,9 +375,131 @@ public class AccessPointTypeRestControllerTest {
 
     }
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void search() {
+    private void searchData() {
+        AccessPointTypeVO type = new AccessPointTypeVO();
 
-    // }
+        type.setCode("test");
+        type.setName("Test Type");
+        type.setDescription("This is a test");
+
+        accessPointTypeRestController.save(type);
+
+        type = new AccessPointTypeVO();
+
+        type.setCode("serious");
+        type.setName("Serious Type");
+        type.setDescription("This is a test");
+
+        accessPointTypeRestController.save(type);
+
+        type = new AccessPointTypeVO();
+
+        type.setCode("onelove");
+        type.setName("Top love");
+        type.setDescription("This is a test");
+
+        accessPointTypeRestController.save(type);
+
+        type = new AccessPointTypeVO();
+
+        type.setCode("test6");
+        type.setName("Test Type 6");
+        type.setDescription("This is a test");
+
+        accessPointTypeRestController.save(type);
+
+        type = new AccessPointTypeVO();
+
+        type.setCode("sixteen");
+        type.setName("One Six");
+        type.setDescription("This is a test");
+
+        accessPointTypeRestController.save(type);
+
+        type = new AccessPointTypeVO();
+
+        type.setCode("test16");
+        type.setName("Testing sixteen");
+        type.setDescription("This is a test");
+
+        accessPointTypeRestController.save(type);
+
+        type = new AccessPointTypeVO();
+
+        type.setCode("stop");
+        type.setName("Test Type Stop");
+        type.setDescription("This is a test");
+
+        accessPointTypeRestController.save(type);
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void search_six() {
+        
+        this.searchData();
+
+        ResponseEntity<?> response = accessPointTypeRestController.search("six");
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
+        Assertions.assertEquals(types.size(), 2);
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void search_no_results() {
+        
+        this.searchData();
+
+        ResponseEntity<?> response = accessPointTypeRestController.search("zero");
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
+        Assertions.assertEquals(types.size(), 0);
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void search_empty() {
+        
+        this.searchData();
+
+        ResponseEntity<?> response = accessPointTypeRestController.search("");
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
+        Assertions.assertEquals(types.size(), 7);
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void search_null() {
+        
+        this.searchData();
+
+        ResponseEntity<?> response = accessPointTypeRestController.search(null);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
+        Assertions.assertEquals(types.size(), 7);
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void search_space() {
+        
+        this.searchData();
+
+        ResponseEntity<?> response = accessPointTypeRestController.search(" ");
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
+        Assertions.assertEquals(types.size(), 7);
+    }
 }

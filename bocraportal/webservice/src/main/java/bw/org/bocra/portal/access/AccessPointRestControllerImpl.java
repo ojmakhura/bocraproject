@@ -5,9 +5,14 @@
 //
 package bw.org.bocra.portal.access;
 
+import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.exception.ConstraintViolationException;
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,14 +41,22 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Access point with id %ld not found.", id));
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Access point with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured while loading an access point. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -51,20 +64,13 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Displays all Access Points");
-            Optional<?> data = Optional.of(accessPointService.getAll());
-            ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(accessPointService.getAll());
 
-            return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured when loading all access points.");
         }
     }
 
@@ -72,20 +78,20 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
             logger.debug("Displays all Access Points of the specified "+"Page number: "+pageNumber +"and Page size: " +pageSize);
-            Optional<?> data = Optional.of(accessPointService.getAll(pageNumber, pageSize));
+            Collection<AccessPointVO> points = accessPointService.getAll(pageNumber, pageSize);
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if(CollectionUtils.isNotEmpty(points)) {
+                response = ResponseEntity.status(HttpStatus.OK).body(points);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data found for page " + pageNumber + " size " + pageSize);
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured when loading all access points.");
         }
     }
 
@@ -93,88 +99,176 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     public ResponseEntity<?> handlePagedSearch(Integer pageNumber, Integer pageSize, AccessPointCriteria criteria) {
         try {
             logger.debug("Searches for an Access Point of the specified "+"Page Number: "+pageNumber+", Page Size: " +pageSize+ " and Criteria: " +criteria);
-            Optional<?> data = Optional.of(accessPointService.search(pageNumber, pageSize, criteria));
+            Collection<AccessPointVO> points = accessPointService.search(pageNumber, pageSize, criteria);
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if(CollectionUtils.isNotEmpty(points)) {
+                response = ResponseEntity.status(HttpStatus.OK).body(points);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data found for page " + pageNumber + " size " + pageSize);
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            String message = String.format("An error occurred when reading page %d of size %d.", pageNumber, pageSize);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Deletes Access Point by ID " +id);
-            Optional<?> data = Optional.of(accessPointService.remove(id));
+            logger.debug("Deletes Access Point by ID " + id);
+            boolean rm = accessPointService.remove(id);
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if(rm) {
+                response = ResponseEntity.status(HttpStatus.OK).body(rm);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the access point with id " + id);
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete access point with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting access point with id " + id);
         }
     }
 
     @Override
     public ResponseEntity<?> handleSave(AccessPointVO accessPoint) {
         try {
-            logger.debug("Saves Access Point "+accessPoint);
+            logger.debug("Saves Access Point " + accessPoint);
             Optional<?> data = Optional.of(accessPointService.save(accessPoint));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
+                System.out.println(">>>>>>> 1");
+                System.out.println(data.get());
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the access point.");
             }
 
             return response;
         } catch (Exception e) {
+            
+            logger.error(e.toString());
             e.printStackTrace();
-            logger.error(e.getMessage());
+            String message = e.getMessage();
+            // if (e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+                            
+            //     if(message.contains("'accessPoint'")) {
+            //         message = "The access point information is missing.";
+            //     } else if(message.contains("'accessPoint.accessPointType'")) {
+            //         message = "The access point type is missing.";
+            //     } else if(message.contains("invalid access point type")) {
+            //         message = "The access point type is invalid.";
+            //     } else if(message.contains("or its id can not be null")) {
+            //         message = "The access point type or its id is missing.";
+            //     } else if(message.contains("'accessPoint.name'")) {
+            //         message = "The access point name is missing.";
+            //     } else if(message.contains("'accessPoint.url'")) {
+            //         message = "The access point url is missing.";
+            //     } else {
+            //         message = "An unknown error has occured. Please contact the system administrator.";
+            //     }
+
+            //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                
+            // }else 
+            
             if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Access Point has been already done.");
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Access Point has been already created.");
+            } else if (e instanceof AccessPointServiceException) {
+
+                StringBuilder builder = new StringBuilder();
+
+                e.printStackTrace();
+
+                if (e.getCause() instanceof ConstraintViolationException) {
+                    builder.append("An access point with this");
+                    AccessPointCriteria criteria = new AccessPointCriteria();
+                    criteria.setName(accessPoint.getName());
+                    Collection<AccessPointVO> point = accessPointService.search(criteria);
+
+                    if(CollectionUtils.isNotEmpty(point)) {
+                        builder.append(" name ");
+                    }
+
+                    builder.append("has already been created.");
+                } else if (e.getCause() instanceof PSQLException) {
+                    String exception = e.getCause().getMessage();
+
+                    if(exception.contains("null value in column \"access_point_type_fk\"")) {
+                        builder.append("The attached access point type is not valid.");
+                    } else if (exception.contains("null value in column \"created_date\"")) {
+                        
+                        builder.append("The created date value is missing.");
+                    } else if (exception.contains("null value in column \"created_by\"")) {
+                        
+                        builder.append("The created-by value is missing.");
+                    }
+                } else if (e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+                    if (e.getCause() instanceof IllegalArgumentException) {
+                        message = e.getCause().getMessage();
+                    } 
+                
+                    if(message.contains("'accessPoint'")) {
+                        message = "The access point information is missing.";
+                    } else if(message.contains("'accessPoint.accessPointType'")) {
+                        message = "The access point type is missing.";
+                    } else if(message.contains("invalid access point type")) {
+                        message = "The access point type is invalid.";
+                    } else if(message.contains("or its id can not be null")) {
+                        message = "The access point type or its id is missing.";
+                    } else if(message.contains("'accessPoint.name'")) {
+                        message = "The access point name is missing.";
+                    } else if(message.contains("'accessPoint.url'")) {
+                        message = "The access point url is missing.";
+                    } else {
+                        message = "An unknown error has occured. Please contact the system administrator.";
+                    }
+    
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                    
+                }               
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(builder.toString());
+
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleSearch(AccessPointCriteria criteria) {
         try {
-            logger.debug("Searches for an Access Point by criteria "+criteria);
-            Optional<?> data = Optional.of(accessPointService.search(criteria)); // TODO: Add custom code here;
+            logger.debug("Searches for an Access Point by criteria " + criteria);
+            Collection<AccessPointVO> types = accessPointService.search(criteria);
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if(CollectionUtils.isNotEmpty(types)) {
+                response = ResponseEntity.status(HttpStatus.OK).body(types);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Search returned no results.");
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }
