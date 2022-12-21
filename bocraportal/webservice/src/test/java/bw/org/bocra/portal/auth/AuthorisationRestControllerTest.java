@@ -6,9 +6,24 @@
 package bw.org.bocra.portal.auth;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.access.AccessPointRepository;
+import bw.org.bocra.portal.access.AccessPointService;
+import bw.org.bocra.portal.access.AccessPointVO;
+import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
+import bw.org.bocra.portal.access.type.AccessPointTypeService;
+import bw.org.bocra.portal.access.type.AccessPointTypeVO;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.transaction.Transactional;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
@@ -30,10 +45,11 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class AuthorisationRestControllerTest {
+@Transactional
+public class AuthorisationRestControllerTest extends GenericRestTest {
 
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
+    // @ClassRule
+    // public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
 
     private String path = "/authorisation";
 
@@ -51,51 +67,206 @@ public class AuthorisationRestControllerTest {
     @Autowired
     protected AuthorisationService authorisationService;
 
+    @Autowired
+    protected AuthorisationRepository authorisationRepository;
+
+    @Autowired
+    protected AccessPointService accessPointService;
+
+    @Autowired
+    protected AccessPointRepository accessPointRepository;
+
+    @Autowired
+    protected AccessPointTypeService accessPointTypeService;
+
+    @Autowired
+    protected AccessPointTypeRepository accessPointTypeRepository;
+
     @BeforeEach
     public void clean() {
+        authorisationRepository.deleteAll();
+        accessPointRepository.deleteAll();
+        accessPointTypeRepository.deleteAll();
     }
 
+    private AccessPointVO createDefaultAccessPoint() {
+
+        AccessPointTypeVO type = new AccessPointTypeVO();
+
+        type.setCode("test");
+        type.setName("Test Type");
+        type.setDescription("This is a test");
+
+        type = accessPointTypeService.save(type);
+
+        AccessPointVO point = new AccessPointVO();
+
+        point.setAccessPointType(type);
+        point.setCreatedBy("testuser4");
+        point.setCreatedDate(LocalDateTime.now());
+        point.setName("Test Type ");
+        point.setUrl("/test");
+
+        point = accessPointService.save(point);
+
+        return point;
+    }
+
+    protected ResponseEntity<?> handleGetAll() {
+        return authorisationRestController.getAll();
+    }
+    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
+        return authorisationRestController.getAllPaged(pageNumber, pageSize);
+    }
+
+    protected void basicCompareAssertions(Object o1, Object o2) {
+        AuthorisationVO a1 = (AuthorisationVO) o1;
+        AuthorisationVO a2 = (AuthorisationVO) o2;
+    }
+
+    public Collection<AuthorisationVO> dummyData(int size) {
+
+        Collection<AuthorisationVO> auths = new ArrayList<>();
+
+        AccessPointVO point = createDefaultAccessPoint();
+
+        for (int i = 1; i <= size; i++) {
+
+            AuthorisationVO auth = new AuthorisationVO();
+
+            auth.setAccessPoint(point);
+            auth.setCreatedBy("testuser4");
+            auth.setCreatedDate(LocalDateTime.now());
+            // auth.set
+            // auth.setUrl("/test" + i);
+
+            auths.add((AuthorisationVO)authorisationRestController.save(auth).getBody());
+        }
+
+        return auths;
+    }
+    
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void assignMenuSection() {
 
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findById() {
-
+    protected ResponseEntity<?> handleFindById(Long id) {
+        return authorisationRestController.findById(id);
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findByRolesAndUrl() {
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void findById() {
 
-    }
+    //     Collection<AuthorisationVO> auths = this.dummyData(1);
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findRestrictedViewItems() {
+    //     AuthorisationVO auth = auths.iterator().next();
+        
+    //     ResponseEntity<?> response = authorisationRestController.findById(auth.getId());
 
-    }
+    //     Assertions.assertNotNull(response);
+    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    //     AuthorisationVO found = (AuthorisationVO) response.getBody();
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAccessTypeCodeAuthorisations() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
-
-    }
+    //     Assertions.assertNotNull(found);
+    //     Assertions.assertEquals(found.getId(), auth.getId());
+    //     Assertions.assertEquals(found.getAccessPoint().getId(), auth.getAccessPoint().getId());
+    // }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
-    public void getAllPaged() {
+    public void findById_notExisting() {
+        Collection<AuthorisationVO> auths = this.dummyData(1);
 
+        AuthorisationVO auth = auths.iterator().next();
+
+        Long id = auth.getId();
+
+        ResponseEntity<?> response = authorisationRestController.findById(id + 10);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+
+        String message = response.getBody().toString();
+        Assertions.assertTrue(message.contains(String.format("Authorisation with id %d not found.", id + 10)));
     }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void findByRolesAndUrl() {
+    //     // TODO::
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void findRestrictedViewItems() {
+    //     // TODO::
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getAccessTypeCodeAuthorisations() {
+    //     // TODO::
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getAll() {
+    //     dummyData(9);
+    //     ResponseEntity<?> response = authorisationRestController.getAll();
+
+    //     Assertions.assertNotNull(response);
+    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    //     Collection<AuthorisationVO> auths = (Collection<AuthorisationVO>) response.getBody();
+    //     Assertions.assertTrue(CollectionUtils.isNotEmpty(auths));
+    //     Assertions.assertEquals(auths.size(), 9);
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getAll_empty() {
+    //     ResponseEntity<?> response = authorisationRestController.getAll();
+
+    //     Assertions.assertNotNull(response);
+    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    //     Collection<AuthorisationVO> auths = (Collection<AuthorisationVO>) response.getBody();
+    //     Assertions.assertTrue(CollectionUtils.isEmpty(auths));
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getAllPaged() {
+    //     dummyData(25);
+    //     int pageNumber = 2;
+    //     int pageSize = 4;
+    //     ResponseEntity<?> response = authorisationRestController.getAllPaged(pageNumber, pageSize);
+
+    //     Assertions.assertNotNull(response);
+    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    //     Collection<AuthorisationVO> auths = (Collection<AuthorisationVO>) response.getBody();
+    //     Assertions.assertTrue(CollectionUtils.isNotEmpty(auths));
+    //     Assertions.assertEquals(auths.size(), pageSize);
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getAllPaged_lastPage() {
+    //     dummyData(15);
+    //     int pageNumber = 3;
+    //     int pageSize = 4;
+
+    //     ResponseEntity<?> response = authorisationRestController.getAllPaged(pageNumber, pageSize);
+
+    //     Assertions.assertNotNull(response);
+    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    //     Collection<AuthorisationVO> auths = (Collection<AuthorisationVO>) response.getBody();
+    //     Assertions.assertTrue(CollectionUtils.isNotEmpty(auths));
+    //     Assertions.assertEquals(auths.size(), 3);
+    // }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
@@ -113,6 +284,60 @@ public class AuthorisationRestControllerTest {
     @Test
     public void search() {
 
+    }
+
+    @Override
+    protected ResponseEntity<?> handleRemove(Long id) {
+        // TODO Auto-generated method stub
+        return authorisationRestController.remove(id);
+    }
+
+    @Override
+    protected Object unsavedDummyData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleSearch(Object criteria) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, Object criteria) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleSave(Object o) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Collection<?> searchData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Object searchCriteria() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Object searchCriteriaNone() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Object searchCriteriaEmpty() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -8,6 +8,7 @@ package bw.org.bocra.portal.access;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,8 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             e.printStackTrace();
 
             String message = e.getMessage();
-            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Access point with id %d not found.", id));
             } else {
                 message = "An unknown error has occured while loading an access point. Please contact the system administrator.";
@@ -170,9 +172,8 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
                     if(e.getCause().getMessage().contains("(name)")) {
 
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An access point with this name has been already created.");
-                    } else {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This access point is conflicting with an existing one.");
-                    }
+                    } 
+                    
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
@@ -184,7 +185,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This access point is conflicting with an existing one.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
