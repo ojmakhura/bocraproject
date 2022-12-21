@@ -148,6 +148,13 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
                     } else {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This licence type is conflicting with an existing one.");
                     }
+                    
+                }  else if (e.getCause().getMessage().contains("null value in column")) {
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    }
                 }
                 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This licence type is conflicting with an existing one.");

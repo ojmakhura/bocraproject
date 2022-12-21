@@ -6,10 +6,17 @@
 package bw.org.bocra.portal.period;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.period.config.PeriodConfigRepository;
+import bw.org.bocra.portal.period.config.PeriodConfigService;
+import bw.org.bocra.portal.period.config.PeriodConfigVO;
+import bw.org.bocra.portal.period.config.RepeatPeriod;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,8 +58,36 @@ public class PeriodRestControllerTest {
     @Autowired
     protected PeriodService periodService;
 
+    @Autowired
+    private PeriodRepository periodRepository;
+
+    @Autowired
+    protected PeriodConfigService periodConfigService;
+
+    @Autowired
+    private PeriodConfigRepository periodConfigRepository;
+
     @BeforeEach
     public void clean() {
+        periodRepository.deleteAll();
+        periodConfigRepository.deleteAll();
+    }
+
+    private PeriodConfigVO createDefaultConfig(){
+        PeriodConfigVO config = new PeriodConfigVO();
+
+        config.setCreatedBy("testuser4");
+        config.setCreatedDate(LocalDateTime.now());
+        config.setFinalDay(15);
+        config.setPeriodConfigName("Test Config");
+        config.setRepeat(3);
+        config.setRepeatPeriod(RepeatPeriod.MONTHS);
+        config.setStartDay(1);
+        config.setStartMonth(1);
+
+        config = periodConfigService.save(config);
+
+        return config;
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
@@ -94,7 +129,161 @@ public class PeriodRestControllerTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void save() {
+        PeriodConfigVO config = createDefaultConfig();
 
+        PeriodVO period = new PeriodVO();
+        period.setCreatedBy("testuser4");
+        period.setCreatedDate(LocalDateTime.now());
+        period.setPeriodConfig(config);
+        period.setPeriodEnd(LocalDate.now().plusMonths(config.getRepeat()));
+        period.setPeriodName("Test Period");
+        period.setPeriodStart(LocalDate.now());
+
+        ResponseEntity<?> response = periodRestController.save(period);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        period = (PeriodVO) response.getBody();
+        Assertions.assertNotNull(period);
+        Assertions.assertNotNull(period.getId());
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save_nullNextId() {
+        PeriodConfigVO config = createDefaultConfig();
+
+        PeriodVO period = new PeriodVO();
+        period.setCreatedBy("testuser4");
+        period.setCreatedDate(LocalDateTime.now());
+        period.setPeriodConfig(config);
+        period.setPeriodEnd(LocalDate.now().plusMonths(config.getRepeat()));
+        period.setPeriodName("Test Period");
+        period.setPeriodStart(LocalDate.now());
+
+        period.setNext(new PeriodVO());
+
+        ResponseEntity<?> response = periodRestController.save(period);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        period = (PeriodVO) response.getBody();
+        Assertions.assertNotNull(period);
+        Assertions.assertNotNull(period.getId());
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save_nullPreviousId() {
+        PeriodConfigVO config = createDefaultConfig();
+
+        PeriodVO period = new PeriodVO();
+        period.setCreatedBy("testuser4");
+        period.setCreatedDate(LocalDateTime.now());
+        period.setPeriodConfig(config);
+        period.setPeriodEnd(LocalDate.now().plusMonths(config.getRepeat()));
+        period.setPeriodName("Test Period");
+        period.setPeriodStart(LocalDate.now());
+
+        period.setPrevious(new PeriodVO());
+
+        ResponseEntity<?> response = periodRestController.save(period);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        period = (PeriodVO) response.getBody();
+        Assertions.assertNotNull(period);
+        Assertions.assertNotNull(period.getId());
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save_noConfig() {
+
+        PeriodVO period = new PeriodVO();
+        period.setCreatedBy("testuser4");
+        period.setCreatedDate(LocalDateTime.now());
+        period.setPeriodConfig(null);
+        period.setPeriodEnd(LocalDate.now().plusMonths(3));
+        period.setPeriodName("Test Period");
+        period.setPeriodStart(LocalDate.now());
+
+        ResponseEntity<?> response = periodRestController.save(period);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        String message = response.getBody().toString();
+        Assertions.assertTrue(StringUtils.isNotBlank(message));
+        Assertions.assertTrue(message.contains("Period config is missing."));
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save_badConfig() {
+        PeriodConfigVO config = new PeriodConfigVO();
+        config.setId(21L);
+
+        PeriodVO period = new PeriodVO();
+        period.setCreatedBy("testuser4");
+        period.setCreatedDate(LocalDateTime.now());
+        period.setPeriodConfig(config);
+        period.setPeriodEnd(LocalDate.now().plusMonths(config.getRepeat()));
+        period.setPeriodName("Test Period");
+        period.setPeriodStart(LocalDate.now());
+
+        ResponseEntity<?> response = periodRestController.save(period);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        
+        String message = response.getBody().toString();
+        System.out.println(message);
+        Assertions.assertTrue(StringUtils.isNotBlank(message));
+        Assertions.assertTrue(message.contains("Invalid period config"));
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save_badNext() {
+        PeriodConfigVO config = createDefaultConfig();
+
+        PeriodVO period = new PeriodVO();
+        period.setCreatedBy("testuser4");
+        period.setCreatedDate(LocalDateTime.now());
+        period.setPeriodConfig(config);
+        period.setPeriodEnd(LocalDate.now().plusMonths(config.getRepeat()));
+        period.setPeriodName("Test Period");
+        period.setPeriodStart(LocalDate.now());
+
+        period.setNext(new PeriodVO());
+        period.getNext().setId(33L);
+
+        ResponseEntity<?> response = periodRestController.save(period);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        
+        String message = response.getBody().toString();
+        System.out.println(message);
+        Assertions.assertTrue(StringUtils.isNotBlank(message));
+        Assertions.assertTrue(message.contains("Invalid next period"));
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save_period_unique() {
+        PeriodConfigVO config = createDefaultConfig();
+
+        PeriodVO period = new PeriodVO();
+        period.setCreatedBy("testuser4");
+        period.setCreatedDate(LocalDateTime.now());
+        period.setPeriodConfig(config);
+        period.setPeriodEnd(LocalDate.now().plusMonths(config.getRepeat()));
+        period.setPeriodName("Test Period");
+        period.setPeriodStart(LocalDate.now());
+        
+        periodRestController.save(period);
+
+        ResponseEntity<?> response = periodRestController.save(period);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        String message = response.getBody().toString();
+        Assertions.assertTrue(StringUtils.isNotBlank(message));
+        Assertions.assertTrue(message.contains("period with this information has already been created"));
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")

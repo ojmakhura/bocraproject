@@ -6,23 +6,18 @@
  */
 package bw.org.bocra.portal.period;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
+import bw.org.bocra.portal.period.config.PeriodConfig;
+import bw.org.bocra.portal.period.config.PeriodConfigRepository;
+import bw.org.bocra.portal.period.config.PeriodConfigVO;
 import java.time.LocalDate;
 import java.util.Collection;
-
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import bw.org.bocra.portal.BocraportalSpecifications;
-import bw.org.bocra.portal.form.activation.FormActivationRepository;
-import bw.org.bocra.portal.form.submission.FormSubmissionDao;
-import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
-import bw.org.bocra.portal.period.config.PeriodConfig;
-import bw.org.bocra.portal.period.config.PeriodConfigDao;
-import bw.org.bocra.portal.period.config.PeriodConfigRepository;
-import bw.org.bocra.portal.period.config.PeriodConfigVO;
 
 /**
  * @see Period
@@ -131,18 +126,45 @@ public class PeriodDaoImpl
         super.periodVOToEntity(source, target, copyIfNull);
 
         if (source.getPeriodConfig() != null && source.getPeriodConfig().getId() != null) {
-            PeriodConfig config = getPeriodConfigDao().load(source.getPeriodConfig().getId());
-            target.setPeriodConfig(config);
+            
+            try {
+                PeriodConfig config = getPeriodConfigDao().load(source.getPeriodConfig().getId());
+                target.setPeriodConfig(config);
+
+            } catch (Exception e) {
+                throw new IllegalArgumentException(
+                    "PeriodDao.periodVOToEntity - 'periodConfig' is invalid."
+                );
+            }
+        } else {
+            throw new IllegalArgumentException(
+                "PeriodDao.periodVOToEntity - 'periodConfig' or its id can not be null"
+            );
         }
 
         if (source.getNext() != null && source.getNext().getId() != null) {
-            Period next = get(source.getNext().getId());
-            target.setNext(next);
+            try{
+                Period next = get(source.getNext().getId());
+        
+                target.setNext(next);
+
+            } catch (Exception e) {
+                throw new IllegalArgumentException(
+                    "PeriodDao.periodVOToEntity - 'next' is invalid."
+                );
+            }
         }
 
         if (source.getPrevious() != null && source.getPrevious().getId() != null) {
-            Period prev = get(source.getPrevious().getId());
-            target.setPrevious(prev);
+            try{
+                Period prev = get(source.getPrevious().getId());
+
+                target.setPrevious(prev); 
+            } catch (Exception e) {
+                throw new IllegalArgumentException(
+                    "PeriodDao.periodVOToEntity - 'previous' is invalid."
+                );
+            }
         }
     }
 

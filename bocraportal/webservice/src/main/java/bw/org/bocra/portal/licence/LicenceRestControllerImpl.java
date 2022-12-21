@@ -217,7 +217,6 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
 
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This licence is conflicting with an existing one.");
             } 
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");

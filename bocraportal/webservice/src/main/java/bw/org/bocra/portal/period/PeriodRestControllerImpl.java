@@ -5,16 +5,17 @@
 //
 package bw.org.bocra.portal.period;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/period")
@@ -43,8 +44,15 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Perion with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured while loading a period. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -52,20 +60,13 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try{
             logger.debug("Display all Periods");
-            Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll());
-            ResponseEntity<Collection<PeriodVO>> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.getAll());
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An error occured when loading all periods.");
         }
     }
 
@@ -104,11 +105,79 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
             }
 
             return response;
-        } catch (Exception e) {
-            
-            logger.error(e.getMessage());
+        } catch (PeriodServiceException | IllegalArgumentException e) {
+
+            String message = e.getMessage();
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'period'")) {
+
+                    message = "Missing period information.";
+
+                } else if(message.contains("'period.periodConfig'") || message.contains("'periodConfig' or its id can not be null")) {
+
+                    message = "Missing period config.";
+
+                } else if(message.contains("'periodConfig' is invalid")) {
+
+                    message = "Invalid period config.";
+
+                } else if(message.contains("'period.periodName'")) {
+
+                    message = "Missing period name.";
+
+                } else if(message.contains("'next' is invalid")) {
+
+                    message = "Invalid next period.";
+
+                } else if(message.contains("'previous' is invalid")) {
+
+                    message = "Invalid previous period.";
+
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                e.printStackTrace();
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("period_unique")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A period with this information has already been created.");
+
+                    } 
+
+                }   else if (e.getCause().getMessage().contains("null value in column")) {
+
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"period_end\"")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Period end date is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"period_start\"")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Period start date is missing.");
+                    }
+                }
+
+                // e.printStackTrace();
+                
+            }
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            // e.printStackTrace();
+            e.getCause().printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
