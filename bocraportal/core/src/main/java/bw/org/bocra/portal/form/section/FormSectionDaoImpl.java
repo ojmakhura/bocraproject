@@ -18,11 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.Form;
-import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.field.FormField;
-import bw.org.bocra.portal.form.field.FormFieldDao;
 import bw.org.bocra.portal.form.field.FormFieldRepository;
 import bw.org.bocra.portal.form.field.FormFieldVO;
 
@@ -141,6 +139,10 @@ public class FormSectionDaoImpl
         if (source.getForm() != null) {
             Form form = getFormDao().load(source.getForm().getId());
             target.setForm(form);
+        } else {
+            throw new IllegalArgumentException(
+                "FormSectionDao.formSectionVOToEntity - 'form' or its id can not be null"
+            );
         }
 
         // WARNING! No conversion for target.formFields (can't convert

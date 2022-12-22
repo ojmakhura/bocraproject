@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
@@ -14,12 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+@Transactional
 public abstract class GenericRestTest {
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
     
-    // protected abstract Object getRestController();
     protected abstract Collection<?> dummyData(int num);
     protected abstract Object unsavedDummyData();
 
@@ -31,7 +33,6 @@ public abstract class GenericRestTest {
     protected abstract ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, Object criteria);
     protected abstract ResponseEntity<?> handleSave(Object o);
 
-    // protected abstract void basicAssertions(Object o);
     protected abstract void basicCompareAssertions(Object o1, Object o2);
     protected abstract Collection<?> searchData();
     protected abstract Object searchCriteria();
@@ -43,7 +44,6 @@ public abstract class GenericRestTest {
         Collection<?> dummies = this.dummyData(1);
 
         Object obj = dummies.iterator().next();
-        System.out.println(obj);
 
         Method getId = obj.getClass().getDeclaredMethod("getId");
         
@@ -52,10 +52,10 @@ public abstract class GenericRestTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Object found = (Object) response.getBody();
-        System.out.println(obj);
 
         Assertions.assertNotNull(found);
         Assertions.assertEquals(getId.invoke(found), getId.invoke(obj));
+        basicCompareAssertions(obj, found);
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
@@ -137,9 +137,9 @@ public abstract class GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void pagedSearch() {
-        this.searchData();
+        Collection<?> v = this.searchData();
 
-        ResponseEntity<?> response = handlePagedSearch(2, 2, searchCriteria());
+        ResponseEntity<?> response = handlePagedSearch(2, 3, searchCriteria());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -191,77 +191,76 @@ public abstract class GenericRestTest {
 
     }
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void save() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         
-    //     ResponseEntity<?> response = handleSave(unsavedDummyData());
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        ResponseEntity<?> response = handleSave(unsavedDummyData());
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         
-    //     Object obj = response.getBody();
-    //     Assertions.assertNotNull(obj);
+        Object obj = response.getBody();
+        Assertions.assertNotNull(obj);
 
-    //     Method getId = obj.getClass().getDeclaredMethod("getId");
-    //     Long id = (Long)getId.invoke(obj);
-    //     Assertions.assertNotNull(id);
-    // }
+        Method getId = obj.getClass().getDeclaredMethod("getId");
+        Long id = (Long)getId.invoke(obj);
+        Assertions.assertNotNull(id);
+    }
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void save_null() {
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save_null() {
 
-    //     ResponseEntity<?> response = handleSave(null);
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
-    //     String message = response.getBody().toString();
-    //     System.out.println(message);
-    //     Assertions.assertTrue(message.contains("information is missing"));
-    // }
+        ResponseEntity<?> response = handleSave(null);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        String message = response.getBody().toString();
+        Assertions.assertTrue(message.contains("information is missing"));
+    }
 
     protected abstract Object searchCriteriaNone();
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void search_no_results() {
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void search_no_results() {
         
-    //     this.searchData();
+        this.searchData();
 
-    //     ResponseEntity<?> response = handleSearch(searchCriteriaNone());
+        ResponseEntity<?> response = handleSearch(searchCriteriaNone());
 
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<?> all = (Collection<?>) response.getBody();
-    //     Assertions.assertEquals(all.size(), 0);
-    // }
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Collection<?> all = (Collection<?>) response.getBody();
+        Assertions.assertEquals(all.size(), 0);
+    }
 
     protected abstract Object searchCriteriaEmpty();
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void search_empty() {
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void search_empty() {
         
-    //     Collection<?> data = this.searchData();
+        Collection<?> data = this.searchData();
 
-    //     ResponseEntity<?> response = handleSearch(searchCriteriaEmpty());
+        ResponseEntity<?> response = handleSearch(searchCriteriaEmpty());
 
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<?> types = (Collection<?>) response.getBody();
-    //     Assertions.assertEquals(types.size(), data.size());
-    // }
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Collection<?> types = (Collection<?>) response.getBody();
+        Assertions.assertEquals(types.size(), data.size());
+    }
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void search_null() {
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void search_null() {
         
-    //     Collection<?> data = this.searchData();
+        Collection<?> data = this.searchData();
 
-    //     ResponseEntity<?> response = handleSearch(null);
+        ResponseEntity<?> response = handleSearch(null);
 
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<?> types = (Collection<?>) response.getBody();
-    //     Assertions.assertEquals(types.size(), data.size());
-    // }
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Collection<?> types = (Collection<?>) response.getBody();
+        Assertions.assertEquals(types.size(), data.size());
+    }
 }

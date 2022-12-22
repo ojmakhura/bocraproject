@@ -5,8 +5,13 @@
 //
 package bw.org.bocra.portal.form.field;
 
-import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,19 +35,28 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
         try{
             logger.debug("Search Form Field by "+id);
             Optional<FormFieldVO> data = Optional.of(formFieldService.findById(id));
-            ResponseEntity<FormFieldVO> response;
+            ResponseEntity<?> response;
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form field with id %ld not found.", id));
             }
     
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("form field with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
 
     }
@@ -51,21 +65,13 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try{
             logger.debug("Display all Form Fields ");
-            Optional<Collection<FormFieldVO>> data = Optional.of(formFieldService.getAll());
-            ResponseEntity<Collection<FormFieldVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(formFieldService.getAll());
+            
         } catch (Exception e) {
             logger.debug("Error detected at Form Field Service");
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -73,20 +79,12 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
             logger.debug("Display Form Fields of specified "+"Page number: "+pageNumber+" and Page Size "+pageSize);
-            Optional<Collection<FormFieldVO>> data = Optional.of(formFieldService.getAll(pageNumber, pageSize));
-            ResponseEntity<Collection<FormFieldVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(formFieldService.getAll(pageNumber, pageSize));
+            
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -95,19 +93,24 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
         try{
             logger.debug("Deletes Form Field by "+id);
             Optional<Boolean> data = Optional.of(formFieldService.remove(id));
-            ResponseEntity<Boolean> response;
+            ResponseEntity<?> response;
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the form field with id " + id);
             }
     
             return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete form field with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting form field with id " + id);
         }
     }
 
@@ -116,19 +119,86 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
         try{
             logger.debug("Save Form Field "+formFieldVO);
             Optional<FormFieldVO> data = Optional.of(formFieldService.save(formFieldVO));
-            ResponseEntity<FormFieldVO> response;
+            ResponseEntity<?> response;
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the form field.");
             }
     
             return response;
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | FormFieldServiceException e) {
+
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+
+            String message = e.getMessage();
+
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'formField'")) {
+
+                    message = "The form field information is missing.";
+
+                } else if(message.contains("or its id can not be null")){
+                    
+                    if(message.contains("'formField.form' can not be null")) {
+                
+                        message = "The form field form or its id is missing.";
+                    } else if(message.contains("'formField.formSection' can not be null")) {
+                
+                        message = "The form field form section or its id is missing.";
+                    }
+                
+                } else if(message.contains("'formField.fieldType'")) {
+                
+                    message = "The form field type is missing.";
+                
+                } else if(message.contains("'formField.fieldName'")) {
+                  
+                    message = "The form field name is missing.";
+                
+                } else if(message.contains("'formField.fieldValueType'")) {
+                  
+                    message = "The form field value type is missing.";
+                
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("(name)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An form field with this name has been already created.");
+                    } 
+                    
+                } else if (e.getCause().getMessage().contains("null value in column")) {
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"field_id\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The field id value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"form_section_fk\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The form section value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"field_type\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The field type value is missing.");
+                    }
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form field is conflicting with an existing one.");
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }

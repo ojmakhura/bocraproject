@@ -148,13 +148,35 @@ public class FormActivationDaoImpl
         // TODO verify behavior of formActivationVOToEntity
         super.formActivationVOToEntity(source, target, copyIfNull);// WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.Period to bw.org.bocra.portal.period.PeriodVO
         if(source.getPeriod() != null && source.getPeriod().getId() != null) {
-            target.setPeriod(getPeriodDao().load(source.getPeriod().getId()));
+            try {
+                target.setPeriod(getPeriodDao().load(source.getPeriod().getId()));
+            } catch(IllegalArgumentException e) {
+
+                throw new IllegalArgumentException(
+                    "FormActivationDao.formActivationVOToEntity - 'period' or its id can not be null"
+                );
+            }
+        } else {
+            throw new IllegalArgumentException(
+                "FormActivationDao.formActivationVOToEntity - 'period' or its id can not be null"
+            );
         }
         
         // WARNING! No conversion for target.form (can't convert source.getForm():bw.org.bocra.portal.form.Form to bw.org.bocra.portal.form.FormVO
         if(source.getForm() != null && source.getForm().getId() != null) {
             
-            target.setForm(getFormDao().load(source.getForm().getId()));
+            try {
+                target.setForm(getFormDao().load(source.getForm().getId()));
+            } catch(IllegalArgumentException e) {
+
+                throw new IllegalArgumentException(
+                    "FormActivationDao.formActivationVOToEntity - 'form' or its id can not be null"
+                );
+            }
+        } else {
+            throw new IllegalArgumentException(
+                "FormActivationDao.formActivationVOToEntity - 'form' or its id can not be null"
+            );
         }
     }
 

@@ -7,8 +7,6 @@
 package bw.org.bocra.portal.complaint;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -18,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.complaint.type.ComplaintTypeRepository;
 import bw.org.bocra.portal.document.DocumentRepository;
-import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentVO;
-import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
@@ -131,10 +127,18 @@ public class ComplaintDaoImpl
 
         if (source.getLicensee() != null) {
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
+        } else {
+            throw new IllegalArgumentException(
+                "ComplaintDao.complaintVOToEntity - 'licensee' or its id can not be null"
+            );
         }
 
         if (source.getComplaintType() != null && StringUtils.isNotBlank(source.getComplaintType().getCode())) {
             target.setComplaintType(getComplaintTypeDao().complaintTypeVOToEntity(source.getComplaintType()));
+        } else {
+            throw new IllegalArgumentException(
+                "ComplaintDao.complaintVOToEntity - 'complaintType' or its id can not be null"
+            );
         }
 
         if(CollectionUtils.isNotEmpty(source.getDocuments())) {

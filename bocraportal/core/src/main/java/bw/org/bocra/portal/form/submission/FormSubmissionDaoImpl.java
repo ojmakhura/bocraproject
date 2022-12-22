@@ -9,9 +9,7 @@ package bw.org.bocra.portal.form.submission;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -178,31 +176,40 @@ public class FormSubmissionDaoImpl
         if(source.getForm() != null && source.getForm().getId() != null) {
             Form form = formDao.load(source.getForm().getId());
             target.setForm(form);
+        } else {
+            throw new IllegalArgumentException(
+                "FormSubmissionDao.formSubmissionVOToEntity - 'form' or its id can not be null"
+            );
         }
 
         if(source.getLicensee() != null && source.getLicensee().getId() != null) {
             Licensee licensee = getLicenseeDao().load(source.getLicensee().getId());
             target.setLicensee(licensee);
+        } else {
+            throw new IllegalArgumentException(
+                "FormSubmissionDao.formSubmissionVOToEntity - 'licensee' or its id can not be null"
+            );
         }
 
         if(source.getPeriod() != null && source.getPeriod().getId() != null) {
 
             Period period = getPeriodDao().load(source.getPeriod().getId());
             target.setPeriod(period);
+        } else {
+            throw new IllegalArgumentException(
+                "FormSubmissionDao.formSubmissionVOToEntity - 'period' or its id can not be null"
+            );
         }
-        
 
-        /*if(CollectionUtils.isNotEmpty(source.getDataFields())) {
-            Collection<DataField> datas = new HashSet<>();
-            for (DataFieldVO dataField : source.getDataFields()) {
-                if(dataField.getId() != null){
-                    DataField data = getDataFieldDao().load(dataField.getId());
-                    if(data != null && data.getId() != null)
-                        datas.add(data);
-                }
-            }
-            target.setDataFields(datas);
-        }*/
+        if(source.getPeriod() != null && source.getPeriod().getId() != null) {
+
+            Period period = getPeriodDao().load(source.getPeriod().getId());
+            target.setPeriod(period);
+        } else {
+            throw new IllegalArgumentException(
+                "FormSubmissionDao.formSubmissionVOToEntity - 'period' or its id can not be null"
+            );
+        }
 
         target.setDataFields(new ArrayList<>());
 

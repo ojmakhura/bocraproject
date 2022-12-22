@@ -5,18 +5,20 @@
 //
 package bw.org.bocra.portal.form.section;
 
-import bw.org.bocra.portal.form.FormVO;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
-import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.hibernate.exception.ConstraintViolationException;
+import javax.persistence.EntityNotFoundException;
+
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/form/section")
@@ -31,21 +33,30 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try{
-            logger.debug("Search Form Section by "+id);
+            logger.debug("Search Form Section by " + id);
             Optional<FormSectionVO> data = Optional.of(formSectionService.findById(id));
-            ResponseEntity<FormSectionVO> response;
+            ResponseEntity<?> response;
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form section with id %ld not found.", id));
             }
     
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form section with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -53,20 +64,12 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     public ResponseEntity<?> handleGetAll() {
         try{
             logger.debug("Display all Form Sections");
-            Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll());
-            ResponseEntity<Collection<FormSectionVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(formSectionService.getAll());
+            
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            // e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -74,20 +77,12 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
             logger.debug("Display all Form Sections of the specified "+"Page numeber"+pageNumber+ " and Page size "+pageSize);
-            Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.getAll(pageNumber, pageSize));
-            ResponseEntity<Collection<FormSectionVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(formSectionService.getAll(pageNumber, pageSize));
+            
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            // e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -96,19 +91,24 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
         try{
             logger.debug("Deletes Form Section by Id "+id);
             Optional<Boolean> data = Optional.of(formSectionService.remove(id));
-            ResponseEntity<Boolean> response;
+            ResponseEntity<?> response;
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the form section with id " + id);
             }
     
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete form section with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting form section with id " + id);
         }
     }
 
@@ -126,14 +126,57 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
             }
     
             return response;
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | FormSectionServiceException e) {
+
             e.printStackTrace();
-            logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                // throw new eFormSectionServiceException
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form section has been already added.");
-            }
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+
+            String message = e.getMessage();
+
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'formSection'")) {
+
+                    message = "The form section information is missing.";
+
+                } else if(message.contains("or its id can not be null") || message.contains("'formSection.form' can not be null")) {
+                
+                    message = "The form section type or its id is missing.";
+                
+                } else if(message.contains("'formSection.sectionId'")) {
+                
+                    message = "The form section id is missing.";
+                
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("(name)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An form section with this name has been already created.");
+                    } 
+                    
+                } else if (e.getCause().getMessage().contains("null value in column")) {
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    }
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form section is conflicting with an existing one.");
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -141,20 +184,12 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
     public ResponseEntity<?> handleSearch(String criteria) {
         try{
             logger.debug("Search Form Section by "+criteria);
-            Optional<Collection<FormSectionVO>> data = Optional.of(formSectionService.search(criteria));
-            ResponseEntity<Collection<FormSectionVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(formSectionService.search(criteria));
+            
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }

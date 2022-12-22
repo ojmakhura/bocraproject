@@ -6,11 +6,13 @@
  */
 package bw.org.bocra.portal.access;
 
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Repository;
+
 import bw.org.bocra.portal.access.type.AccessPointType;
 import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
-import javax.transaction.Transactional;
-import org.springframework.stereotype.Repository;
 
 /**
  * @see AccessPoint

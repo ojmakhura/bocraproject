@@ -81,32 +81,31 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
         return types;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    @DisplayName(value = "Testing the successful creation of a new Access Point Type.")
-    public void saveAccessPointType() throws Exception {
-        dummyData(9);
-        AccessPointTypeVO type = new AccessPointTypeVO();
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // @DisplayName(value = "Testing the successful creation of a new Access Point Type.")
+    // public void saveAccessPointType() throws Exception {
+    //     dummyData(9);
+    //     AccessPointTypeVO type = new AccessPointTypeVO();
 
-        type.setCode("test10");
-        type.setName("Test Type 10");
-        type.setDescription("This is a test");
+    //     type.setCode("test10");
+    //     type.setName("Test Type 10");
+    //     type.setDescription("This is a test");
 
-        ResponseEntity<?> response = accessPointTypeRestController.save(type);
+    //     ResponseEntity<?> response = accessPointTypeRestController.save(type);
 
-        Assertions.assertNotNull(response);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        type = (AccessPointTypeVO) response.getBody();
-        Assertions.assertNotNull(type);
-        Assertions.assertNotNull(type.getId());
-        logger.info(type.toString());
+    //     Assertions.assertNotNull(response);
+    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    //     type = (AccessPointTypeVO) response.getBody();
+    //     Assertions.assertNotNull(type);
+    //     Assertions.assertNotNull(type.getId());
+    //     logger.info(type.toString());
 
-    }
+    // }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_missing() {
-        // dummyData();
         AccessPointTypeVO type = new AccessPointTypeVO();
 
         type.setName("Test Type 10");
@@ -123,7 +122,6 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_missingCode() {
-        // dummyData();
         AccessPointTypeVO type = new AccessPointTypeVO();
 
         type.setName("Test Type 10");
@@ -140,7 +138,6 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_missingName() {
-        // dummyData();
         AccessPointTypeVO type = new AccessPointTypeVO();
 
         type.setCode("test");
@@ -223,145 +220,6 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
         logger.info(type.toString());
     }
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void findById() {
-    //     // dummyData();
-    //     AccessPointTypeVO type = new AccessPointTypeVO();
-
-    //     type.setCode("test10");
-    //     type.setName("Test Type 10");
-    //     type.setDescription("This is a test");
-    //     type = accessPointTypeService.save(type);
-
-    //     ResponseEntity<?> response = accessPointTypeRestController.findById(type.getId());
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     AccessPointTypeVO found = (AccessPointTypeVO) response.getBody();
-
-    //     Assertions.assertNotNull(found);
-    //     Assertions.assertEquals(found.getId(), type.getId());
-    //     Assertions.assertEquals(found.getCode(), type.getCode());
-    //     Assertions.assertEquals(found.getName(), type.getName());
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void findById_notExisting() {
-    //     // dummyData();
-    //     AccessPointTypeVO type = new AccessPointTypeVO();
-
-    //     type.setCode("test10");
-    //     type.setName("Test Type 10");
-    //     type.setDescription("This is a test");
-    //     type = accessPointTypeService.save(type);
-    //     Long id = type.getId();
-
-    //     ResponseEntity<?> response = accessPointTypeRestController.findById(id + 10);
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
-
-    //     String message = response.getBody().toString();
-    //     Assertions.assertTrue(message.contains(String.format("Access point type with id %d not found.", id + 10)));
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getAll() {
-    //     dummyData(9);
-    //     ResponseEntity<?> response = accessPointTypeRestController.getAll();
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
-    //     Assertions.assertEquals(types.size(), 9);
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getAll_empty() {
-    //     ResponseEntity<?> response = accessPointTypeRestController.getAll();
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     Assertions.assertTrue(CollectionUtils.isEmpty(types));
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getAllPaged() {
-    //     dummyData(25);
-    //     int pageNumber = 2;
-    //     int pageSize = 4;
-    //     ResponseEntity<?> response = accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
-    //     Assertions.assertEquals(types.size(), pageSize);
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getAllPaged_lastPage() {
-    //     dummyData(15);
-    //     int pageNumber = 3;
-    //     int pageSize = 4;
-
-    //     ResponseEntity<?> response = accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
-    //     Assertions.assertEquals(types.size(), 3);
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void remove() {
-    //     dummyData(15);
-    //     ResponseEntity<?> response = accessPointTypeRestController.getAll();
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     AccessPointTypeVO t = types.iterator().next();
-
-    //     response = accessPointTypeRestController.remove(t.getId());
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Assertions.assertTrue((boolean) response.getBody());
-
-    //     response = accessPointTypeRestController.getAll();
-    //     Collection<AccessPointTypeVO> types2 = (Collection<AccessPointTypeVO>) response.getBody();
-
-    //     Assertions.assertEquals(types2.size(), types.size() - 1);
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void remove_non_existing() {
-    //     dummyData(10);
-    //     ResponseEntity<?> response = accessPointTypeRestController.getAll();
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-
-    //     response = accessPointTypeRestController.remove(30L);
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
-    //     Assertions.assertTrue(response.getBody().toString().contains("Could not delete access point type"));
-
-    //     response = accessPointTypeRestController.getAll();
-    //     Collection<AccessPointTypeVO> types2 = (Collection<AccessPointTypeVO>) response.getBody();
-
-    //     Assertions.assertEquals(types2.size(), types.size());
-
-    // }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
@@ -377,62 +235,6 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
         Assertions.assertEquals(types.size(), 2);
     }
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void search_no_results() {
-        
-    //     this.searchData();
-
-    //     ResponseEntity<?> response = accessPointTypeRestController.search("zero");
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     Assertions.assertEquals(types.size(), 0);
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void search_empty() {
-        
-    //     this.searchData();
-
-    //     ResponseEntity<?> response = accessPointTypeRestController.search("");
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     Assertions.assertEquals(types.size(), 7);
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void search_null() {
-        
-    //     this.searchData();
-
-    //     ResponseEntity<?> response = accessPointTypeRestController.search(null);
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     Assertions.assertEquals(types.size(), 7);
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void search_space() {
-        
-    //     this.searchData();
-
-    //     ResponseEntity<?> response = accessPointTypeRestController.search(" ");
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-    //     Assertions.assertEquals(types.size(), 7);
-    // }
-
     @Override
     protected Object unsavedDummyData() {
         AccessPointTypeVO type = new AccessPointTypeVO();
@@ -446,20 +248,16 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
 
     @Override
     protected ResponseEntity<?> handleGetAll() {
-        // dummyData(9);
         return accessPointTypeRestController.getAll();
     }
 
     @Override
     protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
-        // dummyData(25);
         return accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
     }
 
     @Override
     protected ResponseEntity<?> handleFindById(Long id) {
-        // AccessPointTypeVO type = (AccessPointTypeVO) unsavedDummyData();
-        // type = accessPointTypeService.save(type);
 
         return accessPointTypeRestController.findById(id);
     }
@@ -471,19 +269,18 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
 
     @Override
     protected ResponseEntity<?> handleSearch(Object criteria) {
-        return accessPointTypeRestController.search(criteria.toString());
+        return accessPointTypeRestController.search((String)criteria);
     }
 
     @Override
     protected ResponseEntity<?> handlePagedSearch(int pageNumber, int pageSize, Object criteria) {
-        // dummyData(25);
         return accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
     }
 
     @Override
     protected ResponseEntity<?> handleSave(Object o) {
-        // TODO Auto-generated method stub
-        return null;
+        
+        return accessPointTypeRestController.save((AccessPointTypeVO)o);
     }
 
     @Override
@@ -561,17 +358,16 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
 
     @Override
     protected Object searchCriteria() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    protected Object searchCriteriaNone() {
-        return accessPointTypeRestController.search("six");
+    protected Object searchCriteriaEmpty() {
+        return "";
     }
 
     @Override
-    protected Object searchCriteriaEmpty() {
-        return accessPointTypeRestController.search("");
+    protected Object searchCriteriaNone() {
+        return "null";
     }
 }

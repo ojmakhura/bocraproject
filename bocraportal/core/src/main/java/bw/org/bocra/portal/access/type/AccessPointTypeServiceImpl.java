@@ -107,4 +107,11 @@ public class AccessPointTypeServiceImpl
         return accessPointTypeDao.toAccessPointTypeVOCollection(types);
     }
 
+    @Override
+    protected Collection<AccessPointTypeVO> handleSearch(Integer pageNumber, Integer pageSize, String criteria)
+            throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
