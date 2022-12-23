@@ -5,8 +5,6 @@
 //
 package bw.org.bocra.portal.licensee.shares;
 
-import bw.org.bocra.portal.licensee.LicenseeDao;
-import bw.org.bocra.portal.licensee.LicenseeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,14 +15,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
+
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class LicenseeShareholerServiceTest {
+public class LicenseeShareholderServiceTest {
 
-    protected Logger logger = LoggerFactory.getLogger(LicenseeShareholerServiceTest.class);
+    protected Logger logger = LoggerFactory.getLogger(LicenseeShareholderServiceTest.class);
     
     @InjectMocks
-    private LicenseeShareholerServiceImpl licenseeShareholerService;
+    private LicenseeShareholderServiceImpl LicenseeShareholderService;
 
     @Mock
     private LicenseeShareholderDao licenseeShareholderDao;
@@ -51,7 +52,7 @@ public class LicenseeShareholerServiceTest {
         Assertions.assertNotNull(shareholderRepository);
         Assertions.assertNotNull(licenseeDao);
         Assertions.assertNotNull(licenseeRepository);
-        Assertions.assertNotNull(licenseeShareholerService);
+        Assertions.assertNotNull(LicenseeShareholderService);
 
     }
     

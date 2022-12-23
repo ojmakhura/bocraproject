@@ -49,7 +49,7 @@ public class LicenseeShareholderRestControllerTest {
     private LicenseeShareholderRestController licenseeShareholderRestController;
 
     @Autowired
-    protected LicenseeShareholerService licenseeShareholerService;
+    protected LicenseeShareholderService licenseeShareholerService;
 
     @BeforeEach
     public void clean() {

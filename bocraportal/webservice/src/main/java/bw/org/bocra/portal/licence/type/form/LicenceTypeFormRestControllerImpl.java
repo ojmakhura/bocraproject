@@ -211,7 +211,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the licence type form with id " + id);
             }
 
             return response;

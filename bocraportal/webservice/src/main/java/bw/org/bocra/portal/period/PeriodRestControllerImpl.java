@@ -5,17 +5,20 @@
 //
 package bw.org.bocra.portal.period;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
 import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/period")
@@ -33,12 +36,12 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
         try{
             logger.debug("Search Period by Id "+id);
             Optional<PeriodVO> data = Optional.of(this.periodService.findById(id));
-            ResponseEntity<PeriodVO> response;
+            ResponseEntity<?> response;
     
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Period with id %ld not found.", id));
             }
     
             return response;
@@ -74,20 +77,25 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleRemove(Long id) {
         try{
             logger.debug("Delete Period by Id "+id);
-            Optional<Boolean> data = Optional.of(periodService.remove(id));
-            ResponseEntity<Boolean> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            boolean rm = periodService.remove(id);
+            ResponseEntity<?> response;
+
+            if(rm) {
+                response = ResponseEntity.status(HttpStatus.OK).body(rm);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the period with id " + id);
             }
-    
+
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete period with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting period with id " + id);
         }
     }
 
@@ -96,12 +104,12 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
         try {
             logger.debug("Save Period "+periodVO);
             Optional<PeriodVO> data = Optional.of(periodService.save(periodVO));
-            ResponseEntity<PeriodVO> response;
+            ResponseEntity<?> response;
 
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the period");
             }
 
             return response;
@@ -171,7 +179,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
                 // e.printStackTrace();
                 
             }
-            e.printStackTrace();
+            logger.error(message, e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
@@ -185,20 +193,12 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleSearch(PeriodCriteria criteria) {
         try{
             logger.debug("Search Period by criteria "+criteria);
-            Optional<Collection<PeriodVO>> data = Optional.of(periodService.search(criteria));
-            ResponseEntity<Collection<PeriodVO>> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.search(criteria));
+            
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -206,21 +206,12 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
             logger.debug("Display Period with the specified page number "+pageNumber+" and page size "+pageSize);
-            Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll(pageNumber, pageSize));
-            ResponseEntity<Collection<PeriodVO>> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.getAll(pageNumber, pageSize));
+            
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -240,9 +231,8 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 

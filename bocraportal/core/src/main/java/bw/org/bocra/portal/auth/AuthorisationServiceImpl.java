@@ -124,7 +124,7 @@ public class AuthorisationServiceImpl
         if(pageNumber < 0 || pageSize < 1) {
             authorisations = authorisationRepository.findAll();
         } else {
-            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("url").descending());
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
             authorisations = authorisationRepository.findAll(pageable).getContent();
         }
 
