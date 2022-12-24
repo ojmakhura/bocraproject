@@ -292,8 +292,60 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
 
     @Override
     protected Collection<?> searchData() {
-        // TODO Auto-generated method stub
-        return null;
+
+        Collection auths = new ArrayList<>();
+
+        AccessPointTypeVO menuType = new AccessPointTypeVO();
+        menuType.setCode("MENU");
+        menuType.setName("Menu");
+
+        menuType = accessPointTypeService.save(menuType);
+
+        AccessPointTypeVO apiType = new AccessPointTypeVO();
+        apiType.setCode("API");
+        apiType.setName("Api");
+
+        apiType = accessPointTypeService.save(apiType);
+
+        for (int i = 1; i <= 4; i++){
+            AccessPointVO ap = new AccessPointVO();
+            ap.setAccessPointType(menuType);
+            ap.setName("Menu " + i);
+            ap.setUrl("/menu" + i);
+            ap.setCreatedBy("path");
+            ap.setCreatedDate(LocalDateTime.now());
+
+            ap = accessPointService.save(ap);
+            
+            AuthorisationVO ath = new AuthorisationVO();
+            ath.setAccessPoint(ap);
+            ath.setCreatedBy("path");
+            ath.setCreatedDate(LocalDateTime.now());
+            ath = (AuthorisationVO) authorisationRestController.save(ath).getBody();
+
+            auths.add(authorisationRestController.save(ath).getBody());
+        }
+
+        for (int i = 1; i <= 3; i++){
+            
+            AccessPointVO ap = new AccessPointVO();
+            ap.setAccessPointType(menuType);
+            ap.setName("Api " + i);
+            ap.setUrl("/api" + i);
+            ap.setCreatedBy("path");
+            ap.setCreatedDate(LocalDateTime.now());
+
+            ap = accessPointService.save(ap);
+            
+            AuthorisationVO ath = new AuthorisationVO();
+            ath.setAccessPoint(ap);
+            ath.setCreatedBy("path");
+            ath.setCreatedDate(LocalDateTime.now());
+
+            auths.add(authorisationRestController.save(ath).getBody());
+        }
+        
+        return auths;
     }
 
     @Override
