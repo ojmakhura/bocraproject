@@ -28,6 +28,9 @@
 												<th scope="col">
 													Periods
 												</th>
+												<th scope="col">
+													Alias
+												</th>
 											</tr>
 										</thead>
 										<tbody formArrayName="periodSelections">
@@ -40,6 +43,10 @@
 												</td>
 												<td scope="col">
 													{{ period.value.period }}
+												</td>
+												<td scope="col">
+													<input type="text" class="form-control" formControlName="alias"
+														(change)="periodAliasChange(period?.value)">
 												</td>
 											</tr>
 										</tbody>
@@ -120,7 +127,7 @@
 						<label for="report-labels" class="col-sm-2 col-form-label">Columns</label>
 						<div class="col-sm-10">
 							<select id="report-labels" class="form-select" formControlName="dataColumns"
-								aria-label="Default select example">
+								aria-label="Default select example" (change)="createReportGrid()">
 								<option value="licensees">Licensees</option>
 								<option value="periods">Periods</option>
 								<option value="fields">Data Fields</option>
@@ -190,7 +197,7 @@
 						<label for="data-labels" class="col-sm-2 col-form-label">Rows</label>
 						<div class="col-sm-10">
 							<select id="data-labels" class="form-select" formControlName="dataRows"
-								aria-label="Default select example" (change)="generateColors(true)">
+								aria-label="Default select example" (change)="createReportGrid(); generateColors(true)">
 								<option></option>
 								<option value="licensees" *ngIf="dataColumns !== 'licensees'">Licensees</option>
 								<!-- <option value="periods">Periods</option> -->
@@ -267,7 +274,7 @@
 							<td mat-cell *matCellDef="let data">{{data.row}}: {{data?.label}}</td>
 						</ng-container>
 						<ng-container *ngFor="let period of gridDataPeriods; let m=index" matColumnDef="{{period}}">
-							<th mat-header-cell *matHeaderCellDef [attr.colspan]="gridColumnHeaders.length/selectedPeriods.length">{{periods[m]}}</th>
+							<th mat-header-cell *matHeaderCellDef [attr.colspan]="periodLengths[periods[m].name]">{{periodAliases[periods[m]?.name]}}</th>
 						</ng-container>
 						<ng-container *ngFor="let ch of gridColumnHeaders; let m=index" matColumnDef="{{ch.elementId}}_{{ch.header}}">
 							<th mat-header-cell *matHeaderCellDef>{{ch.label}} ({{alphabet[m]}})</th>
@@ -286,7 +293,7 @@
 						[selectedLicensees]="selectedLicensees" [selectedFields]="selectedFields"
 						[selectedPeriods]="selectedPeriods" [additionalDataColumns]="additionalDataColumns"
 						[additionalDataRows]="additionalDataRows" [customDataColumns]="customDataColumns"
-						[customDataRows]="customDataRows" [chartIndex]="i">
+						[customDataRows]="customDataRows" [chartIndex]="i" [grid]="grid">
 					</app-report-chart>
 					<div class="mb-3">
 						<button type="button" class="btn btn-info" (click)="removeReportChart(i)">

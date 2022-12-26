@@ -57,6 +57,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() additionalDataRows: any;
   @Input() customDataColumns: any;
   @Input() customDataRows: any;
+  @Input() grid: any;
 
   sections: any[] = [];
   periods: any[] = [];
