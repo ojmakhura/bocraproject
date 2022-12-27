@@ -210,4 +210,40 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public ResponseEntity<?> handleCreateMissingSubmissions(Long id) {
+
+        if(id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Form activation should not be null.");
+        }
+        
+        try {
+            logger.debug("Creating missing submission for activation " + id);
+            return  ResponseEntity.status(HttpStatus.OK).body(formActivationService.createMissingSubmissions(id));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleRecreateActivationSubmission(Long id) {
+
+        if(id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Form activation should not be null.");
+        }
+        
+        try {
+            logger.debug("Recreating submission for activation " + id);
+            return  ResponseEntity.status(HttpStatus.OK).body(formActivationService.recreateActivationSubmission(id));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
 }

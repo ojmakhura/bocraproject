@@ -36,6 +36,7 @@ import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.form.submission.FormSubmissionStatus;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
+import bw.org.bocra.portal.form.submission.SubmissionService;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
@@ -74,11 +75,12 @@ public class FormActivationServiceImpl
     private final SectorFormService sectorFormService;
     private final KeycloakUserService keycloakUserService;
     private final CommunicationMessageDao communicationMessageDao; 
+    private final SubmissionService submissionService;
 
     public FormActivationServiceImpl(FormActivationDao formActivationDao, KeycloakUserService keycloakUserService,
             FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository, CommunicationMessageDao communicationMessageDao,
             FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, SectorService sectorService, SectorFormService sectorFormService,
-            DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
+            SubmissionService submissionService, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
 
         super(formActivationDao, formActivationRepository, formDao, formRepository, formSubmissionDao,
                 formSubmissionRepository,
@@ -88,6 +90,7 @@ public class FormActivationServiceImpl
         this.sectorFormService = sectorFormService; 
         this.keycloakUserService = keycloakUserService;
         this.communicationMessageDao = communicationMessageDao;
+        this.submissionService = submissionService;
     }
 
     /**
@@ -159,62 +162,10 @@ public class FormActivationServiceImpl
          * associated with the form.
          */
         if (formActivation.getId() == null) {
-            Map<Long, Licensee> lmap = new HashMap<>();
-
-            Form form = activation.getForm();
-
-            for (LicenseeForm licensee : form.getLicenseeForms()) {
-                lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
-            }
-
-            for(SectorForm sectorForm : form.getSectorForms()) {
-                List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
-                if(sf != null && sf.size() > 0)
-                    sf.get(0);
-                    
-                for(LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
-                    lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
-                }
-            }
 
             formActivation = formActivationDao.toFormActivationVO(activation);
-            formActivation.setFormSubmissions(new ArrayList<>());
+            formActivation.setFormSubmissions(submissionService.createNewSubmissions(this.getLicenseeIds(activation.getForm()), activation.getId()));
 
-            Set<LicenseeVO> licensees = new HashSet<>();
-
-            for (Licensee licensee : lmap.values()) {
-                FormSubmission submission = FormSubmission.Factory.newInstance();
-                submission.setCreatedBy(activation.getCreatedBy());
-                submission.setCreatedDate(LocalDateTime.now());
-                submission.setForm(form);
-                submission.setLicensee(licensee);
-                submission.setFormActivation(activation);
-                submission.setPeriod(activation.getPeriod());
-                submission.setSubmissionStatus(FormSubmissionStatus.NEW);
-
-                submission.setExpectedSubmissionDate(formActivation.getActivationDeadline());
-
-                /**
-                 * If the for requires single entry, the we create the data fields
-                 */
-                if (form.getEntryType() == FormEntryType.SINGLE) {
-                    for (FormField field : form.getFormFields()) {
-                        DataField dataField = DataField.Factory.newInstance();
-                        dataField.setFormSubmission(submission);
-                        dataField.setFormField(field);
-                        dataField.setValue(field.getDefaultValue());
-                        dataField.setRow(0);
-
-                        submission.getDataFields().add(dataField);
-                    }
-                }
-                submission = formSubmissionRepository.save(submission);
-
-                FormSubmissionVO vo = new FormSubmissionVO();
-                getFormSubmissionDao().toFormSubmissionVO(submission, vo);
-                formActivation.getFormSubmissions().add(vo);
-                licensees.add(vo.getLicensee());
-            }
         }
 
         if(fresh) {
@@ -314,6 +265,75 @@ public class FormActivationServiceImpl
             throws Exception {
         return (Collection<FormActivationVO>) getFormActivationDao()
                 .loadAll(FormActivationDao.TRANSFORM_FORMACTIVATIONVO, pageNumber, pageSize);
+    }
+
+    private Set<Long> getLicenseeIds(Form form) {
+        
+        Set<Long> ids = new HashSet<>();
+
+        for (LicenseeForm licensee : form.getLicenseeForms()) {
+            ids.add(licensee.getLicensee().getId());
+        }
+
+        for(SectorForm sectorForm : form.getSectorForms()) {
+            List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
+            if(sf != null && sf.size() > 0)
+                sf.get(0);
+                    
+            for(LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
+                ids.add(licensee.getLicensee().getId());
+            }
+        }
+
+        return ids;
+    }
+
+    private Set<Licensee> getLicensees(Form form) {
+        Map<Long, Licensee> lmap = new HashMap<>();
+
+        for (LicenseeForm licensee : form.getLicenseeForms()) {
+            lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
+        }
+
+        for(SectorForm sectorForm : form.getSectorForms()) {
+            List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
+            if(sf != null && sf.size() > 0)
+                sf.get(0);
+                    
+            for(LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
+                lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
+            }
+        }
+
+        return lmap.values().stream().collect(Collectors.toSet());
+    }
+
+    @Override
+    protected FormActivationVO handleRecreateActivationSubmission(Long id) throws Exception {
+        FormActivation activation = formActivationRepository.getReferenceById(id);
+
+        formSubmissionDao.remove(activation.getFormSubmissions());
+
+        FormActivationVO formActivation = formActivationDao.toFormActivationVO(activation);
+        formActivation.setFormSubmissions(submissionService.createNewSubmissions(getLicenseeIds(activation.getForm()), id));
+
+        return formActivation;
+    }
+
+    @Override
+    protected Collection<FormSubmissionVO> handleCreateMissingSubmissions(Long id) throws Exception {
+        FormActivation activation = formActivationRepository.getReferenceById(id);
+
+        // Get the ids of the submissions already existing for the activation
+        Set<Long> submissionLicenseeIds = activation.getFormSubmissions().stream().map(sub -> sub.getLicensee().getId()).collect(Collectors.toSet());
+        
+        // Get licensees attached to the form
+        Set<Long> formLicenseeIds = getLicenseeIds(activation.getForm());
+
+        // Get the difference to the two sets.
+        Set<Long> missingLicenseeIds = formLicenseeIds.stream().filter(fl -> !submissionLicenseeIds.contains(fl)).collect(Collectors.toSet());
+
+        return submissionService.createNewSubmissions(missingLicenseeIds, id);
     }
 
 }

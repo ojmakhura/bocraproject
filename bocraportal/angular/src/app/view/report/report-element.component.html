@@ -154,7 +154,7 @@
 								<tr *ngFor="let fieldControl of dataColumnsAnalyticsControl.controls; let j=index"
 									[formGroupName]="j">
 									<td scope="col">
-										<button type="button" (click)="removeLabelsAnalytic('report', j)"
+										<button type="button" (click)="removeCustomColumns(j)"
 											class="btn btn-outline-primary">
 											<mat-icon>delete</mat-icon>
 										</button>

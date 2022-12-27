@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -356,6 +357,29 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
             Integer overdue = submissionService.checkOverdueSubmissions();
             return ResponseEntity.ok(overdue);
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleCreateNewSubmissions(Set<Long> licenseeIds, Long activationId) {
+
+        if(activationId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Form activation should not be null.");
+        }
+
+        if(CollectionUtils.isEmpty(licenseeIds)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Licensee IDs should not be empty.");
+        }
+
+        try {
+
+            return ResponseEntity.ok(submissionService.createNewSubmissions(licenseeIds, activationId));
 
         } catch(Exception e) {
 

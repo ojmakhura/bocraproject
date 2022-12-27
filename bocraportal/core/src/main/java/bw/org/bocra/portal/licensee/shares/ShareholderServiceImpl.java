@@ -84,7 +84,7 @@ public class ShareholderServiceImpl
      * @see bw.org.bocra.portal.licensee.shares.ShareholderService#search(ShareholderVO)
      */
     @Override
-    protected Collection<ShareholderVO> handleSearch(ShareholderVO criteria)
+    protected Collection<ShareholderVO> handleSearch(ShareholderCriteria criteria)
         throws Exception
     {
         // TODO implement protected  Collection<ShareholderVO> handleSearch(ShareholderVO criteria)
