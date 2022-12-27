@@ -158,7 +158,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
     this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
 
-    // console.log(this.formSubmissions)
     this.createReportGrid();
   }
 
@@ -166,7 +165,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.gridDataSource.data = [];
     this.grid = {};
     let cindex = 0;
-    // console.log(this.filteredFormSubmissions);
 
     if (!this.formSubmissions || this.formSubmissions.length == 0) {
       return;
@@ -221,7 +219,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       fs?.forEach((sub) => {
 
         let colIndex = pindex * this.licenseeSelections?.length + colLabels[sub?.licensee?.licenseeName];
-        // console.log(colIndex, pindex, this.licenseeSelections?.length, colLabels[sub?.licensee?.licenseeName])
         let rowIndex = sub?.licensee?.licenseeName;
 
         let fields: DataFieldVO[] = this.extractFields(sub);
@@ -287,10 +284,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.gridDataPeriodHeaders = ['label', ...this.gridDataPeriods];
     this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
 
-    // console.log(this.gridColumnHeaders)
-    // console.log(this.gridDataColDefs)
-    // console.log(this.gridDataColumns)
-    // console.log(this.alphabet[this.gridColumnHeaders.length])
     this.originalColumnLen = this.gridColumnHeaders.length;
 
     this.setGridTableData();
@@ -301,7 +294,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   periodAliasChange(period: any) {
-    console.log(period)
+    
     this.periodAliases[period.period] = period.alias;
   }
 
@@ -494,19 +487,14 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       sourceSplit.cols = Object.keys(this.grid)?.filter((key) => source.includes(`[${key}]`));
     }
 
-    // console.log(this.grid);
-    // console.log(sourceSplit);
-
     let colIndex = this.originalColumnLen + index;
 
     sourceSplit?.rows?.forEach(rowKey => {
       let row = this.grid[rowKey];
-      // console.log(row)
 
       let cell = row[this.alphabet[colIndex]];
 
       if(cell === undefined) {
-        // console.log(changingCol)
         
         cell = {
           period: "Custom",
@@ -528,21 +516,21 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
       sourceSplit.cols?.forEach((colKey) => {
         
-        // console.log(row);
-        // console.log(colKey);
-        // console.log(cell);
-        // console.log(row[colKey]);
-
         if(row[colKey] !== undefined) {
 
-
-          if(changingCol?.type === 'custom') {
-
-          } else {
+          if(changingCol?.type !== 'custom') {
             cell.source.push(row[colKey]);
           }
         }
       });
+
+      if(changingCol?.type === 'custom') {
+        Object.keys(row)?.forEach(rk => {
+          if(cell.value.includes(`[${rk}]`)) {
+            cell.value = cell.value.replaceAll(`[${rk}]`, row[rk].value);
+          }
+        });
+      }
       
       cell.value = this.formatCalculation(
         changingCol?.type === 'custom'
@@ -553,15 +541,10 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           )
       );
     
-      // console.log(cell);
       delete cell.source;
       
     });
 
-    // console.log(this.grid);
-    // this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a.header.localeCompare(b.header));
-    // console.log(this.gridColumnHeaders);
-    // console.log(this.gridColumnHeaders.find(gch => gch.elementId.startsWith(`${index}_`)));
     if(this.gridColumnHeaders.find(gch => gch.elementId.startsWith(`${index}_`)) === undefined) {
       this.gridColumnHeaders.push({
         header: this.alphabet[colIndex],
@@ -569,34 +552,27 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         elementId: `${index}_${changingCol?.name}`,
         label: changingCol?.name
       })
-      // this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a.localeCompare(b));
       this.gridDataColumnHeaders = this.gridColumnHeaders?.map((ch) => `${ch.elementId}_${ch.header}`);
-      // console.log(this.gridDataColumnHeaders);
       this.gridDataColumns = this.gridColumnHeaders?.map((ch) => {
         return { field: ch.fieldId, header: ch.header, label: ch.label };
       });
 
       this.gridDataPeriods = this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_'));
-      // console.log(this.gridDataPeriods);
       this.gridDataPeriodHeaders = ['label', ...this.gridDataPeriods];
       this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
 
-      //this.periodAliases[''];
-      console.log(this.periods);
       if(this.periodAliases['Custom'] === undefined) {
 
         this.periods.push({
           name: 'Custom',
           length: 1
         })
-        // console.log(this.periodAliases);
         this.periodAliases['Custom'] = 'Custom'
         this.periodLengths['Custom'] = 1
       }
     } 
 
     this.periodLengths['Custom'] = this.additionalDataColumns.length
-    // console.log(this.periodLengths);
 
     this.setGridTableData();
   }
@@ -720,7 +696,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     Object.keys(tmp)?.forEach((tk) => {
       if (tk !== 'label' && tk !== 'row') {
-        console.log(tmp[tk])
+        
         tmp[tk].value = this.formatCalculation(
           changingRow?.type === 'custom'
             ? math.evaluate(tmp[tk].value)
@@ -913,7 +889,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   removeCustomColumns(index: number) {
-    console.log(this.grid)
+    
     this.additionalDataColumns = this.dataColumnsAnalytics;
 
     let changingCol: any = this.additionalDataColumns[index];
@@ -944,11 +920,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           delete this.grid[rowIndex][this.alphabet[ti]];
         });
 
-        console.log(this.grid)
         this.dataColumnsAnalyticsControl.removeAt(index);
         
         this.gridColumnHeaders = this.gridColumnHeaders.filter(gch => 'Custom' !== gch.period)
-        console.log(this.gridColumnHeaders);
         
         this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a.localeCompare(b));
         this.gridDataColumnHeaders = this.gridColumnHeaders?.map((ch) => `${ch.elementId}_${ch.header}`);
@@ -960,7 +934,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         this.dataColumnsAnalyticsControl.controls?.forEach((col, index) => {
           this.additionalDataColumnChange(index)
         });
-    
+        
+        this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
+        
         this.setGridTableData();
       }
     }
