@@ -103,9 +103,9 @@ build_api_image: gen_env build_api
 build_comm_image: build_comm gen_env
 	. ./.env && docker compose build comm
 
-build_cron_image: gen_env
-	#. ./.env && docker compose build cron
-	. ./.env && mvn -f bocraportal/bocracron spring-boot:build-image -DskipTests -o
+build_cron_image: gen_env 
+	. ./.env && docker compose build cron
+	# . ./.env && mvn -f bocraportal/bocracron spring-boot:build-image -DskipTests -o
 
 build_web_image: gen_env
 	. ./.env && docker compose build web

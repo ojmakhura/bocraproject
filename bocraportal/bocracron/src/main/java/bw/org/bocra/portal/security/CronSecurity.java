@@ -35,9 +35,9 @@ public class CronSecurity {
                     .realm(realm)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
-                    .resteasyClient(
-                        new ResteasyClientBuilderImpl().connectionPoolSize(10).build()
-                    )
+                    // .resteasyClient(
+                    //     new ResteasyClientBuilderImpl().connectionPoolSize(10).build()
+                    // )
                     .build();
 
         return keycloak;

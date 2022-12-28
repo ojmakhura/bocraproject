@@ -61,7 +61,7 @@ public class BocraSchedule {
     }
 
     @Async
-    @Scheduled(cron = "@daily", zone = "Africa/Gaborone")
+    @Scheduled(cron = "*/10 * * * * *", zone = "Africa/Gaborone")
     public void dueMessages() {
         String accessToken = cronSecurity.getAccessToken().getToken();
         log.info(accessToken);
@@ -77,5 +77,4 @@ public class BocraSchedule {
 
         log.info(String.format("%d messages sent to queue", response.getBody()));
     }
-
 }

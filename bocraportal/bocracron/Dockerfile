@@ -13,7 +13,7 @@ WORKDIR /app
 COPY deployment/certs/${CERT}.crt /app/certs/${CERT}.crt
 RUN keytool -importcert -file /app/certs/${CERT}.crt -noprompt -alias bocra -storepass ${CERT_PASSWORD} -keystore ${JAVA_HOME}/lib/security/cacerts
 
-ARG JAR_FILE=bocraportal/bocracron/target/*.jar
+ARG JAR_FILE=bocraportal/bocracron/target/bocraportal-cron.jar
 COPY ${JAR_FILE} bocraportal-cron.jar
-ENTRYPOINT ["java","-jar","/app/bocraportal-cron.jar"]
-EXPOSE 8085
+ENTRYPOINT ["java", "-jar", "/app/bocraportal-cron.jar"]
+EXPOSE 8099

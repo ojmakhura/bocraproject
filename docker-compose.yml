@@ -398,7 +398,13 @@ services:
   ###############################################################################
   cron:
     image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
-    build: ./cron
+    #build: ./bocraportal/bocracron
+    build:
+      context: .
+      dockerfile: bocraportal/bocracron/Dockerfile
+      args:
+        CERT: ${CERT}
+        CERT_PASSWORD: ${CERT_PASSWORD}
     container_name: bocraportal-cron
     environment:
       CRON_SERVER_PORT: ${CRON_SERVER_PORT}
@@ -425,6 +431,8 @@ services:
       COMM_URL: ${COMM_URL}
       API_URL: ${API_URL}
       TZ: Africa/Gaborone
+    volumes:
+      - ${BOCRA_DATA}/cron/hosts:/etc/hosts
     networks:
       traefik-public:
       bocra-network:
