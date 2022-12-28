@@ -138,19 +138,4 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
         return new KeycloakSpringBootConfigResolver();
     }
-    
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-    
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-        return builder -> {
-            builder.simpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            builder.serializers(new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
-            builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
-        };
-    }
 }

@@ -29,8 +29,20 @@ test_api:
 build_comm:
 	mvn -f bocraportal/comm install -Dmaven.test.skip=true -o
 
+build_comm_native:
+	mvn -f bocraportal/comm  package -Pnative -o
+
 test_comm: 
 	. ./.env && mvn -f bocraportal/comm test -o
+	
+build_cron: gen_env
+	. ./.env && mvn -f bocraportal/bocracron install -DskipTests -o
+	
+build_cron_native: gen_env
+	. ./.env && mvn -f bocraportal/bocracron package -Pnative -DskipTests -o
+
+test_cron: gen_env
+	. ./.env && mvn -f bocraportal/bocracron test -o
 
 build_web: 
 	mvn -f bocraportal/angular install -Dmaven.test.skip=true -o
@@ -48,6 +60,9 @@ clean_all:
 
 clean_mda:
 	mvn -f bocraportal/mda clean -o
+
+clean_cron:
+	mvn -f bocraportal/bocracron clean -o
 
 ##
 ## Start the docker containers
@@ -89,7 +104,8 @@ build_comm_image: build_comm gen_env
 	. ./.env && docker compose build comm
 
 build_cron_image: gen_env
-	. ./.env && docker compose build cron
+	#. ./.env && docker compose build cron
+	. ./.env && mvn -f bocraportal/bocracron spring-boot:build-image -DskipTests -o
 
 build_web_image: gen_env
 	. ./.env && docker compose build web
@@ -124,6 +140,12 @@ run_api_local: gen_env
 
 run_comm_local: gen_env
 	. ./.env && cd bocraportal/comm && mvn spring-boot:run
+
+run_cron_local: gen_env
+	. ./.env && cd bocraportal/bocracron && mvn spring-boot:run
+
+run_cron_native_local: gen_env
+	. ./.env && bocraportal/bocracron/target/bocraportal-cron
 
 local_web_deps: build_web
 	cd bocraportal/angular/target/bocraportal && npm i

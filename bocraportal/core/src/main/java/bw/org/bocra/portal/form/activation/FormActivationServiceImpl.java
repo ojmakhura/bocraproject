@@ -53,6 +53,7 @@ import bw.org.bocra.portal.message.CommunicationMessagePlatform;
 import bw.org.bocra.portal.message.CommunicationMessageStatus;
 import bw.org.bocra.portal.message.CommunicationMessageVO;
 import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.sector.SectorService;
 import bw.org.bocra.portal.sector.form.SectorForm;
@@ -76,21 +77,22 @@ public class FormActivationServiceImpl
     private final KeycloakUserService keycloakUserService;
     private final CommunicationMessageDao communicationMessageDao; 
     private final SubmissionService submissionService;
+    private final PeriodRepository periodRepository;
 
-    public FormActivationServiceImpl(FormActivationDao formActivationDao, KeycloakUserService keycloakUserService,
+    public FormActivationServiceImpl(FormActivationDao formActivationDao, KeycloakUserService keycloakUserService, PeriodRepository periodRepository,
             FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository, CommunicationMessageDao communicationMessageDao,
             FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, SectorService sectorService, SectorFormService sectorFormService,
             SubmissionService submissionService, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
 
         super(formActivationDao, formActivationRepository, formDao, formRepository, formSubmissionDao,
-                formSubmissionRepository,
-                dataFieldDao, dataFieldRepository, messageSource);
+                formSubmissionRepository, dataFieldDao, dataFieldRepository, messageSource);
         // TODO Auto-generated constructor stub
         this.sectorService = sectorService;
         this.sectorFormService = sectorFormService; 
         this.keycloakUserService = keycloakUserService;
         this.communicationMessageDao = communicationMessageDao;
         this.submissionService = submissionService;
+        this.periodRepository = periodRepository;
     }
 
     /**
@@ -334,6 +336,12 @@ public class FormActivationServiceImpl
         Set<Long> missingLicenseeIds = formLicenseeIds.stream().filter(fl -> !submissionLicenseeIds.contains(fl)).collect(Collectors.toSet());
 
         return submissionService.createNewSubmissions(missingLicenseeIds, id);
+    }
+
+    @Override
+    protected Collection<FormActivationVO> handleActivateDueForms() throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

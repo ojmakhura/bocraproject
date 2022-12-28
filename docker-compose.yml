@@ -398,15 +398,33 @@ services:
   ###############################################################################
   cron:
     image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
-    # volumes:
-      # - ${BOCRA_DATA}/cron:/etc/cron
-
     build: ./cron
     container_name: bocraportal-cron
     environment:
+      CRON_SERVER_PORT: ${CRON_SERVER_PORT}
+      CRON_LOG_LEVEL: ${CRON_LOG_LEVEL}
+      CRON_DB: ${CRON_DB}
+      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${KEYCLOAK_DB}
       KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_CRON_CLIENT: ${KEYCLOAK_CRON_CLIENT}
+      KEYCLOAK_CRON_CLIENT_SECRET: ${KEYCLOAK_CRON_CLIENT_SECRET}
+      BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
+      CERT: ${CERT}
+      CERT_PASSWORD: ${CERT_PASSWORD}
+      #RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      #RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      #RABBITMQ_HOST: ${RABBITMQ_HOST}
+      #RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
+      CRON_LOG_LEVEL: ${CRON_LOG_LEVEL}
+      WEB_URL: ${WEB_URL}
       COMM_URL: ${COMM_URL}
+      API_URL: ${API_URL}
+      TZ: Africa/Gaborone
     networks:
       traefik-public:
       bocra-network:

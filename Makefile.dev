@@ -62,6 +62,9 @@ COMMON_LOCAL_VARS = "export EMAIL=${TEST_EMAIL}"\
     "export RABBITMQ_WEB_PORT=${RABBITMQ_WEB_PORT}"\
     "export RABBITMQ_SERVICE_PORT=${RABBITMQ_SERVICE_PORT}"\
     "export CRON_IMAGE_NAME=${CRON_IMAGE_NAME}"\
+    "export CRON_DB=${CRON_DB}"\
+    "export CRON_SERVER_PORT=${CRON_SERVER_PORT}"\
+    "export KEYCLOAK_CRON_CLIENT=${KEYCLOAK_CRON_CLIENT}"\
     "export TRAEFIK_USERNAME=${TRAEFIK_USERNAME}"\
     
 LOCAL_ENV = printf "%s\n" \
@@ -93,11 +96,13 @@ LOCAL_ENV = printf "%s\n" \
     "export SSL_SECURE=true"\
     "export IMAGE_VERSION_SUFFIX=-lc"\
     "export RABBITMQ_HOST=localhost"\
-    "export API_LOG_LEVEL=DEBUG"\
-    "export COMM_LOG_LEVEL=DEBUG"\
+    "export API_LOG_LEVEL=INFO"\
+    "export COMM_LOG_LEVEL=INFO"\
+    "export CRON_LOG_LEVEL=INFO"\
     "export REGISTRY_TAG=${BOCRA_REGISTRY_SUBDOMAIN}.${LOCAL_DOMAIN}"\
     "export KEYCLOAK_REGISTRY_IMAGE=${KEYCLOAK_LOCAL_REGISTRY_IMAGE}"\
     "export KEYCLOAK_API_CLIENT_SECRET=mhhhCwz015E7dQYgK0RGYb5FPH1bsQj2"\
+    "export KEYCLOAK_CRON_CLIENT_SECRET=bd7M5xC4SQbJf6pvHzEe5mFzzAWapmmk"\
     >> .env
 
 DEV_ENV = printf "%s\n" \
@@ -132,9 +137,11 @@ DEV_ENV = printf "%s\n" \
     "export CERT_PASSWORD=changeit"\
     "export API_LOG_LEVEL=DEBUG"\
     "export COMM_LOG_LEVEL=DEBUG"\
+    "export CRON_LOG_LEVEL=DEBUG"\
     "export IMAGE_VERSION_SUFFIX=-dev"\
     "export REGISTRY_TAG=${BOCRA_REGISTRY_SUBDOMAIN}.${DEV_DOMAIN}"\
     "export KEYCLOAK_REGISTRY_IMAGE=${KEYCLOAK_DEV_REGISTRY_IMAGE}"\
+    "export KEYCLOAK_CRON_CLIENT_SECRET=bd7M5xC4SQbJf6pvHzEe5mFzzAWapmmk"\
     ${COMMON_LOCAL_VARS}\
     >> .env
 
@@ -173,10 +180,12 @@ TEST_ENV = printf "%s\n" \
     "export CERT_PASSWORD=changeit"\
     "export API_LOG_LEVEL=DEBUG"\
     "export COMM_LOG_LEVEL=DEBUG"\
+    "export CRON_LOG_LEVEL=DEBUG"\
     "export IMAGE_VERSION_SUFFIX=-test"\
     "export REGISTRY_TAG=opqa-${BOCRA_REGISTRY_SUBDOMAIN}.${TEST_DOMAIN}"\
     "export KEYCLOAK_REGISTRY_IMAGE=${KEYCLOAK_TEST_REGISTRY_IMAGE}"\
     "export KEYCLOAK_WEB_CLIENT_ID=17b28a77-1d2e-4e91-8a22-ff6db44108e5"\
+    "export KEYCLOAK_CRON_CLIENT_SECRET=bd7M5xC4SQbJf6pvHzEe5mFzzAWapmmk"\
     ${COMMON_LOCAL_VARS}\
     >> .env
 
@@ -210,7 +219,9 @@ LIVE_ENV = printf "%s\n" \
     "export IMAGE_VERSION_SUFFIX="\
     "export API_LOG_LEVEL=ERROR"\
     "export COMM_LOG_LEVEL=ERROR"\
+    "export CRON_LOG_LEVEL=ERROR"\
     "export REGISTRY_TAG=${BOCRA_REGISTRY_SUBDOMAIN}.${LIVE_DOMAIN}"\
     "export KEYCLOAK_REGISTRY_IMAGE=${KEYCLOAK_LIVE_REGISTRY_IMAGE}"\
+    "export KEYCLOAK_CRON_CLIENT_SECRET=bd7M5xC4SQbJf6pvHzEe5mFzzAWapmmk"\
     ${COMMON_LOCAL_VARS}\
     >> .env

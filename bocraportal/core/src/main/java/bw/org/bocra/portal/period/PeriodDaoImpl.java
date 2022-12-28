@@ -175,7 +175,7 @@ public class PeriodDaoImpl
         
         if (criteria.getSearchDate() != null) {
             specs = BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThan("periodStart", criteria.getSearchDate());
-            specs = specs.and(BocraportalSpecifications.<Period, LocalDate>findByAttributeLessThanEqual("periodStart", criteria.getSearchDate()));
+            specs = specs.and(BocraportalSpecifications.<Period, LocalDate>findByAttributeLessThanEqual("periodEnd", criteria.getSearchDate()));
         }
 
         if (StringUtils.isNotBlank(criteria.getPeriodName())) {

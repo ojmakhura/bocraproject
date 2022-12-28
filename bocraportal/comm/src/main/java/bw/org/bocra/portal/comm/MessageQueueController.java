@@ -1,5 +1,12 @@
 package bw.org.bocra.portal.comm;
 
+import java.util.Collection;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
+// import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -17,19 +24,14 @@ import org.springframework.web.client.RestTemplate;
 
 import bw.org.bocra.portal.message.CommunicationMessageVO;
 
-import java.util.Collection;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @RestController
 @RequestMapping("/messages")
 public class MessageQueueController {
     protected Logger logger = LoggerFactory.getLogger(MessageQueueController.class);
     private final RabbitTemplate rabbitTemplate;
     private final RestTemplate restTemplate;
+
+    // private final OAuth2AuthorizedClientService clientService;
     
     @Value("${bocra.api.url}")
     private String apiUrl;
@@ -38,6 +40,7 @@ public class MessageQueueController {
 
         this.rabbitTemplate = rabbitTemplate;
         this.restTemplate = restTemplate;
+        // this.clientService = clientService;
     }
 
     @PostMapping()
@@ -59,10 +62,11 @@ public class MessageQueueController {
     }
 
     @GetMapping("/due")
-    public ResponseEntity<?> loadDueMessages() {
+    public ResponseEntity<Integer> loadDueMessages() {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         RefreshableKeycloakSecurityContext ksc = (RefreshableKeycloakSecurityContext) authentication.getCredentials();
-
+    
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + ksc.getTokenString());
         String url = apiUrl + "/message/due";
