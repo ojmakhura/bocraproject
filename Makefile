@@ -36,10 +36,10 @@ test_comm:
 	. ./.env && mvn -f bocraportal/comm test -o
 	
 build_cron: gen_env
-	. ./.env && mvn -f bocraportal/bocracron install -DskipTests -o
+	. ./.env && mvn -f bocraportal/bocracron -Pnative install -DskipTests -o
 	
 build_cron_native: gen_env
-	. ./.env && mvn -f bocraportal/bocracron package -Pnative -DskipTests -o
+	. ./.env && mvn -f bocraportal/bocracron -Pnative native:compile -DskipTests -o
 
 test_cron: gen_env
 	. ./.env && mvn -f bocraportal/bocracron test -o
