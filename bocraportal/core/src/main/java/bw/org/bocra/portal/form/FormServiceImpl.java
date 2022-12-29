@@ -9,12 +9,17 @@
 package bw.org.bocra.portal.form;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.BocraportalSpecifications;
 
 /**
  * @see bw.org.bocra.portal.form.FormService
@@ -76,10 +81,6 @@ public class FormServiceImpl
             throw new FormServiceException("This form cannot be removed. It has data associated with it.");
         }
 
-        // for(FormField field : form.getFormFields()) {
-            
-        // }
-
         if(id == null) {
             return false;
         }
@@ -120,6 +121,17 @@ public class FormServiceImpl
         throws Exception
     {
         return (Collection<FormVO>) getFormDao().loadAll(FormDao.TRANSFORM_FORMVO, pageNumber, pageSize);
+    }
+
+    @Override
+    protected Collection<FormVO> handleGetFormsByPeriods(Set<Long> periodConfigIds) throws Exception {
+
+        if(CollectionUtils.isEmpty(periodConfigIds)) {
+            throw new FormServiceException("Period config ids cannot be empty.");
+        }
+
+        Specification<Form> spec = BocraportalSpecifications.findByJoinAttributeIn("periodConfig", "id", periodConfigIds);
+        return getFormDao().toFormVOCollection(formRepository.findAll(spec, Sort.by("formName").ascending()));
     }
 
 }

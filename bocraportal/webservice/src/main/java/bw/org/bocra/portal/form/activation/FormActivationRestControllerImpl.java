@@ -41,7 +41,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form activation with id %ld not found.", id));
             }
 
             return response;
@@ -124,7 +124,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the form activation");
             }
 
             return response;

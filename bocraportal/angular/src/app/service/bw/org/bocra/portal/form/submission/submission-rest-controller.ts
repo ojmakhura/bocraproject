@@ -7,6 +7,7 @@ import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/subm
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { HttpClient } from '@angular/common/http';
 import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
+import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class SubmissionRestController {
     
     protected path = 'form/submission';
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private keycloakService: KeycloakService) {
     }
 
     public addDataField(dataField: DataFieldVO | any ): Observable<DataFieldVO | any> {
@@ -54,7 +55,9 @@ export class SubmissionRestController {
         return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
     }
 
-    public getSubmissionSummary(criteria: FormSubmissionCriteria | any ): Observable<SubmissionSummary | any> {
+    public getSubmissionSummary(): Observable<SubmissionSummary | any> {
+        let criteria: FormSubmissionCriteria = new FormSubmissionCriteria();
+        criteria.submittedBy = this.keycloakService.getUsername();
         return this.http.post<SubmissionSummary | any>(`${this.path}/summary`, criteria);
     }
 

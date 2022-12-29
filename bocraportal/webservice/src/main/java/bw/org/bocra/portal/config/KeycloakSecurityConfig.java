@@ -1,6 +1,5 @@
 package bw.org.bocra.portal.config;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
@@ -13,7 +12,6 @@ import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -28,14 +26,9 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 
 //@Configuration
 @KeycloakConfiguration
@@ -142,20 +135,5 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     @Bean
     public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
         return new KeycloakSpringBootConfigResolver();
-    }
-    
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-    
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-        return builder -> {
-            builder.simpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            builder.serializers(new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
-            builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
-        };
     }
 }

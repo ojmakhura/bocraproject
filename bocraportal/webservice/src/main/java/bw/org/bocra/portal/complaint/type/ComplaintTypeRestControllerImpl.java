@@ -26,8 +26,7 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
     public ComplaintTypeRestControllerImpl(
             ComplaintTypeService complaintTypeService) {
 
-        super(
-                complaintTypeService);
+        super(complaintTypeService);
     }
 
     @Override
@@ -78,7 +77,7 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
             return  ResponseEntity.status(HttpStatus.OK).body(complaintTypeService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -86,22 +85,20 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
     public ResponseEntity<?> handleRemove(Long id) {
         try {
             logger.debug("Deletes Complaint Type by ID " + id);
-            Optional<?> data = Optional.of(complaintTypeService.remove(id));
-            ResponseEntity<?> response;
+            
 
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if (complaintTypeService.remove(id)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Complaint type successfully deleted.");
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete complaint type");
             }
 
-            return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
 
             if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete complaint type with id " + id);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete complaint type with id " + id);
             }
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting complaint type with id " + id);
@@ -118,7 +115,7 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the complaint type.");
             }
 
             return response;
@@ -173,7 +170,7 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
 
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This access point is conflicting with an existing one.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This complaint type is conflicting with an existing one.");
             } 
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");

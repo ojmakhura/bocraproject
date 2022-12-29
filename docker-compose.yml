@@ -370,6 +370,8 @@ services:
     image: rabbitmq:management
     container_name: bocraportal-rabbitmq
     hostname: rabbitmq
+    # volumes:
+    #  - ${BOCRA_DATA}/rabbit/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
