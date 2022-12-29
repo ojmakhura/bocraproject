@@ -48,6 +48,9 @@
   "name":"[Ljava.sql.Statement;"
 },
 {
+  "name":"[Ljavax.ws.rs.client.ClientRequestFilter;"
+},
+{
   "name":"[Lorg.hibernate.event.spi.AutoFlushEventListener;"
 },
 {
@@ -93,7 +96,16 @@
   "name":"[Lorg.hibernate.event.spi.PostUpdateEventListener;"
 },
 {
+  "name":"[Lorg.hibernate.event.spi.PreDeleteEventListener;"
+},
+{
+  "name":"[Lorg.hibernate.event.spi.PreInsertEventListener;"
+},
+{
   "name":"[Lorg.hibernate.event.spi.PreLoadEventListener;"
+},
+{
+  "name":"[Lorg.hibernate.event.spi.PreUpdateEventListener;"
 },
 {
   "name":"[Lorg.hibernate.event.spi.RefreshEventListener;"
@@ -220,7 +232,10 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["bw.org.bocra.portal.security.CronSecurity","org.springframework.web.client.RestTemplate"] }]
+  "methods":[
+    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.security.CronSecurity","org.springframework.web.client.RestTemplate"] }, 
+    {"name":"dueMessages","parameterTypes":[] }
+  ]
 },
 {
   "name":"bw.org.bocra.portal.security.CronSecurity",
@@ -284,8 +299,8 @@
   "queryAllDeclaredMethods":true,
   "methods":[
     {"name":"getJsonFactory","parameterTypes":[] }, 
-    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.TypeReference"] }, 
-    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","java.lang.Class"] }
+    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.ResolvedType"] }, 
+    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.TypeReference"] }
   ]
 },
 {
@@ -327,6 +342,10 @@
     {"name":"writeTree","parameterTypes":["com.fasterxml.jackson.core.JsonGenerator","com.fasterxml.jackson.core.TreeNode"] }, 
     {"name":"writeValue","parameterTypes":["com.fasterxml.jackson.core.JsonGenerator","java.lang.Object"] }
   ]
+},
+{
+  "name":"com.fasterxml.jackson.databind.ext.Java7HandlersImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.fasterxml.jackson.databind.ext.Java7SupportImpl",
@@ -386,6 +405,33 @@
 },
 {
   "name":"com.fasterxml.jackson.datatype.jsr310.JavaTimeModule",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.fasterxml.jackson.jaxrs.base.ProviderBase",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.fasterxml.jackson.module.jaxb.deser.DataHandlerJsonDeserializer",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.fasterxml.jackson.module.jaxb.ser.DataHandlerJsonSerializer",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -818,6 +864,13 @@
   ]
 },
 {
+  "name":"jakarta.persistence.Persistence",
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getPersistenceUtil","parameterTypes":[] }
+  ]
+},
+{
   "name":"jakarta.persistence.PersistenceContext"
 },
 {
@@ -900,16 +953,14 @@
   "name":"jakarta.validation.ConstraintViolation"
 },
 {
-  "name":"jakarta.validation.Validation"
+  "name":"jakarta.validation.Validator",
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicMethods":true
 },
 {
-  "name":"jakarta.validation.Validation$GenericBootstrapImpl"
-},
-{
-  "name":"jakarta.validation.Validator"
-},
-{
-  "name":"jakarta.validation.ValidatorFactory"
+  "name":"jakarta.validation.ValidatorFactory",
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicMethods":true
 },
 {
   "name":"jakarta.validation.bootstrap.GenericBootstrap"
@@ -946,6 +997,7 @@
 },
 {
   "name":"java.lang.Class",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[
     {"name":"getAnnotatedInterfaces","parameterTypes":[] }, 
@@ -981,12 +1033,20 @@
   "queryAllDeclaredMethods":true,
   "methods":[
     {"name":"addExports","parameterTypes":["java.lang.String","java.lang.Module"] }, 
-    {"name":"isExported","parameterTypes":["java.lang.String"] }
+    {"name":"isExported","parameterTypes":["java.lang.String"] }, 
+    {"name":"isNamed","parameterTypes":[] }
   ]
 },
 {
+  "name":"java.lang.Number",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"java.lang.Object",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"equals","parameterTypes":["java.lang.Object"] }, 
     {"name":"hashCode","parameterTypes":[] }
@@ -1014,6 +1074,9 @@
 {
   "name":"java.lang.System",
   "methods":[{"name":"getSecurityManager","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Thread"
 },
 {
   "name":"java.lang.WrongThreadException"
@@ -1118,6 +1181,9 @@
   "name":"java.net.NetPermission"
 },
 {
+  "name":"java.net.Socket"
+},
+{
   "name":"java.net.SocketPermission"
 },
 {
@@ -1206,7 +1272,16 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"java.util.concurrent.Executors$RunnableAdapter"
+},
+{
+  "name":"java.util.concurrent.FutureTask"
+},
+{
   "name":"java.util.concurrent.ScheduledExecutorService"
+},
+{
+  "name":"java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask"
 },
 {
   "name":"java.util.concurrent.ThreadFactory",
@@ -1214,11 +1289,20 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"java.util.concurrent.ThreadPoolExecutor"
+},
+{
+  "name":"java.util.concurrent.ThreadPoolExecutor$Worker"
+},
+{
   "name":"java.util.logging.LogManager"
 },
 {
   "name":"java.util.logging.SimpleFormatter",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"javafx.beans.value.ObservableValue"
 },
 {
   "name":"javax.annotation.PostConstruct"
@@ -1265,6 +1349,18 @@
   "methods":[{"name":"<init>","parameterTypes":["sun.security.x509.X500Name"] }]
 },
 {
+  "name":"javax.servlet.FilterConfig"
+},
+{
+  "name":"javax.servlet.ServletConfig"
+},
+{
+  "name":"javax.servlet.ServletContext"
+},
+{
+  "name":"javax.servlet.http.HttpServletResponse"
+},
+{
   "name":"javax.smartcardio.CardPermission"
 },
 {
@@ -1281,6 +1377,10 @@
 },
 {
   "name":"javax.sql.XADataSource"
+},
+{
+  "name":"javax.ws.rs.ext.Providers",
+  "methods":[{"name":"getContextResolver","parameterTypes":["java.lang.Class","javax.ws.rs.core.MediaType"] }]
 },
 {
   "name":"jdk.internal.reflect.DelegatingMethodAccessorImpl"
@@ -1544,6 +1644,10 @@
   "name":"org.apache.derby.jdbc.EmbeddedDriver"
 },
 {
+  "name":"org.apache.el.ExpressionFactoryImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"org.apache.jasper.compiler$JspConfig"
 },
 {
@@ -1608,6 +1712,17 @@
 },
 {
   "name":"org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer"
+},
+{
+  "name":"org.eclipse.microprofile.config.Config",
+  "methods":[
+    {"name":"getOptionalValue","parameterTypes":["java.lang.String","java.lang.Class"] }, 
+    {"name":"getValue","parameterTypes":["java.lang.String","java.lang.Class"] }
+  ]
+},
+{
+  "name":"org.eclipse.microprofile.config.ConfigProvider",
+  "methods":[{"name":"getConfig","parameterTypes":["java.lang.ClassLoader"] }]
 },
 {
   "name":"org.elasticsearch.client.RestClientBuilder"
@@ -1707,9 +1822,6 @@
   "queryAllPublicMethods":true
 },
 {
-  "name":"org.hibernate.boot.internal.SessionFactoryBuilderImpl"
-},
-{
   "name":"org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1724,9 +1836,6 @@
 {
   "name":"org.hibernate.cache.internal.NoCachingRegionFactory",
   "queryAllPublicMethods":true
-},
-{
-  "name":"org.hibernate.cfg.beanvalidation.BeanValidationIntegrator"
 },
 {
   "name":"org.hibernate.cfg.beanvalidation.TypeSafeActivator",
@@ -1802,9 +1911,6 @@
   "name":"org.hibernate.internal.EntityManagerMessageLogger_$logger_en_BW"
 },
 {
-  "name":"org.hibernate.internal.SessionFactoryImpl"
-},
-{
   "name":"org.hibernate.internal.log.DeprecationLogger_$logger",
   "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
 },
@@ -1813,9 +1919,6 @@
 },
 {
   "name":"org.hibernate.internal.log.DeprecationLogger_$logger_en_BW"
-},
-{
-  "name":"org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl"
 },
 {
   "name":"org.hibernate.metamodel.mapping.MappingModelCreationLogger_$logger",
@@ -1897,10 +2000,35 @@
   "allPublicFields":true
 },
 {
-  "name":"org.hibernate.validator.messageinterpolation$ParameterMessageInterpolator"
+  "name":"org.hibernate.validator.internal.engine.AbstractConfigurationImpl",
+  "methods":[{"name":"externalClassLoader","parameterTypes":["java.lang.ClassLoader"] }]
 },
 {
-  "name":"org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator"
+  "name":"org.hibernate.validator.internal.engine.ConfigurationImpl"
+},
+{
+  "name":"org.hibernate.validator.internal.engine.resolver.JPATraversableResolver",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.hibernate.validator.internal.util.logging.Log_$logger",
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
+},
+{
+  "name":"org.hibernate.validator.internal.util.logging.Log_$logger_en"
+},
+{
+  "name":"org.hibernate.validator.internal.util.logging.Log_$logger_en_BW"
+},
+{
+  "name":"org.hibernate.validator.internal.util.logging.Messages_$bundle",
+  "fields":[{"name":"INSTANCE"}]
+},
+{
+  "name":"org.hibernate.validator.internal.util.logging.Messages_$bundle_en"
+},
+{
+  "name":"org.hibernate.validator.internal.util.logging.Messages_$bundle_en_BW"
 },
 {
   "name":"org.hsqldb.jdbc$JDBCDriver"
@@ -1918,7 +2046,477 @@
   "name":"org.jboss.logging.Logger"
 },
 {
+  "name":"org.jboss.resteasy.client.jaxrs.i18n.LogMessages_$logger",
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
+},
+{
+  "name":"org.jboss.resteasy.client.jaxrs.i18n.LogMessages_$logger_en"
+},
+{
+  "name":"org.jboss.resteasy.client.jaxrs.i18n.LogMessages_$logger_en_BW"
+},
+{
+  "name":"org.jboss.resteasy.client.jaxrs.i18n.Messages_$bundle",
+  "fields":[{"name":"INSTANCE"}]
+},
+{
+  "name":"org.jboss.resteasy.client.jaxrs.i18n.Messages_$bundle_en"
+},
+{
+  "name":"org.jboss.resteasy.client.jaxrs.i18n.Messages_$bundle_en_BW"
+},
+{
+  "name":"org.jboss.resteasy.client.jaxrs.internal.CompletionStageRxInvokerProvider"
+},
+{
+  "name":"org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl",
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"connectionPoolSize","parameterTypes":["int"] }, 
+    {"name":"sslContext","parameterTypes":["javax.net.ssl.SSLContext"] }
+  ]
+},
+{
+  "name":"org.jboss.resteasy.client.jaxrs.internal.proxy.ProxyBuilderImpl",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Class","javax.ws.rs.client.WebTarget"] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.interceptors.CacheControlFeature",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.interceptors.ClientContentEncodingAnnotationFeature",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.interceptors.MessageSanitizerContainerResponseFilter"
+},
+{
+  "name":"org.jboss.resteasy.plugins.interceptors.ServerContentEncodingAnnotationFeature"
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.AbstractEntityProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.AsyncStreamingOutputProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.ByteArrayProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.CompletionStageProvider"
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.DataSourceProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.DefaultBooleanWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.DefaultNumberWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.DefaultTextPlain",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.DocumentProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.resteasy.spi.ResteasyConfiguration"] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.FileProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.FileRangeWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.FormUrlEncodedProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.IIOImageProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.InputStreamProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.JaxrsFormProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.MultiValuedParamConverterProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.ReactiveStreamProvider"
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.ReaderProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.SourceProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.StreamingOutputProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.StringTextStar",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jackson.PatchMethodFilter"
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jackson.UnrecognizedPropertyExceptionHandler"
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.AbstractJAXBContextFinder",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.AbstractJAXBProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.CollectionProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.JAXBElementProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.JAXBXmlRootElementProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.JAXBXmlSeeAlsoProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.JAXBXmlTypeProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.MapProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.XmlJAXBContextFinder",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.i18n.LogMessages_$logger",
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.i18n.LogMessages_$logger_en"
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.jaxb.i18n.LogMessages_$logger_en_BW"
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.AbstractMultipartFormDataWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.AbstractMultipartRelatedWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.AbstractMultipartWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.ListMultipartReader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.ListMultipartWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MapMultipartFormDataReader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MapMultipartFormDataWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MimeMultipartProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MultipartFormAnnotationReader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MultipartFormAnnotationWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataReader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MultipartReader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MultipartRelatedReader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MultipartRelatedWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.MultipartWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.XopWithMultipartRelatedReader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.multipart.XopWithMultipartRelatedWriter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.sse.SseEventProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.jboss.resteasy.plugins.providers.sse.SseEventSinkInterceptor"
+},
+{
+  "name":"org.jboss.resteasy.resteasy_jaxrs.i18n.LogMessages_$logger",
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
+},
+{
+  "name":"org.jboss.resteasy.resteasy_jaxrs.i18n.LogMessages_$logger_en"
+},
+{
+  "name":"org.jboss.resteasy.resteasy_jaxrs.i18n.LogMessages_$logger_en_BW"
+},
+{
+  "name":"org.jboss.resteasy.resteasy_jaxrs.i18n.Messages_$bundle",
+  "fields":[{"name":"INSTANCE"}]
+},
+{
+  "name":"org.jboss.resteasy.resteasy_jaxrs.i18n.Messages_$bundle_en"
+},
+{
+  "name":"org.jboss.resteasy.resteasy_jaxrs.i18n.Messages_$bundle_en_BW"
+},
+{
+  "name":"org.jboss.resteasy.tracing.api.RESTEasyTracing"
+},
+{
+  "name":"org.joda.time.ReadableInstant"
+},
+{
   "name":"org.jooq.DSLContext"
+},
+{
+  "name":"org.keycloak.admin.client.JacksonProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.keycloak.admin.client.resource.BasicAuthFilter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.keycloak.admin.client.resource.BearerAuthFilter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.keycloak.admin.client.spi.ResteasyClientClassicProvider",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.keycloak.admin.client.token.TokenService",
+  "queryAllPublicMethods":true
+},
+{
+  "name":"org.keycloak.representations.AccessTokenResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setExpiresIn","parameterTypes":["long"] }, 
+    {"name":"setNotBeforePolicy","parameterTypes":["int"] }, 
+    {"name":"setRefreshExpiresIn","parameterTypes":["long"] }, 
+    {"name":"setScope","parameterTypes":["java.lang.String"] }, 
+    {"name":"setToken","parameterTypes":["java.lang.String"] }, 
+    {"name":"setTokenType","parameterTypes":["java.lang.String"] }
+  ]
 },
 {
   "name":"org.neo4j.driver.Driver"
@@ -2056,7 +2654,8 @@
 {
   "name":"org.springframework.aop.framework.autoproxy.AbstractBeanFactoryAwareAdvisingPostProcessor",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"setBeanFactory","parameterTypes":["org.springframework.beans.factory.BeanFactory"] }]
 },
 {
   "name":"org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor",
@@ -2203,17 +2802,8 @@
   ]
 },
 {
-  "name":"org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory"
-},
-{
-  "name":"org.springframework.beans.factory.support.AbstractBeanFactory"
-},
-{
   "name":"org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor",
   "queryAllPublicMethods":true
-},
-{
-  "name":"org.springframework.beans.factory.support.DefaultSingletonBeanRegistry"
 },
 {
   "name":"org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor",
@@ -3298,7 +3888,20 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration"
+  "name":"org.springframework.boot.autoconfigure.validation.PrimaryDefaultValidatorPostProcessor",
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"defaultValidator","parameterTypes":["org.springframework.context.ApplicationContext","org.springframework.beans.factory.ObjectProvider"] }, 
+    {"name":"methodValidationPostProcessor","parameterTypes":["org.springframework.core.env.Environment","org.springframework.beans.factory.ObjectProvider","org.springframework.beans.factory.ObjectProvider"] }
+  ]
 },
 {
   "name":"org.springframework.boot.autoconfigure.validation.ValidatorAdapter",
@@ -3982,17 +4585,8 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"org.springframework.boot.loader.JarLauncher"
-},
-{
   "name":"org.springframework.boot.loader.LaunchedURLClassLoader",
   "methods":[{"name":"clearCache","parameterTypes":[] }]
-},
-{
-  "name":"org.springframework.boot.loader.Launcher"
-},
-{
-  "name":"org.springframework.boot.loader.MainMethodRunner"
 },
 {
   "name":"org.springframework.boot.logging.java.JavaLoggingSystem$Factory",
@@ -4097,6 +4691,12 @@
   "name":"org.springframework.boot.task.TaskSchedulerBuilder",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.springframework.boot.validation.beanvalidation.FilteredMethodValidationPostProcessor",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"afterPropertiesSet","parameterTypes":[] }]
 },
 {
   "name":"org.springframework.boot.validation.beanvalidation.MethodValidationExcludeFilter",
@@ -4296,9 +4896,6 @@
   "name":"org.springframework.boot.web.servlet.WebListenerRegistry",
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
-},
-{
-  "name":"org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext"
 },
 {
   "name":"org.springframework.boot.web.servlet.context.ServletWebServerApplicationContextFactory",
@@ -4552,9 +5149,6 @@
 {
   "name":"org.springframework.context.event.EventListenerMethodProcessor",
   "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"org.springframework.context.support.AbstractApplicationContext"
 },
 {
   "name":"org.springframework.context.support.ApplicationObjectSupport",
@@ -4977,6 +5571,15 @@
 },
 {
   "name":"org.springframework.http.ReactiveHttpInputMessage"
+},
+{
+  "name":"org.springframework.http.client.AbstractBufferingClientHttpRequest"
+},
+{
+  "name":"org.springframework.http.client.AbstractClientHttpRequest"
+},
+{
+  "name":"org.springframework.http.client.SimpleBufferingClientHttpRequest"
 },
 {
   "name":"org.springframework.http.client.support.HttpAccessor",
@@ -5414,9 +6017,6 @@
   ]
 },
 {
-  "name":"org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider"
-},
-{
   "name":"org.springframework.oxm.Marshaller"
 },
 {
@@ -5508,6 +6108,9 @@
   ]
 },
 {
+  "name":"org.springframework.scheduling.concurrent.ReschedulingRunnable"
+},
+{
   "name":"org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -5543,6 +6146,12 @@
 {
   "name":"org.springframework.scheduling.config.ScheduledTaskHolder",
   "queryAllPublicMethods":true
+},
+{
+  "name":"org.springframework.scheduling.support.DelegatingErrorHandlingRunnable"
+},
+{
+  "name":"org.springframework.scheduling.support.ScheduledMethodRunnable"
 },
 {
   "name":"org.springframework.security.access.AccessDecisionManager",
@@ -6452,6 +7061,52 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"org.springframework.validation.beanvalidation.LocalValidatorFactoryBean",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[
+    {"name":"afterPropertiesSet","parameterTypes":[] }, 
+    {"name":"close","parameterTypes":[] }, 
+    {"name":"destroy","parameterTypes":[] }, 
+    {"name":"getClockProvider","parameterTypes":[] }, 
+    {"name":"getConstraintValidatorFactory","parameterTypes":[] }, 
+    {"name":"getMessageInterpolator","parameterTypes":[] }, 
+    {"name":"getParameterNameProvider","parameterTypes":[] }, 
+    {"name":"getTraversableResolver","parameterTypes":[] }, 
+    {"name":"getValidator","parameterTypes":[] }, 
+    {"name":"setApplicationContext","parameterTypes":["org.springframework.context.ApplicationContext"] }, 
+    {"name":"unwrap","parameterTypes":["java.lang.Class"] }, 
+    {"name":"usingContext","parameterTypes":[] }
+  ]
+},
+{
+  "name":"org.springframework.validation.beanvalidation.MethodValidationPostProcessor",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[
+    {"name":"setValidatedAnnotationType","parameterTypes":["java.lang.Class"] }, 
+    {"name":"setValidator","parameterTypes":["jakarta.validation.Validator"] }, 
+    {"name":"setValidatorFactory","parameterTypes":["jakarta.validation.ValidatorFactory"] }, 
+    {"name":"setValidatorProvider","parameterTypes":["org.springframework.beans.factory.ObjectProvider"] }
+  ]
+},
+{
+  "name":"org.springframework.validation.beanvalidation.SpringValidatorAdapter",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[
+    {"name":"forExecutables","parameterTypes":[] }, 
+    {"name":"getConstraintsForClass","parameterTypes":["java.lang.Class"] }, 
+    {"name":"supports","parameterTypes":["java.lang.Class"] }, 
+    {"name":"validate","parameterTypes":["java.lang.Object","org.springframework.validation.Errors"] }, 
+    {"name":"validate","parameterTypes":["java.lang.Object","org.springframework.validation.Errors","java.lang.Object[]"] }, 
+    {"name":"validate","parameterTypes":["java.lang.Object","java.lang.Class[]"] }, 
+    {"name":"validateProperty","parameterTypes":["java.lang.Object","java.lang.String","java.lang.Class[]"] }, 
+    {"name":"validateValue","parameterTypes":["java.lang.Class","java.lang.String","java.lang.Object","org.springframework.validation.Errors","java.lang.Object[]"] }, 
+    {"name":"validateValue","parameterTypes":["java.lang.Class","java.lang.String","java.lang.Object","java.lang.Class[]"] }
+  ]
+},
+{
   "name":"org.springframework.web.accept.ContentNegotiationManager",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -7249,6 +7904,21 @@
   "name":"scala.Option"
 },
 {
+  "name":"sun.net.NetworkClient"
+},
+{
+  "name":"sun.net.www.http.HttpClient"
+},
+{
+  "name":"sun.net.www.protocol.http.HttpURLConnection"
+},
+{
+  "name":"sun.nio.ch.Net"
+},
+{
+  "name":"sun.nio.ch.NioSocketImpl"
+},
+{
   "name":"sun.security.pkcs12.PKCS12KeyStore",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -7322,6 +7992,10 @@
 },
 {
   "name":"sun.security.ssl.SSLContextImpl$DefaultSSLContext",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.ssl.SSLContextImpl$TLSContext",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {

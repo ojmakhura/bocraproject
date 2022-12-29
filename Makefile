@@ -27,7 +27,7 @@ test_api:
 	. ./.env && mvn -f bocraportal/webservice test -o
 
 build_comm:
-	mvn -f bocraportal/comm install -Dmaven.test.skip=true -o
+	. ./.env && mvn -f bocraportal/comm -Pnative clean install -DskipTests -o
 
 build_comm_native:
 	mvn -f bocraportal/comm  package -Pnative -o
@@ -36,16 +36,20 @@ test_comm:
 	. ./.env && mvn -f bocraportal/comm test -o
 	
 build_cron: gen_env
-	. ./.env && mvn -f bocraportal/bocracron -Pnative install -DskipTests -o
-	
-cron_tracing: gen_env
-    . ./.env && cd bocraportal/bocracron && timeout 15 sh -c 'java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image -jar ./target/bocraportal-cron-0.8.jar'
+	. ./.env && mvn -f bocraportal/cron -Pnative clean install -DskipTests -o
 	
 build_cron_native: gen_env
-	. ./.env && mvn -f bocraportal/bocracron -Pnative native:compile -DskipTests -o
+	. ./.env && mvn -f bocraportal/cron -Pnative native:compile -DskipTests -o
+	
+build_native: gen_env 
+	. ./.env && mvn -f bocraportal/${service} clean native:compile -Pnative -DskipTests -o
 
+colon = :
+native_image_tracing: gen_env
+	. ./.env && timeout 40 ${JAVA_HOME}/bin/java -agentlib${colon}native-image-agent=config-output-dir=./bocraportal/${service}/src/main/resources/META-INF/native-image -jar ./bocraportal/${service}/target/bocraportal-${service}-${IMAGE_VERSION}.jar
+	
 test_cron: gen_env
-	. ./.env && mvn -f bocraportal/bocracron test -o
+	. ./.env && mvn -f bocraportal/cron test -o
 
 build_web: 
 	mvn -f bocraportal/angular install -Dmaven.test.skip=true -o
@@ -65,7 +69,10 @@ clean_mda:
 	mvn -f bocraportal/mda clean -o
 
 clean_cron:
-	mvn -f bocraportal/bocracron clean -o
+	mvn -f bocraportal/cron clean -o
+
+clean_module:
+	mvn -f bocraportal/${service} clean -o
 
 ##
 ## Start the docker containers
@@ -103,12 +110,12 @@ build_image: gen_env
 build_api_image: gen_env build_api
 	. ./.env && docker compose build api
 
-build_comm_image: build_comm gen_env
+build_comm_image: gen_env build_cron_native
 	. ./.env && docker compose build comm
 
 build_cron_image: gen_env 
 	. ./.env && docker compose build cron
-	# . ./.env && mvn -f bocraportal/bocracron spring-boot:build-image -DskipTests -o
+	# . ./.env && mvn -f bocraportal/cron spring-boot:build-image -DskipTests -o
 
 build_web_image: gen_env
 	. ./.env && docker compose build web
@@ -145,10 +152,10 @@ run_comm_local: gen_env
 	. ./.env && cd bocraportal/comm && mvn spring-boot:run
 
 run_cron_local: gen_env
-	. ./.env && cd bocraportal/bocracron && mvn spring-boot:run
+	. ./.env && cd bocraportal/cron && mvn spring-boot:run
 
 run_cron_native_local: gen_env
-	. ./.env && bocraportal/bocracron/target/bocraportal-cron
+	. ./.env && bocraportal/cron/target/bocraportal-cron
 
 local_web_deps: build_web
 	cd bocraportal/angular/target/bocraportal && npm i

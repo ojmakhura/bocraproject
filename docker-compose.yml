@@ -267,24 +267,23 @@ services:
     image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
     container_name: bocraportal-comm
     hostname: comm
-
     healthcheck:
       test: "curl -m 5 --silent --fail --request GET http://localhost:8095/actuator/health | grep UP || exit 1"
       interval: 5s
       timeout: 25s
       retries: 3
       start_period: 5s
-    depends_on:
-      db:
-        condition: service_healthy
-      api:
-        condition: service_healthy
-      keycloak:
-        condition: service_healthy
+    #depends_on:
+    #  db:
+    #    condition: service_healthy
+    #  api:
+    #    condition: service_healthy
+    #  keycloak:
+    #    condition: service_healthy
       # rabbitmq:
     build:
       context: .
-      dockerfile: bocraportal/comm/Dockerfile
+      dockerfile: bocraportal/comm/Dockerfile.native
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
@@ -316,7 +315,8 @@ services:
       COMM_URL: ${COMM_URL}
       API_URL: ${API_URL}
       TZ: Africa/Gaborone
-    
+    volumes:
+      - ${BOCRA_DATA}/cron/hosts:/etc/hosts
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.comm.entrypoints=${ACTIVE_ROUTER_ENTRY}"
@@ -401,7 +401,7 @@ services:
     #build: ./bocraportal/bocracron
     build:
       context: .
-      dockerfile: bocraportal/bocracron/Dockerfile
+      dockerfile: bocraportal/bocracron/Dockerfile.native
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
@@ -422,10 +422,6 @@ services:
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
       CERT: ${CERT}
       CERT_PASSWORD: ${CERT_PASSWORD}
-      #RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-      #RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-      #RABBITMQ_HOST: ${RABBITMQ_HOST}
-      #RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
       CRON_LOG_LEVEL: ${CRON_LOG_LEVEL}
       WEB_URL: ${WEB_URL}
       COMM_URL: ${COMM_URL}

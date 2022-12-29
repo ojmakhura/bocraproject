@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bw.org.bocra.portal.message.CommunicationMessageVO;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/email")
+@Slf4j
 public class EmailController {
 
     private final EmailService emailService;
@@ -27,7 +29,7 @@ public class EmailController {
 
             return ResponseEntity.ok().body(emailMessage);
         } catch (Exception e) {
-            // logger.error(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

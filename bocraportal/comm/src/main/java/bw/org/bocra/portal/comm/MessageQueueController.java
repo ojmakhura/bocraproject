@@ -2,9 +2,6 @@ package bw.org.bocra.portal.comm;
 
 import java.util.Collection;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
-// import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -13,8 +10,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,15 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import bw.org.bocra.portal.message.CommunicationMessageVO;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/messages")
+@Slf4j
 public class MessageQueueController {
-    protected Logger logger = LoggerFactory.getLogger(MessageQueueController.class);
+    
     private final RabbitTemplate rabbitTemplate;
     private final RestTemplate restTemplate;
-
-    // private final OAuth2AuthorizedClientService clientService;
     
     @Value("${bocra.api.url}")
     private String apiUrl;
@@ -40,7 +38,6 @@ public class MessageQueueController {
 
         this.rabbitTemplate = rabbitTemplate;
         this.restTemplate = restTemplate;
-        // this.clientService = clientService;
     }
 
     @PostMapping()
@@ -55,7 +52,7 @@ public class MessageQueueController {
 
     public ResponseEntity<?> sendEmail(CommunicationMessageVO message) {
 
-        logger.info(message.toString());
+        log.info(message.toString());
         rabbitTemplate.convertAndSend("", "q.communication", message);
         
         return ResponseEntity.ok().build();
@@ -64,11 +61,12 @@ public class MessageQueueController {
     @GetMapping("/due")
     public ResponseEntity<Integer> loadDueMessages() {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        RefreshableKeycloakSecurityContext ksc = (RefreshableKeycloakSecurityContext) authentication.getCredentials();
-    
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+
+        JwtAuthenticationToken auth = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + ksc.getTokenString());
+        headers.set("Authorization", "Bearer " + auth.getToken().getTokenValue());
         String url = apiUrl + "/message/due";
         HttpEntity<String> request = new HttpEntity<String>(headers);
 
@@ -78,7 +76,7 @@ public class MessageQueueController {
 
             for (CommunicationMessageVO message : messages) {
 
-                if(CollectionUtils.isNotEmpty(message.getDestinations())) {
+                if(!CollectionUtils.isEmpty(message.getDestinations())) {
                     message.setCreatedDate(null);
                     message.setDispatchDate(null);
                     message.setUpdatedDate(null);

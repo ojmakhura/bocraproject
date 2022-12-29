@@ -20,7 +20,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<repackage.classifier />
-		<spring-native.version>0.12.1</spring-native.version>
+		<!-- <spring-native.version>0.12.1</spring-native.version> -->
 		<keycloak.version>20.0.2</keycloak.version>
 	</properties>
 	<dependencyManagement>
@@ -55,6 +55,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!-- <dependency>
 			<groupId>org.springframework.experimental</groupId>
 		<artifactId>spring-native</artifactId>
@@ -82,19 +92,9 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-admin-client</artifactId>
-			<version>20.0.2</version>
+			<version>${keycloak.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.keycloak</groupId>
@@ -103,13 +103,12 @@
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-spring-security-adapter</artifactId>
-			<version>20.0.2</version>
+			<version>${keycloak.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
@@ -117,24 +116,16 @@
 		</dependency>
 		<dependency>
 			<groupId>org.graalvm.buildtools</groupId>
-			 <artifactId>graalvm-reachability-metadata</artifactId>
-			 <version>0.9.19</version>
-			 <classifier>repository</classifier>
-			 <type>zip</type>
-		 </dependency>
-		<!-- https://mvnrepository.com/artifact/jakarta.enterprise/jakarta.enterprise.cdi-api -->
-		<!-- <dependency>
-			<groupId>jakarta.enterprise</groupId>
-		<artifactId>jakarta.enterprise.cdi-api</artifactId>
-			<version>4.0.1</version>
-		</dependency> -->
-		<!-- https://mvnrepository.com/artifact/org.wildfly.transaction/wildfly-transaction-client -->
-		<!-- <dependency>
-			<groupId>org.wildfly.transaction</groupId>
-		<artifactId>wildfly-transaction-client</artifactId>
-			<version>3.0.0.Final</version>
-		</dependency> -->
-
+			<artifactId>graalvm-reachability-metadata</artifactId>
+			<version>0.9.19</version>
+			<classifier>repository</classifier>
+			<type>zip</type>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.0.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -183,9 +174,6 @@
 							<API_URL>${API_URL}</API_URL>
 							<TZ>${TZ}</TZ>
 						</env>
-						<!-- <bindings>
-						<binding>${basedir}/bindings/ca-certificates:/platform/bindings/ca-certificates</binding>
-						</bindings> -->
 					</image>
 				</configuration>
 			</plugin>
@@ -214,42 +202,7 @@
 						<enabled>true</enabled>
 					</agent>
 				</configuration>
-				<!-- <extensions>true</extensions> -->
-				<!-- <executions>
-					<execution>
-						<id>build-native</id>
-						<goals>
-				<goal>build</goal>
-						</goals>
-						<phase>package</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<skip>false</skip>
-				<imageName>bocraportal-cron</imageName>
-				<mainClass>bw.org.bocra.portal.BocracronApplication</mainClass>
-					
-				</configuration> -->
 			</plugin>
-			<!-- <plugin>
-				<groupId>org.springframework.experimental</groupId>
-			<artifactId>spring-aot-maven-plugin</artifactId>
-			<version>${spring-native.version}</version>
-				<executions>
-					<execution>
-			<id>test-generate</id>
-						<goals>
-							<goal>test-generate</goal>
-						</goals>
-			</execution>
-					<execution>
-						<id>generate</id>
-						<goals>
-			<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin> -->
 			<plugin>
 				<groupId>org.hibernate.orm.tooling</groupId>
 				<artifactId>hibernate-enhance-maven-plugin</artifactId>
@@ -272,73 +225,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<!-- <repositories>
-		<repository>
-			<id>spring-releases</id>
-			<name>Spring Releases</name>
-	<url>https://repo.spring.io/release</url>
-			<snapshots>
-				<enabled>false</enabled>
-	</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-	<id>spring-releases</id>
-			<name>Spring Releases</name>
-	<url>https://repo.spring.io/release</url>
-			<snapshots>
-				<enabled>false</enabled>
-	</snapshots>
-		</pluginRepository>
-	</pluginRepositories> -->
-
-	<!-- <profiles>
-		<profile>
-			<id>native</id>
-			<properties>
-	<repackage.classifier>exec</repackage.classifier>
-	<native-buildtools.version>0.9.13</native-buildtools.version>
-			</properties>
-			<dependencies>
-	<dependency>
-					<groupId>org.junit.platform</groupId>
-	<artifactId>junit-platform-launcher</artifactId>
-					<scope>test</scope>
-				</dependency>
-	</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.graalvm.buildtools</groupId>
-	<artifactId>native-maven-plugin</artifactId>
-						<version>${native-buildtools.version}</version>
-	<extensions>true</extensions>
-						<executions>
-							<execution>
-								<id>test-native</id>
-	<phase>test</phase>
-								<goals>
-									<goal>test</goal>
-								</goals>
-							</execution>
-	<execution>
-								<id>build-native</id>
-								<phase>package</phase>
-								<goals>
-	<goal>build</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-	<agent>
-							  <enabled>true</enabled>
-							</agent>
-						  </configuration>
-					</plugin>
-	</plugins>
-			</build>
-		</profile>
-	</profiles> -->
-
 </project>

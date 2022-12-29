@@ -2,9 +2,8 @@ package bw.org.bocra.portal.smtp;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 
 @Entity
 public class RealmSmtpConfig implements Serializable {

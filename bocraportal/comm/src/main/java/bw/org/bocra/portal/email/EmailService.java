@@ -15,11 +15,11 @@ import org.springframework.web.client.RestTemplate;
 import bw.org.bocra.portal.message.CommunicationMessageVO;
 import bw.org.bocra.portal.smtp.RealmSmtpDTO;
 import bw.org.bocra.portal.smtp.RealmSmtpService;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class EmailService {
-
-    protected Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     @Value("${keycloak.realm}")
     private String realmId;
@@ -38,7 +38,7 @@ public class EmailService {
 
     @RabbitListener(queues = "q.send-email")
     public void sendEmail(CommunicationMessageVO emailMessage) {
-        logger.info("Sending email to {}", emailMessage.getSubject());
+        log.info("Sending email to {}", emailMessage.getSubject());
         String url = apiUrl + "/message/due";
 
         RealmSmtpDTO dto = configService.getRealmSmtpConfig(realmId);

@@ -1,11 +1,10 @@
 # Dockerfile
-FROM openjdk:17
+FROM eclipse-temurin:17
 
 ARG CERT
 ARG CERT_PASSWORD
 
-ENV CERT ${CERT}
-ENV CERT_PASSWORD ${CERT_PASSWORD}
+RUN apt-get update
 
 RUN mkdir -p /app
 WORKDIR /app
@@ -13,7 +12,7 @@ WORKDIR /app
 COPY deployment/certs/${CERT}.crt /app/certs/${CERT}.crt
 RUN keytool -importcert -file /app/certs/${CERT}.crt -noprompt -alias bocra -storepass ${CERT_PASSWORD} -keystore ${JAVA_HOME}/lib/security/cacerts
 
-ARG JAR_FILE=bocraportal/comm/target/*.jar
-COPY ${JAR_FILE} bocraportal-comm.jar
-ENTRYPOINT ["java","-jar","/app/bocraportal-comm.jar"]
+ARG JAR_FILE=bocraportal/comm/target/bocraportal-comm
+COPY ${JAR_FILE} bocraportal-comm
+ENTRYPOINT ["/app/bocraportal-comm"]
 EXPOSE 8095
