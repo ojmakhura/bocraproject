@@ -38,6 +38,9 @@ test_comm:
 build_cron: gen_env
 	. ./.env && mvn -f bocraportal/bocracron -Pnative install -DskipTests -o
 	
+cron_tracing: gen_env
+    . ./.env && cd bocraportal/bocracron && timeout 15 sh -c 'java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image -jar ./target/bocraportal-cron-0.8.jar'
+	
 build_cron_native: gen_env
 	. ./.env && mvn -f bocraportal/bocracron -Pnative native:compile -DskipTests -o
 
