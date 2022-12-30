@@ -151,10 +151,18 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
 
                     message = "The access point information is missing.";
 
-                } else if(message.contains("or its id can not be null")) {
-                    if(message.contains("'accessPoint.accessPointType' can not be null")) {
+                } else if(message.contains("can not be null")) {
+                    if(message.contains("'accessPoint.accessPointType'") ||
+                            message.contains("'accessPointType'")) {
                 
                         message = "The access point type or its id is missing.";
+                    } else if(message.contains("'accessPoint.name'") ||
+                                message.contains("'name'")) {
+                        message = "The access point name is missing.";
+                        
+                    } else if(message.contains("'accessPoint.url'") ||
+                                message.contains("'url'")) {
+                        message = "The access point url is missing.";
                     }
                 
                 } else if(message.contains("'accessPoint.name'")) {

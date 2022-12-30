@@ -8,7 +8,9 @@
  */
 package bw.org.bocra.portal.form.activation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,9 +18,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -27,22 +31,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
-import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
-import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.submission.FormSubmission;
 import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
-import bw.org.bocra.portal.form.submission.FormSubmissionStatus;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.form.submission.SubmissionService;
-import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
-import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
-import bw.org.bocra.portal.licence.type.form.LicenceTypeForm;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
@@ -51,10 +49,11 @@ import bw.org.bocra.portal.message.CommunicationMessage;
 import bw.org.bocra.portal.message.CommunicationMessageDao;
 import bw.org.bocra.portal.message.CommunicationMessagePlatform;
 import bw.org.bocra.portal.message.CommunicationMessageStatus;
-import bw.org.bocra.portal.message.CommunicationMessageVO;
 import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodDao;
 import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
+import bw.org.bocra.portal.period.config.PeriodConfig;
 import bw.org.bocra.portal.sector.SectorService;
 import bw.org.bocra.portal.sector.form.SectorForm;
 import bw.org.bocra.portal.sector.form.SectorFormService;
@@ -78,8 +77,9 @@ public class FormActivationServiceImpl
     private final CommunicationMessageDao communicationMessageDao; 
     private final SubmissionService submissionService;
     private final PeriodRepository periodRepository;
+    private final PeriodDao periodDao;
 
-    public FormActivationServiceImpl(FormActivationDao formActivationDao, KeycloakUserService keycloakUserService, PeriodRepository periodRepository,
+    public FormActivationServiceImpl(FormActivationDao formActivationDao, KeycloakUserService keycloakUserService, PeriodRepository periodRepository, PeriodDao periodDao,
             FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository, CommunicationMessageDao communicationMessageDao,
             FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, SectorService sectorService, SectorFormService sectorFormService,
             SubmissionService submissionService, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
@@ -93,6 +93,7 @@ public class FormActivationServiceImpl
         this.communicationMessageDao = communicationMessageDao;
         this.submissionService = submissionService;
         this.periodRepository = periodRepository;
+        this.periodDao = periodDao;
     }
 
     /**
@@ -153,10 +154,14 @@ public class FormActivationServiceImpl
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
 
         if(activation.getActivationDeadline() == null) {
-            activation.setActivationDeadline(activation.getPeriod().getPeriodEnd());
+            activation.setActivationDeadline(activation.getPeriod().getPeriodEnd().plusDays(activation.getPeriod().getPeriodConfig().getFinalDay()));
         }
 
-        activation = formActivationRepository.save(activation);
+        if(StringUtils.isBlank(activation.getActivationName())) {
+            activation.setActivationName(String.format("%s: %s Activation", activation.getForm().getFormName(), activation.getPeriod().getPeriodName()));
+        }
+
+        activation = formActivationRepository.saveAndFlush(activation);
 
         /**
          * The form activations is a new one so we need to
@@ -220,6 +225,7 @@ public class FormActivationServiceImpl
             message.setDestinations(userEmails);
 
             communicationMessageDao.create(message);
+    
         }
     }
 
@@ -340,8 +346,51 @@ public class FormActivationServiceImpl
 
     @Override
     protected Collection<FormActivationVO> handleActivateDueForms() throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+
+        Collection<FormActivationVO> activations = new HashSet<>();
+
+        Collection<Period> periods = periodDao.getActivePeriods();
+        if(CollectionUtils.isEmpty(periods)) {
+            return new HashSet<>();
+        }
+        Set<Long> periodConfigs = periods.stream()
+                    .map(period -> period.getPeriodConfig().getId())
+                    .collect(Collectors.toSet());
+
+        Collection<Form> forms = formDao.findFormsByPeriodConfigs(periodConfigs);
+
+        periods.forEach(period -> {
+            Collection<Form> filtered = forms.stream().filter(form -> form.getPeriodConfig().getId() == period.getId()).collect(Collectors.toList());
+            PeriodVO pv = new PeriodVO();
+            pv.setId(period.getId());
+
+            filtered.forEach(fil -> {
+
+                FormActivationCriteria criteria = new FormActivationCriteria();
+                criteria.setFormId(fil.getId());
+                criteria.setPeriodId(period.getId());
+
+                // We only want to create activations that do not exist.
+                if(CollectionUtils.isEmpty(this.search(criteria))) {
+
+                    FormActivationVO activation = new FormActivationVO();
+                    FormVO form = new FormVO();
+                    form.setId(fil.getId());
+                    activation.setForm(form);
+                    
+                    activation.setPeriod(pv);
+                    activation.setActivationDeadline(period.getPeriodEnd().plusDays(period.getPeriodConfig().getFinalDay()));
+                    String activationName = String.format("%s: %s Activation", fil.getFormName(), period.getPeriodName());
+                    
+                    activation.setActivationName(activationName);
+    
+                    activations.add(this.save(activation));
+
+                }
+            });
+        });
+        
+        return activations;
     }
 
 }

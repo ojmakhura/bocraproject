@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +35,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import bw.org.bocra.portal.BocraportalTestContainer;
 import bw.org.bocra.portal.GenericRestTest;
 import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
+import bw.org.bocra.portal.access.type.AccessPointTypeRestController;
 import bw.org.bocra.portal.access.type.AccessPointTypeService;
+import bw.org.bocra.portal.access.type.AccessPointTypeTestData;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -63,6 +66,9 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     private AccessPointTypeService accessPointTypeService;
 
     @Autowired
+    private AccessPointTypeRestController accessPointTypeRestController;
+
+    @Autowired
     protected AccessPointService accessPointService;
 
     @Autowired
@@ -71,44 +77,17 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @Autowired
     private AccessPointTypeRepository accessPointTypeRepository;
 
-    private AccessPointTypeVO createDefaultType() {
-        
-        AccessPointTypeVO type = new AccessPointTypeVO();
+    @Autowired
+    private AccessPointTestData accessPointTestData;
 
-        type.setCode("test");
-        type.setName("Test Type");
-        type.setDescription("This is a test");
+    @Autowired
+    private AccessPointTypeTestData accessPointTypeTestData;
 
-        return accessPointTypeService.save(type);
-    }
 
     public Collection<?> dummyData(int size) {
 
-        Collection points = new ArrayList<>();
-        AccessPointTypeVO type = createDefaultType();
-
-        for (int i = 1; i <= size; i++) {
-
-            AccessPointVO point = new AccessPointVO();
-
-            point.setAccessPointType(type);
-            point.setCreatedBy("testuser4");
-            point.setCreatedDate(LocalDateTime.now());
-            point.setName("Test Type " + i);
-            point.setUrl("/test" + i);
-
-            points.add(accessPointRestController.save(point).getBody());
-            
-        }
-
-        return points;
+        return accessPointTestData.generateSequentialData(size);
     }
-
-    // @BeforeEach
-    // public void createType() {
-    //     accessPointRepository.deleteAll();
-    //     accessPointTypeRepository.deleteAll();
-    // }
 
     @BeforeEach
     public void clean() {
@@ -120,11 +99,7 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @Test
     public void save_noType() {
         
-        AccessPointVO point = new AccessPointVO();
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test Type ");
-        point.setUrl("/test");
+        AccessPointVO point = accessPointTestData.createUnsavedAccessPointNoType();
 
         ResponseEntity<?> response = accessPointRestController.save(point);
         Assertions.assertNotNull(response);
@@ -140,15 +115,8 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void save_badType() {
-        AccessPointTypeVO type = new AccessPointTypeVO();
 
-        AccessPointVO point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test Type ");
-        point.setUrl("/test");
+        AccessPointVO point = accessPointTestData.createUnsavedAccessPointUnsavedType();
 
         ResponseEntity<?> response = accessPointRestController.save(point);
         Assertions.assertNotNull(response);
@@ -165,16 +133,9 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void save_nullCreatedDate() {
-        AccessPointTypeVO type = createDefaultType();
 
-        type = accessPointTypeService.save(type);
-
-        AccessPointVO point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setName("Test Type ");
-        point.setUrl("/test");
+        AccessPointVO point = accessPointTestData.createUnsavedAccessPoint();
+        point.setCreatedDate(null);
 
         ResponseEntity<?> response = accessPointRestController.save(point);
         Assertions.assertNotNull(response);
@@ -187,19 +148,13 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void save_nullCreatedBy() {
-        AccessPointTypeVO type = createDefaultType();
-
-        type = accessPointTypeService.save(type);
-
-        AccessPointVO point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test Type ");
-        point.setUrl("/test");
+        AccessPointVO point = accessPointTestData.createUnsavedAccessPoint();
+        System.out.println(point);
+        point.setCreatedBy(null);
 
         ResponseEntity<?> response = accessPointRestController.save(point);
         Assertions.assertNotNull(response);
+        System.out.println(response.getBody());
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
         System.out.println(message);
@@ -209,16 +164,9 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void save_nullName() {
-        AccessPointTypeVO type = createDefaultType();
+        AccessPointVO point = accessPointTestData.createUnsavedAccessPoint();
 
-        type = accessPointTypeService.save(type);
-
-        AccessPointVO point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setUrl("/test");
+        point.setName(null);
 
         ResponseEntity<?> response = accessPointRestController.save(point);
         Assertions.assertNotNull(response);
@@ -231,16 +179,7 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void save_emptyName() {
-        AccessPointTypeVO type = createDefaultType();
-
-        type = accessPointTypeService.save(type);
-
-        AccessPointVO point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setUrl("/test");
+        AccessPointVO point = accessPointTestData.createUnsavedAccessPoint();
         point.setName(" ");
 
         ResponseEntity<?> response = accessPointRestController.save(point);
@@ -254,16 +193,8 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void save_nullUrl() {
-        AccessPointTypeVO type = createDefaultType();
-
-        type = accessPointTypeService.save(type);
-
-        AccessPointVO point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test Type");
+        AccessPointVO point = accessPointTestData.createUnsavedAccessPoint();
+        point.setUrl(null);
 
         ResponseEntity<?> response = accessPointRestController.save(point);
         Assertions.assertNotNull(response);
@@ -276,16 +207,7 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void save_emptyUrl() {
-        AccessPointTypeVO type = createDefaultType();
-
-        type = accessPointTypeService.save(type);
-
-        AccessPointVO point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test Type");
+        AccessPointVO point = accessPointTestData.createUnsavedAccessPoint();
         point.setUrl(" ");
 
         ResponseEntity<?> response = accessPointRestController.save(point);
@@ -299,7 +221,7 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void save_sameName() {
-        AccessPointTypeVO type = createDefaultType();
+        AccessPointTypeVO type = accessPointTypeTestData.generateSequentialData(1).iterator().next();
 
         AccessPointVO point = new AccessPointVO();
 
@@ -327,32 +249,6 @@ public class AccessPointRestControllerTest extends GenericRestTest {
         Assertions.assertNotNull(point);
         Assertions.assertNotNull(point.getId());
     }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getAll() {
-    //     dummyData(9);
-    //     ResponseEntity<?> response = accessPointRestController.getAll();
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointVO> types = (Collection<AccessPointVO>) response.getBody();
-    //     Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
-    //     Assertions.assertEquals(types.size(), 9);
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getAll_empty() {
-    //     ResponseEntity<?> response = accessPointRestController.getAll();
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     Collection<AccessPointVO> types = (Collection<AccessPointVO>) response.getBody();
-    //     Assertions.assertTrue(CollectionUtils.isEmpty(types));
-
-    // }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
@@ -387,107 +283,8 @@ public class AccessPointRestControllerTest extends GenericRestTest {
 
     protected Collection<?> searchData() {
 
-        Collection data = new ArrayList<>();
+        return accessPointTestData.generateSearchData();
 
-        AccessPointTypeVO type = createDefaultType();
-
-        AccessPointVO point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test");
-        point.setUrl("/test");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("aceess");
-        point.setUrl("/aceess");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("authorisation");
-        point.setUrl("/authorisation");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("access");
-        point.setUrl("/access");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Access Point Type");
-        point.setUrl("/access/type");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Licensee");
-        point.setUrl("/licensee");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Licence");
-        point.setUrl("/licence");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Licence Type");
-        point.setUrl("/licence/type");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Licence Type Form");
-        point.setUrl("/licence/type/form");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Licence Type Sector");
-        point.setUrl("/licence/type/sector");
-        data.add(accessPointService.save(point));
-
-        point = new AccessPointVO();
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Licence Type Form Field");
-        point.setUrl("/licence/type/form/field");
-        data.add(accessPointService.save(point));
-
-        return data;
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
@@ -502,9 +299,10 @@ public class AccessPointRestControllerTest extends GenericRestTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-        Assertions.assertTrue(CollectionUtils.isNotEmpty(types));
-        Assertions.assertEquals(types.size(), 1);
+        Collection<AccessPointVO> points = (Collection<AccessPointVO>) response.getBody();
+        
+        Assertions.assertTrue(CollectionUtils.isNotEmpty(points));
+        Assertions.assertEquals(points.size(), 1);
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
@@ -512,8 +310,8 @@ public class AccessPointRestControllerTest extends GenericRestTest {
     public void remove() {
         dummyData(15);
         ResponseEntity<?> response = accessPointRestController.getAll();
-        Collection<AccessPointVO> types = (Collection<AccessPointVO>) response.getBody();
-        AccessPointVO t = types.iterator().next();
+        Collection<AccessPointVO> points = (Collection<AccessPointVO>) response.getBody();
+        AccessPointVO t = points.iterator().next();
 
         response = accessPointRestController.remove(t.getId());
         Assertions.assertNotNull(response);
@@ -521,9 +319,9 @@ public class AccessPointRestControllerTest extends GenericRestTest {
         Assertions.assertTrue((boolean) response.getBody());
 
         response = accessPointRestController.getAll();
-        Collection<AccessPointVO> types2 = (Collection<AccessPointVO>) response.getBody();
+        Collection<AccessPointVO> points2 = (Collection<AccessPointVO>) response.getBody();
 
-        Assertions.assertEquals(types2.size(), types.size() - 1);
+        Assertions.assertEquals(points2.size(), points.size() - 1);
 
     }
 
@@ -582,15 +380,8 @@ public class AccessPointRestControllerTest extends GenericRestTest {
 
     @Override
     protected Object unsavedDummyData() {
-        AccessPointTypeVO type = createDefaultType();
 
-        AccessPointVO point = new AccessPointVO();
-
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test Type ");
-        point.setUrl("/test");
+        AccessPointVO point = accessPointTestData.createUnsavedAccessPoint();
 
         return point;
     }

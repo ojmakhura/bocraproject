@@ -12,9 +12,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.field.FormFieldRepository;
 import bw.org.bocra.portal.form.field.FormFieldVO;
@@ -28,6 +31,7 @@ import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.period.config.PeriodConfig;
 import bw.org.bocra.portal.period.config.PeriodConfigRepository;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 import bw.org.bocra.portal.sector.SectorRepository;
@@ -226,6 +230,19 @@ public class FormDaoImpl
         if(source.getPeriodConfig() != null && source.getPeriodConfig().getId() != null) {
             target.setPeriodConfig(periodConfigRepository.getReferenceById(source.getPeriodConfig().getId()));
         }
+    }
+
+    @Override
+    protected Collection<Form> handleFindFormsByPeriodConfigs(Set<Long> periodConfigs) throws Exception {
+
+        if(CollectionUtils.isEmpty(periodConfigs)) {
+            return new HashSet<>();
+        }
+
+        Specification<Form> specs = BocraportalSpecifications.<Form, PeriodConfig, Long>findByJoinAttributeIn("periodConfig", "id", periodConfigs);
+
+        // TODO Auto-generated method stub
+        return formRepository.findAll(specs, Sort.by("name").ascending());
     }
 
 }

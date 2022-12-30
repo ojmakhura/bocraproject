@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,59 +59,28 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private AccessPointTypeTestData accessPointTypeTestData;
+
+    // public AccessPointTypeRestControllerTest() {
+    //     accessPointTypeTestData.setAccessPointTypeRestController(accessPointTypeRestController);
+    // }
+
     @BeforeEach
     public void clean() {
         accessPointTypeRepository.deleteAll();
     }
 
-    // @BeforeEach
     public Collection<?> dummyData(int size) {
 
-        Collection types = new ArrayList<>();
-
-        for (int i = 1; i <= size; i++) {
-
-            AccessPointTypeVO type = new AccessPointTypeVO();
-
-            type.setCode("test" + i);
-            type.setName("Test Type " + i);
-            type.setDescription("This is a test " + i);
-
-            types.add(accessPointTypeRestController.save(type).getBody());
-        }
-
-        return types;
+        return accessPointTypeTestData.generateSequentialData(size);
     }
 
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // @DisplayName(value = "Testing the successful creation of a new Access Point Type.")
-    // public void saveAccessPointType() throws Exception {
-    //     dummyData(9);
-    //     AccessPointTypeVO type = new AccessPointTypeVO();
-
-    //     type.setCode("test10");
-    //     type.setName("Test Type 10");
-    //     type.setDescription("This is a test");
-
-    //     ResponseEntity<?> response = accessPointTypeRestController.save(type);
-
-    //     Assertions.assertNotNull(response);
-    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-    //     type = (AccessPointTypeVO) response.getBody();
-    //     Assertions.assertNotNull(type);
-    //     Assertions.assertNotNull(type.getId());
-    //     logger.info(type.toString());
-
-    // }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_missing() {
-        AccessPointTypeVO type = new AccessPointTypeVO();
-
-        type.setName("Test Type 10");
-        type.setDescription("This is a test");
+        
         ResponseEntity<?> response = accessPointTypeRestController.save(null);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
@@ -122,10 +93,9 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_missingCode() {
-        AccessPointTypeVO type = new AccessPointTypeVO();
+        AccessPointTypeVO type = accessPointTypeTestData.createUnsavedAccessPointType();
 
-        type.setName("Test Type 10");
-        type.setDescription("This is a test");
+        type.setCode(null);
         ResponseEntity<?> response = accessPointTypeRestController.save(type);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
@@ -138,10 +108,9 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_missingName() {
-        AccessPointTypeVO type = new AccessPointTypeVO();
+        AccessPointTypeVO type = accessPointTypeTestData.createUnsavedAccessPointType();
 
-        type.setCode("test");
-        type.setDescription("This is a test");
+        type.setName(null);
         ResponseEntity<?> response = accessPointTypeRestController.save(type);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
@@ -154,10 +123,10 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_missingDescription() {
-        AccessPointTypeVO type = new AccessPointTypeVO();
+        AccessPointTypeVO type = accessPointTypeTestData.createUnsavedAccessPointType();
 
-        type.setCode("test12");
-        type.setName("Test Type 12");
+        type.setDescription(null);
+        
         ResponseEntity<?> response = accessPointTypeRestController.save(type);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -171,13 +140,15 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_sameCode() {
-        dummyData(9);
+        AccessPointTypeVO exists = (AccessPointTypeVO) dummyData(1).iterator().next();
+                
         AccessPointTypeVO type = new AccessPointTypeVO();
 
-        type.setCode("test1");
+        type.setCode(exists.getCode());
         type.setName("Test Type 21");
         type.setDescription("This is a test");
         ResponseEntity<?> response = accessPointTypeRestController.save(type);
+        
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
@@ -187,11 +158,13 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void saveAccessPointTest_sameName() {
-        dummyData(9);
+        AccessPointTypeVO exists = (AccessPointTypeVO) dummyData(1).iterator().next();
+        // Ensure the data we just saved has been committed.
+        this.accessPointTypeService.getAll();
         AccessPointTypeVO type = new AccessPointTypeVO();
 
         type.setCode("test31");
-        type.setName("Test Type 1");
+        type.setName(exists.getName());
         type.setDescription("This is a test");
         ResponseEntity<?> response = accessPointTypeRestController.save(type);
         Assertions.assertNotNull(response);
@@ -237,13 +210,8 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
 
     @Override
     protected Object unsavedDummyData() {
-        AccessPointTypeVO type = new AccessPointTypeVO();
-
-        type.setCode("test10");
-        type.setName("Test Type 10");
-        type.setDescription("This is a test");
-
-        return type;
+        
+        return accessPointTypeTestData.createUnsavedAccessPointType();
     }
 
     @Override
@@ -296,64 +264,8 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     @Override
     protected Collection<?> searchData() {
 
-        Collection types = new ArrayList();
+        return accessPointTypeTestData.generateSearchData();
 
-        AccessPointTypeVO type = new AccessPointTypeVO();
-
-        type.setCode("test");
-        type.setName("Test Type");
-        type.setDescription("This is a test");
-
-        types.add(accessPointTypeRestController.save(type).getBody());
-
-        type = new AccessPointTypeVO();
-
-        type.setCode("serious");
-        type.setName("Serious Type");
-        type.setDescription("This is a test");
-
-        types.add(accessPointTypeRestController.save(type).getBody());
-
-        type = new AccessPointTypeVO();
-
-        type.setCode("onelove");
-        type.setName("Top love");
-        type.setDescription("This is a test");
-
-        types.add(accessPointTypeRestController.save(type).getBody());
-
-        type = new AccessPointTypeVO();
-
-        type.setCode("test6");
-        type.setName("Test Type 6");
-        type.setDescription("This is a test");
-
-        types.add(accessPointTypeRestController.save(type).getBody());
-
-        type = new AccessPointTypeVO();
-
-        type.setCode("sixteen");
-        type.setName("One Six");
-        type.setDescription("This is a test");
-
-        types.add(accessPointTypeRestController.save(type).getBody());
-
-        type = new AccessPointTypeVO();
-
-        type.setCode("test16");
-        type.setName("Testing sixteen");
-        type.setDescription("This is a test");
-
-        types.add(accessPointTypeRestController.save(type).getBody());
-
-        type = new AccessPointTypeVO();
-
-        type.setCode("stop");
-        type.setName("Test Type Stop");
-        type.setDescription("This is a test");
-
-        types.add(accessPointTypeRestController.save(type).getBody());
-        return types;
     }
 
     @Override

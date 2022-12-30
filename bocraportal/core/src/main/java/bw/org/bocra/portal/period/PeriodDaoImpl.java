@@ -15,6 +15,7 @@ import bw.org.bocra.portal.period.config.PeriodConfigVO;
 import java.time.LocalDate;
 import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -194,5 +195,15 @@ public class PeriodDaoImpl
             
             return cb.lessThanOrEqualTo(root.<LocalDate>get(attribute), attributeValue);
         };
+    }
+
+    @Override
+    protected Collection<Period> handleGetActivePeriods() throws Exception {
+        LocalDate today = LocalDate.now();
+
+        Specification<Period> specs = BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThan("startDate", today)
+                                    .and(BocraportalSpecifications.<Period, LocalDate>findByAttributeLessThan("endDate", today));
+
+        return periodRepository.findAll(specs, Sort.by("startDate").descending());
     }
 }

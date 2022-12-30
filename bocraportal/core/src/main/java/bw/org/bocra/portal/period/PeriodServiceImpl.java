@@ -9,8 +9,11 @@
 package bw.org.bocra.portal.period;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +25,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.period.config.PeriodConfigVO;
+import bw.org.bocra.portal.period.config.RepeatPeriod;
 
 /**
  * @see bw.org.bocra.portal.period.PeriodService
@@ -150,14 +155,98 @@ public class PeriodServiceImpl
     @Override
     protected Collection<PeriodVO> handleLoadCurrentPeriods() throws Exception {
 
-        LocalDate today = LocalDate.now();
-
-        Specification<Period> specs = BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThan("startDate", today)
-                                    .and(BocraportalSpecifications.<Period, LocalDate>findByAttributeLessThan("endDate", today));
-
-        Collection<Period> periods = periodRepository.findAll(specs, Sort.by("startDate").descending());
+        Collection<Period> periods = periodDao.getActivePeriods();
         
         return periods == null ? null : getPeriodDao().toPeriodVOCollection(periods);
+    }
+
+    private LocalDate calculateEndDate(LocalDate start, PeriodConfigVO config) {
+        LocalDate next = LocalDate.parse(start.format(DateTimeFormatter.ISO_DATE)); //new Date(start.toString());
+    
+        if (config.getRepeatPeriod() == RepeatPeriod.MONTHS) {
+            next = next.plusMonths(config.getRepeat());
+    
+        } else if (config.getRepeatPeriod() == RepeatPeriod.YEARS) {
+            
+            next = next.plusYears(config.getRepeat());
+            
+            // next.setFullYear(start.getFullYear() + config.getRepeat());
+            // next.setMonth(start.getMonth());
+        }
+        
+        next = next.minusDays(1);
+    
+        return next;
+      }
+
+    @Override
+    protected Collection<PeriodVO> handleCreateNextPeriods(String username) throws Exception {
+
+        // Collection<PeriodVO> currentPeriods = loadCurrentPeriods();
+        // Collection<PeriodVO> nextPeriods = new ArrayList<>();
+
+        // currentPeriods.stream().forEach(period -> {
+        //     if(period.getNext() == null || period.getNext().getId() == null) {
+                    
+        //         PeriodVO per = new PeriodVO();
+        //         per.setCreatedBy(username);
+        //         per.setCreatedDate(LocalDateTime.now());
+        //         per.setPeriodConfig(period.getPeriodConfig());
+        //         per.setPeriodStart(period.getPeriodEnd().plusDays(1));
+    
+        //         per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
+    
+        //         per.setPrevious(period);
+    
+        //         per = this.save(period);
+    
+        //         nextPeriods.add(per);
+        //     }
+        // });
+
+        /**
+         * First filter out the periods that have a next since that implies the next period has already
+         * been created.
+         * Next, for each current period, we create a new period with the current period as the previous.
+         */
+        return loadCurrentPeriods().stream()
+            .filter(period -> period.getNext() != null && period.getNext().getId() != null)
+            .map(period -> {
+                PeriodVO per = new PeriodVO();
+                per.setCreatedBy(username);
+                per.setCreatedDate(LocalDateTime.now());
+                per.setPeriodConfig(period.getPeriodConfig());
+                per.setPeriodStart(period.getPeriodEnd().plusDays(1));
+
+                per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
+
+                per.setPrevious(period);
+
+                per = this.save(period);
+
+                return per;
+            }).collect(Collectors.toList());
+
+        // for (PeriodVO period : currentPeriods) {
+
+        //     if(period.getNext() != null && period.getNext().getId() != null) {
+        //         continue;
+        //     }
+
+        //     PeriodVO per = new PeriodVO();
+        //     per.setCreatedBy(username);
+        //     per.setCreatedDate(LocalDateTime.now());
+        //     per.setPeriodConfig(period.getPeriodConfig());
+        //     per.setPeriodStart(period.getPeriodEnd().plusDays(1));
+
+        //     per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
+
+        //     per.setPrevious(period);
+
+        //     per = this.save(period);
+
+        //     nextPeriods.add(per);
+        // }
     }
 
 }

@@ -77,13 +77,7 @@ public class SubmissionServiceImpl
     protected FormSubmissionVO handleSave(FormSubmissionVO formSubmissionVO)
             throws Exception {
         FormSubmission submission = getFormSubmissionDao().formSubmissionVOToEntity(formSubmissionVO);
-
-        if (formSubmissionVO.getId() == null) {
-            submission = getFormSubmissionDao().create(submission);
-
-        } else {
-            getFormSubmissionDao().update(submission);
-        }
+        submission =formSubmissionRepository.saveAndFlush(submission);
 
         return getFormSubmissionDao().toFormSubmissionVO(submission);
     }
@@ -336,7 +330,7 @@ public class SubmissionServiceImpl
             submission.setUpdatedDate(updateTime);
         }
 
-        formSubmissionRepository.save(submission);
+        formSubmissionRepository.saveAndFlush(submission);
 
         return true;
     }
@@ -424,7 +418,7 @@ public class SubmissionServiceImpl
                     submission.getDataFields().add(dataField);
                 }
             }
-            submission = formSubmissionRepository.save(submission);
+            submission = formSubmissionRepository.saveAndFlush(submission);
 
             FormSubmissionVO vo = new FormSubmissionVO();
             getFormSubmissionDao().toFormSubmissionVO(submission, vo);

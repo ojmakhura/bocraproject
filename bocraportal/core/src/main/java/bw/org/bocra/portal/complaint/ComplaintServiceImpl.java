@@ -68,7 +68,7 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
             compl.setStatus(ComplaintStatus.NEW);
         }
 
-        compl = complaintRepository.save(compl);
+        compl = complaintRepository.saveAndFlush(compl);
 
         return getComplaintDao().toComplaintVO(compl);
     }

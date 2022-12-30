@@ -8,10 +8,14 @@ package bw.org.bocra.portal.auth;
 import bw.org.bocra.portal.BocraportalTestContainer;
 import bw.org.bocra.portal.GenericRestTest;
 import bw.org.bocra.portal.access.AccessPointRepository;
+import bw.org.bocra.portal.access.AccessPointRestController;
 import bw.org.bocra.portal.access.AccessPointService;
+import bw.org.bocra.portal.access.AccessPointTestData;
 import bw.org.bocra.portal.access.AccessPointVO;
 import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
+import bw.org.bocra.portal.access.type.AccessPointTypeRestController;
 import bw.org.bocra.portal.access.type.AccessPointTypeService;
+import bw.org.bocra.portal.access.type.AccessPointTypeTestData;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +31,7 @@ import javax.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -74,13 +79,28 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
     protected AccessPointService accessPointService;
 
     @Autowired
+    protected AccessPointRestController accessPointRestController;
+
+    @Autowired
     protected AccessPointRepository accessPointRepository;
 
     @Autowired
     protected AccessPointTypeService accessPointTypeService;
 
     @Autowired
+    protected AccessPointTypeRestController accessPointTypeRestController;
+
+    @Autowired
     protected AccessPointTypeRepository accessPointTypeRepository;
+
+    @Autowired
+    private AccessPointTestData accessPointTestData;
+
+    @Autowired
+    private AccessPointTypeTestData accessPointTypeTestData;
+
+    @Autowired
+    private AuthorisationTestData authorisationTestData;
 
     @BeforeEach
     public void clean() {
@@ -90,29 +110,28 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
     }
 
 
+    // private AccessPointVO createDefaultAccessPoint() {
 
-    private AccessPointVO createDefaultAccessPoint() {
+    //     AccessPointTypeVO type = new AccessPointTypeVO();
 
-        AccessPointTypeVO type = new AccessPointTypeVO();
+    //     type.setCode("test");
+    //     type.setName("Test Type");
+    //     type.setDescription("This is a test");
 
-        type.setCode("test");
-        type.setName("Test Type");
-        type.setDescription("This is a test");
+    //     type = accessPointTypeService.save(type);
 
-        type = accessPointTypeService.save(type);
+    //     AccessPointVO point = new AccessPointVO();
 
-        AccessPointVO point = new AccessPointVO();
+    //     point.setAccessPointType(type);
+    //     point.setCreatedBy("testuser4");
+    //     point.setCreatedDate(LocalDateTime.now());
+    //     point.setName("Test Type ");
+    //     point.setUrl("/test");
 
-        point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test Type ");
-        point.setUrl("/test");
+    //     point = accessPointService.save(point);
 
-        point = accessPointService.save(point);
-
-        return point;
-    }
+    //     return point;
+    // }
 
     @Override
     protected ResponseEntity<?> handleGetAll() {
@@ -136,74 +155,7 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
     @Override
     public Collection<AuthorisationVO> dummyData(int size) {
 
-        Collection<AuthorisationVO> auths = new ArrayList<>();
-
-        // AccessPointVO point = createDefaultAccessPoint();
-        AccessPointTypeVO type = new AccessPointTypeVO();
-
-        type.setCode("test");
-        type.setName("Test Type");
-        type.setDescription("This is a test");
-
-        type = accessPointTypeService.save(type);
-
-        for (int i = 1; i <= size/2; i++) {         
-
-            AccessPointVO point = new AccessPointVO();
-
-            point.setAccessPointType(type);
-            point.setCreatedBy("testuser4");
-            point.setCreatedDate(LocalDateTime.now());
-            point.setName("Test Type " + i);
-            point.setUrl("/test" + i);
-
-            point = accessPointService.save(point);
-
-            AuthorisationVO auth = new AuthorisationVO();
-
-            auth.setAccessPoint(point);
-            auth.setCreatedBy("testuser4");
-            auth.setCreatedDate(LocalDateTime.now());
-            // auth.set
-            // auth.setu
-            // auth.setUrl("/test" + i);
-
-            auths.add((AuthorisationVO)authorisationRestController.save(auth).getBody());
-        }
-
-        type = new AccessPointTypeVO();
-
-        type.setCode("test1");
-        type.setName("Test Type 1");
-        type.setDescription("This is a test 1");
-
-        type = accessPointTypeService.save(type);
-
-        for (int i = size/2 + 1; i <= size; i++) {
-
-            AccessPointVO point = new AccessPointVO();
-
-            point.setAccessPointType(type);
-            point.setCreatedBy("testuser4");
-            point.setCreatedDate(LocalDateTime.now());
-            point.setName("Test Type " + i);
-            point.setUrl("/test" + i);
-
-            point = accessPointService.save(point);
-
-            AuthorisationVO auth = new AuthorisationVO();
-
-            auth.setAccessPoint(point);
-            auth.setCreatedBy("testuser4");
-            auth.setCreatedDate(LocalDateTime.now());
-            // auth.set
-            // auth.setu
-            // auth.setUrl("/test" + i);
-
-            auths.add((AuthorisationVO)authorisationRestController.save(auth).getBody());
-        }
-
-        return auths;
+        return authorisationTestData.generateSequentialData(size);
     }
     
     @WithMockUser(username = "testuser4", password = "testuser1")
@@ -261,15 +213,8 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
 
     @Override
     protected Object unsavedDummyData() {
-        AccessPointVO point = createDefaultAccessPoint();
 
-        AuthorisationVO auth = new AuthorisationVO();
-
-        auth.setAccessPoint(point);
-        auth.setCreatedBy("testuser4");
-        auth.setCreatedDate(LocalDateTime.now());
-
-        return auth;
+        return authorisationTestData.createUnsavedAuthorisation();
     }
 
     @Override
@@ -293,59 +238,7 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
     @Override
     protected Collection<?> searchData() {
 
-        Collection auths = new ArrayList<>();
-
-        AccessPointTypeVO menuType = new AccessPointTypeVO();
-        menuType.setCode("MENU");
-        menuType.setName("Menu");
-
-        menuType = accessPointTypeService.save(menuType);
-
-        AccessPointTypeVO apiType = new AccessPointTypeVO();
-        apiType.setCode("API");
-        apiType.setName("Api");
-
-        apiType = accessPointTypeService.save(apiType);
-
-        for (int i = 1; i <= 4; i++){
-            AccessPointVO ap = new AccessPointVO();
-            ap.setAccessPointType(menuType);
-            ap.setName("Menu " + i);
-            ap.setUrl("/menu" + i);
-            ap.setCreatedBy("path");
-            ap.setCreatedDate(LocalDateTime.now());
-
-            ap = accessPointService.save(ap);
-            
-            AuthorisationVO ath = new AuthorisationVO();
-            ath.setAccessPoint(ap);
-            ath.setCreatedBy("path");
-            ath.setCreatedDate(LocalDateTime.now());
-            ath = (AuthorisationVO) authorisationRestController.save(ath).getBody();
-
-            auths.add(authorisationRestController.save(ath).getBody());
-        }
-
-        for (int i = 1; i <= 3; i++){
-            
-            AccessPointVO ap = new AccessPointVO();
-            ap.setAccessPointType(menuType);
-            ap.setName("Api " + i);
-            ap.setUrl("/api" + i);
-            ap.setCreatedBy("path");
-            ap.setCreatedDate(LocalDateTime.now());
-
-            ap = accessPointService.save(ap);
-            
-            AuthorisationVO ath = new AuthorisationVO();
-            ath.setAccessPoint(ap);
-            ath.setCreatedBy("path");
-            ath.setCreatedDate(LocalDateTime.now());
-
-            auths.add(authorisationRestController.save(ath).getBody());
-        }
-        
-        return auths;
+        return authorisationTestData.generateSearchData();
     }
 
     @Override

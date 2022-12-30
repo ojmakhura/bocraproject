@@ -81,7 +81,8 @@ public class AccessPointServiceImpl
         throws Exception
     {
         AccessPoint point = getAccessPointDao().accessPointVOToEntity(accessPoint);
-        point = accessPointDao.createOrUpdate(point);
+        // point = accessPointDao.createOrUpdate(point);
+        point = accessPointRepository.saveAndFlush(point);
 
         if(accessPoint.getId() != null) {
             return getAccessPointDao().toAccessPointVO(point);

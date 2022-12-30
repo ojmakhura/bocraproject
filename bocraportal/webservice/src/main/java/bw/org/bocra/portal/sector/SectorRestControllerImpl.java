@@ -175,22 +175,11 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     public ResponseEntity<?> handleSearch(String criteria) {
         
         try {
-            logger.debug("Search Sector by criteria "+criteria);
-            Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
-            ResponseEntity<Collection<SectorVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
-            
+            logger.debug("Display all sectors");
+            return ResponseEntity.status(HttpStatus.OK).body(sectorService.getAll());
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
     
@@ -199,11 +188,11 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddLicensee(Long sectorId, Long licenseeId) {
         try{
-            logger.debug("Add Licensee with sector Id "+sectorId+" and Licensee Id "+licenseeId );
+            logger.debug("Add Licensee with sector Id " + sectorId + " and licensee id " + licenseeId );
         LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
 
         if(lvo == null || lvo.getId() == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("The licensee has not been added to the sector yet.");
 
         } else {
             return ResponseEntity.ok().body(lvo);
@@ -211,7 +200,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }

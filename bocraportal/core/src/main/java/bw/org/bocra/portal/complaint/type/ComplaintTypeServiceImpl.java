@@ -51,7 +51,7 @@ public class ComplaintTypeServiceImpl
     protected ComplaintTypeVO handleSave(ComplaintTypeVO complaintType)
             throws Exception {
         ComplaintType entity = getComplaintTypeDao().complaintTypeVOToEntity(complaintType);
-        entity = complaintTypeRepository.save(entity);
+        entity = complaintTypeRepository.saveAndFlush(entity);
 
         if (complaintType.getId() == null) {
             complaintType = getComplaintTypeDao().toComplaintTypeVO(entity);

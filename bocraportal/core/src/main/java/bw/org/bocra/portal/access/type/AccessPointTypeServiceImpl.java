@@ -48,7 +48,7 @@ public class AccessPointTypeServiceImpl
     protected AccessPointTypeVO handleSave(AccessPointTypeVO accessPointType)
             throws Exception {
         AccessPointType entity = getAccessPointTypeDao().accessPointTypeVOToEntity(accessPointType);
-        entity = accessPointTypeRepository.save(entity);
+        entity = accessPointTypeRepository.saveAndFlush(entity);
 
         if (accessPointType.getId() == null) {
             accessPointType = getAccessPointTypeDao().toAccessPointTypeVO(entity);

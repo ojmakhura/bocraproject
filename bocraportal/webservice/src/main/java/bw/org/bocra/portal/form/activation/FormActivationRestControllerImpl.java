@@ -207,8 +207,15 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
     @Override
     public ResponseEntity<?> handleActivateDueForms() {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            logger.debug("Activating due forms");
+            return  ResponseEntity.status(HttpStatus.OK).body(formActivationService.activateDueForms());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        }
     }
 
     @Override

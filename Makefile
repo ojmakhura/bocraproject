@@ -98,7 +98,7 @@ endif
 
 run_tests: gen_env test_${module}
 
-run_test: gen_env
+run_test:
 	. ./.env && mvn -f bocraportal/${module} -Dtest=${test} test -o
 	
 ##
@@ -170,7 +170,7 @@ stop_app:
 rm_env:
 	rm -f .env
 
-gen_env: rm_env
+gen_env:
 ifdef run_env
 	if [ -f .env ]; then \
 		rm -f .env; \

@@ -67,14 +67,7 @@ public class AuthorisationServiceImpl
     {
         Authorisation entity = authorisationDao.authorisationVOToEntity(authorisationVO);
 
-        if(authorisationVO.getId() != null) {
-
-            entity = authorisationDao.create(entity);
-            return authorisationDao.toAuthorisationVO(entity);
-
-        } else {
-            authorisationDao.update(entity);
-        }
+        entity = authorisationRepository.saveAndFlush(entity);
 
         return authorisationDao.toAuthorisationVO(entity);
     }

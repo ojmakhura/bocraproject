@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.keycloak.KeycloakService;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -27,8 +29,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @CrossOrigin()
 public class PeriodRestControllerImpl extends PeriodRestControllerBase {
 
-    public PeriodRestControllerImpl(PeriodService periodService) {
+    private final KeycloakUserService keycloakUserService;
+
+    public PeriodRestControllerImpl(PeriodService periodService, KeycloakUserService keycloakUserService) {
         super(periodService);
+        this.keycloakUserService = keycloakUserService;
     }
 
     @Override
@@ -192,13 +197,13 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(PeriodCriteria criteria) {
         try{
-            logger.debug("Search Period by criteria "+criteria);
+            logger.debug("Search Period by criteria " + criteria);
             return ResponseEntity.status(HttpStatus.OK).body(periodService.search(criteria));
             
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -211,7 +216,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -219,26 +224,25 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleLoadCurrentPeriods() {
         try{
             logger.debug("Loading current periods");
-            Optional<Collection<PeriodVO>> data = Optional.of(periodService.loadCurrentPeriods());
-            ResponseEntity<Collection<PeriodVO>> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.loadCurrentPeriods());
+            
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleCreateNextPeriods() {
-        // TODO Auto-generated method stub
-        return null;
+        try{
+            logger.debug("Loading current periods");
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.createNextPeriods(keycloakUserService.getLoggedInUser().getUsername()));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+        }
     }
 }

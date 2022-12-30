@@ -71,7 +71,7 @@ public class DocumentServiceImpl
             entity.setDocumentId(uid);
         }
 
-        entity = this.documentRepository.save(entity);
+        entity = this.documentRepository.saveAndFlush(entity);
         
         return documentDao.toDocumentVO(entity);
     }

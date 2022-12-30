@@ -58,12 +58,7 @@ public class FormServiceImpl
     {
 
         Form form = getFormDao().formVOToEntity(formVO);
-
-        if(formVO.getId() == null) {
-            form = getFormDao().create(form);
-        } else {
-            getFormDao().update(form);
-        }
+        form = formRepository.saveAndFlush(form);
 
         return getFormDao().toFormVO(form);
     }
@@ -130,8 +125,7 @@ public class FormServiceImpl
             throw new FormServiceException("Period config ids cannot be empty.");
         }
 
-        Specification<Form> spec = BocraportalSpecifications.findByJoinAttributeIn("periodConfig", "id", periodConfigIds);
-        return getFormDao().toFormVOCollection(formRepository.findAll(spec, Sort.by("formName").ascending()));
+        return getFormDao().toFormVOCollection(formDao.findFormsByPeriodConfigs(periodConfigIds));
     }
 
 }

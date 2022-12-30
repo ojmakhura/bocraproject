@@ -49,13 +49,13 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             }
                 
             if(user == null || StringUtils.isBlank(user.getUserId())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The user could not be saved.");
             }
     
             return ResponseEntity.status(HttpStatus.OK).body(user);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -63,21 +63,11 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     public ResponseEntity<?> handleLoadUsers() {
         try{
             logger.debug("Load Users ");
-            Collection<UserVO> users = this.keycloakUserService.loadUsers();
-
-            Optional<Collection<UserVO>> data = CollectionUtils.isEmpty(users) ? Optional.empty() : Optional.of(users);
-            ResponseEntity<Collection<UserVO>> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(this.keycloakUserService.loadUsers());
+            
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -97,7 +87,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -110,7 +100,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         return ResponseEntity.ok(users);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -127,7 +117,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.ok(rep);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
  
     }
@@ -145,14 +135,14 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleChangePassword(String userId, String newPassword) {
         try{
-            logger.debug("Change User password with user id"+userId+" and new password "+newPassword);
+            logger.debug("Change User password with user id" + userId + " and new password " + newPassword);
             this.keycloakUserService.updateUserPassword(userId, newPassword);
 
             return ResponseEntity.ok().body("User password updated.");
@@ -173,7 +163,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -187,7 +177,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }
