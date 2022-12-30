@@ -177,7 +177,6 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
         } catch(Exception e) {
 
             e.printStackTrace();
-            // e.getCause().printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }

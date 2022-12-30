@@ -26,8 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @CrossOrigin()
 public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRestControllerBase {
     
-    public LicenseeShareholderRestControllerImpl(
-        LicenseeShareholderService licenseeShareholderService    ) {
+    public LicenseeShareholderRestControllerImpl(LicenseeShareholderService licenseeShareholderService) {
         
         super(licenseeShareholderService);
     }

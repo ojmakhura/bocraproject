@@ -26,11 +26,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @CrossOrigin()
 public class NoteRestControllerImpl extends NoteRestControllerBase {
     
-    public NoteRestControllerImpl(
-        NoteService noteService    ) {
+    public NoteRestControllerImpl(NoteService noteService) {
         
-        super(
-            noteService        );
+        super(noteService);
     }
 
 
@@ -38,13 +36,13 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
     public ResponseEntity<?> handleFindById(Long id) {
         try {
             logger.debug("Search Note by "+id);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(noteService.findById(id));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not load the submission note.");
             }
 
             return response;
@@ -67,17 +65,9 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetFormSubmissionNotes(Long formSubmissionId) {
         try {
-            logger.debug("Display Form Submission Notes "+formSubmissionId);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            logger.debug("Display Form Submission Notes " + formSubmissionId);
+            return ResponseEntity.status(HttpStatus.OK).body(noteService.getFormSubmissionNotes(formSubmissionId));
+            
         } catch (Exception e) {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
@@ -88,13 +78,12 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
     public ResponseEntity<?> handleRemove(Long id) {
         try {
             logger.debug("Deletes Form Submission Note by " + id);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if(noteService.remove(id)) {
+                response = ResponseEntity.status(HttpStatus.OK).body("Submission note deleted.");
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the data field with id " + id);
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the submission note with id " + id);
             }
 
             return response;
@@ -103,10 +92,10 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
             logger.error(e.getMessage(), e);
 
             if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete data field with id " + id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete submission note with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting data field with id " + id);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting submission note with id " + id);
         }
     }
 
@@ -114,13 +103,13 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
     public ResponseEntity<?> handleSave(NoteVO note) {
         try {
             logger.debug("Save Form Submission Note "+ note);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(noteService.save(note)); 
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the submission note.");
             }
 
             return response;
@@ -155,10 +144,7 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
-                    // if(e.getCause().getMessage().contains("(name)")) {
-
-                    //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An note with this name has been already created.");
-                    // } 
+                    
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"note\"")) {

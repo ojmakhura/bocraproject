@@ -67,7 +67,6 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
             return ResponseEntity.status(HttpStatus.OK).body(formSectionService.getAll());
             
         } catch (Exception e) {
-            // e.printStackTrace();
             logger.error(e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
         }
@@ -80,7 +79,6 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
             return ResponseEntity.status(HttpStatus.OK).body(formSectionService.getAll(pageNumber, pageSize));
             
         } catch (Exception e) {
-            // e.printStackTrace();
             logger.error(e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occured. Please contact the system administrator.");
         }
@@ -117,12 +115,12 @@ public class FormSectionRestControllerImpl extends FormSectionRestControllerBase
         try{
             logger.debug("Save Form Section "+formSection);
             Optional<FormSectionVO> data = Optional.of(formSectionService.save(formSection));
-            ResponseEntity<FormSectionVO> response;
+            ResponseEntity<?> response;
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the form section.");
             }
     
             return response;

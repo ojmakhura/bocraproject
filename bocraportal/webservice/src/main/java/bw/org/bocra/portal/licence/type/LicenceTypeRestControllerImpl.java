@@ -63,13 +63,13 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
     public ResponseEntity<?> handleGetAll() {
         try{
 
-            logger.debug("Display all Licence Types");
+            logger.debug("Loading all Licence Types");
             return ResponseEntity.status(HttpStatus.OK).body(this.licenceTypeService.getAll());
             
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -195,7 +195,7 @@ public class LicenceTypeRestControllerImpl extends LicenceTypeRestControllerBase
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

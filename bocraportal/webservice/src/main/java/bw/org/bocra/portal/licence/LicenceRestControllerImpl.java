@@ -61,7 +61,7 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
             if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Licence with id %d not found.", id));
             } else {
-                message = "An unknown error has occured while loading an licence. Please contact the system administrator.";
+                message = "An unknown error has occured. Please contact the system administrator.";
             }
 
             logger.error(message);

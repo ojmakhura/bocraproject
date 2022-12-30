@@ -7,8 +7,11 @@ package bw.org.bocra.portal.form.submission;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
+
+import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.postgresql.util.PSQLException;
@@ -42,22 +45,30 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        try{
-            logger.debug("Search Form Submision by "+id);
-            Optional<FormSubmissionVO> data = Optional.of(submissionService.findById(id));
-            ResponseEntity<FormSubmissionVO> response;
-    
-            if(data.isPresent()) {
+        try {
+            logger.debug("Searches for form submission using ID " + id);
+            Optional<?> data = Optional.of(submissionService.findById(id));
+            ResponseEntity<?> response;
+
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form submission with id %ld not found.", id));
             }
-    
+
             return response;
         } catch (Exception e) {
-            // e.printStackTrace();
-            logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Form submission with id %ld not found.", id));
+            logger.error(e.getMessage());
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Document type with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -119,12 +130,12 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
         try{
             logger.debug("Save Form Submisson "+formSubmissionVO);
             Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmissionVO));
-            ResponseEntity<FormSubmissionVO> response;
+            ResponseEntity<?> response;
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save form submission.");
             }
     
             return response;
