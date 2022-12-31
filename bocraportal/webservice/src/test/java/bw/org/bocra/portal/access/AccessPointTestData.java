@@ -28,13 +28,9 @@ public class AccessPointTestData {
     public  AccessPointVO createUnsavedAccessPoint() {
         AccessPointTypeVO type = accessPointTypeTestData.generateSequentialData(1).iterator().next();
 
-        AccessPointVO point = new AccessPointVO();
+        AccessPointVO point = createUnsavedAccessPointNoType();
 
         point.setAccessPointType(type);
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test Type ");
-        point.setUrl("/test");
 
         return point;
     }
@@ -54,15 +50,14 @@ public class AccessPointTestData {
     
     public AccessPointVO createUnsavedAccessPointUnsavedType() {
 
-        AccessPointVO point = new AccessPointVO();
-
+        AccessPointVO point = createUnsavedAccessPointNoType();
         point.setAccessPointType(accessPointTypeTestData.createUnsavedAccessPointType());
-        point.setCreatedBy("testuser4");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setName("Test Type ");
-        point.setUrl("/test");
 
         return point;
+    }
+
+    public AccessPointVO create() {
+        return (AccessPointVO)accessPointRestController.save(createUnsavedAccessPoint()).getBody();
     }
 
     public Collection<AccessPointVO> generateSequentialData(int size) {

@@ -9,46 +9,38 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class FormRestController {
-    protected path = '/form';
-
+    
+    protected path = 'form';
 
     constructor(private http: HttpClient) {
     }
 
     public findById(id: number | any ): Observable<FormVO | any> {
-
-        return this.http.get<FormVO | any>(this.path + `/${id}`);
-
+        return this.http.get<FormVO | any>(`${this.path}/${id}`, {});
     }
 
     public getAll(): Observable<FormVO[] | any[]> {
-
-        return this.http.get<FormVO[] | any[]>(this.path + `/all`);
-
+        return this.http.get<FormVO[] | any[]>(`${this.path}/all`);
     }
 
     public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<FormVO[] | any[]> {
+        return this.http.get<FormVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
+    }
 
-        return this.http.get<FormVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
-
+    public getFormsByPeriods(periodConfigIds: Set<number> | any ): Observable<FormVO[] | any[]> {
+        return this.http.get<FormVO[] | any[]>(`${this.path}/prc`, periodConfigIds);
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(this.path + `/${id}`);
-
+        return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
     }
 
     public save(formVO: FormVO | any ): Observable<FormVO | any> {
-
-        return this.http.post<FormVO | any>(this.path, formVO);
-
+        return this.http.post<FormVO | any>(`${this.path}`, formVO);
     }
 
     public search(criteria: FormCriteria | any ): Observable<FormVO[] | any[]> {
-
-        return this.http.post<FormVO[] | any[]>(this.path + `/search`, criteria);
-
+        return this.http.post<FormVO[] | any[]>(`${this.path}/search`, criteria);
     }
 
 }

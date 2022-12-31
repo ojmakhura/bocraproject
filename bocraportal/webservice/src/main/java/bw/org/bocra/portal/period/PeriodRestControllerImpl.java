@@ -5,9 +5,14 @@
 //
 package bw.org.bocra.portal.period;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -108,6 +113,16 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleSave(PeriodVO periodVO) {
         try {
             logger.debug("Save Period "+periodVO);
+
+            if(periodVO.getId() == null) {
+                periodVO.setCreatedBy(keycloakUserService.getLoggedInUser().getUsername());
+                periodVO.setCreatedDate(LocalDateTime.now());
+            } else {
+
+                periodVO.setUpdatedBy(keycloakUserService.getLoggedInUser().getUsername());
+                periodVO.setUpdatedDate(LocalDateTime.now());
+            }
+
             Optional<PeriodVO> data = Optional.of(periodService.save(periodVO));
             ResponseEntity<?> response;
 
@@ -236,8 +251,26 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     @Override
     public ResponseEntity<?> handleCreateNextPeriods() {
         try{
-            logger.debug("Loading current periods");
-            return ResponseEntity.status(HttpStatus.OK).body(periodService.createNextPeriods(keycloakUserService.getLoggedInUser().getUsername()));
+            logger.debug("Creating the next periods");
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.createNextPeriods(keycloakUserService.getLoggedInUser().getUsername(), new HashSet<>()));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleCreateNextPeriod(Long id) {
+        try{
+            logger.debug("Creating the next period after " + id);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                periodService.createNextPeriods(
+                    keycloakUserService.getLoggedInUser().getUsername(),
+                    Stream.of(id).collect(Collectors.toSet())
+                )
+            );
             
         } catch (Exception e) {
             e.printStackTrace();
