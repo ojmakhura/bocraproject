@@ -6,6 +6,7 @@
 package bw.org.bocra.portal.licensee;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
 import bw.org.bocra.portal.document.DocumentService;
 import bw.org.bocra.portal.user.LicenseeUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +33,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class LicenseeRestControllerTest {
+public class LicenseeRestControllerTest extends GenericRestTest {
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -57,112 +58,196 @@ public class LicenseeRestControllerTest {
     protected LicenseeUserService licenseeUserService;
 
     @Autowired
+    private LicenseeTestData licenseeTestData;
+
+    @Autowired
     protected DocumentService documentService;
 
     @BeforeEach
     public void clean() {
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void addDocument() {
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void addDocument() {
 
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void addSector() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void findById() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getAll() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getAllPaged() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getDocuments() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getForms() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getFormSubmissions() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getLicences() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getReportConfigurations() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getReports() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getSectors() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void getShareholders() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void remove() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void removeSector() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void save() {
+
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void search() {
+
+    // }
+
+    @Override
+    protected Collection<?> dummyData(int size) {
+        return licenseeTestData.generateSequentialData(size);
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void addSector() {
-
+    @Override
+    protected Object unsavedDummyData() {
+        return licenseeTestData.createUnsavedLicensee();
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findById() {
-
+    @Override
+    protected ResponseEntity<?> handleGetAll() {
+        return licenseeRestController.getAll();
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
-
+    @Override
+    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
+        return licenseeRestController.getAllPaged(pageNumber, pageSize);
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAllPaged() {
-
+    @Override
+    protected ResponseEntity<?> handleFindById(Long id) {
+        return licenseeRestController.findById(id);
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getDocuments() {
-
+    @Override
+    protected ResponseEntity<?> handleRemove(Long id) {
+        return licenseeRestController.remove(id);
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getForms() {
-
+    @Override
+    protected ResponseEntity<?> handleSearch(Object criteria) {
+        return licenseeRestController.search((LicenseeCriteria) criteria);
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getFormSubmissions() {
-
+    @Override
+    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, Object criteria) {
+        return null;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getLicences() {
-
+    @Override
+    protected ResponseEntity<?> handleSave(Object o) {
+        
+        return licenseeRestController.save((LicenseeVO) o);
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getReportConfigurations() {
+    @Override
+    protected void basicCompareAssertions(Object o1, Object o2) {
+        
+        LicenseeVO l1 = (LicenseeVO)o1;
+        LicenseeVO l2 = (LicenseeVO)o2;
 
+        Assertions.assertEquals(l1.getId(), l2.getId());   
+        Assertions.assertEquals(l1.getLicenseeName(), l2.getLicenseeName());  
+        Assertions.assertEquals(l1.getUin(), l2.getUin());        
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getReports() {
-
+    @Override
+    protected Collection<?> searchData() {
+        // TODO Auto-generated method stub
+        return licenseeTestData.generateSearchData();
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getSectors() {
-
+    @Override
+    protected Object searchCriteria() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getShareholders() {
-
+    @Override
+    protected Object searchCriteriaNone() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void removeSector() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void save() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void search() {
-
+    @Override
+    protected Object searchCriteriaEmpty() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

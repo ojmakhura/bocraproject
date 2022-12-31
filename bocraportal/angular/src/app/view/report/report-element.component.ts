@@ -149,7 +149,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     this.reportTypeControl.patchValue('default');
-    this.dataColumnsControl.setValue('fields');
+    this.dataColumnsControl.setValue('licensees');
 
     this.reportElementGroup.addControl('dataColumnsAnalytics', this.formBuilder.array([]));
     this.reportElementGroup.addControl('dataRowsAnalytics', this.formBuilder.array([]));
@@ -408,7 +408,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit(): void {
-    this.dataRowsControl.patchValue('licensees');
+    this.dataRowsControl.patchValue('fields');
     this.generateColors(false);
     this.periodSelectionChange();
     this.fieldSelectionChange();
@@ -497,7 +497,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       if(cell === undefined) {
         
         cell = {
-          period: "Custom",
+          period: changingCol?.tag,
           label: changingCol?.name,
           elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
           value: changingCol?.type === 'custom' ? source : undefined,
@@ -507,7 +507,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         // this.grid[colIndex] = row;
         row[this.alphabet[colIndex]] = cell;
       } else {
-        cell['period'] = "Custom";
+        cell['period'] = changingCol?.tag;
         cell['elementId'] = changingCol?.name?.replaceAll(' ', '_')?.toLowerCase();
         cell['label'] = changingCol?.name;
         cell['value'] = changingCol?.type === 'custom' ? source : undefined;
@@ -548,7 +548,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     if(this.gridColumnHeaders.find(gch => gch.elementId.startsWith(`${index}_`)) === undefined) {
       this.gridColumnHeaders.push({
         header: this.alphabet[colIndex],
-        period: 'Custom',
+        period: changingCol?.tag,
         elementId: `${index}_${changingCol?.name}`,
         label: changingCol?.name
       })
@@ -558,21 +558,23 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       });
 
       this.gridDataPeriods = this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_'));
-      this.gridDataPeriodHeaders = ['label', ...this.gridDataPeriods];
-      this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
+      this.gridDataPeriods = [...this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_')), ...new Set(this.additionalDataColumns?.map(col => col?.tag?.replaceAll(' ', '_')))]
 
-      if(this.periodAliases['Custom'] === undefined) {
+      if(this.periodAliases[changingCol?.tag] === undefined) {
 
         this.periods.push({
-          name: 'Custom',
+          name: changingCol?.tag,
           length: 1
         })
-        this.periodAliases['Custom'] = 'Custom'
-        this.periodLengths['Custom'] = 1
+        this.periodAliases[changingCol?.tag] = changingCol?.tag
+        this.periodLengths[changingCol?.tag] = 1
       }
-    } 
 
-    this.periodLengths['Custom'] = this.additionalDataColumns.length
+      this.gridDataPeriodHeaders = ['label', ...this.gridDataPeriods];
+      this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
+    }
+
+    this.periodLengths[changingCol?.tag] = this.additionalDataColumns.length
 
     this.setGridTableData();
   }
@@ -844,6 +846,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           type: [],
           sources: [],
           name: [],
+          tag: ['Custom']
         })
       );
     } else {
@@ -921,8 +924,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         });
 
         this.dataColumnsAnalyticsControl.removeAt(index);
+        this.additionalDataColumns = this.dataColumnsAnalytics;
         
-        this.gridColumnHeaders = this.gridColumnHeaders.filter(gch => 'Custom' !== gch.period)
+        this.gridColumnHeaders = this.gridColumnHeaders.filter(gch => changingCol?.tag !== gch.period)
         
         this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a.localeCompare(b));
         this.gridDataColumnHeaders = this.gridColumnHeaders?.map((ch) => `${ch.elementId}_${ch.header}`);
@@ -934,10 +938,25 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         this.dataColumnsAnalyticsControl.controls?.forEach((col, index) => {
           this.additionalDataColumnChange(index)
         });
+
+        this.periodLengths[changingCol?.tag] = this.periodLengths[changingCol?.tag]-1;
         
-        this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
-        
+        // this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
         this.setGridTableData();
+        this.gridDataPeriods = [...this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_')), ...new Set(this.additionalDataColumns?.map(col => col?.tag?.replaceAll(' ', '_')))]
+        this.gridDataPeriodHeaders = ['label', ...this.gridDataPeriods];
+        this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
+
+        Object.keys(this.periodLengths).forEach(pl => {
+          if(this.periodLengths[pl] === 0) {
+            let a = this.periods.find(p => p.name === pl)
+            this.periods = this.periods.filter(p => p.name !== pl);
+
+            delete this.periodLengths[pl];
+            delete this.periodAliases[pl]
+          }
+        });
+        
       }
     }
   }

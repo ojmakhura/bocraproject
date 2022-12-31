@@ -2,9 +2,9 @@ package bw.org.bocra.portal.access.type;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class AccessPointTypeTestData {
@@ -40,20 +40,12 @@ public class AccessPointTypeTestData {
         return type;
     }
 
-    @Transactional
     public Collection<AccessPointTypeVO> generateSequentialData(int size) {
-        Collection<AccessPointTypeVO> types = new ArrayList<>();
-        for (int i = 1; i <= size; i++) {
-
-            AccessPointTypeVO type = new AccessPointTypeVO();
-
-            type.setCode("test" + i);
-            type.setName("Test Type " + i);
-            type.setDescription("This is a test " + i);
-
-            types.add((AccessPointTypeVO) accessPointTypeRestController.save(type).getBody());
-        }
-        return types;
+        
+        return generateUnsavedSequentialData(size)
+            .stream()
+            .map(type -> (AccessPointTypeVO)accessPointTypeRestController.save(type).getBody())
+            .collect(Collectors.toList());
     }
 
     public Collection<AccessPointTypeVO> generateUnsavedSequentialData(int size) {
@@ -72,7 +64,6 @@ public class AccessPointTypeTestData {
         return types;
     }
     
-    @Transactional
     public Collection<AccessPointTypeVO> generateSearchData() {
         Collection<AccessPointTypeVO> types = new ArrayList<>();
 

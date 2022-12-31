@@ -3,6 +3,7 @@ package bw.org.bocra.portal.access;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -66,24 +67,11 @@ public class AccessPointTestData {
 
     public Collection<AccessPointVO> generateSequentialData(int size) {
 
-        Collection<AccessPointVO> points = new ArrayList<>();
-        AccessPointTypeVO type = accessPointTypeTestData.generateSequentialData(1).iterator().next();
+        return generateUnsavedSequentialData(size)
+            .stream()
+            .map(point -> (AccessPointVO)accessPointRestController.save(point).getBody())
+            .collect(Collectors.toList());
 
-        for (int i = 1; i <= size; i++) {
-
-            AccessPointVO point = new AccessPointVO();
-
-            point.setAccessPointType(type);
-            point.setCreatedBy("testuser4");
-            point.setCreatedDate(LocalDateTime.now());
-            point.setName("Test Type " + i);
-            point.setUrl("/test" + i);
-
-            points.add((AccessPointVO) accessPointRestController.save(point).getBody());
-            
-        }
-
-        return points;
     }
 
     public Collection<AccessPointVO> generateUnsavedSequentialData(int size) {

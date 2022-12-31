@@ -129,7 +129,7 @@
 							<select id="report-labels" class="form-select" formControlName="dataColumns"
 								aria-label="Default select example" (change)="createReportGrid()">
 								<option value="licensees">Licensees</option>
-								<option value="periods">Periods</option>
+								<!-- <option value="periods">Periods</option> -->
 								<option value="fields">Data Fields</option>
 							</select>
 						</div>
@@ -141,6 +141,9 @@
 									<th></th>
 									<th scope="col">
 										Type
+									</th>
+									<th scope="col">
+										Tag
 									</th>
 									<th scope="col">
 										Analytic Name
@@ -177,6 +180,9 @@
 										</div>
 									</td>
 									<td scope="col">
+										<input type="text" class="form-control" formControlName="tag">
+									</td>
+									<td scope="col">
 										<input type="text" class="form-control" formControlName="name"
 											(change)="additionalDataColumnChange(j)" *ngIf="fieldControl.value?.type">
 									</td>
@@ -199,9 +205,9 @@
 							<select id="data-labels" class="form-select" formControlName="dataRows"
 								aria-label="Default select example" (change)="createReportGrid(); generateColors(true)">
 								<option></option>
+								<option value="fields">Data Fields</option>
 								<option value="licensees" *ngIf="dataColumns !== 'licensees'">Licensees</option>
 								<!-- <option value="periods">Periods</option> -->
-								<option value="fields">Data Fields</option>
 							</select>
 						</div>
 					</div>

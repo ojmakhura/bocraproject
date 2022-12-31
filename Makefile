@@ -9,19 +9,19 @@ endif
 	
 
 build_mda:
-	mvn -f bocraportal/mda install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/mda install -DskipTests=true -o
 
 build_common:
-	mvn -f bocraportal/common install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/common install -DskipTests=true -o
 
 build_core:
-	mvn -f bocraportal/core install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/core install -DskipTests=true -o
 
 test_core: 
 	. ./.env && mvn -f bocraportal/core test -o
 
 build_api:
-	mvn -f bocraportal/webservice install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/webservice install -DskipTests=true -o
 
 test_api: 
 	. ./.env && mvn -f bocraportal/webservice test -o
@@ -52,13 +52,13 @@ test_cron: gen_env
 	. ./.env && mvn -f bocraportal/cron test -o
 
 build_web: 
-	mvn -f bocraportal/angular install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/angular install -DskipTests=true -o
 
 build_web_dist: build_web local_web_deps
 	. ./.env && cd bocraportal/angular/target/bocraportal && npm run build --configuration=production
 
 build_app: 
-	mvn -f bocraportal install -Dmaven.test.skip=true -o
+	mvn -f bocraportal install -DskipTests=true -o
 
 clean_build: clean_all build_app
 
@@ -144,7 +144,10 @@ push_keycloak_image: gen_env
 
 ###
 ## Run the local api and web
-###
+###    
+run_module_local: gen_env
+	. ./.env && cd bocraportal/${module} && mvn spring-boot:run
+	
 run_api_local: gen_env
 	. ./.env && cd bocraportal/webservice && mvn spring-boot:run
 

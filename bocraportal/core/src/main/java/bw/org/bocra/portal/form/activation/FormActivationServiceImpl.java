@@ -42,6 +42,7 @@ import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeStatus;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
@@ -280,16 +281,18 @@ public class FormActivationServiceImpl
         Set<Long> ids = new HashSet<>();
 
         for (LicenseeForm licensee : form.getLicenseeForms()) {
-            ids.add(licensee.getLicensee().getId());
+            if(licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
+                ids.add(licensee.getLicensee().getId());
         }
 
         for(SectorForm sectorForm : form.getSectorForms()) {
-            List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
-            if(sf != null && sf.size() > 0)
-                sf.get(0);
+            // List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
+            // if(sf != null && sf.size() > 0)
+            //     sf.get(0);
                     
             for(LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
-                ids.add(licensee.getLicensee().getId());
+                if(licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
+                    ids.add(licensee.getLicensee().getId());
             }
         }
 
@@ -300,16 +303,18 @@ public class FormActivationServiceImpl
         Map<Long, Licensee> lmap = new HashMap<>();
 
         for (LicenseeForm licensee : form.getLicenseeForms()) {
-            lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
+            if(licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
+                lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
         }
 
         for(SectorForm sectorForm : form.getSectorForms()) {
-            List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
-            if(sf != null && sf.size() > 0)
-                sf.get(0);
+            // List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
+            // if(sf != null && sf.size() > 0)
+            //     sf.get(0);
                     
             for(LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
-                lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
+                if(licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
+                    lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
             }
         }
 
