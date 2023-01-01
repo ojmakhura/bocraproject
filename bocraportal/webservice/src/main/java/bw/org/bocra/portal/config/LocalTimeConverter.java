@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LocalTimeConverter implements Converter<String, LocalTime> {
     private static final List<String> SUPPORTED_FORMATS = Arrays.asList("HH:mm:ss", "HH:mm", "HH:mm:ss.SSSXXX");
     private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = SUPPORTED_FORMATS

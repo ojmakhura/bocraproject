@@ -174,11 +174,6 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
             typeMap.put(type.getCode(), type);
         }
 
-        // AccessPointTypeVO type = accessPointTypeService.search("MENU")
-        //                                 .stream()
-        //                                 .filter(tp -> tp.getCode().equals("MENU"))
-        //                                 .collect(Collectors.toList()).get(0);
-
         try {
             File file = ResourceUtils.getFile("classpath:accessPointData.csv");
 

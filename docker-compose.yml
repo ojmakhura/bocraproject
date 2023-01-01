@@ -17,6 +17,8 @@ services:
       - ${BOCRA_DATA}/auth/system_passwd:/var/system_passwd
       - ${BOCRA_DATA}/certs:/etc/certs
       - ${BOCRA_DATA}/traefik/config.yml:/etc/traefik/dynamic_conf/conf.yml:ro
+    environment:
+      TZ: Africa/Gaborone
     ports:
       - 80:80
       - 443:443
@@ -102,6 +104,7 @@ services:
       POSTGRESQL_USERNAME: ${POSTGRES_USER}
       POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRESQL_DATABASE: ${POSTGRES_DB}
+      TZ: Africa/Gaborone
     depends_on:
       proxy:
         condition: service_healthy

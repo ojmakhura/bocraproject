@@ -206,7 +206,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       let fs = this.formSubmissions?.filter((sub) => {
         return (
           per.period === sub?.period?.periodName &&
-          this.selectedLicensees?.find((sel) => sel.licensee === sub?.licensee?.licenseeName)
+          this.licenseeSelections?.find((sel) => sel.licensee === sub?.licensee?.licenseeName)
         );
       });
       
@@ -801,6 +801,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   fieldSelectionChange() {
     this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
+    console.log(this.selectedFields);
     this.createReportGrid();
   }
 

@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LocalDateTimeConverter implements Converter<String, LocalDateTime> {
     
     private static final List<String> SUPPORTED_FORMATS = Arrays.asList("dd-MM-yyyy HH:mm:ss", "yyyy-MM-dd HH:mm:ss");
