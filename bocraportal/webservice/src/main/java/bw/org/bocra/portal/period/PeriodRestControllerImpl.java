@@ -5,6 +5,7 @@
 //
 package bw.org.bocra.portal.period;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
+import bw.org.bocra.portal.period.config.PeriodConfigVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -277,5 +279,11 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
             logger.error(e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
+    }
+
+    @Override
+    public ResponseEntity<?> handleCreatePeriod(PeriodConfigVO periodConfig, LocalDate startDate) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

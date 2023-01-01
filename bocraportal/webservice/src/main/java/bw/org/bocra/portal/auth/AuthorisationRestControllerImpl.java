@@ -198,7 +198,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     @Override
     public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles, Set<String> accessPointTypeCode) {
         try {
-            logger.debug("Displays Authorisation by specified "+ "Roles:"+roles+" and Access Point Type Code: "+accessPointTypeCode);
+            logger.debug("Displays Authorisation by specified roles: " + roles + " and Access Point Type Code: " + accessPointTypeCode);
             return ResponseEntity.status(HttpStatus.OK).body(authorisationService.getAccessTypeCodeAuthorisations(roles, accessPointTypeCode));
             
             

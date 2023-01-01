@@ -28,7 +28,7 @@ export class FormRestController {
     }
 
     public getFormsByPeriods(periodConfigIds: Set<number> | any ): Observable<FormVO[] | any[]> {
-        return this.http.get<FormVO[] | any[]>(`${this.path}/prc`, periodConfigIds);
+        return this.http.get<FormVO[] | any[]>(`${this.path}/prc?periodConfigIds=` + periodConfigIds, {});
     }
 
     public remove(id: number | any ): Observable<boolean | any> {

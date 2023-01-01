@@ -1,10 +1,20 @@
 package bw.org.bocra.portal.init;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 
 import bw.org.bocra.portal.access.AccessPointCriteria;
 import bw.org.bocra.portal.access.AccessPointService;
@@ -29,6 +41,7 @@ import bw.org.bocra.portal.period.config.PeriodConfigVO;
 import bw.org.bocra.portal.period.config.RepeatPeriod;
 
 @Component
+@Transactional
 public class ApplicationRunnerImpl implements ApplicationRunner {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -108,12 +121,16 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         // Creating the first of this year
         PeriodVO period = new PeriodVO();
         period.setPeriodConfig(config);
+        period.setCreatedBy("system");
+        period.setCreatedDate(LocalDateTime.now());
 
         period = periodService.save(period);
 
         while(now.compareTo(period.getPeriodEnd()) > 0) {
             PeriodVO next = new PeriodVO();
             next.setPeriodConfig(config);
+            period.setCreatedBy("system");
+            period.setCreatedDate(LocalDateTime.now());
 
             next.setPeriodStart(period.getPeriodEnd().plusDays(1));
             period = periodService.save(next);
@@ -150,151 +167,68 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
     private void initMenuAccessPoints() {
 
-        AccessPointTypeVO type = accessPointTypeService.search("API")
-                                        .stream()
-                                        .filter(tp -> tp.getCode().equals("API"))
-                                        .collect(Collectors.toList()).get(0);
+        Map<String, AccessPointTypeVO> typeMap = new HashMap<>();
+        Collection<AccessPointTypeVO> types = accessPointTypeService.getAll();
 
-        AccessPointVO point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Authorisation");
-        point.setUrl("/authorisation");
+        for (AccessPointTypeVO type : types) {
+            typeMap.put(type.getCode(), type);
+        }
 
-        point = accessPointService.save(point);
+        // AccessPointTypeVO type = accessPointTypeService.search("MENU")
+        //                                 .stream()
+        //                                 .filter(tp -> tp.getCode().equals("MENU"))
+        //                                 .collect(Collectors.toList()).get(0);
 
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Access Point Type");
-        point.setUrl("/access/type");
+        try {
+            File file = ResourceUtils.getFile("classpath:accessPointData.csv");
 
-        point = accessPointService.save(point);
+            List<List<String>> records = new ArrayList<>();
 
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Access Point");
-        point.setUrl("/access");
+            try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] values = line.split(",");
+                    records.add(Arrays.asList(values));
+                }
+            }
 
-        point = accessPointService.save(point);
+            for (List<String> record : records) {
+                System.out.println(record);
+                AccessPointVO point = new AccessPointVO();
+                point.setCreatedBy("system");
+                point.setCreatedDate(LocalDateTime.now());
 
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Licensee");
-        point.setUrl("/licensee");
+                Iterator<String> recordIter = record.iterator();
 
-        point = accessPointService.save(point);
+                point.setName(recordIter.next());
+                point.setUrl(recordIter.next());
+                point.setAccessPointType(typeMap.get(recordIter.next()));
+                if(record.size() == 4) {
+                    point.setIcon(recordIter.next());
+                }
 
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Users");
-        point.setUrl("/user");
+                point = accessPointService.save(point);
+            }
 
-        point = accessPointService.save(point);
-
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Periods");
-        point.setUrl("/period");
-
-        point = accessPointService.save(point);
-
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Period Configurations");
-        point.setUrl("/period/config");
-
-        point = accessPointService.save(point);
-
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Form Definitions");
-        point.setUrl("/form");
-
-        point = accessPointService.save(point);
-
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Data Capture");
-        point.setUrl("/form/submission");
-
-        point = accessPointService.save(point);
-
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Licence Types");
-        point.setUrl("/licence/type");
-
-        point = accessPointService.save(point);
-
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Licences");
-        point.setUrl("/licence");
-
-        point = accessPointService.save(point);
-
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Sectors");
-        point.setUrl("/sector");
-
-        point = accessPointService.save(point);
-
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Document Types");
-        point.setUrl("/document/type");
-
-        point = accessPointService.save(point);
-
-        point = new AccessPointVO();
-        point.setCreatedBy("system");
-        point.setCreatedDate(LocalDateTime.now());
-        point.setAccessPointType(type);
-        point.setName("Documents");
-        point.setUrl("/document");
-
-        point = accessPointService.save(point);
-
+        } catch (IOException e) {
+            log.error("Failed to load access point file resource.", e);
+            e.printStackTrace();
+        }
     }
 
     private void initAuthorisation() {
         Set<String> roles = new HashSet<>();
-
+        roles.add("DEVELOPER");
+        
         for (AccessPointVO point : accessPointService.getAll()) {
+            log.info(String.format("Creating authorisation for %s", point.getName()));
             AuthorisationVO authorisation = new AuthorisationVO();
             authorisation.setCreatedBy("system");
             authorisation.setCreatedDate(LocalDateTime.now());
             
-            roles.add("DEVELOPER");
             authorisation.setRoles(roles);
             authorisation.setAccessPoint(point);
-
+            authorisation = authorisationService.save(authorisation);
         }
 
     }
