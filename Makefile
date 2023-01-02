@@ -42,7 +42,7 @@ build_cron_native: gen_env
 	. ./.env && mvn -f bocraportal/cron -Pnative native:compile -DskipTests -o
 	
 build_native: gen_env 
-	. ./.env && mvn -f bocraportal/${service} clean native:compile -Pnative -DskipTests -o
+	. ./.env && mvn -f bocraportal/${module} clean native:compile -Pnative -DskipTests -o
 
 colon = :
 native_image_tracing: gen_env
@@ -110,7 +110,7 @@ build_image: gen_env
 build_api_image: gen_env build_api
 	. ./.env && docker compose build api
 
-build_comm_image: gen_env build_cron_native
+build_comm_image: gen_env build_comm_native
 	. ./.env && docker compose build comm
 
 build_cron_image: gen_env 

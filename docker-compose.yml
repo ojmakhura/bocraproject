@@ -406,7 +406,7 @@ services:
     #build: ./bocraportal/bocracron
     build:
       context: .
-      dockerfile: bocraportal/bocracron/Dockerfile.native
+      dockerfile: bocraportal/cron/Dockerfile.native
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
