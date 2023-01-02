@@ -1,5 +1,5 @@
 # Dockerfile
-FROM eclipse-temurin:17
+FROM ghcr.io/graalvm/jdk:ol9-java17-22.3.0-b2
 
 ARG CERT
 ARG CERT_PASSWORD

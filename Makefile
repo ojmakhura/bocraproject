@@ -30,7 +30,7 @@ build_comm:
 	. ./.env && mvn -f bocraportal/comm -Pnative clean install -DskipTests -o
 
 build_comm_native:
-	mvn -f bocraportal/comm  package -Pnative -DskipTests -o
+	mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
 
 test_comm: 
 	. ./.env && mvn -f bocraportal/comm test -o

@@ -276,17 +276,18 @@ services:
       timeout: 25s
       retries: 3
       start_period: 5s
-    #depends_on:
-    #  db:
-    #    condition: service_healthy
-    #  api:
-    #    condition: service_healthy
-    #  keycloak:
-    #    condition: service_healthy
-      # rabbitmq:
+    depends_on:
+      db:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     build:
       context: .
-      dockerfile: bocraportal/comm/Dockerfile
+      dockerfile: bocraportal/comm/Dockerfile.native
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
@@ -403,16 +404,18 @@ services:
   # Cron job system
   ###############################################################################
   cron:
-    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}"
-    #build: ./bocraportal/bocracron
+    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}"	
     build:
       context: .
-      dockerfile: bocraportal/cron/Dockerfile
+      dockerfile: bocraportal/cron/Dockerfile.native
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
         IMAGE_VERSION: ${IMAGE_VERSION}
     container_name: bocraportal-cron
+    depends_on:
+      api:
+        condition: service_healthy
     environment:
       CRON_SERVER_PORT: ${CRON_SERVER_PORT}
       CRON_LOG_LEVEL: ${CRON_LOG_LEVEL}
