@@ -272,10 +272,13 @@ public class FormSubmissionDaoImpl
         }
 
         if(StringUtils.isNotBlank(criteria.getSubmittedBy())) {
+
+            Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy());
+
             if(specifications == null) {
-                specifications = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy());
+                specifications = tmp;
             } else {
-                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy()));
+                specifications = specifications.and(tmp);
             }
         }
 
@@ -287,15 +290,40 @@ public class FormSubmissionDaoImpl
             }
         }
 
-        if(criteria.getPeriodDate() != null) {
+        if(criteria.getPeriodStartDate() != null) {
+
+            Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "startDate", criteria.getPeriodStartDate());
+
             if(specifications == null) {
-                specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodDate())
-                                .and(BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeGreaterThan("period", "startDate", criteria.getPeriodDate()));
+                specifications = tmp;
             } else {
                 specifications = specifications.and(
-                    BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodDate())
-                                .and(BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeGreaterThan("period", "startDate", criteria.getPeriodDate()))
+                    tmp
                 );
+            }
+        }
+
+        if(criteria.getPeriodEndDate() != null) {
+
+            Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodEndDate());
+
+            if(specifications == null) {
+                specifications = tmp;
+            } else {
+                specifications = specifications.and(
+                    tmp
+                );
+            }
+        }
+
+        if(CollectionUtils.isNotEmpty(criteria.getPeriodIds())) {
+
+            Specification<FormSubmission> tmp = BocraportalSpecifications.findByJoinAttributeIn("period", "id", criteria.getPeriodIds());
+
+            if(specifications == null) {
+                specifications = tmp;
+            } else {
+                specifications = specifications.and(tmp);
             }
         }
 

@@ -36,6 +36,7 @@ import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.period.PeriodDao;
 import bw.org.bocra.portal.period.PeriodVO;
 
 /**
@@ -48,13 +49,16 @@ public class SubmissionServiceImpl
 
     private final LicenseeRepository licenseeRepository;
     private final FormActivationRepository activationRepository;
+    private final PeriodDao periodDao;
 
-    public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, FormActivationRepository activationRepository,
+    public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, 
+            FormActivationRepository activationRepository,PeriodDao periodDao,
             LicenseeRepository licenseeRepository, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
 
         super(formSubmissionDao, formSubmissionRepository, dataFieldDao, dataFieldRepository, messageSource);
         this.licenseeRepository = licenseeRepository;
         this.activationRepository = activationRepository;
+        this.periodDao = periodDao;
     }
 
     /**
@@ -338,8 +342,11 @@ public class SubmissionServiceImpl
     @Override
     protected Collection<FormSubmissionVO> handleLoadDueSubmissions() throws Exception {
         FormSubmissionCriteria criteria = new FormSubmissionCriteria();
-        criteria.setPeriodDate(LocalDateTime.now());
+        
+        Collection<Long> periodIds = periodDao.getActivePeriods().stream()
+                                        .map(period -> period.getId()).toList();
 
+        criteria.setPeriodIds(periodIds);
         Collection<FormSubmission> submissions = getFormSubmissionDao().findByCriteria(criteria);
 
         return toSubmissionVOCollection(submissions);
