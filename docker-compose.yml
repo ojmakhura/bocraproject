@@ -286,10 +286,11 @@ services:
       # rabbitmq:
     build:
       context: .
-      dockerfile: bocraportal/comm/Dockerfile.native
+      dockerfile: bocraportal/comm/Dockerfile
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
+        IMAGE_VERSION: ${IMAGE_VERSION}
     networks:
       traefik-public:
       bocra-network:
@@ -406,10 +407,11 @@ services:
     #build: ./bocraportal/bocracron
     build:
       context: .
-      dockerfile: bocraportal/cron/Dockerfile.native
+      dockerfile: bocraportal/cron/Dockerfile
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
+        IMAGE_VERSION: ${IMAGE_VERSION}
     container_name: bocraportal-cron
     environment:
       CRON_SERVER_PORT: ${CRON_SERVER_PORT}

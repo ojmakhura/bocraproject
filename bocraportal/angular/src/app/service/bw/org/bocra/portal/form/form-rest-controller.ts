@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FormRestController {
     
-    protected path = 'form';
+    protected path = '/form';
 
     constructor(private http: HttpClient) {
     }

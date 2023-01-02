@@ -11,7 +11,7 @@ import { DocumentMetadataTarget } from '@app/model/bw/org/bocra/portal/document/
 })
 export class DocumentRestController {
     
-    protected path = 'document';
+    protected path = '/document';
 
     constructor(private http: HttpClient) {
     }

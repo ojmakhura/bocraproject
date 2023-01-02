@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PeriodRestController {
     
-    protected path = 'period';
+    protected path = '/period';
 
     constructor(private http: HttpClient) {
     }

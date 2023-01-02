@@ -14,7 +14,7 @@ import { KeycloakService } from 'keycloak-angular';
 })
 export class SubmissionRestController {
     
-    protected path = 'form/submission';
+    protected path = '/form/submission';
 
     constructor(private http: HttpClient, private keycloakService: KeycloakService) {
     }

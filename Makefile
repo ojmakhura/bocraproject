@@ -30,7 +30,7 @@ build_comm:
 	. ./.env && mvn -f bocraportal/comm -Pnative clean install -DskipTests -o
 
 build_comm_native:
-	mvn -f bocraportal/comm  package -Pnative -o
+	mvn -f bocraportal/comm  package -Pnative -DskipTests -o
 
 test_comm: 
 	. ./.env && mvn -f bocraportal/comm test -o
@@ -110,7 +110,7 @@ build_image: gen_env
 build_api_image: gen_env build_api
 	. ./.env && docker compose build api
 
-build_comm_image: gen_env build_comm_native
+build_comm_image: gen_env
 	. ./.env && docker compose build comm
 
 build_cron_image: gen_env 

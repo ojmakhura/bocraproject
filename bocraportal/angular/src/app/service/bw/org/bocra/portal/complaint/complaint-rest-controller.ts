@@ -12,7 +12,7 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
 })
 export class ComplaintRestController {
     
-    protected path = 'complaint';
+    protected path = '/complaint';
 
     constructor(private http: HttpClient) {
     }
