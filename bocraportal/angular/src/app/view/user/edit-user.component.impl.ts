@@ -140,7 +140,7 @@ export class EditUserComponentImpl extends EditUserComponent {
       
       this.store.dispatch(
         UserActions.createUser({
-          user: user,
+          user: form.user,
           loading: true,
           loaderMessage: 'Creating a user ...'
         })

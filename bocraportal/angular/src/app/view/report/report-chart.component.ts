@@ -68,11 +68,9 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.periodControl.patchValue('all');
 
     this.setLabels();
-    this.createChartData();
-    this.datasets = this.barChartDataSets();
+    this.datasets = this.basicDatasets();
 
     console.log(this.grid);
-    this.testWithGrid();
   }
 
   ngAfterViewInit(): void {
@@ -80,7 +78,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {}
 
-  testWithGrid() {
+  basicDatasets() {
     let tset = {};
 
     Object.keys(this.grid)?.forEach(g => {
@@ -99,27 +97,21 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
 
-      console.log("Rows Found .... ", found);
-      
       Object.keys(tmp)?.forEach(h => {
-        console.log(h, tmp[h]);
-        // console.log(`${tmp[h].period}: ${tmp.label}`);
 
         let key = `${tmp[h].period}: ${tmp.label}`;
 
         if(tmp[h].period) {
           
           if(this.dataColumns === 'licensees') {
-            console.log(tmp[h]);
             found = this.selectedLicensees.find(l => l.licensee === tmp[h].label);
           } else {
             found = this.selectedFields.find(f => f?.fieldId === tmp[h].elementId);
           }
-          console.log(found)
+          
           if(!found || !found.selected) {
             return;
           }
-          console.log("Columns Found .... ", found);
 
           if(tset[key]?.data === undefined) {
             tset[key] = {
@@ -136,83 +128,31 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
     let dset: any[] = [];
 
-    // console.log(Object.keys(tset));
-
-    // Object.keys(tset).forEach(k => {
-    //   dset.push(tset[k]);
-    // })
-
-    console.log(this.colors);
-    console.log(tset);
-    console.log(this.selectedPeriods);
-    console.log(this.selectedFields);
-    console.log(this.selectedLicensees);
-    // console.log(this.dataColumns);
-    // console.log(this.dataRows);
-
     this.selectedPeriods.forEach(period => {
 
       if(this.dataRows === 'licensees') {
-        // console.log("Rows are licensees");
+        
         this.selectedLicensees.forEach(lic => {
-          // console.log(lic);
+          let key = `${period.period}: ${lic.licensee}`;
+
+          if(tset[key]) {
+            tset[key].backgroundColor = this.colors[lic.licensee];
+            dset.push(tset[key]);
+          }
+          
         });
       } else {
-        // console.log("Rows are fields");
         this.selectedFields.forEach(field => {
-          // console.log(field);
+          let key = `${period.period}: ${field.fieldName}`;
+          if(tset[key]) {
+            dset.push(tset[`${period.period}: ${field.fieldName}`]);
+          }
         });
       }
 
     });
 
     return dset;
-  }
-
-  createChartData() {
-    this.selectedPeriods?.forEach((period) => {
-      this.chartData[period.period] = {};
-      let pr = this.chartData[period.period];
-
-      this.selectedLicensees?.forEach((lic) => {
-        pr[lic.licensee] = {};
-        let lc = pr[lic.licensee];
-
-        this.selectedFields?.forEach((field) => {
-          let fl = field?.alias;
-          if (!fl) {
-            fl = field?.fieldName;
-          }
-
-          lc[fl] = 0;
-        });
-      });
-    });
-
-    this.formSubmissions?.forEach((submission) => {
-      let period = this.chartData[submission?.period?.periodName];
-      let licensee = period[submission?.licensee?.licenseeName];
-
-      this.selectedFields?.forEach((field) => {
-        let f: DataFieldVO = this.findField(submission, field.fieldId);
-        if(submission.form.entryType === 'MULTIPLE') {
-
-          // TODO: 
-           
-        } else {
-
-          if (f) {
-            let fl = field?.alias;
-  
-            if (!fl) {
-              fl = field?.fieldName;
-            }
-  
-            licensee[fl] = f.value;
-          }
-        }
-      });
-    });
   }
 
   setLabels() {
@@ -277,7 +217,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectedPeriod() {
     this.setLabels();
-    this.datasets = this.barChartDataSets();
+    this.datasets = this.basicDatasets();
   }
 
   selectedFormSection() {}
@@ -308,7 +248,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectedChartType() {
     if (this.chartType === 'bar') {
-      this.datasets = this.barChartDataSets();
+      this.datasets = this.basicDatasets();
     }
   }
 
@@ -317,8 +257,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   refreshChart() {
     this.setPeriods();
     this.setLabels();
-    this.createChartData();
-    this.datasets = this.barChartDataSets();
+    this.datasets = this.basicDatasets();
   }
 
   get filteredSubmissions() {
@@ -343,343 +282,4 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     return field;
   }
 
-  getLicenseeCombinedDataSet(): any {
-    let extraction = {};
-    let chartDataLabels: string[] = [];
-
-    if (this.dataColumns === 'fields') {
-      this.filteredSubmissions?.forEach((submission) => {
-        let licenseeData = this.chartData[submission.period.periodName][submission?.licensee?.licenseeName];
-
-        let dataLabel = submission.licensee?.licenseeName;
-
-        if (this.period === 'all') {
-          dataLabel = `${dataLabel}: ${submission?.period?.periodName}`;
-        }
-
-        if (!extraction[dataLabel]) {
-          extraction[dataLabel] = {
-            backgroundColor: this.colors[submission.licensee?.licenseeName],
-          };
-        }
-
-        if (chartDataLabels.length == 0) {
-          chartDataLabels = Object.keys(licenseeData);
-        }
-
-        chartDataLabels.forEach((key) => {
-          extraction[dataLabel][key] = +licenseeData[key];
-        });
-        Object.keys(this.customDataColumns)?.forEach((key) => {
-          extraction[dataLabel][key] = this.customDataColumns[key][submission.id];
-        });
-      });
-      
-    } else if (this.dataColumns === 'periods') {
-      if (this.period === 'all') {
-        this.selectedPeriods?.forEach((period) => {
-          this.getPeriodLicenseesCombinedDataset(extraction, period.period);
-        });
-      } else {
-        this.getPeriodLicenseesCombinedDataset(extraction, this.period);
-      }
-    }
-
-    return this.extractCombinedDatasets(extraction);
-  }
-
-  private addCustomDataRows(extraction: any, chartDataLabels: string[]) {
-
-    Object.keys(this.customDataRows)?.forEach((key1) => {
-      let t2 = this.customDataRows[key1];
-      if (!extraction[key1]) {
-        extraction[key1] = {
-          backgroundColor: this.colors[key1.split(':')[0]], 
-        };
-      }
-
-      if (chartDataLabels && chartDataLabels.length > 0) {
-        chartDataLabels?.forEach((k) => {
-          extraction[key1][k] = t2[k];
-        });
-      } else {
-        if (chartDataLabels.length == 0) {
-          chartDataLabels = Object.keys(t2);
-        }
-
-        chartDataLabels?.forEach((k) => {
-          extraction[key1][k] = t2[k];
-        });
-      }
-    });
-  }
-
-  private getPeriodLicenseesCombinedDataset(extraction: any, periodName: string) {
-    let periodData = this.chartData[periodName];
-    
-    Object.keys(periodData).forEach((licenseeName) => {
-      let licenseeData = periodData[licenseeName];
-      this.selectedFields?.forEach((sf) => {
-        
-        let dataLabel = `${licenseeName}: ${sf?.alias ? sf.alias : sf?.fieldName}`;
-
-        if (!extraction[dataLabel]) {
-          extraction[dataLabel] = {
-            backgroundColor: this.colors[licenseeName],
-            data: [],
-          };
-        }
-
-        let value = licenseeData[sf?.alias ? sf.alias : sf?.fieldName];
-
-        extraction[dataLabel][periodName] = +value;
-      });
-    });
-  }
-
-  private findSelectedFieldColor(field: string) {
-    let color = this.colors[field];
-    if (!color) {
-      let fid = this.selectedFields.find((fd) => field === fd.alias);
-
-      if (!color) {
-        fid = this.selectedFields.find((fd) => field === fd.fieldName);
-      }
-
-      if (fid) {
-        color = this.colors[fid.fieldId];
-      }
-    }
-
-    return color;
-  }
-
-  private getPeriodFieldsCombinedDataSet(period: string, extraction: any, chartDataLabels: string[]) {
-    
-    this.labelNames?.forEach((label) => {
-      
-      if (this.chartData[period] && this.chartData[period][label]) {
-        this.selectedFields?.forEach(field => {
-          if(field?.selected) {
-            let tmp = `${field?.fieldName}`;
-
-            if (this.period === 'all') {
-              tmp = `${period}: ${field?.fieldName}`;
-            }
-
-            if(!extraction[tmp]) {
-              let color = this.findSelectedFieldColor(field?.fieldName);
-              extraction[tmp] = {
-                backgroundColor: color
-              }
-            }
-
-            extraction[tmp][label] = +this.chartData[period][label][field?.fieldName];
-            if(!chartDataLabels?.find(lb => lb === label)) {
-              chartDataLabels.push(label);
-            }
-          }
-        });
-      }
-    });
-  }
-
-  getFieldsCombinedDataSet(): any {
-    let extraction = {};
-    let chartDataLabels: string[] = [];
-
-    if (this.dataColumns === 'periods') {
-      if (this.period === 'all') {
-        this.selectedPeriods?.forEach((sp) => {
-          this.getFieldPeriodCombinedDatasets(extraction, sp.period);
-        });
-      } else {
-        this.getFieldPeriodCombinedDatasets(extraction, this.period);
-      }
-            
-    } else if (this.dataColumns === 'licensees') {
-
-      if (this.period === 'all') {
-        Object.keys(this.chartData)?.forEach((label) => {
-          this.getPeriodFieldsCombinedDataSet(label, extraction, chartDataLabels);
-          if (this.customDataColumns[label]) {
-            Object.keys(this.customDataColumns[label])?.forEach((key) => {
-              extraction[label][`${label}: ${key}`] = this.customDataColumns[label][key];
-            });
-          }
-        });
-
-      } else {
-        this.getPeriodFieldsCombinedDataSet(this.period, extraction, chartDataLabels);
-        
-        if(chartDataLabels.length == 0) {
-          chartDataLabels = Object.keys(this.chartData[this.period]);
-        }
-      }
-    }
-
-    Object.keys(this.customDataColumns)?.forEach((key) => {
-      Object.keys(this.customDataColumns[key])?.forEach(k1 => {
-
-        if(!extraction[k1]) {
-          extraction[k1] = {
-            backgroundColor: this.colors[k1.split(':')[0]]
-          };
-        }
-        extraction[k1][key] = this.customDataColumns[key][k1];
-
-      });
-    });
-
-    return this.extractCombinedDatasets(extraction);
-  }
-
-  private extractCombinedDatasets(extraction: any): any[] {
-    
-    let datasets: any[] = [];
-    Object.keys(extraction)?.forEach((key) => {
-
-      let found = datasets?.find(d => d.label === key);
-      if(!found) {
-        found = {
-          label: key,
-          backgroundColor: extraction[key].backgroundColor,
-          data: [],
-        };
-
-        datasets.push(found);
-      }
-
-      if (this.dataColumns === 'licensees') {
-        this.selectedLicensees?.forEach(lic => {
-          if(lic?.selected) {
-            found?.data?.push(extraction[key][lic?.licensee]);
-          }
-        });
-      } else if (this.dataColumns === 'fields') {
-        this.selectedFields?.forEach(field => {
-          if(field?.selected) {
-            found?.data?.push(extraction[key][field?.alias ? field?.alias : field?.fieldName]);  
-          }
-        });
-
-      } else if (this.dataColumns === 'periods') {
-        this.selectedPeriods?.forEach(period => {
-          if(period?.selected) {
-            found?.data?.push(extraction[key][period?.period]);  
-          }
-          
-        });
-      }
-    });
-
-    this.additionalDataColumns?.forEach(col => {
-      let colData = this.customDataColumns[col?.name];
-
-      datasets?.forEach(dataset => {
-        let column = colData[dataset?.label];
-        dataset?.data?.push(column)
-      });
-    });
-    
-    Object.keys(this.customDataRows)?.forEach(key => {
-
-      let found = datasets?.find(d => d.label === key);
-      if(!found) {
-        found = {
-          label: key,
-          backgroundColor: this.colors[key],
-          data: [],
-        };
-
-        datasets.push(found);
-      }
-
-      if (this.dataColumns === 'licensees') {
-        this.selectedLicensees?.forEach(lic => {
-          if(lic?.selected) {
-            found?.data?.push(this.customDataRows[key][lic?.licensee]);
-          }
-        });
-      } else if (this.dataColumns === 'fields') {
-        this.selectedFields?.forEach(field => {
-          if(field?.selected) {
-            found?.data?.push(this.customDataRows[key][field?.alias ? field?.alias : field?.fieldName]);
-          }
-        });
-
-      } else if (this.dataColumns === 'periods') {
-        this.selectedPeriods?.forEach(period => {
-          if(period?.selected) {
-            found?.data?.push(this.customDataRows[key][period?.period]);
-          }
-          
-        });
-      }
-    });
-
-    return datasets;
-  }
-
-  getPeriodCombinedDatasets() {
-    let extraction = {};
-
-    if (this.dataColumns === 'licensees') {
-      if (this.period === 'all') {
-        this.selectedPeriods?.forEach((sp) => {
-          this.getFieldPeriodCombinedDatasets(extraction, sp.period);
-        });
-      } else {
-        this.getFieldPeriodCombinedDatasets(extraction, this.period);
-      }
-    } else if (this.dataColumns === 'fields') {
-    }
-
-    return this.extractCombinedDatasets(extraction);
-  }
-
-  getFieldPeriodCombinedDatasets(extraction: any, periodName: string) {
-  
-    let period = this.chartData[periodName];
-
-    Object.keys(period).forEach((licenseeName) => {
-      let licensee = period[licenseeName];
-
-      this.selectedFields?.forEach((sf) => {
-        let tmp = `${licenseeName}: ${sf?.alias ? sf.alias : sf.fieldName}`;
-
-        if (!extraction[tmp]) {
-          extraction[tmp] = {
-            backgroundColor: this.colors[sf?.fieldId],
-          };
-        }
-
-        let value = licensee[sf.fieldId];
-        if (!value) {
-          value = licensee[sf.fieldName];
-          if (!value) {
-            value = licensee[sf.alias];
-          }
-        }
-        
-        extraction[tmp][periodName] = +value;
-      });
-    });
-  }
-
-  barChartDataSets(): any[] {
-    let datasets: any[] = [];
-
-    if (this.dataRows === 'licensees') {
-      datasets = this.getLicenseeCombinedDataSet();
-    } else if (this.dataRows === 'periods') {
-      datasets = this.getPeriodCombinedDatasets();
-    } else if (this.dataRows === 'fields') {
-      datasets = this.getFieldsCombinedDataSet();
-    }
-
-    console.log(datasets)
-
-    return datasets;
-  }
 }
