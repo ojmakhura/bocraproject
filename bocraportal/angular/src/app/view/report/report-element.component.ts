@@ -287,6 +287,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.originalColumnLen = this.gridColumnHeaders.length;
 
     this.setGridTableData();
+
+    console.log(this.grid)
   }
 
   get licensees() {
@@ -470,9 +472,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.generateColors(false);
 
     this.additionalDataColumns = this.dataColumnsAnalytics;
-    // let fields: DataFieldVO[] = this.extractFields(this.filteredFormSubmissions[0]);
-
     let changingCol: any = this.additionalDataColumns[index];
+    console.log(changingCol)
+    console.log(this.selectedFields)
 
     if (!changingCol?.type || !changingCol?.name || !changingCol?.sources) {
       return;
@@ -567,14 +569,46 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           length: 1
         })
         this.periodAliases[changingCol?.tag] = changingCol?.tag
-        this.periodLengths[changingCol?.tag] = 1
       }
 
       this.gridDataPeriodHeaders = ['label', ...this.gridDataPeriods];
       this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
     }
 
-    this.periodLengths[changingCol?.tag] = this.additionalDataColumns.length
+    if(this.periodLengths[changingCol?.tag]) {
+      this.periodLengths[changingCol?.tag] = 1;
+    } else {
+      this.periodLengths[changingCol?.tag] += 1; 
+    }
+
+    if(this.dataColumns === 'fields') {
+
+      if(this.selectedFields.find(field => field.fieldName === changingCol.name) === undefined) {
+        this.selectedFields.push({
+          selected: true, 
+          fieldName: changingCol.name,
+          fieldId: changingCol?.name?.replaceAll(' ', '_'),
+          alias: changingCol.name
+        })
+      }
+
+    } else if(this.dataColumns === 'licensees') {
+
+      if(this.selectedLicensees.find(lic => lic.licensee === changingCol.name) === undefined) {
+        this.selectedLicensees.push({selected: true, licensee: changingCol.name})
+      }
+    }
+
+    console.log(this.selectedPeriods)
+
+    if(this.selectedPeriods.find(lic => lic.period === changingCol.tag) === undefined) {
+      this.selectedPeriods.push({
+        selected: true,
+        period: changingCol?.tag,
+        alias: changingCol?.tag
+      });
+    }
+
 
     this.setGridTableData();
   }
@@ -600,6 +634,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   getSources(sources: string, type?: string) {
+    
     let additionalSource: AdditionalSource = new AdditionalSource();
 
     let sourceSplit: string[] = sources
@@ -712,11 +747,29 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     });
 
+    if(this.dataRows === 'fields') {
+
+      if(this.selectedFields.find(lic => lic.licensee === changingRow.name) === undefined) {
+        this.selectedFields.push({
+          selected: true, 
+          fieldName: changingRow.name,
+          fieldId: changingRow?.name?.replaceAll(' ', '_'),
+          alias: changingRow.name
+        })
+      }
+
+    } else if(this.dataRows === 'licensees') {
+
+      if(this.selectedLicensees.find(lic => lic.licensee === changingRow.name) === undefined) {
+        this.selectedLicensees.push({selected: true, licensee: changingRow.name})
+      }
+    }
+
     this.setGridTableData();
   }
 
   private formatCalculation(val: number) {
-    return +formatNumber(val, this.locale, '1.0-2').replaceAll(',', '');
+    return +formatNumber(val, this.locale, '1.0').replaceAll(',', '');
   }
 
   createChartsArrayControl(charts: ReportChart[]) {
@@ -863,20 +916,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.additionalDataRows = this.dataRowsAnalytics;
   }
 
-  // removeLabelsAnalytic(target: string, index: number) {
-  //   this.dataColumnsAnalyticsControl.removeAt(index);
-  //   if (target === 'report') {
-  //     this.additionalDataColumnChange(index);
-  //   } else {
-  //     this.additionalDataRows = this.dataRowsAnalytics;
-  //   }
-
-  //   this.customDataColumns = {};
-  //   this.additionalDataColumns?.forEach((value, index) => {
-  //     this.additionalDataColumnChange(index);
-  //   });
-  // }
-
   removeCustomRows(index: number) {
     let i: number = Object.values(this.grid).findIndex((value: any) => value['label'] == this.dataRowsAnalyticsControl.at(index).value.name)
     delete this.grid[`${i}`];
@@ -958,7 +997,11 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           }
         });
         
+      } else {
+        this.dataColumnsAnalyticsControl.removeAt(index);
       }
+    } else {
+      this.dataColumnsAnalyticsControl.removeAt(index);
     }
   }
 

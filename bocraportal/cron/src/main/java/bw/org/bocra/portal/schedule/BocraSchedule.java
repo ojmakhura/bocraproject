@@ -33,6 +33,9 @@ public class BocraSchedule {
     @Value("${bocra.comm.url}")
     private String commUrl;
 
+    @Value("${bocra.api.url}")
+    private String apiUrl;
+
     public BocraSchedule(CronSecurity cronSecurity, RestTemplate restTemplate) {
         this.cronSecurity = cronSecurity;
         this.restTemplate = restTemplate;
@@ -104,7 +107,7 @@ public class BocraSchedule {
         String formatTime = this.getDateTime();
         log.info("Overdue submissions cron job at " + formatTime);
 
-        String due = commUrl + "/messages/due";
+        String due = apiUrl + "/form/submission/overdue";
         log.info("Loading overdue submissions " + due);
 
         HttpHeaders headers = new HttpHeaders();
@@ -112,9 +115,9 @@ public class BocraSchedule {
         
         HttpEntity<String> request = new HttpEntity<String>(headers);
 
-        // ResponseEntity<Integer> response = restTemplate.exchange(due, HttpMethod.GET, request, Integer.class);
+        ResponseEntity<Integer> response = restTemplate.exchange(due, HttpMethod.GET, request, Integer.class);
 
-        // log.info(String.format("%d messages sent to queue", response.getBody()));
+        log.info(String.format("%d submissions overdue.", response.getBody()));
     }
 
     /**
@@ -129,7 +132,7 @@ public class BocraSchedule {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());        
         HttpEntity<String> request = new HttpEntity<String>(headers);
-        String nextPeriodUrl = commUrl + "/period/next";
+        String nextPeriodUrl = apiUrl + "/period/next";
         ResponseEntity<PeriodVO[]> response = restTemplate.exchange(nextPeriodUrl, HttpMethod.GET, request, PeriodVO[].class);
         if(response.getStatusCode() == HttpStatus.OK) {
             log.info(
@@ -151,7 +154,7 @@ public class BocraSchedule {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());        
         HttpEntity<String> request = new HttpEntity<String>(headers);
-        String activateUrl = commUrl + "/form/activation/activate";
+        String activateUrl = apiUrl + "/form/activation/activate";
         ResponseEntity<FormActivationVO[]> response = restTemplate.exchange(activateUrl, HttpMethod.GET, request, FormActivationVO[].class);
         if(response.getStatusCode() == HttpStatus.OK) {
             log.info(

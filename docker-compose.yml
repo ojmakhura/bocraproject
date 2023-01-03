@@ -207,7 +207,7 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}"
+    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
     container_name: bocraportal-api
     hostname: api
 
@@ -267,7 +267,7 @@ services:
   # The Communication API 
   ###############################################################################
   comm:
-    image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}"
+    image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
     container_name: bocraportal-comm
     hostname: comm
     healthcheck:
@@ -404,7 +404,7 @@ services:
   # Cron job system
   ###############################################################################
   cron:
-    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}"	
+    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"	
     build:
       context: .
       dockerfile: bocraportal/cron/Dockerfile.native
@@ -413,6 +413,12 @@ services:
         CERT_PASSWORD: ${CERT_PASSWORD}
         IMAGE_VERSION: ${IMAGE_VERSION}
     container_name: bocraportal-cron
+    healthcheck:
+      test: "curl -m 5 --silent --fail --request GET http://localhost:8099/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 25s
+      retries: 3
+      start_period: 5s
     depends_on:
       api:
         condition: service_healthy

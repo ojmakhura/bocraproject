@@ -35,15 +35,10 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() selectedPeriods: any[];
 
   @Input() reportType: string;
-  @Input() formSubmissions: FormSubmissionVO[] | undefined;
   @Input() dataColumns: string;
   @Input() dataRows: string;
   @Input() colors: any;
   @Input() chartIndex: number;
-  @Input() additionalDataColumns: any[];
-  @Input() additionalDataRows: any;
-  @Input() customDataColumns: any;
-  @Input() customDataRows: any;
   @Input() grid: any;
 
   sections: any[] = [];
@@ -60,17 +55,13 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.setSections();
-
     this.reportChartGroup.addControl('period', this.formBuilder.control([]));
     this.reportChartGroup.addControl('section', this.formBuilder.control([]));
     this.chartTypeControl.patchValue('bar');
     this.periodControl.patchValue('all');
 
-    this.setLabels();
     this.datasets = this.basicDatasets();
 
-    console.log(this.grid);
   }
 
   ngAfterViewInit(): void {
@@ -80,37 +71,39 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   basicDatasets() {
     let tset = {};
+    this.labelNames = [];
+    this.periods = [];
+    console.log(this.grid);
 
     Object.keys(this.grid)?.forEach(g => {
 
       let tmp = this.grid[g];
-      
-      let found = {selected: true}
 
-      if(this.dataRows === 'licensees') {
-        found = this.selectedLicensees.find(l => l.licensee === tmp.label);
+      let rowMatch = undefined;
+
+      if(this.dataRows === 'fields') {
+        rowMatch = this.selectedFields.find(fd => fd.fieldName === tmp.label);
       } else {
-        found = this.selectedFields.find(f => f?.fieldId === tmp.elementId);
+        rowMatch = this.selectedLicensees.find(lic => lic.licensee === tmp.label);
       }
 
-      if(!found || !found.selected) {
+      if(rowMatch === undefined) {
         return;
       }
-
+      
       Object.keys(tmp)?.forEach(h => {
 
         let key = `${tmp[h].period}: ${tmp.label}`;
+        
 
         if(tmp[h].period) {
-          
-          if(this.dataColumns === 'licensees') {
-            found = this.selectedLicensees.find(l => l.licensee === tmp[h].label);
-          } else {
-            found = this.selectedFields.find(f => f?.fieldId === tmp[h].elementId);
+
+          if(this.labelNames.find(name => name === tmp[h].label) === undefined) {
+            this.labelNames.push(tmp[h].label)
           }
-          
-          if(!found || !found.selected) {
-            return;
+
+          if(this.periods.find(per => per === tmp[h].period) === undefined) {
+            this.periods.push(tmp[h].period);
           }
 
           if(tset[key]?.data === undefined) {
@@ -126,13 +119,17 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
+    console.log(tset)
+
     let dset: any[] = [];
 
     this.selectedPeriods.forEach(period => {
+      // console.log(period);
 
       if(this.dataRows === 'licensees') {
         
         this.selectedLicensees.forEach(lic => {
+          // console.log(lic);
           let key = `${period.period}: ${lic.licensee}`;
 
           if(tset[key]) {
@@ -145,64 +142,16 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         this.selectedFields.forEach(field => {
           let key = `${period.period}: ${field.fieldName}`;
           if(tset[key]) {
-            dset.push(tset[`${period.period}: ${field.fieldName}`]);
+            // console.log(key, tset[key]);
+            dset.push(tset[key]);
           }
         });
       }
 
     });
 
+    console.log(dset)
     return dset;
-  }
-
-  setLabels() {
-    this.labelNames = [];
-
-    if (this.dataColumns === 'fields') {
-      this.labelNames = this.selectedFields.map((field) => (field?.alias ? field?.alias : field?.fieldName));
-    } else if (this.dataColumns === 'licensees') {
-      this.labelNames = [...new Set(this.filteredSubmissions.map((sub) => sub?.licensee?.licenseeName))];
-    } else if (this.dataColumns === 'periods') {
-      this.labelNames = [...new Set(this.filteredSubmissions.map((sub) => sub?.period.periodName))];
-    }
-
-    Object.keys(this.additionalDataColumns)?.forEach((key) =>
-      this.labelNames.push(this.additionalDataColumns[key].name)
-    );
-
-    if (this.labelNames.length === 0 && this.additionalDataRows.length > 0) {
-      let keys = Object.keys(this.customDataRows);
-      if (keys && keys.length > 0) {
-        this.labelNames = Object.keys(this.customDataRows[keys[0]]);
-      }
-    }
-  }
-
-  setSections() {
-    let sections = {};
-    if (this.formSubmissions && this.formSubmissions.length > 0) {
-      this.formSubmissions[0].sections.forEach((section: DataFieldSectionVO) => {
-        sections[section.sectionId] = section.sectionLabel;
-      });
-
-      this.setPeriods();
-    }
-
-    Object.keys(sections).forEach((key) => {
-      this.sections.push({
-        sectionId: key,
-        sectionLabel: sections[key],
-      });
-    });
-  }
-
-  setPeriods() {
-    let periods: string[] = [];
-    this.formSubmissions?.forEach((submission) => {
-      periods.push(submission?.period?.periodName);
-    });
-
-    this.periods = [...new Set(periods)];
   }
 
   newForm(chart: ReportChart): FormGroup {
@@ -216,7 +165,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectedPeriod() {
-    this.setLabels();
     this.datasets = this.basicDatasets();
   }
 
@@ -255,31 +203,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   clearReport() {}
 
   refreshChart() {
-    this.setPeriods();
-    this.setLabels();
     this.datasets = this.basicDatasets();
   }
-
-  get filteredSubmissions() {
-    if (this.formSubmissions) {
-      if (this.period !== 'all') {
-        return this.formSubmissions?.filter((submission) => submission?.period?.periodName === this.period);
-      } else {
-        return this.formSubmissions;
-      }
-    }
-
-    return [];
-  }
-
-  private findField(sub: FormSubmissionVO, fieldId: string): DataFieldVO | any {
-    let field: DataFieldVO | any = undefined;
-
-    sub?.sections?.forEach((section: DataFieldSectionVO) => {
-      if (!field) field = section?.dataFields?.find((field: DataFieldVO) => field.formField.fieldId === fieldId);
-    });
-
-    return field;
-  }
-
 }
