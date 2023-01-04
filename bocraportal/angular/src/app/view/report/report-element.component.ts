@@ -257,8 +257,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       });
     });
 
-    this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a.header.localeCompare(b.header));
-    this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a.localeCompare(b));
+    this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a?.header?.localeCompare(b?.header));
+    this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a?.localeCompare(b));
     this.gridDataColumnHeaders = this.gridColumnHeaders?.map((ch) => `${ch.elementId}_${ch.header}`);
     this.gridDataColumns = this.gridColumnHeaders?.map((ch) => {
       return { field: ch.fieldId, header: ch.header, label: ch.label };
