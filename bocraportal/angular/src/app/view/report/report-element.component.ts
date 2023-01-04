@@ -410,6 +410,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     this.dataRowsControl.patchValue('fields');
     this.generateColors(false);
+    this.periodSelectionChange();
+    this.fieldSelectionChange();
+    this.licenseeSelectionChange();
     this.createReportGrid();
   }
 
@@ -468,8 +471,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.additionalDataColumns = this.dataColumnsAnalytics;
     let changingCol: any = this.additionalDataColumns[index];
-    // console.log(changingCol)
-    // console.log(this.selectedFields)
 
     if (!changingCol?.type || !changingCol?.name || !changingCol?.sources) {
       return;
@@ -571,9 +572,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     if(this.periodLengths[changingCol?.tag]) {
-      this.periodLengths[changingCol?.tag] = 1;
+      this.periodLengths[changingCol?.tag] += 1;
     } else {
-      this.periodLengths[changingCol?.tag] += 1; 
+      this.periodLengths[changingCol?.tag] = 1; 
     }
 
     // Update the selected fields or licensees depending on what the columns are.
@@ -595,8 +596,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
 
-    // console.log(this.selectedPeriods)
-
     /// Update the periods
     if(this.selectedPeriods.find(lic => lic.period === changingCol.tag) === undefined) {
       this.selectedPeriods.push({
@@ -605,7 +604,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         alias: changingCol?.tag
       });
     }
-
 
     this.setGridTableData();
   }
@@ -835,13 +833,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  periodSelectionChange(e: any, index: number) {
-
-    if(e.target.checked) {
-      this.periodSelections.splice(index, 0, this.periodSelectionsArray.at(index).value);
-    } else {
-      this.periodSelections.splice(index, 1);
-    }
+  periodSelectionChange() {
+    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
+    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
 
     this.licenseeSelectionsArray?.controls?.forEach((lc) => {
       if (this.filteredFormSubmissions?.find((sub) => sub.licensee.licenseeName === lc.value.licensee)) {
@@ -850,34 +844,17 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         lc.get('selected')?.patchValue(false);
       }
     });
-    // this.createReportGrid();
+    this.createReportGrid();
   }
 
-  fieldSelectionChange(e: any, index: number) {
-    if(e.target.checked) {
-      this.selectedFields.splice(index, 0, this.fieldSelectionsArray.at(index).value);
-    } else {
-      this.selectedFields.splice(index, 1);
-    }
-    // this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
-    // this.createReportGrid();
+  fieldSelectionChange() {
+    this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
+    this.createReportGrid();
   }
 
-  licenseeSelectionChange(e: any, index: number) {
-
-    if(e.target.checked) {
-      if(this.selectedLicensees['selected']) {
-        this.selectedLicensees.splice(index, 1, this.licenseeSelectionsArray.at(index).value);
-      } else {
-        this.selectedLicensees.splice(index, 0, this.licenseeSelectionsArray.at(index).value);
-      }
-      
-    } else {
-      this.selectedLicensees.splice(index, 1);
-    }
-
-    // this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
-    // this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
+  licenseeSelectionChange() {
+    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
+    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
 
     this.periodSelectionsArray?.controls?.forEach((pr) => {
       if (this.filteredFormSubmissions?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
@@ -886,7 +863,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         pr.get('selected')?.patchValue(false);
       }
     });
-    // this.createReportGrid();
+    this.createReportGrid();
   }
 
   selectedChartType() {
@@ -997,6 +974,13 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         });
 
         this.periodLengths[changingCol?.tag] = this.periodLengths[changingCol?.tag]-1;
+        if(this.periodLengths[changingCol?.tag] == 0) {
+          delete this.periodLengths[changingCol?.tag];
+          delete this.periodAliases[changingCol?.tag];
+
+          let index = this.selectedPeriods.findIndex(s => s?.period === changingCol?.tag)
+          this.selectedPeriods.splice(index, 1);
+        }
         
         // this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
         this.setGridTableData();

@@ -39,7 +39,7 @@
 												<td scope="col">
 													<input type="checkbox" formControlName="selected"
 														aria-label="Checkbox for following text input"
-														(change)="periodSelectionChange($event, k)">
+														(change)="periodSelectionChange()">
 												</td>
 												<td scope="col">
 													{{ period.value.period }}
@@ -70,7 +70,7 @@
 												<td scope="col">
 													<input type="checkbox" formControlName="selected"
 														aria-label="Checkbox for following text input"
-														(change)="licenseeSelectionChange($event, j)"> 
+														(change)="licenseeSelectionChange()">
 												</td>
 												<td scope="col">
 													{{ licensee.value.licensee }}
@@ -103,7 +103,7 @@
 												<td scope="col">
 													<input type="checkbox" formControlName="selected"
 														aria-label="Checkbox for following text input"
-														(change)="fieldSelectionChange($event, j)">
+														(change)="fieldSelectionChange()">
 												</td>
 												<td scope="col">
 													{{ fieldControl?.value?.fieldId }}
@@ -113,7 +113,7 @@
 												</td>
 												<td scope="col">
 													<input type="text" class="form-control" formControlName="alias"
-														(change)="fieldSelectionChange($event, j)">
+														(change)="fieldSelectionChange()">
 												</td>
 											</tr>
 										</tbody>
