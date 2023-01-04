@@ -287,8 +287,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.originalColumnLen = this.gridColumnHeaders.length;
 
     this.setGridTableData();
-
-    console.log(this.grid)
   }
 
   get licensees() {
@@ -473,8 +471,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.additionalDataColumns = this.dataColumnsAnalytics;
     let changingCol: any = this.additionalDataColumns[index];
-    console.log(changingCol)
-    console.log(this.selectedFields)
+    // console.log(changingCol)
+    // console.log(this.selectedFields)
 
     if (!changingCol?.type || !changingCol?.name || !changingCol?.sources) {
       return;
@@ -581,6 +579,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       this.periodLengths[changingCol?.tag] += 1; 
     }
 
+    // Update the selected fields or licensees depending on what the columns are.
     if(this.dataColumns === 'fields') {
 
       if(this.selectedFields.find(field => field.fieldName === changingCol.name) === undefined) {
@@ -599,8 +598,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
 
-    console.log(this.selectedPeriods)
+    // console.log(this.selectedPeriods)
 
+    /// Update the periods
     if(this.selectedPeriods.find(lic => lic.period === changingCol.tag) === undefined) {
       this.selectedPeriods.push({
         selected: true,
@@ -854,7 +854,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   fieldSelectionChange() {
     this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
-    console.log(this.selectedFields);
     this.createReportGrid();
   }
 
