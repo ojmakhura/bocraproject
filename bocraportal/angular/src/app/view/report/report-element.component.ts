@@ -410,9 +410,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     this.dataRowsControl.patchValue('fields');
     this.generateColors(false);
-    this.periodSelectionChange();
-    this.fieldSelectionChange();
-    this.licenseeSelectionChange();
     this.createReportGrid();
   }
 
@@ -838,9 +835,13 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  periodSelectionChange() {
-    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
-    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
+  periodSelectionChange(e: any, index: number) {
+
+    if(e.target.checked) {
+      this.periodSelections.splice(index, 0, this.periodSelectionsArray.at(index).value);
+    } else {
+      this.periodSelections.splice(index, 1);
+    }
 
     this.licenseeSelectionsArray?.controls?.forEach((lc) => {
       if (this.filteredFormSubmissions?.find((sub) => sub.licensee.licenseeName === lc.value.licensee)) {
@@ -849,17 +850,34 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         lc.get('selected')?.patchValue(false);
       }
     });
-    this.createReportGrid();
+    // this.createReportGrid();
   }
 
-  fieldSelectionChange() {
-    this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
-    this.createReportGrid();
+  fieldSelectionChange(e: any, index: number) {
+    if(e.target.checked) {
+      this.selectedFields.splice(index, 0, this.fieldSelectionsArray.at(index).value);
+    } else {
+      this.selectedFields.splice(index, 1);
+    }
+    // this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
+    // this.createReportGrid();
   }
 
-  licenseeSelectionChange() {
-    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
-    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
+  licenseeSelectionChange(e: any, index: number) {
+
+    if(e.target.checked) {
+      if(this.selectedLicensees['selected']) {
+        this.selectedLicensees.splice(index, 1, this.licenseeSelectionsArray.at(index).value);
+      } else {
+        this.selectedLicensees.splice(index, 0, this.licenseeSelectionsArray.at(index).value);
+      }
+      
+    } else {
+      this.selectedLicensees.splice(index, 1);
+    }
+
+    // this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
+    // this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
 
     this.periodSelectionsArray?.controls?.forEach((pr) => {
       if (this.filteredFormSubmissions?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
@@ -868,7 +886,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         pr.get('selected')?.patchValue(false);
       }
     });
-    this.createReportGrid();
+    // this.createReportGrid();
   }
 
   selectedChartType() {
