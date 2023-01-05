@@ -19,7 +19,7 @@ export class DocumentTypeEffects {
                     messages: [`Document type ${documentType.name} found.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -33,7 +33,7 @@ export class DocumentTypeEffects {
                     messages: [`Document type ${documentType.name} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -47,7 +47,7 @@ export class DocumentTypeEffects {
                     messages: [`Document type ${id} removed.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -61,7 +61,7 @@ export class DocumentTypeEffects {
                     messages: [`${documentTypes.length} document types found.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -75,7 +75,7 @@ export class DocumentTypeEffects {
                     messages: [`${documentTypes.length} document types found.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -89,7 +89,7 @@ export class DocumentTypeEffects {
                     messages: [`Page ${pageNumber} found with ${pageSize} document types.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );

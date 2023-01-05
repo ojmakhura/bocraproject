@@ -126,10 +126,10 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleSave(FormSubmissionVO formSubmissionVO) {
+    public ResponseEntity<?> handleSave(FormSubmissionVO formSubmission) {
         try{
-            logger.debug("Save Form Submisson "+formSubmissionVO);
-            Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmissionVO));
+            logger.debug("Save Form Submisson " + formSubmission);
+            Optional<FormSubmissionVO> data = Optional.of(submissionService.save(formSubmission));
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
@@ -151,7 +151,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
                     message = "The submission information is missing.";
 
-                } else if(message.contains("or its id can not be null")) {
+                } else if(message.contains("can not be null")) {
                     if(message.contains("'formSubmission.form' can not be null")) {
                 
                         message = "The submission form or its id is missing.";

@@ -76,8 +76,8 @@ export class SubmissionRestController {
         return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/search`, criteria);
     }
 
-    public updateSubmissionStatus(id: number | any , submissionStatus: FormSubmissionStatus | any , updateTime: Date | any , username: string | any ): Observable<Boolean | any> {
-        return this.http.get<Boolean | any>(`${this.path}/update?id=${id}&submissionStatus=${submissionStatus}&updateTime=${updateTime}&username=${username}`, {});
+    public updateSubmissionStatus(id: number | any , submissionStatus: FormSubmissionStatus | any , updateTime: Date, username: string | any ): Observable<Boolean | any> {
+        return this.http.get<Boolean | any>(`${this.path}/update?id=${id}&submissionStatus=${submissionStatus}&updateTime=${updateTime ? updateTime.toISOString() : new Date().toISOString()}&username=${username}`, {});
     }
 
 }

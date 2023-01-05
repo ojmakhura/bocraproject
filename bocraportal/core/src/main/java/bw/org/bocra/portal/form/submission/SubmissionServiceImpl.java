@@ -329,6 +329,12 @@ public class SubmissionServiceImpl
         if (submissionStatus == FormSubmissionStatus.SUBMITTED) {
             submission.setSubmissionDate(updateTime);
             submission.setSubmittedBy(username);
+        } else if (submissionStatus == FormSubmissionStatus.ACCEPTED) {
+            submission.setAcceptedDate(updateTime);
+            submission.setAcceptedBy(username);
+        } else if (submissionStatus == FormSubmissionStatus.RETURNED) {
+            submission.setReturnedDate(updateTime);
+            submission.setReturnedBy(username);
         } else {
             submission.setUpdatedBy(username);
             submission.setUpdatedDate(updateTime);

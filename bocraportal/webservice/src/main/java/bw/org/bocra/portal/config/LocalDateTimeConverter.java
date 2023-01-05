@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LocalDateTimeConverter implements Converter<String, LocalDateTime> {
     
-    private static final List<String> SUPPORTED_FORMATS = Arrays.asList("dd-MM-yyyy HH:mm:ss", "yyyy-MM-dd HH:mm:ss");
+    private static final List<String> SUPPORTED_FORMATS = Arrays.asList("dd-MM-yyyy HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = SUPPORTED_FORMATS
             .stream()
             .map(DateTimeFormatter::ofPattern)

@@ -30,7 +30,7 @@ export class DataProcessingEffects {
                     messages: [`${formSubmissions.length} submissions found.`],
                     success: true
                 })),
-                catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error.error]})])
+                catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );

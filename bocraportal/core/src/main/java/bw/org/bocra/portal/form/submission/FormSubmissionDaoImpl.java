@@ -25,6 +25,7 @@ import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
 import bw.org.bocra.portal.form.section.FormSection;
 import bw.org.bocra.portal.form.submission.data.DataField;
@@ -100,9 +101,6 @@ public class FormSubmissionDaoImpl
                 for(Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
                     DataFieldSectionVO sec = entry.getKey();
                     sec.setDataFields(entry.getValue());
-                    // Collections.sort((List<DataFieldVO>) sec.getDataFields(), (d1, d2) -> {
-                    //     return (int) (d1.getFormField().getId() - d2.getFormField().getId());
-                    // });
                     sections.add(sec);
                 }
 
@@ -120,6 +118,13 @@ public class FormSubmissionDaoImpl
             PeriodVO period = new PeriodVO();
             getPeriodDao().toPeriodVO(source.getPeriod(), period);
             target.setPeriod(period);
+        }
+
+        if(source.getFormActivation() != null) {
+            target.setFormActivation(getFormActivationDao().toFormActivationVO(source.getFormActivation()));
+
+            target.getFormActivation().setForm(null);
+            target.getFormActivation().setPeriod(null);
         }
     }
 
@@ -201,13 +206,13 @@ public class FormSubmissionDaoImpl
             );
         }
 
-        if(source.getPeriod() != null && source.getPeriod().getId() != null) {
+        if(source.getFormActivation() != null && source.getFormActivation().getId() != null) {
 
-            Period period = getPeriodDao().load(source.getPeriod().getId());
-            target.setPeriod(period);
+            FormActivation activation = formActivationDao.load(source.getFormActivation().getId());
+            target.setFormActivation(activation);
         } else {
             throw new IllegalArgumentException(
-                "FormSubmissionDao.formSubmissionVOToEntity - 'period' or its id can not be null"
+                "FormSubmissionDao.formSubmissionVOToEntity - 'formActivation' or its id can not be null"
             );
         }
 
@@ -235,15 +240,15 @@ public class FormSubmissionDaoImpl
         Specification<FormSubmission> specifications = null;
         
         if(criteria.getStartDate() != null) {
-            specifications = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeGreaterThanEqual("submissionDate", criteria.getStartDate().atStartOfDay());
+            specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "periodStart", criteria.getStartDate().atStartOfDay());
         }
 
         if(criteria.getEndDate() != null) {
             LocalDateTime end = criteria.getEndDate().plusDays(1).atStartOfDay();
             if(specifications == null) {
-                specifications = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("submissionDate", end);
+                specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "periodEnd", end);
             } else {
-                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("submissionDate", end));
+                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "periodEnd", end));
             }
         }
 
@@ -290,7 +295,7 @@ public class FormSubmissionDaoImpl
             }
         }
 
-        if(criteria.getPeriodStartDate() != null) {
+        /*if(criteria.getPeriodStartDate() != null) {
 
             Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "startDate", criteria.getPeriodStartDate());
 
@@ -301,9 +306,9 @@ public class FormSubmissionDaoImpl
                     tmp
                 );
             }
-        }
+        }*/
 
-        if(criteria.getPeriodEndDate() != null) {
+        /*if(criteria.getPeriodEndDate() != null) {
 
             Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodEndDate());
 
@@ -314,7 +319,7 @@ public class FormSubmissionDaoImpl
                     tmp
                 );
             }
-        }
+        }*/
 
         if(CollectionUtils.isNotEmpty(criteria.getPeriodIds())) {
 
