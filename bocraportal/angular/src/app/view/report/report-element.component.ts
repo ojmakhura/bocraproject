@@ -821,11 +821,15 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   periodSelectionChange(event: any, j: number) {
-    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
-    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
+    this.selectionChange(event, j, this.periodSelections, this.periodSelectionsArray, this.selectedPeriods);
+
+    let filtered = this.formSubmissions?.filter(sub => {
+      let f = this.selectedPeriods.find(p => p.period === sub.period.periodName);
+      return f !== undefined;
+    });
 
     this.licenseeSelectionsArray?.controls?.forEach((lc) => {
-      if (this.filteredFormSubmissions?.find((sub) => sub.licensee.licenseeName === lc.value.licensee)) {
+      if (filtered?.find((sub) => sub.licensee.licenseeName === lc.value.licensee)) {
         lc.get('selected')?.patchValue(true);
       } else {
         lc.get('selected')?.patchValue(false);
@@ -893,15 +897,36 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   private selectionChange(event: any, j: number, selections: any[], selectionsControl: FormArray, selected: any[]) {
 
     let tmp = selectionsControl.at(j).value;
+    
     if(event.target.checked) {
       let selects = selections?.filter((sel) => sel.selected);
-      let select = selects.findIndex(sf => sf?.fieldId === tmp?.fieldId);
+      let select = selects.findIndex(sf => {
+
+        if(sf?.fieldId)
+          return sf?.fieldId === tmp?.fieldId
+        if(sf?.licensee)
+          return sf?.licensee === tmp?.licensee
+        else
+          return sf?.period === tmp?.period;
+      });
+      
       selected.splice(select, 0, tmp);
+
     } else {
       
-      let index = selected?.findIndex(sf => sf?.fieldId === tmp?.fieldId);
+      let index = selected?.findIndex(sf => {
+        
+        if(sf?.fieldId)
+          return sf?.fieldId === tmp?.fieldId
+        if(sf?.licensee)
+          return sf?.licensee === tmp?.licensee
+        else
+          return sf?.period === tmp?.period;
+      });
+
       selected.splice(index, 1);
     }
+    return selected;
   }
 
   selectedChartType() {
