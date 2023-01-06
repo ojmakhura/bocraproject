@@ -6,6 +6,7 @@
  */
 package bw.org.bocra.portal.form.submission;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -240,15 +241,15 @@ public class FormSubmissionDaoImpl
         Specification<FormSubmission> specifications = null;
         
         if(criteria.getStartDate() != null) {
-            specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "periodStart", criteria.getStartDate().atStartOfDay());
+            specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDate>findByJoinAttributeGreaterThan("period", "periodStart", criteria.getStartDate().minusDays(1));
         }
 
         if(criteria.getEndDate() != null) {
-            LocalDateTime end = criteria.getEndDate().plusDays(1).atStartOfDay();
+            LocalDate end = criteria.getEndDate().plusDays(1);
             if(specifications == null) {
-                specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "periodEnd", end);
+                specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDate>findByJoinAttributeLessThan("period", "periodEnd", end);
             } else {
-                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "periodEnd", end));
+                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, Period, LocalDate>findByJoinAttributeLessThan("period", "periodEnd", end));
             }
         }
 

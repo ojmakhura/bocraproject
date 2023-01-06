@@ -51,6 +51,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.periodControl.patchValue('all');
 
     this.datasets = this.basicDatasets();
+    
   }
 
   ngAfterViewInit(): void {}
@@ -65,8 +66,8 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     let columns = this.dataColumns === 'licensees' ? this.selectedLicensees : this.selectedFields;
     let rows = this.dataColumns === 'licensees' ? this.selectedFields : this.selectedLicensees;
 
-    let colSelector = this.dataColumns === 'licensees' ? 'licensee' : 'fieldName';
-    let rowSelector = this.dataColumns === 'licensees' ? 'fieldName' : 'licensee';
+    let colSelector = this.dataColumns === 'licensees' ? 'licensee' : 'alias';
+    let rowSelector = this.dataColumns === 'licensees' ? 'alias' : 'licensee';
     let colourSelector = this.dataColumns === 'licensees' ? 'licensee' : 'fieldId';
 
     let periods = this.period === 'all' ? this.selectedPeriods : this.selectedPeriods.filter(p => this.period === p?.period);
@@ -121,7 +122,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.labelNames =
       this.dataColumns === 'licensees'
         ? this.selectedLicensees?.map((lic) => lic.licensee)
-        : this.selectedFields?.map((fl) => fl.fieldName);
+        : this.selectedFields?.map((fl) => fl.alias);
 
     this.periods = this.selectedPeriods?.map((per) => per.period);
 

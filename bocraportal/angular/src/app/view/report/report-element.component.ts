@@ -175,11 +175,11 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.fieldSelections?.forEach((field, index) => {
 
       if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
-        colLabels[field?.fieldName] = index;
+        colLabels[field?.fieldId] = index;
       } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
         rowLabels[field?.fieldId] = index;
         this.grid[index] = {
-          label: field?.fieldName,
+          label: field?.alias,
           elementId: field?.fieldId,
           row: index,
         };
@@ -209,25 +209,26 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         
         if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
           fields = fields?.filter(
-            (field) => colLabels[field?.formField?.fieldName] !== undefined
+            (field) => colLabels[field?.formField?.fieldId] !== undefined
           );
         }
 
         fields?.forEach((field, findex) => {
+
+          let selF = this.fieldSelections.find(f => f.fieldId === field.formField.fieldId)
           
-          let label = field?.formField?.fieldName;
+          let label = selF.alias;
           let elementId = field?.formField?.fieldId;
 
           if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
 
-            colIndex = pindex * fields?.length + colLabels[field?.formField?.fieldName];
+            colIndex = pindex * fields?.length + colLabels[field?.formField?.fieldId];
 
           } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
             rowIndex = field?.formField?.fieldId;
             label = sub?.licensee?.licenseeName;
             elementId = `${sub?.id}_${sub?.licensee?.licenseeName}`;
             colIndex = cindex;
-            // cindex++;
           }
           
           if(rowLabels[rowIndex] === undefined) {
@@ -277,7 +278,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return [...new Set(this.formSubmissions?.map((sub) => sub?.licensee?.licenseeName))];
   }
 
-  periodAliasChange(period: any) {
+  periodAliasChange(period: any, k: number) {
     
     this.periodAliases[period.period] = period.alias;
   }
@@ -394,9 +395,11 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     this.dataRowsControl.patchValue('fields');
     this.generateColors(false);
-    this.periodSelectionChange();
-    this.fieldSelectionChange();
-    this.licenseeSelectionChange();
+    // this.periodSelectionChange();
+    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
+    this.selectedFields = this.fieldSelections;
+    // this.licenseeSelectionChange();
+    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
     this.createReportGrid();
   }
 
@@ -539,7 +542,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         return { field: ch.fieldId, header: ch.header, label: ch.label };
       });
 
-      this.gridDataPeriods = this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_'));
+      // this.gridDataPeriods = this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_'));
       this.gridDataPeriods = [...this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_')), ...new Set(this.additionalDataColumns?.map(col => col?.tag?.replaceAll(' ', '_')))]
 
       if(this.periodAliases[changingCol?.tag] === undefined) {
@@ -675,6 +678,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       tmp = {
         label: changingRow?.name,
         row: rowIndex,
+        elementId: `${changingRow?.name?.replaceAll(' ', '_')}`
       };
       this.grid[rowIndex] = tmp;
     }
@@ -687,6 +691,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           tmp[colKey] = {
             value: changingRow?.type === 'custom' ? source : undefined,
             source: [],
+            period: this.grid[0][colKey]?.period,
+            label: this.grid[0][colKey]?.label,
+            elementId: `${changingRow?.name?.replaceAll(' ', '_')}_${this.grid[0][colKey]?.label}`
           };
         }
 
@@ -711,9 +718,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     Object.keys(tmp)?.forEach((tk) => {
-      if (tk !== 'label' && tk !== 'row') {
+      if (tk !== 'label' && tk !== 'row' && tk !== 'elementId') {
         
-        tmp[tk].value =  Math.round(
+        tmp[tk].value = Math.round(
           changingRow?.type === 'custom'
             ? math.evaluate(tmp[tk].value)
             : this.calculate(
@@ -727,7 +734,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     if(this.dataRows === 'fields') {
-
+      
       if(this.selectedFields.find(lic => lic.licensee === changingRow.name) === undefined) {
         this.selectedFields.push({
           selected: true, 
@@ -746,10 +753,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.setGridTableData();
   }
-
-  // private formatCalculation(val: number) {
-  //   return Math.round(val);
-  // }
 
   createChartsArrayControl(charts: ReportChart[]) {
     let chartControl: FormArray = this.formBuilder.array([]);
@@ -817,7 +820,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  periodSelectionChange() {
+  periodSelectionChange(event: any, j: number) {
     this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
     this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
 
@@ -831,23 +834,74 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.createReportGrid();
   }
 
-  fieldSelectionChange() {
-    this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
+  fieldAliasChange(event: any, j: number) {
+    let tmp = this.fieldSelectionsArray.at(j).value;
+
+    if(tmp.selected) {
+
+      let index = this.selectedFields?.findIndex(sf => sf?.fieldId === tmp?.fieldId);
+      this.selectedFields[index].alias = tmp.alias
+    }
+
+    Object.values(this.grid).forEach((value: any) => {
+      if(this.dataColumns === 'licensees') {
+        if(value.elementId === tmp?.fieldId) {
+          value.label = tmp.alias;
+        }
+      } else {
+        Object.values(value).forEach((v: any) => {
+          if(v?.elementId === tmp?.fieldId) {
+            v.label = tmp.alias;
+          }
+        });
+
+        this.gridColumnHeaders?.forEach(ch => {
+          if(ch?.elementId === tmp?.fieldId) {
+            ch.label = tmp.alias;
+          }
+        });
+      }
+    });
+  }
+
+  fieldSelectionChange(event: any, j: number) {
+
+    this.selectionChange(event, j, this.fieldSelections, this.fieldSelectionsArray, this.selectedFields);
+    
     this.createReportGrid();
   }
 
-  licenseeSelectionChange() {
-    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
-    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
+  licenseeSelectionChange(event: any, j: number) {
+
+    this.selectionChange(event, j, this.licenseeSelections, this.licenseeSelectionsArray, this.selectedLicensees);
+    
+    let filtered = this.formSubmissions?.filter(sub => {
+      let f = this.selectedLicensees.find(l => l.licensee === sub.licensee.licenseeName);
+      return f !== undefined;
+    });
 
     this.periodSelectionsArray?.controls?.forEach((pr) => {
-      if (this.filteredFormSubmissions?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
+      if (filtered?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
         pr.get('selected')?.patchValue(true);
       } else {
         pr.get('selected')?.patchValue(false);
       }
     });
     this.createReportGrid();
+  }
+
+  private selectionChange(event: any, j: number, selections: any[], selectionsControl: FormArray, selected: any[]) {
+
+    let tmp = selectionsControl.at(j).value;
+    if(event.target.checked) {
+      let selects = selections?.filter((sel) => sel.selected);
+      let select = selects.findIndex(sf => sf?.fieldId === tmp?.fieldId);
+      selected.splice(select, 0, tmp);
+    } else {
+      
+      let index = selected?.findIndex(sf => sf?.fieldId === tmp?.fieldId);
+      selected.splice(index, 1);
+    }
   }
 
   selectedChartType() {
@@ -895,8 +949,14 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   removeCustomRows(index: number) {
+
+    console.log(this.selectedFields);
+
     let i: number = Object.values(this.grid).findIndex((value: any) => value['label'] == this.dataRowsAnalyticsControl.at(index).value.name)
     delete this.grid[`${i}`];
+    console.log(this.grid);
+
+    let tmp = this.dataRowsAnalyticsControl.at(index).value;
     
     this.dataRowsAnalyticsControl.removeAt(index);
 
@@ -905,6 +965,22 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       this.additionalRowChange(index);
     });
 
+    if(this.dataColumns === 'licensees') {
+
+      let i = this.selectedFields?.findIndex(s => s.fieldName === tmp.name);
+
+      if(i > -1) {
+        this.selectedFields?.splice(i, 1);
+      }
+
+    } else {
+
+      let i = this.selectedLicensees?.findIndex(s => s.fieldName === tmp.name);
+
+      if(i > -1) {
+        this.selectedLicensees?.splice(i, 1);
+      }
+    }
     
     this.setGridTableData();
   }
