@@ -463,6 +463,15 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       return;
     }
 
+    /// Update the periods
+    if(this.selectedPeriods.find(lic => lic.period === changingCol.tag) === undefined) {
+      this.selectedPeriods.push({
+        selected: true,
+        period: changingCol?.tag,
+        alias: changingCol?.tag
+      });
+    }
+
     let source = '';
 
     let sourceSplit = this.getSources(changingCol?.sources);
@@ -536,14 +545,15 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         period: changingCol?.tag,
         elementId: `${index}_${changingCol?.name}`,
         label: changingCol?.name
-      })
+      });
       this.gridDataColumnHeaders = this.gridColumnHeaders?.map((ch) => `${ch.elementId}_${ch.header}`);
+
       this.gridDataColumns = this.gridColumnHeaders?.map((ch) => {
         return { field: ch.fieldId, header: ch.header, label: ch.label };
       });
 
-      // this.gridDataPeriods = this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_'));
-      this.gridDataPeriods = [...this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_')), ...new Set(this.additionalDataColumns?.map(col => col?.tag?.replaceAll(' ', '_')))]
+      if(!this.gridDataPeriods?.find(dp => dp === changingCol?.tag))
+        this.gridDataPeriods = this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_'));
 
       if(this.periodAliases[changingCol?.tag] === undefined) {
 
@@ -581,15 +591,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       if(this.selectedLicensees.find(lic => lic.licensee === changingCol.name) === undefined) {
         this.selectedLicensees.push({selected: true, licensee: changingCol.name})
       }
-    }
-
-    /// Update the periods
-    if(this.selectedPeriods.find(lic => lic.period === changingCol.tag) === undefined) {
-      this.selectedPeriods.push({
-        selected: true,
-        period: changingCol?.tag,
-        alias: changingCol?.tag
-      });
     }
 
     this.setGridTableData();
