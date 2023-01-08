@@ -835,7 +835,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         lc.get('selected')?.patchValue(false);
       }
     });
-    this.createReportGrid();
+    
   }
 
   fieldAliasChange(event: any, j: number) {
@@ -872,7 +872,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.selectionChange(event, j, this.fieldSelections, this.fieldSelectionsArray, this.selectedFields);
     
-    this.createReportGrid();
   }
 
   licenseeSelectionChange(event: any, j: number) {
@@ -891,7 +890,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         pr.get('selected')?.patchValue(false);
       }
     });
-    this.createReportGrid();
+    
   }
 
   private selectionChange(event: any, j: number, selections: any[], selectionsControl: FormArray, selected: any[]) {
@@ -1227,12 +1226,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
    * selected licensees
    */
   get filteredFormSubmissions(): FormSubmissionVO[] {
-    let selectedPeriods = this.periodSelections?.filter((pr) => pr.selected);
-    let selectedLicensees = this.licenseeSelections?.filter((lc) => lc.selected);
+    // let selectedPeriods = this.periodSelections?.filter((pr) => pr.selected);
+    // let selectedLicensees = this.licenseeSelections?.filter((lc) => lc.selected);
 
     let filtered = this.formSubmissions
-      ?.filter((submission) => selectedPeriods?.find((pr) => pr.period === submission?.period?.periodName))
-      ?.filter((submission) => selectedLicensees?.find((lc) => lc.licensee === submission?.licensee?.licenseeName));
+      ?.filter((submission) => this.selectedPeriods?.find((pr) => pr.period === submission?.period?.periodName))
+      ?.filter((submission) => this.selectedLicensees?.find((lc) => lc.licensee === submission?.licensee?.licenseeName));
 
     return filtered ? filtered : [];
   }
