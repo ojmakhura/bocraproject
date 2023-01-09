@@ -34,7 +34,7 @@ import bw.org.bocra.portal.GenericRestTest;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class AccessPointTypeRestControllerTest extends GenericRestTest {
+public class AccessPointTypeRestControllerTest extends GenericRestTest<AccessPointTypeVO, String> {
 
     // @ClassRule
     // public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -71,7 +71,7 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
         accessPointTypeRepository.deleteAll();
     }
 
-    public Collection<?> dummyData(int size) {
+    public Collection<AccessPointTypeVO> dummyData(int size) {
 
         return accessPointTypeTestData.generateSequentialData(size);
     }
@@ -209,7 +209,7 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     }
 
     @Override
-    protected Object unsavedDummyData() {
+    protected AccessPointTypeVO unsavedDummyData() {
         
         return accessPointTypeTestData.createUnsavedAccessPointType();
     }
@@ -236,23 +236,23 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     }
 
     @Override
-    protected ResponseEntity<?> handleSearch(Object criteria) {
-        return accessPointTypeRestController.search((String)criteria);
+    protected ResponseEntity<?> handleSearch(String criteria) {
+        return accessPointTypeRestController.search(criteria);
     }
 
     @Override
-    protected ResponseEntity<?> handlePagedSearch(int pageNumber, int pageSize, Object criteria) {
+    protected ResponseEntity<?> handlePagedSearch(int pageNumber, int pageSize, String criteria) {
         return accessPointTypeRestController.getAllPaged(pageNumber, pageSize);
     }
 
     @Override
-    protected ResponseEntity<?> handleSave(Object o) {
+    protected ResponseEntity<?> handleSave(AccessPointTypeVO o) {
         
-        return accessPointTypeRestController.save((AccessPointTypeVO)o);
+        return accessPointTypeRestController.save(o);
     }
 
     @Override
-    protected void basicCompareAssertions(Object o1, Object o2) {
+    protected void basicCompareAssertions(AccessPointTypeVO o1, AccessPointTypeVO o2) {
         AccessPointTypeVO type1 = (AccessPointTypeVO) o1;
         AccessPointTypeVO type2 = (AccessPointTypeVO) o2;
 
@@ -262,24 +262,24 @@ public class AccessPointTypeRestControllerTest extends GenericRestTest {
     }
 
     @Override
-    protected Collection<?> searchData() {
+    protected Collection<AccessPointTypeVO> searchData() {
 
         return accessPointTypeTestData.generateSearchData();
 
     }
 
     @Override
-    protected Object searchCriteria() {
+    protected String searchCriteria() {
         return null;
     }
 
     @Override
-    protected Object searchCriteriaEmpty() {
+    protected String searchCriteriaEmpty() {
         return "";
     }
 
     @Override
-    protected Object searchCriteriaNone() {
+    protected String searchCriteriaNone() {
         return "null";
     }
 }

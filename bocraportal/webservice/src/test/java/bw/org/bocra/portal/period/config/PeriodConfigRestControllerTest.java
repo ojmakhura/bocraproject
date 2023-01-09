@@ -5,6 +5,8 @@
 //
 package bw.org.bocra.portal.period.config;
 
+import java.util.Collection;
+
 import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,11 +25,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class PeriodConfigRestControllerTest {
+public class PeriodConfigRestControllerTest extends GenericRestTest<PeriodConfigVO, PeriodConfigCriteria> {
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -85,6 +89,90 @@ public class PeriodConfigRestControllerTest {
     @Test
     public void search() {
 
+    }
+
+    @Override
+    protected Collection<PeriodConfigVO> dummyData(int num) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected PeriodConfigVO unsavedDummyData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleGetAll() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleFindById(Long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleRemove(Long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleSearch(PeriodConfigCriteria criteria) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, PeriodConfigCriteria criteria) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleSave(PeriodConfigVO o) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected void basicCompareAssertions(PeriodConfigVO o1, PeriodConfigVO o2) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected Collection<PeriodConfigVO> searchData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected PeriodConfigCriteria searchCriteria() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected PeriodConfigCriteria searchCriteriaNone() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected PeriodConfigCriteria searchCriteriaEmpty() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

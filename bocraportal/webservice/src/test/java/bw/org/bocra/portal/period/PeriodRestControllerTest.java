@@ -6,6 +6,7 @@
 package bw.org.bocra.portal.period;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
 import bw.org.bocra.portal.period.config.PeriodConfigRepository;
 import bw.org.bocra.portal.period.config.PeriodConfigService;
 import bw.org.bocra.portal.period.config.PeriodConfigVO;
@@ -37,7 +38,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class PeriodRestControllerTest {
+public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCriteria> {
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -290,6 +291,90 @@ public class PeriodRestControllerTest {
     @Test
     public void search() {
 
+    }
+
+    @Override
+    protected Collection<PeriodVO> dummyData(int num) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected PeriodVO unsavedDummyData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleGetAll() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleFindById(Long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleRemove(Long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleSearch(PeriodCriteria criteria) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, PeriodCriteria criteria) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ResponseEntity<?> handleSave(PeriodVO o) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected void basicCompareAssertions(PeriodVO o1, PeriodVO o2) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected Collection<PeriodVO> searchData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected PeriodCriteria searchCriteria() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected PeriodCriteria searchCriteriaNone() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected PeriodCriteria searchCriteriaEmpty() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

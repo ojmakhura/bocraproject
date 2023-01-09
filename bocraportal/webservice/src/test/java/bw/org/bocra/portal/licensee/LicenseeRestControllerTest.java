@@ -33,7 +33,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class LicenseeRestControllerTest extends GenericRestTest {
+public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, LicenseeCriteria> {
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -170,12 +170,12 @@ public class LicenseeRestControllerTest extends GenericRestTest {
     // }
 
     @Override
-    protected Collection<?> dummyData(int size) {
+    protected Collection<LicenseeVO> dummyData(int size) {
         return licenseeTestData.generateSequentialData(size);
     }
 
     @Override
-    protected Object unsavedDummyData() {
+    protected LicenseeVO unsavedDummyData() {
         return licenseeTestData.createUnsavedLicensee();
     }
 
@@ -200,23 +200,23 @@ public class LicenseeRestControllerTest extends GenericRestTest {
     }
 
     @Override
-    protected ResponseEntity<?> handleSearch(Object criteria) {
+    protected ResponseEntity<?> handleSearch(LicenseeCriteria criteria) {
         return licenseeRestController.search((LicenseeCriteria) criteria);
     }
 
     @Override
-    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, Object criteria) {
+    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, LicenseeCriteria criteria) {
         return null;
     }
 
     @Override
-    protected ResponseEntity<?> handleSave(Object o) {
+    protected ResponseEntity<?> handleSave(LicenseeVO o) {
         
         return licenseeRestController.save((LicenseeVO) o);
     }
 
     @Override
-    protected void basicCompareAssertions(Object o1, Object o2) {
+    protected void basicCompareAssertions(LicenseeVO o1, LicenseeVO o2) {
         
         LicenseeVO l1 = (LicenseeVO)o1;
         LicenseeVO l2 = (LicenseeVO)o2;
@@ -227,25 +227,25 @@ public class LicenseeRestControllerTest extends GenericRestTest {
     }
 
     @Override
-    protected Collection<?> searchData() {
+    protected Collection<LicenseeVO> searchData() {
         // TODO Auto-generated method stub
         return licenseeTestData.generateSearchData();
     }
 
     @Override
-    protected Object searchCriteria() {
+    protected LicenseeCriteria searchCriteria() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    protected Object searchCriteriaNone() {
+    protected LicenseeCriteria searchCriteriaNone() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    protected Object searchCriteriaEmpty() {
+    protected LicenseeCriteria searchCriteriaEmpty() {
         // TODO Auto-generated method stub
         return null;
     }
