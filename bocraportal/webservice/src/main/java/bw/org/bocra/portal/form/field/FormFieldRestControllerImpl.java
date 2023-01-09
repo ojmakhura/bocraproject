@@ -7,6 +7,8 @@ package bw.org.bocra.portal.form.field;
 
 import java.util.Collection;
 import java.util.Optional;
+
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -128,6 +130,9 @@ public class FormFieldRestControllerImpl extends FormFieldRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
+            if(e instanceof ConstraintViolationException){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This field has been already done.");
+            }
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
     }

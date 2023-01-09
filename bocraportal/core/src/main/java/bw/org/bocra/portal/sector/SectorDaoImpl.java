@@ -37,11 +37,10 @@ public class SectorDaoImpl
 {
 
     public SectorDaoImpl(LicenseeRepository licenseeRepository, LicenseeSectorRepository licenseeSectorRepository,
-            NotificationRepository notificationRepository, FormRepository formRepository,
-            SectorFormRepository sectorFormRepository, SectorRepository sectorRepository) {
-
-        super(licenseeRepository, licenseeSectorRepository, notificationRepository, formRepository, sectorFormRepository,
-                sectorRepository);
+            FormRepository formRepository, SectorFormRepository sectorFormRepository,
+            SectorRepository sectorRepository) {
+        super(licenseeRepository, licenseeSectorRepository, formRepository, sectorFormRepository, sectorRepository);
+        //TODO Auto-generated constructor stub
     }
 
     /**

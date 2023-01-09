@@ -266,7 +266,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     criteria = this.licenseeFormsSearchField.value;
     this.store.dispatch(
       FormActions.searchForms({
-        criteria: { code: criteria, formName: criteria },
+        criteria: { formName: criteria },
         loading: true,
         loaderMessage: 'Searching forms ...'
       })

@@ -162,4 +162,32 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.badRequest().body("User password not updated.");
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleFindByLicenseeId(Long licenseeId) {
+        try{
+            logger.debug("Search user by licensee id");
+            String criteria = "licenseeId:" + licenseeId;
+            List<UserVO> users = this.keycloakUserService.searchByAttributes(criteria);
+
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByLicenseeName(String licenseeName) {
+        try{
+            logger.debug("Search user by licensee name.");
+            String criteria = "licenseeName:" + licenseeName;
+            List<UserVO> users = this.keycloakUserService.searchByAttributes(criteria);
+
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

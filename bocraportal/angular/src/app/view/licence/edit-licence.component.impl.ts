@@ -162,7 +162,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     criteria = this.licenceLicenseeSearchField.value;
     this.store.dispatch(
       LicenseeActions.search({
-        criteria: { uin: criteria, licenseeName: criteria },
+        criteria: {licenseeName: criteria },
         loading: true,
         loaderMessage: 'Searching licensees ...'
       })

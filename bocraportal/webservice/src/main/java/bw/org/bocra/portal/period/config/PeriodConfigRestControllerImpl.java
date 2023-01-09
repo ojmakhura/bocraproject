@@ -8,6 +8,7 @@ package bw.org.bocra.portal.period.config;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -93,6 +94,18 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     public ResponseEntity<?> handleSave(PeriodConfigVO periodConfigVO) {
         try{
             logger.debug("Save Period Config "+periodConfigVO);
+
+            if(periodConfigVO.getId() == null) {
+                PeriodConfigCriteria cr = new PeriodConfigCriteria();
+                cr.setPeriodConfigName(periodConfigVO.getPeriodConfigName());
+                // cr.setRepeatPeriod(periodConfigVO.getRepeatPeriod());
+
+                Collection<PeriodConfigVO> actives = periodConfigService.search(cr);
+                if(CollectionUtils.isNotEmpty(actives)) {
+                    throw new PeriodConfigServiceException("This Period Configuration activation has been already done.");
+                }
+            }            
+
             Optional<PeriodConfigVO> data = Optional.of(periodConfigService.save(periodConfigVO)); 
             ResponseEntity<PeriodConfigVO> response;
     

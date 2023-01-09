@@ -51,12 +51,9 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override licenseeFormLicenseeSearch(): void {
-    let criteria: LicenseeCriteria = new LicenseeCriteria();
-    criteria.licenseeName = this.licenseeFormLicenseeSearchField.value;
-    criteria.uin = this.licenseeFormLicenseeSearchField.value;
     this.store.dispatch(
       LicenseeActions.search({
-        criteria: criteria,
+        criteria: { licenseeName: this.licenseeFormLicenseeSearchField.value},
         loading: true,
         loaderMessage: 'Searching licensees ...'
       })

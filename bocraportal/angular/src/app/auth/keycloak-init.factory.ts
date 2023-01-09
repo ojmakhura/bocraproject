@@ -17,7 +17,16 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<any
             silentCheckSsoRedirectUri:
               window.location.origin + '/assets/silent-check-sso.html'
           },
-          bearerExcludedUrls: ['/assets'],
+          bearerExcludedUrls: ['/assets', '/home', '/about', '/contact', '/complaint', '/complaint/search-complaints'],
+          shouldAddToken: (request) => {
+            const { method, url } = request;
+
+            const isGetRequest = 'GET' === method.toUpperCase();
+            const acceptablePaths = ['/assets', '/home', '/about', '/contact', '/complaint', '/complaint/search-complaints'];
+            const isAcceptablePathMatch = acceptablePaths.some((path) => url.includes(path));
+
+            return !(isGetRequest && isAcceptablePathMatch);
+          }
         });
         resolve(resolve);
       } catch (error) {

@@ -5,20 +5,13 @@
 //
 package bw.org.bocra.portal.form.activation;
 
-import java.util.Collection;
 import java.util.Optional;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bw.org.bocra.portal.form.submission.FormSubmissionStatus;
-import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -35,7 +28,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Searches Form Activation by "+id);
             Optional<?> data = Optional.of(formActivationService.findById(id));
             ResponseEntity<?> response;
 
@@ -47,7 +39,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -56,7 +47,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Displays all Form Activations");
             Optional<?> data = Optional.of(formActivationService.getAll());
             ResponseEntity<?> response;
 
@@ -68,7 +58,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -77,7 +66,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Displays all Form Activations of the specified "+"Page Number:"+pageNumber+"and Page Size:"+pageSize);
             Optional<?> data = Optional.of(formActivationService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
@@ -89,7 +77,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -98,8 +85,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Deletes Activation by "+id);
-            
             Optional<?> data = Optional.of(formActivationService.remove(id));
             ResponseEntity<?> response;
 
@@ -111,11 +96,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form activation cant be deleted.");
-            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -125,16 +106,17 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         try {
             logger.debug("Saves Form Activation "+formActivation);
 
-            if(formActivation.getId() == null) {
-                FormActivationCriteria cr = new FormActivationCriteria();
-                cr.setFormId(formActivation.getForm().getId());
-                cr.setPeriodId(formActivation.getPeriod().getId());
+            // if(formActivation.getId() == null) {
+            //     FormActivationCriteria cr = new FormActivationCriteria();
+            //     cr.setFormId(formActivation.getForm().getId());
+            //     cr.setPeriodId(formActivation.getPeriod().getId());
 
-                Collection<FormActivationVO> actives = formActivationService.search(cr);
-                if(CollectionUtils.isNotEmpty(actives)) {
-                    throw new DataIntegrityViolationException("This form activation has been already done.");
-                }
-            }
+            //     Collection<FormActivationVO> actives = formActivationService.search(cr);
+            //     if(CollectionUtils.isNotEmpty(actives)) {
+            //         throw new FormActivationServiceException("This form activation has been already done.");
+            //     }
+            // }
+
             Optional<?> data = Optional.of(formActivationService.save(formActivation));
             ResponseEntity<?> response;
 
@@ -146,12 +128,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form activation has been already done.");
-            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -159,7 +136,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleSearch(FormActivationCriteria criteria) {
         try {
-            logger.debug("Search Form Activation by "+criteria);
             Optional<?> data = Optional.of(formActivationService.search(criteria));
             ResponseEntity<?> response;
 
@@ -171,7 +147,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

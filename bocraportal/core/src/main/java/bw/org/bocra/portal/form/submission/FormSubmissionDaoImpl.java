@@ -280,6 +280,18 @@ public class FormSubmissionDaoImpl
             }
         }
 
+        if(criteria.getPeriodDate() != null) {
+            if(specifications == null) {
+                specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodDate())
+                                .and(BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeGreaterThan("period", "startDate", criteria.getPeriodDate()));
+            } else {
+                specifications = specifications.and(
+                    BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodDate())
+                                .and(BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeGreaterThan("period", "startDate", criteria.getPeriodDate()))
+                );
+            }
+        }
+
         return formSubmissionRepository.findAll(specifications, Sort.by(Direction.ASC, "submissionDate"));
     }
 }

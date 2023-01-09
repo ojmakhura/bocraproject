@@ -14,6 +14,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.complaint.ComplaintVO;
+import bw.org.bocra.portal.complaint.Complaint;
+import bw.org.bocra.portal.complaint.ComplaintRepository;
+import bw.org.bocra.portal.complaint.ComplaintDao;
 import bw.org.bocra.portal.document.type.DocumentType;
 import bw.org.bocra.portal.document.type.DocumentTypeRepository;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
@@ -30,25 +34,28 @@ import bw.org.bocra.portal.licensee.LicenseeVO;
 @Repository("documentDao")
 @Transactional
 public class DocumentDaoImpl
-    extends DocumentDaoBase
-{
+        extends DocumentDaoBase {
+
+    private final ComplaintDao complaintDao;
 
     public DocumentDaoImpl(DocumentTypeRepository documentTypeRepository, LicenseeRepository licenseeRepository,
-            LicenceRepository licenceRepository, DocumentRepository documentRepository) {
+            LicenceRepository licenceRepository, DocumentRepository documentRepository, ComplaintDao complaintDao) {
         super(documentTypeRepository, licenseeRepository, licenceRepository, documentRepository);
+        this.complaintDao = complaintDao;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected Collection<Document> handleFindByCriteria(String criteria)
-    {
-        // TODO implement public Collection<Document> handleFindByCriteria(String criteria)
+    protected Collection<Document> handleFindByCriteria(String criteria) {
+        // TODO implement public Collection<Document> handleFindByCriteria(String
+        // criteria)
         Specification<Document> spec = null;
 
-        if(StringUtils.isNotBlank(criteria)) {
-            spec = BocraportalSpecifications.<Document, String>findByAttributeContainingIgnoreCase("documentName", criteria);
+        if (StringUtils.isNotBlank(criteria)) {
+            spec = BocraportalSpecifications.<Document, String>findByAttributeContainingIgnoreCase("documentName",
+                    criteria);
         }
 
         return documentRepository.findAll(spec);
@@ -59,9 +66,8 @@ public class DocumentDaoImpl
      */
     @Override
     public void toDocumentVO(
-        Document source,
-        DocumentVO target)
-    {
+            Document source,
+            DocumentVO target) {
         // TODO verify behavior of toDocumentVO
 
         target.setId(source.getId());
@@ -70,10 +76,10 @@ public class DocumentDaoImpl
         target.setCreatedDate(source.getCreatedDate());
         target.setUpdatedDate(source.getUpdatedDate());
         target.setDocumentName(source.getDocumentName());
-        //target.setFile(source.getFile());
+        // target.setFile(source.getFile());
         target.setDocumentId(source.getDocumentId());
 
-        if(source.getDocumentType() != null) {
+        if (source.getDocumentType() != null) {
             DocumentTypeVO type = new DocumentTypeVO();
             type.setId(source.getDocumentType().getId());
             type.setCode(source.getDocumentType().getCode());
@@ -82,18 +88,18 @@ public class DocumentDaoImpl
             target.setDocumentType(type);
         }
 
-        if(source.getLicence() != null) {
+        if (source.getLicence() != null) {
             LicenceVO licence = new LicenceVO();
             licence.setId(source.getLicence().getId());
             licence.setLicenceNumber(source.getLicence().getLicenceNumber());
             licence.setProvisional(source.getLicence().getProvisional());
             licence.setStatus(source.getLicence().getStatus());
             licence.setStartDate(source.getLicence().getStartDate());
-            
+
             target.setLicence(licence);
         }
 
-        if(source.getLicensee() != null) {
+        if (source.getLicensee() != null) {
             LicenseeVO licensee = new LicenseeVO();
             licensee.setAddress(source.getLicensee().getAddress());
             licensee.setId(source.getLicensee().getId());
@@ -102,31 +108,41 @@ public class DocumentDaoImpl
 
             target.setLicensee(licensee);
         }
+
+        if (source.getComplaint() != null) {
+            ComplaintVO complaint = new ComplaintVO();
+            complaint.setAssignedTo(source.getComplaint().getAssignedTo());
+            complaint.setComplaintId(source.getComplaint().getComplaintId());
+            complaint.setDetails(source.getComplaint().getDetails());
+            complaint.setEmail(source.getComplaint().getEmail());
+            complaint.setFirstName(source.getComplaint().getFirstName());
+            complaint.setSurname(source.getComplaint().getSurname());
+            complaint.setStatus(source.getComplaint().getStatus());
+            complaint.setSubject(source.getComplaint().getSubject());
+
+            target.setComplaint(complaint);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DocumentVO toDocumentVO(final Document entity)
-    {
+    public DocumentVO toDocumentVO(final Document entity) {
         // TODO verify behavior of toDocumentVO
         return super.toDocumentVO(entity);
     }
 
     /**
-     * Retrieves the entity object that is associated with the specified value object
+     * Retrieves the entity object that is associated with the specified value
+     * object
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private Document loadDocumentFromDocumentVO(DocumentVO documentVO)
-    {
-        if (documentVO.getId() == null)
-        {
-            return  Document.Factory.newInstance();
-        }
-        else
-        {
+    private Document loadDocumentFromDocumentVO(DocumentVO documentVO) {
+        if (documentVO.getId() == null) {
+            return Document.Factory.newInstance();
+        } else {
             return this.load(documentVO.getId());
         }
     }
@@ -134,8 +150,7 @@ public class DocumentDaoImpl
     /**
      * {@inheritDoc}
      */
-    public Document documentVOToEntity(DocumentVO documentVO)
-    {
+    public Document documentVOToEntity(DocumentVO documentVO) {
         // TODO verify behavior of documentVOToEntity
         Document entity = this.loadDocumentFromDocumentVO(documentVO);
         this.documentVOToEntity(documentVO, entity, true);
@@ -147,27 +162,31 @@ public class DocumentDaoImpl
      */
     @Override
     public void documentVOToEntity(
-        DocumentVO source,
-        Document target,
-        boolean copyIfNull)
-    {
+            DocumentVO source,
+            Document target,
+            boolean copyIfNull) {
         // TODO verify behavior of documentVOToEntity
         super.documentVOToEntity(source, target, copyIfNull);
 
-        if(source.getDocumentType() != null && source.getDocumentType().getId() != null) {
+        if (source.getDocumentType() != null && source.getDocumentType().getId() != null) {
 
             DocumentType docType = getDocumentTypeDao().load(source.getDocumentType().getId());
             target.setDocumentType(docType);
         }
 
-        if(source.getLicence() != null && source.getLicence().getId() != null) {
+        if (source.getLicence() != null && source.getLicence().getId() != null) {
             Licence licence = getLicenceDao().load(source.getLicence().getId());
             target.setLicence(licence);
         }
 
-        if(source.getLicensee() != null && source.getLicensee().getId() != null) {
+        if (source.getLicensee() != null && source.getLicensee().getId() != null) {
             Licensee licensee = getLicenseeDao().load(source.getLicensee().getId());
             target.setLicensee(licensee);
+        }
+
+        if (source.getComplaint() != null && source.getComplaint().getId() != null) {
+            Complaint complaint = complaintDao.load(source.getComplaint().getId());
+            target.setComplaint(complaint);
         }
     }
 
@@ -175,7 +194,7 @@ public class DocumentDaoImpl
     protected Collection<Document> handleGetLicenceDocuments(Long licenceId) throws Exception {
         Specification<Document> spec = null;
 
-        if(licenceId != null) {
+        if (licenceId != null) {
             spec = DocumentSpecifications.findByLicenceId(licenceId);
         }
 
@@ -186,7 +205,7 @@ public class DocumentDaoImpl
     protected Collection<Document> handleGetLicenseeDocuments(Long licenseeId) throws Exception {
         Specification<Document> spec = null;
 
-        if(licenseeId != null) {
+        if (licenseeId != null) {
             spec = DocumentSpecifications.findByLicenseeId(licenseeId);
         }
 

@@ -51,6 +51,7 @@ public class LicenseeDaoImpl
     extends LicenseeDaoBase
 {
 
+
     public LicenseeDaoImpl(LicenseeUserRepository licenseeUserRepository,
             FormSubmissionRepository formSubmissionRepository, FormRepository formRepository,
             LicenceRepository licenceRepository, DocumentRepository documentRepository,
@@ -59,12 +60,12 @@ public class LicenseeDaoImpl
             LicenseeShareholderRepository licenseeShareholderRepository,
             LicenseeSectorRepository licenseeSectorRepository, LicenseeFormRepository licenseeFormRepository,
             LicenseeReportConfigRepository licenseeReportConfigRepository, ComplaintRepository complaintRepository,
-            NotificationRepository notificationRepository, LicenseeRepository licenseeRepository) {
-
+            LicenseeRepository licenseeRepository) {
         super(licenseeUserRepository, formSubmissionRepository, formRepository, licenceRepository, documentRepository,
                 reportRepository, reportConfigRepository, sectorRepository, shareholderRepository,
                 licenseeShareholderRepository, licenseeSectorRepository, licenseeFormRepository, licenseeReportConfigRepository,
-                notificationRepository, complaintRepository, licenseeRepository);
+                complaintRepository, licenseeRepository);
+        //TODO Auto-generated constructor stub
     }
 
     /**

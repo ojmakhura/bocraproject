@@ -149,7 +149,6 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             e.printStackTrace();
             logger.error(e.getMessage());
             if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Access Point has been already done.");
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
