@@ -59,15 +59,8 @@ public class SectorServiceImpl
             throws Exception {
         Sector sec = getSectorDao().sectorVOToEntity(sector);
 
-        if (sec.getId() == null) {
-
-            sec = getSectorDao().create(sec);
-            return getSectorDao().toSectorVO(sec);
-
-        } else {
-            getSectorDao().update(sec);
-            return sector;
-        }
+        sec = sectorRepository.saveAndFlush(sec);
+        return getSectorDao().toSectorVO(sec);
 
     }
 

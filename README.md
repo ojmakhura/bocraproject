@@ -36,6 +36,11 @@ The build process for this application uses the make command. Make sure it has b
 ## Run the API locally
 1. Run the API locally using 'make run_env=LOCAL run_api_local'
 
+## Run the Communication Service locally
+1. Run the COMm Service locally using 'make run_env=LOCAL run_comm_local'
+## Run the API locally
+1. Run the API locally using 'make run_env=LOCAL run_api_local'
+
 ## Run the frontend locally
 1. Run the command 'make local_web_deps'
 2. Run the command 'make run_web_local'

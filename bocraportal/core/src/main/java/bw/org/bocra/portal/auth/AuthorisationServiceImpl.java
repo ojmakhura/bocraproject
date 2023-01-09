@@ -67,14 +67,7 @@ public class AuthorisationServiceImpl
     {
         Authorisation entity = authorisationDao.authorisationVOToEntity(authorisationVO);
 
-        if(authorisationVO.getId() != null) {
-
-            entity = authorisationDao.create(entity);
-            return authorisationDao.toAuthorisationVO(entity);
-
-        } else {
-            authorisationDao.update(entity);
-        }
+        entity = authorisationRepository.saveAndFlush(entity);
 
         return authorisationDao.toAuthorisationVO(entity);
     }
@@ -124,7 +117,7 @@ public class AuthorisationServiceImpl
         if(pageNumber < 0 || pageSize < 1) {
             authorisations = authorisationRepository.findAll();
         } else {
-            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("url").descending());
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
             authorisations = authorisationRepository.findAll(pageable).getContent();
         }
 

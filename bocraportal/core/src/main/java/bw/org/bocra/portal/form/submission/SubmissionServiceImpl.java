@@ -12,8 +12,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,26 +24,41 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.activation.FormActivation;
+import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.period.PeriodDao;
 import bw.org.bocra.portal.period.PeriodVO;
 
 /**
  * @see bw.org.bocra.portal.form.submission.SubmissionService
  */
 @Service("submissionService")
-@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class SubmissionServiceImpl
         extends SubmissionServiceBase {
 
-    public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
-            DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
+    private final LicenseeRepository licenseeRepository;
+    private final FormActivationRepository activationRepository;
+    private final PeriodDao periodDao;
+
+    public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, 
+            FormActivationRepository activationRepository,PeriodDao periodDao,
+            LicenseeRepository licenseeRepository, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
 
         super(formSubmissionDao, formSubmissionRepository, dataFieldDao, dataFieldRepository, messageSource);
+        this.licenseeRepository = licenseeRepository;
+        this.activationRepository = activationRepository;
+        this.periodDao = periodDao;
     }
 
     /**
@@ -64,13 +81,7 @@ public class SubmissionServiceImpl
     protected FormSubmissionVO handleSave(FormSubmissionVO formSubmissionVO)
             throws Exception {
         FormSubmission submission = getFormSubmissionDao().formSubmissionVOToEntity(formSubmissionVO);
-
-        if (formSubmissionVO.getId() == null) {
-            submission = getFormSubmissionDao().create(submission);
-
-        } else {
-            getFormSubmissionDao().update(submission);
-        }
+        submission =formSubmissionRepository.saveAndFlush(submission);
 
         return getFormSubmissionDao().toFormSubmissionVO(submission);
     }
@@ -213,13 +224,14 @@ public class SubmissionServiceImpl
          * Get all values related to status
          */
         Specification<FormSubmission> sSpecs = BocraportalSpecifications
-                .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.SUBMITTED);
+                .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
+                        FormSubmissionStatus.SUBMITTED);
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);
         }
         summary.setAllSubmissions(formSubmissionRepository.count(sSpecs));
-        
+
         /**
          * Get count of returned submissions
          */
@@ -248,19 +260,20 @@ public class SubmissionServiceImpl
         sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
                 "submissionStatus", FormSubmissionStatus.DRAFT)
                 .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
-                    "submissionStatus", FormSubmissionStatus.NEW))
+                        "submissionStatus", FormSubmissionStatus.NEW))
                 .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
-                    "submissionStatus", FormSubmissionStatus.OVERDUE));
-        sSpecs = sSpecs.and(BocraportalSpecifications.<FormSubmission, LocalDate>findByAttributeLessThan("expectedSubmissionDate",
-                    LocalDate.now()));
+                        "submissionStatus", FormSubmissionStatus.OVERDUE));
+        sSpecs = sSpecs.and(
+                BocraportalSpecifications.<FormSubmission, LocalDate>findByAttributeLessThan("expectedSubmissionDate",
+                        LocalDate.now()));
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);
         }
 
         Collection<FormSubmission> overdue = formSubmissionRepository.findAll(sSpecs);
-        for(FormSubmission sub : overdue) {
-            if(sub.getSubmissionStatus() != FormSubmissionStatus.OVERDUE) {
+        for (FormSubmission sub : overdue) {
+            if (sub.getSubmissionStatus() != FormSubmissionStatus.OVERDUE) {
                 sub.setSubmissionStatus(FormSubmissionStatus.OVERDUE);
                 formSubmissionRepository.saveAndFlush(sub);
             }
@@ -283,7 +296,7 @@ public class SubmissionServiceImpl
          * Get count of draft submissions
          */
         sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
-                    FormSubmissionStatus.DRAFT);
+                FormSubmissionStatus.DRAFT);
 
         if (specs != null) {
             sSpecs = sSpecs.and(specs);
@@ -295,8 +308,9 @@ public class SubmissionServiceImpl
 
     @Override
     protected Collection<FormSubmissionVO> handleFindByIds(Set<Long> ids) throws Exception {
-        
-        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, Long>findByAttributeIn("id", ids);
+
+        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, Long>findByAttributeIn("id",
+                ids);
         Collection<FormSubmission> submissions = formSubmissionRepository.findAll(sSpecs);
         Collection<FormSubmissionVO> vos = new ArrayList<>();
 
@@ -308,18 +322,25 @@ public class SubmissionServiceImpl
     }
 
     @Override
-    protected Boolean handleUpdateSubmissionStatus(Long id, FormSubmissionStatus submissionStatus, final LocalDateTime updateTime, final String username) throws Exception {
+    protected Boolean handleUpdateSubmissionStatus(Long id, FormSubmissionStatus submissionStatus,
+            final LocalDateTime updateTime, final String username) throws Exception {
         FormSubmission submission = formSubmissionRepository.getReferenceById(id);
         submission.setSubmissionStatus(submissionStatus);
-        if(submissionStatus == FormSubmissionStatus.SUBMITTED) {
+        if (submissionStatus == FormSubmissionStatus.SUBMITTED) {
             submission.setSubmissionDate(updateTime);
             submission.setSubmittedBy(username);
+        } else if (submissionStatus == FormSubmissionStatus.ACCEPTED) {
+            submission.setAcceptedDate(updateTime);
+            submission.setAcceptedBy(username);
+        } else if (submissionStatus == FormSubmissionStatus.RETURNED) {
+            submission.setReturnedDate(updateTime);
+            submission.setReturnedBy(username);
         } else {
             submission.setUpdatedBy(username);
             submission.setUpdatedDate(updateTime);
         }
 
-        formSubmissionRepository.save(submission);
+        formSubmissionRepository.saveAndFlush(submission);
 
         return true;
     }
@@ -327,11 +348,97 @@ public class SubmissionServiceImpl
     @Override
     protected Collection<FormSubmissionVO> handleLoadDueSubmissions() throws Exception {
         FormSubmissionCriteria criteria = new FormSubmissionCriteria();
-        criteria.setPeriodDate(LocalDateTime.now());
         
+        Collection<Long> periodIds = periodDao.getActivePeriods().stream()
+                                        .map(period -> period.getId()).toList();
+
+        criteria.setPeriodIds(periodIds);
         Collection<FormSubmission> submissions = getFormSubmissionDao().findByCriteria(criteria);
 
         return toSubmissionVOCollection(submissions);
+    }
+
+    @Override
+    protected Integer handleCheckOverdueSubmissions() throws Exception {
+        Specification<FormSubmission> sSpecs = BocraportalSpecifications
+                .<FormSubmission, FormSubmissionStatus>findByAttribute(
+                        "submissionStatus", FormSubmissionStatus.DRAFT)
+                .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
+                        "submissionStatus", FormSubmissionStatus.NEW))
+                .or(BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute(
+                        "submissionStatus", FormSubmissionStatus.OVERDUE));
+        sSpecs = sSpecs.and(
+                BocraportalSpecifications.<FormSubmission, LocalDate>findByAttributeLessThan("expectedSubmissionDate",
+                        LocalDate.now()));
+
+        Collection<FormSubmission> overdue = formSubmissionRepository.findAll(sSpecs);
+        for (FormSubmission sub : overdue) {
+            if (sub.getSubmissionStatus() != FormSubmissionStatus.OVERDUE) {
+                sub.setSubmissionStatus(FormSubmissionStatus.OVERDUE);
+                formSubmissionRepository.saveAndFlush(sub);
+            }
+        }
+
+        return overdue.size();
+    }
+
+    @Override
+    protected Collection<FormSubmissionVO> handleCreateNewSubmissions(Set<Long> licenseeIds, Long activationId)
+            throws Exception {
+
+        if (activationId == null) {
+            throw new SubmissionServiceException("Activation ID must not be null.");
+        }
+
+        if (activationId < 1) {
+            throw new SubmissionServiceException("Activation ID must not be less than 1.");
+        }
+
+        if (CollectionUtils.isEmpty(licenseeIds)) {
+            throw new SubmissionServiceException("At lease 1 licensee must be provided.");
+        }
+
+        FormActivation activation = activationRepository.getReferenceById(activationId);
+
+        Collection<FormSubmissionVO> submissions = new ArrayList<>();
+
+        for (Long licenseeId : licenseeIds) {
+
+            Licensee licensee = licenseeRepository.getReferenceById(licenseeId);
+
+            FormSubmission submission = FormSubmission.Factory.newInstance();
+            submission.setCreatedBy(activation.getCreatedBy());
+            submission.setCreatedDate(LocalDateTime.now());
+            submission.setForm(activation.getForm());
+            submission.setLicensee(licensee);
+            submission.setFormActivation(activation);
+            submission.setPeriod(activation.getPeriod());
+            submission.setSubmissionStatus(FormSubmissionStatus.NEW);
+
+            submission.setExpectedSubmissionDate(activation.getActivationDeadline());
+
+            /**
+             * If the for requires single entry, the we create the data fields
+             */
+            if (activation.getForm().getEntryType() == FormEntryType.SINGLE) {
+                for (FormField field : activation.getForm().getFormFields()) {
+                    DataField dataField = DataField.Factory.newInstance();
+                    dataField.setFormSubmission(submission);
+                    dataField.setFormField(field);
+                    dataField.setValue(field.getDefaultValue());
+                    dataField.setRow(0);
+
+                    submission.getDataFields().add(dataField);
+                }
+            }
+            submission = formSubmissionRepository.saveAndFlush(submission);
+
+            FormSubmissionVO vo = new FormSubmissionVO();
+            getFormSubmissionDao().toFormSubmissionVO(submission, vo);
+            submissions.add(vo);
+        }
+
+        return submissions;
     }
 
 }

@@ -52,13 +52,13 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
       }
     });
 
-    this.store.dispatch(
-      ViewActions.loadViewAuthorisations({
-        viewUrl: "/access/type/edit-access-point-type",
-        roles: this.keycloakService.getUserRoles(),
-        loading: true
-      })
-    );
+    // this.store.dispatch(
+    //   ViewActions.loadViewAuthorisations({
+    //     viewUrl: "/access/type/edit-access-point-type",
+    //     roles: this.keycloakService.getUserRoles(),
+    //     loading: true
+    //   })
+    // );
 
     this.unauthorisedUrls$.subscribe(restrictedItems => {
       restrictedItems.forEach(item => {
@@ -72,13 +72,13 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
       this.setEditAccessPointTypeFormValue({ accessPointType: accessPointType });
     });
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
-        if (item === '/access/type/edit-access-point-type/{button:delete}') {
-          this.deleteUnrestricted = false;
-        }
-      });
-    });
+    // this.unauthorisedUrls$.subscribe(restrictedItems => {
+    //   restrictedItems.forEach(item => {
+    //     if (item === '/access/type/edit-access-point-type/{button:delete}') {
+    //       this.deleteUnrestricted = false;
+    //     }
+    //   });
+    // });
   }
 
   override beforeEditAccessPointTypeSave(form: EditAccessPointTypeSaveForm): void {

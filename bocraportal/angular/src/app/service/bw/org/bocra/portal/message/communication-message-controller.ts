@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CommunicationMessageController {
     
-    protected path = 'message';
+    protected path = '/message';
 
     constructor(private http: HttpClient) {
     }

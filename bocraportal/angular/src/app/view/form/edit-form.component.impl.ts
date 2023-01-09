@@ -15,6 +15,8 @@ import * as LicenseeFormSelectors from '@app/store/licensee/form/licensee-form.s
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as SectorSelectors from '@app/store/sector/sector.selectors';
 import * as SectorActions from '@app/store/sector/sector.actions';
+import * as PeriodConfigSelectors from '@app/store/period/config/period-config.selectors';
+import * as PeriodConfigActions from '@app/store/period/config/period-config.actions';
 import {
   EditFormAddFieldForm,
   EditFormAddLicenseeForm,
@@ -63,6 +65,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.formSectors$ = this.store.pipe(select(SectorSelectors.selectSectors));
     this.licenseeRemoved$ = this.store.pipe(select(LicenseeFormSelectors.selectRemoved));
+    this.formPeriodConfigs$ = this.store.pipe(select(PeriodConfigSelectors.selectPeriodConfigs));
   }
 
   override beforeOnInit(form: EditFormVarsForm): EditFormVarsForm {
@@ -83,22 +86,26 @@ export class EditFormComponentImpl extends EditFormComponent {
     );
 
     this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
-      let client = clients.filter(client => client.clientId === environment.keycloak.clientId)[0]
-      this.keycloakService.loadUserProfile().then(profile => {
-        
-        this.http.get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`)?.subscribe((roles) => {
-          roles?.sort((a, b) => a.name.localeCompare(b.name))?.forEach((role) => {
-            if (this.keycloakService.getUserRoles().includes(role.name)) {
-    
-              let item = new SelectItem();
-              item.label = role['description'];
-              item.value = role['name'];
-    
-              this.formRolesBackingList.push(item);
-            }
+      let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
+      this.keycloakService.loadUserProfile().then((profile) => {
+        this.http
+          .get<any[]>(
+            `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`
+          )
+          ?.subscribe((roles) => {
+            roles
+              ?.sort((a, b) => a.name.localeCompare(b.name))
+              ?.forEach((role) => {
+                if (this.keycloakService.getUserRoles().includes(role.name)) {
+                  let item = new SelectItem();
+                  item.label = role['description'];
+                  item.value = role['name'];
+
+                  this.formRolesBackingList.push(item);
+                }
+              });
           });
-        });
-      })
+      });
     });
 
     this.route?.queryParams?.subscribe((queryParams: any) => {
@@ -128,7 +135,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.formSection$?.subscribe((section) => {
       if (section) {
         let sc: FormSectionVO | undefined = this.formFormSections.find((sec, i) => {
-          if(sec.id == section.id) {
+          if (sec.id == section.id) {
             this.formFormSectionsControl.at(i).patchValue(section);
             return true;
           } else {
@@ -136,10 +143,9 @@ export class EditFormComponentImpl extends EditFormComponent {
           }
         });
 
-        if(!sc) {
+        if (!sc) {
           this.addToFormFormSections(section);
         }
-        
       }
     });
 
@@ -161,6 +167,10 @@ export class EditFormComponentImpl extends EditFormComponent {
           this.deleteUnrestricted = false;
         }
       });
+    });
+
+    this.formPeriodConfigs$?.subscribe(periods => {
+
     });
   }
 
@@ -276,7 +286,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       }
 
       section.form = new FormVO();
-      section.form.id = this.form.id
+      section.form.id = this.form.id;
 
       this.store.dispatch(
         FormActions.saveSection({
@@ -416,5 +426,19 @@ export class EditFormComponentImpl extends EditFormComponent {
         name: value?.sector?.name,
       },
     });
+  }
+
+  override formPeriodConfigAddDialog(): void {
+  }
+
+  override formPeriodConfigSearch(): void {
+    let cr = this.formPeriodConfigSearchField.value;
+    this.store.dispatch(
+      PeriodConfigActions.search({
+        criteria: {periodConfigName: cr},
+        loaderMessage: '',
+        loading: true
+      })
+    );
   }
 }

@@ -11,7 +11,7 @@ import { EditUserChangePasswordForm, EditUserComponent, EditUserDeleteForm, Edit
 import { environment } from '@env/environment';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 
@@ -28,6 +28,7 @@ export class EditUserComponentImpl extends EditUserComponent {
   deleteUnrestricted: boolean = true;
   unauthorisedUrls$: Observable<string[]>;
   starPass: string = '';
+  assignedLicensee$: Observable<boolean> = of(false);
 
   constructor(private injector: Injector) {
     super(injector);
@@ -63,10 +64,21 @@ export class EditUserComponentImpl extends EditUserComponent {
   }
 
   override afterOnInit() {
-    this.user$.subscribe((user) => {
+    this.keycloakService.loadUserProfile().then(profile => {
+      let user: UserVO = new UserVO;
+      if(profile['attributes'] && profile['attributes']?.licenseeId) {
+        user.licensee.id = profile['attributes']?.licenseeId[0];
+        user.licensee.licenseeName = profile['attributes']?.licenseeName[0];
+
+        if(user.licensee.id && user.licensee.id > 0) {
+          this.assignedLicensee$ = of(true);
+        }
+      }
+      
       this.setEditUserFormValue({ user: user });
     });
 
+    
   }
 
   override doNgAfterViewInit() {
@@ -125,15 +137,10 @@ export class EditUserComponentImpl extends EditUserComponent {
   override beforeEditUserSave(form: EditUserSaveForm): void {
     
     if (this.editUserForm.valid) {
-      let user = Object.assign({}, form.user);
-      user.licensee = {
-        id: user.licensee?.id,
-        licenseeName: user.licensee?.licenseeName
-      };
-
+      
       this.store.dispatch(
         UserActions.createUser({
-          user: user,
+          user: form.user,
           loading: true,
           loaderMessage: 'Creating a user ...'
         })

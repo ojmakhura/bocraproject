@@ -57,10 +57,6 @@ public class CommunicationMessageDaoImpl
      */
     private CommunicationMessage loadCommunicationMessageFromCommunicationMessageVO(CommunicationMessageVO communicationMessageVO)
     {
-        // TODO implement loadCommunicationMessageFromCommunicationMessageVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.message.loadCommunicationMessageFromCommunicationMessageVO(CommunicationMessageVO) not yet implemented.");
-
-        /* A typical implementation looks like this:
         if (communicationMessageVO.getId() == null)
         {
             return  CommunicationMessage.Factory.newInstance();
@@ -69,7 +65,6 @@ public class CommunicationMessageDaoImpl
         {
             return this.load(communicationMessageVO.getId());
         }
-        */
     }
 
     /**

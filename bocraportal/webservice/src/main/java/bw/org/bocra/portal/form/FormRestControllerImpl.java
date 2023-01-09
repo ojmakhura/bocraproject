@@ -7,9 +7,6 @@ package bw.org.bocra.portal.form;
 
 import java.util.Collection;
 import java.util.Optional;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/form")
+@RequestMapping("form")
 @CrossOrigin()
 @Tag(name = "Form", description = "Managing form definitions.")
 public class FormRestControllerImpl extends FormRestControllerBase {
@@ -34,104 +31,64 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
-        try{
-            logger.debug("Search Form by Id"+id);
-            Optional<FormVO> data = Optional.of(formService.findById(id));
-            ResponseEntity<?> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        Optional<FormVO> data = Optional.of(formService.findById(id));
+        ResponseEntity<?> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
-        try{
-            logger.debug("Display Forms");
-            Optional<Collection<FormVO>> data = Optional.of(formService.getAll());
-            ResponseEntity<Collection<FormVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        Optional<Collection<FormVO>> data = Optional.of(formService.getAll());
+        ResponseEntity<Collection<FormVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        return response;
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
-        try{
-            logger.debug("Display all Forms of the specified Page number "+pageNumber+" and Page size "+pageSize);
-            Optional<Collection<FormVO>> data = Optional.of(formService.getAll(pageNumber, pageSize));
-            ResponseEntity<Collection<FormVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        Optional<Collection<FormVO>> data = Optional.of(formService.getAll(pageNumber, pageSize));
+        ResponseEntity<Collection<FormVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        return response;
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
-        try{
-            logger.debug("Deletes a Form by Id "+id);
-            Optional<Boolean> data = Optional.of(formService.remove(id)); 
-            ResponseEntity<Boolean> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        Optional<Boolean> data = Optional.of(formService.remove(id)); 
+        ResponseEntity<Boolean> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        return response;
     }
 
     @Override
     public ResponseEntity<?> handleSave(FormVO formVO) {
         try{
             logger.debug("Save Form "+formVO);
-
-            if(Form.getCode() == null) {
-                FormCriteria cr = new FormCriteria();
-                cr.setFormName(Form.getFormName());
-                cr.setCode(Form.getCode());
-
-                Collection<FormVO> actives = formService.search(cr);
-                if(CollectionUtils.isNotEmpty(actives)) {
-                    throw new FormServiceException("This Form has been already done.");
-                }
-            }            
-
             Optional<FormVO> data = Optional.of(formService.save(formVO));
             ResponseEntity<FormVO> response;
     
@@ -154,22 +111,15 @@ public class FormRestControllerImpl extends FormRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleSearch(FormCriteria criteria) {
-        try{
-            logger.debug("Search Form by criteria"+criteria);
-            Optional<Collection<FormVO>> data = Optional.of(formService.search(criteria)); 
-            ResponseEntity<Collection<FormVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        Optional<Collection<FormVO>> data = Optional.of(formService.search(criteria)); 
+        ResponseEntity<Collection<FormVO>> response;
+
+        if(data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        return response;
     }
 }

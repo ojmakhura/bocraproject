@@ -9,28 +9,56 @@ endif
 	
 
 build_mda:
-	mvn -f bocraportal/mda install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/mda install -DskipTests=true -o
 
 build_common:
-	mvn -f bocraportal/common install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/common install -DskipTests=true -o
 
 build_core:
-	mvn -f bocraportal/core install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/core install -DskipTests=true -o
+
+test_core: 
+	. ./.env && mvn -f bocraportal/core test -o
 
 build_api:
-	mvn -f bocraportal/webservice install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/webservice install -DskipTests=true -o
+
+test_api: 
+	. ./.env && mvn -f bocraportal/webservice test -o
 
 build_comm:
-	mvn -f bocraportal/comm install -Dmaven.test.skip=true -o
+	. ./.env && mvn -f bocraportal/comm -Pnative clean install -DskipTests -o
+
+build_comm_native:
+	mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
+
+test_comm: 
+	. ./.env && mvn -f bocraportal/comm test -o
+	
+build_cron: gen_env
+	. ./.env && mvn -f bocraportal/cron -Pnative clean install -DskipTests -o
+	
+build_cron_native: gen_env
+	. ./.env && mvn -f bocraportal/cron -Pnative native:compile -DskipTests -o
+	
+build_native: gen_env 
+	. ./.env && mvn -f bocraportal/${module} clean native:compile -Pnative -DskipTests -o
+
+colon = :
+native_image_tracing: gen_env
+	. ./.env && timeout 40 ${JAVA_HOME}/bin/java -agentlib${colon}native-image-agent=config-output-dir=./bocraportal/${service}/src/main/resources/META-INF/native-image -jar ./bocraportal/${service}/target/bocraportal-${service}-${IMAGE_VERSION}.jar
+	
+test_cron: gen_env
+	. ./.env && mvn -f bocraportal/cron test -o
 
 build_web: 
-	mvn -f bocraportal/angular install -Dmaven.test.skip=true -o
+	mvn -f bocraportal/angular install -DskipTests=true -o
 
 build_web_dist: build_web local_web_deps
 	. ./.env && cd bocraportal/angular/target/bocraportal && npm run build --configuration=production
 
 build_app: 
-	mvn -f bocraportal install -Dmaven.test.skip=true -o
+	mvn -f bocraportal install -DskipTests=true -o
 
 clean_build: clean_all build_app
 
@@ -39,6 +67,12 @@ clean_all:
 
 clean_mda:
 	mvn -f bocraportal/mda clean -o
+
+clean_cron:
+	mvn -f bocraportal/cron clean -o
+
+clean_module:
+	mvn -f bocraportal/${service} clean -o
 
 ##
 ## Start the docker containers
@@ -61,6 +95,11 @@ else
 	@echo 'no run_env defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> service=<name> down_service`'
 	exit 1
 endif
+
+run_tests: gen_env test_${module}
+
+run_test:
+	. ./.env && mvn -f bocraportal/${module} -Dtest=${test} test -o
 	
 ##
 ## Build docker images
@@ -68,11 +107,15 @@ endif
 build_image: gen_env
 	. ./.env && docker compose -f ${stack_file}.yml build
 
-build_api_image: build_api gen_env
+build_api_image: gen_env build_api
 	. ./.env && docker compose build api
 
-build_comm_image: build_comm gen_env
+build_comm_image: gen_env
 	. ./.env && docker compose build comm
+
+build_cron_image: gen_env 
+	. ./.env && docker compose build cron
+	# . ./.env && mvn -f bocraportal/cron spring-boot:build-image -DskipTests -o
 
 build_web_image: gen_env
 	. ./.env && docker compose build web
@@ -101,12 +144,21 @@ push_keycloak_image: gen_env
 
 ###
 ## Run the local api and web
-###
+###    
+run_module_local: gen_env
+	. ./.env && cd bocraportal/${module} && mvn spring-boot:run
+	
 run_api_local: gen_env
 	. ./.env && cd bocraportal/webservice && mvn spring-boot:run
 
 run_comm_local: gen_env
 	. ./.env && cd bocraportal/comm && mvn spring-boot:run
+
+run_cron_local: gen_env
+	. ./.env && cd bocraportal/cron && mvn spring-boot:run
+
+run_cron_native_local: gen_env
+	. ./.env && bocraportal/cron/target/bocraportal-cron
 
 local_web_deps: build_web
 	cd bocraportal/angular/target/bocraportal && npm i
@@ -121,7 +173,7 @@ stop_app:
 rm_env:
 	rm -f .env
 
-gen_env: rm_env
+gen_env:
 ifdef run_env
 	if [ -f .env ]; then \
 		rm -f .env; \

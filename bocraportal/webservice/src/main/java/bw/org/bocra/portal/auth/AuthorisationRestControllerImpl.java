@@ -10,8 +10,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.validation.ConstraintViolationException;
-
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,7 +32,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Searches for Authorisation by Id "+id);
             Optional<AuthorisationVO> data = Optional.of(this.authorisationService.findById(id)); // TODO: Add custom code here;
             ResponseEntity<AuthorisationVO> response;
     
@@ -46,7 +44,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -54,8 +51,9 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
 
     @Override
     public ResponseEntity<?> handleGetAll() {
+
         try {
-            logger.debug("Displays all Authorisations");
+
             Optional<Collection<AuthorisationVO>> data = Optional.of(this.authorisationService.getAll()); // TODO: Add custom code here;
             ResponseEntity<Collection<AuthorisationVO>> response;
     
@@ -68,7 +66,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
@@ -76,8 +73,8 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
+
         try {
-            logger.debug("Deletes an Authorisation by Id"+id);
             Optional<Boolean> data = Optional.of(this.authorisationService.remove(id)); // TODO: Add custom code here;
             ResponseEntity<Boolean> response;
     
@@ -90,16 +87,15 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     @Override
-    public ResponseEntity<?> handleSave(AuthorisationVO authorisationVO) {     
+    public ResponseEntity<?> handleSave(AuthorisationVO authorisationVO) {
+       
         try {
-            logger.debug("Saves Authorisation "+ authorisationVO);
             Optional<AuthorisationVO> data = Optional.of(authorisationService.save(authorisationVO)); // TODO: Add custom code here;
             ResponseEntity<AuthorisationVO> response;
     
@@ -113,10 +109,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            e.printStackTrace();
-            if(e instanceof ConstraintViolationException) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Authorisation has been already done.");
-            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -124,7 +116,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     @Override
     public ResponseEntity<?> handleSearch(AuthorisationCriteria criteria) {
         try {
-            logger.debug("Searche for an Authorisation by criteria "+criteria);
             Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.search(criteria)); // TODO: Add custom code here;
             ResponseEntity<Collection<AuthorisationVO>> response;
     
@@ -145,8 +136,8 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
+
         try {
-            logger.debug("Displays all Authoristions by specified  "+"Page Number: "+pageNumber+", Page Size: "+pageSize);
             Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
             ResponseEntity<Collection<AuthorisationVO>> response;
     
@@ -159,7 +150,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             return response;
             
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
@@ -169,7 +159,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     @Override
     public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles, Set<String> accessPointTypeCode) {
         try {
-            logger.debug("Displays Authorisation by specified "+ "Roles:"+roles+" and Access Point Type Code: "+accessPointTypeCode);
             Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.getAccessTypeCodeAuthorisations(roles, accessPointTypeCode)); // TODO: Add custom code here;
             ResponseEntity<Collection<AuthorisationVO>> response;
     
@@ -191,7 +180,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     @Override
     public ResponseEntity<?> handleAssignMenuSection(Long authorisationId, Long menuSectionId) {
         try {
-            logger.debug(" Assigns Menu section with "+"Authorisation Id: "+authorisationId+" and  Menu Section: "+menuSectionId);
             Optional<AuthorisationVO> data = Optional.of(authorisationService.assignMenuSection(authorisationId, menuSectionId));
             ResponseEntity<AuthorisationVO> response;
     
@@ -213,7 +201,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     @Override
     public ResponseEntity<?> handleFindByRolesAndUrl(String url, Set<String> roles) {
         try {
-            logger.debug("Searches for an Authorisation by "+"Url: "+url+" and Roles: "+ roles);
             Optional<Collection<AuthorisationVO>> data = Optional.of(authorisationService.findByRolesAndUrl(url, roles));
             ResponseEntity<Collection<AuthorisationVO>> response;
     
@@ -235,7 +222,6 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     @Override
     public ResponseEntity<?> handleFindRestrictedViewItems(String url, Set<String> roles) {
         try {
-            logger.debug("Searches for a Restricted View item by "+"Url: "+url+" and Roles: "+roles);
             Collection<AuthorisationVO> data = authorisationService.findByUrlPrefix(url);
             Collection<String> restrictedUrls = new ArrayList<>();
 

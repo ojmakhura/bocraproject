@@ -60,11 +60,7 @@ public class PeriodConfigServiceImpl
 
         PeriodConfig entity = getPeriodConfigDao().periodConfigVOToEntity(periodConfigVO);
 
-        if(periodConfigVO.getId() != null) {
-            getPeriodConfigDao().update(entity);
-        } else {
-            periodConfigVO = (PeriodConfigVO) getPeriodConfigDao().create(PeriodConfigDao.TRANSFORM_PERIODCONFIGVO, entity);
-        }
+        entity = periodConfigRepository.saveAndFlush(entity);
 
         return periodConfigVO;
     }

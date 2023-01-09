@@ -1,5 +1,5 @@
 # Dockerfile
-FROM openjdk:17
+FROM eclipse-temurin:17
 
 ARG CERT
 ARG CERT_PASSWORD

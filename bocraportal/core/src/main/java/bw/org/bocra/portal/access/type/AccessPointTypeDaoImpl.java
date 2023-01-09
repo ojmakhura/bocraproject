@@ -6,16 +6,14 @@
  */
 package bw.org.bocra.portal.access.type;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import java.util.Collection;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import bw.org.bocra.portal.BocraportalSpecifications;
 
 /**
  * @see AccessPointType
@@ -38,7 +36,7 @@ public class AccessPointTypeDaoImpl
         Specification<AccessPointType> spec = null;
         if(StringUtils.isNotBlank(criteria)) {
             spec = BocraportalSpecifications.<AccessPointType, String>findByAttributeContainingIgnoreCase("name", criteria)
-                    .or(BocraportalSpecifications.<AccessPointType, String>findByAttributeContainingIgnoreCase("description", criteria));
+                    .or(BocraportalSpecifications.<AccessPointType, String>findByAttributeContainingIgnoreCase("code", criteria));
             
         }
 

@@ -22,7 +22,7 @@ export class UserEffects {
           map((user) =>
             UserActions.createUserSuccess({
               user,
-              messages: [`User ${user.username} created.`],
+              messages: [`User ${user?.email} saved.`],
               success: true,
             })
           ),
@@ -38,7 +38,7 @@ export class UserEffects {
       mergeMap(() =>
         this.userRestController.loadUsers().pipe(
           map((users) => UserActions.loadUsersSuccess({ users: users, messages: [], success: true })),
-          catchError(({ error }) => [UserActions.userFailure({ messages: [error] })])
+          catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
@@ -48,8 +48,8 @@ export class UserEffects {
     this.actions$.pipe(
       ofType(UserActions.findById),
       mergeMap(({ userId }) => this.userRestController.findUserById(userId).pipe(
-        map((user) => UserActions.findByIdSuccess({ user: user, messages: [`User ${user.username}`], success: true })),
-        catchError(({ error }) => [UserActions.userFailure({ messages: [error] })])
+        map((user) => UserActions.findByIdSuccess({ user: user, messages: [`User ${user?.username} found`], success: true })),
+        catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
       ))
     )
   );
@@ -59,7 +59,7 @@ export class UserEffects {
       ofType(UserActions.changePassword),
       mergeMap(({ userId, newPassword }) => this.userRestController.changePassword(userId, newPassword).pipe(
         map((message) => UserActions.changePasswordSuccess({ messages: [message], success: true })),
-        catchError(({ error }) => [UserActions.userFailure({ messages: [error] })])
+        catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
       ))
     )
   );
@@ -72,7 +72,7 @@ export class UserEffects {
           map((users) =>
             UserActions.searchSuccess({ users: users, messages: [`Found ${users.length} users.`], success: true })
           ),
-          catchError(({ error }) => [UserActions.userFailure({ messages: [error] })])
+          catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )

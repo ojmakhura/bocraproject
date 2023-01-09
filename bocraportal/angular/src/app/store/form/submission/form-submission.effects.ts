@@ -24,7 +24,7 @@ export class FormSubmissionEffects {
                     messages: [`Submission ${formSubmission?.form?.formName} found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -38,7 +38,7 @@ export class FormSubmissionEffects {
                     messages: [`${formSubmissions.length} submissions found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -52,7 +52,7 @@ export class FormSubmissionEffects {
                     messages: [`Submission ${formSubmission?.form?.formName} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -66,7 +66,7 @@ export class FormSubmissionEffects {
                     messages: [`Note for saved.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -80,7 +80,7 @@ export class FormSubmissionEffects {
                     messages: [`Submission ${id} removed.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -94,7 +94,7 @@ export class FormSubmissionEffects {
                     messages: [`${formSubmissions.length} submissions found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -108,7 +108,7 @@ export class FormSubmissionEffects {
                     messages: [`${formSubmissions.length} submissions found.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -122,7 +122,7 @@ export class FormSubmissionEffects {
                     messages: [`Page ${pageNumber} found with ${formSubmissions.length} submissions.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -133,10 +133,10 @@ export class FormSubmissionEffects {
             mergeMap(({ id, submissionStatus, updateTime, username }) => this.submissionRestController.updateSubmissionStatus(id, submissionStatus, updateTime, username).pipe(
                 map( updated => FormSubmissionActions.updateStatusSuccess({
                     updated,
-                    messages: [`Form submission updated.`],
+                    messages: [`Form submission stateud updated to ${submissionStatus}.`],
                     success: true
                 })),
-                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error.error]})])
+                catchError(({error}) => [FormSubmissionActions.formSubmissionFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );

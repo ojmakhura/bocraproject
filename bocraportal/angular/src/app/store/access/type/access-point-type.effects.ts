@@ -18,7 +18,7 @@ export class AccessPointTypeEffects {
           map((accessPointType) =>
             AccessPointTypeActions.findByIdSuccess({ accessPointType, messages: [`Access point type ${accessPointType.name} found.`], success: true })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
@@ -32,7 +32,7 @@ export class AccessPointTypeEffects {
           map((accessPointType) =>
             AccessPointTypeActions.saveSuccess({ accessPointType, messages: [`Access point type ${accessPointType.name} saved.`], success: true })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error?.error ? error.error : error : error] })])
         )
       )
     )
@@ -46,7 +46,7 @@ export class AccessPointTypeEffects {
           map((removed) =>
             AccessPointTypeActions.removeSuccess({ removed, messages: [`Access point type successfully removed.`], success: true })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
@@ -68,7 +68,7 @@ export class AccessPointTypeEffects {
           map((accessPointTypes) =>
             AccessPointTypeActions.getAllSuccess({ accessPointTypes, messages: [`${accessPointTypes.length} access point types found.`], success: true })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
@@ -90,7 +90,7 @@ export class AccessPointTypeEffects {
           map((accessPointTypes) =>
             AccessPointTypeActions.searchSuccess({ accessPointTypes, messages: [`${accessPointTypes.length} access point types found.`], success: true })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )
@@ -104,7 +104,7 @@ export class AccessPointTypeEffects {
           map((accessPointTypes) =>
             AccessPointTypeActions.getAllPagedSuccess({ accessPointTypes, messages: [`Page ${pageNumber} found with ${pageSize} access point types.`], success: true })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error.error] })])
+          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
         )
       )
     )

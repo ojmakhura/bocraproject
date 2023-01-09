@@ -19,7 +19,7 @@ export class DocumentEffects {
                     messages: [`Document ${document.documentName} found.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -33,7 +33,7 @@ export class DocumentEffects {
                     messages: [`Document ${document.documentName} saved.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -47,7 +47,7 @@ export class DocumentEffects {
                     messages: [`Document ${id} removed.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -61,7 +61,7 @@ export class DocumentEffects {
                     messages: [`${documents.length} document found.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -75,7 +75,7 @@ export class DocumentEffects {
                     messages: [`${documents.length} document found.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
             ))
         )
     );
@@ -89,7 +89,21 @@ export class DocumentEffects {
                     messages: [`Page ${pageNumber} found with ${documents.length} documents.`],
                     success: true
                 })),
-                catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
+            ))
+        )
+    );
+
+    uploadFile$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(DocumentActions.uploadFile),
+            mergeMap(({ documentTypeId, file, fileName, metadataTarget, metadataTargetId }) => this.documentRestController.uploadFile(documentTypeId, file, fileName, metadataTarget, metadataTargetId).pipe(
+                map( document => DocumentActions.uploadFileSuccess({
+                    document,
+                    messages: [`Added  with ID  licensees.`],
+                    success: true
+                })),
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error]})])
             ))
         )
     );
@@ -102,7 +116,7 @@ export class DocumentEffects {
     //                 documents,
     //                 success: true
     //             })),
-    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
+    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
     //         ))
     //     )
     // );
@@ -115,7 +129,7 @@ export class DocumentEffects {
     //                 documents,
     //                 success: true
     //             })),
-    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error.error]})])
+    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
     //         ))
     //     )
     // );

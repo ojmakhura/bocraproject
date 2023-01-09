@@ -6,12 +6,11 @@
  */
 package bw.org.bocra.portal.form.submission;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +26,7 @@ import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
 import bw.org.bocra.portal.form.section.FormSection;
 import bw.org.bocra.portal.form.submission.data.DataField;
@@ -102,9 +102,6 @@ public class FormSubmissionDaoImpl
                 for(Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
                     DataFieldSectionVO sec = entry.getKey();
                     sec.setDataFields(entry.getValue());
-                    // Collections.sort((List<DataFieldVO>) sec.getDataFields(), (d1, d2) -> {
-                    //     return (int) (d1.getFormField().getId() - d2.getFormField().getId());
-                    // });
                     sections.add(sec);
                 }
 
@@ -122,6 +119,13 @@ public class FormSubmissionDaoImpl
             PeriodVO period = new PeriodVO();
             getPeriodDao().toPeriodVO(source.getPeriod(), period);
             target.setPeriod(period);
+        }
+
+        if(source.getFormActivation() != null) {
+            target.setFormActivation(getFormActivationDao().toFormActivationVO(source.getFormActivation()));
+
+            target.getFormActivation().setForm(null);
+            target.getFormActivation().setPeriod(null);
         }
     }
 
@@ -178,31 +182,40 @@ public class FormSubmissionDaoImpl
         if(source.getForm() != null && source.getForm().getId() != null) {
             Form form = formDao.load(source.getForm().getId());
             target.setForm(form);
+        } else {
+            throw new IllegalArgumentException(
+                "FormSubmissionDao.formSubmissionVOToEntity - 'form' or its id can not be null"
+            );
         }
 
         if(source.getLicensee() != null && source.getLicensee().getId() != null) {
             Licensee licensee = getLicenseeDao().load(source.getLicensee().getId());
             target.setLicensee(licensee);
+        } else {
+            throw new IllegalArgumentException(
+                "FormSubmissionDao.formSubmissionVOToEntity - 'licensee' or its id can not be null"
+            );
         }
 
         if(source.getPeriod() != null && source.getPeriod().getId() != null) {
 
             Period period = getPeriodDao().load(source.getPeriod().getId());
             target.setPeriod(period);
+        } else {
+            throw new IllegalArgumentException(
+                "FormSubmissionDao.formSubmissionVOToEntity - 'period' or its id can not be null"
+            );
         }
-        
 
-        /*if(CollectionUtils.isNotEmpty(source.getDataFields())) {
-            Collection<DataField> datas = new HashSet<>();
-            for (DataFieldVO dataField : source.getDataFields()) {
-                if(dataField.getId() != null){
-                    DataField data = getDataFieldDao().load(dataField.getId());
-                    if(data != null && data.getId() != null)
-                        datas.add(data);
-                }
-            }
-            target.setDataFields(datas);
-        }*/
+        if(source.getFormActivation() != null && source.getFormActivation().getId() != null) {
+
+            FormActivation activation = formActivationDao.load(source.getFormActivation().getId());
+            target.setFormActivation(activation);
+        } else {
+            throw new IllegalArgumentException(
+                "FormSubmissionDao.formSubmissionVOToEntity - 'formActivation' or its id can not be null"
+            );
+        }
 
         target.setDataFields(new ArrayList<>());
 
@@ -228,15 +241,15 @@ public class FormSubmissionDaoImpl
         Specification<FormSubmission> specifications = null;
         
         if(criteria.getStartDate() != null) {
-            specifications = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeGreaterThanEqual("submissionDate", criteria.getStartDate().atStartOfDay());
+            specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDate>findByJoinAttributeGreaterThan("period", "periodStart", criteria.getStartDate().minusDays(1));
         }
 
         if(criteria.getEndDate() != null) {
-            LocalDateTime end = criteria.getEndDate().plusDays(1).atStartOfDay();
+            LocalDate end = criteria.getEndDate().plusDays(1);
             if(specifications == null) {
-                specifications = BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("submissionDate", end);
+                specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDate>findByJoinAttributeLessThan("period", "periodEnd", end);
             } else {
-                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, LocalDateTime>findByAttributeLessThan("submissionDate", end));
+                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, Period, LocalDate>findByJoinAttributeLessThan("period", "periodEnd", end));
             }
         }
 
@@ -265,10 +278,13 @@ public class FormSubmissionDaoImpl
         }
 
         if(StringUtils.isNotBlank(criteria.getSubmittedBy())) {
+
+            Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy());
+
             if(specifications == null) {
-                specifications = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy());
+                specifications = tmp;
             } else {
-                specifications = specifications.and(BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy", criteria.getSubmittedBy()));
+                specifications = specifications.and(tmp);
             }
         }
 
@@ -280,15 +296,40 @@ public class FormSubmissionDaoImpl
             }
         }
 
-        if(criteria.getPeriodDate() != null) {
+        /*if(criteria.getPeriodStartDate() != null) {
+
+            Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "startDate", criteria.getPeriodStartDate());
+
             if(specifications == null) {
-                specifications = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodDate())
-                                .and(BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeGreaterThan("period", "startDate", criteria.getPeriodDate()));
+                specifications = tmp;
             } else {
                 specifications = specifications.and(
-                    BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodDate())
-                                .and(BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeGreaterThan("period", "startDate", criteria.getPeriodDate()))
+                    tmp
                 );
+            }
+        }*/
+
+        /*if(criteria.getPeriodEndDate() != null) {
+
+            Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodEndDate());
+
+            if(specifications == null) {
+                specifications = tmp;
+            } else {
+                specifications = specifications.and(
+                    tmp
+                );
+            }
+        }*/
+
+        if(CollectionUtils.isNotEmpty(criteria.getPeriodIds())) {
+
+            Specification<FormSubmission> tmp = BocraportalSpecifications.findByJoinAttributeIn("period", "id", criteria.getPeriodIds());
+
+            if(specifications == null) {
+                specifications = tmp;
+            } else {
+                specifications = specifications.and(tmp);
             }
         }
 

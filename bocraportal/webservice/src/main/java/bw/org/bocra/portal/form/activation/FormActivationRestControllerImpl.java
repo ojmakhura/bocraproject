@@ -104,19 +104,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handleSave(FormActivationVO formActivation) {
         try {
-            logger.debug("Saves Form Activation "+formActivation);
-
-            // if(formActivation.getId() == null) {
-            //     FormActivationCriteria cr = new FormActivationCriteria();
-            //     cr.setFormId(formActivation.getForm().getId());
-            //     cr.setPeriodId(formActivation.getPeriod().getId());
-
-            //     Collection<FormActivationVO> actives = formActivationService.search(cr);
-            //     if(CollectionUtils.isNotEmpty(actives)) {
-            //         throw new FormActivationServiceException("This form activation has been already done.");
-            //     }
-            // }
-
             Optional<?> data = Optional.of(formActivationService.save(formActivation));
             ResponseEntity<?> response;
 

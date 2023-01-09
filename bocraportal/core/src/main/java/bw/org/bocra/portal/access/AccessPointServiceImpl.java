@@ -11,6 +11,7 @@ package bw.org.bocra.portal.access;
 import java.util.Collection;
 
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,8 @@ public class AccessPointServiceImpl
     protected  AccessPointVO handleFindById(Long id)
         throws Exception
     {
-        return accessPointDao.toAccessPointVO(accessPointRepository.getById(id));
+        AccessPoint point = getAccessPointDao().load(id);
+        return accessPointDao.toAccessPointVO(point);
     }
 
     /**
@@ -56,7 +58,8 @@ public class AccessPointServiceImpl
     protected  Collection<AccessPointVO> handleGetAll(Integer pageNumber, Integer pageSize)
         throws Exception
     {
-        return (Collection<AccessPointVO>) getAccessPointDao().loadAll(AccessPointDao.TRANSFORM_ACCESSPOINTVO, pageNumber, pageSize);
+        Collection<AccessPoint> entities = accessPointRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent();
+        return accessPointDao.toAccessPointVOCollection(entities);
     }
 
     /**
@@ -66,7 +69,7 @@ public class AccessPointServiceImpl
     protected  boolean handleRemove(Long id)
         throws Exception
     {
-        this.accessPointRepository.deleteById(id);
+        accessPointRepository.deleteById(id);
         return true;
     }
 
@@ -78,13 +81,14 @@ public class AccessPointServiceImpl
         throws Exception
     {
         AccessPoint point = getAccessPointDao().accessPointVOToEntity(accessPoint);
-        point = accessPointRepository.save(point);
+        // point = accessPointDao.createOrUpdate(point);
+        point = accessPointRepository.saveAndFlush(point);
 
         if(accessPoint.getId() != null) {
             return getAccessPointDao().toAccessPointVO(point);
         }
 
-        return accessPoint;
+        return accessPointDao.toAccessPointVO(point);
     }
 
     /**
@@ -95,7 +99,7 @@ public class AccessPointServiceImpl
         throws Exception
     {
         Collection<AccessPoint> points = accessPointDao.findByCriteria(criteria);
-        return (Collection<AccessPointVO>)accessPointDao.findByCriteria(AccessPointDao.TRANSFORM_ACCESSPOINTVO, criteria);
+        return accessPointDao.toAccessPointVOCollection(points);
     }
 
     /**
@@ -107,7 +111,8 @@ public class AccessPointServiceImpl
     {
         criteria.setFetchSize(pageSize);
         criteria.setPageNumber(pageNumber);
-        return (Collection<AccessPointVO>)accessPointDao.findByCriteria(AccessPointDao.TRANSFORM_ACCESSPOINTVO, criteria);
+        Collection<AccessPoint> entities = accessPointDao.findByCriteria(criteria);
+        return accessPointDao.toAccessPointVOCollection(entities);
     }
 
 }

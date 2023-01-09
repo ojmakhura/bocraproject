@@ -3,18 +3,24 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-        <groupId>bw.org.bocra.portal</groupId>
-        <artifactId>bocraportal</artifactId>
-        <version>0.6</version>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.0.1</version>
+		<relativePath />
     </parent>
 	<groupId>bw.org.bocra.portal</groupId>
 	<artifactId>bocraportal-comm</artifactId>
+	<version>0.8.4</version>
 	<name>BOCRA Online Portal Comm Module</name>
 	<description>BOCRA Online Portal Comm Module</description>
-	<!-- <properties>
-		<java.version>11</java.version>
-	</properties> -->
-	<dependencyManagement>
+	<properties>
+		<java.version>17</java.version>
+		<repackage.classifier/>
+		<!-- <spring-native.version>0.12.1</spring-native.version> -->
+		<keycloak.version>20.0.2</keycloak.version>
+		<bocraportal.version>0.8.2</bocraportal.version>
+	</properties>
+	<!-- <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.keycloak.bom</groupId>
@@ -24,12 +30,34 @@
                 <scope>import</scope>
             </dependency>
         </dependencies>
-    </dependencyManagement>
+    </dependencyManagement> -->
 	<dependencies>
 		<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>bocraportal-common</artifactId>
-            <version>${project.version}</version>
+            <version>${bocraportal.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-beanutils</groupId>
+					<artifactId>commons-beanutils</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-web-services</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.jsonwebtoke</groupId>
+					<artifactId>jjwt</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-text</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -51,88 +79,194 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
          </dependency>
+		 <dependency>
+			 <groupId>org.springframework.boot</groupId>
+			 <artifactId>spring-boot-starter-test</artifactId>
+			 <scope>test</scope>
+		 </dependency>
+		 <dependency>
+			 <groupId>org.springframework.security</groupId>
+			 <artifactId>spring-security-test</artifactId>
+			 <scope>test</scope>
+		 </dependency>
+		 <dependency>
+			<groupId>com.c4-soft.springaddons</groupId>
+			<artifactId>spring-addons-webmvc-jwt-resource-server</artifactId>
+			<version>6.0.9</version>
+		</dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+		 <!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+        <!-- <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
+			<version>${keycloak.version}</version>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-spring-security-adapter</artifactId>
+        </dependency> -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
-
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.19.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
+			<groupId>org.graalvm.buildtools</groupId>
+			<artifactId>graalvm-reachability-metadata</artifactId>
+			<version>0.9.19</version>
+			<classifier>repository</classifier>
+			<type>zip</type>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.0.Final</version>
 		</dependency>
 	</dependencies>
 
-	
 	<build>
-        <finalName>${application.id}-comm</finalName>
-        <!-- Change from default src/main/java and src/test/java>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>src-test</testSourceDirectory -->
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <!-- <sources>
-                                <source>target/src/main/java</source>
-                            </sources> -->
-                            <sources>
-                                <source>src/main/resources</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+					<classifier>${repackage.classifier}</classifier>
+					<image>
+						<builder>paketobuildpacks/builder:tiny</builder>
+						<name>ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}</name>
+						<env>
+							<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+							<COMM_SERVER_PORT>${COMM_SERVER_PORT}</COMM_SERVER_PORT>
+							<COMM_LOG_LEVEL>${COMM_LOG_LEVEL}</COMM_LOG_LEVEL>
+							<COMM_DB>${COMM_DB}</COMM_DB>
+							<POSTGRES_SERVER>${POSTGRES_SERVER}</POSTGRES_SERVER>
+							<POSTGRES_SERVER_PORT>${POSTGRES_SERVER_PORT}</POSTGRES_SERVER_PORT>
+							<POSTGRES_USER>${POSTGRES_USER}</POSTGRES_USER>
+							<POSTGRES_PASSWORD>${POSTGRES_PASSWORD}</POSTGRES_PASSWORD>
+							<POSTGRES_DB>${POSTGRES_DB}</POSTGRES_DB>
+							<KEYCLOAK_AUTH_URL>${KEYCLOAK_AUTH_URL}</KEYCLOAK_AUTH_URL>
+							<KEYCLOAK_REALM>${KEYCLOAK_REALM}</KEYCLOAK_REALM>
+							<KEYCLOAK_COMM_CLIENT>${KEYCLOAK_COMM_CLIENT}</KEYCLOAK_COMM_CLIENT>
+							<KEYCLOAK_COMM_CLIENT_SECRET>${KEYCLOAK_COMM_CLIENT_SECRET}</KEYCLOAK_COMM_CLIENT_SECRET>
+							<BOCRA_KEYCLOAK_ADDRESS>${BOCRA_KEYCLOAK_ADDRESS}</BOCRA_KEYCLOAK_ADDRESS>
+							<CERT>${CERT}</CERT>
+							<CERT_PASSWORD>${CERT_PASSWORD}</CERT_PASSWORD>
+							<COMM_LOG_LEVEL>${COMM_LOG_LEVEL}</COMM_LOG_LEVEL>
+							<WEB_URL>${WEB_URL}</WEB_URL>
+							<COMM_URL>${COMM_URL}</COMM_URL>
+							<API_URL>${API_URL}</API_URL>
+							<TZ>${TZ}</TZ>
+						</env>
+					</image>
+				</configuration>
             </plugin>
-            <plugin>
+            <!-- <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-            </plugin>
+            </plugin> -->
+			<plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>build-native</id>
+						<goals>
+							<goal>compile-no-fork</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+					<execution>
+						<id>test-native</id>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<phase>test</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<agent>
+						<enabled>true</enabled>
+					</agent>
+					<metadataRepository>
+						<enabled>true</enabled>
+					</metadataRepository>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.hibernate.orm.tooling</groupId>
+				<artifactId>hibernate-enhance-maven-plugin</artifactId>
+				<version>${hibernate.version}</version>
+				<executions>
+					<execution>
+						<id>enhance</id>
+						<goals>
+							<goal>enhance</goal>
+						</goals>
+						<configuration>
+							<failOnError>true</failOnError>
+							<enableLazyInitialization>true</enableLazyInitialization>
+							<enableDirtyTracking>true</enableDirtyTracking>
+							<enableAssociationManagement>true</enableAssociationManagement>
+							<enableExtendedEnhancement>false</enableExtendedEnhancement>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
-            <!-- <resource>
-                <directory>target/src/main/java</directory>
-            </resource> -->
         </resources>
     </build>
-
 </project>

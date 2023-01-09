@@ -9,10 +9,13 @@ import bw.org.bocra.portal.form.FormService;
 import bw.org.bocra.portal.sector.SectorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import javax.swing.JList.DropLocation;
+import javax.persistence.EntityNotFoundException;
 
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,168 +37,237 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     @Override
     public ResponseEntity<?> handleCreate(Long sectorId, Long formId) {
         try {
-            logger.debug("Create Sector Form sector Id "+sectorId+" and form Id"+formId);
-            Optional<?> data = Optional.of(sectorFormService.create(sectorId, formId)); 
+            logger.debug("Create Licence Form with Licence Id "+sectorId+" and Form Id "+formId);
+            Optional<?> data = Optional.of(sectorFormService.create(sectorId, formId));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not create a sector form entry. Please contact administrator.");
             }
 
             return response;
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | SectorFormServiceException e) {
+
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            String message = e.getMessage();
+
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'sectorForm'")) {
+
+                    message = "The sector form information is missing.";
+
+                } else if(message.contains("or its id can not be null")) {
+                    if(message.contains("'sectorForm.form'")) {
+                
+                        message = "The form type or its id is missing.";
+
+                    } else if(message.contains("'sectorForm.sector'")) {
+                
+                        message = "The sector or its id is missing.";
+                    }
+                
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("(sector_form_unique)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An sector form has been already created.");
+                    } 
+                    
+                } else if (e.getCause().getMessage().contains("null value in column")) {
+                    if (e.getCause().getMessage().contains("column \"form_fk\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The form value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"sector_fk\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The sector value is missing.");
+                    }
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleFindByForm(Long formId) {
         try {
-            logger.debug("Search Sector Form by Form with form Id "+formId);
-            Optional<?> data = Optional.of(sectorFormService.findByForm(formId)); // TODO: Add custom code here;
+            logger.debug("Search Sector Form by Form Id "+formId);
+            Optional<?> data = Optional.ofNullable(sectorFormService.findByForm(formId));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the sector form with this form id.");
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            String message = e.getMessage();
+
+            logger.error(message, e);
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("sector with form id %d not found.", formId));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Search Sector Form by Id  "+id);
-            Optional<?> data = Optional.of(sectorFormService.findById(id)); // TODO: Add custom code here;
+            logger.debug("Search sector Form by Id "+id);
+            Optional<?> data = Optional.of(sectorFormService.findById(id));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Sector form with id %d not found.", id));
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Sector form with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
     @Override
     public ResponseEntity<?> handleFindBySector(Long sectorId) {
         try {
-            logger.debug("Search Sector Form by sector with sector Id " + sectorId);
-            Optional<?> data = Optional.of(sectorFormService.findBySector(sectorId)); // TODO: Add custom code here;
+            logger.debug("Search sector Form by sector Id " + sectorId);
+            Optional<?> data = Optional.of(sectorFormService.findBySector(sectorId));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the sector form with this sector id.");
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            String message = e.getMessage();
+
+            logger.error(message, e);
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Sector with sector id %d not found.", sectorId));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Display all Sector Forms  ");
-            Optional<?> data = Optional.of(sectorFormService.getAll()); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            logger.debug("Display all sector Forms");
+            return ResponseEntity.status(HttpStatus.OK).body(sectorFormService.getAll());
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Delete Sector Form with Id "+id);
-            Optional<?> data = Optional.of(sectorFormService.remove(id)); // TODO: Add custom code here;
+            logger.debug("Deletes sector Form by Id "+id);
+            Optional<?> data = Optional.of(sectorFormService.remove(id));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the sector form with id " + id);
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete sector form with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting sector form with id " + id);
         }
     }
 
     @Override
     public ResponseEntity<?> handleUpdateForm(Long id, Long formId) {
         try {
-            logger.debug("Update Form with Id "+id+" and Form Id"+formId);
-            Optional<?> data = Optional.of(sectorFormService.updateForm(id, formId)); // TODO: Add custom code here;
+            logger.debug("Update sector Form by Id "+id+" and Form Id"+formId);
+            Optional<?> data = Optional.of(sectorFormService.updateForm(id, formId));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the form id.");
             }
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.error(e.getMessage(), e );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleUpdateSector(Long id, Long sectorId) {
         try {
-            logger.debug("Update Sector with Id "+id+" and sector id "+sectorId);
-            Optional<?> data = Optional.of(sectorFormService.updateSector(id, sectorId)); // TODO: Add custom code here;
+            logger.debug("Update sector Form by Id " + id + " and sector Id " + sectorId);
+            Optional<?> data = Optional.of(sectorFormService.updateSector(id, sectorId));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the sector id.");
             }
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

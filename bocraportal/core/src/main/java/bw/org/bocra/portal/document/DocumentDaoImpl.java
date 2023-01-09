@@ -48,14 +48,34 @@ public class DocumentDaoImpl
      * {@inheritDoc}
      */
     @Override
-    protected Collection<Document> handleFindByCriteria(String criteria) {
+    protected Collection<Document> handleFindByCriteria(DocumentCriteria criteria) {
         // TODO implement public Collection<Document> handleFindByCriteria(String
         // criteria)
         Specification<Document> spec = null;
 
-        if (StringUtils.isNotBlank(criteria)) {
+        if (StringUtils.isNotBlank(criteria.getDocumentName())) {
             spec = BocraportalSpecifications.<Document, String>findByAttributeContainingIgnoreCase("documentName",
-                    criteria);
+                    criteria.getDocumentName());
+        }
+
+        if(StringUtils.isNotBlank(criteria.getDocumentId())) {
+            spec = BocraportalSpecifications.<Document, String>findByAttribute("documentId",
+                criteria.getDocumentId());
+        }
+
+        if(StringUtils.isNotBlank(criteria.getExtension())) {
+            spec = BocraportalSpecifications.<Document, String>findByAttribute("documentId",
+                criteria.getExtension());
+        }
+
+        if(criteria.getMetadataTarget() != null) {
+            spec = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget",
+                criteria.getMetadataTarget());
+        }
+
+        if(criteria.getMetadataTargetId() != null) {
+            spec = BocraportalSpecifications.<Document, Long>findByAttribute("metadataTarget",
+                criteria.getMetadataTargetId());
         }
 
         return documentRepository.findAll(spec);
@@ -76,7 +96,7 @@ public class DocumentDaoImpl
         target.setCreatedDate(source.getCreatedDate());
         target.setUpdatedDate(source.getUpdatedDate());
         target.setDocumentName(source.getDocumentName());
-        // target.setFile(source.getFile());
+        target.setFile(source.getFile());
         target.setDocumentId(source.getDocumentId());
 
         if (source.getDocumentType() != null) {
@@ -88,40 +108,40 @@ public class DocumentDaoImpl
             target.setDocumentType(type);
         }
 
-        if (source.getLicence() != null) {
-            LicenceVO licence = new LicenceVO();
-            licence.setId(source.getLicence().getId());
-            licence.setLicenceNumber(source.getLicence().getLicenceNumber());
-            licence.setProvisional(source.getLicence().getProvisional());
-            licence.setStatus(source.getLicence().getStatus());
-            licence.setStartDate(source.getLicence().getStartDate());
+        // if (source.getLicence() != null) {
+        //     LicenceVO licence = new LicenceVO();
+        //     licence.setId(source.getLicence().getId());
+        //     licence.setLicenceNumber(source.getLicence().getLicenceNumber());
+        //     licence.setProvisional(source.getLicence().getProvisional());
+        //     licence.setStatus(source.getLicence().getStatus());
+        //     licence.setStartDate(source.getLicence().getStartDate());
 
-            target.setLicence(licence);
-        }
+        //     target.setLicence(licence);
+        // }
 
-        if (source.getLicensee() != null) {
-            LicenseeVO licensee = new LicenseeVO();
-            licensee.setAddress(source.getLicensee().getAddress());
-            licensee.setId(source.getLicensee().getId());
-            licensee.setLicenseeName(source.getLicensee().getLicenseeName());
-            licensee.setUin(source.getLicensee().getUin());
+        // if (source.getLicensee() != null) {
+        //     LicenseeVO licensee = new LicenseeVO();
+        //     licensee.setAddress(source.getLicensee().getAddress());
+        //     licensee.setId(source.getLicensee().getId());
+        //     licensee.setLicenseeName(source.getLicensee().getLicenseeName());
+        //     licensee.setUin(source.getLicensee().getUin());
 
-            target.setLicensee(licensee);
-        }
+        //     target.setLicensee(licensee);
+        // }
 
-        if (source.getComplaint() != null) {
-            ComplaintVO complaint = new ComplaintVO();
-            complaint.setAssignedTo(source.getComplaint().getAssignedTo());
-            complaint.setComplaintId(source.getComplaint().getComplaintId());
-            complaint.setDetails(source.getComplaint().getDetails());
-            complaint.setEmail(source.getComplaint().getEmail());
-            complaint.setFirstName(source.getComplaint().getFirstName());
-            complaint.setSurname(source.getComplaint().getSurname());
-            complaint.setStatus(source.getComplaint().getStatus());
-            complaint.setSubject(source.getComplaint().getSubject());
+        // if (source.getComplaint() != null) {
+        //     ComplaintVO complaint = new ComplaintVO();
+        //     complaint.setAssignedTo(source.getComplaint().getAssignedTo());
+        //     complaint.setComplaintId(source.getComplaint().getComplaintId());
+        //     complaint.setDetails(source.getComplaint().getDetails());
+        //     complaint.setEmail(source.getComplaint().getEmail());
+        //     complaint.setFirstName(source.getComplaint().getFirstName());
+        //     complaint.setSurname(source.getComplaint().getSurname());
+        //     complaint.setStatus(source.getComplaint().getStatus());
+        //     complaint.setSubject(source.getComplaint().getSubject());
 
-            target.setComplaint(complaint);
-        }
+        //     target.setComplaint(complaint);
+        // }
     }
 
     /**
@@ -174,29 +194,29 @@ public class DocumentDaoImpl
             target.setDocumentType(docType);
         }
 
-        if (source.getLicence() != null && source.getLicence().getId() != null) {
-            Licence licence = getLicenceDao().load(source.getLicence().getId());
-            target.setLicence(licence);
-        }
+        // if (source.getLicence() != null && source.getLicence().getId() != null) {
+        //     Licence licence = getLicenceDao().load(source.getLicence().getId());
+        //     target.setLicence(licence);
+        // }
 
-        if (source.getLicensee() != null && source.getLicensee().getId() != null) {
-            Licensee licensee = getLicenseeDao().load(source.getLicensee().getId());
-            target.setLicensee(licensee);
-        }
+        // if (source.getLicensee() != null && source.getLicensee().getId() != null) {
+        //     Licensee licensee = getLicenseeDao().load(source.getLicensee().getId());
+        //     target.setLicensee(licensee);
+        // }
 
-        if (source.getComplaint() != null && source.getComplaint().getId() != null) {
-            Complaint complaint = complaintDao.load(source.getComplaint().getId());
-            target.setComplaint(complaint);
-        }
+        // if (source.getComplaint() != null && source.getComplaint().getId() != null) {
+        //     Complaint complaint = complaintDao.load(source.getComplaint().getId());
+        //     target.setComplaint(complaint);
+        // }
     }
 
     @Override
     protected Collection<Document> handleGetLicenceDocuments(Long licenceId) throws Exception {
         Specification<Document> spec = null;
 
-        if (licenceId != null) {
-            spec = DocumentSpecifications.findByLicenceId(licenceId);
-        }
+        // if (licenceId != null) {
+        //     spec = DocumentSpecifications.findByLicenceId(licenceId);
+        // }
 
         return documentRepository.findAll(spec);
     }
@@ -205,9 +225,9 @@ public class DocumentDaoImpl
     protected Collection<Document> handleGetLicenseeDocuments(Long licenseeId) throws Exception {
         Specification<Document> spec = null;
 
-        if (licenseeId != null) {
-            spec = DocumentSpecifications.findByLicenseeId(licenseeId);
-        }
+        // if (licenseeId != null) {
+        //     spec = DocumentSpecifications.findByLicenseeId(licenseeId);
+        // }
 
         return documentRepository.findAll(spec);
     }

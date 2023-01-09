@@ -5,7 +5,13 @@
 //
 package bw.org.bocra.portal.licensee.shares;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,20 +37,30 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Search Shareholder by Id "+id);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Search shareholder by "+id);
+            ShareholderVO shareholder = shareholderService.findById(id);
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if(shareholder != null && shareholder.getId() != null) {
+                response = ResponseEntity.status(HttpStatus.OK).body(shareholder);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Shareholder with id %ld not found.", id));
             }
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            e.printStackTrace();
+
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Shareholder with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -52,19 +68,11 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Display all Shareholders");
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return  ResponseEntity.status(HttpStatus.OK).body(shareholderService.getAll());
+            
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -72,19 +80,11 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
             logger.debug("Display all Shareholders with the specified page number "+pageNumber+" and page size  "+pageSize);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(shareholderService.getAll(pageNumber, pageSize));
+            
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -92,27 +92,33 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     public ResponseEntity<?> handleRemove(Long id) {
         try {
             logger.debug("Delete Shareholder with Id "+id);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(shareholderService.remove(id));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the shareholder with id " + id);
             }
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete shareholder with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting shareholder with id " + id);
         }
     }
 
     @Override
     public ResponseEntity<?> handleSave(ShareholderVO shareholder) {
         try {
-            logger.debug("Save Shareholder "+shareholder);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Save Shareholder " + shareholder);
+            Optional<?> data = Optional.of(shareholderService.save(shareholder));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
@@ -122,29 +128,82 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
             }
 
             return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }  catch (IllegalArgumentException | ShareholderServiceException e) {
+
+            e.printStackTrace();
+
+            String message = e.getMessage();
+
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'shareholder'")) {
+
+                    message = "The shareholder information is missing.";
+
+                } else if(message.contains("'shareholder.name'")) {
+                
+                    message = "The shareholder name is missing.";
+                
+                } else if(message.contains("'shareholder.type'")) {
+                  
+                    message = "The shareholder type is missing.";
+                
+                }else if(message.contains("'shareholder.shareholderId'")) {
+                  
+                    message = "The shareholder id is missing.";
+                
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("shareholder_id")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee with this id has been already created.");
+                    } else if(e.getCause().getMessage().contains("(licensee_name)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee with this name has been already created.");
+                    } 
+                    
+                } else if (e.getCause().getMessage().contains("null value in column")) {
+
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"name\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The name value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"shareholder_id\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The shareholder id value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"type\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The type id value is missing.");
+                    }
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleSearch(ShareholderCriteria criteria) {
         try {
-            logger.debug("Search Shareholder by criteria "+criteria);
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            logger.debug("Search Shareholder by criteria " + criteria);
+            return ResponseEntity.status(HttpStatus.OK).body(shareholderService.search(criteria));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

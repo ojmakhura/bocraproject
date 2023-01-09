@@ -7,15 +7,14 @@
 package bw.org.bocra.portal.licence;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
-import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.licence.type.LicenceType;
 import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeVO;
@@ -67,24 +66,15 @@ public class LicenceDaoImpl
             target.setLicenceType(type);
         }
 
-        Collection<DocumentVO> docs = new HashSet<>();
-
-        for(Document doc : source.getDocuments()) {
-            DocumentVO dvo = new DocumentVO();
-            dvo.setId(doc.getId());
-            dvo.setDocumentName(doc.getDocumentName());
-            dvo.setDocumentId(doc.getDocumentId());
-
-            DocumentTypeVO type = new DocumentTypeVO();
-            type.setCode(doc.getDocumentType().getCode());
-            type.setId(doc.getDocumentType().getId());
-            type.setName(doc.getDocumentType().getName());
-
-            dvo.setDocumentType(type);
-            docs.add(dvo);
+        if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
+            docs = docs.stream().map(d -> {
+                d.setFile(null);
+                return d;
+            }).collect(Collectors.toSet());
+            target.setDocuments(docs);
         }
 
-        target.setDocuments(docs);
     }
 
     /**
@@ -147,6 +137,15 @@ public class LicenceDaoImpl
         if(source.getLicenceType() != null) {
             LicenceType type = licenceTypeRepository.getReferenceById(source.getLicenceType().getId());
             target.setLicenceType(type);
+        } else {
+            throw new IllegalArgumentException(
+                "LicenceDao.licenceVOToEntity - 'licenceType' or its id can not be null"
+            );
         }
+
+        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
+            target.setDocumentIds(source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toSet()));
+        }
+        
     }
 }

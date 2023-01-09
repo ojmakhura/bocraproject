@@ -6,214 +6,264 @@
 package bw.org.bocra.portal.message;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import org.postgresql.util.PSQLException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/message")
 @CrossOrigin()
-@Tag(name = "Access Point", description = "Managing the different resources available.")
+@Tag(name = "Communication Messages", description = "Managing communications like emails and sms.")
 public class CommunicationMessageControllerImpl extends CommunicationMessageControllerBase {
     
-    public CommunicationMessageControllerImpl(
-        CommunicationMessageService communicationMessageService    ) {
+    @Value("${bocra.comm.url}")
+    private String commUrl;
+
+    private final RestTemplate restTemplate;
+    
+    public CommunicationMessageControllerImpl(CommunicationMessageService communicationMessageService, RestTemplate restTemplate) {
         
-        super(
-            communicationMessageService        );
+        super(communicationMessageService);
+        this.restTemplate = restTemplate;
     }
 
 
     @Override
     public ResponseEntity<?> handleClearFailedMessages() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.clearFailedMessages()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not clear failed messages.");
             }
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleClearSentMessages() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(communicationMessageService.clearSentMessages()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not clear sent messages.");
             }
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Search message by Id " + id);
+            Optional<?> data = Optional.of(communicationMessageService.findById(id));
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Message with id %d not found.", id));
             }
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            e.printStackTrace();
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Message with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            logger.debug("Display all message.");
+            return ResponseEntity.status(HttpStatus.OK).body(communicationMessageService.getAll());
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured when loading all message.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            logger.debug("Display all messages of the specified by page number " + pageNumber + " and page size " + pageSize);
+            return  ResponseEntity.status(HttpStatus.OK).body(communicationMessageService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            String message = String.format("An error occurred when reading page %d of size %d.", pageNumber, pageSize);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
     @Override
     public ResponseEntity<?> handleLoadTodayMessages() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(communicationMessageService.loadTodayMessages());
+            
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handlePagedSearch(Integer pageNumber, Integer pageSize, String criteria) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(communicationMessageService.search(pageNumber, pageSize, criteria));
+            
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Delete message by Id " + id);
+            Optional<?> data = Optional.of(communicationMessageService.remove(id));
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the message with id " + id);
             }
 
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete message with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting message with id " + id);
         }
     }
 
     @Override
     public ResponseEntity<?> handleSave(CommunicationMessageVO communicationMessage) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            logger.debug("Saves Complaint Type " + communicationMessage);
+            Optional<?> data = Optional.of(communicationMessageService.save(communicationMessage));
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the message.");
             }
 
             return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IllegalArgumentException | CommunicationMessageServiceException e) {
+
+            e.printStackTrace();
+
+            String message = e.getMessage();
+
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'communicationMessage'")) {
+
+                    message = "The message information is missing.";
+
+                } else if(message.contains("'communicationMessage.status'")) {
+                
+                    message = "The message status is missing.";
+                
+                } else if(message.contains("'communicationMessage.messagePlatform'")) {
+                  
+                    message = "The message platform is missing.";
+                
+                } else if(message.contains("'communicationMessage.subject'")) {
+                  
+                    message = "The message subject is missing.";
+                
+                } else if(message.contains("'communicationMessage.text'")) {
+                  
+                    message = "The message text is missing.";
+                
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("null value in column")) {
+
+                    if (e.getCause().getMessage().contains("column \"message_platform\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The message platform value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"status\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The status value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"subject\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The subject value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"text\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The text value is missing.");
+                    }
+
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This message is conflicting with an existing one.");
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
-            ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
+            logger.debug("Search Licence by criteria " + criteria);
+            return ResponseEntity.status(HttpStatus.OK).body(communicationMessageService.search(criteria));
 
-            return response;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -221,11 +271,23 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
     @Override
     public ResponseEntity<?> handleLoadDueSubmissionMessages() {
         try {
-            Optional<?> data = Optional.empty(); // TODO: Add custom code here;
+            return ResponseEntity.status(HttpStatus.OK).body(communicationMessageService.loadDueSubmissionMessages());
+            
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<?> handleSendDueMessages() {
+        try {
+            Optional<Collection<CommunicationMessageVO>> data = Optional.of(communicationMessageService.loadDueSubmissionMessages()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get().size());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -233,7 +295,20 @@ public class CommunicationMessageControllerImpl extends CommunicationMessageCont
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<?> handleUpdateMessageStatus(Long id, CommunicationMessageStatus status) {
+        
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(communicationMessageService.updateMessageStatus(id, status)); 
+            
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

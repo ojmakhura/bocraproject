@@ -56,12 +56,8 @@ public class FormFieldServiceImpl
     {
 
         FormField field = getFormFieldDao().formFieldVOToEntity(formFieldVO);
-
-        if(field.getId() == null) {
-            field = getFormFieldDao().create(field);
-        } else {
-            getFormFieldDao().update(field);
-        }
+        field = formFieldRepository.saveAndFlush(field);
+        
         return getFormFieldDao().toFormFieldVO(field);
     }
 

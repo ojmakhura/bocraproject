@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentCriteria;
+import bw.org.bocra.portal.document.DocumentMetadataTarget;
+import bw.org.bocra.portal.document.DocumentService;
 import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.form.Form;
@@ -62,10 +65,11 @@ import bw.org.bocra.portal.sector.SectorVO;
 public class LicenseeServiceImpl
     extends LicenseeServiceBase
 {
+    private final DocumentService documentService;
 
     public LicenseeServiceImpl(LicenseeDao licenseeDao, LicenseeRepository licenseeRepository,
             LicenseeShareholderDao licenseeShareholderDao, LicenseeShareholderRepository licenseeShareholderRepository,
-            LicenseeFormDao licenseeFormDao, LicenseeFormRepository licenseeFormRepository,
+            LicenseeFormDao licenseeFormDao, LicenseeFormRepository licenseeFormRepository, DocumentService documentService,
             LicenseeSectorDao licenseeSectorDao, LicenseeSectorRepository licenseeSectorRepository,
             LicenceDao licenceDao, LicenceRepository licenceRepository, FormSubmissionDao formSubmissionDao,
             FormSubmissionRepository formSubmissionRepository, SectorDao sectorDao, SectorRepository sectorRepository,
@@ -75,6 +79,8 @@ public class LicenseeServiceImpl
                 licenseeFormRepository, licenseeSectorDao, licenseeSectorRepository, licenceDao, licenceRepository,
                 formSubmissionDao, formSubmissionRepository, sectorDao, sectorRepository, formDao, formRepository,
                 messageSource);
+
+        this.documentService = documentService;
     }
 
     /**
@@ -232,35 +238,35 @@ public class LicenseeServiceImpl
     @Override
     protected Collection<DocumentVO> handleGetDocuments(Long id) throws Exception {
 
-        Licensee licensee = licenseeDao.get(id);
+        DocumentCriteria criteria = new DocumentCriteria();
+        criteria.setMetadataTargetId(id);
+        criteria.setMetadataTarget(DocumentMetadataTarget.LICENSEE);
+        return documentService.search(criteria);
 
-        Collection<Document> docs = licensee.getDocuments();
-        Collection<DocumentVO> vos = new ArrayList<>();
+        // for (Document document : docs) {
+        //     DocumentVO vo = new DocumentVO();
+        //     vo.setCreatedBy(document.getCreatedBy());
+        //     vo.setCreatedDate(document.getCreatedDate());
+        //     vo.setDocumentName(document.getDocumentName());
+        //     vo.setId(document.getId());
+        //     vo.setUpdatedBy(document.getUpdatedBy());
+        //     vo.setUpdatedDate(document.getUpdatedDate());
 
-        for (Document document : docs) {
-            DocumentVO vo = new DocumentVO();
-            vo.setCreatedBy(document.getCreatedBy());
-            vo.setCreatedDate(document.getCreatedDate());
-            vo.setDocumentName(document.getDocumentName());
-            vo.setId(document.getId());
-            vo.setUpdatedBy(document.getUpdatedBy());
-            vo.setUpdatedDate(document.getUpdatedDate());
+        //     DocumentTypeVO type = new DocumentTypeVO();
+        //     type.setCode(document.getDocumentType().getCode());
+        //     type.setName(document.getDocumentType().getName());
+        //     type.setCreatedBy(document.getDocumentType().getCreatedBy());
+        //     type.setCreatedDate(document.getDocumentType().getCreatedDate());
+        //     type.setDescription(document.getDocumentType().getDescription());
+        //     type.setId(document.getDocumentType().getId());
+        //     type.setUpdatedBy(document.getDocumentType().getUpdatedBy());
+        //     type.setUpdatedDate(document.getDocumentType().getUpdatedDate());
+        //     vo.setDocumentType(type);
 
-            DocumentTypeVO type = new DocumentTypeVO();
-            type.setCode(document.getDocumentType().getCode());
-            type.setName(document.getDocumentType().getName());
-            type.setCreatedBy(document.getDocumentType().getCreatedBy());
-            type.setCreatedDate(document.getDocumentType().getCreatedDate());
-            type.setDescription(document.getDocumentType().getDescription());
-            type.setId(document.getDocumentType().getId());
-            type.setUpdatedBy(document.getDocumentType().getUpdatedBy());
-            type.setUpdatedDate(document.getDocumentType().getUpdatedDate());
-            vo.setDocumentType(type);
+        //     vos.add(vo);
+        // }
 
-            vos.add(vo);
-        }
-
-        return vos;
+        // return vos;
     }
 
     @Override

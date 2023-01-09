@@ -8,7 +8,6 @@ package bw.org.bocra.portal.document;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import bw.org.bocra.portal.complaint.ComplaintService;
 import bw.org.bocra.portal.keycloak.KeycloakService;
-import bw.org.bocra.portal.complaint.ComplaintVO;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,21 +28,21 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class DocumentRestControllerImpl extends DocumentRestControllerBase {
 
     private final KeycloakService keycloakService;
-
-    public DocumentRestControllerImpl(DocumentService documentService, ComplaintService complaintService,
-            KeycloakService keycloakService) {
-        super(documentService, complaintService);
+    
+    public DocumentRestControllerImpl(DocumentService documentService, KeycloakService keycloakService) {
+        
+        super(documentService);
         this.keycloakService = keycloakService;
     }
+
 
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Searches Document by " + id);
             Optional<?> data = Optional.of(documentService.findById(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -61,11 +58,10 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Displays all Documents");
             Optional<?> data = Optional.of(documentService.getAll()); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -81,12 +77,10 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Displays all Documents by specified " + "Page Number: " + pageNumber + " and Page Size: "
-                    + pageSize);
             Optional<?> data = Optional.of(documentService.getAll(pageNumber, pageSize));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -102,11 +96,10 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Deletes a Document by " + id);
             Optional<?> data = Optional.of(documentService.remove(id));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -122,11 +115,10 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(DocumentVO document) {
         try {
-            logger.debug("Saves Document " + document);
             Optional<?> data = Optional.of(documentService.save(document));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -135,21 +127,23 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Document already exists.");
-            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    // @PostMapping("/licensee/upload")
+    // public DocumentVO uploadLicenseeDocument(@RequestParam(name = "file") MultipartFile file, @PathVariable Long licenseeId) {
+    //     System.out.println(String.format("Licensee %d\n", licenseeId));
+    //     return new DocumentVO();
+    // }
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
-            logger.debug("Searches Document by " + criteria);
             Optional<?> data = Optional.of(documentService.search(criteria));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -162,10 +156,11 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
         }
     }
 
+
     @Override
     public ResponseEntity<?> handleUploadLicenceDocument(Long licenceId, MultipartFile file) {
         try {
-            logger.debug("Upload Licence Document with Licence Id: " + licenceId + " and a File: " + file);
+            
             AccessToken token = keycloakService.getSecurityContext().getToken();
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
@@ -177,7 +172,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             Optional<?> data = Optional.of(documentService.save(document));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -190,10 +185,10 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
         }
     }
 
+
     @Override
     public ResponseEntity<?> handleUploadLicenseeDocument(Long licenseeId, MultipartFile file) {
         try {
-            logger.debug("Upload Licensee Document with Licensee Id" + licenseeId + " File:" + file);
             AccessToken token = keycloakService.getSecurityContext().getToken();
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
@@ -206,7 +201,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             Optional<?> data = Optional.of(documentService.save(document));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -218,15 +213,17 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 
     @Override
     public ResponseEntity<?> handleDownloadFile(Long id) {
+
         try {
-            logger.debug("Downloads File with " + id);
+            
             Optional<?> data = Optional.of(documentService.downloadFile(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
+            if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -237,39 +234,5 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-    }
-
-    @Override
-    public ResponseEntity<?> handleUploadComplaintDocument(Long complaintId, MultipartFile file) {
-        try {
-            logger.debug("Upload Complaint Document with Complaint Id: " + complaintId + " and a File: " + file);
-            AccessToken token = keycloakService.getSecurityContext().getToken();
-            DocumentVO document = new DocumentVO();
-            document.setCreatedBy(token.getPreferredUsername());
-            document.setCreatedDate(LocalDateTime.now());
-            document.setFile(file.getBytes());
-            ComplaintVO complaint = new ComplaintVO();
-            complaint.setId(complaintId);
-            document.setComplaint(complaint);
-            Optional<?> data = Optional.of(documentService.save(document));
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> handleUploadComplaintReplyDocument(Long complaintReplyId, MultipartFile file) {
-        // TODO Auto-generated method stub
-        return null;
     }
 }

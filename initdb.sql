@@ -8,7 +8,7 @@ CREATE SEQUENCE IF NOT EXISTS public.access_point_seq
     CACHE 1;
 
 ALTER SEQUENCE public.access_point_seq
-    OWNER TO postgres;
+    OWNER TO bocraportal;
 
 CREATE SEQUENCE IF NOT EXISTS public.access_point_type_seq
     INCREMENT 1
@@ -18,7 +18,7 @@ CREATE SEQUENCE IF NOT EXISTS public.access_point_type_seq
     CACHE 1;
 
 ALTER SEQUENCE public.access_point_type_seq
-    OWNER TO postgres;
+    OWNER TO bocraportal;
 
 
 CREATE SEQUENCE IF NOT EXISTS public.authorisation_seq
@@ -29,7 +29,7 @@ CREATE SEQUENCE IF NOT EXISTS public.authorisation_seq
     CACHE 1;
 
 ALTER SEQUENCE public.authorisation_seq
-    OWNER TO postgres;
+    OWNER TO bocraportal;
 
 -- Table: public.access_point_type
 
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS public.access_point_type
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.access_point_type
-    OWNER to postgres;
+    OWNER TO bocraportal;
 
 -- Table: public.access_point
 
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS public.access_point
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.access_point
-    OWNER to postgres;
+    OWNER TO bocraportal;
 
 -- Table: public.authorisation
 
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS public.authorisation
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.authorisation
-    OWNER to postgres;
+    OWNER TO bocraportal;
 
 -- Table: public.authorisation_roles
 

@@ -14,9 +14,19 @@ import bw.org.bocra.portal.user.LicenseeUserService;
 import bw.org.bocra.portal.user.UserVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import bw.org.bocra.portal.document.DocumentService;
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
+import bw.org.bocra.portal.keycloak.KeycloakService;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
+import bw.org.bocra.portal.user.LicenseeUserService;
+import bw.org.bocra.portal.user.UserVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -104,6 +114,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
+
 
             LicenseeVO licensee = licenseeService.findById(id);
             ResponseEntity<?> response;
@@ -317,7 +328,6 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Error detected at Licensee Service handleRemove "+id);
             Optional<?> data = Optional.of(this.licenseeService.remove(id));
             ResponseEntity<?> response;
 
@@ -337,7 +347,6 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleRemoveSector(Long licenseeSectorId) {
         try {
-            logger.debug("Delete Licensee Sector with Licensee Sector Id "+licenseeSectorId);
             Optional<?> data = Optional.of(this.licenseeService.removeSector(licenseeSectorId));
             ResponseEntity<?> response;
 
@@ -357,7 +366,6 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(LicenseeVO licensee) {
         try {
-            logger.debug("Save Licensee "+licensee);
             Optional<?> data = Optional.of(this.licenseeService.save(licensee));
             ResponseEntity<?> response;
 
@@ -377,7 +385,6 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(LicenseeCriteria criteria) {
         try {
-            logger.debug("Search Licensee by criteria "+criteria);
             Optional<?> data = Optional.of(this.licenseeService.search(criteria));
             ResponseEntity<?> response;
 

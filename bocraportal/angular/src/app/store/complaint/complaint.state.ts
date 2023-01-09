@@ -16,6 +16,7 @@ export interface ComplaintState {
     complaintReply: ComplaintReplyVO,
     complaintReplies: Array<ComplaintReplyVO> | Array<any>,
     id: number | any;
+    complaintId: string;
     removed: boolean;
     loading: boolean;
     loaderMessage: string | undefined;
@@ -40,5 +41,6 @@ export const initialState: ComplaintState = {
     documents: [],
     complaintReply: undefined,
     complaintReplies: [],
-    loggedInSearch: null
+    loggedInSearch: null,
+    complaintId: ''
 };

@@ -73,6 +73,21 @@
 						</div>
 					</div>
 				</fieldset>
+				<fieldset class="mb-3" formGroupName="complaintType">
+				    <div class="row mb-3">
+						<label id="complaintComplaintType_label" class="col-sm-2 col-form-label" for="complaintComplaintType"><span translate>complaint.type</span></label>
+						<div class="input-group">
+							<input type="text" readonly class="form-control" id="complaintComplaintTypeTypeName"
+									value="{{ complaintComplaintType?.typeName }}" disabled>
+							<button type="button" (click)="complaintComplaintTypeAddDialog()" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#complaintComplaintTypeModal">
+								<mat-icon>add_box</mat-icon>
+							</button>
+							<button type="button" (click)="complaintComplaintTypeClear()" class="btn btn-outline-primary">
+								<mat-icon>clear</mat-icon>
+							</button>
+						</div>
+				    </div>
+				</fieldset>
 				<div class="mb-3">
 					<label id="complaintFirstName_label" class="col-sm-2 col-form-label" for="complaintFirstName"><span
 							translate>first.name</span>*</label>
@@ -183,7 +198,7 @@
 						class="btn btn-outline-primary"><span translate>reset</span></button>
 				</div>
 				<mat-tab-group animationDuration="0ms" class="view-tabs" *ngIf="complaintId">
-					<mat-tab label="{{'documents' | translate}}" *ngIf="false">
+					<mat-tab label="{{'documents' | translate}}">
 						<div>
 							<button type="button" (click)="editComplaintNewDocument()" class="btn btn-primary my-2">
 								<mat-icon>add_box</mat-icon>
@@ -193,14 +208,16 @@
 								<ng-container matColumnDef="actions">
 									<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
 									<mat-cell *matCellDef="let row; index as i">
-										<button type="button" color="accent" (click)="deleteFromComplaintDocuments(i)"
-											class="btn btn-info">
+										<div>
+											<button type="button" (click)="deleteFromComplaintDocuments(i)"
+											class="btn btn-outline-primary">
 											<mat-icon>delete</mat-icon>
 										</button>
-										<button type="button" color="accent" (click)="doEditComplaintDocuments(row)"
+										<!-- <button type="button" color="accent" (click)="doEditComplaintDocuments(row)"
 											class="btn btn-info">
 											<mat-icon>edit</mat-icon>
-										</button>
+										</button> -->
+										</div>
 									</mat-cell>
 								</ng-container>
 								<ng-container matColumnDef="id">
@@ -231,41 +248,6 @@
 							<button type="button" (click)="editComplaintReply()" class="btn btn-primary my-2">
 								<mat-icon>add_box</mat-icon>
 							</button>
-							<!-- <mat-table matSort [dataSource]="complaintComplaintReplies" #complaintRepliesSort="matSort"
-								class="table table-bordered table-striped" style="width: 100%;">
-								<ng-container matColumnDef="actions">
-									<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-									<mat-cell *matCellDef="let row; index as i">
-										<button type="button" color="accent"
-											(click)="deleteFromComplaintComplaintReplies(i)" class="btn btn-info">
-											<mat-icon>delete</mat-icon>
-										</button>
-										<button type="button" color="accent"
-											(click)="doEditComplaintComplaintReplies(row)" class="btn btn-info">
-											<mat-icon>edit</mat-icon>
-										</button>
-									</mat-cell>
-								</ng-container>
-								<ng-container matColumnDef="id">
-									<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-									<mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
-								</ng-container>
-								<ng-container matColumnDef="date">
-									<mat-header-cell *matHeaderCellDef translate>date</mat-header-cell>
-									<mat-cell *matCellDef="let row"> {{ row?.date }} </mat-cell>
-								</ng-container>
-								<ng-container matColumnDef="replyUser">
-									<mat-header-cell *matHeaderCellDef translate>reply.user</mat-header-cell>
-									<mat-cell *matCellDef="let row"> {{ row?.replyUser }} </mat-cell>
-								</ng-container>
-								<mat-header-row *matHeaderRowDef="complaintComplaintRepliesModalColumns">
-								</mat-header-row>
-								<mat-row *matRowDef="let row; columns: complaintComplaintRepliesModalColumns;">
-								</mat-row>
-							</mat-table>
-							<mat-paginator #complaintComplaintRepliesPaginator="matPaginator" [pageSize]="10"
-								[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator> -->
-
 							<div class="list-group" *ngFor="let reply of complaintComplaintReplies">
 								<a class="list-group-item list-group-item-action mb-2 px-5" aria-current="true">
 									<div class="d-flex w-100 justify-content-between">
@@ -277,7 +259,7 @@
 									</p>
 									<div class="action">
 										<span class="badge bg-primary" type="button"
-											(click)="doEditComplaintComplaintReplies(reply.id)"><i class="fa fa-pencil"
+											(click)="doEditComplaintComplaintReplies(reply)"><i class="fa fa-pencil"
 												aria-hidden="true"></i> Edit</span>
 										<span class="badge bg-danger" type="button"
 											(click)="deleteFromComplaintComplaintReplies(reply.id)"><i
@@ -484,4 +466,65 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+
+<!-- Modal for complaintType -->
+<div class="modal fade" id="complaintComplaintTypeModal" tabindex="-1" aria-labelledby="complaintComplaintTypeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="complaintComplaintTypeAddLabel" translate>
+                    action.select
+                    <span translate>complaint.type</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form>
+                        <div>
+                            <mat-form-field>
+                            <mat-label translate>search</mat-label>
+                            <input matInput type="text" [formControl]="complaintComplaintTypeSearchField"
+                                id="complaintComplaintTypeSearchField" />
+                            </mat-form-field>
+                        </div>
+                        <button type="button" (click)="complaintComplaintTypeSearch()" class="btn btn-primary">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </form>
+                </div>
+             <mat-table matSort [dataSource]="complaintComplaintTypesDataSource" #complaintComplaintTypeModalSort="matSort" class="table table-bordered" style="width: 100%;">
+                 <ng-container matColumnDef="actions">
+                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+                     <mat-cell *matCellDef="let row; let i=index">
+                         <mat-radio-group (change)="complaintComplaintTypeSelected($event, row)">
+                             <mat-radio-button [value]="row" [checked]='complaintComplaintTypeSelect.id === row?.id'></mat-radio-button>
+                         </mat-radio-group>
+                     </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="id">
+                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="code">
+                     <mat-header-cell *matHeaderCellDef translate>code</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.code }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="typeName">
+                     <mat-header-cell *matHeaderCellDef translate>type.name</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.typeName }} </mat-cell>
+                 </ng-container>
+                 <mat-header-row *matHeaderRowDef="complaintComplaintTypeModalColumns"></mat-header-row>
+                 <mat-row *matRowDef="let row; columns: complaintComplaintTypeModalColumns;"></mat-row>
+             </mat-table>
+             <mat-paginator #complaintComplaintTypeModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+                <button type="button" class="btn btn-primary" (click)="addSelectedComplaintComplaintType()" data-bs-dismiss="modal" translate>save</button>
+            </div>
+        </div>
+    </div>
 </div>

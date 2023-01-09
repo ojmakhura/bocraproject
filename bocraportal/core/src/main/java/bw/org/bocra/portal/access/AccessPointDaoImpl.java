@@ -6,12 +6,11 @@
  */
 package bw.org.bocra.portal.access;
 
-import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.access.type.AccessPointType;
-import bw.org.bocra.portal.access.type.AccessPointTypeDao;
 import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 
@@ -96,8 +95,20 @@ public class AccessPointDaoImpl
         // TODO verify behavior of accessPointVOToEntity
         super.accessPointVOToEntity(source, target, copyIfNull);
         if(source.getAccessPointType() != null && source.getAccessPointType().getId() != null) {
+            
             AccessPointType type = getAccessPointTypeDao().get(source.getAccessPointType().getId());
+
+            if(type == null || type.getId() == null) {
+                throw new IllegalArgumentException(
+                    "AccessPointDao.accessPointVOToEntity - invalid access point type."
+                );
+            }
+
             target.setAccessPointType(type);
+        } else {
+            throw new IllegalArgumentException(
+                "AccessPointDao.accessPointVOToEntity - 'accessPointType' or its id can not be null"
+            );
         }
     }
 }

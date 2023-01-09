@@ -137,7 +137,6 @@ export const formReducer = createReducer(
         formSections: action.formSections,
         loading: false,
         loaderMessage: undefined,
-        messages: []
     })),
     on(FormActions.removeField, (state, action) => ({
         ...state,

@@ -136,7 +136,7 @@
 											</ng-template>
 										</td>
 										<td class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-											<div *ngIf="isCalculatedField(dataField) || formDisabled(); else editable">
+											<div *ngIf="isCalculatedField(dataField) || submissionStatus === 'SUBMITTED' || submissionStatus === 'ACCEPTED'; else editable">
 												<span>{{ dataField?.value }}</span>
 											</div>
 											<ng-template #editable>
@@ -167,42 +167,6 @@
 								</tbody>
 							</table>
 						</div>
-						<!-- <div formArrayName="dataFields">
-							<div *ngFor="let dataField of getSectorFields(i); let j = index; trackBy: trackByFn"
-								[formGroupName]="j">
-								<div class="mb-3" *ngIf="isButton(dataField)">
-									<input type="button" class="btn btn-primary"
-										value="{{ dataField?.formField?.fieldName }}" />
-								</div>
-								<div class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-									<label class="form-label" for="{{ getDataFieldId(dataField) }}">{{ dataField?.formField?.fieldName }} </label>
-									<div *ngIf="isCalculatedField(dataField) || formDisabled(); else editable">
-										<span>{{ dataField?.value }}</span>
-									</div>
-									<ng-template #editable>
-										<input class="form-control" type="{{ this.getType(dataField) }}"
-											formControlName="value" id="{{ getDataFieldId(dataField) }}"
-											*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)"
-											(change)="onRowChange(section, dataField)" />
-										<textarea class="form-control" formControlName="value" *ngIf="isTextArea(dataField)"
-											id="{{ getDataFieldId(dataField) }}"
-											(change)="onRowChange(section, dataField)"></textarea>
-										<select class="form-select" aria-label="Default select example" id="{{ getDataFieldId(dataField) }}"
-											formControlName="value" *ngIf="isSelect(dataField)">
-											<option selected></option>
-											<option value="1">One</option>
-											<option value="2">Two</option>
-											<option value="3">Three</option>
-										</select>
-										<input type="range" class="form-range" min="{{ dataField.formField.min }}"
-											id="{{ getDataFieldId(dataField) }}" formControlName="value"
-											max="{{ dataField?.value.formField.max }}" *ngIf="isRange(dataField)"
-											(change)="onRowChange(section, dataField)" />
-
-									</ng-template>
-								</div>
-							</div>
-						</div> -->
 					</div>
 				</div>
 				<ng-template #isMultipleEntry>
@@ -288,7 +252,7 @@
 				</div>
 				<div class="text-end">
 					<button type="button" color="accent" (click)="editFormSubmissionSave()" (click)="scroll(target)"
-						class="btn btn-outline-primary">
+						class="btn btn-outline-primary" *ngIf="formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'RETURNED'">
 						<span translate>save</span>
 					</button>
 					<!-- <button type="button" color="accent" (click)="editFormSubmissionDelete()" (click)="scroll(target)"
@@ -297,23 +261,23 @@
 					</button> -->
 
 					<button type="button" color="accent" (click)="editFormSubmissionNote()"
-						class="btn btn-outline-primary" *ngIf="formSubmissionId">
+						class="btn btn-outline-primary" *ngIf="formSubmissionId && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'RETURNED')">
 						<span translate>note</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionSubmit()" (click)="scroll(target)"
-						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted">
+						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'RETURNED')">
 						<span translate>submit</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionAccept()" (click)="scroll(target)"
-						class="btn btn-outline-primary" *ngIf="formSubmissionId && acceptUnrestricted">
+						class="btn btn-outline-primary" *ngIf="formSubmissionId && acceptUnrestricted && formSubmissionSubmissionStatus === 'SUBMITTED'">
 						<span translate>accept</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionReturn()" (click)="scroll(target)"
-						class="btn btn-outline-primary" *ngIf="returnUnrestricted && formDisabled()">
+						class="btn btn-outline-primary" *ngIf="returnUnrestricted && formDisabled() && formSubmissionSubmissionStatus === 'SUBMITTED'">
 						<span translate>return</span>
 					</button>
 					<button color="accent" type="button" (click)="editFormSubmissionFormReset()"
-						(click)="scroll(target)" class="btn btn-outline-primary">
+						(click)="scroll(target)" class="btn btn-outline-primary" *ngIf="formSubmissionSubmissionStatus === 'DRAFT'">
 						<span translate>reset</span>
 					</button>
 				</div>
