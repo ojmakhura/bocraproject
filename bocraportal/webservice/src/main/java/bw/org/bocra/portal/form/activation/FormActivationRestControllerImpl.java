@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -124,17 +125,16 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         try {
             logger.debug("Saves Form Activation "+formActivation);
 
-            // if(formActivation.getId() == null) {
-            //     FormActivationCriteria cr = new FormActivationCriteria();
-            //     cr.setFormId(formActivation.getForm().getId());
-            //     cr.setPeriodId(formActivation.getPeriod().getId());
+            if(formActivation.getId() == null) {
+                FormActivationCriteria cr = new FormActivationCriteria();
+                cr.setFormId(formActivation.getForm().getId());
+                cr.setPeriodId(formActivation.getPeriod().getId());
 
-            //     Collection<FormActivationVO> actives = formActivationService.search(cr);
-            //     if(CollectionUtils.isNotEmpty(actives)) {
-            //         throw new FormActivationServiceException("This form activation has been already done.");
-            //     }
-            // }
-
+                Collection<FormActivationVO> actives = formActivationService.search(cr);
+                if(CollectionUtils.isNotEmpty(actives)) {
+                    throw new DataIntegrityViolationException("This form activation has been already done.");
+                }
+            }
             Optional<?> data = Optional.of(formActivationService.save(formActivation));
             ResponseEntity<?> response;
 
