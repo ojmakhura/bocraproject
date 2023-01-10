@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import bw.org.bocra.portal.GenericTestData;
 import bw.org.bocra.portal.access.AccessPointTestData;
 import bw.org.bocra.portal.access.AccessPointVO;
 import bw.org.bocra.portal.access.type.AccessPointTypeTestData;
@@ -15,20 +17,23 @@ import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 
 @Component
 @Profile("test")
-public class AuthorisationTestData {
+public class AuthorisationTestData extends GenericTestData<AuthorisationVO, AuthorisationRepository, AuthorisationCriteria, AuthorisationRestController> {
 
-    private final AuthorisationRestController authorisationRestController;
+    // private final AuthorisationRestController authorisationRestController;
 
-    private final AccessPointTestData accessPointTestData;
-    private final AccessPointTypeTestData accessPointTypeTestData;
+    @Autowired
+    private AccessPointTestData accessPointTestData;
 
-    public AuthorisationTestData(AuthorisationRestController authorisationRestController, AccessPointTestData accessPointTestData, AccessPointTypeTestData accessPointTypeTestData) {
-        this.authorisationRestController = authorisationRestController;
-        this.accessPointTestData = accessPointTestData;
-        this.accessPointTypeTestData = accessPointTypeTestData;
+    @Autowired
+    private AccessPointTypeTestData accessPointTypeTestData;
+
+    public AuthorisationTestData(AuthorisationRepository repository, AuthorisationRestController restController) {
+        super(repository, restController);
+        //TODO Auto-generated constructor stub
     }
 
-    public AuthorisationVO createUnsavedAuthorisation() {
+    @Override
+    public AuthorisationVO createUnsavedData() {
         AccessPointVO point = accessPointTestData.generateSequentialData(1).iterator().next();
         AuthorisationVO auth = new AuthorisationVO();
 
@@ -50,7 +55,7 @@ public class AuthorisationTestData {
     }
 
     public AuthorisationVO createUnsavedAuthorisationUnsavedAccess() {
-        AccessPointVO point = accessPointTestData.createUnsavedAccessPoint();
+        AccessPointVO point = accessPointTestData.createUnsavedData();
         AuthorisationVO auth = new AuthorisationVO();
 
         auth.setAccessPoint(point);
@@ -60,48 +65,49 @@ public class AuthorisationTestData {
         return auth;
     }
 
-    public Collection<AuthorisationVO> generateSequentialData(int size) {
+    // public Collection<AuthorisationVO> generateSequentialData(int size) {
 
-        Collection<AuthorisationVO> auths = new ArrayList<>();
-        Collection<AccessPointVO> access = accessPointTestData.generateSequentialData(size);
-        Iterator<AccessPointVO> iterator = access.iterator();
+    //     Collection<AuthorisationVO> auths = new ArrayList<>();
+    //     Collection<AccessPointVO> access = accessPointTestData.generateSequentialData(size);
+    //     Iterator<AccessPointVO> iterator = access.iterator();
 
-        for (int i = 1; i <= size / 2; i++) {
+    //     for (int i = 1; i <= size / 2; i++) {
 
-            AccessPointVO point = iterator.next();
-            AuthorisationVO auth = new AuthorisationVO();
+    //         AccessPointVO point = iterator.next();
+    //         AuthorisationVO auth = new AuthorisationVO();
 
-            auth.setAccessPoint(point);
-            auth.setCreatedBy("testuser4");
-            auth.setCreatedDate(LocalDateTime.now());
+    //         auth.setAccessPoint(point);
+    //         auth.setCreatedBy("testuser4");
+    //         auth.setCreatedDate(LocalDateTime.now());
 
-            auths.add((AuthorisationVO) authorisationRestController.save(auth).getBody());
-        }
+    //         auths.add((AuthorisationVO) authorisationRestController.save(auth).getBody());
+    //     }
 
-        return auths;
-    }
+    //     return auths;
+    // }
 
-    public Collection<AuthorisationVO> generateUnsavedSequentialData(int size) {
-        Collection<AuthorisationVO> auths = new ArrayList<>();
-        Collection<AccessPointVO> access = accessPointTestData.generateSequentialData(size);
-        Iterator<AccessPointVO> iterator = access.iterator();
+    // public Collection<AuthorisationVO> generateUnsavedSequentialData(int size) {
+    //     Collection<AuthorisationVO> auths = new ArrayList<>();
+    //     Collection<AccessPointVO> access = accessPointTestData.generateSequentialData(size);
+    //     Iterator<AccessPointVO> iterator = access.iterator();
 
-        for (int i = 1; i <= size / 2; i++) {
+    //     for (int i = 1; i <= size / 2; i++) {
 
-            AccessPointVO point = iterator.next();
-            AuthorisationVO auth = new AuthorisationVO();
+    //         AccessPointVO point = iterator.next();
+    //         AuthorisationVO auth = new AuthorisationVO();
 
-            auth.setAccessPoint(point);
-            auth.setCreatedBy("testuser4");
-            auth.setCreatedDate(LocalDateTime.now());
+    //         auth.setAccessPoint(point);
+    //         auth.setCreatedBy("testuser4");
+    //         auth.setCreatedDate(LocalDateTime.now());
 
-            auths.add(auth);
-        }
+    //         auths.add(auth);
+    //     }
 
-        return auths;
-    }
+    //     return auths;
+    // }
 
-    public Collection<AuthorisationVO> generateSearchData() throws Exception {
+    @Override
+    public Collection<AuthorisationVO> searchData() {
         Collection<AuthorisationVO> auths = new ArrayList<>();
 
         AccessPointTypeVO menuType = new AccessPointTypeVO();
@@ -124,13 +130,18 @@ public class AuthorisationTestData {
             ap.setCreatedBy("path");
             ap.setCreatedDate(LocalDateTime.now());
 
-            ap = (AccessPointVO) accessPointTestData.create(ap);
+            try {
+                ap = (AccessPointVO) accessPointTestData.create(ap);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             
             AuthorisationVO ath = new AuthorisationVO();
             ath.setAccessPoint(ap);
             ath.setCreatedBy("path");
             ath.setCreatedDate(LocalDateTime.now());
-            ath = (AuthorisationVO) authorisationRestController.save(ath).getBody();
+            // ath = (AuthorisationVO) authorisationRestController.save(ath).getBody();
 
             auths.add(ath);
         }
@@ -144,16 +155,51 @@ public class AuthorisationTestData {
             ap.setCreatedBy("path");
             ap.setCreatedDate(LocalDateTime.now());
 
-            ap = (AccessPointVO) accessPointTestData.create(ap);
+            try {
+                ap = (AccessPointVO) accessPointTestData.create(ap);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             
             AuthorisationVO ath = new AuthorisationVO();
             ath.setAccessPoint(ap);
             ath.setCreatedBy("path");
             ath.setCreatedDate(LocalDateTime.now());
 
-            auths.add((AuthorisationVO) authorisationRestController.save(ath));
+            // auths.add((AuthorisationVO) authorisationRestController.save(ath));
         }
         
         return auths;
+    }
+
+    @Override
+    public Collection<AuthorisationVO> generateUnsavedSequentialData(int size) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public AuthorisationCriteria searchCriteria() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public AuthorisationCriteria searchCriteriaEmpty() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public AuthorisationCriteria searchCriteriaNone() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Class<AuthorisationVO> getDataClass() {
+        // TODO Auto-generated method stub
+        return AuthorisationVO.class;
     }
 }

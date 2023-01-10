@@ -36,12 +36,8 @@ public abstract class GenericTestData<T, R extends JpaRepository, C, X> {
         return restController;
     }
 
-    public abstract T createUnsavedData();
-
-    public abstract Collection<T> generateUnsavedSequentialData(int size);
-
     public T create(T obj) throws Exception {
-        Method save = restController.getClass().getDeclaredMethod("save");
+        Method save = restController.getClass().getDeclaredMethod("save", getDataClass());
         ResponseEntity<?> response = (ResponseEntity<?>) save.invoke(restController, obj);
         return (T) response.getBody();
     }
@@ -68,11 +64,30 @@ public abstract class GenericTestData<T, R extends JpaRepository, C, X> {
             .collect(Collectors.toList());
     }
 
+    public abstract T createUnsavedData();
+
+    public abstract Collection<T> generateUnsavedSequentialData(int size);
+
     public abstract Collection<T> searchData();
 
+    /**
+     * Normal search criteria
+     * @return
+     */
     public abstract C searchCriteria();
 
+    /**
+     * An empty criteria. 
+     * @return
+     */
     public abstract C searchCriteriaEmpty() ;
 
+    /**
+     * A criteria that will ensure that the search result returns no 
+     * retults.
+     * @return
+     */
     public abstract C searchCriteriaNone();
+
+    public abstract Class<T> getDataClass();
 }

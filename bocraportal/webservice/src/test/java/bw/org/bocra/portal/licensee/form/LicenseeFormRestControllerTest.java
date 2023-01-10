@@ -61,6 +61,13 @@ public class LicenseeFormRestControllerTest {
 
     }
 
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // @Override
+    // public void save() {
+
+    // }
+
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void findByForm() {
@@ -69,25 +76,7 @@ public class LicenseeFormRestControllerTest {
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
-    public void findById() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
     public void findByLicensee() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
 
     }
 

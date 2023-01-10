@@ -13,9 +13,11 @@ import bw.org.bocra.portal.GenericTestData;
 @Profile("test")
 public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, AccessPointTypeRepository, String, AccessPointTypeRestController> {
 
+    private final AccessPointTypeService accessPointTypeService;
 
-    public AccessPointTypeTestData(AccessPointTypeRestController restController, AccessPointTypeRepository repository) {
+    public AccessPointTypeTestData(AccessPointTypeRestController restController, AccessPointTypeRepository repository, AccessPointTypeService accessPointTypeService) {
         super(repository, restController);
+        this.accessPointTypeService = accessPointTypeService;
     }
 
     public void clean() {
@@ -38,7 +40,7 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
     //     type.setCode("test");
     //     type.setName("Test Type");
     //     type.setDescription("This is a test");
-    //     type = (AccessPointTypeVO) restController.save(type).getBody();
+    //     type = accessPointTypeService.save(type);
         
     //     return type;
     // }
@@ -47,7 +49,7 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
         
         return generateUnsavedSequentialData(size)
             .stream()
-            .map(type -> (AccessPointTypeVO)restController.save(type).getBody())
+            .map(type -> accessPointTypeService.save(type))
             .collect(Collectors.toList());
     }
 
@@ -76,7 +78,7 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
         type.setName("Test Type");
         type.setDescription("This is a test");
 
-        types.add((AccessPointTypeVO) restController.save(type).getBody());
+        types.add(accessPointTypeService.save(type));
 
         type = new AccessPointTypeVO();
 
@@ -84,7 +86,7 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
         type.setName("Serious Type");
         type.setDescription("This is a test");
 
-        types.add((AccessPointTypeVO) restController.save(type).getBody());
+        types.add(accessPointTypeService.save(type));
 
         type = new AccessPointTypeVO();
 
@@ -92,7 +94,7 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
         type.setName("Top love");
         type.setDescription("This is a test");
 
-        types.add((AccessPointTypeVO) restController.save(type).getBody());
+        types.add(accessPointTypeService.save(type));
 
         type = new AccessPointTypeVO();
 
@@ -100,7 +102,7 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
         type.setName("Test Type 6");
         type.setDescription("This is a test");
 
-        types.add((AccessPointTypeVO) restController.save(type).getBody());
+        types.add(accessPointTypeService.save(type));
 
         type = new AccessPointTypeVO();
 
@@ -108,7 +110,7 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
         type.setName("One Six");
         type.setDescription("This is a test");
 
-        types.add((AccessPointTypeVO) restController.save(type).getBody());
+        types.add(accessPointTypeService.save(type));
 
         type = new AccessPointTypeVO();
 
@@ -116,7 +118,7 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
         type.setName("Testing sixteen");
         type.setDescription("This is a test");
 
-        types.add((AccessPointTypeVO) restController.save(type).getBody());
+        types.add(accessPointTypeService.save(type));
 
         type = new AccessPointTypeVO();
 
@@ -124,7 +126,7 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
         type.setName("Test Type Stop");
         type.setDescription("This is a test");
 
-        types.add((AccessPointTypeVO) restController.save(type).getBody());
+        types.add(accessPointTypeService.save(type));
         return types;
     }
 
@@ -136,13 +138,18 @@ public class AccessPointTypeTestData extends GenericTestData<AccessPointTypeVO, 
 
     @Override
     public String searchCriteriaEmpty() {
-        // TODO Auto-generated method stub
-        return null;
+        
+        return "";
     }
 
     @Override
     public String searchCriteriaNone() {
+        return "null";
+    }
+
+    @Override
+    public Class<AccessPointTypeVO> getDataClass() {
         // TODO Auto-generated method stub
-        return null;
+        return AccessPointTypeVO.class;
     }
 }

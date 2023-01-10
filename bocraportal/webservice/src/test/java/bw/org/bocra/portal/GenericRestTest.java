@@ -9,7 +9,9 @@ import javax.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,59 +36,89 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
         this.testData = testData;
     }
 
-    protected abstract Collection<T> dummyData(int num);
-    protected abstract T unsavedDummyData();
+    /**
+     * Sometimes the criteria/data object is null and we cannot get the class
+     * from it. In that instance we need to use the datatype to get the class,
+     * but we cannot do that from here since the type here is a generic type
+     * which can only be resolved at runtime. We therefore need to get the 
+     * types from the concrete class which has absolute knowledge on the types.
+     * @return
+     */
+    protected abstract Class<C> getCriteriaClass();
+    protected abstract Class<T> getDataClass();
+
+    /**
+     * Compare and assert two objects equality
+     * @param o1
+     * @param o2
+     */
+    protected abstract void basicCompareAssertions(T o1, T o2);
+
+    protected abstract void searchResultsAssertions(ResponseEntity<?> response);
+    // protected abstract void nullSearchResultsAssertions(ResponseEntity<?> response);
+
+    /**
+     * Calidate the results from an empty search
+     * @param response
+     */
+    // protected abstract void emptySearchResultsAssertions(ResponseEntity<?> response);
+
+    @BeforeEach
+    public void clean() {
+        testData.clean();
+    }
 
     protected ResponseEntity<?> handleGetAll() throws Exception {
         Method getAll = restController.getClass().getDeclaredMethod("getAll");
         return (ResponseEntity<?>) getAll.invoke(restController);
     }
-    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) throws Exception {
 
-        Method getAllPaged = restController.getClass().getDeclaredMethod("getAllPaged");
-        return (ResponseEntity<?>) getAllPaged.invoke(restController);
+    protected ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) throws Exception {
+
+        Method getAllPaged = restController.getClass().getDeclaredMethod("getAllPaged", pageNumber.getClass(), pageSize.getClass());
+        return (ResponseEntity<?>) getAllPaged.invoke(restController, pageNumber, pageSize);
     }
+
     protected ResponseEntity<?> handleFindById(Long id) throws Exception {
 
-        Method findById = restController.getClass().getDeclaredMethod("findById");
+        Method findById = restController.getClass().getDeclaredMethod("findById", Long.class);
         return (ResponseEntity<?>) findById.invoke(restController, id);
     }
+
     protected ResponseEntity<?> handleRemove(Long id) throws Exception {
 
-        Method remove = restController.getClass().getDeclaredMethod("remove");
+        Method remove = restController.getClass().getDeclaredMethod("remove", Long.class);
         return (ResponseEntity<?>) remove.invoke(restController, id);
 
     }
 
     protected ResponseEntity<?> handleSearch(C criteria) throws Exception {
 
-        Method search = restController.getClass().getDeclaredMethod("search");
+        Method search = restController.getClass().getDeclaredMethod("search", getCriteriaClass());
         return (ResponseEntity<?>) search.invoke(restController, criteria);
 
     }
-    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, C criteria) throws Exception {
+    protected ResponseEntity<?> handlePagedSearch(Integer pagenumber, Integer pageSize, C criteria) throws Exception {
 
-        Method pagedSearch = restController.getClass().getDeclaredMethod("pagedSearch");
+        Method pagedSearch = restController.getClass().getDeclaredMethod("pagedSearch", pagenumber.getClass(), pageSize.getClass(), getCriteriaClass());
         return (ResponseEntity<?>) pagedSearch.invoke(restController, pagenumber, pageSize, criteria);
 
     }
 
     protected ResponseEntity<?> handleSave(T o) throws Exception {
 
-        Method save = restController.getClass().getDeclaredMethod("save");
+        Method save = restController.getClass().getDeclaredMethod("save", getDataClass());
         return (ResponseEntity<?>) save.invoke(restController, o);
 
     }
-
-    protected abstract void basicCompareAssertions(T o1, T o2);
-    // protected abstract Collection<T> searchData();
-    // protected abstract C searchCriteria();
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void findById() throws Exception {
 
-        Collection<T> dummies = this.dummyData(1);
+        Collection<T> dummies = testData.generateSequentialData(1);
+        System.out.println("==============================");
+        System.out.println(dummies);
 
         T obj = dummies.iterator().next();
 
@@ -106,7 +138,7 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void findById_notExisting() throws Exception {
-        Collection<T> dummies = this.dummyData(1);
+        Collection<T> dummies = testData.generateSequentialData(1);
 
         Object obj = dummies.iterator().next();
 
@@ -126,7 +158,7 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void getAll() throws Exception {
-        Collection<T> dummies = dummyData(9);
+        Collection<T> dummies = testData.generateSequentialData(9);
         ResponseEntity<?> response = handleGetAll();
 
         Assertions.assertNotNull(response);
@@ -151,7 +183,7 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void getAllPaged() throws Exception {
-        dummyData(25);
+        testData.generateSequentialData(25);
         int pageNumber = 2;
         int pageSize = 4;
         ResponseEntity<?> response = handleGetAllPaged(pageNumber, pageSize);
@@ -166,7 +198,7 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void getAllPaged_lastPage() throws Exception {
-        dummyData(15);
+        testData.generateSequentialData(15);
         int pageNumber = 3;
         int pageSize = 4;
 
@@ -196,7 +228,7 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void remove() throws Exception {
-        dummyData(15);
+        testData.generateSequentialData(15);
         ResponseEntity<?> response = handleGetAll();
         Collection<T> all = (Collection<T>) response.getBody();
 
@@ -220,7 +252,7 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void remove_non_existing() throws Exception {
-        dummyData(10);
+        testData.generateSequentialData(10);
         ResponseEntity<?> response = handleGetAll();
         Collection<T> all = (Collection<T>) response.getBody();
 
@@ -240,7 +272,7 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
     @Test
     public void save() throws Exception {
         
-        ResponseEntity<?> response = handleSave(unsavedDummyData());
+        ResponseEntity<?> response = handleSave(testData.createUnsavedData());
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         
@@ -263,15 +295,13 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
         Assertions.assertTrue(message.contains("information is missing"));
     }
 
-    protected abstract C searchCriteriaNone();
-
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void search_no_results() throws Exception {
         
         testData.searchData();
 
-        ResponseEntity<?> response = handleSearch(searchCriteriaNone());
+        ResponseEntity<?> response = handleSearch(testData.searchCriteriaNone());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -279,15 +309,13 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
         Assertions.assertEquals(all.size(), 0);
     }
 
-    protected abstract C searchCriteriaEmpty();
-
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void search_empty() throws Exception {
         
         Collection<T> data = testData.searchData();
 
-        ResponseEntity<?> response = handleSearch(searchCriteriaEmpty());
+        ResponseEntity<?> response = handleSearch(testData.searchCriteriaEmpty());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -295,6 +323,10 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
         Assertions.assertEquals(types.size(), data.size());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void search_null() throws Exception {
@@ -307,5 +339,25 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Collection<T> types = (Collection<T>) response.getBody();
         Assertions.assertEquals(types.size(), data.size());
+    }
+
+    /**
+     * This method performs a successful search. But since the criteria may
+     * be different for each case, we leave the assertions to each concrete
+     * class.
+     * 
+     * @throws Exception
+     */
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void search() throws Exception {
+        
+        Collection<T> data = testData.searchData();
+
+        ResponseEntity<?> response = handleSearch(testData.searchCriteria());
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        this.searchResultsAssertions(response);
     }
 }

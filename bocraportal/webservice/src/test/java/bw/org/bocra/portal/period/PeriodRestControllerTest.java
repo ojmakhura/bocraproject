@@ -5,18 +5,9 @@
 //
 package bw.org.bocra.portal.period;
 
-import bw.org.bocra.portal.BocraportalTestContainer;
-import bw.org.bocra.portal.GenericRestTest;
-import bw.org.bocra.portal.period.config.PeriodConfigRepository;
-import bw.org.bocra.portal.period.config.PeriodConfigService;
-import bw.org.bocra.portal.period.config.PeriodConfigVO;
-import bw.org.bocra.portal.period.config.RepeatPeriod;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import org.apache.commons.collections4.CollectionUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
@@ -35,13 +26,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
+import bw.org.bocra.portal.period.config.PeriodConfigRepository;
+import bw.org.bocra.portal.period.config.PeriodConfigService;
+import bw.org.bocra.portal.period.config.PeriodConfigVO;
+import bw.org.bocra.portal.period.config.RepeatPeriod;
+
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCriteria> {
-
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
+public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodRepository, PeriodCriteria, PeriodRestController> {
 
     private String path = "/period";
 
@@ -53,14 +51,9 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private PeriodRestController periodRestController;
 
     @Autowired
     protected PeriodService periodService;
-
-    @Autowired
-    private PeriodRepository periodRepository;
 
     @Autowired
     protected PeriodConfigService periodConfigService;
@@ -68,9 +61,15 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
     @Autowired
     private PeriodConfigRepository periodConfigRepository;
 
+    @Autowired
+    public PeriodRestControllerTest(PeriodRestController restController,
+            GenericTestData<PeriodVO, PeriodRepository, PeriodCriteria, PeriodRestController> testData) {
+        super(restController, testData);
+    }
+
     @BeforeEach
     public void clean() {
-        periodRepository.deleteAll();
+        testData.clean();
         periodConfigRepository.deleteAll();
     }
 
@@ -99,36 +98,6 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
-    public void findById() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAllPaged() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void loadCurrentPeriods() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
     public void save() {
         PeriodConfigVO config = createDefaultConfig();
 
@@ -140,7 +109,7 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
         period.setPeriodName("Test Period");
         period.setPeriodStart(LocalDate.now());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         period = (PeriodVO) response.getBody();
@@ -163,7 +132,7 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
 
         period.setNext(new PeriodVO());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         period = (PeriodVO) response.getBody();
@@ -186,7 +155,7 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
 
         period.setPrevious(new PeriodVO());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         period = (PeriodVO) response.getBody();
@@ -206,7 +175,7 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
         period.setPeriodName("Test Period");
         period.setPeriodStart(LocalDate.now());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
@@ -228,7 +197,7 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
         period.setPeriodName("Test Period");
         period.setPeriodStart(LocalDate.now());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         
@@ -254,7 +223,7 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
         period.setNext(new PeriodVO());
         period.getNext().setId(33L);
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         
@@ -277,9 +246,9 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
         period.setPeriodName("Test Period");
         period.setPeriodStart(LocalDate.now());
         
-        periodRestController.save(period);
+        restController.save(period);
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
@@ -287,94 +256,29 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodCr
         Assertions.assertTrue(message.contains("period with this information has already been created"));
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void search() {
-
-    }
-
-    @Override
-    protected Collection<PeriodVO> dummyData(int num) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected PeriodVO unsavedDummyData() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleGetAll() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleFindById(Long id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleRemove(Long id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleSearch(PeriodCriteria criteria) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, PeriodCriteria criteria) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleSave(PeriodVO o) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     @Override
     protected void basicCompareAssertions(PeriodVO o1, PeriodVO o2) {
         // TODO Auto-generated method stub
+        Assertions.assertEquals(o1.getId(), o2.getId());
+        Assertions.assertEquals(o1.getPeriodName(), o2.getPeriodName());
+        Assertions.assertEquals(o1.getPeriodConfig().getId(), o2.getPeriodConfig().getId());
         
     }
 
     @Override
-    protected Collection<PeriodVO> searchData() {
-        // TODO Auto-generated method stub
-        return null;
+    protected Class<PeriodCriteria> getCriteriaClass() {
+        return PeriodCriteria.class;
     }
 
     @Override
-    protected PeriodCriteria searchCriteria() {
-        // TODO Auto-generated method stub
-        return null;
+    protected Class<PeriodVO> getDataClass() {
+        return PeriodVO.class;
     }
 
     @Override
-    protected PeriodCriteria searchCriteriaNone() {
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
         // TODO Auto-generated method stub
-        return null;
+        
     }
-
-    @Override
-    protected PeriodCriteria searchCriteriaEmpty() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

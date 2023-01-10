@@ -18,11 +18,13 @@ public class AccessPointTestData extends GenericTestData<AccessPointVO, AccessPo
 
     // private final AccessPointRestController accessPointRestController;
     private final AccessPointTypeTestData accessPointTypeTestData;
+    private final AccessPointService accessPointService;
     // private final AccessPointRepository accessPointRepository;
 
-    public AccessPointTestData(AccessPointRestController accessPointRestController, AccessPointTypeTestData accessPointTypeTestData, AccessPointRepository accessPointRepository) {
+    public AccessPointTestData(AccessPointRestController accessPointRestController, AccessPointTypeTestData accessPointTypeTestData, AccessPointRepository accessPointRepository, AccessPointService accessPointService) {
         super(accessPointRepository, accessPointRestController);
         this.accessPointTypeTestData = accessPointTypeTestData;
+        this.accessPointService = accessPointService;
     }
 
     @Override
@@ -213,5 +215,11 @@ public class AccessPointTestData extends GenericTestData<AccessPointVO, AccessPo
     public AccessPointCriteria searchCriteriaNone() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public Class<AccessPointVO> getDataClass() {
+        // TODO Auto-generated method stub
+        return AccessPointVO.class;
     }
 }

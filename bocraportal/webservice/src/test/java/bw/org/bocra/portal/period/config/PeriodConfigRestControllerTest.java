@@ -8,6 +8,7 @@ package bw.org.bocra.portal.period.config;
 import java.util.Collection;
 
 import org.junit.ClassRule;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -26,14 +27,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
 import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class PeriodConfigRestControllerTest extends GenericRestTest<PeriodConfigVO, PeriodConfigCriteria> {
-
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
+public class PeriodConfigRestControllerTest extends GenericRestTest<PeriodConfigVO, PeriodConfigRepository, PeriodConfigCriteria, PeriodConfigRestController> {
 
     private String path = "/period/config";
 
@@ -45,134 +44,40 @@ public class PeriodConfigRestControllerTest extends GenericRestTest<PeriodConfig
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private PeriodConfigRestController periodConfigRestController;
 
     @Autowired
     protected PeriodConfigService periodConfigService;
+
+    @Autowired
+    public PeriodConfigRestControllerTest(PeriodConfigRestController restController,
+            GenericTestData<PeriodConfigVO, PeriodConfigRepository, PeriodConfigCriteria, PeriodConfigRestController> testData) {
+        super(restController, testData);
+    }
 
     @BeforeEach
     public void clean() {
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findById() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAllPaged() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void save() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void search() {
-
-    }
-
-    @Override
-    protected Collection<PeriodConfigVO> dummyData(int num) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected PeriodConfigVO unsavedDummyData() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleGetAll() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleFindById(Long id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleRemove(Long id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleSearch(PeriodConfigCriteria criteria) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, PeriodConfigCriteria criteria) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleSave(PeriodConfigVO o) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     @Override
     protected void basicCompareAssertions(PeriodConfigVO o1, PeriodConfigVO o2) {
+        Assertions.assertEquals(o1.getId(), o2.getId());
+        Assertions.assertEquals(o1.getPeriodConfigName(), o2.getPeriodConfigName());        
+    }
+
+    @Override
+    protected Class<PeriodConfigCriteria> getCriteriaClass() {
+        return PeriodConfigCriteria.class;
+    }
+
+    @Override
+    protected Class<PeriodConfigVO> getDataClass() {
+        return PeriodConfigVO.class;
+    }
+
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
         // TODO Auto-generated method stub
         
-    }
-
-    @Override
-    protected Collection<PeriodConfigVO> searchData() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected PeriodConfigCriteria searchCriteria() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected PeriodConfigCriteria searchCriteriaNone() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected PeriodConfigCriteria searchCriteriaEmpty() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

@@ -6,7 +6,6 @@
 package bw.org.bocra.portal.access;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.transaction.Transactional;
@@ -14,7 +13,6 @@ import javax.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -27,16 +25,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
 import bw.org.bocra.portal.GenericRestTest;
 import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
-import bw.org.bocra.portal.access.type.AccessPointTypeRestController;
-import bw.org.bocra.portal.access.type.AccessPointTypeService;
 import bw.org.bocra.portal.access.type.AccessPointTypeTestData;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 
@@ -53,15 +46,11 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
 
     protected Logger logger = LoggerFactory.getLogger(AccessPointRestControllerTest.class);
 
-    @Autowired
-    protected AccessPointService accessPointService;
-
-    @Autowired
-    private AccessPointTypeRepository accessPointTypeRepository;
 
     @Autowired
     private AccessPointTypeTestData accessPointTypeTestData;
 
+    @Autowired
     public AccessPointRestControllerTest(AccessPointRestController restController, AccessPointTestData testData) {
         super(restController, testData);
     }
@@ -69,7 +58,7 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
     @BeforeEach
     public void clean() {
         testData.clean();
-        accessPointTypeRepository.deleteAll();
+        accessPointTypeTestData.clean();
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
@@ -230,7 +219,7 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void getAllPaged() {
-        dummyData(25);
+        testData.generateSequentialData(25);
         int pageNumber = 2;
         int pageSize = 4;
         ResponseEntity<?> response = restController.getAllPaged(pageNumber, pageSize);
@@ -245,7 +234,7 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void getAllPaged_lastPage() {
-        dummyData(15);
+        testData.generateSequentialData(15);
         int pageNumber = 3;
         int pageSize = 4;
 
@@ -267,7 +256,7 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void pagedSearch() {
-        this.searchData();
+        testData.searchData();
 
         AccessPointCriteria criteria = new AccessPointCriteria();
         criteria.setUrl("type");
@@ -282,30 +271,30 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
         Assertions.assertEquals(points.size(), 1);
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
-        dummyData(15);
-        ResponseEntity<?> response = restController.getAll();
-        Collection<AccessPointVO> points = (Collection<AccessPointVO>) response.getBody();
-        AccessPointVO t = points.iterator().next();
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void remove() {
+    //     testData.generateSequentialData(15);
+    //     ResponseEntity<?> response = restController.getAll();
+    //     Collection<AccessPointVO> points = (Collection<AccessPointVO>) response.getBody();
+    //     AccessPointVO t = points.iterator().next();
 
-        response = restController.remove(t.getId());
-        Assertions.assertNotNull(response);
-        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Assertions.assertTrue((boolean) response.getBody());
+    //     response = restController.remove(t.getId());
+    //     Assertions.assertNotNull(response);
+    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    //     Assertions.assertTrue((boolean) response.getBody());
 
-        response = restController.getAll();
-        Collection<AccessPointVO> points2 = (Collection<AccessPointVO>) response.getBody();
+    //     response = restController.getAll();
+    //     Collection<AccessPointVO> points2 = (Collection<AccessPointVO>) response.getBody();
 
-        Assertions.assertEquals(points2.size(), points.size() - 1);
+    //     Assertions.assertEquals(points2.size(), points.size() - 1);
 
-    }
+    // }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
     public void remove_non_existing() {
-        dummyData(10);
+        testData.generateSequentialData(10);
         ResponseEntity<?> response = restController.getAll();
         Collection<AccessPointVO> types = (Collection<AccessPointVO>) response.getBody();
 
@@ -356,14 +345,6 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
     }
 
     @Override
-    protected AccessPointVO unsavedDummyData() {
-
-        AccessPointVO point = testData.createUnsavedData();
-
-        return point;
-    }
-
-    @Override
     protected void basicCompareAssertions(AccessPointVO o1, AccessPointVO o2) {
         // TODO Auto-generated method stub
         AccessPointVO point1 = (AccessPointVO)o1;
@@ -374,4 +355,19 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
         Assertions.assertEquals(point1.getName(), point2.getName());
     }
 
+    @Override
+    protected Class<AccessPointCriteria> getCriteriaClass() {
+        return AccessPointCriteria.class;
+    }
+
+    @Override
+    protected Class<AccessPointVO> getDataClass() {
+        return AccessPointVO.class;
+    }
+
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
+        // TODO Auto-generated method stub
+        
+    }
 }

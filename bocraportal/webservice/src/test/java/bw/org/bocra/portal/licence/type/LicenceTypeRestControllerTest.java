@@ -5,11 +5,8 @@
 //
 package bw.org.bocra.portal.licence.type;
 
-import java.util.Collection;
-
 import org.junit.ClassRule;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,20 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
 import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class LicenceTypeRestControllerTest extends GenericRestTest<LicenceTypeVO, LicenceTypeCriteria> {
+public class LicenceTypeRestControllerTest extends GenericRestTest<LicenceTypeVO, LicenceTypeRepository, LicenceTypeCriteria, LicenceTypeRestController> {
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -40,139 +34,39 @@ public class LicenceTypeRestControllerTest extends GenericRestTest<LicenceTypeVO
     protected Logger logger = LoggerFactory.getLogger(LicenceTypeRestControllerTest.class);
 
     @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private LicenceTypeRestController licenceTypeRestController;
-
-    @Autowired
     protected LicenceTypeService licenceTypeService;
 
-    @BeforeEach
-    public void clean() {
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findById() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAllPaged() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void save() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void search() {
-
-    }
-
-    @Override
-    protected Collection<LicenceTypeVO> dummyData(int num) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected LicenceTypeVO unsavedDummyData() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleGetAll() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleFindById(Long id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleRemove(Long id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleSearch(LicenceTypeCriteria criteria) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, LicenceTypeCriteria criteria) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleSave(LicenceTypeVO o) {
-        // TODO Auto-generated method stub
-        return null;
+    @Autowired
+    public LicenceTypeRestControllerTest(LicenceTypeRestController restController,
+            GenericTestData<LicenceTypeVO, LicenceTypeRepository, LicenceTypeCriteria, LicenceTypeRestController> testData) {
+        super(restController, testData);
     }
 
     @Override
     protected void basicCompareAssertions(LicenceTypeVO o1, LicenceTypeVO o2) {
+        
+        Assertions.assertEquals(o1.getId(), o2.getId());
+        Assertions.assertEquals(o1.getCode(), o2.getCode());
+    }
+
+
+    @Override
+    protected Class<LicenceTypeCriteria> getCriteriaClass() {
+        return LicenceTypeCriteria.class;
+    }
+
+
+    @Override
+    protected Class<LicenceTypeVO> getDataClass() {
+        return LicenceTypeVO.class;
+    }
+
+
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
         // TODO Auto-generated method stub
         
     }
 
-    @Override
-    protected Collection<LicenceTypeVO> searchData() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected LicenceTypeCriteria searchCriteria() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected LicenceTypeCriteria searchCriteriaNone() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected LicenceTypeCriteria searchCriteriaEmpty() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }

@@ -7,6 +7,7 @@ package bw.org.bocra.portal.sector;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
 import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorDao;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorService;
@@ -36,7 +37,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class SectorRestControllerTest extends GenericRestTest<SectorVO, String> {
+public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRepository, String, SectorRestController> {
 
     protected Logger logger = LoggerFactory.getLogger(SectorRestControllerTest.class);
 
@@ -49,10 +50,9 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, String> 
     @Autowired
     private SectorRepository sectorRepository;
 
-    @BeforeEach
-    public void clean() {
-
-        sectorRepository.deleteAll();
+    public SectorRestControllerTest(SectorRestController restController,
+            GenericTestData<SectorVO, SectorRepository, String, SectorRestController> testData) {
+        super(restController, testData);
     }
 
     public Collection<SectorVO> dummyData(int size) {
@@ -575,6 +575,31 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, String> 
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Collection<SectorVO> types = (Collection<SectorVO>) response.getBody();
         Assertions.assertEquals(types.size(), 7);
+    }
+
+    @Override
+    protected void basicCompareAssertions(SectorVO o1, SectorVO o2) {
+        
+        Assertions.assertEquals(o1.getId(), o2.getId());
+        Assertions.assertEquals(o1.getCode(), o2.getCode());
+        Assertions.assertEquals(o1.getName(), o2.getName());
+        
+    }
+
+    @Override
+    protected Class<String> getCriteriaClass() {
+        return String.class;
+    }
+
+    @Override
+    protected Class<SectorVO> getDataClass() {
+        return SectorVO.class;
+    }
+
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

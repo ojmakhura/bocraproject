@@ -7,6 +7,7 @@ package bw.org.bocra.portal.licensee;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
 import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
 import bw.org.bocra.portal.document.DocumentService;
 import bw.org.bocra.portal.user.LicenseeUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,10 +34,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, LicenseeCriteria> {
-
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
+public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, LicenseeRepository, LicenseeCriteria, LicenseeRestController> {
 
     private String path = "/licensee";
 
@@ -49,170 +47,19 @@ public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, Lice
     private ObjectMapper objectMapper;
 
     @Autowired
-    private LicenseeRestController licenseeRestController;
-
-    @Autowired
-    protected LicenseeService licenseeService;
-
-    @Autowired
     protected LicenseeUserService licenseeUserService;
-
-    @Autowired
-    private LicenseeTestData licenseeTestData;
 
     @Autowired
     protected DocumentService documentService;
 
+    @Autowired
+    public LicenseeRestControllerTest(LicenseeRestController restController,
+            GenericTestData<LicenseeVO, LicenseeRepository, LicenseeCriteria, LicenseeRestController> testData) {
+        super(restController, testData);
+    }
+
     @BeforeEach
     public void clean() {
-    }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void addDocument() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void addSector() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void findById() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getAll() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getAllPaged() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getDocuments() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getForms() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getFormSubmissions() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getLicences() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getReportConfigurations() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getReports() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getSectors() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void getShareholders() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void remove() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void removeSector() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void save() {
-
-    // }
-
-    // @WithMockUser(username = "testuser4", password = "testuser1")
-    // @Test
-    // public void search() {
-
-    // }
-
-    @Override
-    protected Collection<LicenseeVO> dummyData(int size) {
-        return licenseeTestData.generateSequentialData(size);
-    }
-
-    @Override
-    protected LicenseeVO unsavedDummyData() {
-        return licenseeTestData.createUnsavedLicensee();
-    }
-
-    @Override
-    protected ResponseEntity<?> handleGetAll() {
-        return licenseeRestController.getAll();
-    }
-
-    @Override
-    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
-        return licenseeRestController.getAllPaged(pageNumber, pageSize);
-    }
-
-    @Override
-    protected ResponseEntity<?> handleFindById(Long id) {
-        return licenseeRestController.findById(id);
-    }
-
-    @Override
-    protected ResponseEntity<?> handleRemove(Long id) {
-        return licenseeRestController.remove(id);
-    }
-
-    @Override
-    protected ResponseEntity<?> handleSearch(LicenseeCriteria criteria) {
-        return licenseeRestController.search((LicenseeCriteria) criteria);
-    }
-
-    @Override
-    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, LicenseeCriteria criteria) {
-        return null;
-    }
-
-    @Override
-    protected ResponseEntity<?> handleSave(LicenseeVO o) {
-        
-        return licenseeRestController.save((LicenseeVO) o);
     }
 
     @Override
@@ -227,27 +74,18 @@ public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, Lice
     }
 
     @Override
-    protected Collection<LicenseeVO> searchData() {
-        // TODO Auto-generated method stub
-        return licenseeTestData.generateSearchData();
+    protected Class<LicenseeCriteria> getCriteriaClass() {
+        return LicenseeCriteria.class;
     }
 
     @Override
-    protected LicenseeCriteria searchCriteria() {
-        // TODO Auto-generated method stub
-        return null;
+    protected Class<LicenseeVO> getDataClass() {
+        return LicenseeVO.class;
     }
 
     @Override
-    protected LicenseeCriteria searchCriteriaNone() {
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
         // TODO Auto-generated method stub
-        return null;
+        
     }
-
-    @Override
-    protected LicenseeCriteria searchCriteriaEmpty() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }
