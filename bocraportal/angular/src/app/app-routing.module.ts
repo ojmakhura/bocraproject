@@ -92,6 +92,10 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/complaint/complaint.module')).ComplaintModule
     },
     {
+      path: 'complaint/type', 
+      loadChildren: async () => (await import('@app/view/complaint/type/complaint-type.module')).ComplaintTypeModule
+    },
+    {
       path: 'report', 
       loadChildren: async () => (await import('@app/view/report/report.module')).ReportModule
     },

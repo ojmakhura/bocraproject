@@ -6,14 +6,14 @@
  */
 package bw.org.bocra.portal.licence.type.form;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeVO;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see LicenceTypeForm
@@ -128,10 +128,18 @@ public class LicenceTypeFormDaoImpl
         super.licenceTypeFormVOToEntity(source, target, copyIfNull);
         if (source.getForm() != null && source.getForm().getId() != null) {
             target.setForm(getFormDao().load(source.getForm().getId()));
+        } else {
+            throw new IllegalArgumentException(
+                "LicenceTypeFormDao.licenceTypeFormVOToEntity - 'form' or its id can not be null"
+            );
         }
 
         if (source.getLicenceType() != null && source.getLicenceType().getId() != null) {
             target.setLicenceType(getLicenceTypeDao().load(source.getLicenceType().getId()));
+        } else {
+            throw new IllegalArgumentException(
+                "LicenceTypeFormDao.licenceTypeFormVOToEntity - 'licenceType' or its id can not be null"
+            );
         }
     }
 }

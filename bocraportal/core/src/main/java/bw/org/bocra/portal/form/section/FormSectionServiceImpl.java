@@ -54,9 +54,10 @@ public class FormSectionServiceImpl
         throws Exception
     {
         FormSection section = getFormSectionDao().formSectionVOToEntity(formSection);
+        section = this.formSectionRepository.saveAndFlush(section);
 
         if(formSection.getId() == null) {
-            section = this.formSectionDao.create(section);
+            
             Form form = section.getForm();
             if(CollectionUtils.isEmpty(form.getFormSections())){
                 form.setFormSections(new ArrayList<>());

@@ -8,6 +8,7 @@ package bw.org.bocra.portal.licensee;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.annotation.Lazy;
@@ -99,23 +100,9 @@ public class LicenseeDaoImpl
                 target.getSectors().add(vo);
             }
         }
-        
-        target.setDocuments(new ArrayList<>());
-        for(Document document : source.getDocuments()) {
 
-            DocumentVO dvo = new DocumentVO();
-            dvo.setId(document.getId());
-            dvo.setDocumentName(document.getDocumentName());
-            dvo.setDocumentId(document.getDocumentId());
-
-            DocumentTypeVO type = new DocumentTypeVO();
-            type.setCode(document.getDocumentType().getCode());
-            type.setId(document.getDocumentType().getId());
-            type.setName(document.getDocumentType().getName());
-
-            dvo.setDocumentType(type);
-
-            target.getDocuments().add(dvo);
+        if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            target.setDocuments(documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds())));
         }
 
         target.setForms(new ArrayList<>());
@@ -196,6 +183,10 @@ public class LicenseeDaoImpl
 
             target.setLicences(types);
 
+        }
+
+        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
+            target.setDocumentIds(source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toList()));
         }
 
         // if(CollectionUtils.isNotEmpty(source.getSectors()) && source.getId() != null) {

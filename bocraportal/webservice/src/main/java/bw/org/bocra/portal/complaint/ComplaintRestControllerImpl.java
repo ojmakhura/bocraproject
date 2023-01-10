@@ -5,16 +5,25 @@
 //
 package bw.org.bocra.portal.complaint;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
-// import org.keycloak.representations.AccessToken;
+import javax.persistence.EntityNotFoundException;
+
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import bw.org.bocra.portal.document.DocumentService;
+import bw.org.bocra.portal.keycloak.KeycloakService;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/complaint")
@@ -22,9 +31,17 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Complaint", description = "Managing the complaints.")
 public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
-    public ComplaintRestControllerImpl(ComplaintService complaintService) {
+    private final DocumentService documentService;
+    private final KeycloakUserService keycloakUserService;
+    private final KeycloakService keycloakService;
+
+    public ComplaintRestControllerImpl(ComplaintService complaintService, DocumentService documentService,
+            KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
 
         super(complaintService);
+        this.documentService = documentService;
+        this.keycloakUserService = keycloakUserService;
+        this.keycloakService = keycloakService;
 
     }
 
@@ -38,55 +55,54 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Complaint with id %ld not found.", id));
             }
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> handleGetAll() {
-        try {
-            logger.debug("Displays all Complaints");
-            Optional<?> data = Optional.of(complaintService.getAll()); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Complaint with id %d not found.", id));
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                message = "An unknown error has occured. Please contact the system administrator.";
             }
 
-            return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.error(message, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
+
+    // @Override
+    // public ResponseEntity<?> handleGetAll() {
+    // try {
+    // logger.debug("Displays all Complaints");
+    // Optional<?> data = Optional.of(complaintService.getAll()); // TODO: Add
+    // custom code here;
+    // ResponseEntity<?> response;
+
+    // if (data.isPresent()) {
+    // response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+    // } else {
+    // response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    // }
+
+    // return response;
+    // } catch (Exception e) {
+    // logger.error(e.getMessage());
+    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    // }
+    // }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
             logger.debug("Displays all Complaints of the specified " + "Page number" + pageNumber + " and Page size "
                     + pageSize);
-            Optional<?> data = Optional.of(complaintService.getAll(pageNumber, pageSize)); // TODO: Add custom code
-                                                                                           // here;
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(complaintService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -100,13 +116,19 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the complaint with id " + id);
             }
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete compaint with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting complaint with id " + id);
         }
     }
 
@@ -120,13 +142,89 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the complaint.");
             }
 
             return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IllegalArgumentException | ComplaintServiceException e) {
+
+            e.printStackTrace();
+
+            String message = e.getMessage();
+
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'complaint'")) {
+
+                    message = "The complaint information is missing.";
+
+                } else if(message.contains("'licensee' or its id can not be null") || message.contains("'complaint.licensee' can not be null")) {
+                
+                    message = "The licensee or its id is missing.";
+                
+                }else if(message.contains("'complaintType' or its id can not be null") || message.contains("'complaint.complaintType' can not be null")) {
+                
+                    message = "The complaint type or its id is missing.";
+                
+                } else if(message.contains("'complaint.status'")) {
+                
+                    message = "The complaint status is missing.";
+                
+                } else if(message.contains("'complaint.firstName'")) {
+                  
+                    message = "The complaint first name is missing.";
+                
+                } else if(message.contains("'complaint.surname'")) {
+                  
+                    message = "The complaint surname is missing.";
+                
+                } else if(message.contains("'complaint.email'")) {
+                  
+                    message = "The complaint email is missing.";
+                
+                } else if(message.contains("'complaint.subject'")) {
+                  
+                    message = "The complaint subject is missing.";
+                
+                } else if(message.contains("'complaint.details'")) {
+                  
+                    message = "The complaint details is missing.";
+                
+                } else if(message.contains("'complaint.createdDate'")) {
+                  
+                    message = "The complaint created date is missing.";
+                
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("(complaint_id)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An complaint with this id has been already created.");
+                    } 
+                    
+                } else if (e.getCause().getMessage().contains("null value in column")) {
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    }
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This complaint is conflicting with an existing one.");
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            // e.getCause().printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -134,38 +232,30 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     public ResponseEntity<?> handleSearch(ComplaintSeachCriteria criteria) {
         try {
             logger.debug("Searchs for a Complaint");
-            Optional<?> data = Optional.of(complaintService.search(criteria)); // TODO: Add custom code here;
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(complaintService.search(criteria));
+            
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
-    public ResponseEntity<?> handleAddComplaintReply(Long complaintId, ComplaintReplyVO reply) {
+    public ResponseEntity<?> handleAddComplaintReply(String complaintId, ComplaintReplyVO reply) {
         try {
             logger.debug("Reply Complaint with Complaint Id:" + complaintId);
             Optional<?> data = Optional.of(complaintService.addComplaintReply(complaintId, reply));
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
+            // if (data.isPresent()) {
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            // } else {
+            //     response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            // }
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unable to add the reply to this complaint. Please contact administrator.");
         }
 
     }
@@ -176,17 +266,13 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             logger.debug("Deletes a Complaint Reply with Id" + id);
             Optional<?> data = Optional.of(complaintService.removeComplaintReply(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
+            
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unable to remove the reply from this complaint. Please contact administrator.");
         }
     }
 
@@ -194,19 +280,36 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     public ResponseEntity<?> handleFindByComplaintId(String complaintId) {
         try {
             logger.debug("Searches for a Complaint assigned by " + complaintId);
-            Optional<?> data = Optional.of(complaintService.findByComplaintId(complaintId)); // TODO: Add custom code here;
+            Optional<?> data = Optional.of(complaintService.findByComplaintId(complaintId)); // TODO: Add custom code
+                                                                                             // here;
             ResponseEntity<?> response;
 
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
+            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
 
             return response;
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Complaint with complaint id %s not found.", complaintId));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
+    }
+
+    @Override
+    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByIds(Set<Long> ids) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

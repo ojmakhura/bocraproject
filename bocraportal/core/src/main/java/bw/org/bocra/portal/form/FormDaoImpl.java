@@ -12,9 +12,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.field.FormFieldRepository;
 import bw.org.bocra.portal.form.field.FormFieldVO;
@@ -28,6 +31,8 @@ import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.period.config.PeriodConfig;
+import bw.org.bocra.portal.period.config.PeriodConfigRepository;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 import bw.org.bocra.portal.sector.SectorRepository;
 import bw.org.bocra.portal.sector.form.SectorForm;
@@ -43,16 +48,16 @@ public class FormDaoImpl
     extends FormDaoBase
 {
 
-
     public FormDaoImpl(LicenceTypeRepository licenceTypeRepository, FormFieldRepository formFieldRepository,
             FormSubmissionRepository formSubmissionRepository, LicenseeRepository licenseeRepository,
             ReportConfigRepository reportConfigRepository, FormSectionRepository formSectionRepository,
             LicenceTypeFormRepository licenceTypeFormRepository, LicenseeFormRepository licenseeFormRepository,
             FormReportConfigRepository formReportConfigRepository, SectorFormRepository sectorFormRepository,
-            SectorRepository sectorRepository, FormRepository formRepository) {
+            SectorRepository sectorRepository, PeriodConfigRepository periodConfigRepository,
+            FormRepository formRepository) {
         super(licenceTypeRepository, formFieldRepository, formSubmissionRepository, licenseeRepository, reportConfigRepository,
                 formSectionRepository, licenceTypeFormRepository, licenseeFormRepository, formReportConfigRepository,
-                sectorFormRepository, sectorRepository, formRepository);
+                sectorFormRepository, sectorRepository, periodConfigRepository, formRepository);
         //TODO Auto-generated constructor stub
     }
 
@@ -67,43 +72,21 @@ public class FormDaoImpl
         // TODO verify behavior of toFormVO
         super.toFormVO(source, target);
 
-        // if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
-
-        //     if(target.getLicenceTypes() == null) {
-        //         target.setLicenceTypes(new ArrayList<>());
-        //     }
-            
-        //     for (LicenceType entity : source.getLicenceTypes()) {
-        //         LicenceTypeVO type = new LicenceTypeVO();
-        //         type.setId(entity.getId());
-        //         type.setCode(entity.getCode());
-        //         type.setDescription(entity.getDescription());
-        //         type.setName(entity.getName());
-                
-        //         target.getLicenceTypes().add(type);
-        //     }
-        // }
-
         if(CollectionUtils.isNotEmpty(source.getFormFields())) {
             if(target.getFormFields() == null) {
                 target.setFormFields(new ArrayList<>());
             }
 
             for (FormField entity : source.getFormFields()) {
-                //FormFieldVO field = new FormFieldVO();
-                // field.setId(entity.getId());
-                // field.setCreatedBy(entity.getCreatedBy());
-                // field.setCreatedDate(entity.getCreatedDate());
-                // field.setUpdatedBy(entity.getUpdatedBy());
-                // field.setUpdatedDate(entity.getUpdatedDate());
-                // field.setFieldId(entity.getFieldId());
-                // field.setFieldName(entity.getFieldName());
-                // field.setFieldType(entity.getFieldType());
 
                 FormFieldVO field = formFieldDao.toFormFieldVO(entity);
 
                 target.getFormFields().add(field);
             }
+        }
+
+        if(source.getPeriodConfig() != null && source.getPeriodConfig().getId() != null) {
+            target.setPeriodConfig(periodConfigDao.toPeriodConfigVO(source.getPeriodConfig()));
         }
 
         if(CollectionUtils.isNotEmpty(source.getFormSections())) {
@@ -244,19 +227,22 @@ public class FormDaoImpl
             target.setFormSections(sections);
         }
 
-        // if(!CollectionUtils.isEmpty(source.getLicenceTypes())) {
+        if(source.getPeriodConfig() != null && source.getPeriodConfig().getId() != null) {
+            target.setPeriodConfig(periodConfigRepository.getReferenceById(source.getPeriodConfig().getId()));
+        }
+    }
 
-        //     target.setLicenceTypes(new ArrayList<>());
+    @Override
+    protected Collection<Form> handleFindFormsByPeriodConfigs(Set<Long> periodConfigs) throws Exception {
 
-        //     for(LicenceTypeVO type : source.getLicenceTypes()) {
+        if(CollectionUtils.isEmpty(periodConfigs)) {
+            return new HashSet<>();
+        }
 
-        //         if(type.getId() != null) {
-        //             LicenceType entity = getLicenceTypeDao().load(type.getId());
-        //             target.getLicenceTypes().add(entity);
-        //         }
+        Specification<Form> specs = BocraportalSpecifications.<Form, PeriodConfig, Long>findByJoinAttributeIn("periodConfig", "id", periodConfigs);
 
-        //     }
-        // }
+        // TODO Auto-generated method stub
+        return formRepository.findAll(specs, Sort.by("name").ascending());
     }
 
 }

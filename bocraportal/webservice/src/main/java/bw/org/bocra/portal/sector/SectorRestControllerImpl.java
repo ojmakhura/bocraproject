@@ -5,18 +5,18 @@
 //
 package bw.org.bocra.portal.sector;
 
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import org.hibernate.exception.ConstraintViolationException;
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/sector")
@@ -33,19 +33,27 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         try{
             logger.debug("Search Sector by Id "+id);
             Optional<SectorVO> data = Optional.of(sectorService.findById(id)); // TODO: Add custom code here;
-            ResponseEntity<SectorVO> response;
+            ResponseEntity<?> response;
     
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Sector with id %ld not found.", id));
             }
     
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Sector with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured while loading an sector. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -53,20 +61,11 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try{
             logger.debug("Display all Sectors");
-            Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll()); // TODO: Add custom code here;
-            ResponseEntity<Collection<SectorVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+             return ResponseEntity.status(HttpStatus.OK).body(sectorService.getAll());
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured when loading all sectors.");
         }
     }
 
@@ -74,66 +73,98 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
             logger.debug("Display all Sectors with specified page number "+pageNumber+" and page size"+pageSize);
-            Optional<Collection<SectorVO>> data = Optional.of(sectorService.getAll(pageNumber, pageSize)); // TODO: Add custom code here;
-            ResponseEntity<Collection<SectorVO>> response;
     
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(sectorService.getAll(pageNumber, pageSize));
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            String message = String.format("An error occurred when reading page %d of size %d.", pageNumber, pageSize);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try{
-            logger.debug("Delete Sector with Id "+id);
-            Optional<Boolean> data = Optional.of(sectorService.remove(id)); // TODO: Add custom code here;
-            ResponseEntity<Boolean> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            logger.debug("Deletes sector by ID " + id);
+            boolean rm = sectorService.remove(id);
+            ResponseEntity<?> response;
+
+            if(rm) {
+                response = ResponseEntity.status(HttpStatus.OK).body(rm);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the sector with id " + id);
             }
-    
+
             return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete sector with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting sector with id " + id);
         }
     }
 
     @Override
     public ResponseEntity<?> handleSave(SectorVO sector) {
         try{
-            logger.debug("Save Sector "+sector);
-            Optional<SectorVO> data = Optional.of(sectorService.save(sector)); // TODO: Add custom code here;
-            ResponseEntity<SectorVO> response;
-    
+            logger.debug("Saves sector " + sector );
+            Optional<?> data = Optional.of(sectorService.save(sector));
+            ResponseEntity<?> response;
+
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the access point type.");
             }
-    
+
             return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
+        } catch (SectorServiceException | IllegalArgumentException e) {
+
+            String message = e.getMessage();
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+                if(message.contains("'sector'")) {
+                    message = "The sector information is missing.";
+                } else if(message.contains("'sector.code'")) {
+                    message = "The sector code is missing.";
+                } else if(message.contains("'sector.name'")) {
+                    message = "The sector name is missing.";
+                } else if(message.contains("'sector.themeColour'")) {
+                    message = "The sector colour is missing.";
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("(code)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This sector with this code has been already created.");
+
+                    } else if(e.getCause().getMessage().contains("(name)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This sector with this name has been already created.");
+                    } else {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This sector is conflicting with an existing one.");
+                    }
+                }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Sector has been already created.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This sector is conflicting with an existing one.");
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.getCause().printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
                
       }
@@ -144,22 +175,11 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     public ResponseEntity<?> handleSearch(String criteria) {
         
         try {
-            logger.debug("Search Sector by criteria "+criteria);
-            Optional<Collection<SectorVO>> data = Optional.of(sectorService.search(criteria)); // TODO: Add custom code here;
-            ResponseEntity<Collection<SectorVO>> response;
-    
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
-            
+            logger.debug("Display all sectors");
+            return ResponseEntity.status(HttpStatus.OK).body(sectorService.getAll());
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
     
@@ -168,11 +188,11 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     @Override
     public ResponseEntity<?> handleAddLicensee(Long sectorId, Long licenseeId) {
         try{
-            logger.debug("Add Licensee with sector Id "+sectorId+" and Licensee Id "+licenseeId );
+            logger.debug("Add Licensee with sector Id " + sectorId + " and licensee id " + licenseeId );
         LicenseeSectorVO lvo = getSectorService().addLicensee(sectorId, licenseeId);
 
         if(lvo == null || lvo.getId() == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("The licensee has not been added to the sector yet.");
 
         } else {
             return ResponseEntity.ok().body(lvo);
@@ -180,7 +200,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }

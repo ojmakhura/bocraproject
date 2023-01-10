@@ -8,7 +8,9 @@
  */
 package bw.org.bocra.portal.form.activation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,7 +18,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,29 +31,35 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
-import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
-import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.submission.FormSubmission;
 import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
-import bw.org.bocra.portal.form.submission.FormSubmissionStatus;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
-import bw.org.bocra.portal.form.submission.data.DataField;
+import bw.org.bocra.portal.form.submission.SubmissionService;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
-import bw.org.bocra.portal.licence.type.form.LicenceTypeForm;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeStatus;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
+import bw.org.bocra.portal.message.CommunicationMessage;
+import bw.org.bocra.portal.message.CommunicationMessageDao;
+import bw.org.bocra.portal.message.CommunicationMessagePlatform;
+import bw.org.bocra.portal.message.CommunicationMessageStatus;
 import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodDao;
+import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
+import bw.org.bocra.portal.period.config.PeriodConfig;
 import bw.org.bocra.portal.sector.SectorService;
 import bw.org.bocra.portal.sector.form.SectorForm;
 import bw.org.bocra.portal.sector.form.SectorFormService;
 import bw.org.bocra.portal.sector.form.SectorFormVO;
+import bw.org.bocra.portal.user.UserVO;
 
 /**
  * @see bw.org.bocra.portal.form.activation.FormActivationService
@@ -56,20 +69,32 @@ import bw.org.bocra.portal.sector.form.SectorFormVO;
 public class FormActivationServiceImpl
         extends FormActivationServiceBase {
 
-    private SectorService sectorService;
-    private SectorFormService sectorFormService;
+    @Value("${bocra.web.url}")
+    private String webUrl;
 
-    public FormActivationServiceImpl(FormActivationDao formActivationDao,
-            FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository,
+    private final SectorService sectorService;
+    private final SectorFormService sectorFormService;
+    private final KeycloakUserService keycloakUserService;
+    private final CommunicationMessageDao communicationMessageDao; 
+    private final SubmissionService submissionService;
+    private final PeriodRepository periodRepository;
+    private final PeriodDao periodDao;
+
+    public FormActivationServiceImpl(FormActivationDao formActivationDao, KeycloakUserService keycloakUserService, PeriodRepository periodRepository, PeriodDao periodDao,
+            FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository, CommunicationMessageDao communicationMessageDao,
             FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, SectorService sectorService, SectorFormService sectorFormService,
-            DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
+            SubmissionService submissionService, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
 
         super(formActivationDao, formActivationRepository, formDao, formRepository, formSubmissionDao,
-                formSubmissionRepository,
-                dataFieldDao, dataFieldRepository, messageSource);
+                formSubmissionRepository, dataFieldDao, dataFieldRepository, messageSource);
         // TODO Auto-generated constructor stub
         this.sectorService = sectorService;
-        this.sectorFormService = sectorFormService;        
+        this.sectorFormService = sectorFormService; 
+        this.keycloakUserService = keycloakUserService;
+        this.communicationMessageDao = communicationMessageDao;
+        this.submissionService = submissionService;
+        this.periodRepository = periodRepository;
+        this.periodDao = periodDao;
     }
 
     /**
@@ -125,10 +150,16 @@ public class FormActivationServiceImpl
     protected FormActivationVO handleSave(FormActivationVO formActivation)
             throws Exception {
 
+        boolean fresh = formActivation.getId() == null;
+
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
 
         if(activation.getActivationDeadline() == null) {
-            activation.setActivationDeadline(activation.getPeriod().getPeriodEnd());
+            activation.setActivationDeadline(activation.getPeriod().getPeriodEnd().plusDays(activation.getPeriod().getPeriodConfig().getFinalDay()));
+        }
+
+        if(StringUtils.isBlank(activation.getActivationName())) {
+            activation.setActivationName(String.format("%s: %s Activation", activation.getForm().getFormName(), activation.getPeriod().getPeriodName()));
         }
 
         activation = formActivationRepository.saveAndFlush(activation);
@@ -139,66 +170,64 @@ public class FormActivationServiceImpl
          * associated with the form.
          */
         if (formActivation.getId() == null) {
-            Map<Long, Licensee> lmap = new HashMap<>();
-
-            Form form = activation.getForm();
-
-            for (LicenseeForm licensee : form.getLicenseeForms()) {
-                lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
-            }
-
-            for(SectorForm sectorForm : form.getSectorForms()) {
-                List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
-                if(sf != null && sf.size() > 0)
-                    sf.get(0);
-                    
-                for(LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
-                    lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
-                }
-            }
 
             formActivation = formActivationDao.toFormActivationVO(activation);
-            formActivation.setFormSubmissions(new ArrayList<>());
-
-            for (Licensee licensee : lmap.values()) {
-                FormSubmission submission = FormSubmission.Factory.newInstance();
-                submission.setCreatedBy(activation.getCreatedBy());
-                submission.setCreatedDate(LocalDateTime.now());
-                submission.setForm(form);
-                submission.setLicensee(licensee);
-                submission.setFormActivation(activation);
-                submission.setPeriod(activation.getPeriod());
-                submission.setSubmissionStatus(FormSubmissionStatus.NEW);
-
-                submission.setExpectedSubmissionDate(formActivation.getActivationDeadline());
-
-                submission = formSubmissionRepository.saveAndFlush(submission);
-                
-
-                /**
-                 * If the for requires single entry, the we create the data fields
-                 */
-                if (form.getEntryType() == FormEntryType.SINGLE) {
-                    for (FormField field : form.getFormFields()) {
-                        DataField dataField = DataField.Factory.newInstance();
-                        dataField.setFormSubmission(submission);
-                        dataField.setFormField(field);
-                        dataField.setValue(field.getDefaultValue());
-                        dataField.setRow(0);
-
-                        dataField = dataFieldRepository.saveAndFlush(dataField);
-                        
-                    }
-                }
-
-                FormSubmissionVO vo = new FormSubmissionVO();
-                getFormSubmissionDao().toFormSubmissionVO(submission, vo);
-                formActivation.getFormSubmissions().add(vo);
-            }
+            formActivation.setFormSubmissions(submissionService.createNewSubmissions(this.getLicenseeIds(activation.getForm()), activation.getId()));
 
         }
 
+        if(fresh) {
+            this.scheduleNotifications(formActivation);
+        }
+
         return formActivation;
+    }
+
+    private String emailTempate = "Dear %s user\n\n"
+                    + "You are notified that BOCRA requests your participation to\n"
+                    + "provide %s data. Please go to %s?id=%d to fill out the form.\n\n"
+                    + "The deadline to submit the information is %s\n\n"
+                    + "Kind Regards\n\n"
+                    + "BOCRA";
+
+    private void scheduleNotifications(FormActivationVO formActivation) {
+
+        String submissionUrl = webUrl + "/form/submission/edit-form-submission";
+
+        for (FormSubmissionVO submission : formActivation.getFormSubmissions()) {
+
+            Collection<UserVO> users = keycloakUserService.getLicenseeUsers(submission.getLicensee().getId());
+            Collection<String> userEmails = users.stream().map(user -> user.getEmail()).collect(Collectors.toSet());
+
+            if(CollectionUtils.isEmpty(userEmails)) {
+                continue;
+            }
+
+            CommunicationMessage message = CommunicationMessage.Factory.newInstance();
+
+            message.setCreatedBy(formActivation.getCreatedBy());
+            message.setCreatedDate(LocalDateTime.now());
+            message.setSendNow(false);
+            message.setDispatchDate(formActivation.getPeriod().getPeriodEnd().atStartOfDay());
+            message.setMessagePlatform(CommunicationMessagePlatform.EMAIL);
+            message.setStatus(CommunicationMessageStatus.DRAFT);
+            message.setSubject(String.format("%s data request for period %s.", formActivation.getForm().getFormName(), formActivation.getPeriod().getPeriodName()));
+            message.setText(
+                String.format(
+                    emailTempate,
+                    submission.getLicensee().getLicenseeName(),
+                    formActivation.getForm().getFormName(),
+                    submissionUrl,
+                    submission.getId(),
+                    submission.getExpectedSubmissionDate()
+                )
+            );
+
+            message.setDestinations(userEmails);
+
+            communicationMessageDao.create(message);
+    
+        }
     }
 
     /**
@@ -245,6 +274,128 @@ public class FormActivationServiceImpl
             throws Exception {
         return (Collection<FormActivationVO>) getFormActivationDao()
                 .loadAll(FormActivationDao.TRANSFORM_FORMACTIVATIONVO, pageNumber, pageSize);
+    }
+
+    private Set<Long> getLicenseeIds(Form form) {
+        
+        Set<Long> ids = new HashSet<>();
+
+        for (LicenseeForm licensee : form.getLicenseeForms()) {
+            if(licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
+                ids.add(licensee.getLicensee().getId());
+        }
+
+        for(SectorForm sectorForm : form.getSectorForms()) {
+            // List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
+            // if(sf != null && sf.size() > 0)
+            //     sf.get(0);
+                    
+            for(LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
+                if(licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
+                    ids.add(licensee.getLicensee().getId());
+            }
+        }
+
+        return ids;
+    }
+
+    private Set<Licensee> getLicensees(Form form) {
+        Map<Long, Licensee> lmap = new HashMap<>();
+
+        for (LicenseeForm licensee : form.getLicenseeForms()) {
+            if(licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
+                lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
+        }
+
+        for(SectorForm sectorForm : form.getSectorForms()) {
+            // List<SectorFormVO> sf = (List<SectorFormVO>) sectorFormService.findByForm(form.getId());
+            // if(sf != null && sf.size() > 0)
+            //     sf.get(0);
+                    
+            for(LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
+                if(licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
+                    lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
+            }
+        }
+
+        return lmap.values().stream().collect(Collectors.toSet());
+    }
+
+    @Override
+    protected FormActivationVO handleRecreateActivationSubmission(Long id) throws Exception {
+        FormActivation activation = formActivationRepository.getReferenceById(id);
+
+        formSubmissionDao.remove(activation.getFormSubmissions());
+
+        FormActivationVO formActivation = formActivationDao.toFormActivationVO(activation);
+        formActivation.setFormSubmissions(submissionService.createNewSubmissions(getLicenseeIds(activation.getForm()), id));
+
+        return formActivation;
+    }
+
+    @Override
+    protected Collection<FormSubmissionVO> handleCreateMissingSubmissions(Long id) throws Exception {
+        FormActivation activation = formActivationRepository.getReferenceById(id);
+
+        // Get the ids of the submissions already existing for the activation
+        Set<Long> submissionLicenseeIds = activation.getFormSubmissions().stream().map(sub -> sub.getLicensee().getId()).collect(Collectors.toSet());
+        
+        // Get licensees attached to the form
+        Set<Long> formLicenseeIds = getLicenseeIds(activation.getForm());
+
+        // Get the difference to the two sets.
+        Set<Long> missingLicenseeIds = formLicenseeIds.stream().filter(fl -> !submissionLicenseeIds.contains(fl)).collect(Collectors.toSet());
+
+        return submissionService.createNewSubmissions(missingLicenseeIds, id);
+    }
+
+    @Override
+    protected Collection<FormActivationVO> handleActivateDueForms() throws Exception {
+
+        Collection<FormActivationVO> activations = new HashSet<>();
+
+        Collection<Period> periods = periodDao.getActivePeriods();
+        if(CollectionUtils.isEmpty(periods)) {
+            return new HashSet<>();
+        }
+        Set<Long> periodConfigs = periods.stream()
+                    .map(period -> period.getPeriodConfig().getId())
+                    .collect(Collectors.toSet());
+
+        Collection<Form> forms = formDao.findFormsByPeriodConfigs(periodConfigs);
+
+        periods.forEach(period -> {
+            Collection<Form> filtered = forms.stream().filter(form -> form.getPeriodConfig().getId() == period.getId()).collect(Collectors.toList());
+            PeriodVO pv = new PeriodVO();
+            pv.setId(period.getId());
+
+            filtered.forEach(fil -> {
+
+                FormActivationCriteria criteria = new FormActivationCriteria();
+                criteria.setFormId(fil.getId());
+                criteria.setPeriodId(period.getId());
+
+                // We only want to create activations that do not exist.
+                if(CollectionUtils.isEmpty(this.search(criteria))) {
+
+                    FormActivationVO activation = new FormActivationVO();
+                    FormVO form = new FormVO();
+                    form.setId(fil.getId());
+                    activation.setForm(form);
+                    
+                    activation.setPeriod(pv);
+                    activation.setActivationDeadline(period.getPeriodEnd().plusDays(period.getPeriodConfig().getFinalDay()));
+                    String activationName = String.format("%s: %s Activation", fil.getFormName(), period.getPeriodName());
+                    
+                    activation.setActivationName(activationName);
+    
+                    activations.add(this.save(activation));
+
+                }
+            });
+        });
+        
+        return activations;
     }
 
 }

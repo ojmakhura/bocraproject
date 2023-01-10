@@ -6,7 +6,7 @@
 			<div *ngIf="loading | async">
 				<app-loader [isLoading]="loading | async"></app-loader>
 			</div>
-			<div *ngIf="success | async" class="alert alert-success" role="alert">
+			<!-- <div *ngIf="success | async" class="alert alert-success" role="alert">
 				<div *ngFor="let message of messages | async">
 					{{ message }}
 				</div>
@@ -15,30 +15,19 @@
 				<div *ngFor="let message of messages | async">
 					{{ message }}
 				</div>
-			</div>
+			</div> -->
 			<div formGroupName="complaintReply">
 				<div class="mb-3">
-				    <label id="complaintReplyDate_label" class="col-sm-2 col-form-label" for="complaintReplyDate"><span translate>date</span>*</label>
-				    <!-- <input type="date" id="complaintReplyDate" class="form-control" formControlName="date"  required navigator="true" showOn="button"/>
-				    <div *ngIf="replyForm.invalid && complaintReplyDateControl.invalid && (complaintReplyDateControl.dirty || complaintReplyDateControl.touched)" class="alert alert-danger" role="alert">
-				        <div *ngIf="complaintReplyDateControl.errors['required']">
-				            <span translate>date.required</span>
-				        </div>
-				    </div> -->
+				    <label id="complaintReplyDate_label" class="col-sm-3 col-form-label" for="complaintReplyDate"><span translate>date</span></label>
                     <label for="complaintReplyDate_label_vaule">{{complaintReply?.date}}</label>
 				</div>
 				<div class="mb-3">
-				    <label id="complaintReplyReplyUser_label" class="col-sm-2 col-form-label" for="complaintReplyReplyUser"><span translate>reply.user</span>*</label>
-				    <input type="text" id="complaintReplyReplyUser" class="form-control" name="replyUser" formControlName="replyUser" required/>
-				    <div *ngIf="replyForm.invalid && complaintReplyReplyUserControl.invalid && (complaintReplyReplyUserControl.dirty || complaintReplyReplyUserControl.touched)" class="alert alert-danger" role="alert">
-				        <div *ngIf="complaintReplyReplyUserControl.errors['required']">
-				            <span translate>reply.user.required</span>
-				        </div>
-				    </div>
+				    <label id="complaintReplyReplyUser_label" class="col-sm-3 col-form-label" for="complaintReplyReplyUser"><span translate>reply.user</span></label>
+                    <label for="complaintReplyDate_label_vaule">{{complaintReply?.replyUser}}</label>
 				</div>
 				<div class="mb-3">
 				    <label id="complaintReplyReply_label" class="col-sm-2 col-form-label" for="complaintReplyReply"><span translate>reply</span>*</label>
-					<textarea id="complaintReplyReply" class="form-control" formControlName="reply"  required></textarea>
+					<textarea id="complaintReplyReply" class="form-control" formControlName="reply" rows="3"  required></textarea>
 				    <div *ngIf="replyForm.invalid && complaintReplyReplyControl.invalid && (complaintReplyReplyControl.dirty || complaintReplyReplyControl.touched)" class="alert alert-danger" role="alert">
 				        <div *ngIf="complaintReplyReplyControl.errors['required']">
 				            <span translate>reply.required</span>
@@ -55,7 +44,7 @@
 </div>
 <mat-dialog-actions align="end">
 	<button mat-dialog-close type="button" class="btn btn-primary me-2" color="accent" translate>action.cancel</button>
-	<button type="button" (click)="replyNewDocument()" class="btn btn-primary me-2">
+	<button type="button" (click)="replyNewDocument()" class="btn btn-primary me-2" *ngIf="false">
 		<span translate>new.document</span>
 	</button>
 	<button type="button" class="btn btn-primary" (click)="dialogDone()" translate>action.done</button>

@@ -35,16 +35,17 @@ import { ComplaintState } from '@app/store/complaint/complaint.state';
 import * as ComplaintSelectors from '@app/store/complaint/complaint.selectors';
 import * as ComplaintActions from '@app/store/complaint/complaint.actions';
 
-import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
-import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
-import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-vo';
+import { ComplaintTypeVO } from '@app/model/bw/org/bocra/portal/complaint/type/complaint-type-vo';
+import { ReplyComponentImpl } from '@app/view/complaint/reply.component.impl';
 import { ComplaintSeachCriteria } from '@app/model/bw/org/bocra/portal/complaint/complaint-seach-criteria';
-import { ComplaintDocumentComponentImpl } from '@app/view/complaint/complaint-document.component.impl';
-import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
-import { ComplaintStatus } from '@app/model/bw/org/bocra/portal/complaint/complaint-status';
+import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-vo';
+import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 import { ComplaintControllerImpl } from '@app/controller/complaint/complaint-controller.impl';
 import { ComplaintRestController } from '@app/service/bw/org/bocra/portal/complaint/complaint-rest-controller';
-import { ReplyComponentImpl } from '@app/view/complaint/reply.component.impl';
+import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
+import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
+import { ComplaintDocumentComponentImpl } from '@app/view/complaint/complaint-document.component.impl';
+import { ComplaintStatus } from '@app/model/bw/org/bocra/portal/complaint/complaint-status';
 import { MatDialogConfig } from '@angular/material/dialog';
 
 export class EditComplaintSaveForm {
@@ -135,6 +136,21 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
     complaintComplaintRepliesSearchField: FormControl;
     complaintComplaintRepliesSelect: ComplaintReplyVO[] = [];
 
+    @ViewChild('complaintComplaintTypeModalPaginator', {static: true}) complaintComplaintTypeModalPaginator: MatPaginator;
+    @ViewChild('complaintComplaintTypeModalSort', {static: true}) complaintComplaintTypeModalSort: MatSort;
+    
+    complaintComplaintTypes$: Observable<Array<ComplaintTypeVO>>;
+    complaintComplaintTypesDataSource = new MatTableDataSource<ComplaintTypeVO>([]);
+    complaintComplaintTypeSelect: ComplaintTypeVO = new ComplaintTypeVO();
+    complaintComplaintTypeSearchField: FormControl = new FormControl();
+
+    complaintComplaintTypeModalColumns = [
+        'actions',
+        'id',
+        'code',
+        'typeName',
+    ];
+
     @ViewChild('complaintLicenseeModalPaginator', {static: true}) complaintLicenseeModalPaginator: MatPaginator;
     @ViewChild('complaintLicenseeModalSort', {static: true}) complaintLicenseeModalSort: MatSort;
     
@@ -152,6 +168,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
 
     statusT = ComplaintStatus;
     statusOptions: string[] = Object.keys(this.statusT);
+    complaintComplaintTypeBackingList: Array<SelectItem> = [];
     complaintLicenseeBackingList: Array<SelectItem> = [];
     complaint$: Observable<ComplaintVO>;
     messages: Observable<any>;
@@ -206,6 +223,12 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
             this.complaintComplaintRepliesDataSource.data = data;
             this.complaintComplaintRepliesDataSource.paginator = this.complaintComplaintRepliesModalPaginator;
             this.complaintComplaintRepliesDataSource.sort = this.complaintComplaintRepliesModalSort;
+        });
+
+        this.complaintComplaintTypes$?.subscribe(data => {
+            this.complaintComplaintTypesDataSource.data = data;
+            this.complaintComplaintTypesDataSource.paginator = this.complaintComplaintTypeModalPaginator;
+            this.complaintComplaintTypesDataSource.sort = this.complaintComplaintTypeModalSort;
         });
 
         this.complaintLicensees$?.subscribe(data => {
@@ -488,8 +511,9 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
         return this.formBuilder.group({
             id: [{value: complaint?.id, disabled: false}],
             status: [{value: complaint?.status, disabled: false}, [Validators.required, ]],
-            licensee: this.createLicenseeVOGroup(complaint?.licensee),
             complaintId: [{value: complaint?.complaintId, disabled: false}],
+            complaintType: this.createComplaintTypeVOGroup(complaint?.complaintType),
+            licensee: this.createLicenseeVOGroup(complaint?.licensee),
             firstName: [{value: complaint?.firstName, disabled: false}, [Validators.required, ]],
             surname: [{value: complaint?.surname, disabled: false}, [Validators.required, ]],
             email: [{value: complaint?.email, disabled: false}, [Validators.required, ]],
@@ -527,6 +551,50 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
         return this.complaintStatusControl.value;
     }
 
+    get complaintComplaintIdControl(): FormControl {
+        return this.complaintControl.get('complaintId') as FormControl;
+    }
+
+    get complaintComplaintId(): string {
+        return this.complaintComplaintIdControl.value;
+    }
+
+    get complaintComplaintTypeControl(): FormGroup {
+        return this.complaintControl.get('complaintType') as FormGroup;
+    }
+
+    get complaintComplaintType(): ComplaintTypeVO {
+        return this.complaintComplaintTypeControl.value;
+    }
+
+
+    complaintComplaintTypeAddDialog(): void {
+    }
+
+    
+    complaintComplaintTypeSearch(): void {
+    }
+
+    handleComplaintComplaintTypeSelected(event: MatRadioChange, data: ComplaintTypeVO): void {}
+    
+    complaintComplaintTypeSelected(event: MatRadioChange, data: ComplaintTypeVO): void {
+        
+        this.complaintComplaintTypeSelect = data;
+        this.handleComplaintComplaintTypeSelected(event, data);
+    }
+
+    /**
+     * May be overridden to customise behaviour
+     *
+     */
+    addSelectedComplaintComplaintType(): void {
+        this.complaintControl.patchValue({complaintType: this.complaintComplaintTypeSelect});
+    }
+
+    complaintComplaintTypeClear(): void {
+        this.complaintControl.patchValue({complaintType: new ComplaintTypeVO()});
+    }
+
     get complaintLicenseeControl(): FormGroup {
         return this.complaintControl.get('licensee') as FormGroup;
     }
@@ -561,14 +629,6 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
 
     complaintLicenseeClear(): void {
         this.complaintControl.patchValue({licensee: new LicenseeVO()});
-    }
-
-    get complaintComplaintIdControl(): FormControl {
-        return this.complaintControl.get('complaintId') as FormControl;
-    }
-
-    get complaintComplaintId(): string {
-        return this.complaintComplaintIdControl.value;
     }
 
     get complaintFirstNameControl(): FormControl {
@@ -769,6 +829,80 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
         }
     }
 
+    createComplaintTypeVOGroup(value: ComplaintTypeVO): FormGroup {
+        return this.formBuilder.group({
+            id: [value?.id],
+            createdBy: [value?.createdBy],
+            updatedBy: [value?.updatedBy],
+            createdDate: [value?.createdDate],
+            updatedDate: [value?.updatedDate],
+            code: [value?.code],
+            typeName: [value?.typeName],
+            description: [value?.description],
+        });
+    }
+
+    createComplaintTypeVOArray(values: ComplaintTypeVO[]): FormArray {
+        if(values) {
+            let formArray: FormArray = this.formBuilder.array([]);
+            values?.forEach(value => formArray.push(this.createComplaintTypeVOGroup(value)))
+
+            return formArray;
+        } else {
+            return new FormArray([]);
+        }
+    }
+
+    createComplaintSeachCriteriaGroup(value: ComplaintSeachCriteria): FormGroup {
+        return this.formBuilder.group({
+            status: [value?.status],
+            surname: [value?.surname],
+            email: [value?.email],
+            subject: [value?.subject],
+            complaintId: [value?.complaintId],
+            licenseeName: [value?.licenseeName],
+            complaintType: [value?.complaintType],            
+        });
+    }
+
+    createComplaintSeachCriteriaArray(values: ComplaintSeachCriteria[]): FormArray {
+        if(values) {
+            let formArray: FormArray = this.formBuilder.array([]);
+            values?.forEach(value => formArray.push(this.createComplaintSeachCriteriaGroup(value)))
+
+            return formArray;
+        } else {
+            return new FormArray([]);
+        }
+    }
+
+    createComplaintVOGroup(value: ComplaintVO): FormGroup {
+        return this.formBuilder.group({
+            id: [value?.id],
+            status: [value?.status],
+            complaintId: [value?.complaintId],
+            firstName: [value?.firstName],
+            surname: [value?.surname],
+            email: [value?.email],
+            subject: [value?.subject],
+            details: [value?.details],
+            assignedTo: [value?.assignedTo],
+            createdDate: [value?.createdDate],
+            updatedDate: [value?.updatedDate],
+        });
+    }
+
+    createComplaintVOArray(values: ComplaintVO[]): FormArray {
+        if(values) {
+            let formArray: FormArray = this.formBuilder.array([]);
+            values?.forEach(value => formArray.push(this.createComplaintVOGroup(value)))
+
+            return formArray;
+        } else {
+            return new FormArray([]);
+        }
+    }
+
     createDocumentVOGroup(value: DocumentVO): FormGroup {
         return this.formBuilder.group({
             id: [value?.id],
@@ -805,6 +939,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
             status: [value?.status],
             uin: [value?.uin],
             licenseeName: [value?.licenseeName],
+            alias: [value?.alias],
             address: [value?.address],
         });
     }
@@ -813,54 +948,6 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
         if(values) {
             let formArray: FormArray = this.formBuilder.array([]);
             values?.forEach(value => formArray.push(this.createLicenseeVOGroup(value)))
-
-            return formArray;
-        } else {
-            return new FormArray([]);
-        }
-    }
-
-    createComplaintVOGroup(value: ComplaintVO): FormGroup {
-        return this.formBuilder.group({
-            id: [value?.id],
-            status: [value?.status],
-            complaintId: [value?.complaintId],
-            firstName: [value?.firstName],
-            surname: [value?.surname],
-            email: [value?.email],
-            subject: [value?.subject],
-            details: [value?.details],
-            assignedTo: [value?.assignedTo],
-            createdDate: [value?.createdDate],
-            updatedDate: [value?.updatedDate],
-        });
-    }
-
-    createComplaintVOArray(values: ComplaintVO[]): FormArray {
-        if(values) {
-            let formArray: FormArray = this.formBuilder.array([]);
-            values?.forEach(value => formArray.push(this.createComplaintVOGroup(value)))
-
-            return formArray;
-        } else {
-            return new FormArray([]);
-        }
-    }
-
-    createComplaintSeachCriteriaGroup(value: ComplaintSeachCriteria): FormGroup {
-        return this.formBuilder.group({
-            status: [value?.status],
-            surname: [value?.surname],
-            email: [value?.email],
-            subject: [value?.subject],
-            complaintId: [value?.complaintId],
-        });
-    }
-
-    createComplaintSeachCriteriaArray(values: ComplaintSeachCriteria[]): FormArray {
-        if(values) {
-            let formArray: FormArray = this.formBuilder.array([]);
-            values?.forEach(value => formArray.push(this.createComplaintSeachCriteriaGroup(value)))
 
             return formArray;
         } else {

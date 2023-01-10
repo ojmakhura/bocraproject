@@ -31,6 +31,15 @@
 				    <label id="criteriaFormName_label" class="col-sm-2 col-form-label" for="criteriaFormName"><span translate>form.name</span></label>
 				    <input type="text" id="criteriaFormName" class="form-control" name="formName" formControlName="formName"/>
 				</div>
+				<div class="mb-3">
+				    <label id="criteriaEntryType_label" class="col-sm-2 col-form-label" for="criteriaEntryType"><span translate>entry.type</span></label>
+				    <select id="criteriaEntryType" class="form-select" formControlName="entryType" >
+				        <option></option>
+				        <option *ngFor="let key of entryTypeOptions" [value]="key">
+				            {{ entryTypeT[key] }}
+				        </option>
+				    </select>
+				</div>
         	</div>
     	</form>
 		<div class="text-end mt-5">

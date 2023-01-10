@@ -21,6 +21,11 @@ export const selectId = createSelector(
     (state: ComplaintState) => state.id
 );
 
+export const selectComplaintId = createSelector(
+    selectComplaintState,
+    (state: ComplaintState) => state.complaintId
+);
+
 export const selectCriteria = createSelector(
     selectComplaintState,
     (state: ComplaintState) => state.criteria

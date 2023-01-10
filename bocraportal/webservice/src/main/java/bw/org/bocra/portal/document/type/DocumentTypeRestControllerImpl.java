@@ -6,9 +6,15 @@
 package bw.org.bocra.portal.document.type;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.hibernate.exception.ConstraintViolationException;
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,124 +36,164 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     @Override
     public ResponseEntity<?> handleFindById(Long id) {
         try {
-            logger.debug("Searches for Document Type by "+id);
+            logger.debug("Searches for document types using ID " + id);
             Optional<?> data = Optional.of(documentTypeService.findById(id));
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Document type with id %ld not found.", id));
             }
 
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Document type with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetAll() {
         try {
-            logger.debug("Displays all Document Types");
-            Optional<?> data = Optional.of(documentTypeService.getAll());
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            logger.debug("Displays all document types");
+            return  ResponseEntity.status(HttpStatus.OK).body(documentTypeService.getAll());
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
-            logger.debug("Displays all Document Types of the specified "+" Page Number: "+pageNumber+" and Page Size"+pageSize);
-            Optional<?> data = Optional.of(documentTypeService.getAll(pageNumber, pageSize));
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            logger.debug("Displays all document types of the specified Page number: " + pageNumber
+                    + "and Page size: " + pageSize);
+            return  ResponseEntity.status(HttpStatus.OK).body(documentTypeService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Deletes Document Type by "+id);
-            Optional<?> data = Optional.of(documentTypeService.remove(id));
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            logger.debug("Deletes Complaint Type by ID " + id);
+            
+            if (documentTypeService.remove(id)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Complaint type successfully deleted.");
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete document type");
             }
 
-            return response;
         } catch (Exception e) {
+
+            e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete document type with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting document type with id " + id);
         }
     }
 
     @Override
     public ResponseEntity<?> handleSave(DocumentTypeVO documentType) {
         try {
-            logger.debug("Save Document Type "+documentType);
+            logger.debug("Saves document type " + documentType);
             Optional<?> data = Optional.of(documentTypeService.save(documentType));
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the document type.");
             }
 
             return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Document Type already exists.");
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IllegalArgumentException | DocumentTypeServiceException e) {
+
+            e.printStackTrace();
+
+            String message = e.getMessage();
+
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'documentType'")) {
+
+                    message = "The document type information is missing.";
+
+                } else if(message.contains("'documentType.code'")) {
+                
+                    message = "The document type code is missing.";
+                
+                } else if(message.contains("'documentType.name'")) {
+                  
+                    message = "The document type name is missing.";
+                
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("(code)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An document type with this code has been already created.");
+                    } else if(e.getCause().getMessage().contains("(type_name)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An document type with this name has been already created.");
+                    } 
+                    
+                } else if (e.getCause().getMessage().contains("null value in column")) {
+
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"code\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The code value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"name\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The type name value is missing.");
+                    }
+
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This complaint type is conflicting with an existing one.");
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
-            logger.debug("Searches for Document Type by "+criteria);
-            Optional<?> data = Optional.of(documentTypeService.search(criteria));
-            ResponseEntity<?> response;
+            logger.debug("Searches for a document type by criteria " + criteria);
 
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(documentTypeService.search(criteria));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

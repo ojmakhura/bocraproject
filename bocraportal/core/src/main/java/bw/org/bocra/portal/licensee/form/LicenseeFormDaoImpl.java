@@ -6,14 +6,14 @@
  */
 package bw.org.bocra.portal.licensee.form;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see LicenseeForm
@@ -139,11 +139,19 @@ public class LicenseeFormDaoImpl
 
         if (source.getForm() != null && source.getForm().getId() != null) {
             target.setForm(getFormDao().load(source.getForm().getId()));
+        } else {
+            throw new IllegalArgumentException(
+                "LicenseeFormDao.licenseeFormVOToEntity - 'form' or its id can not be null"
+            );
         }
 
         if (source.getLicensee() != null && source.getLicensee().getId() != null) {
 
             target.setLicensee(getLicenseeDao().get(source.getLicensee().getId()));
+        } else {
+            throw new IllegalArgumentException(
+                "LicenseeFormDao.licenseeFormVOToEntity - 'licensee' or its id can not be null"
+            );
         }
     }
 }

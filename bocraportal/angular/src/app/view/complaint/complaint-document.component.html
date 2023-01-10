@@ -3,7 +3,7 @@
 <div mat-dialog-content class="container">
     <div class="card-body">
         <form [formGroup]="complaintDocumentForm">
-            <div *ngIf="loading | async">
+            <!-- <div *ngIf="loading | async">
                 <app-loader [isLoading]="loading | async"></app-loader>
             </div>
             <div *ngIf="success | async" class="alert alert-success" role="alert">
@@ -15,7 +15,7 @@
                 <div *ngFor="let message of messages | async">
                     {{ message }}
                 </div>
-            </div>
+            </div> -->
             <div formGroupName="document">
                 <fieldset formGroupName="documentType">
                     <div class="row mb-3">

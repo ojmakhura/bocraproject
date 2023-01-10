@@ -5,22 +5,21 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 
-// @Configuration
-public class SpringRestConfiguration implements WebMvcConfigurer  {
+@Configuration
+public class SpringRestConfiguration {
 	
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*");
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
     
-    // @Bean
+    @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
         return builder -> {
             builder.simpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -29,4 +28,5 @@ public class SpringRestConfiguration implements WebMvcConfigurer  {
             builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
         };
     }
+
 }

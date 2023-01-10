@@ -6,16 +6,13 @@
  */
 package bw.org.bocra.portal.form.field;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.form.Form;
-import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.section.FormSection;
-import bw.org.bocra.portal.form.section.FormSectionDao;
 import bw.org.bocra.portal.form.section.FormSectionRepository;
 import bw.org.bocra.portal.form.section.FormSectionVO;
 
@@ -124,11 +121,19 @@ public class FormFieldDaoImpl
 
             Form form = formDao.load(source.getForm().getId());
             target.setForm(form);
+        } else {
+            throw new IllegalArgumentException(
+                "FormFieldDao.formFieldVOToEntity - 'form' or its id can not be null"
+            );
         }
 
         if(source.getFormSection() != null && source.getFormSection().getId() != null) {
             FormSection section = formSectionDao.load(source.getFormSection().getId());
             target.setFormSection(section);
+        } else {
+            throw new IllegalArgumentException(
+                "FormFieldDao.formFieldVOToEntity - 'formSection' or its id can not be null"
+            );
         }
         
     }

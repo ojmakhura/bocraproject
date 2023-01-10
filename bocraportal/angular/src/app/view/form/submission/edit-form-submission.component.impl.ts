@@ -55,6 +55,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   returnUnrestricted: boolean = true;
   acceptUnrestricted: boolean = true;
   addUnrestricted: boolean = true;
+  updated$: Observable<boolean>;
 
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
@@ -69,6 +70,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
+    this.updated$ = this.store.pipe(select(SubmissionSelectors.selectUpdated));
     this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
     this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
@@ -249,6 +251,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   // }
   
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
+
+    console.log(form);
+
     if (this.formSubmissionControl.valid) {
       if(form.formSubmission.submissionStatus != FormSubmissionStatus.SUBMITTED && form.formSubmission.submissionStatus != FormSubmissionStatus.ACCEPTED) {
         form.formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;
@@ -276,7 +281,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       formSubmission.submittedBy = this.keycloakService.getUsername();
       formSubmission.submissionDate = new Date();
       formSubmission.submissionStatus = FormSubmissionStatus.SUBMITTED;
-      this.doFormSubmissionSave(formSubmission);
+      
+      this.doFormSubmissionStatusChange(formSubmission)
     }
 
   }
@@ -286,7 +292,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
       let formSubmission: FormSubmissionVO = this.formSubmission;
       formSubmission.submissionStatus = FormSubmissionStatus.ACCEPTED;
-      this.doFormSubmissionSave(formSubmission);
+      
+      this.doFormSubmissionStatusChange(formSubmission)
     }
   }
 
@@ -296,7 +303,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
       let formSubmission: FormSubmissionVO = form.formSubmission;
       formSubmission.submissionStatus = FormSubmissionStatus.RETURNED;
-      this.doFormSubmissionSave(formSubmission);
+      // this.doFormSubmissionSave(formSubmission);
+      this.doFormSubmissionStatusChange(formSubmission)
     }
   }
 
@@ -319,6 +327,13 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         loading: true
       })
     );
+
+    this.updated$.subscribe(updated => {
+      
+      if(updated) {
+        this.setEditFormSubmissionFormValue({ formSubmission: formSubmission });
+      }
+    })
   }
 
   private doFormSubmissionSave(formSubmission: FormSubmissionVO) {
@@ -402,27 +417,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       min: [formField?.min ? formField.min : null],
       max: [formField?.max ? formField.max : null],
       options: this.formBuilder.array(formField?.options ? formField.options : []),
-    });
-  }
-
-  override createFormSubmissionForm(formSubmission: FormSubmissionVO): FormGroup {
-    return this.formBuilder.group({
-        id: [{value: formSubmission?.id, disabled: false}],
-        createdBy: [{value: formSubmission?.createdBy, disabled: false}],
-        updatedBy: [{value: formSubmission?.updatedBy, disabled: false}],
-        createdDate: [{value: formSubmission?.createdDate, disabled: false}],
-        updatedDate: [{value: formSubmission?.updatedDate, disabled: false}],
-        submittedBy: [{value: formSubmission?.submittedBy, disabled: false}],
-        submissionDate: [{value: formSubmission?.submissionDate, disabled: false}],
-        form: this.createFormVOGroup(formSubmission?.form),
-        period: this.createPeriodVOGroup(formSubmission?.period),
-        licensee: this.createLicenseeVOGroup(formSubmission?.licensee),
-        dataFields: this.createDataFieldVOArray(formSubmission?.dataFields),
-        submissionStatus: [{value: formSubmission?.submissionStatus, disabled: false}, [Validators.required, ]],
-        upload: [{value: formSubmission?.upload, disabled: false}],
-        notes: this.createNoteVOArray(formSubmission?.notes),
-        sections: this.createDataFieldSectionVOArray(formSubmission?.sections),
-        expectedSubmissionDate: [{value: formSubmission?.expectedSubmissionDate, disabled: false}],
     });
   }
 

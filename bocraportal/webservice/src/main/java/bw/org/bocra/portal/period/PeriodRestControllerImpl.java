@@ -5,8 +5,18 @@
 //
 package bw.org.bocra.portal.period;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +24,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.keycloak.KeycloakService;
+import bw.org.bocra.portal.keycloak.KeycloakUserService;
+import bw.org.bocra.portal.period.config.PeriodConfigVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -23,8 +36,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @CrossOrigin()
 public class PeriodRestControllerImpl extends PeriodRestControllerBase {
 
-    public PeriodRestControllerImpl(PeriodService periodService) {
+    private final KeycloakUserService keycloakUserService;
+
+    public PeriodRestControllerImpl(PeriodService periodService, KeycloakUserService keycloakUserService) {
         super(periodService);
+        this.keycloakUserService = keycloakUserService;
     }
 
     @Override
@@ -32,19 +48,26 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
         try{
             logger.debug("Search Period by Id "+id);
             Optional<PeriodVO> data = Optional.of(this.periodService.findById(id));
-            ResponseEntity<PeriodVO> response;
+            ResponseEntity<?> response;
     
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Period with id %ld not found.", id));
             }
     
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Perion with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured while loading a period. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -52,20 +75,13 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try{
             logger.debug("Display all Periods");
-            Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll());
-            ResponseEntity<Collection<PeriodVO>> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.getAll());
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An error occured when loading all periods.");
         }
     }
 
@@ -73,20 +89,25 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleRemove(Long id) {
         try{
             logger.debug("Delete Period by Id "+id);
-            Optional<Boolean> data = Optional.of(periodService.remove(id));
-            ResponseEntity<Boolean> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            boolean rm = periodService.remove(id);
+            ResponseEntity<?> response;
+
+            if(rm) {
+                response = ResponseEntity.status(HttpStatus.OK).body(rm);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the period with id " + id);
             }
-    
+
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete period with id " + id);
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting period with id " + id);
         }
     }
 
@@ -94,42 +115,112 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleSave(PeriodVO periodVO) {
         try {
             logger.debug("Save Period "+periodVO);
+
+            if(periodVO.getId() == null) {
+                periodVO.setCreatedBy(keycloakUserService.getLoggedInUser().getUsername());
+                periodVO.setCreatedDate(LocalDateTime.now());
+            } else {
+
+                periodVO.setUpdatedBy(keycloakUserService.getLoggedInUser().getUsername());
+                periodVO.setUpdatedDate(LocalDateTime.now());
+            }
+
             Optional<PeriodVO> data = Optional.of(periodService.save(periodVO));
-            ResponseEntity<PeriodVO> response;
+            ResponseEntity<?> response;
 
             if (data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the period");
             }
 
             return response;
-        } catch (Exception e) {
-            
-            logger.error(e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        } catch (PeriodServiceException | IllegalArgumentException e) {
+
+            String message = e.getMessage();
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'period'")) {
+
+                    message = "Missing period information.";
+
+                } else if(message.contains("'period.periodConfig'") || message.contains("'periodConfig' or its id can not be null")) {
+
+                    message = "Missing period config.";
+
+                } else if(message.contains("'periodConfig' is invalid")) {
+
+                    message = "Invalid period config.";
+
+                } else if(message.contains("'period.periodName'")) {
+
+                    message = "Missing period name.";
+
+                } else if(message.contains("'next' is invalid")) {
+
+                    message = "Invalid next period.";
+
+                } else if(message.contains("'previous' is invalid")) {
+
+                    message = "Invalid previous period.";
+
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                e.printStackTrace();
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("period_unique")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A period with this information has already been created.");
+
+                    } 
+
+                }   else if (e.getCause().getMessage().contains("null value in column")) {
+
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"period_end\"")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Period end date is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"period_start\"")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Period start date is missing.");
+                    }
+                }
+
+                // e.printStackTrace();
+                
+            }
+            logger.error(message, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            // e.printStackTrace();
+            e.getCause().printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleSearch(PeriodCriteria criteria) {
         try{
-            logger.debug("Search Period by criteria "+criteria);
-            Optional<Collection<PeriodVO>> data = Optional.of(periodService.search(criteria));
-            ResponseEntity<Collection<PeriodVO>> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            logger.debug("Search Period by criteria " + criteria);
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.search(criteria));
+            
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -137,21 +228,62 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
             logger.debug("Display Period with the specified page number "+pageNumber+" and page size "+pageSize);
-            Optional<Collection<PeriodVO>> data = Optional.of(periodService.getAll(pageNumber, pageSize));
-            ResponseEntity<Collection<PeriodVO>> response;
-    
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-    
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.getAll(pageNumber, pageSize));
+            
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
+    }
+
+    @Override
+    public ResponseEntity<?> handleLoadCurrentPeriods() {
+        try{
+            logger.debug("Loading current periods");
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.loadCurrentPeriods());
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleCreateNextPeriods() {
+        try{
+            logger.debug("Creating the next periods");
+            return ResponseEntity.status(HttpStatus.OK).body(periodService.createNextPeriods(keycloakUserService.getLoggedInUser().getUsername(), new HashSet<>()));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleCreateNextPeriod(Long id) {
+        try{
+            logger.debug("Creating the next period after " + id);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                periodService.createNextPeriods(
+                    keycloakUserService.getLoggedInUser().getUsername(),
+                    Stream.of(id).collect(Collectors.toSet())
+                )
+            );
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleCreatePeriod(PeriodConfigVO periodConfig, LocalDate startDate) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

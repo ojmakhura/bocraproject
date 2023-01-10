@@ -28,6 +28,9 @@
 												<th scope="col">
 													Periods
 												</th>
+												<th scope="col">
+													Alias
+												</th>
 											</tr>
 										</thead>
 										<tbody formArrayName="periodSelections">
@@ -36,10 +39,14 @@
 												<td scope="col">
 													<input type="checkbox" formControlName="selected"
 														aria-label="Checkbox for following text input"
-														(change)="periodSelectionChange()">
+														(change)="periodSelectionChange($event, k)">
 												</td>
 												<td scope="col">
 													{{ period.value.period }}
+												</td>
+												<td scope="col">
+													<input type="text" class="form-control" formControlName="alias"
+														(change)="periodAliasChange(period?.value, k)">
 												</td>
 											</tr>
 										</tbody>
@@ -63,7 +70,7 @@
 												<td scope="col">
 													<input type="checkbox" formControlName="selected"
 														aria-label="Checkbox for following text input"
-														(change)="licenseeSelectionChange()">
+														(change)="licenseeSelectionChange($event, j)">
 												</td>
 												<td scope="col">
 													{{ licensee.value.licensee }}
@@ -96,7 +103,7 @@
 												<td scope="col">
 													<input type="checkbox" formControlName="selected"
 														aria-label="Checkbox for following text input"
-														(change)="fieldSelectionChange()">
+														(change)="fieldSelectionChange($event, j)">
 												</td>
 												<td scope="col">
 													{{ fieldControl?.value?.fieldId }}
@@ -105,7 +112,8 @@
 													{{ fieldControl?.value?.fieldName }}
 												</td>
 												<td scope="col">
-													<input type="text" class="form-control" formControlName="alias" (change)="fieldSelectionChange()">
+													<input type="text" class="form-control" formControlName="alias"
+														(change)="fieldAliasChange($event, j)">
 												</td>
 											</tr>
 										</tbody>
@@ -119,9 +127,9 @@
 						<label for="report-labels" class="col-sm-2 col-form-label">Columns</label>
 						<div class="col-sm-10">
 							<select id="report-labels" class="form-select" formControlName="dataColumns"
-								aria-label="Default select example">
+								aria-label="Default select example" (change)="createReportGrid()">
 								<option value="licensees">Licensees</option>
-								<option value="periods">Periods</option>
+								<!-- <option value="periods">Periods</option> -->
 								<option value="fields">Data Fields</option>
 							</select>
 						</div>
@@ -135,6 +143,9 @@
 										Type
 									</th>
 									<th scope="col">
+										Tag
+									</th>
+									<th scope="col">
 										Analytic Name
 									</th>
 									<th scope="col">
@@ -144,17 +155,18 @@
 							</thead>
 							<tbody formArrayName="dataColumnsAnalytics">
 								<tr *ngFor="let fieldControl of dataColumnsAnalyticsControl.controls; let j=index"
-										[formGroupName]="j">
+									[formGroupName]="j">
 									<td scope="col">
-										<button type="button" (click)="removeLabelsAnalytic('report', j)"
-													class="btn btn-outline-primary">
+										<button type="button" (click)="removeCustomColumns(j)"
+											class="btn btn-outline-primary">
 											<mat-icon>delete</mat-icon>
 										</button>
 									</td>
 									<td scope="col">
 										<div class="col-sm-10">
 											<select id="report-labels" class="form-select" formControlName="type"
-												aria-label="Default select example" (change)="additionalDataColumnChange(j)">
+												aria-label="Default select example"
+												(change)="additionalDataColumnChange(j)">
 												<option value="custom">Custom</option>
 												<option value="sum">Sum</option>
 												<option value="mean">Mean</option>
@@ -168,27 +180,34 @@
 										</div>
 									</td>
 									<td scope="col">
-										<input type="text" class="form-control" formControlName="name" (change)="additionalDataColumnChange(j)" *ngIf="fieldControl.value?.type">
+										<input type="text" class="form-control" formControlName="tag">
 									</td>
 									<td scope="col">
-										<textarea type="text" class="form-control" formControlName="sources" (change)="additionalDataColumnChange(j)" *ngIf="fieldControl.value?.name"></textarea>
+										<input type="text" class="form-control" formControlName="name"
+											(change)="additionalDataColumnChange(j)" *ngIf="fieldControl.value?.type">
+									</td>
+									<td scope="col">
+										<textarea type="text" class="form-control" formControlName="sources"
+											(change)="additionalDataColumnChange(j)"
+											*ngIf="fieldControl.value?.name"></textarea>
 									</td>
 								</tr>
 							</tbody>
 						</table>
-						<div class="mb-3" >
-							<button type="button"  class="btn btn-primary" (click)="addLabelsAnalytic('report')">Add</button>
+						<div class="mb-3">
+							<button type="button" class="btn btn-primary"
+								(click)="addLabelsAnalytic('report')">Add</button>
 						</div>
 					</div>
 					<div class="mb-3 row" *ngIf="dataColumns !== null">
 						<label for="data-labels" class="col-sm-2 col-form-label">Rows</label>
 						<div class="col-sm-10">
 							<select id="data-labels" class="form-select" formControlName="dataRows"
-								aria-label="Default select example" (change)="generateColors(true)">
+								aria-label="Default select example" (change)="createReportGrid(); generateColors(true)">
 								<option></option>
+								<option value="fields">Data Fields</option>
 								<option value="licensees" *ngIf="dataColumns !== 'licensees'">Licensees</option>
 								<!-- <option value="periods">Periods</option> -->
-								<option value="fields">Data Fields</option>
 							</select>
 						</div>
 					</div>
@@ -214,38 +233,39 @@
 							<tr *ngFor="let fieldControl of dataRowsAnalyticsControl.controls; let j=index"
 								[formGroupName]="j">
 								<td scope="col">
-									<button type="button" (click)="removeLabelsAnalytic('data', j)"
-                                                class="btn btn-outline-primary">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
+									<button type="button" (click)="removeCustomRows(j)" class="btn btn-outline-primary">
+										<mat-icon>delete</mat-icon>
+									</button>
 								</td>
 								<td scope="col">
 									<div class="col-sm-10">
 										<select id="report-labels" class="form-select" formControlName="type"
 											aria-label="Default select example" (change)="additionalRowChange(j)">
 											<option value="custom">Custom</option>
-												<option value="sum">Sum</option>
-												<option value="mean">Mean</option>
-												<option value="mode">Mode</option>
-												<option value="median">Median</option>
-												<option value="variance">Variance</option>
-												<option value="std">Standard Deviation</option>
-												<option value="min">Minimum</option>
-												<option value="max">Maximum</option>
+											<option value="sum">Sum</option>
+											<option value="mean">Mean</option>
+											<option value="mode">Mode</option>
+											<option value="median">Median</option>
+											<option value="variance">Variance</option>
+											<option value="std">Standard Deviation</option>
+											<option value="min">Minimum</option>
+											<option value="max">Maximum</option>
 										</select>
 									</div>
 								</td>
 								<td scope="col">
-									<input type="text" class="form-control" formControlName="name" (change)="additionalRowChange(j)">
+									<input type="text" class="form-control" formControlName="name"
+										(change)="additionalRowChange(j)">
 								</td>
 								<td scope="col">
-									<textarea type="text" class="form-control" formControlName="sources" (change)="additionalRowChange(j)" *ngIf="fieldControl.value?.name"></textarea>
+									<textarea type="text" class="form-control" formControlName="sources"
+										(change)="additionalRowChange(j)" *ngIf="fieldControl.value?.name"></textarea>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-					<div class="mb-3" >
-						<button type="button"  class="btn btn-primary" (click)="addLabelsAnalytic('data')">Add</button>
+					<div class="mb-3">
+						<button type="button" class="btn btn-primary" (click)="addLabelsAnalytic('data')">Add</button>
 					</div>
 				</div>
 				<div class="mb-3" *ngIf="this.chartsControl?.length > 0">
@@ -253,38 +273,38 @@
 						Colors
 					</button>
 				</div>
-				<!-- <div>
-					<span>{{selectedLabels}}</span>
+				<div class="accordion-body" *ngIf="gridDataPeriods.length > 0">
+					<table mat-table matSort [dataSource]="gridDataSource" #gridSort="matSort" class="table table-bordered table-striped">
+						<ng-container matColumnDef="label">
+							<th mat-header-cell *matHeaderCellDef [attr.rowspan]="2"></th>
+							<td mat-cell *matCellDef="let data">{{data.row}}: {{data?.label}}</td>
+						</ng-container>
+						<ng-container *ngFor="let period of gridDataPeriods; let m=index" matColumnDef="{{period}}">
+							<th mat-header-cell *matHeaderCellDef [attr.colspan]="periodLengths[periods[m]?.name]">{{periodAliases[periods[m]?.name]}}</th>
+						</ng-container>
+						<ng-container *ngFor="let ch of gridColumnHeaders; let m=index" matColumnDef="{{ch.elementId}}_{{ch.header}}">
+							<th mat-header-cell *matHeaderCellDef>{{ch.label}} ({{alphabet[m]}})</th>
+							<td mat-cell *matCellDef="let data"> {{data[gridDataColumns[m]?.header]?.value}}</td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="gridDataPeriodHeaders"></tr>
+						<tr mat-header-row *matHeaderRowDef="gridDataColumnHeaders"></tr>
+						<tr mat-row *matRowDef="let row; columns: gridDataColDefs"></tr>
+					</table>
+					<mat-paginator #gridPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 30, 40, 50, 60, 70, 80, 90]" showFirstLastButtons></mat-paginator>
 				</div>
-				<div>
-					<span>{{dataRows}}</span>
-				</div>
-				<div>
-					<span>{{selectedDataRows}}</span>
-				</div> -->
 				<div *ngFor="let chartControl of chartsControl?.controls; let i=index" #test>
-					<app-report-chart 
-						[dataColumns]="dataColumns"
-						[dataRows]="dataRows"
-						[reportType]="reportType"
-						[colors]="colors"
-						[reportChartGroup]="chartControl" 
-						[formSubmissions]="filteredFormSubmissions"
-						[selectedLicensees]="selectedLicensees"
-						[selectedFields]="selectedFields"
-						[selectedPeriods]="selectedPeriods"
-						[additionalDataColumns]="additionalDataColumns"
-						[additionalDataRows]="additionalDataRows"
-						[customDataColumns]="customDataColumns"
-						[customDataRows]="customDataRows"
-						[chartIndex]="i">
+					<app-report-chart [dataColumns]="dataColumns" [dataRows]="dataRows" [reportType]="reportType"
+						[colors]="colors" [reportChartGroup]="chartControl"
+						[selectedLicensees]="selectedLicensees" [selectedFields]="selectedFields"
+						[selectedPeriods]="selectedPeriods" [chartIndex]="i" [grid]="grid">
 					</app-report-chart>
 					<div class="mb-3">
 						<button type="button" class="btn btn-info" (click)="removeReportChart(i)">
 							<mat-icon>delete</mat-icon>
 						</button>
 					</div>
-	
+
 				</div>
 				<div class="mb-3">
 					<button type="button" class="btn bi bi-plus-circle" (click)="addReportChart()"></button>

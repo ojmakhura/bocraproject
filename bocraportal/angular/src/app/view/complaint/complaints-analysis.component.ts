@@ -43,18 +43,6 @@ import { BaseChartDirective } from 'ng2-charts';
 
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 
-export class ComplaintsDummmy {
-    id: number | any = null;
-    status: string | any = null;
-    licenseeName: string | any = null;
-    createdDate: Date | any = null;
-}
-
-export class YearlyAnalysis {
-    year: number | any = null;
-    total: number | any = null;
-}
-
 @Component({
     selector: 'app-complaints-analysis-base',
     template: ''
@@ -63,6 +51,10 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
     @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
     complaintsAnalysisForm: FormGroup | any;
+    reportFilterForm = new FormGroup({
+        report: new FormControl(''),
+        chartType: new FormControl('')
+    })
     hide: boolean = false;
     protected route: ActivatedRoute;
     protected router: Router;
@@ -79,27 +71,15 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
     loaderMessage: Observable<string>;
     error: Observable<boolean>;
     selected: any = null;
-    complaints: ComplaintsDummmy[] = [
-        { id: 1, status: "NEW", licenseeName: "BTC", createdDate: '2022-11-16 09:31:45' },
-        { id: 2, status: "NEW", licenseeName: "BTC", createdDate: "2022-11-16 09:31:45" },
-        { id: 3, status: "NEW", licenseeName: "BTC", createdDate: "2022-11-16 09:31:45" },
-        { id: 4, status: "NEW", licenseeName: "Mascom", createdDate: "2021-11-16 09:31:45" },
-        { id: 5, status: "NEW", licenseeName: "Mascom", createdDate: "2021-11-16 09:31:45" },
-        { id: 6, status: "NEW", licenseeName: "Mascom", createdDate: "2021-11-16 09:31:45" },
-        { id: 7, status: "NEW", licenseeName: "Mascom", createdDate: "2021-11-16 09:31:45" },
-        { id: 8, status: "NEW", licenseeName: "Orange", createdDate: "2021-11-16 09:31:45" },
-        { id: 9, status: "NEW", licenseeName: "Orange", createdDate: "2020-11-16 09:31:45" },
-        { id: 10, status: "NEW", licenseeName: "Orange", createdDate: "2020-11-16 09:31:45" },
-        { id: 11, status: "NEW", licenseeName: "Orange", createdDate: "2020-11-16 09:31:45" },
-        { id: 12, status: "NEW", licenseeName: "BTC", createdDate: "2020-11-16 09:31:45" },
-        { id: 13, status: "NEW", licenseeName: "BTC", createdDate: "2019-11-16 09:31:45" },
-        { id: 14, status: "NEW", licenseeName: "BTC", createdDate: "2019-11-16 09:31:45" },
-        { id: 15, status: "NEW", licenseeName: "BTC", createdDate: "2021-11-16 09:31:45" },
 
-    ]
-
-    reportLabel: string[] = ['2022', '2021', '2020'];
+    reportLabel: string[] = [];
     reportData: number[] = [];
+
+    reportLicenseesLabel: string[] = [];
+    reportLicenseesData: number[] = [];
+
+    reportTypeLabel: string[] = [];
+    reportTypeData: number[] = [];
 
     constructor(injector: Injector) {
 
@@ -131,7 +111,6 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
                 this.handleFormChanges(change);
             }
         );
-        this.reportData.push(this.complaints.filter(entry => entry.createdDate.includes('2022')).length, this.complaints.filter(entry => entry.createdDate.includes('2021')).length, this.complaints.filter(entry => entry.createdDate.includes('2020')).length);
         this.afterOnInit();
     }
 
@@ -159,6 +138,7 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
 
     ngAfterViewInit() {
         this.doNgAfterViewInit();
+        this.chart?.update();
         this.complaintController.resetUseCaseScope();
     }
 
@@ -203,8 +183,8 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
                 display: true,
             },
             datalabels: {
-                anchor: 'end',
-                align: 'end'
+                anchor: 'center',
+                align: 'start'
             }
         }
     };
@@ -214,11 +194,58 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
     ];
 
     public barChartData: ChartData<'bar'> = {
-        labels: this.reportLabel,
-        datasets: [
-            { data: this.reportData, label: 'Complaints Report Analysis' }
-        ]
+        labels: [],
+        datasets: []
     };
+
+    public barChartLicenseeData: ChartData<'bar'> = {
+        labels: [],
+        datasets: []
+    };
+
+    public barChartTypeData: ChartData<'bar'> = {
+        labels: [],
+        datasets: []
+    };
+
+    public pieChartOptions: ChartConfiguration['options'] = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+            },
+            datalabels: {
+                formatter: (value, ctx) => {
+                    if (ctx.chart.data.labels) {
+                        return ctx.chart.data.labels[ctx.dataIndex];
+                    }
+                },
+            },
+        }
+    };
+    public pieChartData: ChartData<'pie', number[], string | string[]> = {
+        labels: [],
+        datasets: [{
+            data: []
+        }]
+    };
+    public pieChartLicenseeData: ChartData<'pie', number[], string | string[]> = {
+        labels: [],
+        datasets: [{
+            data: []
+        }]
+    };
+
+    public pieChartTypeData: ChartData<'pie', number[], string | string[]> = {
+        labels: [],
+        datasets: [{
+            data: []
+        }]
+    };
+
+    public pieChartType: ChartType = 'pie';
+    public pieChartPlugins = [DataLabelsPlugin];
 
     // events
     public chartClicked({ event, active }: { event?: ChartEvent, active?: {}[] }): void {
@@ -227,6 +254,18 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
 
     public chartHovered({ event, active }: { event?: ChartEvent, active?: {}[] }): void {
         console.log(event, active);
+    }
+
+    selectedReport(e: any) {
+        this.reportFilterForm.patchValue({
+            report: e.target.value,
+        });
+    }
+
+    selectedChartType(e: any) {
+        this.reportFilterForm.patchValue({
+            chartType: e.target.value,
+        });
     }
 
 }

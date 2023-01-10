@@ -5,19 +5,19 @@
 //
 package bw.org.bocra.portal.form.activation;
 
-import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.hibernate.exception.ConstraintViolationException;
+import javax.persistence.EntityNotFoundException;
+
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bw.org.bocra.portal.form.submission.FormSubmissionStatus;
-import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -41,14 +41,23 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form activation with id %ld not found.", id));
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form activation with id %d not found.", id));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
@@ -56,20 +65,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Displays all Form Activations");
-            Optional<?> data = Optional.of(formActivationService.getAll());
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(formActivationService.getAll());
+            
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -77,45 +78,38 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
             logger.debug("Displays all Form Activations of the specified "+"Page Number:"+pageNumber+"and Page Size:"+pageSize);
-            Optional<?> data = Optional.of(formActivationService.getAll(pageNumber, pageSize));
-            ResponseEntity<?> response;
-
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(formActivationService.getAll(pageNumber, pageSize));
+            
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Deletes Activation by "+id);
-            
-            Optional<?> data = Optional.of(formActivationService.remove(id));
+            logger.debug("Deletes form activation by ID " + id);
+            boolean rm = formActivationService.remove(id);
             ResponseEntity<?> response;
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            if(rm) {
+                response = ResponseEntity.status(HttpStatus.OK).body(rm);
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the form activation with id " + id);
             }
 
             return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form activation cant be deleted.");
+
+            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete form activation with id " + id);
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting form activation with id " + id);
         }
     }
 
@@ -124,35 +118,77 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         try {
             logger.debug("Saves Form Activation "+formActivation);
 
-            // if(formActivation.getId() == null) {
-            //     FormActivationCriteria cr = new FormActivationCriteria();
-            //     cr.setFormId(formActivation.getForm().getId());
-            //     cr.setPeriodId(formActivation.getPeriod().getId());
-
-            //     Collection<FormActivationVO> actives = formActivationService.search(cr);
-            //     if(CollectionUtils.isNotEmpty(actives)) {
-            //         throw new FormActivationServiceException("This form activation has been already done.");
-            //     }
-            // }
-
             Optional<?> data = Optional.of(formActivationService.save(formActivation));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the form activation");
             }
 
             return response;
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | FormActivationServiceException e) {
+
             e.printStackTrace();
-            logger.error(e.getMessage());
-            if(e instanceof ConstraintViolationException) {
-                // throw new eFormActivationServiceException("This form activation has been already done.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form activation has been already done.");
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            String message = e.getMessage();
+
+            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+
+                if(message.contains("'formActivation'")) {
+
+                    message = "The form activation information is missing.";
+
+                } else if(message.contains("or its id can not be null")) {
+
+                    if(message.contains("'formActivation.form'")) {
+
+                        message = "The form activation type or its id is missing.";
+
+                    } else if(message.contains("'formActivation.period'")) {
+
+                        message = "The form activation type or its id is missing.";
+                    }                
+                
+                } else if(message.contains("'formActivation.activationName'")) {
+                
+                    message = "The form activation name is missing.";
+                
+                } else {
+                    message = "An unknown error has occured. Please contact the system administrator.";
+                }
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+
+            } else if(e.getCause() instanceof PSQLException) {
+
+                if (e.getCause().getMessage().contains("duplicate key")) {
+                    if(e.getCause().getMessage().contains("(form_period_unique)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An form activation with this form and period has been already created.");
+                    } else if(e.getCause().getMessage().contains("(activation_name)")) {
+
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An form activation with this name and period has been already created.");
+                    } 
+                    
+                } else if (e.getCause().getMessage().contains("null value in column")) {
+                    if (e.getCause().getMessage().contains("column \"created_by\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                    } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                    }
+                }
+                
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This form activation is conflicting with an existing one.");
+            } 
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -160,20 +196,61 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleSearch(FormActivationCriteria criteria) {
         try {
             logger.debug("Search Form Activation by "+criteria);
-            Optional<?> data = Optional.of(formActivationService.search(criteria));
-            ResponseEntity<?> response;
+            return  ResponseEntity.status(HttpStatus.OK).body(formActivationService.search(criteria));
 
-            if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleActivateDueForms() {
+        try {
+            logger.debug("Activating due forms");
+            return  ResponseEntity.status(HttpStatus.OK).body(formActivationService.activateDueForms());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleCreateMissingSubmissions(Long id) {
+
+        if(id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Form activation should not be null.");
+        }
+        
+        try {
+            logger.debug("Creating missing submission for activation " + id);
+            return  ResponseEntity.status(HttpStatus.OK).body(formActivationService.createMissingSubmissions(id));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleRecreateActivationSubmission(Long id) {
+
+        if(id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Form activation should not be null.");
+        }
+        
+        try {
+            logger.debug("Recreating submission for activation " + id);
+            return  ResponseEntity.status(HttpStatus.OK).body(formActivationService.recreateActivationSubmission(id));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }

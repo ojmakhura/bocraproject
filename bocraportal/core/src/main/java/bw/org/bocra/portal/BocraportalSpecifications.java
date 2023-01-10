@@ -178,6 +178,22 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, J, T extends Comparable<? super T>>Specification<E> findByJoinAttributeLessThan(String joinAttribute, String attribute, T attributeValue) {
+
+        return (root, cq, cb) -> {
+            Join<E, J> join = root.join(joinAttribute);
+            return cb.lessThan(join.<T>get(attribute), attributeValue);
+        };
+    }
+
+    public static <E, J, T extends Comparable<? super T>>Specification<E> findByJoinAttributeGreaterThan(String joinAttribute, String attribute, T attributeValue) {
+
+        return (root, cq, cb) -> {
+            Join<E, J> join = root.join(joinAttribute);
+            return cb.greaterThan(join.<T>get(attribute), attributeValue);
+        };
+    }
+
     public static <E, J, T>Specification<E> findByJoinAttributeIn(String joinAttribute, String attribute, Collection<T> attributeValues) {
         return (root, cq, cb) -> {
             

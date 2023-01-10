@@ -24,6 +24,8 @@ import { ComplaintControllerImpl } from '@app/controller/complaint/complaint-con
 import { ComplaintRestController } from '@app/service/bw/org/bocra/portal/complaint/complaint-rest-controller';
 import { NgChartsModule } from 'ng2-charts';
 import 'chart.js';
+import { complaintTypeFeature } from '@app/store/complaint/type/complaint-type.reducers';
+import { ComplaintTypeEffects } from '@app/store/complaint/type/complaint-type.effects';
 
 @NgModule({
   imports: [
@@ -39,7 +41,8 @@ import 'chart.js';
     SharedModule,
     NgChartsModule,
     StoreModule.forFeature(complaintFeature),
-    EffectsModule.forFeature([ ComplaintEffects ])
+    StoreModule.forFeature(complaintTypeFeature),
+    EffectsModule.forFeature([ ComplaintEffects, ComplaintTypeEffects])
   ],
   declarations: [
     EditComplaintComponentImpl,

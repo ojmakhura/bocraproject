@@ -5,18 +5,30 @@ import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/compl
 import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-vo';
 import { HttpClient } from '@angular/common/http';
 import { ComplaintSeachCriteria } from '@app/model/bw/org/bocra/portal/complaint/complaint-seach-criteria';
+import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComplaintRestController {
     
-    protected path = 'complaint';
+    protected path = '/complaint';
 
     constructor(private http: HttpClient) {
     }
 
-    public addComplaintReply(complaintId: number | any , reply: ComplaintReplyVO | any ): Observable<ComplaintReplyVO | any> {
+    public addDocument(id: number | any , documentTypeId: number | any , file: File | any , fileName: string | any ): Observable<DocumentVO | any> {
+
+        const formData: FormData = new FormData();
+        formData.append('documentTypeId', documentTypeId);
+        formData.append('file', file);
+        formData.append('fileName', fileName);
+        
+        return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, formData);
+
+    }
+
+    public addComplaintReply(complaintId: string | any , reply: ComplaintReplyVO | any ): Observable<ComplaintReplyVO | any> {
         return this.http.post<ComplaintReplyVO | any>(`${this.path}/complaint/reply?complaintId=${complaintId}`, reply);
     }
 

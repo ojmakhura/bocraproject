@@ -12,6 +12,7 @@ import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -70,7 +71,7 @@ public class DocumentServiceImpl
             entity.setDocumentId(uid);
         }
 
-        entity = this.documentRepository.save(entity);
+        entity = this.documentRepository.saveAndFlush(entity);
         
         return documentDao.toDocumentVO(entity);
     }
@@ -105,7 +106,7 @@ public class DocumentServiceImpl
      * @see bw.org.bocra.portal.document.DocumentService#search(String)
      */
     @Override
-    protected  Collection<DocumentVO> handleSearch(String criteria)
+    protected  Collection<DocumentVO> handleSearch(DocumentCriteria criteria)
         throws Exception
     {
         Collection<Document> entities = this.documentDao.findByCriteria(criteria);
@@ -158,6 +159,17 @@ public class DocumentServiceImpl
     @Override
     protected byte[] handleDownloadFile(Long id) throws Exception {
         return getDocumentDao().get(id).getFile();
+    }
+
+    @Override
+    protected Collection<DocumentVO> handleFindByIds(Set<Long> ids) throws Exception {
+        
+        return getDocumentDao().toDocumentVOCollection(documentRepository.findByIdIn(ids));
+    }
+
+    @Override
+    protected Collection<DocumentVO> handleFindByDocumentIds(Set<String> documentIds) throws Exception {
+        return getDocumentDao().toDocumentVOCollection(documentRepository.findByDocumentIdIn(documentIds));
     }
 
 }

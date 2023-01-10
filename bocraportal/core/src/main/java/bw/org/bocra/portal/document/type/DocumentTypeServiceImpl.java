@@ -45,7 +45,7 @@ public class DocumentTypeServiceImpl
             return null;
         }
 
-        return documentTypeDao.toDocumentTypeVO(documentTypeRepository.getById(id));
+        return documentTypeDao.toDocumentTypeVO(documentTypeRepository.getReferenceById(id));
 
     }
 
@@ -57,7 +57,10 @@ public class DocumentTypeServiceImpl
         throws Exception
     {
 
-        return (DocumentTypeVO) documentTypeDao.create(DocumentTypeDao.TRANSFORM_DOCUMENTTYPEVO, documentTypeDao.documentTypeVOToEntity(documentType));
+        DocumentType type = documentTypeDao.documentTypeVOToEntity(documentType);
+        type = documentTypeRepository.saveAndFlush(type);
+
+        return documentTypeDao.toDocumentTypeVO(type);
 
     }
 
