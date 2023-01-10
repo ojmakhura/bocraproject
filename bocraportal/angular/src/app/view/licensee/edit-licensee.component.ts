@@ -32,7 +32,7 @@ import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licens
 import { LicenseeStatus } from '@app/model/bw/org/bocra/portal/licensee/licensee-status';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
-import { ShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/shareholder-vo';
+import { ShareholderVO } from '@app/model/bw/org/bocra/portal/shareholder/shareholder-vo';
 import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
 import { DocumentRestController } from '@app/service/bw/org/bocra/portal/document/document-rest-controller';
@@ -1158,8 +1158,6 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
             type: [value?.type],
             name: [value?.name],
             address: [value?.address],
-            numberOfShares: [value?.numberOfShares],
-            percentageShares: [value?.percentageShares],
         });
     }
 

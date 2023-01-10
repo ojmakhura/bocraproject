@@ -11,6 +11,9 @@ package bw.org.bocra.portal.licensee.shares;
 import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.shareholder.ShareholderDao;
+import bw.org.bocra.portal.shareholder.ShareholderRepository;
+
 import java.util.Collection;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -25,25 +28,34 @@ import org.springframework.transaction.annotation.Transactional;
 public class LicenseeShareholderServiceImpl
     extends LicenseeShareholderServiceBase
 {
-    public LicenseeShareholderServiceImpl(
-        LicenseeShareholderDao licenseeShareholder,
-        LicenseeShareholderRepository licenseeShareholderRepository,
-        ShareholderDao shareholder,
-        ShareholderRepository shareholderRepository,
-        LicenseeDao licensee,
-        LicenseeRepository licenseeRepository,
-        MessageSource messageSource
-    ) {
+    // public LicenseeShareholderServiceImpl(
+    //     LicenseeShareholderDao licenseeShareholder,
+    //     LicenseeShareholderRepository licenseeShareholderRepository,
+    //     ShareholderDao shareholder,
+    //     ShareholderRepository shareholderRepository,
+    //     LicenseeDao licensee,
+    //     LicenseeRepository licenseeRepository,
+    //     MessageSource messageSource
+    // ) {
         
-        super(
-            licenseeShareholder,
-            licenseeShareholderRepository,
-            shareholder,
-            shareholderRepository,
-            licensee,
-            licenseeRepository,
-            messageSource
-        );
+    //     super(
+    //         licenseeShareholder,
+    //         licenseeShareholderRepository,
+    //         shareholder,
+    //         shareholderRepository,
+    //         licensee,
+    //         licenseeRepository,
+    //         messageSource
+    //     );
+    // }
+
+    public LicenseeShareholderServiceImpl(LicenseeShareholderDao licenseeShareholderDao,
+            LicenseeShareholderRepository licenseeShareholderRepository, ShareholderDao shareholderDao,
+            ShareholderRepository shareholderRepository, LicenseeDao licenseeDao, LicenseeRepository licenseeRepository,
+            MessageSource messageSource) {
+        super(licenseeShareholderDao, licenseeShareholderRepository, shareholderDao, shareholderRepository, licenseeDao,
+                licenseeRepository, messageSource);
+        //TODO Auto-generated constructor stub
     }
 
     /**
@@ -55,17 +67,6 @@ public class LicenseeShareholderServiceImpl
     {
         // TODO implement protected  LicenseeShareholderVO handleFindById(Long id)
         throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleFindById(Long id) Not implemented!");
-    }
-
-    /**
-     * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#create(Long, Long)
-     */
-    @Override
-    protected LicenseeShareholderVO handleCreate(Long licenseeId, Long shareholderId)
-        throws Exception
-    {
-        // TODO implement protected  LicenseeShareholderVO handleCreate(Long licenseeId, Long shareholderId)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleCreate(Long licenseeId, Long shareholderId) Not implemented!");
     }
 
     /**
@@ -132,6 +133,13 @@ public class LicenseeShareholderServiceImpl
     {
         // TODO implement protected  LicenseeShareholderVO handleUpdateShareholder(Long id, Long formId)
         throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleUpdateShareholder(Long id, Long formId) Not implemented!");
+    }
+
+    @Override
+    protected LicenseeShareholderVO handleCreate(Long licenseeId, Long shareholderId, Integer numberOfShares)
+            throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
