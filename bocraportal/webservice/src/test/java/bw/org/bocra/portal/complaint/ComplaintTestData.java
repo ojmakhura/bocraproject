@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import bw.org.bocra.portal.complaint.type.ComplaintTypeTestData;
 import bw.org.bocra.portal.complaint.type.ComplaintTypeVO;
 
 @Component
+@Profile("test")
 public class ComplaintTestData {
     private final ComplaintRestController complaintRestController;
     private final ComplaintTypeTestData complaintTypeTestData;

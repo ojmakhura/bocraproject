@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import bw.org.bocra.portal.access.AccessPointTestData;
@@ -13,6 +14,7 @@ import bw.org.bocra.portal.access.type.AccessPointTypeTestData;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 
 @Component
+@Profile("test")
 public class AuthorisationTestData {
 
     private final AuthorisationRestController authorisationRestController;
@@ -99,20 +101,20 @@ public class AuthorisationTestData {
         return auths;
     }
 
-    public Collection<AuthorisationVO> generateSearchData() {
+    public Collection<AuthorisationVO> generateSearchData() throws Exception {
         Collection<AuthorisationVO> auths = new ArrayList<>();
 
         AccessPointTypeVO menuType = new AccessPointTypeVO();
         menuType.setCode("MENU");
         menuType.setName("Menu");
 
-        menuType = (AccessPointTypeVO) accessPointTypeTestData.getAccessPointTypeRestController().save(menuType).getBody();
+        menuType = (AccessPointTypeVO) accessPointTypeTestData.getRestController().save(menuType).getBody();
 
         AccessPointTypeVO apiType = new AccessPointTypeVO();
         apiType.setCode("API");
         apiType.setName("Api");
 
-        apiType = (AccessPointTypeVO) accessPointTypeTestData.getAccessPointTypeRestController().save(apiType).getBody();
+        apiType = (AccessPointTypeVO) accessPointTypeTestData.getRestController().save(apiType).getBody();
 
         for (int i = 1; i <= 4; i++){
             AccessPointVO ap = new AccessPointVO();
@@ -122,7 +124,7 @@ public class AuthorisationTestData {
             ap.setCreatedBy("path");
             ap.setCreatedDate(LocalDateTime.now());
 
-            ap = (AccessPointVO) accessPointTestData.getAccessPointRestController().save(ap).getBody();
+            ap = (AccessPointVO) accessPointTestData.create(ap);
             
             AuthorisationVO ath = new AuthorisationVO();
             ath.setAccessPoint(ap);
@@ -142,14 +144,14 @@ public class AuthorisationTestData {
             ap.setCreatedBy("path");
             ap.setCreatedDate(LocalDateTime.now());
 
-            ap = (AccessPointVO) accessPointTestData.getAccessPointRestController().save(ap).getBody();
+            ap = (AccessPointVO) accessPointTestData.create(ap);
             
             AuthorisationVO ath = new AuthorisationVO();
             ath.setAccessPoint(ap);
             ath.setCreatedBy("path");
             ath.setCreatedDate(LocalDateTime.now());
 
-            auths.add((AuthorisationVO) authorisationRestController.save(ath).getBody());
+            auths.add((AuthorisationVO) authorisationRestController.save(ath));
         }
         
         return auths;

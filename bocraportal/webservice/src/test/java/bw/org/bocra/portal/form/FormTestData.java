@@ -5,15 +5,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("test")
 public class FormTestData {
     
     private final FormRestController formRestController;
+    private final FormRepository formRepository;
 
-    public FormTestData(FormRestController formRestController) {
+    public FormTestData(FormRestController formRestController, FormRepository formRepository) {
         this.formRestController = formRestController;
+        this.formRepository = formRepository;
+    }
+
+    public void clean() {
+        formRepository.deleteAll();
     }
 
     public FormVO createUnsaved() {
