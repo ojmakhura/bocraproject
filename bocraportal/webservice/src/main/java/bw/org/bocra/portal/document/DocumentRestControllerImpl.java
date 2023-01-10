@@ -138,7 +138,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     // }
 
     @Override
-    public ResponseEntity<?> handleSearch(String criteria) {
+    public ResponseEntity<?> handleSearch(DocumentCriteria criteria) {
         try {
             Optional<?> data = Optional.of(documentService.search(criteria));
             ResponseEntity<?> response;
