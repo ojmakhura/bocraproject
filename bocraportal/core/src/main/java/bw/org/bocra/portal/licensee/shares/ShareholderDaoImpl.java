@@ -16,20 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("shareholderDao")
 @Transactional
 public class ShareholderDaoImpl
-    extends ShareholderDaoBase
-{
-    
+        extends ShareholderDaoBase {
+
     public ShareholderDaoImpl(
-        LicenseeRepository licenseeRepository,
-        LicenseeShareholderRepository licenseeShareholderRepository,
-        ShareholderRepository shareholderRepository
-    ) {
+            LicenseeRepository licenseeRepository,
+            LicenseeShareholderRepository licenseeShareholderRepository,
+            ShareholderRepository shareholderRepository) {
 
         super(
-            licenseeRepository,
-            licenseeShareholderRepository,
-            shareholderRepository
-        );
+                licenseeRepository,
+                licenseeShareholderRepository,
+                shareholderRepository);
     }
 
     /**
@@ -37,9 +34,8 @@ public class ShareholderDaoImpl
      */
     @Override
     public void toShareholderVO(
-        Shareholder source,
-        ShareholderVO target)
-    {
+            Shareholder source,
+            ShareholderVO target) {
         // TODO verify behavior of toShareholderVO
         super.toShareholderVO(source, target);
     }
@@ -48,39 +44,35 @@ public class ShareholderDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public ShareholderVO toShareholderVO(final Shareholder entity)
-    {
+    public ShareholderVO toShareholderVO(final Shareholder entity) {
         // TODO verify behavior of toShareholderVO
         return super.toShareholderVO(entity);
     }
 
     /**
-     * Retrieves the entity object that is associated with the specified value object
+     * Retrieves the entity object that is associated with the specified value
+     * object
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private Shareholder loadShareholderFromShareholderVO(ShareholderVO shareholderVO)
-    {
+    private Shareholder loadShareholderFromShareholderVO(ShareholderVO shareholderVO) {
         // TODO implement loadShareholderFromShareholderVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.licensee.shares.loadShareholderFromShareholderVO(ShareholderVO) not yet implemented.");
+        // throw new
+        // UnsupportedOperationException("bw.org.bocra.portal.licensee.shares.loadShareholderFromShareholderVO(ShareholderVO)
+        // not yet implemented.");
 
-        /* A typical implementation looks like this:
-        if (shareholderVO.getId() == null)
-        {
-            return  Shareholder.Factory.newInstance();
-        }
-        else
-        {
+        if (shareholderVO.getId() == null) {
+            return Shareholder.Factory.newInstance();
+        } else {
             return this.load(shareholderVO.getId());
         }
-        */
+
     }
 
     /**
      * {@inheritDoc}
      */
-    public Shareholder shareholderVOToEntity(ShareholderVO shareholderVO)
-    {
+    public Shareholder shareholderVOToEntity(ShareholderVO shareholderVO) {
         // TODO verify behavior of shareholderVOToEntity
         Shareholder entity = this.loadShareholderFromShareholderVO(shareholderVO);
         this.shareholderVOToEntity(shareholderVO, entity, true);
@@ -92,10 +84,9 @@ public class ShareholderDaoImpl
      */
     @Override
     public void shareholderVOToEntity(
-        ShareholderVO source,
-        Shareholder target,
-        boolean copyIfNull)
-    {
+            ShareholderVO source,
+            Shareholder target,
+            boolean copyIfNull) {
         // TODO verify behavior of shareholderVOToEntity
         super.shareholderVOToEntity(source, target, copyIfNull);
     }
