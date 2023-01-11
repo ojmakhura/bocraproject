@@ -117,7 +117,7 @@ public class LicenseeShareholderServiceImpl
      * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#updateLicensee(Long, Long)
      */
     @Override
-    protected LicenseeFormVO handleUpdateLicensee(Long id, Long licenseeId)
+    protected LicenseeShareholderVO handleUpdateLicensee(Long id, Long licenseeId)
         throws Exception
     {
         // TODO implement protected  LicenseeFormVO handleUpdateLicensee(Long id, Long licenseeId)
