@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import bw.org.bocra.portal.form.FormTestData;
@@ -13,6 +14,7 @@ import bw.org.bocra.portal.licensee.LicenseeTestData;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 
 @Component
+@Profile("test")
 public class LicenseeFormTestData {
     
     private final LicenseeFormRestController licenseeFormRestController;

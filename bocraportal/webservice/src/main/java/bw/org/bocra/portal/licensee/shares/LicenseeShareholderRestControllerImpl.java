@@ -32,16 +32,16 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     }
 
     @Override
-    public ResponseEntity<?> handleCreate(Long licenseeId, Long shareholderId) {
+    public ResponseEntity<?> handleCreate(Long licenseeId, Long shareholderId, Integer numberofShares) {
         try {
             logger.debug("Create Licensee Sector with Licensee Id "+licenseeId+" and Sector Id "+shareholderId);
-            Optional<?> data = Optional.of(licenseeShareholderService.create(licenseeId, shareholderId));
+            Optional<?> data = Optional.of(licenseeShareholderService.create(licenseeId, shareholderId, numberofShares));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not create a licensee sector entry. Please contact administrator.");
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not create a licensee shareholder entry. Please contact administrator.");
             }
 
             return response;
@@ -53,16 +53,16 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
 
             if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
 
-                if(message.contains("'licenseeSector'")) {
+                if(message.contains("'licenseeShareholder'")) {
 
-                    message = "The licensee sector information is missing.";
+                    message = "The licensee shareholder information is missing.";
 
                 } else if(message.contains("or its id can not be null")) {
-                    if(message.contains("'licenseeSector.form'")) {
+                    if(message.contains("'licenseeShareholder.shareholder'")) {
                 
-                        message = "The sector type or its id is missing.";
+                        message = "The shareholder type or its id is missing.";
 
-                    } else if(message.contains("'licenseeSector.licensee'")) {
+                    } else if(message.contains("'licenseeShareholder.licensee'")) {
                 
                         message = "The licensee or its id is missing.";
                     }
@@ -76,14 +76,14 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
-                    if(e.getCause().getMessage().contains("(licensee_sector_unique)")) {
+                    if(e.getCause().getMessage().contains("(licensee_shareholder_unique)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee sector has been already created.");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee shareholder has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
-                    if (e.getCause().getMessage().contains("column \"form_fk\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The sector value is missing.");
+                    if (e.getCause().getMessage().contains("column \"shareholder_fk\"")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The shareholder value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"licence_type_fk\"")) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The licensee value is missing.");
                     }
@@ -104,7 +104,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleFindByLicensee(Long licenseeId) {
         try {
-            logger.debug("Search licensee sector by licensee Id " + licenseeId);
+            logger.debug("Search licensee shareholder by licensee Id " + licenseeId);
             Optional<?> data = Optional.of(licenseeShareholderService.findByLicensee(licenseeId));
             ResponseEntity<?> response;
 
@@ -134,14 +134,14 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleFindByShareholder(Long shareholderId) {
         try {
-            logger.debug("Search licensee sector by sector Id " + shareholderId);
+            logger.debug("Search licensee shareholder by shareholder Id " + shareholderId);
             Optional<?> data = Optional.of(licenseeShareholderService.findByShareholder(shareholderId));
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
                 response = ResponseEntity.status(HttpStatus.OK).body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the licensee shareholder with this sector id.");
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the licensee shareholder with this shareholder id.");
             }
 
             return response;
@@ -153,7 +153,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
             logger.error(message, e);
             if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
                     || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Licensee sector with shareholder id %d not found.", shareholderId));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Licensee shareholder with shareholder id %d not found.", shareholderId));
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
@@ -164,7 +164,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     @Override
     public ResponseEntity<?> handleFindByLicenseeShareholderId(Long id) {
         try {
-            logger.debug("Search licensee sector by Id "+id);
+            logger.debug("Search licensee shareholder by Id "+id);
             Optional<?> data = Optional.of(licenseeShareholderService.findById(id));
             ResponseEntity<?> response;
 

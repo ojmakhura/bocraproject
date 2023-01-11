@@ -3,10 +3,10 @@
  * This is only generated once! It will never be overwritten.
  * You can (and have to!) safely modify it by hand.
  * TEMPLATE:    SpringServiceImpl.vsl in andromda-spring cartridge
- * MODEL CLASS: bocraportal::backend::bw.org.bocra.portal::licensee::shares::ShareholderService
+ * MODEL CLASS: bocraportal::backend::bw.org.bocra.portal::shareholder::ShareholderService
  * STEREOTYPE:  Service
  */
-package bw.org.bocra.portal.licensee.shares;
+package bw.org.bocra.portal.shareholder;
 
 import bw.org.bocra.portal.licence.LicenceVO;
 
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @see bw.org.bocra.portal.licensee.shares.ShareholderService
+ * @see bw.org.bocra.portal.shareholder.ShareholderService
  */
 @Service("shareholderService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -36,7 +36,7 @@ public class ShareholderServiceImpl
     }
 
     /**
-     * @see bw.org.bocra.portal.licensee.shares.ShareholderService#findById(Long)
+     * @see bw.org.bocra.portal.shareholder.ShareholderService#findById(Long)
      */
     @Override
     protected ShareholderVO handleFindById(Long id)
@@ -50,7 +50,7 @@ public class ShareholderServiceImpl
     }
 
     /**
-     * @see bw.org.bocra.portal.licensee.shares.ShareholderService#save(ShareholderVO)
+     * @see bw.org.bocra.portal.shareholder.ShareholderService#save(ShareholderVO)
      */
     @Override
     protected ShareholderVO handleSave(ShareholderVO shareholder)
@@ -67,7 +67,7 @@ public class ShareholderServiceImpl
     }
 
     /**
-     * @see bw.org.bocra.portal.licensee.shares.ShareholderService#remove(Long)
+     * @see bw.org.bocra.portal.shareholder.ShareholderService#remove(Long)
      */
     @Override
     protected boolean handleRemove(Long id)
@@ -77,25 +77,21 @@ public class ShareholderServiceImpl
 
             return true;
         }
-
+        shareholder
         return false;
     }
 
     /**
-     * @see bw.org.bocra.portal.licensee.shares.ShareholderService#getAll()
+     * @see bw.org.bocra.portal.shareholder.ShareholderService#getAll()
      */
     @Override
-    protected Collection<LicenceVO> handleGetAll()
+    protected Collection<ShareholderVO> handleGetAll()
             throws Exception {
-        // TODO implement protected Collection<LicenceVO> handleGetAll()
-        throw new UnsupportedOperationException(
-                "bw.org.bocra.portal.licensee.shares.ShareholderService.handleGetAll() Not implemented!");
-        // return (Collection<ShareholderVO>)
-        // shareholderDao.loadAll(ShareholderDao.TRANSFORM_SHAREHOLDERVO);
+        return (Collection<ShareholderVO>) shareholderDao.loadAll(ShareholderDao.TRANSFORM_SHAREHOLDERVO);
     }
 
     /**
-     * @see bw.org.bocra.portal.licensee.shares.ShareholderService#search(ShareholderVO)
+     * @see bw.org.bocra.portal.shareholder.ShareholderService#search(ShareholderCriteria)
      */
     @Override
     protected Collection<ShareholderVO> handleSearch(ShareholderCriteria criteria)

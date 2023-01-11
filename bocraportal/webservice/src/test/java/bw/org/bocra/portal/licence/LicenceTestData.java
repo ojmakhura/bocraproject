@@ -7,12 +7,14 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import bw.org.bocra.portal.licence.type.LicenceTypeTestData;
 import bw.org.bocra.portal.licence.type.LicenceTypeVO;
 
 @Component
+@Profile("test")
 public class LicenceTestData {
     
     private final LicenceRestController accessPointRestController;

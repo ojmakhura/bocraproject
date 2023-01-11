@@ -6,11 +6,14 @@
 package bw.org.bocra.portal.sector;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorDao;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.ClassRule;
@@ -34,20 +37,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class SectorRestControllerTest {
-
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
-
-    private String path = "/sector";
+public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRepository, String, SectorRestController> {
 
     protected Logger logger = LoggerFactory.getLogger(SectorRestControllerTest.class);
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private SectorRestController sectorRestController;
@@ -58,22 +50,14 @@ public class SectorRestControllerTest {
     @Autowired
     private SectorRepository sectorRepository;
 
-    @Autowired
-    private LicenseeSectorDao licenseeSectorDao;
-
-    @Autowired
-    private LicenseeSectorRepository licenseeSectorRepository;
-
-    @Autowired
-    private LicenseeSectorService licenseeSectorService;
-
-    @BeforeEach
-    public void clean() {
-
-        sectorRepository.deleteAll();
+    public SectorRestControllerTest(SectorRestController restController,
+            GenericTestData<SectorVO, SectorRepository, String, SectorRestController> testData) {
+        super(restController, testData);
     }
 
-    public void dummyData(int size) {
+    public Collection<SectorVO> dummyData(int size) {
+
+        Collection<SectorVO> sectors = new ArrayList<>();
 
         for (int i = 1; i <= size; i++) {
 
@@ -86,8 +70,10 @@ public class SectorRestControllerTest {
             sector.setThemeColour("color" + i);
             sector.setDescription("This is sector " + i);
 
-           sectorRestController.save(sector);
+           sectors.add((SectorVO) sectorRestController.save(sector).getBody());
         }
+
+        return sectors;
     }
 
     private void searchData() {
@@ -589,6 +575,31 @@ public class SectorRestControllerTest {
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         Collection<SectorVO> types = (Collection<SectorVO>) response.getBody();
         Assertions.assertEquals(types.size(), 7);
+    }
+
+    @Override
+    protected void basicCompareAssertions(SectorVO o1, SectorVO o2) {
+        
+        Assertions.assertEquals(o1.getId(), o2.getId());
+        Assertions.assertEquals(o1.getCode(), o2.getCode());
+        Assertions.assertEquals(o1.getName(), o2.getName());
+        
+    }
+
+    @Override
+    protected Class<String> getCriteriaClass() {
+        return String.class;
+    }
+
+    @Override
+    protected Class<SectorVO> getDataClass() {
+        return SectorVO.class;
+    }
+
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

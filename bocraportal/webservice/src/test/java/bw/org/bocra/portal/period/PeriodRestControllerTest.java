@@ -5,17 +5,9 @@
 //
 package bw.org.bocra.portal.period;
 
-import bw.org.bocra.portal.BocraportalTestContainer;
-import bw.org.bocra.portal.period.config.PeriodConfigRepository;
-import bw.org.bocra.portal.period.config.PeriodConfigService;
-import bw.org.bocra.portal.period.config.PeriodConfigVO;
-import bw.org.bocra.portal.period.config.RepeatPeriod;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import org.apache.commons.collections4.CollectionUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
@@ -34,13 +26,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
+import bw.org.bocra.portal.period.config.PeriodConfigRepository;
+import bw.org.bocra.portal.period.config.PeriodConfigService;
+import bw.org.bocra.portal.period.config.PeriodConfigVO;
+import bw.org.bocra.portal.period.config.RepeatPeriod;
+
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class PeriodRestControllerTest {
-
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
+public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodRepository, PeriodCriteria, PeriodRestController> {
 
     private String path = "/period";
 
@@ -52,14 +51,9 @@ public class PeriodRestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private PeriodRestController periodRestController;
 
     @Autowired
     protected PeriodService periodService;
-
-    @Autowired
-    private PeriodRepository periodRepository;
 
     @Autowired
     protected PeriodConfigService periodConfigService;
@@ -67,9 +61,15 @@ public class PeriodRestControllerTest {
     @Autowired
     private PeriodConfigRepository periodConfigRepository;
 
+    @Autowired
+    public PeriodRestControllerTest(PeriodRestController restController,
+            GenericTestData<PeriodVO, PeriodRepository, PeriodCriteria, PeriodRestController> testData) {
+        super(restController, testData);
+    }
+
     @BeforeEach
     public void clean() {
-        periodRepository.deleteAll();
+        testData.clean();
         periodConfigRepository.deleteAll();
     }
 
@@ -98,36 +98,6 @@ public class PeriodRestControllerTest {
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
-    public void findById() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAllPaged() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void loadCurrentPeriods() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
     public void save() {
         PeriodConfigVO config = createDefaultConfig();
 
@@ -139,7 +109,7 @@ public class PeriodRestControllerTest {
         period.setPeriodName("Test Period");
         period.setPeriodStart(LocalDate.now());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         period = (PeriodVO) response.getBody();
@@ -162,7 +132,7 @@ public class PeriodRestControllerTest {
 
         period.setNext(new PeriodVO());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         period = (PeriodVO) response.getBody();
@@ -185,7 +155,7 @@ public class PeriodRestControllerTest {
 
         period.setPrevious(new PeriodVO());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
         period = (PeriodVO) response.getBody();
@@ -205,7 +175,7 @@ public class PeriodRestControllerTest {
         period.setPeriodName("Test Period");
         period.setPeriodStart(LocalDate.now());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
@@ -227,7 +197,7 @@ public class PeriodRestControllerTest {
         period.setPeriodName("Test Period");
         period.setPeriodStart(LocalDate.now());
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         
@@ -253,7 +223,7 @@ public class PeriodRestControllerTest {
         period.setNext(new PeriodVO());
         period.getNext().setId(33L);
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         
@@ -276,9 +246,9 @@ public class PeriodRestControllerTest {
         period.setPeriodName("Test Period");
         period.setPeriodStart(LocalDate.now());
         
-        periodRestController.save(period);
+        restController.save(period);
 
-        ResponseEntity<?> response = periodRestController.save(period);
+        ResponseEntity<?> response = restController.save(period);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
@@ -286,10 +256,29 @@ public class PeriodRestControllerTest {
         Assertions.assertTrue(message.contains("period with this information has already been created"));
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void search() {
 
+    @Override
+    protected void basicCompareAssertions(PeriodVO o1, PeriodVO o2) {
+        // TODO Auto-generated method stub
+        Assertions.assertEquals(o1.getId(), o2.getId());
+        Assertions.assertEquals(o1.getPeriodName(), o2.getPeriodName());
+        Assertions.assertEquals(o1.getPeriodConfig().getId(), o2.getPeriodConfig().getId());
+        
     }
 
+    @Override
+    protected Class<PeriodCriteria> getCriteriaClass() {
+        return PeriodCriteria.class;
+    }
+
+    @Override
+    protected Class<PeriodVO> getDataClass() {
+        return PeriodVO.class;
+    }
+
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
+        // TODO Auto-generated method stub
+        
+    }
 }

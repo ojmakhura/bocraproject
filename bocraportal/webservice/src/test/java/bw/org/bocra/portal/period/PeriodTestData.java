@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import bw.org.bocra.portal.period.config.PeriodConfigTestData;
 import bw.org.bocra.portal.period.config.PeriodConfigVO;
 
 @Component
+@Profile("test")
 public class PeriodTestData {
     private final PeriodRestController periodRestController;
     private final PeriodConfigTestData periodConfigTestData;

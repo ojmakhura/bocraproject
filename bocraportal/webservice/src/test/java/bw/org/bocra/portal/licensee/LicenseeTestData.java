@@ -6,9 +6,11 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("test")
 public class LicenseeTestData {
     private final LicenseeRestController licenseeFormRestController;
 

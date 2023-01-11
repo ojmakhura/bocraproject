@@ -5,7 +5,10 @@
 //
 package bw.org.bocra.portal.period.config;
 
+import java.util.Collection;
+
 import org.junit.ClassRule;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,14 +26,13 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class PeriodConfigRestControllerTest {
-
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
+public class PeriodConfigRestControllerTest extends GenericRestTest<PeriodConfigVO, PeriodConfigRepository, PeriodConfigCriteria, PeriodConfigRestController> {
 
     private String path = "/period/config";
 
@@ -41,50 +44,40 @@ public class PeriodConfigRestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private PeriodConfigRestController periodConfigRestController;
 
     @Autowired
     protected PeriodConfigService periodConfigService;
+
+    @Autowired
+    public PeriodConfigRestControllerTest(PeriodConfigRestController restController,
+            GenericTestData<PeriodConfigVO, PeriodConfigRepository, PeriodConfigCriteria, PeriodConfigRestController> testData) {
+        super(restController, testData);
+    }
 
     @BeforeEach
     public void clean() {
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findById() {
-
+    @Override
+    protected void basicCompareAssertions(PeriodConfigVO o1, PeriodConfigVO o2) {
+        Assertions.assertEquals(o1.getId(), o2.getId());
+        Assertions.assertEquals(o1.getPeriodConfigName(), o2.getPeriodConfigName());        
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
-
+    @Override
+    protected Class<PeriodConfigCriteria> getCriteriaClass() {
+        return PeriodConfigCriteria.class;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAllPaged() {
-
+    @Override
+    protected Class<PeriodConfigVO> getDataClass() {
+        return PeriodConfigVO.class;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void save() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void search() {
-
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

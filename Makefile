@@ -98,8 +98,8 @@ endif
 
 run_tests: gen_env test_${module}
 
-run_test:
-	. ./.env && mvn -f bocraportal/${module} -Dtest=${test} test -o
+run_test: gen_env
+	. ./.env && mvn -f bocraportal/${module} -Dtest=${test} -Dspring.profiles.active=test test -o
 	
 ##
 ## Build docker images

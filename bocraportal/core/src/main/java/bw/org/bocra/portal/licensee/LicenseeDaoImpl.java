@@ -16,11 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.complaint.ComplaintRepository;
-import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentRepository;
-import bw.org.bocra.portal.document.DocumentVO;
-import bw.org.bocra.portal.document.type.DocumentTypeVO;
-import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
@@ -34,11 +30,8 @@ import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
-import bw.org.bocra.portal.licensee.shares.ShareholderRepository;
-import bw.org.bocra.portal.notification.NotificationRepository;
 import bw.org.bocra.portal.report.ReportRepository;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
-import bw.org.bocra.portal.sector.Sector;
 import bw.org.bocra.portal.sector.SectorRepository;
 import bw.org.bocra.portal.user.LicenseeUserRepository;
 
@@ -52,21 +45,18 @@ public class LicenseeDaoImpl
     extends LicenseeDaoBase
 {
 
-
     public LicenseeDaoImpl(LicenseeUserRepository licenseeUserRepository,
             FormSubmissionRepository formSubmissionRepository, FormRepository formRepository,
             LicenceRepository licenceRepository, DocumentRepository documentRepository,
             ReportRepository reportRepository, ReportConfigRepository reportConfigRepository,
-            SectorRepository sectorRepository, ShareholderRepository shareholderRepository,
-            LicenseeShareholderRepository licenseeShareholderRepository,
+            SectorRepository sectorRepository, LicenseeShareholderRepository licenseeShareholderRepository,
             LicenseeSectorRepository licenseeSectorRepository, LicenseeFormRepository licenseeFormRepository,
             LicenseeReportConfigRepository licenseeReportConfigRepository, ComplaintRepository complaintRepository,
             LicenseeRepository licenseeRepository) {
         super(licenseeUserRepository, formSubmissionRepository, formRepository, licenceRepository, documentRepository,
-                reportRepository, reportConfigRepository, sectorRepository, shareholderRepository,
-                licenseeShareholderRepository, licenseeSectorRepository, licenseeFormRepository, licenseeReportConfigRepository,
-                complaintRepository, licenseeRepository);
-        //TODO Auto-generated constructor stub
+                reportRepository, reportConfigRepository, sectorRepository, licenseeShareholderRepository,
+                licenseeSectorRepository, licenseeFormRepository, licenseeReportConfigRepository, complaintRepository,
+                licenseeRepository);
     }
 
     /**

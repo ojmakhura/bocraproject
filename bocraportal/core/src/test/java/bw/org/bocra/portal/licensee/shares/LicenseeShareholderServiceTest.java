@@ -5,6 +5,10 @@
 //
 package bw.org.bocra.portal.licensee.shares;
 
+import bw.org.bocra.portal.licensee.LicenseeDao;
+import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.shareholder.ShareholderDao;
+import bw.org.bocra.portal.shareholder.ShareholderRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,19 +17,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import bw.org.bocra.portal.licensee.LicenseeDao;
-import bw.org.bocra.portal.licensee.LicenseeRepository;
-
-@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class LicenseeShareholderServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(LicenseeShareholderServiceTest.class);
     
     @InjectMocks
-    private LicenseeShareholderServiceImpl LicenseeShareholderService;
+    private LicenseeShareholderServiceImpl licenseeShareholderService;
 
     @Mock
     private LicenseeShareholderDao licenseeShareholderDao;
@@ -52,10 +51,9 @@ public class LicenseeShareholderServiceTest {
         Assertions.assertNotNull(shareholderRepository);
         Assertions.assertNotNull(licenseeDao);
         Assertions.assertNotNull(licenseeRepository);
-        Assertions.assertNotNull(LicenseeShareholderService);
+        Assertions.assertNotNull(licenseeShareholderService);
 
     }
-    
 
     @Test
     public void findById_success() {
@@ -67,7 +65,6 @@ public class LicenseeShareholderServiceTest {
         
     }
 
-
     @Test
     public void create_success() {
         
@@ -77,7 +74,6 @@ public class LicenseeShareholderServiceTest {
     public void create_fail() {
         
     }
-
 
     @Test
     public void remove_success() {
@@ -89,7 +85,6 @@ public class LicenseeShareholderServiceTest {
         
     }
 
-
     @Test
     public void getAll_success() {
         
@@ -99,7 +94,6 @@ public class LicenseeShareholderServiceTest {
     public void getAll_fail() {
         
     }
-
 
     @Test
     public void findByLicensee_success() {
@@ -111,7 +105,6 @@ public class LicenseeShareholderServiceTest {
         
     }
 
-
     @Test
     public void findByShareholder_success() {
         
@@ -122,7 +115,6 @@ public class LicenseeShareholderServiceTest {
         
     }
 
-
     @Test
     public void updateLicensee_success() {
         
@@ -132,7 +124,6 @@ public class LicenseeShareholderServiceTest {
     public void updateLicensee_fail() {
         
     }
-
 
     @Test
     public void updateShareholder_success() {

@@ -5,32 +5,26 @@
 //
 package bw.org.bocra.portal.licence.type;
 
-import bw.org.bocra.portal.BocraportalTestContainer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class LicenceTypeRestControllerTest {
+public class LicenceTypeRestControllerTest extends GenericRestTest<LicenceTypeVO, LicenceTypeRepository, LicenceTypeCriteria, LicenceTypeRestController> {
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -40,55 +34,39 @@ public class LicenceTypeRestControllerTest {
     protected Logger logger = LoggerFactory.getLogger(LicenceTypeRestControllerTest.class);
 
     @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private LicenceTypeRestController licenceTypeRestController;
-
-    @Autowired
     protected LicenceTypeService licenceTypeService;
 
-    @BeforeEach
-    public void clean() {
+    @Autowired
+    public LicenceTypeRestControllerTest(LicenceTypeRestController restController,
+            GenericTestData<LicenceTypeVO, LicenceTypeRepository, LicenceTypeCriteria, LicenceTypeRestController> testData) {
+        super(restController, testData);
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findById() {
-
+    @Override
+    protected void basicCompareAssertions(LicenceTypeVO o1, LicenceTypeVO o2) {
+        
+        Assertions.assertEquals(o1.getId(), o2.getId());
+        Assertions.assertEquals(o1.getCode(), o2.getCode());
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
 
+    @Override
+    protected Class<LicenceTypeCriteria> getCriteriaClass() {
+        return LicenceTypeCriteria.class;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAllPaged() {
 
+    @Override
+    protected Class<LicenceTypeVO> getDataClass() {
+        return LicenceTypeVO.class;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
 
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
+        // TODO Auto-generated method stub
+        
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void save() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void search() {
-
-    }
 
 }

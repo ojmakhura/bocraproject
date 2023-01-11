@@ -7,6 +7,7 @@ package bw.org.bocra.portal.auth;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
 import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
 import bw.org.bocra.portal.access.AccessPointRepository;
 import bw.org.bocra.portal.access.AccessPointRestController;
 import bw.org.bocra.portal.access.AccessPointService;
@@ -51,7 +52,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
-public class AuthorisationRestControllerTest extends GenericRestTest {
+public class AuthorisationRestControllerTest extends GenericRestTest<AuthorisationVO, AuthorisationRepository, AuthorisationCriteria, AuthorisationRestController> {
 
     // @ClassRule
     // public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -66,8 +67,6 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private AuthorisationRestController authorisationRestController;
 
     @Autowired
     protected AuthorisationService authorisationService;
@@ -102,11 +101,18 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
     @Autowired
     private AuthorisationTestData authorisationTestData;
 
+    @Autowired
+    public AuthorisationRestControllerTest(AuthorisationRestController restController,
+            GenericTestData<AuthorisationVO, AuthorisationRepository, AuthorisationCriteria, AuthorisationRestController> testData) {
+        super(restController, testData);
+        
+    }
+
     @BeforeEach
     public void clean() {
-        authorisationRepository.deleteAll();
-        accessPointRepository.deleteAll();
-        accessPointTypeRepository.deleteAll();
+        authorisationTestData.clean();
+        accessPointTestData.clean();
+        accessPointTypeTestData.clean();
     }
 
 
@@ -133,29 +139,12 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
     //     return point;
     // }
 
-    @Override
-    protected ResponseEntity<?> handleGetAll() {
-        return authorisationRestController.getAll();
-    }
 
     @Override
-    protected ResponseEntity<?> handleGetAllPaged(int pageNumber, int pageSize) {
-        return authorisationRestController.getAllPaged(pageNumber, pageSize);
-    }
+    protected void basicCompareAssertions(AuthorisationVO o1, AuthorisationVO o2) {
 
-    @Override
-    protected void basicCompareAssertions(Object o1, Object o2) {
-        AuthorisationVO a1 = (AuthorisationVO) o1;
-        AuthorisationVO a2 = (AuthorisationVO) o2;
-
-        Assertions.assertEquals(a1.getId(), a2.getId());
-        Assertions.assertEquals(a1.getAccessPoint().getId(), a2.getAccessPoint().getId());
-    }
-
-    @Override
-    public Collection<AuthorisationVO> dummyData(int size) {
-
-        return authorisationTestData.generateSequentialData(size);
+        Assertions.assertEquals(o1.getId(), o2.getId());
+        Assertions.assertEquals(o1.getAccessPoint().getId(), o2.getAccessPoint().getId());
     }
     
     @WithMockUser(username = "testuser4", password = "testuser1")
@@ -164,10 +153,29 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
 
     }
 
+
     @Override
-    protected ResponseEntity<?> handleFindById(Long id) {
-        return authorisationRestController.findById(id);
+    protected Class<AuthorisationCriteria> getCriteriaClass() {
+        return AuthorisationCriteria.class;
     }
+
+
+    @Override
+    protected Class<AuthorisationVO> getDataClass() {
+        return AuthorisationVO.class;
+    }
+
+
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    // @Override
+    // protected ResponseEntity<?> handleFindById(Long id) {
+    //     return authorisationRestController.findById(id);
+    // }
 
 
     // @WithMockUser(username = "testuser4", password = "testuser1")
@@ -205,58 +213,28 @@ public class AuthorisationRestControllerTest extends GenericRestTest {
 
     // }
 
-    @Override
-    protected ResponseEntity<?> handleRemove(Long id) {
+    // @Override
+    // protected ResponseEntity<?> handleRemove(Long id) {
         
-        return authorisationRestController.remove(id);
-    }
+    //     return authorisationRestController.remove(id);
+    // }
 
-    @Override
-    protected Object unsavedDummyData() {
-
-        return authorisationTestData.createUnsavedAuthorisation();
-    }
-
-    @Override
-    protected ResponseEntity<?> handleSearch(Object criteria) {
+    // @Override
+    // protected ResponseEntity<?> handleSearch(Object criteria) {
         
-        return authorisationRestController.search((AuthorisationCriteria) criteria);
-    }
+    //     return authorisationRestController.search((AuthorisationCriteria) criteria);
+    // }
 
-    @Override
-    protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, Object criteria) {
+    // @Override
+    // protected ResponseEntity<?> handlePagedSearch(int pagenumber, int pageSize, Object criteria) {
         
-        return null;
-    }
+    //     return null;
+    // }
 
-    @Override
-    protected ResponseEntity<?> handleSave(Object o) {
+    // @Override
+    // protected ResponseEntity<?> handleSave(Object o) {
         
-        return authorisationRestController.save((AuthorisationVO) o);
-    }
-
-    @Override
-    protected Collection<?> searchData() {
-
-        return authorisationTestData.generateSearchData();
-    }
-
-    @Override
-    protected Object searchCriteria() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected Object searchCriteriaNone() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected Object searchCriteriaEmpty() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    //     return authorisationRestController.save((AuthorisationVO) o);
+    // }
 
 }

@@ -4,9 +4,9 @@
  * This is only generated once! It will never be overwritten.
  * You can (and have to!) safely modify it by hand.
  */
-package bw.org.bocra.portal.licensee.shares;
+package bw.org.bocra.portal.shareholder;
 
-import bw.org.bocra.portal.licensee.LicenseeRepository;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +19,10 @@ public class ShareholderDaoImpl
         extends ShareholderDaoBase {
 
     public ShareholderDaoImpl(
-            LicenseeRepository licenseeRepository,
             LicenseeShareholderRepository licenseeShareholderRepository,
             ShareholderRepository shareholderRepository) {
 
         super(
-                licenseeRepository,
                 licenseeShareholderRepository,
                 shareholderRepository);
     }
@@ -57,16 +55,20 @@ public class ShareholderDaoImpl
      */
     private Shareholder loadShareholderFromShareholderVO(ShareholderVO shareholderVO) {
         // TODO implement loadShareholderFromShareholderVO
-        // throw new
-        // UnsupportedOperationException("bw.org.bocra.portal.licensee.shares.loadShareholderFromShareholderVO(ShareholderVO)
-        // not yet implemented.");
+        throw new UnsupportedOperationException(
+                "bw.org.bocra.portal.shareholder.loadShareholderFromShareholderVO(ShareholderVO) not yet implemented.");
 
-        if (shareholderVO.getId() == null) {
-            return Shareholder.Factory.newInstance();
-        } else {
-            return this.load(shareholderVO.getId());
-        }
-
+        /*
+         * A typical implementation looks like this:
+         * if (shareholderVO.getId() == null)
+         * {
+         * return Shareholder.Factory.newInstance();
+         * }
+         * else
+         * {
+         * return this.load(shareholderVO.getId());
+         * }
+         */
     }
 
     /**
