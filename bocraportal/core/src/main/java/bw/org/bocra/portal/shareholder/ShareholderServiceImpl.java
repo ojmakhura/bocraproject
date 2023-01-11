@@ -1,11 +1,3 @@
-// license-header java merge-point
-/**
- * This is only generated once! It will never be overwritten.
- * You can (and have to!) safely modify it by hand.
- * TEMPLATE:    SpringServiceImpl.vsl in andromda-spring cartridge
- * MODEL CLASS: bocraportal::backend::bw.org.bocra.portal::shareholder::ShareholderService
- * STEREOTYPE:  Service
- */
 package bw.org.bocra.portal.shareholder;
 
 import bw.org.bocra.portal.licence.LicenceVO;
@@ -77,7 +69,6 @@ public class ShareholderServiceImpl
 
             return true;
         }
-        shareholder
         return false;
     }
 
@@ -98,7 +89,9 @@ public class ShareholderServiceImpl
             throws Exception {
         Collection<Shareholder> holders = this.shareholderDao.findByCriteria(criteria);
         Collection<ShareholderVO> vos = new ArrayList<>();
-
+        // throw new UnsupportedOperationException(
+        // "bw.org.bocra.portal.shareholder.loadShareholderFromShareholderVO(ShareholderVO)
+        // not yet implemented.");
         for (Shareholder holder : holders) {
             ShareholderVO vo = new ShareholderVO();
             getShareholderDao().toShareholderVO(holder, vo);

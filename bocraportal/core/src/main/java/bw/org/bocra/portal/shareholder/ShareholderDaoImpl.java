@@ -55,20 +55,15 @@ public class ShareholderDaoImpl
      */
     private Shareholder loadShareholderFromShareholderVO(ShareholderVO shareholderVO) {
         // TODO implement loadShareholderFromShareholderVO
-        throw new UnsupportedOperationException(
-                "bw.org.bocra.portal.shareholder.loadShareholderFromShareholderVO(ShareholderVO) not yet implemented.");
+        // throw new UnsupportedOperationException(
+        // "bw.org.bocra.portal.shareholder.loadShareholderFromShareholderVO(ShareholderVO)
+        // not yet implemented.");
 
-        /*
-         * A typical implementation looks like this:
-         * if (shareholderVO.getId() == null)
-         * {
-         * return Shareholder.Factory.newInstance();
-         * }
-         * else
-         * {
-         * return this.load(shareholderVO.getId());
-         * }
-         */
+        if (shareholderVO.getId() == null) {
+            return Shareholder.Factory.newInstance();
+        } else {
+            return this.load(shareholderVO.getId());
+        }
     }
 
     /**

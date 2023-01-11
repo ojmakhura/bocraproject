@@ -8,14 +8,18 @@
  */
 package bw.org.bocra.portal.licensee.shares;
 
+import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
+import bw.org.bocra.portal.shareholder.Shareholder;
 import bw.org.bocra.portal.shareholder.ShareholderDao;
 import bw.org.bocra.portal.shareholder.ShareholderRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.context.MessageSource;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,127 +30,129 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("LicenseeShareholderService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class LicenseeShareholderServiceImpl
-                extends LicenseeShareholderServiceBase {
-        // public LicenseeShareholderServiceImpl(
-        // LicenseeShareholderDao licenseeShareholder,
-        // LicenseeShareholderRepository licenseeShareholderRepository,
-        // ShareholderDao shareholder,
-        // ShareholderRepository shareholderRepository,
-        // LicenseeDao licensee,
-        // LicenseeRepository licenseeRepository,
-        // MessageSource messageSource
-        // ) {
+		extends LicenseeShareholderServiceBase {
+	public LicenseeShareholderServiceImpl(LicenseeShareholderDao licenseeShareholderDao,
+			LicenseeShareholderRepository licenseeShareholderRepository, ShareholderDao shareholderDao,
+			ShareholderRepository shareholderRepository, LicenseeDao licenseeDao,
+			LicenseeRepository licenseeRepository,
+			MessageSource messageSource) {
+		super(licenseeShareholderDao, licenseeShareholderRepository, shareholderDao, shareholderRepository,
+				licenseeDao,
+				licenseeRepository, messageSource);
+		// TODO Auto-generated constructor stub
+	}
 
-        // super(
-        // licenseeShareholder,
-        // licenseeShareholderRepository,
-        // shareholder,
-        // shareholderRepository,
-        // licensee,
-        // licenseeRepository,
-        // messageSource
-        // );
-        // }
+	/**
+	 * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#findById(Long)
+	 */
+	@Override
+	protected LicenseeShareholderVO handleFindById(Long id)
+			throws Exception {
+		LicenseeShareholder ls = getLicenseeShareholderDao().load(id);
+		return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
+	}
 
-        public LicenseeShareholderServiceImpl(LicenseeShareholderDao licenseeShareholderDao,
-                        LicenseeShareholderRepository licenseeShareholderRepository, ShareholderDao shareholderDao,
-                        ShareholderRepository shareholderRepository, LicenseeDao licenseeDao,
-                        LicenseeRepository licenseeRepository,
-                        MessageSource messageSource) {
-                super(licenseeShareholderDao, licenseeShareholderRepository, shareholderDao, shareholderRepository,
-                                licenseeDao,
-                                licenseeRepository, messageSource);
-                // TODO Auto-generated constructor stub
-        }
+	/**
+	 * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#remove(Long)
+	 */
+	@Override
+	protected boolean handleRemove(Long id)
+			throws Exception {
+		getLicenseeShareholderRepository().deleteById(id);
+		return true;
+	}
 
-        /**
-         * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#findById(Long)
-         */
-        @Override
-        protected LicenseeShareholderVO handleFindById(Long id)
-                        throws Exception {
-                // TODO implement protected LicenseeShareholderVO handleFindById(Long id)
-                throw new UnsupportedOperationException(
-                                "bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleFindById(Long id) Not implemented!");
-        }
+	/**
+	 * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#getAll()
+	 */
+	@Override
+	protected Collection<LicenseeShareholderVO> handleGetAll()
+			throws Exception {
+		return (Collection<LicenseeShareholderVO>) getLicenseeShareholderDao()
+				.loadAll(LicenseeShareholderDao.TRANSFORM_LICENSEESHAREHOLDERVO);
+	}
 
-        /**
-         * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#remove(Long)
-         */
-        @Override
-        protected boolean handleRemove(Long id)
-                        throws Exception {
-                // TODO implement protected boolean handleRemove(Long id)
-                throw new UnsupportedOperationException(
-                                "bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleRemove(Long id) Not implemented!");
-        }
+	/**
+	 * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#findByLicensee(Long)
+	 */
+	@Override
+	protected Collection<LicenseeShareholderVO> handleFindByLicensee(Long licenseeId)
+			throws Exception {
+		Specification<LicenseeShareholder> spec = LicenseeShareholderSpecifications.findByLicenseeId(licenseeId);
+		Collection<LicenseeShareholder> holders = getLicenseeShareholderRepository().findAll(spec);
+		Collection<LicenseeShareholderVO> vos = new ArrayList<>();
 
-        /**
-         * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#getAll()
-         */
-        @Override
-        protected Collection<LicenseeShareholderVO> handleGetAll()
-                        throws Exception {
-                // TODO implement protected Collection<LicenseeShareholderVO> handleGetAll()
-                throw new UnsupportedOperationException(
-                                "bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleGetAll() Not implemented!");
-        }
+		for (LicenseeShareholder licenseeShareholder : holders) {
+			LicenseeShareholderVO vo = new LicenseeShareholderVO();
+			getLicenseeShareholderDao().toLicenseeShareholderVO(licenseeShareholder, vo);
 
-        /**
-         * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#findByLicensee(Long)
-         */
-        @Override
-        protected Collection<LicenseeShareholderVO> handleFindByLicensee(Long licenseeId)
-                        throws Exception {
-                // TODO implement protected Collection<LicenseeShareholderVO>
-                // handleFindByLicensee(Long licenseeId)
-                throw new UnsupportedOperationException(
-                                "bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleFindByLicensee(Long licenseeId) Not implemented!");
-        }
+			vos.add(vo);
+		}
+		return vos;
+	}
 
-        /**
-         * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#findByShareholder(Long)
-         */
-        @Override
-        protected Collection<LicenseeShareholderVO> handleFindByShareholder(Long formId)
-                        throws Exception {
-                // TODO implement protected Collection<LicenseeShareholderVO>
-                // handleFindByShareholder(Long formId)
-                throw new UnsupportedOperationException(
-                                "bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleFindByShareholder(Long formId) Not implemented!");
-        }
+	/**
+	 * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#findByShareholder(Long)
+	 */
+	@Override
+	protected Collection<LicenseeShareholderVO> handleFindByShareholder(Long shareholderId)
+			throws Exception {
+		Specification<LicenseeShareholder> spec = LicenseeShareholderSpecifications.findByShareholderId(shareholderId);
+		Collection<LicenseeShareholder> holders = getLicenseeShareholderRepository().findAll(spec);
+		Collection<LicenseeShareholderVO> vos = new ArrayList<>();
 
-        /**
-         * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#updateLicensee(Long,
-         *      Long)
-         */
-        @Override
-        protected LicenseeFormVO handleUpdateLicensee(Long id, Long licenseeId)
-                        throws Exception {
-                // TODO implement protected LicenseeFormVO handleUpdateLicensee(Long id, Long
-                // licenseeId)
-                throw new UnsupportedOperationException(
-                                "bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleUpdateLicensee(Long id, Long licenseeId) Not implemented!");
-        }
+		for (LicenseeShareholder licenseeShareholder : holders) {
+			LicenseeShareholderVO vo = new LicenseeShareholderVO();
+			getLicenseeShareholderDao().toLicenseeShareholderVO(licenseeShareholder, vo);
 
-        /**
-         * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#updateShareholder(Long,
-         *      Long)
-         */
-        @Override
-        protected LicenseeShareholderVO handleUpdateShareholder(Long id, Long formId)
-                        throws Exception {
-                // TODO implement protected LicenseeShareholderVO handleUpdateShareholder(Long
-                // id, Long formId)
-                throw new UnsupportedOperationException(
-                                "bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleUpdateShareholder(Long id, Long formId) Not implemented!");
-        }
+			vos.add(vo);
+		}
+		return vos;
+	}
 
-        @Override
-        protected LicenseeShareholderVO handleCreate(Long licenseeId, Long shareholderId, Integer numberOfShares)
-                        throws Exception {
-                // TODO Auto-generated method stub
-                return null;
-        }
+	/**
+	 * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#updateLicensee(Long,
+	 *      Long)
+	 */
+	@Override
+	protected LicenseeFormVO handleUpdateLicensee(Long id, Long licenseeId)
+			throws Exception {
+		// LicenseeShareholder ls = getLicenseeShareholderDao().load(id);
+		// ls.setLicensee(getLicenseeDao().load(licenseeId));
+		// ls = getLicenseeShareholderRepository().save(ls);
+
+		// return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
+		// TODO implement protected LicenseeFormVO handleUpdateLicensee(Long id, Long
+		// licenseeId)
+		throw new UnsupportedOperationException(
+				"bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleUpdateLicensee(Long id, Long licenseeId) Not implemented!");
+	}
+
+	/**
+	 * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#updateShareholder(Long,
+	 *      Long)
+	 */
+	@Override
+	protected LicenseeShareholderVO handleUpdateShareholder(Long id, Long shareholderId)
+			throws Exception {
+		LicenseeShareholder ls = getLicenseeShareholderDao().load(id);
+		ls.setShareholder(getShareholderDao().load(shareholderId));
+		ls = getLicenseeShareholderRepository().save(ls);
+
+		return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
+	}
+
+	@Override
+	protected LicenseeShareholderVO handleCreate(Long licenseeId, Long shareholderId, Integer numberOfShares)
+			throws Exception {
+		Licensee licensee = getLicenseeDao().load(licenseeId);
+		Shareholder holder = getShareholderDao().load(shareholderId);
+		LicenseeShareholder ls = LicenseeShareholder.Factory.newInstance();
+		ls.setLicensee(licensee);
+		ls = getLicenseeShareholderDao().create(licensee, holder);
+
+		return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
+
+	}
 
 }
