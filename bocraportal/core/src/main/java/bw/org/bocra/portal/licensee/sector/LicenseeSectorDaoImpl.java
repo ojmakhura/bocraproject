@@ -127,10 +127,18 @@ public class LicenseeSectorDaoImpl
 
         if(source.getLicensee() != null && source.getLicensee().getId() != null) {
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
-        } 
+        } else {
+            throw new IllegalArgumentException(
+                "LicenseeSectorDao.licenseeSectorVOToEntity - 'licensee' or its id can not be null"
+            );
+        }
 
         if(source.getSector() != null && source.getSector().getId() != null) {
             target.setSector(getSectorDao().load(source.getSector().getId()));
-        } 
+        }  else {
+            throw new IllegalArgumentException(
+                "LicenseeSectorDao.licenseeSectorVOToEntity - 'sector' or its id can not be null"
+            );
+        }
     }
 }

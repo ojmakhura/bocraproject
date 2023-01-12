@@ -60,7 +60,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
                     message = "The licensee sector information is missing.";
 
                 } else if(message.contains("or its id can not be null")) {
-                    if(message.contains("'licenseeSector.form'")) {
+                    if(message.contains("'licenseeSector.sector'")) {
                 
                         message = "The sector type or its id is missing.";
 
@@ -84,7 +84,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
-                    if (e.getCause().getMessage().contains("column \"form_fk\"")) {
+                    if (e.getCause().getMessage().contains("column \"sector_fk\"")) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The sector value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"licence_type_fk\"")) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The licensee value is missing.");

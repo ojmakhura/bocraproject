@@ -8,11 +8,11 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { ReportVO } from '@app/model/bw/org/bocra/portal/report/report-vo';
 import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licensee-criteria';
 import { ReportConfigVO } from '@app/model/bw/org/bocra/portal/report/config/report-config-vo';
-import { ShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/shareholder-vo';
 import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 import { HttpClient } from '@angular/common/http';
+import { ShareholderVO } from '@app/model/bw/org/bocra/portal/shareholder/shareholder-vo';
 
 @Injectable({
   providedIn: 'root'

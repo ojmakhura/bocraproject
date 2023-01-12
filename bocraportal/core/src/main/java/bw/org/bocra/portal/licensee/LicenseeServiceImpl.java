@@ -48,7 +48,6 @@ import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholder;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderDao;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
-import bw.org.bocra.portal.licensee.shares.ShareholderVO;
 import bw.org.bocra.portal.report.Report;
 import bw.org.bocra.portal.report.ReportVO;
 import bw.org.bocra.portal.report.config.ReportConfigVO;
@@ -56,6 +55,7 @@ import bw.org.bocra.portal.sector.Sector;
 import bw.org.bocra.portal.sector.SectorDao;
 import bw.org.bocra.portal.sector.SectorRepository;
 import bw.org.bocra.portal.sector.SectorVO;
+import bw.org.bocra.portal.shareholder.ShareholderVO;
 
 /**
  * @see bw.org.bocra.portal.licensee.LicenseeService
@@ -301,8 +301,6 @@ public class LicenseeServiceImpl
             vo.setCreatedDate(holder.getShareholder().getCreatedDate());
             vo.setId(holder.getShareholder().getId());
             vo.setName(holder.getShareholder().getName());
-            vo.setNumberOfShares(holder.getShareholder().getNumberOfShares());
-            vo.setPercentageShares(holder.getShareholder().getPercentageShares());
             vo.setType(holder.getShareholder().getType());
             vo.setUpdatedBy(holder.getShareholder().getUpdatedBy());
             vo.setUpdatedDate(holder.getShareholder().getUpdatedDate());
