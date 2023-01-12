@@ -115,17 +115,13 @@ public class LicenseeShareholderServiceImpl
 	 *      Long)
 	 */
 	@Override
-	protected LicenseeFormVO handleUpdateLicensee(Long id, Long licenseeId)
+	protected LicenseeShareholderVO handleUpdateLicensee(Long id, Long licenseeId)
 			throws Exception {
-		// LicenseeShareholder ls = getLicenseeShareholderDao().load(id);
-		// ls.setLicensee(getLicenseeDao().load(licenseeId));
-		// ls = getLicenseeShareholderRepository().save(ls);
+		LicenseeShareholder ls = getLicenseeShareholderDao().load(id);
+		ls.setLicensee(getLicenseeDao().load(licenseeId));
+		ls = getLicenseeShareholderRepository().save(ls);
 
-		// return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
-		// TODO implement protected LicenseeFormVO handleUpdateLicensee(Long id, Long
-		// licenseeId)
-		throw new UnsupportedOperationException(
-				"bw.org.bocra.portal.licensee.shares.LicenseeShareholderService.handleUpdateLicensee(Long id, Long licenseeId) Not implemented!");
+		return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
 	}
 
 	/**

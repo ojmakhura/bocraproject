@@ -16,7 +16,7 @@ export class SectorEffects {
             mergeMap(({ id }) => this.sectorRestController.findById(id).pipe(
                 map( sector => SectorActions.findByIdSuccess({
                     sector,
-                    messages: [`Sector for ${sector?.name} found.`],
+                    messages: [`Sector ${sector?.name} found.`],
                     success: true
                 })),
                 catchError(({error}) => [SectorActions.sectorFailure({messages: [error?.error ? error.error : error]})])
@@ -30,7 +30,7 @@ export class SectorEffects {
             mergeMap(({ sector }) => this.sectorRestController.save(sector).pipe(
                 map( sector => SectorActions.saveSuccess({
                     sector,
-                    messages: [`Sector for ${sector?.name} saved.`],
+                    messages: [`Sector ${sector?.name} saved.`],
                     success: true
                 })),
                 catchError(({error}) => [SectorActions.sectorFailure({messages: [error?.error ? error.error : error]})])
@@ -44,7 +44,7 @@ export class SectorEffects {
             mergeMap(({ sectorId, licenseeId }) => this.sectorRestController.addLicensee(sectorId, licenseeId).pipe(
                 map( licensee => SectorActions.addLicenseeSuccess({
                     licensee,
-                    messages: [`Licensee for ${licensee?.name} added to sector.`],
+                    messages: [`Licensee ${licensee?.name} added to sector.`],
                     success: true
                 })),
                 catchError(({error}) => [SectorActions.sectorFailure({messages: [error?.error ? error.error : error]})])
