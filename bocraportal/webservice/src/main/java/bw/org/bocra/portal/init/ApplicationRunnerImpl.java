@@ -41,8 +41,8 @@ import bw.org.bocra.portal.period.config.PeriodConfigService;
 import bw.org.bocra.portal.period.config.PeriodConfigVO;
 import bw.org.bocra.portal.period.config.RepeatPeriod;
 
-@Component
-@Transactional
+// @Component
+// @Transactional
 @Profile("!test")
 public class ApplicationRunnerImpl implements ApplicationRunner {
 
