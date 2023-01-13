@@ -57,9 +57,9 @@ export class LicenseeShareholderRestController {
 
     }
 
-    public updateShareholder(id: number | any , formId: number | any ): Observable<LicenseeShareholderVO | any> {
+    public updateShareholder(id: number | any , shareholderId: number | any ): Observable<LicenseeShareholderVO | any> {
 
-        return this.http.patch<LicenseeShareholderVO | any>(this.path + `/${id}/${shareholderId}`, {id: id, formId: formId});
+        return this.http.patch<LicenseeShareholderVO | any>(this.path + `/${id}/${shareholderId}`, {id: id, shareholderId: shareholderId});
 
     }
 
