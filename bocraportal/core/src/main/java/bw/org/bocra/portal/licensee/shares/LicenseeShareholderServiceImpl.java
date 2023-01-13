@@ -114,8 +114,7 @@ public class LicenseeShareholderServiceImpl
      * @see bw.org.bocra.portal.licensee.shares.LicenseeShareholderService#updateLicensee(Long,
      *      Long)
      */
-    Override
-
+    @Override
     protected LicenseeShareholderVO handleUpdateLicensee(Long id, Long licenseeId)
             throws Exception {
         LicenseeShareholder ls = getLicenseeShareholderDao().load(id);
@@ -142,11 +141,24 @@ public class LicenseeShareholderServiceImpl
     @Override
     protected LicenseeShareholderVO handleCreate(Long licenseeId, Long shareholderId, Integer numberOfShares)
             throws Exception {
+
+        // if (!licenseeRepository.findById(licenseeId).isPresent()) {
+        // throw new IllegalArgumentException(
+        // "Licensee id does not exist!");
+        // }
+
+        // if (!shareholderRepository.findById(shareholderId).isPresent()) {
+        // throw new IllegalArgumentException(
+        // "Shareholder id does not exist!");
+        // }
+
         Licensee licensee = getLicenseeDao().load(licenseeId);
         Shareholder holder = getShareholderDao().load(shareholderId);
         LicenseeShareholder ls = LicenseeShareholder.Factory.newInstance();
         ls.setLicensee(licensee);
-        ls = getLicenseeShareholderDao().create(licensee, holder);
+        ls.setShareholder(holder);
+        ls.setNumberOfShares(numberOfShares);
+        ls = getLicenseeShareholderDao().create(ls);
 
         return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
 

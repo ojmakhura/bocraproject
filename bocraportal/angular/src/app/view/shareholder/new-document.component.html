@@ -4,7 +4,7 @@
 	<div class="card-body">
     	<form [formGroup]="newDocumentForm">
 			<div *ngIf="loading | async">
-				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+				<app-loader [isLoading]="loading | async"></app-loader>
 			</div>
 			<!-- <div *ngIf="success | async" class="alert alert-success" role="alert">
 				<div *ngFor="let message of messages | async">
@@ -17,8 +17,78 @@
 				</div>
 			</div> -->
 			<div formGroupName="document">
+				<!-- <fieldset class="mb-3" formGroupName="licence">
+				    <legend id="documentLicence_label" class="col-sm-2 col-form-label" for="documentLicence"><span translate>licence</span></legend>
+				    <div class="col my-3 view-buttons">
+				        <button type="button" (click)="documentLicenceAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentLicenceModal">
+				            <mat-icon>add_box</mat-icon>
+				        </button>
+				        <button type="button" (click)="documentLicenceClear()" class="btn btn-primary">
+				            <mat-icon>clear</mat-icon>
+				        </button>
+				    </div>
+				    <div class="row mb-3">
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>id</td>
+				                    <td >{{ documentLicence?.id }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>status</td>
+				                    <td >{{ documentLicence?.status }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>licence.number</td>
+				                    <td >{{ documentLicence?.licenceNumber }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>licensee.name</td>
+				                    <td >{{ documentLicence?.licensee?.licenseeName }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>start.date</td>
+				                    <td >{{ documentLicence?.startDate }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>end.date</td>
+				                    <td >{{ documentLicence?.endDate }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
+				    </div>
+				</fieldset>
+				<fieldset class="mb-3" formGroupName="licensee">
+				    <legend id="documentLicensee_label" class="col-sm-2 col-form-label" for="documentLicensee"><span translate>licensee</span></legend>
+				    <div class="col my-3 view-buttons">
+				        <button type="button" (click)="documentLicenseeAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentLicenseeModal">
+				            <mat-icon>add_box</mat-icon>
+				        </button>
+				        <button type="button" (click)="documentLicenseeClear()" class="btn btn-primary">
+				            <mat-icon>clear</mat-icon>
+				        </button>
+				    </div>
+				    <div class="row mb-3">
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>id</td>
+				                    <td >{{ documentLicensee?.id }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>uin</td>
+				                    <td >{{ documentLicensee?.uin }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>licensee.name</td>
+				                    <td >{{ documentLicensee?.licenseeName }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
+				    </div>
+				</fieldset> -->
 				<fieldset class="mb-3" formGroupName="documentType">
-				    <legend id="documentDocumentType_label" class="col-sm-2 col-form-label" for="documentDocumentType"><span translate>document.type</span>*</legend>
+				    <legend id="documentDocumentType_label" class="col-sm-6 col-form-label" for="documentDocumentType"><span translate>document.type</span>*</legend>
 				    <div class="col my-3 view-buttons">
 				        <button type="button" (click)="documentDocumentTypeAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentDocumentTypeModal">
 				            <mat-icon>add_box</mat-icon>
@@ -28,10 +98,22 @@
 				        </button>
 				    </div>
 				    <div class="row mb-3">
-				        <label for="documentDocumentTypeName" class="col-sm-2 col-form-label" translate>name</label>
-				        <div class="col-sm-10">
-				            <input type="text" readonly class="form-control-plaintext" id="documentDocumentTypeName" value="{{documentDocumentType?.name }}">
-				        </div>
+				        <table class="table">
+				            <tbody>
+				                <!-- <tr>
+				                    <td scope="row"translate>id</td>
+				                    <td >{{ documentDocumentType?.id }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>code</td>
+				                    <td >{{ documentDocumentType?.code }}</td>
+				                <tr> -->
+				                <tr>
+				                    <td scope="row"translate>name</td>
+				                    <td >{{ documentDocumentType?.name }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
 				    </div>
 				    <div *ngIf="newDocumentForm.invalid && documentDocumentTypeControl.invalid && (documentDocumentTypeControl.dirty || documentDocumentTypeControl.touched)" class="alert alert-danger" role="alert">
 				        <div *ngIf="documentDocumentTypeControl.errors['required']">
@@ -50,25 +132,79 @@
 				</div>
 				<div class="mb-3">
 				    <label id="documentFile_label" class="col-sm-2 col-form-label" for="documentFile"><span translate>file</span>*</label>
-				    <input type="file" id="documentFile" class="form-control" (change)="onFileSelected($event)" required/>
+				    <input type="file" id="documentFile" class="form-control" formControlName="file"  required/>
 				    <div *ngIf="newDocumentForm.invalid && documentFileControl.invalid && (documentFileControl.dirty || documentFileControl.touched)" class="alert alert-danger" role="alert">
 				        <div *ngIf="documentFileControl.errors['required']">
 				            <span translate>file.required</span>
 				        </div>
 				    </div>
 				</div>
-				<div class="mb-3">
-				    <label id="documentDocumentId_label" class="col-sm-2 col-form-label" for="documentDocumentId"><span translate>document.id</span></label>
+				<!-- <div class="mb-3">
+				    <label id="documentDocumentId_label" class="col-sm-6 col-form-label" for="documentDocumentId"><span translate>document.id</span></label>
 				    <input type="text" id="documentDocumentId" class="form-control" name="documentId" formControlName="documentId"/>
+				</div> -->
+				<!-- <div class="mb-3">
+				    <label id="documentExtension_label" class="col-sm-2 col-form-label" for="documentExtension"><span translate>extension</span></label>
+				    <input type="text" id="documentExtension" class="form-control" name="extension" formControlName="extension"/>
+				</div> -->
+				<!-- <fieldset class="mb-3" formGroupName="complaint">
+				    <legend id="documentComplaint_label" class="col-sm-2 col-form-label" for="documentComplaint"><span translate>complaint</span></legend>
+				    <div class="col my-3 view-buttons">
+				        <button type="button" (click)="documentComplaintAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentComplaintModal">
+				            <mat-icon>add_box</mat-icon>
+				        </button>
+				        <button type="button" (click)="documentComplaintClear()" class="btn btn-primary">
+				            <mat-icon>clear</mat-icon>
+				        </button>
+				    </div>
+				    <div class="row mb-3">
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>id</td>
+				                    <td >{{ documentComplaint?.id }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>created.date</td>
+				                    <td >{{ documentComplaint?.createdDate }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>first.name</td>
+				                    <td >{{ documentComplaint?.firstName }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>surname</td>
+				                    <td >{{ documentComplaint?.surname }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>status</td>
+				                    <td >{{ documentComplaint?.status }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
+				    </div>
+				</fieldset> -->
+				<!-- <div class="mb-3">
+				    <label id="documentMetadataTarget_label" class="col-sm-2 col-form-label" for="documentMetadataTarget"><span translate>metadata.target</span></label>
+				    <select id="documentMetadataTarget" class="form-select" formControlName="metadataTarget" >
+				        <option></option>
+				        <option *ngFor="let key of metadataTargetOptions" [value]="key">
+				            {{ metadataTargetT[key] }}
+				        </option>
+				    </select>
 				</div>
+				<div class="mb-3">
+				    <label id="documentMetadataTargetId_label" class="col-sm-2 col-form-label" for="documentMetadataTargetId"><span translate>metadata.target.id</span></label>
+				    <input type="number" id="documentMetadataTargetId" class="form-control" name="metadataTargetId" formControlName="metadataTargetId"/>
+				</div> -->
         	</div>
     	</form>
 	</div>
 </div>
-<div mat-dialog-actions>
-	<button type="button" class="btn btn-primary" color="accent" mat-dialog-close translate>action.cancel</button>
+<mat-dialog-actions align="end">
+	<button mat-dialog-close type="button" class="btn btn-primary me-2" color="accent" translate>action.cancel</button>
 	<button type="button" class="btn btn-primary" color="accent" (click)="dialogDone()" translate>action.done</button>
-</div>
+</mat-dialog-actions>
 <!-- Modal for licence -->
 <div class="modal fade" id="documentLicenceModal" tabindex="-1" aria-labelledby="documentLicenceLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -256,6 +392,74 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
                 <button type="button" class="btn btn-primary" (click)="addSelectedDocumentDocumentType()" data-bs-dismiss="modal" translate>save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for complaint -->
+<div class="modal fade" id="documentComplaintModal" tabindex="-1" aria-labelledby="documentComplaintLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="documentComplaintAddLabel" translate>
+                    action.select
+                    <span translate>complaint</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form>
+                        <div>
+                            <mat-form-field>
+                            <mat-label translate>search</mat-label>
+                            <input matInput type="text" [formControl]="documentComplaintSearchField"
+                                id="documentComplaintSearchField" />
+                            </mat-form-field>
+                        </div>
+                        <button type="button" (click)="documentComplaintSearch()" class="btn btn-primary">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </form>
+                </div>
+             <mat-table matSort [dataSource]="documentComplaintsDataSource" #documentComplaintModalSort="matSort" class="table table-bordered" style="width: 100%;">
+                 <ng-container matColumnDef="actions">
+                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+                     <mat-cell *matCellDef="let row; let i=index">
+                         <mat-radio-group (change)="documentComplaintSelected($event, row)">
+                             <mat-radio-button [value]="row" [checked]='documentComplaintSelect.id === row?.id'></mat-radio-button>
+                         </mat-radio-group>
+                     </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="id">
+                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="createdDate">
+                     <mat-header-cell *matHeaderCellDef translate>created.date</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.createdDate }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="firstName">
+                     <mat-header-cell *matHeaderCellDef translate>first.name</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.firstName }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="surname">
+                     <mat-header-cell *matHeaderCellDef translate>surname</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.surname }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="status">
+                     <mat-header-cell *matHeaderCellDef translate>status</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.status }} </mat-cell>
+                 </ng-container>
+                 <mat-header-row *matHeaderRowDef="documentComplaintModalColumns"></mat-header-row>
+                 <mat-row *matRowDef="let row; columns: documentComplaintModalColumns;"></mat-row>
+             </mat-table>
+             <mat-paginator #documentComplaintModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+                <button type="button" class="btn btn-primary" (click)="addSelectedDocumentComplaint()" data-bs-dismiss="modal" translate>save</button>
             </div>
         </div>
     </div>

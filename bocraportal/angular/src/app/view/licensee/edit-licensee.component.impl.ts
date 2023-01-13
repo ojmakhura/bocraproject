@@ -20,7 +20,7 @@ import {
   EditLicenseeComponent,
   EditLicenseeDeleteForm,
   EditLicenseeDocumentsForm,
-  EditLicenseeNewDocumentForm, EditLicenseeSaveForm, EditLicenseeVarsForm
+  EditLicenseeNewDocumentForm, EditLicenseeNewShareholderForm, EditLicenseeSaveForm, EditLicenseeVarsForm
 } from '@app/view/licensee/edit-licensee.component';
 import { DocumentMetadataTarget } from '@model/bw/org/bocra/portal/document/document-metadata-target';
 import { select } from '@ngrx/store';
@@ -236,6 +236,15 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       this.store.dispatch(LicenseeActions.licenseeFailure({ messages: ['Please select something to delete'] }));
     }
   }
+
+  // override afterEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm, dialogData: any): void {
+  //   if(dialogData){
+  //     this.store.dispatch(
+  //       LicenseeActions.
+  //     )
+  //   }
+        
+  // }
 
   override licenseeLicencesSearch(): void {
     let criteria: string = '';
