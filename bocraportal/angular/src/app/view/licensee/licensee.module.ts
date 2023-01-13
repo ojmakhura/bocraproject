@@ -25,6 +25,8 @@ import { viewFeature } from '@app/store/view/view.reducers';
 import { ViewEffects } from '@app/store/view/view.effects';
 import { licenseeSectorFeature } from '@app/store/licensee/sector/licensee-sector.reducers';
 import { LicenseeSectorEffects } from '@app/store/licensee/sector/licensee-sector.effects';
+import { licenseeShareholderFeature } from '@app/store/licensee/shares/licensee-shareholder.reducers';
+import { LicenseeShareholderEffects } from '@app/store/licensee/shares/licensee-shareholder.effects';
 
 @NgModule({
   imports: [
@@ -39,8 +41,9 @@ import { LicenseeSectorEffects } from '@app/store/licensee/sector/licensee-secto
     LicenseeRoutingModule,
     StoreModule.forFeature(licenseeFeature),
     StoreModule.forFeature(licenseeSectorFeature),
+    StoreModule.forFeature(licenseeShareholderFeature),
     StoreModule.forFeature(viewFeature),
-    EffectsModule.forFeature([ LicenseeEffects, ViewEffects, LicenseeSectorEffects ])
+    EffectsModule.forFeature([ LicenseeEffects, ViewEffects, LicenseeSectorEffects, LicenseeShareholderEffects ])
   ],
   declarations: [
     EditLicenseeComponentImpl,
