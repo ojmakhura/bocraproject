@@ -21,7 +21,7 @@ test_core:
 	. ./.env && mvn -f bocraportal/core test -o
 
 build_api:
-	mvn -f bocraportal/webservice install -DskipTests=true -o
+	. ./.env && mvn -f bocraportal/webservice install -DskipTests=true -o
 
 test_api: 
 	. ./.env && mvn -f bocraportal/webservice test -o
@@ -30,7 +30,7 @@ build_comm:
 	. ./.env && mvn -f bocraportal/comm -Pnative clean install -DskipTests -o
 
 build_comm_native:
-	mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
+	. ./.env && mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
 
 test_comm: 
 	. ./.env && mvn -f bocraportal/comm test -o
