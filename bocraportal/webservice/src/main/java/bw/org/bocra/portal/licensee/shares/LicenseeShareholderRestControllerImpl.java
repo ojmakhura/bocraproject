@@ -162,7 +162,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     }
 
     @Override
-    public ResponseEntity<?> handleFindByLicenseeShareholderId(Long id) {
+    public ResponseEntity<?> handleFindById(Long id) {
         try {
             logger.debug("Search licensee shareholder by Id "+id);
             Optional<?> data = Optional.of(licenseeShareholderService.findById(id));
@@ -192,7 +192,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     }
 
     @Override
-    public ResponseEntity<?> handleGetAllShareholders() {
+    public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Display all Licensee shareholders ");
             return ResponseEntity.status(HttpStatus.OK).body(licenseeShareholderService.getAll());
@@ -204,7 +204,7 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
     }
 
     @Override
-    public ResponseEntity<?> handleRemoveShareholder(Long id) {
+    public ResponseEntity<?> handleRemove(Long id) {
         try {
             logger.debug("Deletes licensee shareholder by Id "+id);
             Optional<?> data = Optional.of(licenseeShareholderService.remove(id));
