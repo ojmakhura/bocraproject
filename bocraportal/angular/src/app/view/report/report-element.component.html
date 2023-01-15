@@ -157,7 +157,7 @@
 								<tr *ngFor="let fieldControl of dataColumnsAnalyticsControl.controls; let j=index"
 									[formGroupName]="j">
 									<td scope="col">
-										<button type="button" (click)="removeCustomColumns(j)"
+										<button type="button" (click)="removeCustomColumns(j); dataColumnsAnalyticsControl.removeAt(j)"
 											class="btn btn-outline-primary">
 											<mat-icon>delete</mat-icon>
 										</button>
@@ -184,7 +184,7 @@
 									</td>
 									<td scope="col">
 										<input type="text" class="form-control" formControlName="name"
-											(change)="additionalDataColumnChange(j)" *ngIf="fieldControl.value?.type">
+											(change)="additionalDataColumnNameChange($event, j)" *ngIf="fieldControl.value?.type">
 									</td>
 									<td scope="col">
 										<textarea type="text" class="form-control" formControlName="sources"
@@ -255,7 +255,7 @@
 								</td>
 								<td scope="col">
 									<input type="text" class="form-control" formControlName="name"
-										(change)="additionalRowChange(j)">
+										(change)="additionalRowNameChange(j)">
 								</td>
 								<td scope="col">
 									<textarea type="text" class="form-control" formControlName="sources"

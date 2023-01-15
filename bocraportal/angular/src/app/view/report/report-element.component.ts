@@ -294,6 +294,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   periodAliasChange(period: any, k: number) {
     
     this.periodAliases[period.period] = period.alias;
+    let found = this.selectedPeriods.find(pr => pr.period === period.period);
+    found.alias = period.alias;
   }
 
   getPeriods() {
@@ -408,10 +410,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     this.dataRowsControl.patchValue('fields');
     this.generateColors(false);
-    // this.periodSelectionChange();
     this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
     this.selectedFields = this.fieldSelections;
-    // this.licenseeSelectionChange();
     this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
     this.createReportGrid();
   }
@@ -466,7 +466,37 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return [...new Set(results)];
   }
 
+  additionalDataColumnNameChange(event: any, index: number) {
+    
+    this.additionalDataColumns = this.dataColumnsAnalytics;
+    let changingCol: any = this.additionalDataColumns[index];
+
+    let colIndex = this.originalColumnLen + index;
+
+    if (!changingCol?.type || !changingCol?.name || !changingCol?.sources) {
+      return;
+    }
+
+    let colAlphabet = this.getColumnAlphabet(colIndex);
+
+    Object.keys(this.grid).forEach(rowKey => {
+      let row = this.grid[rowKey];
+
+      let cell = row[colAlphabet];
+      cell.element = changingCol?.name?.replaceAll(' ', '_')?.toLowerCase();
+      cell.label = changingCol?.name;
+    });
+
+    let found = this.gridColumnHeaders.find(gch => gch.header === colAlphabet);
+
+    if(found) {
+      found.element = `${index}_${changingCol?.name}`;
+      found.label = `${changingCol?.name}`;
+    }
+  }
+
   additionalDataColumnChange(index: number) {
+    
     this.generateColors(false);
 
     this.additionalDataColumns = this.dataColumnsAnalytics;
@@ -495,32 +525,41 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     let colIndex = this.originalColumnLen + index;
+    
     let colAlphabet = this.getColumnAlphabet(colIndex);
 
     sourceSplit?.rows?.forEach(rowKey => {
       let row = this.grid[rowKey];
 
+      row[colAlphabet] = {
+        period: changingCol?.tag,
+        label: changingCol?.name,
+        elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
+        value: changingCol?.type === 'custom' ? source : undefined,
+        source: []
+      }
+
       let cell = row[colAlphabet];
 
-      if(cell === undefined) {
+      // if(cell === undefined) {
         
-        cell = {
-          period: changingCol?.tag,
-          label: changingCol?.name,
-          elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
-          value: changingCol?.type === 'custom' ? source : undefined,
-          source: []
-        };
+      //   cell = {
+      //     period: changingCol?.tag,
+      //     label: changingCol?.name,
+      //     elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
+      //     value: changingCol?.type === 'custom' ? source : undefined,
+      //     source: []
+      //   };
 
-        // this.grid[colIndex] = row;
-        row[colAlphabet] = cell;
-      } else {
-        cell['period'] = changingCol?.tag;
-        cell['elementId'] = changingCol?.name?.replaceAll(' ', '_')?.toLowerCase();
-        cell['label'] = changingCol?.name;
-        cell['value'] = changingCol?.type === 'custom' ? source : undefined;
-        cell['source'] = [];
-      }
+      //   // this.grid[colIndex] = row;
+      //   row[colAlphabet] = cell;
+      // } else {
+      //   cell['period'] = changingCol?.tag;
+      //   cell['elementId'] = changingCol?.name?.replaceAll(' ', '_')?.toLowerCase();
+      //   cell['label'] = changingCol?.name;
+      //   cell['value'] = changingCol?.type === 'custom' ? source : undefined;
+      //   cell['source'] = [];
+      // }
 
       sourceSplit.cols?.forEach((colKey) => {
         
@@ -668,6 +707,25 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return additionalSource;
   }
 
+  additionalRowNameChange(index: number) {
+
+    this.additionalDataRows = this.dataRowsAnalytics;
+    let changingRow = this.dataRowsAnalytics[index];
+
+    if (!changingRow?.type || !changingRow?.name || !changingRow?.sources) {
+      return;
+    }
+    
+    let rowIndex: number = this.dataColumns === 'fields' ? index + this.licenseeSelections.length : index + this.gridRowHeaders.length;
+
+    let tmp = this.grid[rowIndex];
+    
+    tmp.elementId = changingRow?.name?.replaceAll(' ', '_');
+    tmp.label = changingRow?.name;
+
+    this.setGridTableData();
+  }
+
   additionalRowChange(index: number) {
     this.generateColors(false);
 
@@ -687,7 +745,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       sourceSplit.rows = Object.keys(this.grid)?.filter((key) => source.includes(`[${key}]`));
     }
 
-    let rowIndex: number = this.dataColumns === 'fields' ? index + this.selectedLicensees.length : index + this.gridRowHeaders.length;
+    let rowIndex: number = this.dataColumns === 'fields' ? index + this.licenseeSelections.length : index + this.gridRowHeaders.length;
 
     let tmp = this.grid[rowIndex];
   
@@ -838,6 +896,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   periodSelectionChange(event: any, j: number) {
+    
     this.selectionChange(event, j, this.periodSelections, this.periodSelectionsArray, this.selectedPeriods);
 
     let filtered = this.formSubmissions?.filter(sub => {
@@ -851,8 +910,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       } else {
         lc.get('selected')?.patchValue(false);
       }
-    });
-    
+    });    
   }
 
   fieldAliasChange(event: any, j: number) {
@@ -892,6 +950,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   licenseeSelectionChange(event: any, j: number) {
+
+    console.log(this.grid)
 
     this.selectionChange(event, j, this.licenseeSelections, this.licenseeSelectionsArray, this.selectedLicensees);
     

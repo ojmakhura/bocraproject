@@ -47,6 +47,7 @@ services:
         - "traefik.enable=true"
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
+        - "traefik.http.routers.keycloak.service=keycloak"
         - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
         - "traefik.http.routers.keycloak.entrypoints=${ACTIVE_ROUTER_ENTRY}"
         - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
