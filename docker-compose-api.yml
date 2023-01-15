@@ -4,7 +4,7 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "ojmakhura/bocraportal-api:latest"
+    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
     container_name: bocra-api
     hostname: api
     healthcheck:
@@ -16,12 +16,13 @@ services:
     build:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile
+      args:
+        CERT: ${CERT}
+        CERT_PASSWORD: ${CERT_PASSWORD}
     networks:
       traefik-public:
-      bocra-network:
-        ipv4_address: ${BOCRA_API_ADDRESS}
     environment:
-      POSTGRES_SERVER: db
+      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -29,7 +30,18 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_API_CLIENT: ${KEYCLOAK_API_CLIENT}
+      KEYCLOAK_API_CLIENT_SECRET: ${KEYCLOAK_API_CLIENT_SECRET}
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
+      CERT: ${CERT}
+      CERT_PASSWORD: ${CERT_PASSWORD}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
+      API_LOG_LEVEL: ${API_LOG_LEVEL}
+      WEB_URL: ${WEB_URL}
+      COMM_URL: ${COMM_URL}
       TZ: Africa/Gaborone
     deploy:
       placement:
@@ -49,4 +61,3 @@ services:
 ###############################################################################
 networks:
   traefik-public:
-  bocra-network:

@@ -88,6 +88,22 @@ else
 	exit 1
 endif
 
+up_stack: gen_env
+ifdef stack
+	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-${stack}.yml ${STACK_NAME}-${stack}
+else
+	@echo 'no stack defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> stack=<name> up_stack`'
+	exit 1
+endif
+
+down_stack:
+ifdef stack
+	docker stack rm ${STACK_NAME}-${stack}
+else
+	@echo 'no stack defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> stack=<name> down_stack`'
+	exit 1
+endif
+
 down_service:
 ifdef service
 	docker stop ${STACK_NAME}-${service}

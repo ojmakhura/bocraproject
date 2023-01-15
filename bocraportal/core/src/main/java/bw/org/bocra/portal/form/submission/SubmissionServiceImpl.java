@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -350,7 +351,7 @@ public class SubmissionServiceImpl
         FormSubmissionCriteria criteria = new FormSubmissionCriteria();
         
         Collection<Long> periodIds = periodDao.getActivePeriods().stream()
-                                        .map(period -> period.getId()).toList();
+                                        .map(period -> period.getId()).collect(Collectors.toList());
 
         criteria.setPeriodIds(periodIds);
         Collection<FormSubmission> submissions = getFormSubmissionDao().findByCriteria(criteria);

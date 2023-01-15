@@ -6,10 +6,11 @@ services:
   keycloak:
     image: ${KEYCLOAK_REGISTRY_IMAGE}
     hostname: keycloak
-    restart: unless-stopped
     command:
       - "start"
       - "--optimized"
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
       interval: 5s
@@ -25,16 +26,17 @@ services:
       KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
       KC_DB_URL_HOST: ${POSTGRES_SERVER}
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-      KC_METRICS_ENABLED: true
+      KC_METRICS_ENABLED: "true"
       KC_PROXY: edge
-      KC_HOSTNAME_STRICT_HTTPS: false
-      KC_HEALTH_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HEALTH_ENABLED: "true"
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
-      PROXY_ADDRESS_FORWARDING: false
+      PROXY_ADDRESS_FORWARDING: "false"
       TZ: Africa/Gaborone
     networks:
       traefik-public:
+      default:
     deploy:
       placement:
         constraints:
@@ -43,11 +45,20 @@ services:
           - node.role == manager
       labels:
         - "traefik.enable=true"
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
         - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
         - "traefik.http.routers.keycloak.entrypoints=${ACTIVE_ROUTER_ENTRY}"
         - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
         - "traefik.http.routers.keycloak.tls=${SSL_SECURE}"
-        - "traefik.http.routers.keycloak.tls.certresolver=le"
+        # - "traefik.http.routers.keycloak.tls.certresolver=le"
+        # - "traefik.enable=true"
+        # - "traefik.tcp.routers.keycloak.service=keycloak"
+        # - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+        # - "traefik.http.routers.keycloak.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+        # - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+        # - "traefik.http.routers.keycloak.tls=${SSL_SECURE}"
+        # - "traefik.http.routers.keycloak.tls.certresolver=le"
 
 ###############################################################################
 # Networks
