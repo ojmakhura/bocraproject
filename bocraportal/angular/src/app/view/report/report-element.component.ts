@@ -19,6 +19,7 @@ import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
 import * as math from 'mathjs';
+import { floor } from 'mathjs';
 import { ReportChart } from './report-chart.component';
 
 export class ReportElement {
@@ -203,6 +204,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       fs?.forEach((sub) => {
 
         let colIndex = pindex * this.licenseeSelections?.length + colLabels[sub?.licensee?.licenseeName];
+        let colAlphabet = this.getColumnAlphabet(colIndex);
         let rowIndex = sub?.licensee?.licenseeName;
 
         let fields: DataFieldVO[] = this.extractFields(sub);
@@ -223,28 +225,31 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
 
             colIndex = pindex * fields?.length + colLabels[field?.formField?.fieldId];
+            colAlphabet = this.getColumnAlphabet(colIndex);
 
           } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
             rowIndex = field?.formField?.fieldId;
             label = sub?.licensee?.licenseeName;
             elementId = `${sub?.id}_${sub?.licensee?.licenseeName}`;
             colIndex = cindex;
+            colAlphabet = this.getColumnAlphabet(colIndex);
           }
           
           if(rowLabels[rowIndex] === undefined) {
             return;
           }
 
-          this.grid[rowLabels[rowIndex]][this.alphabet[colIndex]] = {
+          this.grid[rowLabels[rowIndex]][colAlphabet] = {
             period: per.period,
             label: label,
             elementId: elementId,
             value: field?.value,
           };
 
-          if (columnHeaders[this.alphabet[colIndex]] === undefined) {
-            columnHeaders[this.alphabet[colIndex]] = {
-              header: this.alphabet[colIndex],
+          if (columnHeaders[colAlphabet] === undefined) {
+            columnHeaders[colAlphabet] = {
+              colIndex: colIndex,
+              header: colAlphabet,
               period: per.period,
               elementId: elementId,
               label: label,
@@ -258,7 +263,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       });
     });
 
-    this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a?.header?.localeCompare(b?.header));
+
+    this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a?.colIndex - b?.colIndex);
     this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a?.localeCompare(b));
     this.gridDataColumnHeaders = this.gridColumnHeaders?.map((ch) => `${ch.elementId}_${ch.header}`);
     this.gridDataColumns = this.gridColumnHeaders?.map((ch) => {
@@ -274,6 +280,13 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.setGridTableData();
   }
 
+  getColumnAlphabet(index: number) {
+    let quotient = floor(index/26) - 1;
+    let remainder = index % 26;
+    
+    return `${quotient >= 0 ? this.alphabet[quotient] : ''}` + this.alphabet[remainder];
+  }
+
   get licensees() {
     return [...new Set(this.formSubmissions?.map((sub) => sub?.licensee?.licenseeName))];
   }
@@ -281,6 +294,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   periodAliasChange(period: any, k: number) {
     
     this.periodAliases[period.period] = period.alias;
+    let found = this.selectedPeriods.find(pr => pr.period === period.period);
+    found.alias = period.alias;
   }
 
   getPeriods() {
@@ -395,10 +410,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     this.dataRowsControl.patchValue('fields');
     this.generateColors(false);
-    // this.periodSelectionChange();
     this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
     this.selectedFields = this.fieldSelections;
-    // this.licenseeSelectionChange();
     this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
     this.createReportGrid();
   }
@@ -453,7 +466,37 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return [...new Set(results)];
   }
 
+  additionalDataColumnNameChange(event: any, index: number) {
+    
+    this.additionalDataColumns = this.dataColumnsAnalytics;
+    let changingCol: any = this.additionalDataColumns[index];
+
+    let colIndex = this.originalColumnLen + index;
+
+    if (!changingCol?.type || !changingCol?.name || !changingCol?.sources) {
+      return;
+    }
+
+    let colAlphabet = this.getColumnAlphabet(colIndex);
+
+    Object.keys(this.grid).forEach(rowKey => {
+      let row = this.grid[rowKey];
+
+      let cell = row[colAlphabet];
+      cell.element = changingCol?.name?.replaceAll(' ', '_')?.toLowerCase();
+      cell.label = changingCol?.name;
+    });
+
+    let found = this.gridColumnHeaders.find(gch => gch.header === colAlphabet);
+
+    if(found) {
+      found.element = `${index}_${changingCol?.name}`;
+      found.label = `${changingCol?.name}`;
+    }
+  }
+
   additionalDataColumnChange(index: number) {
+    
     this.generateColors(false);
 
     this.additionalDataColumns = this.dataColumnsAnalytics;
@@ -482,31 +525,41 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     let colIndex = this.originalColumnLen + index;
+    
+    let colAlphabet = this.getColumnAlphabet(colIndex);
 
     sourceSplit?.rows?.forEach(rowKey => {
       let row = this.grid[rowKey];
 
-      let cell = row[this.alphabet[colIndex]];
-
-      if(cell === undefined) {
-        
-        cell = {
-          period: changingCol?.tag,
-          label: changingCol?.name,
-          elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
-          value: changingCol?.type === 'custom' ? source : undefined,
-          source: []
-        };
-
-        // this.grid[colIndex] = row;
-        row[this.alphabet[colIndex]] = cell;
-      } else {
-        cell['period'] = changingCol?.tag;
-        cell['elementId'] = changingCol?.name?.replaceAll(' ', '_')?.toLowerCase();
-        cell['label'] = changingCol?.name;
-        cell['value'] = changingCol?.type === 'custom' ? source : undefined;
-        cell['source'] = [];
+      row[colAlphabet] = {
+        period: changingCol?.tag,
+        label: changingCol?.name,
+        elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
+        value: changingCol?.type === 'custom' ? source : undefined,
+        source: []
       }
+
+      let cell = row[colAlphabet];
+
+      // if(cell === undefined) {
+        
+      //   cell = {
+      //     period: changingCol?.tag,
+      //     label: changingCol?.name,
+      //     elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
+      //     value: changingCol?.type === 'custom' ? source : undefined,
+      //     source: []
+      //   };
+
+      //   // this.grid[colIndex] = row;
+      //   row[colAlphabet] = cell;
+      // } else {
+      //   cell['period'] = changingCol?.tag;
+      //   cell['elementId'] = changingCol?.name?.replaceAll(' ', '_')?.toLowerCase();
+      //   cell['label'] = changingCol?.name;
+      //   cell['value'] = changingCol?.type === 'custom' ? source : undefined;
+      //   cell['source'] = [];
+      // }
 
       sourceSplit.cols?.forEach((colKey) => {
         
@@ -540,8 +593,10 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     if(this.gridColumnHeaders.find(gch => gch.elementId.startsWith(`${index}_`)) === undefined) {
+      
       this.gridColumnHeaders.push({
-        header: this.alphabet[colIndex],
+        colIndex: this.gridColumnHeaders.length,
+        header: this.getColumnAlphabet(this.gridColumnHeaders.length),
         period: changingCol?.tag,
         elementId: `${index}_${changingCol?.name}`,
         label: changingCol?.name
@@ -592,7 +647,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         this.selectedLicensees.push({selected: true, licensee: changingCol.name})
       }
     }
-
+    
     this.setGridTableData();
   }
 
@@ -652,6 +707,25 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return additionalSource;
   }
 
+  additionalRowNameChange(index: number) {
+
+    this.additionalDataRows = this.dataRowsAnalytics;
+    let changingRow = this.dataRowsAnalytics[index];
+
+    if (!changingRow?.type || !changingRow?.name || !changingRow?.sources) {
+      return;
+    }
+    
+    let rowIndex: number = this.dataColumns === 'fields' ? index + this.licenseeSelections.length : index + this.gridRowHeaders.length;
+
+    let tmp = this.grid[rowIndex];
+    
+    tmp.elementId = changingRow?.name?.replaceAll(' ', '_');
+    tmp.label = changingRow?.name;
+
+    this.setGridTableData();
+  }
+
   additionalRowChange(index: number) {
     this.generateColors(false);
 
@@ -671,7 +745,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       sourceSplit.rows = Object.keys(this.grid)?.filter((key) => source.includes(`[${key}]`));
     }
 
-    let rowIndex: number = this.dataColumns === 'fields' ? index + this.selectedLicensees.length : index + this.gridRowHeaders.length;
+    let rowIndex: number = this.dataColumns === 'fields' ? index + this.licenseeSelections.length : index + this.gridRowHeaders.length;
 
     let tmp = this.grid[rowIndex];
   
@@ -822,6 +896,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   periodSelectionChange(event: any, j: number) {
+    
     this.selectionChange(event, j, this.periodSelections, this.periodSelectionsArray, this.selectedPeriods);
 
     let filtered = this.formSubmissions?.filter(sub => {
@@ -835,8 +910,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       } else {
         lc.get('selected')?.patchValue(false);
       }
-    });
-    
+    });    
   }
 
   fieldAliasChange(event: any, j: number) {
@@ -876,6 +950,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   licenseeSelectionChange(event: any, j: number) {
+
+    console.log(this.grid)
 
     this.selectionChange(event, j, this.licenseeSelections, this.licenseeSelectionsArray, this.selectedLicensees);
     
@@ -975,11 +1051,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   removeCustomRows(index: number) {
 
-    console.log(this.selectedFields);
-
     let i: number = Object.values(this.grid).findIndex((value: any) => value['label'] == this.dataRowsAnalyticsControl.at(index).value.name)
     delete this.grid[`${i}`];
-    console.log(this.grid);
 
     let tmp = this.dataRowsAnalyticsControl.at(index).value;
     
@@ -1031,15 +1104,20 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       if(cellKey !== '') {
 
         let keyIndex = this.alphabet.findIndex(a => a === cellKey);
+        let colAlphabet = this.getColumnAlphabet(keyIndex);
 
         Object.keys(this.grid).forEach(rowIndex => {
           let ti = keyIndex;
+          colAlphabet = this.getColumnAlphabet(ti);
+          let colAlphabet1 = this.getColumnAlphabet(ti+1);
 
-          while(this.grid[rowIndex][this.alphabet[ti+1]] !== undefined) {
-            this.grid[rowIndex][this.alphabet[ti]] = this.grid[rowIndex][this.alphabet[ti+1]];
+          while(this.grid[rowIndex][colAlphabet1] !== undefined) {
+            this.grid[rowIndex][colAlphabet] = this.grid[rowIndex][colAlphabet1];
             ti++;
+            colAlphabet = this.getColumnAlphabet(ti);
+            colAlphabet1 = this.getColumnAlphabet(ti+1);
           }
-          delete this.grid[rowIndex][this.alphabet[ti]];
+          delete this.grid[rowIndex][colAlphabet];
         });
 
         this.dataColumnsAnalyticsControl.removeAt(index);

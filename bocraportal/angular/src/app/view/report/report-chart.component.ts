@@ -79,7 +79,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         let found: any = gridValues.find((gv: any) => gv?.label === row[rowSelector]);
         let key =
           periods.length > 1
-            ? `${pr.period}: ${row[rowSelector]}`
+            ? `${pr.alias}: ${row[rowSelector]}`
             : row[rowSelector];
 
         
@@ -100,6 +100,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
     });
 
+
     let dset: any[] = [];
 
     periods.forEach((pr) => {
@@ -107,7 +108,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       rows.forEach(row => {
         let key =
           periods.length > 1
-            ? `${pr.period}: ${row[rowSelector]}`
+            ? `${pr.alias}: ${row[rowSelector]}`
             : row[rowSelector];
 
         if (tset[key]) {
@@ -124,7 +125,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         ? this.selectedLicensees?.map((lic) => lic.licensee)
         : this.selectedFields?.map((fl) => fl.alias);
 
-    this.periods = this.selectedPeriods?.map((per) => per.period);
+    this.periods = this.selectedPeriods?.map((per) => per.alias);
 
     return dset;
   }

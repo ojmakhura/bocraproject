@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import bw.org.bocra.portal.message.CommunicationMessageStatus;
 import bw.org.bocra.portal.message.CommunicationMessageVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,12 +77,20 @@ public class MessageQueueController {
 
             for (CommunicationMessageVO message : messages) {
 
+                String status = CommunicationMessageStatus.FAILED.getValue();
+
                 if(!CollectionUtils.isEmpty(message.getDestinations())) {
                     message.setCreatedDate(null);
                     message.setDispatchDate(null);
                     message.setUpdatedDate(null);
                     this.sendEmail(message);
-                }                
+
+                    // Update the message status
+                    status = CommunicationMessageStatus.SENT.getValue();
+                }
+
+                String updateUrl = String.format("%s/message/status?id=%d&status=%s", apiUrl, message.getId(), status);
+                restTemplate.exchange(updateUrl, HttpMethod.PATCH, request, CommunicationMessageVO[].class);
             }
         } else {
             messages = new CommunicationMessageVO[0];
