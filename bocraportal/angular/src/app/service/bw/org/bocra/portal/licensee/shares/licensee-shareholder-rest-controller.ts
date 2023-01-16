@@ -15,9 +15,9 @@ export class LicenseeShareholderRestController {
     constructor(private http: HttpClient) {
     }
 
-    public create(licenseeId: number | any , shareholderId: number | any ): Observable<LicenseeShareholderVO | any> {
+    public create(licenseeId: number | any , shareholderId: number | any , numberOfShares: number | any): Observable<LicenseeShareholderVO | any> {
 
-        return this.http.post<LicenseeShareholderVO | any>(this.path, {licenseeId: licenseeId, shareholderId: shareholderId});
+        return this.http.post<LicenseeShareholderVO | any>(this.path, {licenseeId: licenseeId, shareholderId: shareholderId, numberOfShares: numberOfShares});
 
     }
 

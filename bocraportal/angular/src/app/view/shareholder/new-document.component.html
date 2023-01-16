@@ -132,7 +132,7 @@
 				</div>
 				<div class="mb-3">
 				    <label id="documentFile_label" class="col-sm-2 col-form-label" for="documentFile"><span translate>file</span>*</label>
-				    <input type="file" id="documentFile" class="form-control" formControlName="file"  required/>
+				    <input type="file" id="documentFile" class="form-control" formControlName="file" (change)="onFileSelected($event)" required/>
 				    <div *ngIf="newDocumentForm.invalid && documentFileControl.invalid && (documentFileControl.dirty || documentFileControl.touched)" class="alert alert-danger" role="alert">
 				        <div *ngIf="documentFileControl.errors['required']">
 				            <span translate>file.required</span>
@@ -396,72 +396,3 @@
         </div>
     </div>
 </div>
-
-<!-- Modal for complaint -->
-<div class="modal fade" id="documentComplaintModal" tabindex="-1" aria-labelledby="documentComplaintLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="documentComplaintAddLabel" translate>
-                    action.select
-                    <span translate>complaint</span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <form>
-                        <div>
-                            <mat-form-field>
-                            <mat-label translate>search</mat-label>
-                            <input matInput type="text" [formControl]="documentComplaintSearchField"
-                                id="documentComplaintSearchField" />
-                            </mat-form-field>
-                        </div>
-                        <button type="button" (click)="documentComplaintSearch()" class="btn btn-primary">
-                            <mat-icon>search</mat-icon>
-                        </button>
-                    </form>
-                </div>
-             <mat-table matSort [dataSource]="documentComplaintsDataSource" #documentComplaintModalSort="matSort" class="table table-bordered" style="width: 100%;">
-                 <ng-container matColumnDef="actions">
-                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-                     <mat-cell *matCellDef="let row; let i=index">
-                         <mat-radio-group (change)="documentComplaintSelected($event, row)">
-                             <mat-radio-button [value]="row" [checked]='documentComplaintSelect.id === row?.id'></mat-radio-button>
-                         </mat-radio-group>
-                     </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="id">
-                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="createdDate">
-                     <mat-header-cell *matHeaderCellDef translate>created.date</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.createdDate }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="firstName">
-                     <mat-header-cell *matHeaderCellDef translate>first.name</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.firstName }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="surname">
-                     <mat-header-cell *matHeaderCellDef translate>surname</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.surname }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="status">
-                     <mat-header-cell *matHeaderCellDef translate>status</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.status }} </mat-cell>
-                 </ng-container>
-                 <mat-header-row *matHeaderRowDef="documentComplaintModalColumns"></mat-header-row>
-                 <mat-row *matRowDef="let row; columns: documentComplaintModalColumns;"></mat-row>
-             </mat-table>
-             <mat-paginator #documentComplaintModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-                <button type="button" class="btn btn-primary" (click)="addSelectedDocumentComplaint()" data-bs-dismiss="modal" translate>save</button>
-            </div>
-        </div>
-    </div>
-</div>
-

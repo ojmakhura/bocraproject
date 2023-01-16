@@ -13,6 +13,8 @@ import * as LicenseeFormSelectors from '@app/store/licensee/form/licensee-form.s
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as LicenseeSectorActions from '@app/store/licensee/sector/licensee-sector.actions';
 import * as LicenseeSectorSelectors from '@app/store/licensee/sector/licensee-sector.selectors';
+import * as LicenseeShareholderActions from '@app/store/licensee/shares/licensee-shareholder.actions';
+import * as LicenseeShareholderSelectors from '@app/store/licensee/shares/licensee-shareholder.selectors';
 import * as SectorActions from '@app/store/sector/sector.actions';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
@@ -51,6 +53,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     this.formRemoved$ = this.store.pipe(select(LicenseeFormSelectors.selectRemoved));
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
     this.licenseeDocument$ = this.store.pipe(select(DocumentSelectors.selectDocument));
+    this.licenseeShareholders$ = this.store.pipe(select(LicenseeShareholderSelectors.selectLicenseeShareholder));
   }
 
   beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
@@ -105,7 +108,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     });
 
     this.licenseeDocument$.subscribe(document => {
-      if(document?.id)
+      if (document?.id)
         this.addToLicenseeDocuments(document);
     });
   }
@@ -153,7 +156,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override deleteFromLicenseeDocuments(index: number) {
-    if(confirm('Are you sure you want to delete the licensee document?')) {
+    if (confirm('Are you sure you want to delete the licensee document?')) {
       const doc: DocumentVO = this.licenseeDocuments[index];
       this.store.dispatch(
         DocumentActions.remove({
@@ -163,10 +166,10 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
         })
       );
       this.documentDelete$.subscribe(removed => {
-        if(removed)
+        if (removed)
           this.licenseeDocumentsControl.removeAt(index);
       });
-      
+
     }
   }
 
@@ -216,18 +219,18 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   }
 
   override beforeEditLicenseeDelete(form: EditLicenseeDeleteForm): void {
-    if(form?.licensee?.id){
-      if(!(form?.licensee?.users.length>0) && !(form?.licensee?.forms.length>0) && !(form?.licensee?.documents.length>0) && !(form?.licensee?.sectors.length>0) && confirm('Are you sure you want to delete the form activation?')) {
+    if (form?.licensee?.id) {
+      if (!(form?.licensee?.users.length > 0) && !(form?.licensee?.forms.length > 0) && !(form?.licensee?.documents.length > 0) && !(form?.licensee?.sectors.length > 0) && confirm('Are you sure you want to delete the form activation?')) {
 
         this.store.dispatch(
-           LicenseeActions.remove({
-             id: form?.licensee?.id,
-             loading: false,
-             loaderMessage: 'Removing licensee ...'
-           })
+          LicenseeActions.remove({
+            id: form?.licensee?.id,
+            loading: false,
+            loaderMessage: 'Removing licensee ...'
+          })
         );
         this.editLicenseeFormReset();
-      }else{
+      } else {
         this.store.dispatch(LicenseeActions.licenseeFailure({ messages: ['This Licensee can not be deleted it has attachments  '] }));
       }
     }
@@ -237,14 +240,20 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     }
   }
 
-  // override afterEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm, dialogData: any): void {
-  //   if(dialogData){
-  //     this.store.dispatch(
-  //       LicenseeActions.
-  //     )
-  //   }
-        
-  // }
+  override afterEditLicenseeNewShareholder(form: EditLicenseeNewShareholderForm, dialogData: any): void {
+    if(dialogData){
+      this.store.dispatch(
+        LicenseeShareholderActions.create({
+          licenseeId: dialogData.shareholder.licensee.id,
+          shareholderId: dialogData.shareholder.shareholder.id,
+          numberOfShares: dialogData.shareholder.numberOfShares,
+          loading: true,
+          loaderMessage: 'Creating licensee shareholder ...'
+        })
+      );
+    }
+
+  }
 
   override licenseeLicencesSearch(): void {
     let criteria: string = '';
@@ -301,7 +310,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
 
   override afterEditLicenseeNewDocument(form: EditLicenseeNewDocumentForm, dialogData: any): void {
     if (dialogData) {
-      
+
       this.store.dispatch(
         DocumentActions.uploadFile({
           metadataTarget: DocumentMetadataTarget.LICENSEE,

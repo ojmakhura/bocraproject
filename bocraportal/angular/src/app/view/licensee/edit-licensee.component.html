@@ -359,8 +359,7 @@
 				</mat-tab>
 				<mat-tab label="{{'shareholders' | translate}}">
 					<div>
-						<button type="button" (click)="licenseeShareholdersAddDialog()" class="btn btn-primary"
-							data-bs-toggle="modal" data-bs-target="#licenseeShareholdersModal">
+						<button type="button" (click)="editLicenseeNewShareholder()" class="btn btn-primary">
 							<mat-icon>add_box</mat-icon>
 						</button>
 						<mat-table matSort [dataSource]="licenseeShareholders" #shareholdersSort="matSort"
