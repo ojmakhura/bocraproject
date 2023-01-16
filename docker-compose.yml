@@ -38,6 +38,7 @@ services:
       - "--providers.file.watch=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.postgres.address=:5432"
       - "--entryPoints.ping.address=:8082"
       - "--log.level=DEBUG"
       - "--accessLog"
@@ -124,6 +125,12 @@ services:
       - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
       - "traefik.http.routers.bocra-db.tls=${SSL_SECURE}"
       - "traefik.http.routers.bocra-db.tls.certresolver=le"
+      - "traefik.tcp.routers.bocra-db.entrypoints=postgres"
+      - "traefik.tcp.routers.bocra-db.rule=HostSNI(`${DB_DOMAIN}`)"
+      - "traefik.tcp.routers.bocra-db.tls=${SSL_SECURE}"
+      - "traefik.tcp.routers.bocra-db.service=bocra-db"
+      - "traefik.tcp.routers.bocra-db.tls.certresolver=le"
+      - "traefik.tcp.services.bocra-db.loadBalancer.server.port=5432"
 
   ###############################################################################
   # Postgres administration frontend
@@ -207,7 +214,7 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocraportal-api
     hostname: api
 
@@ -267,7 +274,7 @@ services:
   # The Communication API 
   ###############################################################################
   comm:
-    image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocraportal-comm
     hostname: comm
     healthcheck:
@@ -404,7 +411,7 @@ services:
   # Cron job system
   ###############################################################################
   cron:
-    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"	
+    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}"	
     build:
       context: .
       dockerfile: bocraportal/cron/Dockerfile.native
