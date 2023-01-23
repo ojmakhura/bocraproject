@@ -121,16 +121,11 @@ services:
       default:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-db.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
-      - "traefik.http.routers.bocra-db.tls=${SSL_SECURE}"
-      - "traefik.http.routers.bocra-db.tls.certresolver=le"
-      - "traefik.tcp.routers.bocra-db.entrypoints=postgres"
-      - "traefik.tcp.routers.bocra-db.rule=HostSNI(`${DB_DOMAIN}`)"
-      - "traefik.tcp.routers.bocra-db.tls=${SSL_SECURE}"
-      - "traefik.tcp.routers.bocra-db.service=bocra-db"
-      - "traefik.tcp.routers.bocra-db.tls.certresolver=le"
-      - "traefik.tcp.services.bocra-db.loadBalancer.server.port=5432"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.tcp.routers.bocra-db-postgres.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.bocra-db-postgres.entrypoints=postgres"
+      - "traefik.tcp.routers.bocra-db.service=postgres"
+      - "traefik.tcp.services.bocra-db.loadbalancer.server.port=5432"
 
   ###############################################################################
   # Postgres administration frontend
@@ -157,10 +152,13 @@ services:
       TZ: Africa/Gaborone
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-pgadmin.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.bocra-pgadmin.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
-      - "traefik.http.routers.bocra-pgadmin.tls=${SSL_SECURE}"
-      - "traefik.http.routers.bocra-pgadmin.tls.certresolver=le"
+      - "traefik.http.routers.bocra-pgadmin-web.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.bocra-pgadmin-web.entrypoints=web"
+      - "traefik.http.routers.bocra-pgadmin-web.middlewares=https-redirect"
+      - "traefik.http.routers.bocra-pgadmin-websecure.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.bocra-pgadmin-websecure.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.bocra-pgadmin-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.bocra-pgadmin-websecure.tls.certresolver=le"
 
   ###############################################################################
   # Keycloak authentication server
@@ -205,10 +203,14 @@ services:
       default:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.keycloak.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
-      - "traefik.http.routers.keycloak.tls=${SSL_SECURE}"
-      - "traefik.http.routers.keycloak.tls.certresolver=le"
+      - "traefik.http.routers.keycloak-web.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.keycloak-web.entrypoints=web"
+      - "traefik.http.routers.keycloak-web.middlewares=https-redirect"
+      - "traefik.http.routers.keycloak-websecure.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.keycloak-websecure.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+      - "traefik.http.routers.keycloak-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.keycloak-websecure.tls.certresolver=le"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
 
   ###############################################################################
   # The main API 
@@ -265,10 +267,13 @@ services:
     
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
-      - "traefik.http.routers.api.tls=${SSL_SECURE}"
-      - "traefik.http.routers.api.tls.certresolver=le"
+      - "traefik.http.routers.api-web.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.api-web.entrypoints=web"
+      - "traefik.http.routers.api-web.middlewares=https-redirect"
+      - "traefik.http.routers.api-websecure.entrypoints=websecure"
+      - "traefik.http.routers.api-websecure.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.api-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.api-websecure.tls.certresolver=le"
   
   ###############################################################################
   # The Communication API 
@@ -331,10 +336,13 @@ services:
       - ${BOCRA_DATA}/cron/hosts:/etc/hosts
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.comm.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.comm.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
-      - "traefik.http.routers.comm.tls=${SSL_SECURE}"
-      - "traefik.http.routers.comm.tls.certresolver=le"
+      - "traefik.http.routers.comm-web.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
+      - "traefik.http.routers.comm-web.entrypoints=web"
+      - "traefik.http.routers.comm-web.middlewares=https-redirect"
+      - "traefik.http.routers.comm-websecure.entrypoints=websecure"
+      - "traefik.http.routers.comm-websecure.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
+      - "traefik.http.routers.comm-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.comm-websecure.tls.certresolver=le"
 
   ###############################################################################
   # Angular web application
@@ -371,9 +379,12 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
-      - "traefik.http.routers.bocra-web.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.bocra-web.tls=${SSL_SECURE}"
-      - "traefik.http.routers.bocra-web.tls.certresolver=le"
+      - "traefik.http.routers.bocra-web.entrypoints=web"
+      - "traefik.http.routers.bocra-web.middlewares=https-redirect"
+      - "traefik.http.routers.bocra-websecure.rule=Host(`${WEB_DOMAIN}`)"
+      - "traefik.http.routers.bocra-websecure.entrypoints=websecure"
+      - "traefik.http.routers.bocra-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.bocra-websecure.tls.certresolver=le"
 
   ###############################################################################
   # Rabbit MQ
@@ -449,6 +460,15 @@ services:
       COMM_URL: ${COMM_URL}
       API_URL: ${API_URL}
       TZ: Africa/Gaborone
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cron-http.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/cron`)"
+      - "traefik.http.routers.cron-http.entrypoints=web"
+      - "traefik.http.routers.cron-http.middlewares=https-redirect"
+      - "traefik.http.routers.cron-websecure.entrypoints=websecure"
+      - "traefik.http.routers.cron-websecure.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/cron`)"
+      - "traefik.http.routers.cron-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.cron-websecure.tls.certresolver=le"
     volumes:
       - ${BOCRA_DATA}/cron/hosts:/etc/hosts
     networks:
@@ -479,7 +499,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.registry.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.registry-http.rule=Host(`${REGISTRY_DOMAIN}`)"
+      - "traefik.http.routers.registry-http.entrypoints=web"
+      - "traefik.http.routers.registry-http.middlewares=https-redirect"
+      - "traefik.http.routers.registry.entrypoints=websecure"
       - "traefik.http.routers.registry.rule=Host(`${REGISTRY_DOMAIN}`)"
       - "traefik.http.routers.registry.tls=${SSL_SECURE}"
       - "traefik.http.routers.registry.tls.certresolver=le"
