@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,14 +21,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.section.FormSection;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
@@ -45,7 +47,7 @@ import bw.org.bocra.portal.period.PeriodVO;
  * @see FormSubmission
  */
 @Repository("formSubmissionDao")
-@Transactional
+// @Transactional
 public class FormSubmissionDaoImpl
     extends FormSubmissionDaoBase
 {
@@ -334,5 +336,50 @@ public class FormSubmissionDaoImpl
         }
 
         return formSubmissionRepository.findAll(specifications, Sort.by(Direction.ASC, "submissionDate"));
+    }
+
+    @Override
+    protected Collection<FormSubmission> handleCreateNewSubmissions(Set<Long> licenseeIds, Long activationId)
+            throws Exception {
+        
+                FormActivation activation = formActivationRepository.getReferenceById(activationId);
+
+                Collection<FormSubmission> submissions = new ArrayList<>();
+        
+                for (Long licenseeId : licenseeIds) {
+        
+                    Licensee licensee = licenseeRepository.getReferenceById(licenseeId);
+        
+                    FormSubmission submission = FormSubmission.Factory.newInstance();
+                    submission.setCreatedBy(activation.getCreatedBy());
+                    submission.setCreatedDate(LocalDateTime.now());
+                    submission.setForm(activation.getForm());
+                    submission.setLicensee(licensee);
+                    submission.setFormActivation(activation);
+                    submission.setPeriod(activation.getPeriod());
+                    submission.setSubmissionStatus(FormSubmissionStatus.NEW);
+        
+                    submission.setExpectedSubmissionDate(activation.getActivationDeadline());
+        
+                    /**
+                     * If the for requires single entry, the we create the data fields
+                     */
+                    if (activation.getForm().getEntryType() == FormEntryType.SINGLE) {
+                        for (FormField field : activation.getForm().getFormFields()) {
+                            DataField dataField = DataField.Factory.newInstance();
+                            dataField.setFormSubmission(submission);
+                            dataField.setFormField(field);
+                            dataField.setValue(field.getDefaultValue());
+                            dataField.setRow(0);
+        
+                            submission.getDataFields().add(dataField);
+                        }
+                    }
+                    submission = formSubmissionRepository.saveAndFlush(submission);
+        
+                    submissions.add(submission);
+                }
+        
+                return submissions;
     }
 }
