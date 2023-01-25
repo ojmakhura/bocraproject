@@ -4,11 +4,6 @@ import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
-// import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-// import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
-// import org.keycloak.OAuth2Constants;
-// import org.keycloak.admin.client.Keycloak;
-// import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,9 +30,9 @@ public class CronSecurity {
                     .realm(realm)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
-                    // .resteasyClient(
-                    //     new ResteasyClientBuilderImpl().connectionPoolSize(10).build()
-                    // )
+                    .resteasyClient(
+                        new ResteasyClientBuilderImpl().connectionPoolSize(10).build()
+                    )
                     .build();
 
         return keycloak;

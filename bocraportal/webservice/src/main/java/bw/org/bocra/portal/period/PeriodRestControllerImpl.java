@@ -15,6 +15,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -60,8 +62,9 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             String message = e.getMessage();
-            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Perion with id %d not found.", id));
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                        || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Period with id %d not found.", id));
             } else {
                 message = "An unknown error has occured while loading a period. Please contact the system administrator.";
             }
@@ -81,7 +84,7 @@ public class PeriodRestControllerImpl extends PeriodRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An error occured when loading all periods.");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 

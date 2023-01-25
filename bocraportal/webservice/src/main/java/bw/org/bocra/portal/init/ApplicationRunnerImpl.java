@@ -137,13 +137,10 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         period = periodService.save(period);
 
         while(now.compareTo(period.getPeriodEnd()) > 0) {
-            PeriodVO next = new PeriodVO();
-            next.setPeriodConfig(config);
-            period.setCreatedBy("system");
-            period.setCreatedDate(LocalDateTime.now());
 
-            next.setPeriodStart(period.getPeriodEnd().plusDays(1));
-            period = periodService.save(next);
+            Set<Long> s = new HashSet<>();
+            s.add(period.getId());
+            period = periodService.createNextPeriods("system", s).iterator().next();
         }
         log.info("Created periods for configuration " + config.getPeriodConfigName());   
     }
