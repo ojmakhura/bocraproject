@@ -28,6 +28,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import bw.org.bocra.portal.access.AccessPointCriteria;
 import bw.org.bocra.portal.access.AccessPointService;
 import bw.org.bocra.portal.access.AccessPointVO;
@@ -40,6 +44,8 @@ import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.period.config.PeriodConfigService;
 import bw.org.bocra.portal.period.config.PeriodConfigVO;
 import bw.org.bocra.portal.period.config.RepeatPeriod;
+import bw.org.bocra.portal.sector.SectorService;
+import bw.org.bocra.portal.sector.SectorVO;
 
 @Component
 @Transactional
@@ -53,14 +59,16 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     private final AccessPointTypeService accessPointTypeService;
     private final AccessPointService accessPointService;
     private final AuthorisationService authorisationService;
+    private final SectorService sectorService;
 
-    public ApplicationRunnerImpl(PeriodService periodService, PeriodConfigService periodConfigService, AccessPointTypeService accessPointTypeService, AccessPointService accessPointService, AuthorisationService authorisationService) {
+    public ApplicationRunnerImpl(PeriodService periodService, PeriodConfigService periodConfigService, AccessPointTypeService accessPointTypeService, AccessPointService accessPointService, AuthorisationService authorisationService, SectorService sectorService) {
 
         this.periodService = periodService;
         this.periodConfigService = periodConfigService;
         this.accessPointService = accessPointService;
         this.accessPointTypeService = accessPointTypeService;
         this.authorisationService = authorisationService;
+        this.sectorService = sectorService;
     }
 
     private Collection<PeriodConfigVO> initPeriodConfigs() {
@@ -227,7 +235,20 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
             authorisation.setAccessPoint(point);
             authorisation = authorisationService.save(authorisation);
         }
+    }
 
+    private void initSectors() throws StreamReadException, DatabindException, IOException {
+
+        File file = ResourceUtils.getFile("classpath:sectors.json");
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<SectorVO> sectors = Arrays.asList(mapper.readValue(file, SectorVO[].class));
+        for (SectorVO sector : sectors) {
+            log.info(String.format("Creating sector %s", sector.getName()));
+            sector.setCreatedBy("system");
+            sector.setCreatedDate(LocalDateTime.now());
+            sectorService.save(sector);
+        }
     }
 
     @Override
@@ -272,6 +293,14 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
             log.info("Initialising authorisations .... ");
             this.initAuthorisation();
             log.info("Authorisations initialisation complete .... ");
+        }
+
+        if(CollectionUtils.isEmpty(sectorService.getAll(1, 1))) {
+
+            log.info("Initialising sectors .... ");
+            this.initSectors();
+            log.info("Sectors initialisation complete .... ");
+
         }
 
         log.info("System fully intialised ...");
