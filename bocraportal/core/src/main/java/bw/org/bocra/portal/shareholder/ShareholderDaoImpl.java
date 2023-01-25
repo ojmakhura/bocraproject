@@ -6,7 +6,19 @@
  */
 package bw.org.bocra.portal.shareholder;
 
+import bw.org.bocra.portal.document.DocumentRepository;
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.DocumentDao;
+import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholderVO;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholder;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +30,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class ShareholderDaoImpl
         extends ShareholderDaoBase {
 
+    private DocumentRepository documentRepository;
+    private DocumentDao documentDao;
+
     public ShareholderDaoImpl(
             LicenseeShareholderRepository licenseeShareholderRepository,
-            ShareholderRepository shareholderRepository) {
+            ShareholderRepository shareholderRepository, DocumentRepository documentRepository,
+            DocumentDao documentDao) {
 
         super(
                 licenseeShareholderRepository,
                 shareholderRepository);
+
+        this.documentRepository = documentRepository;
+        this.documentDao = documentDao;
     }
 
     /**
@@ -36,6 +55,25 @@ public class ShareholderDaoImpl
             ShareholderVO target) {
         // TODO verify behavior of toShareholderVO
         super.toShareholderVO(source, target);
+        if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            target.setDocuments(
+                    documentDao.toDocumentVOCollection(documentRepository.findByIdIn(source.getDocumentIds())));
+        }
+
+        target.setShares(new ArrayList<>());
+        for (LicenseeShareholder holder : source.getLicenseeShareholders()) {
+            LicenseeShareholderVO ls = new LicenseeShareholderVO();
+            ls.setId(holder.getId());
+
+            ls.setLicensee(new LicenseeVO());
+            ls.getLicensee().setId(holder.getLicensee().getId());
+            ls.getLicensee().setUin(holder.getLicensee().getUin());
+            ls.getLicensee().setLicenseeName(holder.getLicensee().getLicenseeName());
+            ls.setNumberOfShares(holder.getNumberOfShares());
+
+            target.getShares().add(ls);
+
+        }
     }
 
     /**

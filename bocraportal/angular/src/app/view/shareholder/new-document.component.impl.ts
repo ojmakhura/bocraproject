@@ -47,4 +47,11 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
       this.documentDocumentNameControl.patchValue(this.currentFile?.name)
     }
   }
+
+  override handleDialogDone(data: any): any {
+    if(data.document) {
+      data.document.file = this.currentFile;
+    }
+    return data;
+  }
 }

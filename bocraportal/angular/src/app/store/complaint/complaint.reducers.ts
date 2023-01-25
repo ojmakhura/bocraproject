@@ -31,7 +31,7 @@ export const complaintReducer = createReducer(
         ...state,
         complaint: action.complaint, 
         criteria: null, 
-        complaints: [], 
+        complaints: [action.complaint], 
         id: null, 
         loading: false,
         loaderMessage: undefined,

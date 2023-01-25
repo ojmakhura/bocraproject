@@ -17,7 +17,7 @@
 				</div>
 			</div> -->
 			<div formGroupName="shareholder">
-				<div class="mb-3" formGroupName="licensee">
+				<!-- <div class="mb-3" formGroupName="licensee">
 				    <label id="shareholderLicensee_label" class="col-sm-2 col-form-label" for="shareholderLicensee"><span translate>licensee</span>*</label>
 				    <select id="shareholderLicensee" class="form-select" formControlName="id"  required>
 				        <option *ngFor="let item of shareholderLicenseeBackingList" [value]="item.value">{{ item.label }}</option>
@@ -27,7 +27,7 @@
 				            <span translate>licensee.required</span>
 				        </div>
 				    </div>
-				</div>
+				</div> -->
 				<div class="mb-3" formGroupName="shareholder">
 				    <label id="shareholderShareholder_label" class="col-sm-2 col-form-label" for="shareholderShareholder"><span translate>shareholder</span>*</label>
 				    <select id="shareholderShareholder" class="form-select" formControlName="id"  required>
@@ -46,19 +46,21 @@
                 <mat-tab-group animationDuration="0ms" class = "view-tabs">
                     <mat-tab label="{{'documents' | translate}}">
 		            	<div>
-		                    <button type="button" (click)="shareholderDocumentsAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareholderDocumentsModal">
+		                    <button type="button" (click)=" editShareholderNewDocument()" class="btn btn-primary" *ngIf="!newShareholderForm.invalid">
 		                        <mat-icon>add_box</mat-icon>
 		                    </button>
 		            		<mat-table matSort [dataSource]="shareholderDocuments" #documentsSort="matSort" class="table table-bordered table-striped" style="width: 100%;">
 		            			<ng-container matColumnDef="actions">
 		            				<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
 		                            <mat-cell *matCellDef="let row; index as i">
-		                                <button type="button" color="accent" (click)="deleteFromShareholderDocuments(i)" class="btn btn-info">
-		                                    <mat-icon>delete</mat-icon>
-		                                </button>
-		                                <button type="button" color="accent" (click)="doEditShareholderDocuments(row)" class="btn btn-info">
-		                                    <mat-icon>edit</mat-icon>
-		                                </button>
+		                                <div>
+											<button type="button" color="accent" (click)="deleteFromShareholderDocuments(i)" class="btn btn-outline-primary">
+												<mat-icon>delete</mat-icon>
+											</button>
+											<button type="button" color="accent" (click)="doEditShareholderDocuments(row)" class="btn btn-outline-primary" *ngIf="false">
+												<mat-icon>edit</mat-icon>
+											</button>
+										</div>
 		                            </mat-cell>
 		            			</ng-container>
 		            			<ng-container matColumnDef="id">

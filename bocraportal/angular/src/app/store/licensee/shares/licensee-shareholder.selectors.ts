@@ -16,6 +16,11 @@ export const selectLicenseeShareholder = createSelector(
     (state: LicenseeShareholderState) => state.licenseeShareholder
 );
 
+export const selectLicenseeShareholders = createSelector(
+    selectLicenseeShareholderState,
+    (state: LicenseeShareholderState) => state.licenseeShareholders
+);
+
 export const selectLicensee = createSelector(
     selectLicenseeShareholderState,
     (state: LicenseeShareholderState) => state.licensee

@@ -15,7 +15,7 @@ export class LicenseeShareholderEffects {
     this.actions$.pipe(
       ofType(LicenseeShareholderActions.findById),
       mergeMap(({ id }) =>
-        this.licenseeShareholderRestController.findShareholderById(id).pipe(
+        this.licenseeShareholderRestController.findById(id).pipe(
           map((licenseeShareholder) =>
             LicenseeShareholderActions.findByIdSuccess({
               licenseeShareholder,
@@ -135,7 +135,7 @@ export class LicenseeShareholderEffects {
     this.actions$.pipe(
       ofType(LicenseeShareholderActions.remove),
       mergeMap(({ id }) =>
-        this.licenseeShareholderRestController.removeShareholder(id).pipe(
+        this.licenseeShareholderRestController.remove(id).pipe(
           map((removed) =>
             LicenseeShareholderActions.removeSuccess({
               removed,
@@ -155,7 +155,7 @@ export class LicenseeShareholderEffects {
     this.actions$.pipe(
       ofType(LicenseeShareholderActions.getAll),
       mergeMap(() =>
-        this.licenseeShareholderRestController.getAllShareholders().pipe(
+        this.licenseeShareholderRestController.getAll().pipe(
           map((licenseeShareholders) =>
             LicenseeShareholderActions.getAllSuccess({
               licenseeShareholders,
