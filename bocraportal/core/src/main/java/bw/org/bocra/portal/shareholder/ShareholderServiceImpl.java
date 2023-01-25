@@ -1,13 +1,8 @@
-// license-header java merge-point
-/**
- * This is only generated once! It will never be overwritten.
- * You can (and have to!) safely modify it by hand.
- * TEMPLATE:    SpringServiceImpl.vsl in andromda-spring cartridge
- * MODEL CLASS: bocraportal::backend::bw.org.bocra.portal::shareholder::ShareholderService
- * STEREOTYPE:  Service
- */
 package bw.org.bocra.portal.shareholder;
 
+import bw.org.bocra.portal.licence.LicenceVO;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -18,21 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
  * @see bw.org.bocra.portal.shareholder.ShareholderService
  */
 @Service("shareholderService")
-@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class ShareholderServiceImpl
-    extends ShareholderServiceBase
-{
+        extends ShareholderServiceBase {
     public ShareholderServiceImpl(
-        ShareholderDao shareholder,
-        ShareholderRepository shareholderRepository,
-        MessageSource messageSource
-    ) {
-        
+            ShareholderDao shareholder,
+            ShareholderRepository shareholderRepository,
+            MessageSource messageSource) {
+
         super(
-            shareholder,
-            shareholderRepository,
-            messageSource
-        );
+                shareholder,
+                shareholderRepository,
+                messageSource);
     }
 
     /**
@@ -40,10 +32,13 @@ public class ShareholderServiceImpl
      */
     @Override
     protected ShareholderVO handleFindById(Long id)
-        throws Exception
-    {
-        // TODO implement protected  ShareholderVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.shareholder.ShareholderService.handleFindById(Long id) Not implemented!");
+            throws Exception {
+        if (id == null) {
+            return null;
+        }
+
+        Shareholder holder = getShareholderDao().load(id);
+        return getShareholderDao().toShareholderVO(holder);
     }
 
     /**
@@ -51,10 +46,16 @@ public class ShareholderServiceImpl
      */
     @Override
     protected ShareholderVO handleSave(ShareholderVO shareholder)
-        throws Exception
-    {
-        // TODO implement protected  ShareholderVO handleSave(ShareholderVO shareholder)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.shareholder.ShareholderService.handleSave(ShareholderVO shareholder) Not implemented!");
+            throws Exception {
+        Shareholder entity = shareholderDao.shareholderVOToEntity(shareholder);
+
+        if (shareholder.getId() == null) {
+            entity = shareholderDao.create(entity);
+        } else {
+            shareholderDao.update(entity);
+        }
+
+        return getShareholderDao().toShareholderVO(entity);
     }
 
     /**
@@ -62,10 +63,13 @@ public class ShareholderServiceImpl
      */
     @Override
     protected boolean handleRemove(Long id)
-        throws Exception
-    {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.shareholder.ShareholderService.handleRemove(Long id) Not implemented!");
+            throws Exception {
+        if (id != null) {
+            shareholderRepository.deleteById(id);
+
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -73,10 +77,8 @@ public class ShareholderServiceImpl
      */
     @Override
     protected Collection<ShareholderVO> handleGetAll()
-        throws Exception
-    {
-        // TODO implement protected  Collection<ShareholderVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.shareholder.ShareholderService.handleGetAll() Not implemented!");
+            throws Exception {
+        return (Collection<ShareholderVO>) shareholderDao.loadAll(ShareholderDao.TRANSFORM_SHAREHOLDERVO);
     }
 
     /**
@@ -84,21 +86,29 @@ public class ShareholderServiceImpl
      */
     @Override
     protected Collection<ShareholderVO> handleSearch(ShareholderCriteria criteria)
-        throws Exception
-    {
-        // TODO implement protected  Collection<ShareholderVO> handleSearch(ShareholderCriteria criteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.shareholder.ShareholderService.handleSearch(ShareholderCriteria criteria) Not implemented!");
+            throws Exception {
+        Collection<Shareholder> holders = this.shareholderDao.findByCriteria(criteria);
+        Collection<ShareholderVO> vos = new ArrayList<>();
+        // throw new UnsupportedOperationException(
+        // "bw.org.bocra.portal.shareholder.loadShareholderFromShareholderVO(ShareholderVO)
+        // not yet implemented.");
+        for (Shareholder holder : holders) {
+            ShareholderVO vo = new ShareholderVO();
+            getShareholderDao().toShareholderVO(holder, vo);
+            vos.add(vo);
+        }
+        return vos;
     }
 
     /**
-     * @see bw.org.bocra.portal.shareholder.ShareholderService#getAll(Integer, Integer)
+     * @see bw.org.bocra.portal.licensee.shares.ShareholderService#getAll(Integer,
+     *      Integer)
      */
     @Override
     protected Collection<ShareholderVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throws Exception
-    {
-        // TODO implement protected  Collection<ShareholderVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.shareholder.ShareholderService.handleGetAll(Integer pageNumber, Integer pageSize) Not implemented!");
+            throws Exception {
+        return (Collection<ShareholderVO>) shareholderDao.loadAll(ShareholderDao.TRANSFORM_SHAREHOLDERVO, pageNumber,
+                pageSize);
     }
 
 }

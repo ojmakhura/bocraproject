@@ -6,7 +6,19 @@
  */
 package bw.org.bocra.portal.shareholder;
 
+import bw.org.bocra.portal.document.DocumentRepository;
+import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.DocumentDao;
+import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholderVO;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholder;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,18 +28,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("shareholderDao")
 @Transactional
 public class ShareholderDaoImpl
-    extends ShareholderDaoBase
-{
-    
+        extends ShareholderDaoBase {
+
+    private DocumentRepository documentRepository;
+    private DocumentDao documentDao;
+
     public ShareholderDaoImpl(
-        LicenseeShareholderRepository licenseeShareholderRepository,
-        ShareholderRepository shareholderRepository
-    ) {
+            LicenseeShareholderRepository licenseeShareholderRepository,
+            ShareholderRepository shareholderRepository, DocumentRepository documentRepository,
+            DocumentDao documentDao) {
 
         super(
-            licenseeShareholderRepository,
-            shareholderRepository
-        );
+                licenseeShareholderRepository,
+                shareholderRepository);
+
+        this.documentRepository = documentRepository;
+        this.documentDao = documentDao;
     }
 
     /**
@@ -35,50 +51,63 @@ public class ShareholderDaoImpl
      */
     @Override
     public void toShareholderVO(
-        Shareholder source,
-        ShareholderVO target)
-    {
+            Shareholder source,
+            ShareholderVO target) {
         // TODO verify behavior of toShareholderVO
         super.toShareholderVO(source, target);
+        if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            target.setDocuments(
+                    documentDao.toDocumentVOCollection(documentRepository.findByIdIn(source.getDocumentIds())));
+        }
+
+        target.setShares(new ArrayList<>());
+        for (LicenseeShareholder holder : source.getLicenseeShareholders()) {
+            LicenseeShareholderVO ls = new LicenseeShareholderVO();
+            ls.setId(holder.getId());
+
+            ls.setLicensee(new LicenseeVO());
+            ls.getLicensee().setId(holder.getLicensee().getId());
+            ls.getLicensee().setUin(holder.getLicensee().getUin());
+            ls.getLicensee().setLicenseeName(holder.getLicensee().getLicenseeName());
+            ls.setNumberOfShares(holder.getNumberOfShares());
+
+            target.getShares().add(ls);
+
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ShareholderVO toShareholderVO(final Shareholder entity)
-    {
+    public ShareholderVO toShareholderVO(final Shareholder entity) {
         // TODO verify behavior of toShareholderVO
         return super.toShareholderVO(entity);
     }
 
     /**
-     * Retrieves the entity object that is associated with the specified value object
+     * Retrieves the entity object that is associated with the specified value
+     * object
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private Shareholder loadShareholderFromShareholderVO(ShareholderVO shareholderVO)
-    {
+    private Shareholder loadShareholderFromShareholderVO(ShareholderVO shareholderVO) {
         // TODO implement loadShareholderFromShareholderVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.shareholder.loadShareholderFromShareholderVO(ShareholderVO) not yet implemented.");
+        // throw new UnsupportedOperationException(
+        // "bw.org.bocra.portal.shareholder.loadShareholderFromShareholderVO(ShareholderVO)
+        // not yet implemented.");
 
-        /* A typical implementation looks like this:
-        if (shareholderVO.getId() == null)
-        {
-            return  Shareholder.Factory.newInstance();
-        }
-        else
-        {
+        if (shareholderVO.getId() == null) {
+            return Shareholder.Factory.newInstance();
+        } else {
             return this.load(shareholderVO.getId());
         }
-        */
     }
 
     /**
      * {@inheritDoc}
      */
-    public Shareholder shareholderVOToEntity(ShareholderVO shareholderVO)
-    {
+    public Shareholder shareholderVOToEntity(ShareholderVO shareholderVO) {
         // TODO verify behavior of shareholderVOToEntity
         Shareholder entity = this.loadShareholderFromShareholderVO(shareholderVO);
         this.shareholderVOToEntity(shareholderVO, entity, true);
@@ -90,10 +119,9 @@ public class ShareholderDaoImpl
      */
     @Override
     public void shareholderVOToEntity(
-        ShareholderVO source,
-        Shareholder target,
-        boolean copyIfNull)
-    {
+            ShareholderVO source,
+            Shareholder target,
+            boolean copyIfNull) {
         // TODO verify behavior of shareholderVOToEntity
         super.shareholderVOToEntity(source, target, copyIfNull);
     }

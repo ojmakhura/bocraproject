@@ -6,6 +6,7 @@
  */
 package bw.org.bocra.portal.licensee;
 
+import bw.org.bocra.portal.shareholder.ShareholderVO;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -30,6 +31,8 @@ import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholderVO;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholder;
 import bw.org.bocra.portal.report.ReportRepository;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 import bw.org.bocra.portal.sector.SectorRepository;
@@ -42,8 +45,7 @@ import bw.org.bocra.portal.user.LicenseeUserRepository;
 @Lazy
 @Transactional
 public class LicenseeDaoImpl
-    extends LicenseeDaoBase
-{
+        extends LicenseeDaoBase {
 
     public LicenseeDaoImpl(LicenseeUserRepository licenseeUserRepository,
             FormSubmissionRepository formSubmissionRepository, FormRepository formRepository,
@@ -64,16 +66,15 @@ public class LicenseeDaoImpl
      */
     @Override
     public void toLicenseeVO(
-        Licensee source,
-        LicenseeVO target)
-    {
+            Licensee source,
+            LicenseeVO target) {
         super.toLicenseeVO(source, target);
 
-        if(CollectionUtils.isNotEmpty(source.getLicences())) {
+        if (CollectionUtils.isNotEmpty(source.getLicences())) {
 
             target.setLicences(new ArrayList<>());
 
-            for(Licence entity : source.getLicences()) {
+            for (Licence entity : source.getLicences()) {
                 LicenceVO vo = new LicenceVO();
 
                 licenceDao.toLicenceVO(entity, vo);
@@ -81,22 +82,23 @@ public class LicenseeDaoImpl
             }
         }
 
-        if(CollectionUtils.isNotEmpty(source.getLicenseeSectors())) {
+        if (CollectionUtils.isNotEmpty(source.getLicenseeSectors())) {
 
             target.setSectors(new ArrayList<>());
 
-            for(LicenseeSector entity : source.getLicenseeSectors()) {
+            for (LicenseeSector entity : source.getLicenseeSectors()) {
                 LicenseeSectorVO vo = getLicenseeSectorDao().toLicenseeSectorVO(entity);
                 target.getSectors().add(vo);
             }
         }
 
-        if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            target.setDocuments(documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds())));
+        if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            target.setDocuments(
+                    documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds())));
         }
 
         target.setForms(new ArrayList<>());
-        for(LicenseeForm form : source.getLicenseeForms()) {
+        for (LicenseeForm form : source.getLicenseeForms()) {
             LicenseeFormVO lf = new LicenseeFormVO();
             lf.setId(form.getId());
 
@@ -109,6 +111,21 @@ public class LicenseeDaoImpl
             target.getForms().add(lf);
         }
 
+        target.setShareholders(new ArrayList<>());
+        for (LicenseeShareholder holder : source.getLicenseeShareholders()) {
+            LicenseeShareholderVO ls = new LicenseeShareholderVO();
+            ls.setId(holder.getId());
+
+            ls.setShareholder(new ShareholderVO());
+            ls.getShareholder().setId(holder.getShareholder().getId());
+            ls.getShareholder().setShareholderId(holder.getShareholder().getShareholderId());
+            ls.getShareholder().setType(holder.getShareholder().getType());
+            ls.getShareholder().setName(holder.getShareholder().getName());
+            ls.setNumberOfShares(holder.getNumberOfShares());
+
+            target.getShareholders().add(ls);
+        }
+
         // TODO: read users from keycloak
     }
 
@@ -116,25 +133,21 @@ public class LicenseeDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public LicenseeVO toLicenseeVO(final Licensee entity)
-    {
+    public LicenseeVO toLicenseeVO(final Licensee entity) {
         // TODO verify behavior of toLicenseeVO
         return super.toLicenseeVO(entity);
     }
 
     /**
-     * Retrieves the entity object that is associated with the specified value object
+     * Retrieves the entity object that is associated with the specified value
+     * object
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private Licensee loadLicenseeFromLicenseeVO(LicenseeVO licenseeVO)
-    {
-        if (licenseeVO.getId() == null)
-        {
-            return  Licensee.Factory.newInstance();
-        }
-        else
-        {
+    private Licensee loadLicenseeFromLicenseeVO(LicenseeVO licenseeVO) {
+        if (licenseeVO.getId() == null) {
+            return Licensee.Factory.newInstance();
+        } else {
             return this.load(licenseeVO.getId());
         }
     }
@@ -142,8 +155,7 @@ public class LicenseeDaoImpl
     /**
      * {@inheritDoc}
      */
-    public Licensee licenseeVOToEntity(LicenseeVO licenseeVO)
-    {
+    public Licensee licenseeVOToEntity(LicenseeVO licenseeVO) {
         // TODO verify behavior of licenseeVOToEntity
         Licensee entity = this.loadLicenseeFromLicenseeVO(licenseeVO);
         this.licenseeVOToEntity(licenseeVO, entity, true);
@@ -155,17 +167,16 @@ public class LicenseeDaoImpl
      */
     @Override
     public void licenseeVOToEntity(
-        LicenseeVO source,
-        Licensee target,
-        boolean copyIfNull)
-    {
+            LicenseeVO source,
+            Licensee target,
+            boolean copyIfNull) {
         // TODO verify behavior of licenseeVOToEntity
         super.licenseeVOToEntity(source, target, copyIfNull);
 
-        if(CollectionUtils.isNotEmpty(source.getLicences())) {
+        if (CollectionUtils.isNotEmpty(source.getLicences())) {
             Collection<Licence> types = new ArrayList<>();
-            for(LicenceVO licence : source.getLicences()) {
-                if(licence.getId() != null) {
+            for (LicenceVO licence : source.getLicences()) {
+                if (licence.getId() != null) {
                     Licence entity = licenceRepository.getReferenceById(licence.getId());
                     types.add(entity);
                 }
@@ -175,22 +186,25 @@ public class LicenseeDaoImpl
 
         }
 
-        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
-            target.setDocumentIds(source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toList()));
+        if (CollectionUtils.isNotEmpty(source.getDocuments())) {
+            target.setDocumentIds(
+                    source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toList()));
         }
 
-        // if(CollectionUtils.isNotEmpty(source.getSectors()) && source.getId() != null) {
-        //     Collection<LicenseeSector> sectors = new ArrayList<>();
-        //     for(LicenseeSectorVO sector : source.getSectors()) {
-        //         if( sector.getLicenseeSectorId() != null) {
-        //             sectors.add(licenseeSectorRepository.getReferenceById(sector.getLicenseeSectorId()));
-        //         } else if(sector.getId() != null) {
+        // if(CollectionUtils.isNotEmpty(source.getSectors()) && source.getId() != null)
+        // {
+        // Collection<LicenseeSector> sectors = new ArrayList<>();
+        // for(LicenseeSectorVO sector : source.getSectors()) {
+        // if( sector.getLicenseeSectorId() != null) {
+        // sectors.add(licenseeSectorRepository.getReferenceById(sector.getLicenseeSectorId()));
+        // } else if(sector.getId() != null) {
 
-        //             sectors.add(licenseeSectorDao.create(target, sectorDao.load(sector.getId())));
-        //         }
-        //     }
+        // sectors.add(licenseeSectorDao.create(target,
+        // sectorDao.load(sector.getId())));
+        // }
+        // }
 
-        //     target.setLicenseeSectors(sectors);
-    //     }
+        // target.setLicenseeSectors(sectors);
+        // }
     }
 }

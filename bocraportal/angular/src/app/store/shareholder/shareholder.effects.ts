@@ -14,7 +14,7 @@ export class ShareholderEffects {
          this.actions$.pipe(
             ofType(ShareholderActions.findById),
             mergeMap(({id}) => this.shareholderRestController.findById(id).pipe(
-                map(( shareholder) => ShareholderActions.findByIdSuccess({shareholder, messages: [`Action successful.`], success: true})),
+                map(( shareholder) => ShareholderActions.findByIdSuccess({shareholder, messages: [`Shareholder ${shareholder.name} found.`], success: true})),
                 catchError(({error}) => [ShareholderActions.shareholderFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -24,7 +24,7 @@ export class ShareholderEffects {
          this.actions$.pipe(
             ofType(ShareholderActions.save),
             mergeMap(({shareholder}) => this.shareholderRestController.save(shareholder).pipe(
-                map(( shareholder) => ShareholderActions.saveSuccess({shareholder, messages: [`Action successful.`], success: true})),
+                map(( shareholder) => ShareholderActions.saveSuccess({shareholder, messages: [`Shareholder ${shareholder.name} saved successfully.`], success: true})),
                 catchError(({error}) => [ShareholderActions.shareholderFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -34,7 +34,7 @@ export class ShareholderEffects {
          this.actions$.pipe(
             ofType(ShareholderActions.remove),
             mergeMap(({id}) => this.shareholderRestController.remove(id).pipe(
-                map(( removed) => ShareholderActions.removeSuccess({removed, messages: [`Action successful.`], success: true})),
+                map(( removed) => ShareholderActions.removeSuccess({removed, messages: [`Shareholder ${id} removed successfully.`], success: true})),
                 catchError(({error}) => [ShareholderActions.shareholderFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -44,7 +44,7 @@ export class ShareholderEffects {
          this.actions$.pipe(
             ofType(ShareholderActions.getAll),
             mergeMap(({}) => this.shareholderRestController.getAll().pipe(
-                map(( shareholders) => ShareholderActions.getAllSuccess({shareholders, messages: [`Action successful.`], success: true})),
+                map(( shareholders) => ShareholderActions.getAllSuccess({shareholders, messages: [`${shareholders.length} shareholders found.`], success: true})),
                 catchError(({error}) => [ShareholderActions.shareholderFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -54,7 +54,7 @@ export class ShareholderEffects {
          this.actions$.pipe(
             ofType(ShareholderActions.search),
             mergeMap(({criteria}) => this.shareholderRestController.search(criteria).pipe(
-                map(( shareholders) => ShareholderActions.searchSuccess({shareholders, messages: [`Action successful.`], success: true})),
+                map(( shareholders) => ShareholderActions.searchSuccess({shareholders, messages: [`${shareholders.length} shareholders found.`], success: true})),
                 catchError(({error}) => [ShareholderActions.shareholderFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -64,7 +64,7 @@ export class ShareholderEffects {
          this.actions$.pipe(
             ofType(ShareholderActions.getAllPaged),
             mergeMap(({pageNumber, pageSize}) => this.shareholderRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map(( shareholders ) => ShareholderActions.getAllPagedSuccess({shareholders, messages: [`Action successful.`], success: true})),
+                map(( shareholders ) => ShareholderActions.getAllPagedSuccess({shareholders, messages: [`Page ${pageNumber} found with ${shareholders.length} shareholders.`], success: true})),
                 catchError(({error}) => [ShareholderActions.shareholderFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )

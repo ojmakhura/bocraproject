@@ -19,7 +19,8 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     '/home',
     '/contact',
     '/complaint',
-    '/complaint/search-complaints'
+    '/complaint/search-complaints',
+    '/complaint/edit-complaint'
   ]
 
   constructor(
