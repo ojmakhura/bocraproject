@@ -56,8 +56,12 @@ public class ShareholderDaoImpl
         // TODO verify behavior of toShareholderVO
         super.toShareholderVO(source, target);
         if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            target.setDocuments(
-                    documentDao.toDocumentVOCollection(documentRepository.findByIdIn(source.getDocumentIds())));
+            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByIdIn(source.getDocumentIds()));
+            docs = docs.stream().map(d -> {
+                d.setFile(null);
+                return d;
+            }).collect(Collectors.toSet());
+            target.setDocuments(docs);
         }
 
         target.setShares(new ArrayList<>());
@@ -124,5 +128,17 @@ public class ShareholderDaoImpl
             boolean copyIfNull) {
         // TODO verify behavior of shareholderVOToEntity
         super.shareholderVOToEntity(source, target, copyIfNull);
+        // if(CollectionUtils.isNotEmpty(source.getShares())) {
+        //     source.getShares().forEach(share -> {
+        //         if(share.getId() != null) {
+                    
+        //         }
+        //     });
+        // }
+
+        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
+            Collection<Long> ids = source.getDocuments().stream().map(doc -> doc.getId()).collect(Collectors.toSet());
+            target.setDocumentIds(ids);
+        }
     }
 }

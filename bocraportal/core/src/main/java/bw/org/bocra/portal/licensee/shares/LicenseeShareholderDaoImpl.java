@@ -6,11 +6,20 @@
  */
 package bw.org.bocra.portal.licensee.shares;
 
+import bw.org.bocra.portal.document.DocumentDao;
+import bw.org.bocra.portal.document.DocumentRepository;
+import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.shareholder.ShareholderRepository;
 import bw.org.bocra.portal.shareholder.ShareholderVO;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class LicenseeShareholderDaoImpl
     extends LicenseeShareholderDaoBase
 {
-    
+    private DocumentDao documentDao;
+    private final DocumentRepository documentRepository;
+
     public LicenseeShareholderDaoImpl(
-        ShareholderRepository shareholderRepository,
+        ShareholderRepository shareholderRepository, DocumentRepository documentRepository,
         LicenseeRepository licenseeRepository,
         LicenseeShareholderRepository licenseeShareholderRepository
     ) {
@@ -34,6 +45,16 @@ public class LicenseeShareholderDaoImpl
             licenseeRepository,
             licenseeShareholderRepository
         );
+        this.documentRepository = documentRepository;
+    }
+
+    @Autowired
+    public void setDocumentDao(@Lazy DocumentDao documentDao) {
+        this.documentDao = documentDao;
+    }
+
+    public DocumentDao getDocumentDao() {
+        return this.documentDao;
     }
 
     /**
@@ -75,6 +96,15 @@ public class LicenseeShareholderDaoImpl
             shareholder.setUpdatedDate(source.getShareholder().getUpdatedDate());
 
             target.setShareholder(shareholder);
+        }
+
+        if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByIdIn(source.getDocumentIds()));
+            docs = docs.stream().map(d -> {
+                d.setFile(null);
+                return d;
+            }).collect(Collectors.toSet());
+            target.setDocuments(docs);
         }
     }
 
@@ -142,6 +172,11 @@ public class LicenseeShareholderDaoImpl
             throw new IllegalArgumentException(
                 "LicenseeShareholderDao.licenseeShareholderVOToEntity - 'shareholder' or its id can not be null"
             );
+        }
+
+        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
+            Collection<Long> ids = source.getDocuments().stream().map(doc -> doc.getId()).collect(Collectors.toSet());
+            target.setDocumentIds(ids);
         }
     }
 }

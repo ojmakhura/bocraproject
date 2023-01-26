@@ -7,12 +7,14 @@ package bw.org.bocra.portal.document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.keycloak.representations.AccessToken;
 import org.postgresql.util.PSQLException;
@@ -229,76 +231,10 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     public ResponseEntity<?> handleSearch(DocumentCriteria criteria) {
         try {
             logger.debug("Searches Document by " + criteria);
-            Optional<?> data = Optional.of(documentService.search(criteria));
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(documentService.search(criteria));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> handleUploadLicenceDocument(Long licenceId, MultipartFile file) {
-        try {
-            logger.debug("Upload Licence Document with Licence Id: " + licenceId + " and a File: " + file);
-            AccessToken token = keycloakService.getSecurityContext().getToken();
-            DocumentVO document = new DocumentVO();
-            document.setCreatedBy(token.getPreferredUsername());
-            document.setCreatedDate(LocalDateTime.now());
-            document.setFile(file.getBytes());
-            LicenceVO licence = new LicenceVO();
-            licence.setId(licenceId);
-            document.setLicence(licence);
-            Optional<?> data = Optional.of(documentService.save(document));
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> handleUploadLicenseeDocument(Long licenseeId, MultipartFile file) {
-        try {
-            logger.debug("Upload Licensee Document with Licensee Id" + licenseeId + " File:" + file);
-            AccessToken token = keycloakService.getSecurityContext().getToken();
-            DocumentVO document = new DocumentVO();
-            document.setCreatedBy(token.getPreferredUsername());
-            document.setCreatedDate(LocalDateTime.now());
-            document.setFile(file.getBytes());
-            LicenseeVO licensee = new LicenseeVO();
-            licensee.setId(licenseeId);
-            document.setLicensee(licensee);
-
-            Optional<?> data = Optional.of(documentService.save(document));
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -312,43 +248,6 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
                     .contentType(MediaType.MULTIPART_MIXED)
                     .body(file);
 
-            // ResponseEntity<?> response;
-
-            // if (data.isPresent()) {
-            // response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            // } else {
-            // response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            // }
-
-            // return response;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> handleUploadComplaintDocument(Long complaintId, MultipartFile file) {
-        try {
-            logger.debug("Upload Complaint Document with Complaint Id: " + complaintId + " and a File: " + file);
-            AccessToken token = keycloakService.getSecurityContext().getToken();
-            DocumentVO document = new DocumentVO();
-            document.setCreatedBy(token.getPreferredUsername());
-            document.setCreatedDate(LocalDateTime.now());
-            document.setFile(file.getBytes());
-            ComplaintVO complaint = new ComplaintVO();
-            complaint.setId(complaintId);
-            document.setComplaint(complaint);
-            Optional<?> data = Optional.of(documentService.save(document));
-            ResponseEntity<?> response;
-
-            if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -374,9 +273,6 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             document.setDocumentType(documentType);
             document.setDocumentName(fileName);
 
-            System.out.println(document);
-
-            // document.setComplaint(complaint);
             Optional<?> data = Optional.of(documentService.save(document));
             ResponseEntity<?> response;
 
@@ -427,37 +323,52 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
                     }
 
                     ls.getDocuments().add((DocumentVO) data.get());
-                    // licenseeShareholderService.save(ls);
+                    licenseeShareholderService.save(ls);
                 }
 
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error occured when uploading a file.");
             }
 
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+                e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error occured when uploading a file.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleFindByDocumentIds(Set<String> documentIds) {
-        // TODO Auto-generated method stub
-        return null;
+
+        Collection<DocumentVO> docs = documentService.findByDocumentIds(documentIds);
+
+        if(CollectionUtils.isEmpty(docs)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No documents found.");
+        }
+
+        return ResponseEntity.ok(docs);
     }
 
     @Override
     public ResponseEntity<?> handleFindByIds(Set<Long> ids) {
-        // TODO Auto-generated method stub
-        return null;
+        
+        Collection<DocumentVO> docs = documentService.findByIds(ids);
+
+        if(CollectionUtils.isEmpty(docs)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No documents found.");
+        }
+
+        return ResponseEntity.ok(docs);
     }
 
     @Override
     public ResponseEntity<?> handleFindDocumentsByMetadata(DocumentMetadataTarget metadataTarget,
             Long metadataTargetId) {
-        // TODO Auto-generated method stub
-        return null;
+        
+        DocumentCriteria criteria = new DocumentCriteria();
+        criteria.setMetadataTarget(metadataTarget);
+        return this.search(criteria);
     }
 
     @Override

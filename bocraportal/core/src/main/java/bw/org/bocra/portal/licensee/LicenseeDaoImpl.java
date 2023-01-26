@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.complaint.ComplaintRepository;
 import bw.org.bocra.portal.document.DocumentRepository;
+import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
@@ -93,8 +94,12 @@ public class LicenseeDaoImpl
         }
 
         if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            target.setDocuments(
-                    documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds())));
+            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
+            docs = docs.stream().map(d -> {
+                d.setFile(null);
+                return d;
+            }).collect(Collectors.toSet());
+            target.setDocuments(docs);
         }
 
         target.setForms(new ArrayList<>());

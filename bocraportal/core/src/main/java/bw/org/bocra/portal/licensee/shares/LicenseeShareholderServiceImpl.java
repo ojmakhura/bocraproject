@@ -18,6 +18,9 @@ import bw.org.bocra.portal.shareholder.ShareholderRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -162,6 +165,26 @@ public class LicenseeShareholderServiceImpl
 
         return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
 
+    }
+
+    @Override
+    protected LicenseeShareholderVO handleAttachDocument(Long id, Long documentId) throws Exception {
+        LicenseeShareholder ls = licenseeShareholderRepository.getReferenceById(id);
+        if (CollectionUtils.isEmpty(ls.getDocumentIds())) {
+            ls.setDocumentIds(new HashSet<>());
+        }
+
+        ls.getDocumentIds().add(documentId);
+        ls = licenseeShareholderRepository.save(ls);
+        return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
+    }
+
+    @Override
+    protected LicenseeShareholderVO handleSave(LicenseeShareholderVO licenseeShareholder) throws Exception {
+
+        LicenseeShareholder ls = licenseeShareholderDao.licenseeShareholderVOToEntity(licenseeShareholder);
+        ls = licenseeShareholderRepository.save(ls);
+        return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
     }
 
 }
