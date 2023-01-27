@@ -28,22 +28,22 @@
 				        </button>
 				    </div>
 				    <div class="row mb-3">
-				        <label for="licenseeFormLicenseeId" class="col-sm-6 col-form-label" translate>id</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="licenseeFormLicenseeId" value="{{licenseeFormLicensee?.id }}">
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="licenseeFormLicenseeUin" class="col-sm-6 col-form-label" translate>uin</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="licenseeFormLicenseeUin" value="{{licenseeFormLicensee?.uin }}">
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="licenseeFormLicenseeLicenseeName" class="col-sm-6 col-form-label" translate>licensee.name</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="licenseeFormLicenseeLicenseeName" value="{{licenseeFormLicensee?.licenseeName }}">
-				        </div>
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row" translate>id</td>
+				                    <td >{{ licenseeFormLicensee?.id }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row" translate>uin</td>
+				                    <td >{{ licenseeFormLicensee?.uin }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row" translate>licensee.name</td>
+				                    <td >{{ licenseeFormLicensee?.licenseeName }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
 				    </div>
 				    <div *ngIf="editLicenseeForm.invalid && licenseeFormLicenseeControl.invalid && (licenseeFormLicenseeControl.dirty || licenseeFormLicenseeControl.touched)" class="alert alert-danger" role="alert">
 				        <div *ngIf="licenseeFormLicenseeControl.errors['required']">
