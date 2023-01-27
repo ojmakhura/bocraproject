@@ -6,7 +6,7 @@
 			<div *ngIf="loading | async">
 				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
 			</div>
-			<div *ngIf="success | async" class="alert alert-success" role="alert">
+			<!-- <div *ngIf="success | async" class="alert alert-success" role="alert">
 				<div *ngFor="let message of messages | async">
 					{{ message }}
 				</div>
@@ -15,9 +15,9 @@
 				<div *ngFor="let message of messages | async">
 					{{ message }}
 				</div>
-			</div>
+			</div> -->
 			<div formGroupName="document">
-				<fieldset class="mb-3" formGroupName="documentType">
+				<fieldset class="form-group border p-3" formGroupName="documentType">
 				    <legend id="documentDocumentType_label" class="col-sm-2 col-form-label" for="documentDocumentType"><span translate>document.type</span>*</legend>
 				    <div class="col my-3 view-buttons">
 				        <button type="button" (click)="documentDocumentTypeAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentDocumentTypeModal">
@@ -57,7 +57,7 @@
 				        </div>
 				    </div>
 				</div>
-				<div class="mb-3">
+				<div class="mb-3" *ngIf="false">
 				    <label id="documentDocumentId_label" class="col-sm-2 col-form-label" for="documentDocumentId"><span translate>document.id</span></label>
 				    <input type="text" id="documentDocumentId" class="form-control" name="documentId" formControlName="documentId"/>
 				</div>

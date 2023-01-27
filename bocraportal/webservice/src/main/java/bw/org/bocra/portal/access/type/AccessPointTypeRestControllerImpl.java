@@ -5,6 +5,7 @@
 //
 package bw.org.bocra.portal.access.type;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/access/type")
 @Tag(name = "Access Point Type", description = "Configuring different resource types accessible.")
 @CrossOrigin()
+@SecurityRequirement(name = "bocraportal-api")
 public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestControllerBase {
 
     public AccessPointTypeRestControllerImpl(AccessPointTypeService accessPointTypeService) {

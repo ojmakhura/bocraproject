@@ -1,16 +1,26 @@
+Access Point,/access,MENU,fa-rss fa-lg
+Access Point Type,/access/type,MENU,fa-rss-square fa-lg
+Authorisation,/authorisation,MENU,fa-cogs fa-lg
+Sectors,/sector,MENU,fa-sitemap fa-lg
+Period Configurations,/period/config,MENU,fa-calendar fa-lg
+Periods,/period,MENU,fa-calendar-o fa-lg
+Licensee,/licensee,MENU,fa-university fa-lg
+Users,/user,MENU,fa-users fa-lg
+Menu Section,/menu,MENU,fa-bars fa-lg
+Form Definitions,/form,MENU,fa-pencil-square-o fa-lg
+Form Activation,/form/activation,MENU,fa-check-square-o fa-lg
+Data Capture,/form/submission,MENU,fa-database fa-lg
+Form Data Processing,/form/processing,MENU,fa-list-alt fa-lg
+Reports,/report,MENU,
+Licence Types,/licence/type,MENU,fa-file-text-o fa-lg
+Licences,/licence,MENU,fa-certificate fa-lg
+Complaint Types,/complaint/type,MENU,
+Document Types,/document/type,MENU,fa-file-text fa-lg
+Documents,/document,MENU,fa-file-o fa-lg
 Authorisation Search,POST /authorisation/search,API,
 Authorisation Menu Section,GET /authorisation/{authorisationId}/{menuSectionId},API,
 Authorisation Get All,GET /authorisation/all,API,
 LicenceTypeRestController save,POST /licence/type,API,
-Users,/user,MENU,fa-users fa-lg
-Access Point,/access,MENU,fa-rss fa-lg
-Access Point Type,/access/type,MENU,fa-rss-square fa-lg
-Menu Section,/menu,MENU,fa-bars fa-lg
-Sectors,/sector,MENU,fa-sitemap fa-lg
-Authorisation,/authorisation,MENU,fa-cogs fa-lg
-Form Activation,/form/activation,MENU,fa-check-square-o fa-lg
-Form Definitions,/form,MENU,fa-pencil-square-o fa-lg
-Licence Types,/licence/type,MENU,fa-file-text-o fa-lg
 AccessPointTypeRestController search,POST /access/search,API,
 AccessPointTypeRestController  getAll,GET /access/type/all,API,
 AuthorisationRestController assignMenuSection,GET /authorisation/{authorisationId}/{menuSectionId},API,
@@ -52,7 +62,6 @@ Form Field,/form/field,API,
 SubmissionRestController getAll,GET /form/submission/all,API,
 FormFieldRestController getAllPaged,GET /form/field/page/{pageNumber}/size/{pageSize},API,
 FormFieldRestController save,POST/form/field/{id},API,
-Documents,/document,MENU,fa-file-o fa-lg
 LicenceTypeRestController search,POST /licence/type/search,API,
 NoteRestController getFormSubmissionNotes,POST form/submission/note,API,
 LicenceTypeRestController getAllPaged,GET /licence/type/page/{pageNumber}/size/{pageSize},API,
@@ -145,18 +154,10 @@ LicenseeSectorRestController remove,DELETE /licensee/sector/{id},API,
 LicenseeSectorRestController getAll,GET /licensee/sector/all,API,
 LicenseeRestController getDocuments,GET /licensee/documents/{id},API,
 LicenseeRestController getReports,GET /licensee/reports/{id},API,
-Data Capture,/form/submission,MENU,fa-database fa-lg
-Licensee,/licensee,MENU,fa-university fa-lg
-Period Configurations,/period/config,MENU,fa-calendar fa-lg
 LicenseeSectorRestController findByLicensee,GET /licensee/sector/{licenseeId},API,
 LicenseeSectorRestController findBySector,GET /licensee/sector/{sectorId}/sectorId/{sectorId},API,
-Licences,/licence,MENU,fa-certificate fa-lg
 Edit Authorisation Delete Button,/auth/edit-authorisation/{button:delete},BUTTON,
-Document Types,/document/type,MENU,fa-file-text fa-lg
 Edit Form Submission Submit Button,/form/submission/edit-form-submission/{button:submit},BUTTON,
-Form Data Processing,/form/processing,MENU,fa-list-alt fa-lg
-Reports,/report,MENU,
 Edit Form Submission Delete Button,/form/submission/edit-form-submission/{button:delete},BUTTON,
 Edit Form Submission Return Button,/form/submission/edit-form-submission/{button:return},BUTTON,
-Edit Form Submission Accept Button,/form/submission/edit-form-submission/{button:accept},BUTTON,
-Periods,/period,MENU,fa-calendar-o fa-lg
+Edit Form Submission Accept Button,/form/submission/edit-form-submission/{button:accept},BUTTON

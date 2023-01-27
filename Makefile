@@ -21,7 +21,7 @@ test_core:
 	. ./.env && mvn -f bocraportal/core test -o
 
 build_api:
-	mvn -f bocraportal/webservice install -DskipTests=true -o
+	. ./.env && mvn -f bocraportal/webservice install -DskipTests=true -o
 
 test_api: 
 	. ./.env && mvn -f bocraportal/webservice test -o
@@ -30,7 +30,7 @@ build_comm:
 	. ./.env && mvn -f bocraportal/comm -Pnative clean install -DskipTests -o
 
 build_comm_native:
-	mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
+	. ./.env && mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
 
 test_comm: 
 	. ./.env && mvn -f bocraportal/comm test -o
@@ -85,6 +85,22 @@ ifdef service
 	. ./.env && docker compose up -d ${service}
 else
 	@echo 'no service defined. Please run again with `make  service=<name> up_service`'
+	exit 1
+endif
+
+up_stack: gen_env
+ifdef stack
+	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-${stack}.yml ${STACK_NAME}-${stack}
+else
+	@echo 'no stack defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> stack=<name> up_stack`'
+	exit 1
+endif
+
+down_stack:
+ifdef stack
+	docker stack rm ${STACK_NAME}-${stack}
+else
+	@echo 'no stack defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> stack=<name> down_stack`'
 	exit 1
 endif
 

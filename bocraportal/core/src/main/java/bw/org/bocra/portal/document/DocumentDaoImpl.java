@@ -107,41 +107,6 @@ public class DocumentDaoImpl
 
             target.setDocumentType(type);
         }
-
-        // if (source.getLicence() != null) {
-        //     LicenceVO licence = new LicenceVO();
-        //     licence.setId(source.getLicence().getId());
-        //     licence.setLicenceNumber(source.getLicence().getLicenceNumber());
-        //     licence.setProvisional(source.getLicence().getProvisional());
-        //     licence.setStatus(source.getLicence().getStatus());
-        //     licence.setStartDate(source.getLicence().getStartDate());
-
-        //     target.setLicence(licence);
-        // }
-
-        // if (source.getLicensee() != null) {
-        //     LicenseeVO licensee = new LicenseeVO();
-        //     licensee.setAddress(source.getLicensee().getAddress());
-        //     licensee.setId(source.getLicensee().getId());
-        //     licensee.setLicenseeName(source.getLicensee().getLicenseeName());
-        //     licensee.setUin(source.getLicensee().getUin());
-
-        //     target.setLicensee(licensee);
-        // }
-
-        // if (source.getComplaint() != null) {
-        //     ComplaintVO complaint = new ComplaintVO();
-        //     complaint.setAssignedTo(source.getComplaint().getAssignedTo());
-        //     complaint.setComplaintId(source.getComplaint().getComplaintId());
-        //     complaint.setDetails(source.getComplaint().getDetails());
-        //     complaint.setEmail(source.getComplaint().getEmail());
-        //     complaint.setFirstName(source.getComplaint().getFirstName());
-        //     complaint.setSurname(source.getComplaint().getSurname());
-        //     complaint.setStatus(source.getComplaint().getStatus());
-        //     complaint.setSubject(source.getComplaint().getSubject());
-
-        //     target.setComplaint(complaint);
-        // }
     }
 
     /**

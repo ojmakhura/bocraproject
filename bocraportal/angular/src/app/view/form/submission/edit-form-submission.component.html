@@ -28,9 +28,9 @@
 					<label for="formSubmissionExpectedSubmissionDate" class="col-sm-2 col-form-label"
 						translate>expected.submission.date</label>
 					<label for="formSubmissionExpectedSubmissionDate" class="col-sm-2 col-form-label"
-						translate>{{formSubmissionExpectedSubmissionDate}}</label>
+						translate>{{formSubmissionExpectedSubmissionDate | date: 'dd MMM yyyy HH:ss'}}</label>
 				</div>
-				<fieldset formGroupName="licensee">
+				<fieldset formGroupName="licensee" class="form-group border p-3">
 					<div class="row mb-3">
 						<label for="formSubmissionLicenseeLicenseeName" class="col-sm-2 col-form-label"
 							translate>licensee.name</label>
@@ -50,7 +50,7 @@
 					</div>
 				</fieldset>
 
-				<fieldset formGroupName="form">
+				<fieldset formGroupName="form" class="form-group border p-3">
 					<div class="row mb-3">
 						<label for="formSubmissionFormFormName" class="col-sm-2 col-form-label"
 							translate>form.name</label>
@@ -75,7 +75,7 @@
 						</div>
 					</div>
 				</fieldset>
-				<fieldset formGroupName="period">
+				<fieldset formGroupName="period" class="form-group border p-3">
 					<div class="row mb-3">
 						<label for="formSubmissionPeriodPeriodName" class="col-sm-2 col-form-label"
 							translate>period.name</label>
@@ -94,7 +94,7 @@
 						</div>
 					</div>
 				</fieldset>
-				<fieldset formGroupName="licensee">
+				<fieldset formGroupName="licensee" class="form-group border p-3">
 					<div class="row mb-3">
 						<label for="formSubmissionLicenseeLicenseeName" class="col-sm-2 col-form-label"
 							translate>licensee.name</label>
@@ -252,7 +252,7 @@
 				</div>
 				<div class="text-end">
 					<button type="button" color="accent" (click)="editFormSubmissionSave()" (click)="scroll(target)"
-						class="btn btn-outline-primary" *ngIf="formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'RETURNED'">
+						class="btn btn-outline-primary" *ngIf="formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'NEW' ||formSubmissionSubmissionStatus === 'OVERDUE' || formSubmissionSubmissionStatus === 'RETURNED'">
 						<span translate>save</span>
 					</button>
 					<!-- <button type="button" color="accent" (click)="editFormSubmissionDelete()" (click)="scroll(target)"
@@ -261,11 +261,11 @@
 					</button> -->
 
 					<button type="button" color="accent" (click)="editFormSubmissionNote()"
-						class="btn btn-outline-primary" *ngIf="formSubmissionId && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'RETURNED')">
+						class="btn btn-outline-primary" *ngIf="formSubmissionId && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'NEW' ||formSubmissionSubmissionStatus === 'OVERDUE' || formSubmissionSubmissionStatus === 'RETURNED')">
 						<span translate>note</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionSubmit()" (click)="scroll(target)"
-						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'RETURNED')">
+						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'NEW' ||formSubmissionSubmissionStatus === 'OVERDUE' || formSubmissionSubmissionStatus === 'RETURNED')">
 						<span translate>submit</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionAccept()" (click)="scroll(target)"
@@ -277,7 +277,7 @@
 						<span translate>return</span>
 					</button>
 					<button color="accent" type="button" (click)="editFormSubmissionFormReset()"
-						(click)="scroll(target)" class="btn btn-outline-primary" *ngIf="formSubmissionSubmissionStatus === 'DRAFT'">
+						(click)="scroll(target)" class="btn btn-outline-primary" *ngIf="formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'NEW' ||formSubmissionSubmissionStatus === 'OVERDUE'">
 						<span translate>reset</span>
 					</button>
 				</div>

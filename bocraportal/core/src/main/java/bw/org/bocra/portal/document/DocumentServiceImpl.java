@@ -132,30 +132,6 @@ public class DocumentServiceImpl
         return documents == null ? null : getDocumentDao().toDocumentVOCollection(documents);
     }
 
-    /**
-     * @see bw.org.bocra.portal.document.DocumentService#getLicenseeDocuments(Long)
-     */
-    @Override
-    protected  Collection<DocumentVO> handleGetLicenseeDocuments(Long licenseeId)
-        throws Exception
-    {
-        Collection<Document> docs = getDocumentDao().getLicenseeDocuments(licenseeId);
-
-        return getDocumentDao().toDocumentVOCollection(docs);
-    }
-
-    /**
-     * @see bw.org.bocra.portal.document.DocumentService#getLicenceDocuments(Long)
-     */
-    @Override
-    protected  Collection<DocumentVO> handleGetLicenceDocuments(Long licenceId)
-        throws Exception
-    {
-        Collection<Document> docs = getDocumentDao().getLicenceDocuments(licenceId);
-        return getDocumentDao().toDocumentVOCollection(docs);
-
-    }
-
     @Override
     protected byte[] handleDownloadFile(Long id) throws Exception {
         return getDocumentDao().get(id).getFile();

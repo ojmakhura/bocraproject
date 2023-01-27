@@ -14,9 +14,12 @@ import { KeycloakService } from 'keycloak-angular';
   styleUrls: ['./search-complaints.component.scss']
 })
 export class SearchComplaintsComponentImpl extends SearchComplaintsComponent {
-
+  loggedIn!: boolean;
   constructor(private injector: Injector, public override keycloakService: KeycloakService) {
     super(injector, keycloakService);
+  }
+  override afterOnInit(): void {
+    
   }
 
   doNgOnDestroy(): void {
@@ -26,24 +29,27 @@ export class SearchComplaintsComponentImpl extends SearchComplaintsComponent {
    * This method may be overwritten
    */
   override beforeSearchComplaintsSearch(form: SearchComplaintsSearchForm): void {
-    if(form?.criteria){
-      this.store.dispatch(ComplaintActions.findByComplaintId({
-        complaintId: form.criteria,
-        loading: true,
-        loaderMessage: 'Searching access points ...'
-      }));
-    }
-    if(form?.loggedInSearch){
-      this.store.dispatch(ComplaintActions.search({
-        criteria: form.loggedInSearch,
-        loading: true,
-        loaderMessage: 'Searching access points ...'
-      }));
-    }
-
+    this.isLoggedIn.subscribe(loggedin => {
+      if (loggedin) {
+        this.store.dispatch(ComplaintActions.search({
+          criteria: form.loggedInSearch,
+          loading: true,
+          loaderMessage: 'Searching access points ...'
+        }));
+      } else {
+        if (this.criteriaControl.valid) {
+          this.store.dispatch(ComplaintActions.findByComplaintId({
+            complaintId: form.criteria,
+            loading: true,
+            loaderMessage: 'Searching access points ...'
+          }));
+        }
+      }
+    });
+   
   }
 
-  override searchComplaintsAnalyse(){
+  override searchComplaintsAnalyse() {
     this.router.navigate([`/complaint/complaints-analysis`]);
   }
 }

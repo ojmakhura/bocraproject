@@ -98,7 +98,7 @@ public class AccessPointTypeServiceTest {
         // Mockito.when(accessPointTypeService.save(type)).thenReturn(type);
         type.setId(null);
         type = accessPointTypeService.save(type);
-        System.out.println(type);
+        
         Assertions.assertNotNull(type);
         Assertions.assertNotNull(type.getId());
     }

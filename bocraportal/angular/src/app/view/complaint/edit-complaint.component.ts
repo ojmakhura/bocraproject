@@ -19,7 +19,7 @@ import {
     ReactiveFormsModule, 
     Validators 
 } from '@angular/forms';
-import { formatDate } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSelectChange } from '@angular/material/select';

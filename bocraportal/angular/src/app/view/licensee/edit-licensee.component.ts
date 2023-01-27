@@ -32,7 +32,7 @@ import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licens
 import { LicenseeStatus } from '@app/model/bw/org/bocra/portal/licensee/licensee-status';
 import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo';
 import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
-import { ShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/shareholder-vo';
+import { ShareholderVO } from '@app/model/bw/org/bocra/portal/shareholder/shareholder-vo';
 import { SectorVO } from '@app/model/bw/org/bocra/portal/sector/sector-vo';
 import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
 import { DocumentRestController } from '@app/service/bw/org/bocra/portal/document/document-rest-controller';
@@ -42,6 +42,7 @@ import { NewDocumentComponentImpl } from '@app/view/licensee/new-document.compon
 import { NewShareholderComponentImpl } from '@app/view/licensee/new-shareholder.component.impl';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { MatTableDataSource } from '@angular/material/table';
+import { LicenseeShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/licensee-shareholder-vo';
 
 export class EditLicenseeSaveForm {
     licensee: LicenseeVO | any;
@@ -210,6 +211,29 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
     licenseeSectorsSearchField: FormControl;
     licenseeSectorsSelect: SectorVO[] = [];
 
+    licenseeShareholdersColumns = [
+        'id',
+        'shareholder.shareholderId',
+        'shareholder.name',
+        'numberOfShares',
+    ];
+
+    licenseeShareholdersModalColumns = [
+        'actions',
+        ...this.licenseeShareholdersColumns
+    ];
+
+    @ViewChild('licenseeShareholdersPaginator', {static: true}) licenseeShareholdersPaginator: MatPaginator;
+    @ViewChild('licenseeShareholdersSort', {static: true}) licenseeShareholdersSort: MatSort;
+
+    @ViewChild('licenseeShareholdersModalPaginator', {static: true}) licenseeShareholdersModalPaginator: MatPaginator;
+    @ViewChild('licenseeShareholdersModalSort', {static: true}) licenseeShareholdersModalSort: MatSort;
+
+    licenseeShareholders$: Observable<LicenseeShareholderVO[]>;
+    licenseeShareholdersDataSource = new MatTableDataSource<LicenseeShareholderVO>([]);
+    licenseeShareholdersSearchField: FormControl;
+    licenseeShareholdersSelect: LicenseeShareholderVO[] = [];
+
     statusT = LicenseeStatus;
     statusOptions: string[] = Object.keys(this.statusT);
     licensee$: Observable<LicenseeVO>;
@@ -247,6 +271,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
         this.licenseeLicencesSearchField = new FormControl();
         this.licenseeDocumentsSearchField = new FormControl();
         this.licenseeSectorsSearchField = new FormControl();
+        this.licenseeShareholdersSearchField = new FormControl();
     }
 
     abstract beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm;
@@ -289,6 +314,12 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
             this.licenseeSectorsDataSource.data = data;
             this.licenseeSectorsDataSource.paginator = this.licenseeSectorsModalPaginator;
             this.licenseeSectorsDataSource.sort = this.licenseeSectorsModalSort;
+        });
+
+        this.licenseeShareholders$?.subscribe(data => {
+            this.licenseeShareholdersDataSource.data = data;
+            this.licenseeShareholdersDataSource.paginator = this.licenseeShareholdersModalPaginator;
+            this.licenseeShareholdersDataSource.sort = this.licenseeShareholdersModalSort;
         });
         
         this.afterOnInit();
@@ -615,6 +646,7 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
             licences: this.createLicenceVOArray(licensee?.licences),
             documents: this.createDocumentVOArray(licensee?.documents),
             sectors: this.createLicenseeSectorVOArray(licensee?.sectors),
+            shareholders: this.createLicenseeShareholderVOArray(licensee?.shareholders),
         });
     }
 
@@ -1014,6 +1046,64 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
         });
     }
 
+    get licenseeShareholdersControl(): FormArray {
+        return this.licenseeControl.get('shareholders') as FormArray;
+    }
+
+    get licenseeShareholders(): LicenseeShareholderVO[] {
+        return this.licenseeShareholdersControl.value;
+    }
+
+
+    licenseeShareholdersAddDialog(): void {
+    }
+
+    
+    licenseeShareholdersSearch(): void {
+    }
+
+    handleDeleteFromLicenseeShareholders(shareholders: LicenseeShareholderVO): void {}
+    
+    deleteFromLicenseeShareholders(index: number) {
+        this.handleDeleteFromLicenseeShareholders(this.licenseeShareholders[index]);
+        this.licenseeShareholdersControl.removeAt(index);
+    }
+
+    doEditLicenseeShareholders(shareholders: LicenseeShareholderVO) {
+    }
+
+    handleLicenseeShareholdersSelected(event: MatCheckboxChange, data: LicenseeShareholderVO): void {}
+    
+    licenseeShareholdersSelected(event: MatCheckboxChange, data: LicenseeShareholderVO): void {
+        if(event.checked) {
+            this.licenseeShareholdersSelect.push(data);
+        } else {
+            const key = Object.keys(data)[0];
+            let tmp = this.licenseeShareholdersSelect.filter(d => d[key] !== data[key]);
+            this.licenseeShareholdersSelect = tmp;
+        }
+
+        this.handleLicenseeShareholdersSelected(event, data);
+    }
+
+    addToLicenseeShareholders(data: LicenseeShareholderVO) {
+        this.licenseeShareholdersControl.push(this.createLicenseeShareholderVOGroup(data));
+    }
+
+    /**
+     * May be overridden to customise behaviour
+     *
+     */
+    addSelectedLicenseeShareholders(): void {
+        this.licenseeShareholdersSelect.forEach((data) => {
+            const key = Object.keys(data)[0];
+            const found = this.licenseeShareholders.find((d: LicenseeShareholderVO) => d[key] === data[key])
+            if(!found) {
+                this.addToLicenseeShareholders(data);
+            }
+        });
+    }
+
     getItemControl(name: string): FormControl {
         return this.editLicenseeForm.get(name) as FormControl;
     }
@@ -1158,8 +1248,6 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
             type: [value?.type],
             name: [value?.name],
             address: [value?.address],
-            numberOfShares: [value?.numberOfShares],
-            percentageShares: [value?.percentageShares],
         });
     }
 
@@ -1193,6 +1281,24 @@ export abstract class EditLicenseeComponent implements OnInit, AfterViewInit, On
         if(values) {
             let formArray: FormArray = this.formBuilder.array([]);
             values?.forEach(value => formArray.push(this.createDocumentVOGroup(value)))
+
+            return formArray;
+        } else {
+            return new FormArray([]);
+        }
+    }
+
+    createLicenseeShareholderVOGroup(value: LicenseeShareholderVO): FormGroup {
+        return this.formBuilder.group({
+            id: [value?.id],
+            numberOfShares: [value?.numberOfShares],
+        });
+    }
+
+    createLicenseeShareholderVOArray(values: LicenseeShareholderVO[]): FormArray {
+        if(values) {
+            let formArray: FormArray = this.formBuilder.array([]);
+            values?.forEach(value => formArray.push(this.createLicenseeShareholderVOGroup(value)))
 
             return formArray;
         } else {
