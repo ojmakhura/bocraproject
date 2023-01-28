@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ShareholderRestController {
     
-    protected path = 'shareholder';
+    protected path = '/shareholder';
 
     constructor(private http: HttpClient) {
     }

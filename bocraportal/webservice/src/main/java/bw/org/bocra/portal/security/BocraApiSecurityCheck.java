@@ -58,7 +58,6 @@ public class BocraApiSecurityCheck {
                 }
             }
         } else {
-            System.out.println(authentication.getDetails());
             WebAuthenticationDetails dt = (WebAuthenticationDetails) authentication.getDetails();
             return true;
         }

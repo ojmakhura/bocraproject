@@ -216,23 +216,28 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   }
 
   override afterEditComplaintReply(form: EditComplaintReplyForm, dialogData: any): void {
+    console.log(dialogData);
     if (dialogData) {
       if (!form?.complaintReply?.id) {
         dialogData.complaintReply.date = new Date();
       }
-      if (this.keycloakService.getUsername()) {
-        dialogData.complaintReply.replyUser = this.keycloakService.getUsername()
-      } else {
-        dialogData.complaintReply.replyUser = this.complaint?.firstName + ' ' + this.complaint?.surname;
-      }
-      this.store.dispatch(
-        ComplaintActions.addComplaintReply({
-          complaintId: this.complaintComplaintId,
-          reply: dialogData.complaintReply,
-          loading: true,
-          loaderMessage: 'Adding reply to complaint ...'
-        })
-      );
+
+      this.keycloakService.isLoggedIn().then(loggedIn => {
+        if (loggedIn) {
+          dialogData.complaintReply.replyUser = this.keycloakService.getUsername()
+        } else {
+          dialogData.complaintReply.replyUser = this.complaint?.firstName + ' ' + this.complaint?.surname;
+        }
+
+        this.store.dispatch(
+          ComplaintActions.addComplaintReply({
+            complaintId: this.complaintComplaintId,
+            reply: dialogData.complaintReply,
+            loading: true,
+            loaderMessage: 'Adding reply to complaint ...'
+          })
+        );
+      })      
     }
   }
 

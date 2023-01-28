@@ -291,11 +291,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             logger.debug("Searches for a Complaint assigned by " + complaintId);
             Optional<?> data = Optional.of(complaintService.findByComplaintId(complaintId)); // TODO: Add custom code
                                                                                              // here;
-            ResponseEntity<?> response;
-
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
-
-            return response;
+            return ResponseEntity.status(HttpStatus.OK).body(data.get());
         } catch (Exception e) {
             String message = e.getMessage();
             if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
