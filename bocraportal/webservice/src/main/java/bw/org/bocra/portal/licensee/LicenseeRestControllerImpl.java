@@ -28,7 +28,6 @@ import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
-import bw.org.bocra.portal.user.LicenseeUserService;
 import bw.org.bocra.portal.user.UserVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -42,9 +41,9 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     private final KeycloakUserService keycloakUserService;
     private final KeycloakService keycloakService;
     
-    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService, DocumentService documentService, KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
+    public LicenseeRestControllerImpl(LicenseeService licenseeService, DocumentService documentService, KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
         
-        super(licenseeService, licenseeUserService, documentService);
+        super(licenseeService, documentService);
         this.keycloakUserService = keycloakUserService;
         this.keycloakService = keycloakService;
     }

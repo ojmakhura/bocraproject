@@ -6,7 +6,6 @@
 package bw.org.bocra.portal.auth;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
-import bw.org.bocra.portal.user.LicenseeUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -48,9 +47,6 @@ public class AuthControllerTest {
 
     @Autowired
     private AuthController authController;
-
-    @Autowired
-    protected LicenseeUserService licenseeUserService;
 
     @BeforeEach
     public void clean() {

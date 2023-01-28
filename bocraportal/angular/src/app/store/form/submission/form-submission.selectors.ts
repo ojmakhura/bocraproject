@@ -21,6 +21,11 @@ export const selectUpdated = createSelector(
     (state: FormSubmissionState) => state.updated
 );
 
+export const selectStatusUpdated = createSelector(
+    selectFormSubmissionState,
+    (state: FormSubmissionState) => state.statusUpdated
+);
+
 export const selectFormSubmission = createSelector(
     selectFormSubmissionState,
     (state: FormSubmissionState) => state.formSubmission

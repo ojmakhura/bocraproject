@@ -14,7 +14,7 @@
             <ng-container matColumnDef="id">
                 <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>id</span></mat-header-cell>
                 <mat-cell *matCellDef="let row"> 
-                    <a routerLink=""  id="idAction" (click)='searchComplaintsEdit(row?.id)'>
+                    <a routerLink=""  id="idAction" (click)='searchComplaintsEdit(row?.complaintId)'>
                         {{ row?.id }}
                     </a> 
                 </mat-cell>

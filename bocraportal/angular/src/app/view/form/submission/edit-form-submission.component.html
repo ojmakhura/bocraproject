@@ -30,10 +30,10 @@
 					<label for="formSubmissionExpectedSubmissionDate" class="col-sm-2 col-form-label"
 						translate>{{formSubmissionExpectedSubmissionDate | date: 'dd MMM yyyy HH:ss'}}</label>
 				</div>
-				<fieldset formGroupName="licensee" class="form-group border p-3">
+				<div formGroupName="licensee">
 					<div class="row mb-3">
 						<label for="formSubmissionLicenseeLicenseeName" class="col-sm-2 col-form-label"
-							translate>licensee.name</label>
+							translate>licensee</label>
 						<div class="input-group">
 							<input type="text" class="form-control" id="formSubmissionLicenseeLicenseeName"
 								value="{{ formSubmissionLicensee?.licenseeName }}" disabled />
@@ -48,12 +48,12 @@
 							</button>
 						</div>
 					</div>
-				</fieldset>
+				</div>
 
-				<fieldset formGroupName="form" class="form-group border p-3">
+				<div formGroupName="form">
 					<div class="row mb-3">
 						<label for="formSubmissionFormFormName" class="col-sm-2 col-form-label"
-							translate>form.name</label>
+							translate>form</label>
 						<div class="input-group">
 							<input type="text" class="form-control" id="formSubmissionFormFormName"
 								value="{{ formSubmissionForm?.formName }}" disabled />
@@ -74,11 +74,11 @@
 							<span translate>form.required</span>
 						</div>
 					</div>
-				</fieldset>
-				<fieldset formGroupName="period" class="form-group border p-3">
+				</div>
+				<div formGroupName="period">
 					<div class="row mb-3">
 						<label for="formSubmissionPeriodPeriodName" class="col-sm-2 col-form-label"
-							translate>period.name</label>
+							translate>period</label>
 						<div class="input-group">
 							<input type="text" class="form-control" id="formSubmissionPeriodPeriodName"
 								value="{{ formSubmissionPeriod?.periodName }}" disabled />
@@ -93,11 +93,11 @@
 							</button>
 						</div>
 					</div>
-				</fieldset>
-				<fieldset formGroupName="licensee" class="form-group border p-3">
+				</div>
+				<div formGroupName="licensee">
 					<div class="row mb-3">
 						<label for="formSubmissionLicenseeLicenseeName" class="col-sm-2 col-form-label"
-							translate>licensee.name</label>
+							translate>licensee</label>
 						<div class="input-group">
 							<input type="text" class="form-control" id="formSubmissionLicenseeLicenseeName"
 								value="{{ formSubmissionLicensee?.licenseeName }}" disabled />
@@ -112,15 +112,15 @@
 							</button>
 						</div>
 					</div>
-				</fieldset>
+				</div>
 				<div formArrayName="sections" *ngIf="isSingleEntry(); else isMultipleEntry">
-					<div *ngFor="let section of formSubmissionSectionsControl.controls; let i = index"
+					<fieldset class="form-group border p-3" *ngFor="let section of formSubmissionSectionsControl.controls; let i = index"
 						[formGroupName]="i">
-						<div>
-							<h5>
+						<legend *ngIf="section?.value?.sectionId !== 'default'">
+							<h6>
 								{{ section?.value?.sectionLabel }}
-							</h5>
-						</div>
+							</h6>
+						</legend>
 						<div formArrayName="dataFields" class="mb-3">
 							<table class="table">
 								<tbody>
@@ -135,8 +135,8 @@
 												{{ dataField?.formField?.fieldName }}
 											</ng-template>
 										</td>
-										<td class="mb-3" *ngIf="!isHidden(dataField) && isSimpleType(dataField)">
-											<div *ngIf="isCalculatedField(dataField) || submissionStatus === 'SUBMITTED' || submissionStatus === 'ACCEPTED'; else editable">
+										<td class="mb-3" *ngIf="dataField.formField.fieldType !== 'HIDDEN' && isSimpleType(dataField)">
+											<div *ngIf="dataField.formField.fieldValueType === 'CALCULATED' || submissionStatus === 'SUBMITTED' || submissionStatus === 'ACCEPTED'; else editable">
 												<span>{{ dataField?.value }}</span>
 											</div>
 											<ng-template #editable>
@@ -167,7 +167,7 @@
 								</tbody>
 							</table>
 						</div>
-					</div>
+					</fieldset>
 				</div>
 				<ng-template #isMultipleEntry>
 					<div class="mb-3" *ngIf="!formDisabled()">
@@ -265,7 +265,7 @@
 						<span translate>note</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionSubmit()" (click)="scroll(target)"
-						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'NEW' ||formSubmissionSubmissionStatus === 'OVERDUE' || formSubmissionSubmissionStatus === 'RETURNED')">
+						class="btn btn-outline-primary" *ngIf="formSubmissionId && !formSubmissionControl.dirty && submitUnrestricted && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'NEW' ||formSubmissionSubmissionStatus === 'OVERDUE' || formSubmissionSubmissionStatus === 'RETURNED')">
 						<span translate>submit</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionAccept()" (click)="scroll(target)"
@@ -273,7 +273,7 @@
 						<span translate>accept</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionReturn()" (click)="scroll(target)"
-						class="btn btn-outline-primary" *ngIf="returnUnrestricted && formDisabled() && formSubmissionSubmissionStatus === 'SUBMITTED'">
+						class="btn btn-outline-primary" *ngIf="returnUnrestricted && formSubmissionSubmissionStatus === 'SUBMITTED'">
 						<span translate>return</span>
 					</button>
 					<button color="accent" type="button" (click)="editFormSubmissionFormReset()"

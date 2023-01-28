@@ -43,6 +43,13 @@ export class SearchComplaintsComponentImpl extends SearchComplaintsComponent {
             loading: true,
             loaderMessage: 'Searching access points ...'
           }));
+        } else {
+          
+          if(this?.criteriaControl?.errors['required']) {
+            this.store.dispatch(ComplaintActions.complaintFailure({
+              messages: ['Complaint ID is required']
+            }))
+          }
         }
       }
     });

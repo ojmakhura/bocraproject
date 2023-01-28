@@ -37,7 +37,6 @@ import bw.org.bocra.portal.licensee.shares.LicenseeShareholder;
 import bw.org.bocra.portal.report.ReportRepository;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 import bw.org.bocra.portal.sector.SectorRepository;
-import bw.org.bocra.portal.user.LicenseeUserRepository;
 
 /**
  * @see Licensee
@@ -48,15 +47,14 @@ import bw.org.bocra.portal.user.LicenseeUserRepository;
 public class LicenseeDaoImpl
         extends LicenseeDaoBase {
 
-    public LicenseeDaoImpl(LicenseeUserRepository licenseeUserRepository,
-            FormSubmissionRepository formSubmissionRepository, FormRepository formRepository,
+    public LicenseeDaoImpl(FormSubmissionRepository formSubmissionRepository, FormRepository formRepository,
             LicenceRepository licenceRepository, DocumentRepository documentRepository,
             ReportRepository reportRepository, ReportConfigRepository reportConfigRepository,
             SectorRepository sectorRepository, LicenseeShareholderRepository licenseeShareholderRepository,
             LicenseeSectorRepository licenseeSectorRepository, LicenseeFormRepository licenseeFormRepository,
             LicenseeReportConfigRepository licenseeReportConfigRepository, ComplaintRepository complaintRepository,
             LicenseeRepository licenseeRepository) {
-        super(licenseeUserRepository, formSubmissionRepository, formRepository, licenceRepository, documentRepository,
+        super(formSubmissionRepository, formRepository, licenceRepository, documentRepository,
                 reportRepository, reportConfigRepository, sectorRepository, licenseeShareholderRepository,
                 licenseeSectorRepository, licenseeFormRepository, licenseeReportConfigRepository, complaintRepository,
                 licenseeRepository);

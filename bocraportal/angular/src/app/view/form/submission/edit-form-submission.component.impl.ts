@@ -33,6 +33,7 @@ import { FieldValueType } from '@app/model/bw/org/bocra/portal/form/field/field-
 import * as math from 'mathjs';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
+import { setTimeout } from 'timers';
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -55,7 +56,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   returnUnrestricted: boolean = true;
   acceptUnrestricted: boolean = true;
   addUnrestricted: boolean = true;
-  updated$: Observable<boolean>;
+  statusUpdated$: Observable<boolean>;
 
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
@@ -70,7 +71,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
-    this.updated$ = this.store.pipe(select(SubmissionSelectors.selectUpdated));
+    this.statusUpdated$ = this.store.pipe(select(SubmissionSelectors.selectStatusUpdated));
     this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
     this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
@@ -328,12 +329,12 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       })
     );
 
-    this.updated$.subscribe(updated => {
+    this.statusUpdated$.subscribe(updated => {
       
       if(updated) {
-        this.setEditFormSubmissionFormValue({ formSubmission: formSubmission });
+        this.formSubmissionControl.get('submissionStatus')?.patchValue(formSubmission.submissionStatus);
       }
-    })
+    });
   }
 
   private doFormSubmissionSave(formSubmission: FormSubmissionVO) {
@@ -455,7 +456,20 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     } else {
         return new FormArray([]);
     }
-}
+  }
+
+  override createDataFieldSectionVOArray(values: DataFieldSectionVO[]): FormArray {
+      if(values) {
+          let formArray: FormArray = this.formBuilder.array([]);
+          values?.slice()?.sort((a: DataFieldSectionVO, b: DataFieldSectionVO) => {
+            return a?.position - b?.position;
+        })?.forEach(value => formArray.push(this.createDataFieldSectionVOGroup(value)))
+
+          return formArray;
+      } else {
+          return new FormArray([]);
+      }
+  }
 
   getFieldDefaultValue(field: DataFieldVO) {
     return field.formField.defaultValue;
