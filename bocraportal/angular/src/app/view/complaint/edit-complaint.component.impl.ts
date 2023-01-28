@@ -66,7 +66,14 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     );
 
     this.route.queryParams.subscribe((queryParams: any) => {
-      if (queryParams?.id) {
+
+      if (queryParams?.complaintId) {
+        this.store.dispatch(ComplaintActions.findByComplaintId({
+          complaintId: queryParams?.complaintId,
+          loading: true,
+          loaderMessage: 'Find complaint by complaint id ...'
+        }));
+      } else if (queryParams?.id) {
         this.store.dispatch(
           ComplaintActions.findById({
             id: queryParams?.id,
@@ -109,23 +116,22 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     this.complaintDocument$.subscribe(document => {
       this.addToComplaintDocuments(document);
     });
-    
+  }
+
+  complaintIdEntered() {
+    console.log(this.complaintComplaintId);
+    this.router.navigate(['/complaint/edit-complaint'], {queryParams: {complaintId: this.complaintComplaintId}});
   }
   
   override createComplaintForm(complaint: ComplaintVO): FormGroup {
-
 
     if(complaint === undefined) {
       complaint = new ComplaintVO();
     }
 
-    if(complaint.status === undefined || complaint.status === null) {
-      complaint.status = ComplaintStatus.NEW;
-    }
-
     return this.formBuilder.group({
         id: [{value: complaint?.id, disabled: false}],
-        status: [{value: complaint?.status, disabled: false}, [Validators.required, ]],
+        status: [{value: complaint?.status ? complaint?.status : 'NEW', disabled: false}, [Validators.required, ]],
         complaintId: [{value: complaint?.complaintId, disabled: false}],
         complaintType: this.createComplaintTypeVOGroup(complaint?.complaintType),
         licensee: this.createLicenseeVOGroup(complaint?.licensee),
@@ -244,18 +250,6 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
       }
     };
   }
-
-  // override handleDeleteFromComplaintComplaintReplies(complaintReplies: ComplaintReplyVO): void {
-  //   if (confirm('Are you sure you want to delete the complaint reply')) {
-  //     this.store.dispatch(
-  //       ComplaintActions.removeComplaintReply({
-  //         id: complaintReplies.id,
-  //         loading: true,
-  //         loaderMessage: 'Removing reply ...'
-  //       })
-  //     )
-  //   }
-  // }
 
   override deleteFromComplaintComplaintReplies(id: number) {
     for (let i = 0; i < this.complaintComplaintReplies.length; i++) {

@@ -50,9 +50,6 @@ public class UserRestControllerTest {
     private UserRestController userRestController;
 
     @Autowired
-    protected LicenseeUserService licenseeUserService;
-
-    @Autowired
     protected LicenseeService licenseeService;
 
     @BeforeEach

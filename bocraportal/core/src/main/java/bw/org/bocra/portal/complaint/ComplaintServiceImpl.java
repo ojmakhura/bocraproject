@@ -210,12 +210,12 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     protected ComplaintVO handleFindByComplaintId(String complaintId) throws Exception {
 
         if (StringUtils.isNotBlank(complaintId)) {
-            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", complaintId);
 
+            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", complaintId);
             List<Complaint> entities = getComplaintRepository().findAll(spec, Sort.by("id").descending());
 
             if (CollectionUtils.isEmpty(entities)) {
-                return null;
+                throw new ComplaintServiceException(String.format("No complaint with complaint ID %s counst", complaintId));
             }
 
             return complaintDao.toComplaintVO(entities.get(0));

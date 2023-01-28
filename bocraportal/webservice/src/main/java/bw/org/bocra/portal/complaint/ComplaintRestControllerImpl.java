@@ -15,6 +15,8 @@ import org.postgresql.util.PSQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import bw.org.bocra.portal.document.DocumentService;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
+import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -230,6 +233,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleSearch(ComplaintSeachCriteria criteria) {
+        
         try {
             logger.debug("Searchs for a Complaint");
             return ResponseEntity.status(HttpStatus.OK).body(complaintService.search(criteria));
@@ -278,6 +282,11 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
     @Override
     public ResponseEntity<?> handleFindByComplaintId(String complaintId) {
+
+        if(StringUtils.isBlank(complaintId)) {
+            return ResponseEntity.badRequest().body("Complaint ID should not be empty.");
+        }
+
         try {
             logger.debug("Searches for a Complaint assigned by " + complaintId);
             Optional<?> data = Optional.of(complaintService.findByComplaintId(complaintId)); // TODO: Add custom code
@@ -291,7 +300,11 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             String message = e.getMessage();
             if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
                     || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Complaint with complaint id %s not found.", complaintId));
+
+                message = String.format("Complaint with complaint id %s not found.", complaintId);
+            
+            } else if(e instanceof ComplaintServiceException || e.getCause() instanceof ComplaintServiceException) {
+                message = String.format("Complaint with complaint id %s not found.", complaintId);
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }

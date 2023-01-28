@@ -32,8 +32,8 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     protected Logger logger = LoggerFactory.getLogger(UserRestControllerImpl.class);
     private final KeycloakUserService keycloakUserService;
 
-    public UserRestControllerImpl(LicenseeUserService licenseeUserService, LicenseeService licenseeService, KeycloakUserService keycloakUserService) {
-        super(licenseeUserService, licenseeService);
+    public UserRestControllerImpl(LicenseeService licenseeService, KeycloakUserService keycloakUserService) {
+        super(licenseeService);
         this.keycloakUserService = keycloakUserService;
     }
 

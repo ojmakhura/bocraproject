@@ -94,12 +94,12 @@ export abstract class SearchComplaintsComplaintsComponent implements OnInit, OnD
 
     doSearchComplaintsEdit(form: any): any {}
 	
-	searchComplaintsEdit(id: number) {
+	searchComplaintsEdit(complaintId: string) {
         let form = {
-            id: id,
+            complaintId: complaintId,
         };
         let queryParams: any = {
-            id: id,
+            complaintId: complaintId,
         };
         this.complaintController.setQueryParams(Object.assign({}, queryParams));
         let params = this.doSearchComplaintsEdit(form);
