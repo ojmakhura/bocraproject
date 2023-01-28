@@ -136,7 +136,7 @@
 											</ng-template>
 										</td>
 										<td class="mb-3" *ngIf="dataField.formField.fieldType !== 'HIDDEN' && isSimpleType(dataField)">
-											<div *ngIf="dataField.formField.fieldValueType === 'SUBMITTED' || submissionStatus === 'SUBMITTED' || submissionStatus === 'ACCEPTED'; else editable">
+											<div *ngIf="dataField.formField.fieldValueType === 'CALCULATED' || submissionStatus === 'SUBMITTED' || submissionStatus === 'ACCEPTED'; else editable">
 												<span>{{ dataField?.value }}</span>
 											</div>
 											<ng-template #editable>
@@ -265,7 +265,7 @@
 						<span translate>note</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionSubmit()" (click)="scroll(target)"
-						class="btn btn-outline-primary" *ngIf="formSubmissionId && submitUnrestricted && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'NEW' ||formSubmissionSubmissionStatus === 'OVERDUE' || formSubmissionSubmissionStatus === 'RETURNED')">
+						class="btn btn-outline-primary" *ngIf="formSubmissionId && !formSubmissionControl.dirty && submitUnrestricted && (formSubmissionSubmissionStatus === 'DRAFT' || formSubmissionSubmissionStatus === 'NEW' ||formSubmissionSubmissionStatus === 'OVERDUE' || formSubmissionSubmissionStatus === 'RETURNED')">
 						<span translate>submit</span>
 					</button>
 					<button type="button" color="accent" (click)="editFormSubmissionAccept()" (click)="scroll(target)"

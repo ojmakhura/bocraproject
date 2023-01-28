@@ -15,6 +15,7 @@ export interface FormSubmissionState {
     removed: boolean,
     success: boolean,
     loading: boolean,
+    statusUpdated: boolean,
     loaderMessage: string | undefined,
     updated: boolean,
     error: boolean,
@@ -34,5 +35,6 @@ export const initialState: FormSubmissionState = {
     error: false,
     messages: [],
     loaderMessage: undefined,
-    updated: false
+    updated: false,
+    statusUpdated: false
 };
