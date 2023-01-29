@@ -98,6 +98,10 @@
 										</div>
 		                            </mat-cell>
 		            			</ng-container>
+		            			<ng-container matColumnDef="id">
+		            				<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+		                            <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+		            			</ng-container>
 		            			<ng-container matColumnDef="documentId">
 		            				<mat-header-cell *matHeaderCellDef translate>document.id</mat-header-cell>
 		                            <mat-cell *matCellDef="let row"> {{ row?.documentId }} </mat-cell>
