@@ -163,10 +163,10 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("shareholder_id")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee with this id has been already created.");
-                    } else if(e.getCause().getMessage().contains("(licensee_name)")) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A shareholder with this id has been already created.");
+                    } else if(e.getCause().getMessage().contains("(name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee with this name has been already created.");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A shareholder with this name has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {

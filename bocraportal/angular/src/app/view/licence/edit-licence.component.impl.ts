@@ -17,6 +17,7 @@ import { DocumentMetadataTarget } from '@model/bw/org/bocra/portal/document/docu
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-edit-licence',
@@ -29,6 +30,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
   deleteUnrestricted: boolean = true;
   documentDelete$: Observable<boolean>;
   licenceDocument$: Observable<DocumentVO>;
+  file$: Observable<Blob>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -38,6 +40,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
     this.licenceLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.licenceDocument$ = this.store.pipe(select(DocumentSelectors.selectDocument));
+    this.file$ = this.store.pipe(select(DocumentSelectors.selectFile));
   }
 
   override beforeOnInit(form: EditLicenceVarsForm): EditLicenceVarsForm {
@@ -82,8 +85,24 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     });
   }
 
-  fileDownload(documentId: number) {
+  
+  downloadFile(documentId: number, documentName: string) {
 
+    this.store.dispatch(
+      DocumentActions.downloadFile({
+        documentId: documentId,
+        loading: true,
+        loaderMessage: 'Downloading document ...'
+      })
+    );
+
+    this.file$.subscribe((file: any) => {
+      if(file) {
+        let blob:any = file as Blob;
+        const url = window.URL.createObjectURL(blob);
+        saveAs(blob, documentName);
+      }
+    });
   }
 
   override doNgOnDestroy() { }

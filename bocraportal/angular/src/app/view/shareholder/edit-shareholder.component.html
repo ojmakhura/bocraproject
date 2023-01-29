@@ -92,12 +92,11 @@
 											<button type="button" color="accent" (click)="doEditShareholderDocuments(row)" class="btn btn-info" *ngIf="false">
 												<mat-icon>edit</mat-icon>
 											</button>
+											<button type="button" (click)="fileDownload(row?.documentId, row?.documentName)" class="btn btn-outline-primary">
+											  <mat-icon>file_download</mat-icon>
+											</button> 
 										</div>
 		                            </mat-cell>
-		            			</ng-container>
-		            			<ng-container matColumnDef="id">
-		            				<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-		                            <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
 		            			</ng-container>
 		            			<ng-container matColumnDef="documentId">
 		            				<mat-header-cell *matHeaderCellDef translate>document.id</mat-header-cell>

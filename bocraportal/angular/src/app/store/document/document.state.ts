@@ -11,6 +11,7 @@ export interface DocumentState {
     removed: boolean,
     success: boolean,
     loading: boolean,
+    file: any,
     loaderMessage: string | undefined,
     error: boolean,
     messages: any[]
@@ -26,5 +27,6 @@ export const initialState: DocumentState = {
     loading: false,
     error: false,
     messages: [],
-    loaderMessage: undefined
+    loaderMessage: undefined,
+    file: undefined
 };

@@ -157,10 +157,12 @@
                                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                                     <mat-cell *matCellDef="let row; index as i">
                                         <div>
-                                            <button type="button" color="accent" (click)="deleteFromLicenceDocuments(i)"
-                                            class="btn btn-outline-primary">
-                                            <mat-icon>delete</mat-icon>
-                                        </button>
+                                            <button type="button" color="accent" (click)="deleteFromLicenceDocuments(i)" class="btn btn-outline-primary">
+												<mat-icon>delete</mat-icon>
+											</button>											
+											<button type="button" (click)="downloadFile(row?.documentId, row?.documentName)" class="btn btn-primary">
+												<mat-icon>file_download</mat-icon>
+											</button>
                                         <!-- <button type="button" color="accent" (click)="doEditLicenceDocuments(row)" class="btn btn-outline-primary">
 		                                    <mat-icon>edit</mat-icon>
 		                                </button>

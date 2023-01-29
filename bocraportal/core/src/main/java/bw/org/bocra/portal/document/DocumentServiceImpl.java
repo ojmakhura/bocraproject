@@ -80,14 +80,11 @@ public class DocumentServiceImpl
      * @see bw.org.bocra.portal.document.DocumentService#remove(Long)
      */
     @Override
-    protected  boolean handleRemove(Long id)
+    protected  boolean handleRemove(String documentId)
         throws Exception
     {
-        if(id == null) {
-            return false;
-        }
-
-        this.documentDao.remove(id);
+        
+        this.documentDao.remove(getDocuments(documentId));
 
         return true;
     }
@@ -101,6 +98,20 @@ public class DocumentServiceImpl
     {
         return (Collection<DocumentVO>) documentDao.loadAll(DocumentDao.TRANSFORM_DOCUMENTVO);
     }
+
+    private List<Document> getDocuments(String documentId) {
+        if(StringUtils.isBlank(documentId)) {
+            throw new DocumentServiceException("Document ID should not be null.");
+        }
+
+        List<Document> docs = documentRepository.findByDocumentId(documentId, PageRequest.of(0, 1)).getContent();
+
+        if(CollectionUtils.isEmpty(docs)) {
+            throw new DocumentServiceException(String.format("No documents with document ID %s found.", documentId));
+        }
+
+        return docs;
+    } 
 
     /**
      * @see bw.org.bocra.portal.document.DocumentService#search(String)
@@ -133,8 +144,9 @@ public class DocumentServiceImpl
     }
 
     @Override
-    protected byte[] handleDownloadFile(Long id) throws Exception {
-        return getDocumentDao().get(id).getFile();
+    protected byte[] handleDownloadFile(String documentId) throws Exception {
+
+        return getDocuments(documentId).get(0).getFile();
     }
 
     @Override
@@ -146,6 +158,12 @@ public class DocumentServiceImpl
     @Override
     protected Collection<DocumentVO> handleFindByDocumentIds(Set<String> documentIds) throws Exception {
         return getDocumentDao().toDocumentVOCollection(documentRepository.findByDocumentIdIn(documentIds));
+    }
+
+    @Override
+    protected DocumentVO handleFindByDocumentId(String documentId) throws Exception {
+        
+        return documentDao.toDocumentVO(getDocuments(documentId).get(0));
     }
 
 }
