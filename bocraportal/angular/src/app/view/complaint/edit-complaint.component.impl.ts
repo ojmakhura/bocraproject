@@ -20,6 +20,7 @@ import { DocumentMetadataTarget } from '@model/bw/org/bocra/portal/document/docu
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-edit-complaint',
@@ -36,6 +37,7 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   complaintReply$: Observable<ComplaintReplyVO>;
   complaintDocument$: Observable<DocumentVO>;
   loggedIn: boolean = false;
+  file$: Observable<Blob>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -46,6 +48,7 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
     this.complaintReply$ = this.store.pipe(select(ComplaintSelectors.selectComplaintReply));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
+    this.file$ = this.store.pipe(select(DocumentSelectors.selectFile));
     // this.accessPointAccessPointTypes$ = this.store.pipe(select(AccessPointTypeSelectors.selectAccessPointTypes));
     this.keycloakService.isLoggedIn().then((loggedIn) => {
       this.loggedIn = loggedIn;
@@ -330,5 +333,24 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
 
   scroll(el: HTMLElement) {
     el.scrollIntoView();
+  }
+
+  downloadFile(documentId: number, documentName: string) {
+
+    this.store.dispatch(
+      DocumentActions.downloadFile({
+        documentId: documentId,
+        loading: true,
+        loaderMessage: 'Downloading document ...'
+      })
+    );
+
+    this.file$.subscribe((file: any) => {
+      if(file) {
+        let blob:any = file as Blob;
+        const url = window.URL.createObjectURL(blob);
+        saveAs(blob, documentName);
+      }
+    });
   }
 }

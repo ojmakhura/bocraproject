@@ -6,6 +6,8 @@ import { DocumentMetadataTarget } from '@app/model/bw/org/bocra/portal/document/
 export enum DocumentActionType {
     FIND_BY_ID = '[Document] Find By Id',
     FIND_BY_ID_SUCCESS = '[Document] Find By Id Success',
+    FIND_BY_DOCUMENT_ID = '[Document] Find By Document Id',
+    FIND_BY_DOCUMENT_ID_SUCCESS = '[Document] Find By Document Id Success',
     SAVE = '[Document] Save',
     SAVE_SUCCESS = '[Document] Save Success',
     REMOVE = '[Document] Remove',
@@ -14,6 +16,8 @@ export enum DocumentActionType {
     GET_ALL_SUCCESS = '[Document] Get All Success',
     UPLOAD_FILE = '[Document] Upload File',
     UPLOAD_FILE_SUCCESS = '[Document] Upload File Success',
+    DOWNLOAD_FILE = '[Document] Download File',
+    DOWNLOAD_FILE_SUCCESS = '[Document] Download File Success',
     SEARCH = '[Document] Search',
     SEARCH_SUCCESS = '[Document] Search Success',
     GET_ALL_PAGED = '[Document] Get All Paged',
@@ -37,6 +41,26 @@ export const findById = createAction(
 export const findByIdSuccess = createAction(
     DocumentActionType.FIND_BY_ID_SUCCESS,
     props<{ document: DocumentVO | any, messages: any[], success: boolean}>()
+);
+
+export const findByDocumentId = createAction(
+    DocumentActionType.FIND_BY_DOCUMENT_ID,
+    props<{ documentId: string | any , loading: boolean, loaderMessage: string | undefined }>()
+);
+
+export const findByDocumentIdSuccess = createAction(
+    DocumentActionType.FIND_BY_DOCUMENT_ID_SUCCESS,
+    props<{ document: DocumentVO | any, messages: any[], success: boolean}>()
+);
+
+export const downloadFile = createAction(
+    DocumentActionType.DOWNLOAD_FILE,
+    props<{ documentId: string | any , loading: boolean, loaderMessage: string | undefined }>()
+);
+
+export const downloadFileSuccess = createAction(
+    DocumentActionType.DOWNLOAD_FILE_SUCCESS,
+    props<{ file: any, messages: any[], success: boolean}>()
 );
 
 export const save = createAction(

@@ -177,7 +177,7 @@ run_cron_native_local: gen_env
 	. ./.env && bocraportal/cron/target/bocraportal-cron
 
 local_web_deps: build_web
-	cd bocraportal/angular/target/bocraportal && npm i
+	cd bocraportal/angular/target/bocraportal && npm i && npm install file-saver --save && npm install @types/file-saver --save-dev
 
 run_web_local: build_web
 	cd bocraportal/angular/target/bocraportal && npm start

@@ -19,6 +19,7 @@ import * as LicenseeShareholderSelectors from '@app/store/licensee/shares/licens
 import * as SectorActions from '@app/store/sector/sector.actions';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
+import { saveAs } from 'file-saver';
 
 import * as ShareholderSelectors from '@app/store/shareholder/shareholder.selectors';
 import {
@@ -47,6 +48,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   licenseeDocument$: Observable<DocumentVO>;
   licenseeShareholder$: Observable<LicenseeShareholderVO>
   licenseeShareholderId: any;
+  file$: Observable<Blob>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -60,6 +62,7 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     this.licenseeDocument$ = this.store.pipe(select(DocumentSelectors.selectDocument));
     this.licenseeShareholder$ = this.store.pipe(select(LicenseeShareholderSelectors.selectLicenseeShareholder))
     this.licenseeShareholders$ = this.store.pipe(select(LicenseeShareholderSelectors.selectLicenseeShareholders));
+    this.file$ = this.store.pipe(select(DocumentSelectors.selectFile));
   }
 
   beforeOnInit(form: EditLicenseeVarsForm): EditLicenseeVarsForm {
@@ -395,8 +398,23 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     });
   }
 
-  fileDownload(doc: DocumentVO) {
-    this.documentRestController.downloadFile(doc.id).subscribe((response: any) => {
+  
+  fileDownload(documentId: number, documentName: string) {
+
+    this.store.dispatch(
+      DocumentActions.downloadFile({
+        documentId: documentId,
+        loading: true,
+        loaderMessage: 'Downloading document ...'
+      })
+    );
+
+    this.file$.subscribe((file: any) => {
+      if(file) {
+        let blob:any = file as Blob;
+        const url = window.URL.createObjectURL(blob);
+        saveAs(blob, documentName);
+      }
     });
   }
 }

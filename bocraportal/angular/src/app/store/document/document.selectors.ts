@@ -11,6 +11,11 @@ export const selectCriteria = createSelector(
     (state: DocumentState) => state.criteria
 );
 
+export const selectFile = createSelector(
+    selectDocumentState,
+    (state: DocumentState) => state.file
+);
+
 export const selectDocuments = createSelector(
     selectDocumentState,
     (state: DocumentState) => state.documents

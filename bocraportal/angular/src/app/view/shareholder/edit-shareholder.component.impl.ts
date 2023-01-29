@@ -20,6 +20,7 @@ import { DocumentMetadataTarget } from '@app/model/bw/org/bocra/portal/document/
 import { FormGroup } from '@angular/forms';
 import { LicenseeShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/licensee-shareholder-vo';
 import { MatGridTileHeaderCssMatStyler } from '@angular/material/grid-list';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-edit-shareholder',
@@ -33,6 +34,8 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
   shareholderDocument$: Observable<DocumentVO>;
   shareholderShare$: Observable<LicenseeShareholderVO>;
   licenseeShareholderId: any;
+  file$: Observable<Blob>;
+  
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
@@ -41,6 +44,7 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
     this.shareholderDocument$ = this.store.pipe(select(DocumentSelectors.selectDocument));
     this.shareholderShare$ = this.store.pipe(select(LicenseeShareholderSelectors.selectLicenseeShareholder));
     this.shareholderShares$ = this.store.pipe(select(LicenseeShareholderSelectors.selectLicenseeShareholders));
+    this.file$ = this.store.pipe(select(DocumentSelectors.selectFile));
 
   }
 
@@ -255,6 +259,26 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
       licenseeUin: [value?.licensee?.uin],
       licenseeName: [value?.licensee?.licenseeName],
       numberOfShares: [value?.numberOfShares],
+    });
+  }
+
+  
+  fileDownload(documentId: number, documentName: string) {
+
+    this.store.dispatch(
+      DocumentActions.downloadFile({
+        documentId: documentId,
+        loading: true,
+        loaderMessage: 'Downloading document ...'
+      })
+    );
+
+    this.file$.subscribe((file: any) => {
+      if(file) {
+        let blob:any = file as Blob;
+        const url = window.URL.createObjectURL(blob);
+        saveAs(blob, documentName);
+      }
     });
   }
 }
