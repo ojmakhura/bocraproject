@@ -23,7 +23,7 @@
 				</div>
 			</div>
 			<div formGroupName="document">
-				<fieldset class="form-group border p-3" formGroupName="licence">
+				<fieldset class="form-group border p-3" formGroupName="licence" *ngIf="documentMetadataTarget === 'LICENCE'">
 				    <legend id="documentLicence_label" class="col-sm-2 col-form-label" for="documentLicence"><span translate>licence</span></legend>
 				    <div class="col my-3 view-buttons">
 				        <button type="button" (click)="documentLicenceAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentLicenceModal">
@@ -34,43 +34,33 @@
 				        </button>
 				    </div>
 				    <div class="row mb-3">
-				        <label for="documentLicenceId" class="col-sm-2 col-form-label" translate>id</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentLicenceId" value="{{documentLicence?.id }}"disabled/>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="documentLicenceStatus" class="col-sm-2 col-form-label" translate>status</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentLicenceStatus" value="{{documentLicence?.status }}"disabled>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="documentLicenceLicenceNumber" class="col-sm-2 col-form-label" translate>licence.number</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentLicenceLicenceNumber" value="{{documentLicence?.licenceNumber }}"disabled>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="documentLicenceLicensee.licenseeName" class="col-sm-2 col-form-label" translate>licensee.name</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentLicenceLicensee.licenseeName" value="{{documentLicence?.licensee?.licenseeName }}"disabled>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="documentLicenceStartDate" class="col-sm-2 col-form-label" translate>start.date</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentLicenceStartDate" value="{{documentLicence?.startDate }}"disabled>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="documentLicenceEndDate" class="col-sm-2 col-form-label" translate>end.date</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentLicenceEndDate" value="{{documentLicence?.endDate }}"disabled>
-				        </div>
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>status</td>
+				                    <td >{{ documentLicence?.status }}</td>
+				                <tr>
+				                <tr >
+				                    <td scope="row"translate>licence.number</td>
+				                    <td >{{ documentLicence?.licenceNumber }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>licensee</td>
+				                    <td >{{ documentLicence?.licensee?.licenseeName }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>start.date</td>
+				                    <td >{{ documentLicence?.startDate }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>end.date</td>
+				                    <td >{{ documentLicence?.endDate }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
 				    </div>
 				</fieldset>
-				<fieldset class="form-group border p-3" formGroupName="licensee">
+				<fieldset class="form-group border p-3" formGroupName="licensee" *ngIf="documentMetadataTarget === 'LICENSEE'">
 				    <legend id="documentLicensee_label" class="col-sm-2 col-form-label" for="documentLicensee"><span translate>licensee</span></legend>
 				    <div class="col my-3 view-buttons">
 				        <button type="button" (click)="documentLicenseeAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentLicenseeModal">
@@ -81,22 +71,130 @@
 				        </button>
 				    </div>
 				    <div class="row mb-3">
-				        <label for="documentLicenseeId" class="col-sm-2 col-form-label" translate>id</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentLicenseeId" value="{{documentLicensee?.id }}"disabled>
-				        </div>
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>uin</td>
+				                    <td >{{ documentLicensee?.uin }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>licensee.name</td>
+				                    <td >{{ documentLicensee?.licenseeName }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
+				    </div>
+				</fieldset>
+                <fieldset class="form-group border p-3" formGroupName="complaint" *ngIf="documentMetadataTarget === 'COMPLAINT'">
+				    <legend id="documentComplaint_label" class="col-sm-2 col-form-label" for="documentComplaint"><span translate>complaint</span></legend>
+				    <div class="col my-3 view-buttons">
+				        <button type="button" (click)="documentComplaintAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentComplaintModal">
+				            <mat-icon>add_box</mat-icon>
+				        </button>
+				        <button type="button" (click)="documentComplaintClear()" class="btn btn-primary">
+				            <mat-icon>clear</mat-icon>
+				        </button>
 				    </div>
 				    <div class="row mb-3">
-				        <label for="documentLicenseeUin" class="col-sm-2 col-form-label" translate>uin</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentLicenseeUin" value="{{documentLicensee?.uin }}"disabled>
-				        </div>
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>created.date</td>
+				                    <td >{{ documentComplaint?.createdDate }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>name</td>
+				                    <td >{{ documentComplaint?.firstName }} {{ documentComplaint?.surname }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>status</td>
+				                    <td >{{ documentComplaint?.status }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
+				    </div>
+				</fieldset>
+                <fieldset class="form-group border p-3" formGroupName="complaintReply" *ngIf="documentMetadataTarget === 'COMPLAINT_REPLY'">
+				    <legend id="documentComplaintReply_label" class="col-sm-2 col-form-label" for="documentComplaintReply"><span translate>complaint.reply</span></legend>
+				    <div class="col my-3 view-buttons">
+				        <button type="button" (click)="documentComplaintReplyAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentComplaintReplyModal">
+				            <mat-icon>add_box</mat-icon>
+				        </button>
+				        <button type="button" (click)="documentComplaintReplyClear()" class="btn btn-primary">
+				            <mat-icon>clear</mat-icon>
+				        </button>
 				    </div>
 				    <div class="row mb-3">
-				        <label for="documentLicenseeLicenseeName" class="col-sm-2 col-form-label" translate>licensee.name</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentLicenseeLicenseeName" value="{{documentLicensee?.licenseeName }}"disabled/>
-				        </div>
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>date</td>
+				                    <td >{{ documentComplaintReply?.date }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>reply.user</td>
+				                    <td >{{ documentComplaintReply?.replyUser }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
+				    </div>
+				</fieldset>
+				<fieldset class="form-group border p-3" formGroupName="licenseeShareholder" *ngIf="documentMetadataTarget === 'LICENSEE_SHAREHOLDER'">
+				    <legend id="documentLicenseeShareholder_label" class="col-sm-2 col-form-label" for="documentLicenseeShareholder"><span translate>licensee.shareholder</span></legend>
+				    <div class="col my-3 view-buttons">
+				        <button type="button" (click)="documentLicenseeShareholderAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentLicenseeShareholderModal">
+				            <mat-icon>add_box</mat-icon>
+				        </button>
+				        <button type="button" (click)="documentLicenseeShareholderClear()" class="btn btn-primary">
+				            <mat-icon>clear</mat-icon>
+				        </button>
+				    </div>
+				    <div class="row mb-3">
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>licensee</td>
+				                    <td >{{ documentLicenseeShareholder?.licensee?.licenseeName }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>shareholder</td>
+				                    <td >{{ documentLicenseeShareholder?.shareholder?.name }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>number.of.shares</td>
+				                    <td >{{ documentLicenseeShareholder?.numberOfShares }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
+				    </div>
+				</fieldset>
+				<fieldset class="form-group border p-3" formGroupName="shareholder" *ngIf="documentMetadataTarget === 'SHAREHOLDER'">
+				    <legend id="documentShareholder_label" class="col-sm-2 col-form-label" for="documentShareholder"><span translate>shareholder</span></legend>
+				    <div class="col my-3 view-buttons">
+				        <button type="button" (click)="documentShareholderAddDialog()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentShareholderModal">
+				            <mat-icon>add_box</mat-icon>
+				        </button>
+				        <button type="button" (click)="documentShareholderClear()" class="btn btn-primary">
+				            <mat-icon>clear</mat-icon>
+				        </button>
+				    </div>
+				    <div class="row mb-3">
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>type</td>
+				                    <td >{{ documentShareholder?.type }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>shareholder.id</td>
+				                    <td >{{ documentShareholder?.shareholderId }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>name</td>
+				                    <td >{{ documentShareholder?.name }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
 				    </div>
 				</fieldset>
 				<fieldset class="form-group border p-3" formGroupName="documentType">
@@ -110,27 +208,18 @@
 				        </button>
 				    </div>
 				    <div class="row mb-3">
-				        <label for="documentDocumentTypeId" class="col-sm-2 col-form-label" translate>id</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentDocumentTypeId" value="{{documentDocumentType?.id }}"disabled/>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="documentDocumentTypeCode" class="col-sm-2 col-form-label" translate>code</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentDocumentTypeCode" value="{{documentDocumentType?.code }}"disabled/>
-				        </div>
-				    </div>
-				    <div class="row mb-3">
-				        <label for="documentDocumentTypeName" class="col-sm-2 col-form-label" translate>name</label>
-				        <div class="col-sm-10">
-				            <input type="text" class="form-control" id="documentDocumentTypeName" value="{{documentDocumentType?.name }}"disabled/>
-				        </div>
-				    </div>
-				    <div *ngIf="editDocumentForm.invalid && documentDocumentTypeControl.invalid && (documentDocumentTypeControl.dirty || documentDocumentTypeControl.touched)" class="alert alert-danger" role="alert">
-				        <div *ngIf="documentDocumentTypeControl.errors['required']">
-				            <span translate>document.type.required</span>
-				        </div>
+				        <table class="table">
+				            <tbody>
+				                <tr>
+				                    <td scope="row"translate>code</td>
+				                    <td >{{ documentDocumentType?.code }}</td>
+				                <tr>
+				                <tr>
+				                    <td scope="row"translate>name</td>
+				                    <td >{{ documentDocumentType?.name }}</td>
+				                <tr>
+				            </tbody>
+				        </table>
 				    </div>
 				</fieldset>
 				<div class="mb-3">
@@ -145,6 +234,9 @@
 				<div class="mb-3">
 				    <label id="documentFile_label" class="col-sm-2 col-form-label" for="documentFile"><span translate>file</span>*</label>
 				    <input type="file" id="documentFile" class="form-control" formControlName="file"  required/>
+                    <button type="button" (click)="downloadFile()" class="btn btn-primary">
+                        <mat-icon>file_download</mat-icon>
+                    </button>
 				    <div *ngIf="editDocumentForm.invalid && documentFileControl.invalid && (documentFileControl.dirty || documentFileControl.touched)" class="alert alert-danger" role="alert">
 				        <div *ngIf="documentFileControl.errors['required']">
 				            <span translate>file.required</span>
@@ -153,7 +245,7 @@
 				</div>
 				<div class="mb-3">
 				    <label id="documentDocumentId_label" class="col-sm-2 col-form-label" for="documentDocumentId"><span translate>document.id</span></label>
-				    <input type="text" id="documentDocumentId" class="form-control" name="documentId" formControlName="documentId"/>
+				    <label>{{ documentDocumentId }}</label>
 				</div>
 				<div class="mb-3">
 				    <label id="documentExtension_label" class="col-sm-2 col-form-label" for="documentExtension"><span translate>extension</span></label>
@@ -173,6 +265,134 @@
         </div>
 	</div>
 </div>
+<!-- Modal for licensee -->
+<div class="modal fade" id="documentLicenseeModal" tabindex="-1" aria-labelledby="documentLicenseeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="documentLicenseeAddLabel" translate>
+                    action.select
+                    <span translate>licensee</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form>
+                        <div>
+                            <mat-form-field>
+                            <mat-label translate>search</mat-label>
+                            <input matInput type="text" [formControl]="documentLicenseeSearchField"
+                                id="documentLicenseeSearchField" />
+                            </mat-form-field>
+                        </div>
+                        <button type="button" (click)="documentLicenseeSearch()" class="btn btn-primary">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </form>
+                </div>
+             <mat-table matSort [dataSource]="documentLicenseesDataSource" #documentLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%;">
+                 <ng-container matColumnDef="actions">
+                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+                     <mat-cell *matCellDef="let row; let i=index">
+                         <mat-radio-group (change)="documentLicenseeSelected($event, row)">
+                             <mat-radio-button [value]="row" [checked]='documentLicenseeSelect.id === row?.id'></mat-radio-button>
+                         </mat-radio-group>
+                     </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="id">
+                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="uin">
+                     <mat-header-cell *matHeaderCellDef translate>uin</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.uin }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="licenseeName">
+                     <mat-header-cell *matHeaderCellDef translate>licensee.name</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.licenseeName }} </mat-cell>
+                 </ng-container>
+                 <mat-header-row *matHeaderRowDef="documentLicenseeModalColumns"></mat-header-row>
+                 <mat-row *matRowDef="let row; columns: documentLicenseeModalColumns;"></mat-row>
+             </mat-table>
+             <mat-paginator #documentLicenseeModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+                <button type="button" class="btn btn-primary" (click)="addSelectedDocumentLicensee()" data-bs-dismiss="modal" translate>save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for complaint -->
+<div class="modal fade" id="documentComplaintModal" tabindex="-1" aria-labelledby="documentComplaintLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="documentComplaintAddLabel" translate>
+                    action.select
+                    <span translate>complaint</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form>
+                        <div>
+                            <mat-form-field>
+                            <mat-label translate>search</mat-label>
+                            <input matInput type="text" [formControl]="documentComplaintSearchField"
+                                id="documentComplaintSearchField" />
+                            </mat-form-field>
+                        </div>
+                        <button type="button" (click)="documentComplaintSearch()" class="btn btn-primary">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </form>
+                </div>
+             <mat-table matSort [dataSource]="documentComplaintsDataSource" #documentComplaintModalSort="matSort" class="table table-bordered" style="width: 100%;">
+                 <ng-container matColumnDef="actions">
+                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+                     <mat-cell *matCellDef="let row; let i=index">
+                         <mat-radio-group (change)="documentComplaintSelected($event, row)">
+                             <mat-radio-button [value]="row" [checked]='documentComplaintSelect.id === row?.id'></mat-radio-button>
+                         </mat-radio-group>
+                     </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="id">
+                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="createdDate">
+                     <mat-header-cell *matHeaderCellDef translate>created.date</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.createdDate }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="firstName">
+                     <mat-header-cell *matHeaderCellDef translate>first.name</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.firstName }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="surname">
+                     <mat-header-cell *matHeaderCellDef translate>surname</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.surname }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="status">
+                     <mat-header-cell *matHeaderCellDef translate>status</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.status }} </mat-cell>
+                 </ng-container>
+                 <mat-header-row *matHeaderRowDef="documentComplaintModalColumns"></mat-header-row>
+                 <mat-row *matRowDef="let row; columns: documentComplaintModalColumns;"></mat-row>
+             </mat-table>
+             <mat-paginator #documentComplaintModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+                <button type="button" class="btn btn-primary" (click)="addSelectedDocumentComplaint()" data-bs-dismiss="modal" translate>save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal for licence -->
 <div class="modal fade" id="documentLicenceModal" tabindex="-1" aria-labelledby="documentLicenceLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -245,14 +465,14 @@
     </div>
 </div>
 
-<!-- Modal for licensee -->
-<div class="modal fade" id="documentLicenseeModal" tabindex="-1" aria-labelledby="documentLicenseeLabel" aria-hidden="true">
+<!-- Modal for complaintReply -->
+<div class="modal fade" id="documentComplaintReplyModal" tabindex="-1" aria-labelledby="documentComplaintReplyLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="documentLicenseeAddLabel" translate>
+                <h5 class="modal-title" id="documentComplaintReplyAddLabel" translate>
                     action.select
-                    <span translate>licensee</span>
+                    <span translate>complaint.reply</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -262,21 +482,21 @@
                         <div>
                             <mat-form-field>
                             <mat-label translate>search</mat-label>
-                            <input matInput type="text" [formControl]="documentLicenseeSearchField"
-                                id="documentLicenseeSearchField" />
+                            <input matInput type="text" [formControl]="documentComplaintReplySearchField"
+                                id="documentComplaintReplySearchField" />
                             </mat-form-field>
                         </div>
-                        <button type="button" (click)="documentLicenseeSearch()" class="btn btn-primary">
+                        <button type="button" (click)="documentComplaintReplySearch()" class="btn btn-primary">
                             <mat-icon>search</mat-icon>
                         </button>
                     </form>
                 </div>
-             <mat-table matSort [dataSource]="documentLicenseesDataSource" #documentLicenseeModalSort="matSort" class="table table-bordered" style="width: 100%;">
+             <mat-table matSort [dataSource]="documentComplaintRepliesDataSource" #documentComplaintReplyModalSort="matSort" class="table table-bordered" style="width: 100%;">
                  <ng-container matColumnDef="actions">
                      <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                      <mat-cell *matCellDef="let row; let i=index">
-                         <mat-radio-group (change)="documentLicenseeSelected($event, row)">
-                             <mat-radio-button [value]="row" [checked]='documentLicenseeSelect.id === row?.id'></mat-radio-button>
+                         <mat-radio-group (change)="documentComplaintReplySelected($event, row)">
+                             <mat-radio-button [value]="row" [checked]='documentComplaintReplySelect.id === row?.id'></mat-radio-button>
                          </mat-radio-group>
                      </mat-cell>
                  </ng-container>
@@ -284,22 +504,130 @@
                      <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
                      <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
                  </ng-container>
-                 <ng-container matColumnDef="uin">
-                     <mat-header-cell *matHeaderCellDef translate>uin</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.uin }} </mat-cell>
+                 <ng-container matColumnDef="date">
+                     <mat-header-cell *matHeaderCellDef translate>date</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.date }} </mat-cell>
                  </ng-container>
-                 <ng-container matColumnDef="licenseeName">
-                     <mat-header-cell *matHeaderCellDef translate>licensee.name</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.licenseeName }} </mat-cell>
+                 <ng-container matColumnDef="replyUser">
+                     <mat-header-cell *matHeaderCellDef translate>reply.user</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.replyUser }} </mat-cell>
                  </ng-container>
-                 <mat-header-row *matHeaderRowDef="documentLicenseeModalColumns"></mat-header-row>
-                 <mat-row *matRowDef="let row; columns: documentLicenseeModalColumns;"></mat-row>
+                 <mat-header-row *matHeaderRowDef="documentComplaintReplyModalColumns"></mat-header-row>
+                 <mat-row *matRowDef="let row; columns: documentComplaintReplyModalColumns;"></mat-row>
              </mat-table>
-             <mat-paginator #documentLicenseeModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+             <mat-paginator #documentComplaintReplyModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-                <button type="button" class="btn btn-primary" (click)="addSelectedDocumentLicensee()" data-bs-dismiss="modal" translate>save</button>
+                <button type="button" class="btn btn-primary" (click)="addSelectedDocumentComplaintReply()" data-bs-dismiss="modal" translate>save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for licenseeShareholder -->
+<div class="modal fade" id="documentLicenseeShareholderModal" tabindex="-1" aria-labelledby="documentLicenseeShareholderLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="documentLicenseeShareholderAddLabel" translate>
+                    action.select
+                    <span translate>licensee.shareholder</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form>
+                        <div>
+                            <mat-form-field>
+                            <mat-label translate>search</mat-label>
+                            <input matInput type="text" [formControl]="documentLicenseeShareholderSearchField"
+                                id="documentLicenseeShareholderSearchField" />
+                            </mat-form-field>
+                        </div>
+                        <button type="button" (click)="documentLicenseeShareholderSearch()" class="btn btn-primary">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </form>
+                </div>
+             <mat-table matSort [dataSource]="documentLicenseeShareholdersDataSource" #documentLicenseeShareholderModalSort="matSort" class="table table-bordered" style="width: 100%;">
+                 <ng-container matColumnDef="actions">
+                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+                     <mat-cell *matCellDef="let row; let i=index">
+                         <mat-radio-group (change)="documentLicenseeShareholderSelected($event, row)">
+                             <mat-radio-button [value]="row" [checked]='documentLicenseeShareholderSelect.id === row?.id'></mat-radio-button>
+                         </mat-radio-group>
+                     </mat-cell>
+                 </ng-container>
+                 <mat-header-row *matHeaderRowDef="documentLicenseeShareholderModalColumns"></mat-header-row>
+                 <mat-row *matRowDef="let row; columns: documentLicenseeShareholderModalColumns;"></mat-row>
+             </mat-table>
+             <mat-paginator #documentLicenseeShareholderModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+                <button type="button" class="btn btn-primary" (click)="addSelectedDocumentLicenseeShareholder()" data-bs-dismiss="modal" translate>save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for shareholder -->
+<div class="modal fade" id="documentShareholderModal" tabindex="-1" aria-labelledby="documentShareholderLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="documentShareholderAddLabel" translate>
+                    action.select
+                    <span translate>shareholder</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form>
+                        <div>
+                            <mat-form-field>
+                            <mat-label translate>search</mat-label>
+                            <input matInput type="text" [formControl]="documentShareholderSearchField"
+                                id="documentShareholderSearchField" />
+                            </mat-form-field>
+                        </div>
+                        <button type="button" (click)="documentShareholderSearch()" class="btn btn-primary">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </form>
+                </div>
+             <mat-table matSort [dataSource]="documentShareholdersDataSource" #documentShareholderModalSort="matSort" class="table table-bordered" style="width: 100%;">
+                 <ng-container matColumnDef="actions">
+                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+                     <mat-cell *matCellDef="let row; let i=index">
+                         <mat-radio-group (change)="documentShareholderSelected($event, row)">
+                             <mat-radio-button [value]="row" [checked]='documentShareholderSelect.type === row?.type'></mat-radio-button>
+                         </mat-radio-group>
+                     </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="type">
+                     <mat-header-cell *matHeaderCellDef translate>type</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.type }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="shareholderId">
+                     <mat-header-cell *matHeaderCellDef translate>shareholder.id</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.shareholderId }} </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="name">
+                     <mat-header-cell *matHeaderCellDef translate>name</mat-header-cell>
+                     <mat-cell *matCellDef="let row"> {{ row?.name }} </mat-cell>
+                 </ng-container>
+                 <mat-header-row *matHeaderRowDef="documentShareholderModalColumns"></mat-header-row>
+                 <mat-row *matRowDef="let row; columns: documentShareholderModalColumns;"></mat-row>
+             </mat-table>
+             <mat-paginator #documentShareholderModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+                <button type="button" class="btn btn-primary" (click)="addSelectedDocumentShareholder()" data-bs-dismiss="modal" translate>save</button>
             </div>
         </div>
     </div>
@@ -364,4 +692,3 @@
         </div>
     </div>
 </div>
-

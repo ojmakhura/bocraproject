@@ -54,7 +54,7 @@ export const formSubmissionReducer = createReducer(
     })),
     on(FormSubmissionActions.updateStatusSuccess, (state, action) => ({
         ...state,
-        updated: action.updated, 
+        statusUpdated: action.statusUpdated, 
         loading: false,
         loaderMessage: undefined,
         success: action.success,

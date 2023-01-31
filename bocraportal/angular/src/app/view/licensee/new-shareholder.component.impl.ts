@@ -17,6 +17,7 @@ import { DocumentMetadataTarget } from '@app/model/bw/org/bocra/portal/document/
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 import { Observable } from 'rxjs';
 import { FormGroup } from '@angular/forms';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-new-shareholder',
@@ -26,6 +27,7 @@ import { FormGroup } from '@angular/forms';
 export class NewShareholderComponentImpl extends NewShareholderComponent {
 
   shareholderDocument$: Observable<DocumentVO>;
+  file$: Observable<Blob>;
 
   constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
     super(data, injector);
@@ -34,6 +36,7 @@ export class NewShareholderComponentImpl extends NewShareholderComponent {
     this.shareholderDocument$ = this.store.pipe(select(DocumentSelectors.selectDocument));
     this.shareholderLicenseeBackingList = [];
     this.shareholderShareholderBackingList = [];
+    this.file$ = this.store.pipe(select(DocumentSelectors.selectFile));
   }
 
   override beforeOnInit(form: NewShareholderVarsForm): NewShareholderVarsForm {
@@ -94,5 +97,25 @@ export class NewShareholderComponentImpl extends NewShareholderComponent {
       metadataTarget: [value?.metadataTarget],
       metadataTargetId: [value?.metadataTargetId],
     })
+  }
+
+  
+  fileDownload(documentId: number, documentName: string) {
+
+    this.store.dispatch(
+      DocumentActions.downloadFile({
+        documentId: documentId,
+        loading: true,
+        loaderMessage: 'Downloading document ...'
+      })
+    );
+
+    this.file$.subscribe((file: any) => {
+      if(file) {
+        let blob:any = file as Blob;
+        const url = window.URL.createObjectURL(blob);
+        saveAs(blob, documentName);
+      }
+    });
   }
 }

@@ -5,12 +5,25 @@ import {documentKey, initialState} from './document.state';
 
 export const documentReducer = createReducer(
     initialState,
-    on(DocumentActions.findById, (state, action) => ({
+    on(DocumentActions.downloadFile, (state, action) => ({
         ...state,
         loading: action.loading,
         loaderMessage: action.loaderMessage,
     })),
-    on(DocumentActions.findByIdSuccess, (state, action) => ({
+    on(DocumentActions.downloadFileSuccess, (state, action) => ({
+        ...state,
+        file: action.file, 
+        loading: false,
+        success: action.success,
+        error: false,
+        messages: action.messages
+    })),
+    on(DocumentActions.findByDocumentId, (state, action) => ({
+        ...state,
+        loading: action.loading,
+        loaderMessage: action.loaderMessage,
+    })),
+    on(DocumentActions.findByDocumentIdSuccess, (state, action) => ({
         ...state,
         document: action.document, 
         loading: false,

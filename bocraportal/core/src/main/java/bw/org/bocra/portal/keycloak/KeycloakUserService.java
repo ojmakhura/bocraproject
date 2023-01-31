@@ -34,7 +34,6 @@ import org.springframework.stereotype.Component;
 
 import bw.org.bocra.portal.licensee.LicenseeService;
 import bw.org.bocra.portal.licensee.LicenseeVO;
-import bw.org.bocra.portal.user.LicenseeUserService;
 import bw.org.bocra.portal.user.UserVO;
 
 @Component
@@ -45,8 +44,7 @@ public class KeycloakUserService {
     private final LicenseeService licenseeService;
     private final KeycloakService keycloakService;
 
-    public KeycloakUserService(LicenseeUserService licenseeUserService, LicenseeService licenseeService,
-            KeycloakService keycloakService) {
+    public KeycloakUserService(LicenseeService licenseeService, KeycloakService keycloakService) {
         this.licenseeService = licenseeService;
         this.keycloakService = keycloakService;
     }

@@ -66,7 +66,7 @@ export const updateStatus = createAction(
 
 export const updateStatusSuccess = createAction(
     FormSubmissionActionType.UPDATE_STATUS_SUCCESS,
-    props<{ updated: boolean | any, messages: any[], success: boolean}>()
+    props<{ statusUpdated: boolean | any, messages: any[], success: boolean}>()
 );
 
 export const saveNote = createAction(

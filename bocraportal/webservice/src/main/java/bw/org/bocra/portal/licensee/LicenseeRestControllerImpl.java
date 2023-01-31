@@ -28,7 +28,6 @@ import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
-import bw.org.bocra.portal.user.LicenseeUserService;
 import bw.org.bocra.portal.user.UserVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -42,48 +41,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     private final KeycloakUserService keycloakUserService;
     private final KeycloakService keycloakService;
     
-    public LicenseeRestControllerImpl(LicenseeService licenseeService, LicenseeUserService licenseeUserService, DocumentService documentService, KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
+    public LicenseeRestControllerImpl(LicenseeService licenseeService, DocumentService documentService, KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
         
-        super(licenseeService, licenseeUserService, documentService);
+        super(licenseeService, documentService);
         this.keycloakUserService = keycloakUserService;
         this.keycloakService = keycloakService;
-    }
-
-
-    @Override
-    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
-        try {
-            logger.debug("Add Document to Licensee with id "+id+",document type id "+documentTypeId+", file "+file+" and file name "+fileName);
-            AccessToken token = keycloakService.getSecurityContext().getToken();
-            DocumentVO document = new DocumentVO();
-            document.setCreatedBy(token.getPreferredUsername());
-            document.setCreatedDate(LocalDateTime.now());
-            document.setFile(file.getBytes());
-            document.setDocumentName(fileName);
-            
-            LicenseeVO licensee = new LicenseeVO();
-            licensee.setId(id);
-            document.setLicensee(licensee);
-
-            DocumentTypeVO docType = new DocumentTypeVO();
-            docType.setId(documentTypeId);
-
-            document.setDocumentType(docType);
-            document = this.documentService.save(document);            
-            ResponseEntity<?> response;
-
-            if(document != null && document.getId() != null) {
-                response = ResponseEntity.status(HttpStatus.OK).body(document);
-            } else {
-                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not add document to licensee.");
-            }
-
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
-        }
     }
 
     @Override

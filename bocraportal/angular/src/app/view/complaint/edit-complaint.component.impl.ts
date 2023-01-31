@@ -20,6 +20,7 @@ import { DocumentMetadataTarget } from '@model/bw/org/bocra/portal/document/docu
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-edit-complaint',
@@ -36,6 +37,7 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   complaintReply$: Observable<ComplaintReplyVO>;
   complaintDocument$: Observable<DocumentVO>;
   loggedIn: boolean = false;
+  file$: Observable<Blob>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -46,6 +48,7 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     this.documentDelete$ = this.store.pipe(select(DocumentSelectors.selectRemoved));
     this.complaintReply$ = this.store.pipe(select(ComplaintSelectors.selectComplaintReply));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
+    this.file$ = this.store.pipe(select(DocumentSelectors.selectFile));
     // this.accessPointAccessPointTypes$ = this.store.pipe(select(AccessPointTypeSelectors.selectAccessPointTypes));
     this.keycloakService.isLoggedIn().then((loggedIn) => {
       this.loggedIn = loggedIn;
@@ -66,7 +69,14 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     );
 
     this.route.queryParams.subscribe((queryParams: any) => {
-      if (queryParams?.id) {
+
+      if (queryParams?.complaintId) {
+        this.store.dispatch(ComplaintActions.findByComplaintId({
+          complaintId: queryParams?.complaintId,
+          loading: true,
+          loaderMessage: 'Find complaint by complaint id ...'
+        }));
+      } else if (queryParams?.id) {
         this.store.dispatch(
           ComplaintActions.findById({
             id: queryParams?.id,
@@ -109,23 +119,22 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
     this.complaintDocument$.subscribe(document => {
       this.addToComplaintDocuments(document);
     });
-    
+  }
+
+  complaintIdEntered() {
+    console.log(this.complaintComplaintId);
+    this.router.navigate(['/complaint/edit-complaint'], {queryParams: {complaintId: this.complaintComplaintId}});
   }
   
   override createComplaintForm(complaint: ComplaintVO): FormGroup {
-
 
     if(complaint === undefined) {
       complaint = new ComplaintVO();
     }
 
-    if(complaint.status === undefined || complaint.status === null) {
-      complaint.status = ComplaintStatus.NEW;
-    }
-
     return this.formBuilder.group({
         id: [{value: complaint?.id, disabled: false}],
-        status: [{value: complaint?.status, disabled: false}, [Validators.required, ]],
+        status: [{value: complaint?.status ? complaint?.status : 'NEW', disabled: false}, [Validators.required, ]],
         complaintId: [{value: complaint?.complaintId, disabled: false}],
         complaintType: this.createComplaintTypeVOGroup(complaint?.complaintType),
         licensee: this.createLicenseeVOGroup(complaint?.licensee),
@@ -210,23 +219,28 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   }
 
   override afterEditComplaintReply(form: EditComplaintReplyForm, dialogData: any): void {
+    console.log(dialogData);
     if (dialogData) {
       if (!form?.complaintReply?.id) {
         dialogData.complaintReply.date = new Date();
       }
-      if (this.keycloakService.getUsername()) {
-        dialogData.complaintReply.replyUser = this.keycloakService.getUsername()
-      } else {
-        dialogData.complaintReply.replyUser = this.complaint?.firstName + ' ' + this.complaint?.surname;
-      }
-      this.store.dispatch(
-        ComplaintActions.addComplaintReply({
-          complaintId: this.complaintComplaintId,
-          reply: dialogData.complaintReply,
-          loading: true,
-          loaderMessage: 'Adding reply to complaint ...'
-        })
-      );
+
+      this.keycloakService.isLoggedIn().then(loggedIn => {
+        if (loggedIn) {
+          dialogData.complaintReply.replyUser = this.keycloakService.getUsername()
+        } else {
+          dialogData.complaintReply.replyUser = this.complaint?.firstName + ' ' + this.complaint?.surname;
+        }
+
+        this.store.dispatch(
+          ComplaintActions.addComplaintReply({
+            complaintId: this.complaintComplaintId,
+            reply: dialogData.complaintReply,
+            loading: true,
+            loaderMessage: 'Adding reply to complaint ...'
+          })
+        );
+      })      
     }
   }
 
@@ -244,18 +258,6 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
       }
     };
   }
-
-  // override handleDeleteFromComplaintComplaintReplies(complaintReplies: ComplaintReplyVO): void {
-  //   if (confirm('Are you sure you want to delete the complaint reply')) {
-  //     this.store.dispatch(
-  //       ComplaintActions.removeComplaintReply({
-  //         id: complaintReplies.id,
-  //         loading: true,
-  //         loaderMessage: 'Removing reply ...'
-  //       })
-  //     )
-  //   }
-  // }
 
   override deleteFromComplaintComplaintReplies(id: number) {
     for (let i = 0; i < this.complaintComplaintReplies.length; i++) {
@@ -331,5 +333,24 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
 
   scroll(el: HTMLElement) {
     el.scrollIntoView();
+  }
+
+  downloadFile(documentId: number, documentName: string) {
+
+    this.store.dispatch(
+      DocumentActions.downloadFile({
+        documentId: documentId,
+        loading: true,
+        loaderMessage: 'Downloading document ...'
+      })
+    );
+
+    this.file$.subscribe((file: any) => {
+      if(file) {
+        let blob:any = file as Blob;
+        const url = window.URL.createObjectURL(blob);
+        saveAs(blob, documentName);
+      }
+    });
   }
 }

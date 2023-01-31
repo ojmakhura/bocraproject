@@ -24,7 +24,7 @@
 			</div>
 			<div class="mb-3" *ngIf="!(isLoggedIn | async)">
 				<label id="criteria_label" class="col-sm-2 col-form-label" for="criteria"><span
-						translate>criteria</span>*</label>
+						translate>Complaint ID</span>*</label>
 				<input type="text" id="criteria" class="form-control" name="criteria" formControlName="criteria"
 					required />
 				<div *ngIf="searchComplaintsForm.invalid && criteriaControl.invalid && (criteriaControl.dirty || criteriaControl.touched)"

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bw.org.bocra.portal.user.LicenseeUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -30,8 +29,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @CrossOrigin()
 public class AuthControllerImpl extends AuthControllerBase {
 
-    public AuthControllerImpl(LicenseeUserService licenseeUserService) {
-        super(licenseeUserService);
+    public AuthControllerImpl() {
+        super();
     }
 
     protected static Logger log = LoggerFactory.getLogger(AuthControllerImpl.class);

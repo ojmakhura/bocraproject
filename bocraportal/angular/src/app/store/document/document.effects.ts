@@ -24,6 +24,20 @@ export class DocumentEffects {
         )
     );
 
+    findByDocumentId$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(DocumentActions.findByDocumentId),
+            mergeMap(({ documentId }) => this.documentRestController.findByDocumentId(documentId).pipe(
+                map( document => DocumentActions.findByDocumentIdSuccess({
+                    document,
+                    messages: [`Document ${document.documentName} found.`],
+                    success: true
+                })),
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
+            ))
+        )
+    );
+
     save$ = createEffect(() => 
          this.actions$.pipe(
             ofType(DocumentActions.save),
@@ -108,30 +122,17 @@ export class DocumentEffects {
         )
     );
 
-    // getLicenseeDocuments$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DocumentActions.getLicenseeDocuments),
-    //         mergeMap(({ licenseeId }) => this.documentRestController.getLicenseeDocuments(licenseeId).pipe(
-    //             map( documents => DocumentActions.getLicenseeDocumentsSuccess({
-    //                 documents,
-    //                 success: true
-    //             })),
-    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
-    //         ))
-    //     )
-    // );
-
-    // getLicenceDocuments$ = createEffect(() => 
-    //      this.actions$.pipe(
-    //         ofType(DocumentActions.getLicenceDocuments),
-    //         mergeMap(({ licenceId }) => this.documentRestController.getLicenceDocuments(licenceId).pipe(
-    //             map( documents => DocumentActions.getLicenceDocumentsSuccess({
-    //                 documents,
-    //                 success: true
-    //             })),
-    //             catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
-    //         ))
-    //     )
-    // );
-
+    downloadFile$ = createEffect(() => 
+         this.actions$.pipe(
+            ofType(DocumentActions.downloadFile),
+            mergeMap(({ documentId }) => this.documentRestController.downloadFile(documentId).pipe(
+                map( file => DocumentActions.downloadFileSuccess({
+                    file,
+                    messages: [`Document downloaded.`],
+                    success: true
+                })),
+                catchError(({error}) => [DocumentActions.documentFailure({messages: [error?.error ? error.error : error]})])
+            ))
+        )
+    );
 }

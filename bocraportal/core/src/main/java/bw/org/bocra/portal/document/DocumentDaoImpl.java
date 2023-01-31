@@ -14,19 +14,27 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
-import bw.org.bocra.portal.complaint.ComplaintVO;
 import bw.org.bocra.portal.complaint.Complaint;
+import bw.org.bocra.portal.complaint.ComplaintReply;
+import bw.org.bocra.portal.complaint.ComplaintReplyDao;
+import bw.org.bocra.portal.complaint.ComplaintReplyRepository;
+import bw.org.bocra.portal.complaint.ComplaintReplyVO;
 import bw.org.bocra.portal.complaint.ComplaintRepository;
-import bw.org.bocra.portal.complaint.ComplaintDao;
+import bw.org.bocra.portal.complaint.ComplaintVO;
 import bw.org.bocra.portal.document.type.DocumentType;
 import bw.org.bocra.portal.document.type.DocumentTypeRepository;
 import bw.org.bocra.portal.document.type.DocumentTypeVO;
-import bw.org.bocra.portal.licence.Licence;
 import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholder;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
+import bw.org.bocra.portal.licensee.shares.LicenseeShareholderVO;
+import bw.org.bocra.portal.shareholder.Shareholder;
+import bw.org.bocra.portal.shareholder.ShareholderRepository;
+import bw.org.bocra.portal.shareholder.ShareholderVO;
 
 /**
  * @see Document
@@ -36,12 +44,20 @@ import bw.org.bocra.portal.licensee.LicenseeVO;
 public class DocumentDaoImpl
         extends DocumentDaoBase {
 
-    private final ComplaintDao complaintDao;
+    private final ComplaintRepository complaintRepository;
+    private final ComplaintReplyRepository complaintReplyRepository;
+    private final ShareholderRepository shareholderRepository;
+    private final LicenseeShareholderRepository licenseeShareholderRepository;
 
     public DocumentDaoImpl(DocumentTypeRepository documentTypeRepository, LicenseeRepository licenseeRepository,
-            LicenceRepository licenceRepository, DocumentRepository documentRepository, ComplaintDao complaintDao) {
+            LicenceRepository licenceRepository, DocumentRepository documentRepository, ComplaintRepository complaintRepository, 
+            ComplaintReplyRepository complaintReplyRepository, ShareholderRepository shareholderRepository, LicenseeShareholderRepository licenseeShareholderRepository) {
+        
         super(documentTypeRepository, licenseeRepository, licenceRepository, documentRepository);
-        this.complaintDao = complaintDao;
+        this.shareholderRepository = shareholderRepository;
+        this.complaintRepository = complaintRepository;
+        this.complaintReplyRepository = complaintReplyRepository;
+        this.licenseeShareholderRepository = licenseeShareholderRepository;
     }
 
     /**
@@ -64,7 +80,7 @@ public class DocumentDaoImpl
         }
 
         if(StringUtils.isNotBlank(criteria.getExtension())) {
-            spec = BocraportalSpecifications.<Document, String>findByAttribute("documentId",
+            spec = BocraportalSpecifications.<Document, String>findByAttribute("extension",
                 criteria.getExtension());
         }
 
@@ -74,7 +90,7 @@ public class DocumentDaoImpl
         }
 
         if(criteria.getMetadataTargetId() != null) {
-            spec = BocraportalSpecifications.<Document, Long>findByAttribute("metadataTarget",
+            spec = BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId",
                 criteria.getMetadataTargetId());
         }
 
@@ -89,15 +105,84 @@ public class DocumentDaoImpl
             Document source,
             DocumentVO target) {
         // TODO verify behavior of toDocumentVO
+        super.toDocumentVO(source, target);
 
-        target.setId(source.getId());
-        target.setCreatedBy(source.getCreatedBy());
-        target.setUpdatedBy(source.getUpdatedBy());
-        target.setCreatedDate(source.getCreatedDate());
-        target.setUpdatedDate(source.getUpdatedDate());
-        target.setDocumentName(source.getDocumentName());
-        target.setFile(source.getFile());
-        target.setDocumentId(source.getDocumentId());
+        target.setFile(null);
+
+        if(source.getMetadataTargetId() != null) {
+            if(source.getMetadataTarget() == DocumentMetadataTarget.LICENCE) {
+    
+                target.setMetadataTarget(DocumentMetadataTarget.LICENCE);
+
+                LicenceVO vo = licenceDao.toLicenceVO(licenceDao.get(source.getMetadataTargetId()));
+                vo.setDocuments(null);
+                vo.getLicenceType().setForms(null);
+                vo.getLicenceType().setLicences(null);
+
+                vo.getLicensee().setDocuments(null);
+                vo.getLicensee().setForms(null);
+
+                target.setLicence(vo);
+
+            } else if(source.getMetadataTarget() == DocumentMetadataTarget.LICENSEE) {
+    
+                target.setMetadataTarget(DocumentMetadataTarget.LICENSEE);
+
+                Licensee lic = licenseeRepository.getReferenceById(source.getMetadataTargetId());
+                target.setLicensee(getLicenseeVO(lic));
+
+            } else if(source.getMetadataTarget() == DocumentMetadataTarget.SHAREHOLDER) {
+    
+                target.setMetadataTarget(DocumentMetadataTarget.SHAREHOLDER);
+                Shareholder sharer = shareholderRepository.getReferenceById(source.getMetadataTargetId());
+                
+                target.setShareholder(getShareholderVO(sharer));
+
+            } else if(source.getMetadataTarget() == DocumentMetadataTarget.LICENSEE_SHAREHOLDER) {
+    
+                target.setMetadataTarget(DocumentMetadataTarget.LICENSEE_SHAREHOLDER);
+
+                LicenseeShareholder holder = licenseeShareholderRepository.getReferenceById(source.getMetadataTargetId());
+                LicenseeShareholderVO vo = new LicenseeShareholderVO();
+                vo.setId(holder.getId());
+                vo.setNumberOfShares(holder.getNumberOfShares());
+                vo.setLicensee(getLicenseeVO(holder.getLicensee()));
+                vo.setShareholder(getShareholderVO(holder.getShareholder()));
+                
+                target.setLicenseeShareholder(vo);
+
+            } else if(source.getMetadataTarget() == DocumentMetadataTarget.COMPLAINT) {
+    
+                target.setMetadataTarget(DocumentMetadataTarget.COMPLAINT);
+
+                Complaint complaint = complaintRepository.getReferenceById(source.getMetadataTargetId());
+                ComplaintVO vo = new ComplaintVO();
+                vo.setId(complaint.getId());
+                vo.setAssignedTo(complaint.getAssignedTo());
+                vo.setComplaintId(complaint.getComplaintId());
+                vo.setDetails(complaint.getDetails());
+                vo.setEmail(complaint.getEmail());
+                vo.setFirstName(complaint.getFirstName());
+                vo.setSurname(complaint.getSurname());
+                vo.setStatus(complaint.getStatus());
+                
+                target.setComplaint(vo);
+
+            } else if(source.getMetadataTarget() == DocumentMetadataTarget.COMPLAINT_REPLY) {
+    
+                target.setMetadataTarget(DocumentMetadataTarget.COMPLAINT_REPLY);
+
+                ComplaintReply reply = complaintReplyRepository.getReferenceById(source.getMetadataTargetId());
+                ComplaintReplyVO vo = new ComplaintReplyVO();
+                vo.setId(reply.getId());
+                vo.setReply(reply.getReply());
+                vo.setReplyUser(reply.getReplyUser());
+                vo.setDate(reply.getDate());
+                
+                target.setComplaintReply(vo);
+
+            }
+        }
 
         if (source.getDocumentType() != null) {
             DocumentTypeVO type = new DocumentTypeVO();
@@ -107,6 +192,27 @@ public class DocumentDaoImpl
 
             target.setDocumentType(type);
         }
+    }
+
+    private ShareholderVO getShareholderVO(Shareholder holder) {
+
+        ShareholderVO vo = new ShareholderVO();
+        vo.setId(holder.getId());
+        vo.setAddress(holder.getAddress());
+        vo.setName(holder.getName());
+        vo.setType(holder.getType());
+
+        return vo;
+    }
+
+    private LicenseeVO getLicenseeVO(Licensee licensee) {
+
+        LicenseeVO vo = new LicenseeVO();
+        vo.setId(licensee.getId());
+        vo.setLicenseeName(licensee.getLicenseeName());
+        vo.setUin(licensee.getUin());
+
+        return vo;
     }
 
     /**
@@ -159,41 +265,36 @@ public class DocumentDaoImpl
             target.setDocumentType(docType);
         }
 
-        // if (source.getLicence() != null && source.getLicence().getId() != null) {
-        //     Licence licence = getLicenceDao().load(source.getLicence().getId());
-        //     target.setLicence(licence);
-        // }
+        if(source.getMetadataTarget() == null || source.getMetadataTargetId() == null) {
+            if(source.getLicence() != null && source.getLicence().getId() != null) {
 
-        // if (source.getLicensee() != null && source.getLicensee().getId() != null) {
-        //     Licensee licensee = getLicenseeDao().load(source.getLicensee().getId());
-        //     target.setLicensee(licensee);
-        // }
+                target.setMetadataTarget(DocumentMetadataTarget.LICENCE);
+                target.setMetadataTargetId(source.getLicence().getId());
 
-        // if (source.getComplaint() != null && source.getComplaint().getId() != null) {
-        //     Complaint complaint = complaintDao.load(source.getComplaint().getId());
-        //     target.setComplaint(complaint);
-        // }
-    }
+            } else if(source.getLicensee() != null && source.getLicensee().getId() != null) {
 
-    @Override
-    protected Collection<Document> handleGetLicenceDocuments(Long licenceId) throws Exception {
-        Specification<Document> spec = null;
+                target.setMetadataTarget(DocumentMetadataTarget.LICENSEE);
+                target.setMetadataTargetId(source.getLicensee().getId());
 
-        // if (licenceId != null) {
-        //     spec = DocumentSpecifications.findByLicenceId(licenceId);
-        // }
+            } else if(source.getLicenseeShareholder() != null && source.getLicenseeShareholder().getId() != null) {
 
-        return documentRepository.findAll(spec);
-    }
+                target.setMetadataTarget(DocumentMetadataTarget.LICENSEE_SHAREHOLDER);
+                target.setMetadataTargetId(source.getLicenseeShareholder().getId());
 
-    @Override
-    protected Collection<Document> handleGetLicenseeDocuments(Long licenseeId) throws Exception {
-        Specification<Document> spec = null;
+            } else if(source.getShareholder() != null && source.getShareholder().getId() != null) {
 
-        // if (licenseeId != null) {
-        //     spec = DocumentSpecifications.findByLicenseeId(licenseeId);
-        // }
+                target.setMetadataTarget(DocumentMetadataTarget.SHAREHOLDER);
+                target.setMetadataTargetId(source.getShareholder().getId());
 
-        return documentRepository.findAll(spec);
+            } else if(source.getComplaint() != null && source.getComplaint().getId() != null) {
+
+                target.setMetadataTarget(DocumentMetadataTarget.COMPLAINT);
+                target.setMetadataTargetId(source.getComplaint().getId());
+
+            } else if(source.getComplaintReply() != null && source.getComplaintReply().getId() != null) {
+                target.setMetadataTarget(DocumentMetadataTarget.COMPLAINT_REPLY);
+                target.setMetadataTargetId(source.getComplaintReply().getId());
+            }
+        }
     }
 }

@@ -6,6 +6,8 @@ import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import { ShareholderState } from '@app/store/shareholder/shareholder.state';
 import * as ShareholderSelectors from '@app/store/shareholder/shareholder.selectors';
 import * as ShareholderActions from '@app/store/shareholder/shareholder.actions';
+import * as DocumentActions from '@app/store/document/document.actions';
+import * as DocumentSelectors from '@app/store/document/document.selectors';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -13,6 +15,8 @@ import { select } from '@ngrx/store';
 import { SelectItem } from '@app/utils/select-item';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 import { FormGroup } from '@angular/forms';
+import { saveAs } from 'file-saver';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-shares',
@@ -21,12 +25,15 @@ import { FormGroup } from '@angular/forms';
 })
 export class EditSharesComponentImpl extends EditSharesComponent {
 
+  file$: Observable<Blob>;
+  
   constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
     super(data, injector);
     this.licenseeLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.licenseeShareholders$ = this.store.pipe(select(ShareholderSelectors.selectShareholders));
     this.licenseeLicenseeBackingList = [];
     this.licenseeShareholderBackingList = [];
+    this.file$ = this.store.pipe(select(DocumentSelectors.selectFile));
   }
 
   override beforeOnInit(form: EditSharesVarsForm): EditSharesVarsForm {
@@ -80,5 +87,24 @@ export class EditSharesComponentImpl extends EditSharesComponent {
       metadataTarget: [value?.metadataTarget],
       metadataTargetId: [value?.metadataTargetId],
     })
+  }
+
+  fileDownload(documentId: number, documentName: string) {
+
+    this.store.dispatch(
+      DocumentActions.downloadFile({
+        documentId: documentId,
+        loading: true,
+        loaderMessage: 'Downloading document ...'
+      })
+    );
+
+    this.file$.subscribe((file: any) => {
+      if(file) {
+        let blob:any = file as Blob;
+        const url = window.URL.createObjectURL(blob);
+        saveAs(blob, documentName);
+      }
+    });
   }
 }

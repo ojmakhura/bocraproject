@@ -15,10 +15,13 @@ import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.keycloak.representations.AccessToken;
 import org.postgresql.util.PSQLException;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -86,6 +89,8 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
                     || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(String.format("Document with id %d not found.", id));
+            } else if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
@@ -101,7 +106,10 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             logger.debug("Displays all document");
             return ResponseEntity.status(HttpStatus.OK).body(documentService.getAll());
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage()); 
+            if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage()); 
+            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("An unknown error has occured. Please contact the system administrator.");
         }
@@ -115,17 +123,20 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             return ResponseEntity.status(HttpStatus.OK).body(documentService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             logger.error(e.getMessage());
+            if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
     @Override
-    public ResponseEntity<?> handleRemove(Long id) {
+    public ResponseEntity<?> handleRemove(String documentId) {
         try {
-            logger.debug("Deletes document by ID " + id);
+            logger.debug("Deletes document by ID " + documentId);
 
-            if (documentService.remove(id)) {
+            if (documentService.remove(documentId)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Document successfully deleted.");
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete document");
@@ -136,11 +147,13 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             logger.error(e.getMessage());
 
             if (e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete document with id " + id);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete document with id " + documentId);
+            } else if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
             }
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Unknown error encountered when deleting document with id " + id);
+                    .body("Unknown error encountered when deleting document with id " + documentId);
         }
     }
 
@@ -210,6 +223,8 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
                                 .body("The document type value is missing.");
                     }
 
+                } else if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                    return ResponseEntity.badRequest().body(e.getMessage());
                 }
 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -230,27 +245,39 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(DocumentCriteria criteria) {
         try {
+            System.out.println(criteria);
+            if(criteria == null) {
+                return ResponseEntity.status(HttpStatus.OK).body(documentService.getAll());
+            }
+
             logger.debug("Searches Document by " + criteria);
             return ResponseEntity.status(HttpStatus.OK).body(documentService.search(criteria));
         } catch (Exception e) {
             logger.error(e.getMessage());
+            if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
     @Override
-    public ResponseEntity<?> handleDownloadFile(Long id) {
+    public ResponseEntity<?> handleDownloadFile(String documentId) {
         try {
-            logger.debug("Downloads File with " + id);
-            byte[] file = documentService.downloadFile(id);
-
+            logger.debug("Downloads File with " + documentId);
+            DocumentVO file = documentService.findByDocumentId(documentId);
+        
             return ResponseEntity.status(HttpStatus.OK)
-                    .contentType(MediaType.MULTIPART_MIXED)
-                    .body(file);
+                    .contentType(MediaType.parseMediaType(file.getContentType()))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getDocumentName() + "\"")
+                    .body(new ByteArrayResource(documentService.downloadFile(documentId)));
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -260,6 +287,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
         try {
             logger.debug("Upload Complaint Document with name : " + fileName);
             AccessToken token = keycloakService.getSecurityContext().getToken();
+            System.out.println(file.getContentType());
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
             document.setCreatedDate(LocalDateTime.now());
@@ -267,6 +295,8 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             document.setMetadataTarget(metadataTarget);
             document.setMetadataTargetId(metadataTargetId);
             document.setSize(file.getSize());
+            document.setContentType(file.getContentType());
+                                    
             DocumentTypeVO documentType = new DocumentTypeVO();
             documentType.setId(documentTypeId);
 
@@ -333,47 +363,92 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-                e.printStackTrace();
+            e.printStackTrace();
+            if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error occured when uploading a file.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleFindByDocumentIds(Set<String> documentIds) {
+                
+        try {
+            
+            Collection<DocumentVO> docs = documentService.findByDocumentIds(documentIds);
 
-        Collection<DocumentVO> docs = documentService.findByDocumentIds(documentIds);
+            if(CollectionUtils.isEmpty(docs)) {
+                return ResponseEntity.badRequest().body("No documents found.");
+            }
 
-        if(CollectionUtils.isEmpty(docs)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No documents found.");
+            return ResponseEntity.ok(docs);
+        } catch(Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error occured. Please contact the site administrator.");
+
         }
-
-        return ResponseEntity.ok(docs);
     }
 
     @Override
     public ResponseEntity<?> handleFindByIds(Set<Long> ids) {
-        
-        Collection<DocumentVO> docs = documentService.findByIds(ids);
+                
+        try {
+            
+            Collection<DocumentVO> docs = documentService.findByIds(ids);
 
-        if(CollectionUtils.isEmpty(docs)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No documents found.");
+            if(CollectionUtils.isEmpty(docs)) {
+                return ResponseEntity.badRequest().body("No documents found.");
+            }
+
+            return ResponseEntity.ok(docs);
+        } catch(Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error occured. Please contact the site administrator.");
+
         }
-
-        return ResponseEntity.ok(docs);
     }
 
     @Override
     public ResponseEntity<?> handleFindDocumentsByMetadata(DocumentMetadataTarget metadataTarget,
             Long metadataTargetId) {
-        
-        DocumentCriteria criteria = new DocumentCriteria();
-        criteria.setMetadataTarget(metadataTarget);
-        return this.search(criteria);
+                
+        try {
+            DocumentCriteria criteria = new DocumentCriteria();
+            criteria.setMetadataTarget(metadataTarget);
+            return this.search(criteria);
+        } catch(Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error occured. Please contact the site administrator.");
+
+        }
     }
 
     @Override
-    public ResponseEntity<?> handleUploadComplaintReplyDocument(Long complaintReplyId, MultipartFile file) {
-        // TODO Auto-generated method stub
-        return null;
+    public ResponseEntity<?> handleFindByDocumentId(String documentId) {
+        
+        try {
+            return ResponseEntity.ok().body(documentService.findByDocumentId(documentId));
+        } catch(Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error occured. Please contact the site administrator.");
+
+        }
     }
 }

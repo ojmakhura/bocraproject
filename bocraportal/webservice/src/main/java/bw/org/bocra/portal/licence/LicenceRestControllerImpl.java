@@ -240,41 +240,4 @@ public class LicenceRestControllerImpl extends LicenceRestControllerBase {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
-
-    @Override
-    public ResponseEntity<?> handleAddDocument(Long id, Long documentTypeId, MultipartFile file, String fileName) {
-        try {
-            logger.debug("Add Document by Id " + id + ", document type Id" + documentTypeId + ", file" + file
-                    + " and file name" + fileName);
-            AccessToken token = keycloakService.getSecurityContext().getToken();
-            DocumentVO document = new DocumentVO();
-            document.setCreatedBy(token.getPreferredUsername());
-            document.setCreatedDate(LocalDateTime.now());
-            document.setFile(file.getBytes());
-            document.setDocumentName(fileName);
-
-            LicenceVO licence = new LicenceVO();
-            licence.setId(id);
-            document.setLicence(licence);
-
-            DocumentTypeVO docType = new DocumentTypeVO();
-            docType.setId(documentTypeId);
-
-            document.setDocumentType(docType);
-            document = this.documentService.save(document);
-            ResponseEntity<?> response;
-
-            if (document != null && document.getId() != null) {
-                response = ResponseEntity.status(HttpStatus.OK).body(document);
-            } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
 }

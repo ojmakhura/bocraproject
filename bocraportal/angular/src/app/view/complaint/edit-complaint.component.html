@@ -3,7 +3,7 @@
 	<div class="card-body">
 		<form [formGroup]="editComplaintForm">
 
-			<section>
+			<section *ngIf="loggedIn">
 				<div class="text-end">
 					<button type="button" (click)="editComplaintSearch()" class="btn btn-primary">
 						<span translate>search</span>
@@ -42,14 +42,16 @@
 				<div class="mb-3">
 					<label id="complaintComplaintId_label" class="col-sm-2 col-form-label"
 						for="complaintComplaintId"><span translate>complaint.id</span></label>
-					<!-- <input type="text" id="complaintComplaintId" class="form-control" name="complaintId"
-						formControlName="complaintId" /> -->
-					<label for="complaintId_label_value">{{complaint?.complaintId}}</label>
+					<input type="text" id="complaintComplaintId" class="form-control" name="complaintId"
+						formControlName="complaintId" *ngIf="!complaintId; else showLabelValue" (blur)="complaintIdEntered()"/>
+					<ng-template #showLabelValue>
+						<label for="complaintId_label_value">{{complaint?.complaintId}}</label>
+					</ng-template>
 				</div>
 				<fieldset formGroupName="licensee" class="form-group border p-3">
 					<div class="row mb-3">
 						<label id="complaintLicensee_label" for="complaintLicenseeLicenseeName"
-							class="col-form-label"><span translate>licensee.name</span>*</label>
+							class="col-form-label"><span translate>licensee</span>*</label>
 						<div class="col-sm-12">
 							<div class="input-group">
 								<input type="text" readonly class="form-control" id="complaintLicenseeLicenseeName"
@@ -158,8 +160,8 @@
 					<label id="complaintAssignedTo_label" class="col-sm-2 col-form-label"
 						for="complaintAssignedTo"><span translate>assigned.to</span></label>
 					<input type="text" id="complaintAssignedTo" class="form-control" name="assignedTo"
-						formControlName="assignedTo" *ngIf="loggedIn; else notLoggedIn" />
-					<ng-template #notLoggedIn>
+						formControlName="assignedTo" *ngIf="loggedIn; else notLoggedIn2" />
+					<ng-template #notLoggedIn2>
 						<label> {{ complaintAssignedTo }} </label>
 					</ng-template>
 				</div>
@@ -216,6 +218,9 @@
 											<button type="button" (click)="deleteFromComplaintDocuments(i)"
 												class="btn btn-outline-primary">
 												<mat-icon>delete</mat-icon>
+											</button>
+											<button type="button" (click)="downloadFile(row?.documentId, row?.documentName)" class="btn btn-primary">
+												<mat-icon>file_download</mat-icon>
 											</button>
 											<!-- <button type="button" color="accent" (click)="doEditComplaintDocuments(row)"
 											class="btn btn-info">
