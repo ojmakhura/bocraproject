@@ -15,51 +15,35 @@ export class LicenseeFormRestController {
     }
 
     public create(licenseeId: number | any , formId: number | any ): Observable<LicenseeFormVO | any> {
-
         return this.http.post<LicenseeFormVO | any>(`${this.path}?licenseeId=${licenseeId}&formId=${formId}`, {});
-
     }
 
     public findByForm(formId: number | any ): Observable<LicenseeFormVO[] | any[]> {
-
-        return this.http.get<LicenseeFormVO[] | any[]>(`${this.path}/${formId}/formId/${formId}`);
-
+        return this.http.get<LicenseeFormVO[] | any[]>(`${this.path}/find/f?formId=${formId}`, {});
     }
 
     public findById(id: number | any ): Observable<LicenseeFormVO | any> {
-
-        return this.http.get<LicenseeFormVO | any>(`${this.path}/${id}`);
-
+        return this.http.get<LicenseeFormVO | any>(`${this.path}/${id}`, {});
     }
 
     public findByLicensee(licenseeId: number | any ): Observable<LicenseeFormVO[] | any[]> {
-
-        return this.http.get<LicenseeFormVO[] | any[]>(`${this.path}/${licenseeId}`);
-
+        return this.http.get<LicenseeFormVO[] | any[]>(`${this.path}/find/l?licenseeId=${licenseeId}`, {});
     }
 
     public getAll(): Observable<LicenseeFormVO[] | any[]> {
-
         return this.http.get<LicenseeFormVO[] | any[]>(`${this.path}/all`);
-
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(`${this.path}/${id}`);
-
+        return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
     }
 
     public updateForm(id: number | any , formId: number | any ): Observable<LicenseeFormVO | any> {
-
-        return this.http.patch<LicenseeFormVO | any>(`${this.path}/${id}/${formId}`, {});
-
+        return this.http.patch<LicenseeFormVO | any>(`${this.path}/update/f?id=${id}&formId=${formId}`, {});
     }
 
     public updateLicensee(id: number | any , licenseeId: number | any ): Observable<LicenseeFormVO | any> {
-
-        return this.http.patch<LicenseeFormVO | any>(`${this.path}/${id}/${licenseeId}`, {});
-
+        return this.http.patch<LicenseeFormVO | any>(`${this.path}/update/l?id=${id}&licenseeId=${licenseeId}`, {});
     }
 
 }

@@ -23,11 +23,11 @@ export class LicenseeShareholderRestController {
     }
 
     public findByLicensee(licenseeId: number | any ): Observable<LicenseeShareholderVO[] | any[]> {
-        return this.http.get<LicenseeShareholderVO[] | any[]>(`${this.path}/${licenseeId}`, {});
+        return this.http.get<LicenseeShareholderVO[] | any[]>(`${this.path}/find/l?licenseeId=${licenseeId}`, {});
     }
 
     public findByShareholder(shareholderId: number | any ): Observable<LicenseeShareholderVO[] | any[]> {
-        return this.http.get<LicenseeShareholderVO[] | any[]>(`${this.path}/${shareholderId}`, {});
+        return this.http.get<LicenseeShareholderVO[] | any[]>(`${this.path}/find/s?shareholderId=${shareholderId}`, {});
     }
 
     public getAll(): Observable<LicenseeShareholderVO[] | any[]> {
@@ -39,11 +39,15 @@ export class LicenseeShareholderRestController {
     }
 
     public updateLicensee(id: number | any , licenseeId: number | any ): Observable<LicenseeShareholderVO | any> {
-        return this.http.patch<LicenseeShareholderVO | any>(`${this.path}/${id}/${licenseeId}`, {id: id});
+        return this.http.patch<LicenseeShareholderVO | any>(`${this.path}/update/l?id=${id}&licenseeId=${licenseeId}`, {});
+    }
+
+    public updateNumberOfShares(id: number | any , numberOfShares: number | any ): Observable<LicenseeShareholderVO | any> {
+        return this.http.patch<LicenseeShareholderVO | any>(`${this.path}/update/n?id=${id}&numberOfShares=${numberOfShares}`, {});
     }
 
     public updateShareholder(id: number | any , shareholderId: number | any ): Observable<LicenseeShareholderVO | any> {
-        return this.http.patch<LicenseeShareholderVO | any>(`${this.path}/${id}/${shareholderId}`, {});
+        return this.http.patch<LicenseeShareholderVO | any>(`${this.path}/update/s?id=${id}&shareholderId=${shareholderId}`, {});
     }
 
 }
