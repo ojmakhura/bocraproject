@@ -268,4 +268,24 @@ public class LicenseeShareholderRestControllerImpl extends LicenseeShareholderRe
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleUpdateNumberOfShares(Long id, Integer numberOfShares) {
+        try {
+            logger.debug("Update licensee shareholder by Id " + id + " and number of shares " + numberOfShares);
+            Optional<?> data = Optional.of(licenseeShareholderService.updateNumberOfShares(id, numberOfShares));
+            ResponseEntity<?> response;
+
+            if(data.isPresent()) {
+                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the licensee id.");
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+        }
+    }
 }

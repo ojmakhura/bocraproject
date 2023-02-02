@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LicenseeFormVO } from '@app/model/bw/org/bocra/portal/licensee/form/licensee-form-vo';
-import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
+import { LicenseeSectorVO } from '@app/model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -15,52 +15,36 @@ export class LicenseeSectorRestController {
     constructor(private http: HttpClient) {
     }
 
-    public create(licenseeId: number | any , sectorId: number | any ): Observable<LicenseeFormVO | any> {
-
-        return this.http.post<LicenseeFormVO | any>(`${this.path}?licenseeId=${licenseeId}&sectorId=${sectorId}`, {});
-
+    public create(licenseeId: number | any , sectorId: number | any ): Observable<LicenseeSectorVO | any> {
+        return this.http.post<LicenseeSectorVO | any>(`${this.path}?licenseeId=${licenseeId}&sectorId=${sectorId}`, {});
     }
 
-    public findById(id: number | any ): Observable<FormVO | any> {
-
-        return this.http.get<FormVO | any>(`${this.path}/${id}`);
-
+    public findById(id: number | any ): Observable<LicenseeSectorVO | any> {
+        return this.http.get<LicenseeSectorVO | any>(`${this.path}/${id}`, {});
     }
 
-    public findByLicensee(licenseeId: number | any ): Observable<LicenseeFormVO[] | any[]> {
-
-        return this.http.get<LicenseeFormVO[] | any[]>(`${this.path}/${licenseeId}`);
-
+    public findByLicensee(licenseeId: number | any ): Observable<LicenseeSectorVO[] | any[]> {
+        return this.http.get<LicenseeSectorVO[] | any[]>(`${this.path}/find/l?licenseeId=${licenseeId}`, {});
     }
 
-    public findBySector(sectorId: number | any ): Observable<FormVO[] | any[]> {
-
-        return this.http.get<FormVO[] | any[]>(`${this.path}/${sectorId}/sectorId/${sectorId}`);
-
+    public findBySector(sectorId: number | any ): Observable<LicenseeSectorVO[] | any[]> {
+        return this.http.get<LicenseeSectorVO[] | any[]>(`${this.path}/find/s?sectorId=${sectorId}`, {});
     }
 
     public getAll(): Observable<LicenseeFormVO[] | any[]> {
-
         return this.http.get<LicenseeFormVO[] | any[]>(`${this.path}/all`);
-
     }
 
     public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(`${this.path}/${id}`);
-
+        return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
     }
 
-    public updateLicensee(id: number | any , licenseeId: number | any ): Observable<LicenseeFormVO | any> {
-
-        return this.http.patch<LicenseeFormVO | any>(`${this.path}/${id}/${licenseeId}`, {});
-
+    public updateLicensee(id: number | any , licenseeId: number | any ): Observable<LicenseeSectorVO | any> {
+        return this.http.patch<LicenseeSectorVO | any>(`${this.path}/update/l/licenseeId/${licenseeId}`, {id: id});
     }
 
-    public updateSector(id: number | any , sectorId: number | any ): Observable<LicenseeFormVO | any> {
-
-        return this.http.patch<LicenseeFormVO | any>(`${this.path}/${id}/${sectorId}`, {});
-
+    public updateSector(id: number | any , sectorId: number | any ): Observable<LicenseeSectorVO | any> {
+        return this.http.patch<LicenseeSectorVO | any>(`${this.path}/update/s/id/${id}/sectorId/${sectorId}`, {});
     }
 
 }
