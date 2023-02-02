@@ -133,7 +133,7 @@
 											<button type="button" color="accent" (click)="deleteFromShareholderShares(i)" class="btn btn-outline-primary">
 												<mat-icon>delete</mat-icon>
 											</button>
-											<button type="button" color="accent" (click)="doEditShareholderShares(row)" class="btn btn-info" *ngIf="false">
+											<button type="button" color="accent" (click)="doEditShareholderShares(row)" class="btn btn-outline-primary">
 												<mat-icon>edit</mat-icon>
 											</button>
 										</div>
@@ -145,11 +145,11 @@
 		            			</ng-container>
 		            			<ng-container matColumnDef="licensee.uin">
 		            				<mat-header-cell *matHeaderCellDef translate>licensee.uin</mat-header-cell>
-		                            <mat-cell *matCellDef="let row"> {{ row?.licenseeUin }} </mat-cell>
+		                            <mat-cell *matCellDef="let row"> {{ row?.licensee.uin }} </mat-cell>
 		            			</ng-container>
 		            			<ng-container matColumnDef="licensee.licenseeName">
 		            				<mat-header-cell *matHeaderCellDef translate>licensee.name</mat-header-cell>
-		                            <mat-cell *matCellDef="let row"> {{ row?.licenseeName }} </mat-cell>
+		                            <mat-cell *matCellDef="let row"> {{ row?.licensee.licenseeName }} </mat-cell>
 		            			</ng-container>
 		            			<ng-container matColumnDef="numberOfShares">
 		            				<mat-header-cell *matHeaderCellDef translate>number.of.shares</mat-header-cell>

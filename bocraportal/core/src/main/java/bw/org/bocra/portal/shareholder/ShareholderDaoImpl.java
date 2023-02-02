@@ -56,7 +56,8 @@ public class ShareholderDaoImpl
         // TODO verify behavior of toShareholderVO
         super.toShareholderVO(source, target);
         if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByIdIn(source.getDocumentIds()));
+            Collection<DocumentVO> docs = documentDao
+                    .toDocumentVOCollection(documentRepository.findByIdIn(source.getDocumentIds()));
             docs = docs.stream().map(d -> {
                 d.setFile(null);
                 return d;
@@ -74,9 +75,16 @@ public class ShareholderDaoImpl
             ls.getLicensee().setUin(holder.getLicensee().getUin());
             ls.getLicensee().setLicenseeName(holder.getLicensee().getLicenseeName());
             ls.setNumberOfShares(holder.getNumberOfShares());
-
+            if (CollectionUtils.isNotEmpty(holder.getDocumentIds())) {
+                Collection<DocumentVO> docs = documentDao
+                        .toDocumentVOCollection(documentRepository.findByIdIn(holder.getDocumentIds()));
+                docs = docs.stream().map(d -> {
+                    d.setFile(null);
+                    return d;
+                }).collect(Collectors.toSet());
+                ls.setDocuments(docs);
+            }
             target.getShares().add(ls);
-
         }
     }
 
@@ -129,14 +137,14 @@ public class ShareholderDaoImpl
         // TODO verify behavior of shareholderVOToEntity
         super.shareholderVOToEntity(source, target, copyIfNull);
         // if(CollectionUtils.isNotEmpty(source.getShares())) {
-        //     source.getShares().forEach(share -> {
-        //         if(share.getId() != null) {
-                    
-        //         }
-        //     });
+        // source.getShares().forEach(share -> {
+        // if(share.getId() != null) {
+
+        // }
+        // });
         // }
 
-        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
+        if (CollectionUtils.isNotEmpty(source.getDocuments())) {
             Collection<Long> ids = source.getDocuments().stream().map(doc -> doc.getId()).collect(Collectors.toSet());
             target.setDocumentIds(ids);
         }

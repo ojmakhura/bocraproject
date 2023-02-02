@@ -35,7 +35,7 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
   shareholderShare$: Observable<LicenseeShareholderVO>;
   licenseeShareholderId: any;
   file$: Observable<Blob>;
-  
+
   constructor(private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
@@ -175,7 +175,7 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
 
   override  handleDeleteFromShareholderDocuments(documents: DocumentVO): void {
     console.log(documents);
-    if(documents && confirm('Are you sure you want to delete the licensee document')){
+    if (documents && confirm('Are you sure you want to delete the licensee document')) {
       this.store.dispatch(
         DocumentActions.remove({
           id: documents.id,
@@ -188,15 +188,28 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
 
   override afterEditShareholderAddShareholder(form: EditShareholderAddShareholderForm, dialogData: any): void {
     if (dialogData) {
-      this.store.dispatch(
-        LicenseeShareholderActions.create({
-          licenseeId: dialogData.licensee.licensee.id,
-          shareholderId: this.shareholderId,
-          numberOfShares: dialogData.licensee.numberOfShares,
-          loading: true,
-          loaderMessage: 'Creating licensee shareholder ...'
-        })
-      );
+      if(dialogData.licensee.id === null){
+        this.store.dispatch(
+          LicenseeShareholderActions.create({
+            licenseeId: dialogData.licensee.licensee.id,
+            shareholderId: this.shareholderId,
+            numberOfShares: dialogData.licensee.numberOfShares,
+            loading: true,
+            loaderMessage: 'Creating licensee shareholder ...'
+          })
+        );
+      }else {
+        if(dialogData.licensee.id){
+          this.store.dispatch(
+            LicenseeShareholderActions.updateLicensee({
+              id: dialogData.licensee.id,
+              licenseeId: dialogData.licensee.licensee.id,
+              loading: true,
+              loaderMessage: 'Updating licensee shareholder'
+            })
+          );
+        }
+      }
 
       this.shareholderShare$.subscribe(ls => {
         if (ls?.id) {
@@ -223,8 +236,7 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
   }
 
   override handleDeleteFromShareholderShares(shares: LicenseeShareholderVO): void {
-    console.log(shares);
-    if(shares && confirm('Are you sure you want to delete the licensee shareholder?')){
+    if (shares && confirm('Are you sure you want to delete the licensee shareholder?')) {
       this.store.dispatch(
         LicenseeShareholderActions.remove({
           id: shares.id,
@@ -256,13 +268,13 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
   override createLicenseeShareholderVOGroup(value: LicenseeShareholderVO): FormGroup {
     return this.formBuilder.group({
       id: [value?.id],
-      licenseeUin: [value?.licensee?.uin],
-      licenseeName: [value?.licensee?.licenseeName],
+      licensee: [value?.licensee],
       numberOfShares: [value?.numberOfShares],
+      documents: [value?.documents]
     });
   }
 
-  
+
   fileDownload(documentId: number, documentName: string) {
 
     this.store.dispatch(
@@ -274,11 +286,17 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
     );
 
     this.file$.subscribe((file: any) => {
-      if(file) {
-        let blob:any = file as Blob;
+      if (file) {
+        let blob: any = file as Blob;
         const url = window.URL.createObjectURL(blob);
         saveAs(blob, documentName);
       }
     });
+  }
+
+  override doEditShareholderShares(shares: LicenseeShareholderVO) {
+    this.useCaseScope.queryParams['licensee'] = shares;
+    this.useCaseScope.pageVariables['licensee'] = shares;
+    this.editShareholderAddShareholder();
   }
 }

@@ -4,7 +4,7 @@
 		<form [formGroup]="editComplaintForm">
 
 			<section *ngIf="loggedIn">
-				<div class="text-end">
+				<div class="text-end mb-3">
 					<button type="button" (click)="editComplaintSearch()" class="btn btn-primary">
 						<span translate>search</span>
 					</button>
@@ -24,7 +24,18 @@
 					{{ message }}
 				</div>
 			</div>
-			<div formGroupName="complaint">
+			<form class="d-flex mb-3" [formGroup]="searchComplaintIdForm" (ngSubmit)="onSubmit()" *ngIf="!loadNew">
+				<input class="form-control me-2" type="search" placeholder="Search by complaint Id" aria-label="Search"
+					formControlName="searchComplaintId">
+				<button class="btn btn-outline-primary" type="submit">LOAD</button>
+			</form>
+
+			<button class="btn btn-outline-primary mb-3" type="submit" (click)="editComplaintFormReset()"
+				(click)="newComplaint()" *ngIf="!loadNew">New Complaint</button>
+			<button class="btn btn-outline-primary mb-3" type="submit" (click)="load()" *ngIf="loadNew">Load
+				Complaint</button>
+
+			<div formGroupName="complaint" *ngIf="loadComplaint || loadNew || complaintId">
 				<div class="mb-3">
 					<label id="complaintStatus_label" class="col-sm-2 col-form-label" for="complaintStatus"><span
 							translate>status</span>*</label>
@@ -43,7 +54,8 @@
 					<label id="complaintComplaintId_label" class="col-sm-2 col-form-label"
 						for="complaintComplaintId"><span translate>complaint.id</span></label>
 					<input type="text" id="complaintComplaintId" class="form-control" name="complaintId"
-						formControlName="complaintId" *ngIf="!complaintId; else showLabelValue" (blur)="complaintIdEntered()"/>
+						formControlName="complaintId" *ngIf="!complaintId; else showLabelValue"
+						(blur)="complaintIdEntered()" />
 					<ng-template #showLabelValue>
 						<label for="complaintId_label_value">{{complaint?.complaintId}}</label>
 					</ng-template>
@@ -148,7 +160,8 @@
 				<div class="mb-3">
 					<label id="complaintDetails_label" class="col-sm-2 col-form-label" for="complaintDetails"><span
 							translate>details</span>*</label>
-					<textarea id="complaintDetails" class="form-control" formControlName="details" required rows="6"></textarea>
+					<textarea id="complaintDetails" class="form-control" formControlName="details" required
+						rows="6"></textarea>
 					<div *ngIf="editComplaintForm.invalid && complaintDetailsControl.invalid && (complaintDetailsControl.dirty || complaintDetailsControl.touched)"
 						class="alert alert-danger" role="alert">
 						<div *ngIf="complaintDetailsControl.errors['required']">
@@ -159,12 +172,44 @@
 				<div class="mb-3">
 					<label id="complaintAssignedTo_label" class="col-sm-2 col-form-label"
 						for="complaintAssignedTo"><span translate>assigned.to</span></label>
-					<input type="text" id="complaintAssignedTo" class="form-control" name="assignedTo"
-						formControlName="assignedTo" *ngIf="loggedIn; else notLoggedIn2" />
+					<div class="input-group">
+						<input type="text" readonly class="form-control" id="complaintComplaintTypeTypeName"
+							value="{{ complaintComplaintType?.typeName }}" disabled>
+							<input type="text" id="complaintAssignedTo" class="form-control" name="assignedTo"
+						formControlName="assignedTo" *ngIf="loggedIn; else notLoggedIn2"/>
+						<button type="button" (click)="licenseeUserAddDialog()"
+							class="btn btn-outline-primary" data-bs-toggle="modal"
+							data-bs-target="#assignUserModal">
+							<mat-icon>add_box</mat-icon>
+						</button>
+						<button type="button" (click)="licenseeUserClear()" class="btn btn-outline-primary">
+							<mat-icon>clear</mat-icon>
+						</button>
+					</div>
 					<ng-template #notLoggedIn2>
 						<label> {{ complaintAssignedTo }} </label>
 					</ng-template>
 				</div>
+
+				<fieldset class="form-group border p-3" formGroupName="complaintType">
+					<div class="row mb-3">
+						<label id="complaintComplaintType_label" class="col-sm-2 col-form-label"
+							for="complaintComplaintType"><span translate>complaint.type</span></label>
+						<div class="input-group">
+							<input type="text" readonly class="form-control" id="complaintComplaintTypeTypeName"
+								value="{{ complaintComplaintType?.typeName }}" disabled>
+							<button type="button" (click)="complaintComplaintTypeAddDialog()"
+								class="btn btn-outline-primary" data-bs-toggle="modal"
+								data-bs-target="#complaintComplaintTypeModal">
+								<mat-icon>add_box</mat-icon>
+							</button>
+							<button type="button" (click)="complaintComplaintTypeClear()"
+								class="btn btn-outline-primary">
+								<mat-icon>clear</mat-icon>
+							</button>
+						</div>
+					</div>
+				</fieldset>
 				<div class="mb-3">
 					<label id="complaintCreatedDate_label" class="col-sm-2 col-form-label"
 						for="complaintCreatedDate"><span translate>created.date</span></label>
@@ -176,14 +221,16 @@
 							<span translate>created.date.required</span>
 						</div>
 					</div> -->
-					<label for="complaintCreatedDate_label_value">{{complaint?.createdDate | date: 'dd MMM yyyy HH:ss'}}</label>
+					<label for="complaintCreatedDate_label_value">{{complaint?.createdDate | date: 'dd MMM yyyy
+						HH:ss'}}</label>
 				</div>
 				<div class="mb-4">
 					<label id="complaintUpdatedDate_label" class="col-sm-2 col-form-label"
 						for="complaintUpdatedDate"><span translate>updated.date</span></label>
 					<!-- <input type="date" id="complaintUpdatedDate" class="form-control" formControlName="updatedDate"
 						navigator="true" showOn="button" /> -->
-					<label for="ComplaintUpdatedDate_label_value">{{complaint?.updatedDate | date: 'dd MMM yyyy HH:ss'}}</label>
+					<label for="ComplaintUpdatedDate_label_value">{{complaint?.updatedDate | date: 'dd MMM yyyy
+						HH:ss'}}</label>
 				</div>
 				<div class="text-end mb-3">
 					<button type="button" (click)="editComplaintSave()" (click)="scroll(target)"
@@ -219,7 +266,9 @@
 												class="btn btn-outline-primary">
 												<mat-icon>delete</mat-icon>
 											</button>
-											<button type="button" (click)="downloadFile(row?.documentId, row?.documentName)" class="btn btn-primary">
+											<button type="button"
+												(click)="downloadFile(row?.documentId, row?.documentName)"
+												class="btn btn-primary">
 												<mat-icon>file_download</mat-icon>
 											</button>
 											<!-- <button type="button" color="accent" (click)="doEditComplaintDocuments(row)"
@@ -538,6 +587,80 @@
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
 				<button type="button" class="btn btn-primary" (click)="addSelectedComplaintComplaintType()"
 					data-bs-dismiss="modal" translate>save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Assign User Modal -->
+<div class="modal fade" id="assignUserModal" tabindex="-1" aria-labelledby="assignUserLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="assignUserAddLabel" translate>
+					action.select
+					<span translate>users</span>
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div>
+					<form>
+						<div>
+							<mat-form-field>
+								<mat-label translate>search</mat-label>
+								<input matInput type="text" [formControl]="licenseeUsersSearchField"
+									id="licenseeUsersSearchField" />
+							</mat-form-field>
+						</div>
+						<button type="button" (click)="licenseeUsersSearch()" class="btn btn-primary">
+							<mat-icon>search</mat-icon>
+						</button>
+					</form>
+				</div>
+				<mat-table matSort [dataSource]="licenseeUsersDataSource" #licenseeUsersModalSort="matSort"
+					class="table table-bordered" style="width: 100%">
+					<ng-container matColumnDef="actions">
+						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+						<mat-cell *matCellDef="let row; let i = index">
+							<mat-radio-group (change)="licenseeUserSelected($event, row)">
+								<mat-radio-button [value]="row"
+									[checked]='licenseeUserSelect.username === row?.id'></mat-radio-button>
+							</mat-radio-group>
+						</mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="userId">
+						<mat-header-cell *matHeaderCellDef translate>user.id</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row.userId }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="username">
+						<mat-header-cell *matHeaderCellDef translate>username</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row.username }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="email">
+						<mat-header-cell *matHeaderCellDef translate>email</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row.email }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="firstName">
+						<mat-header-cell *matHeaderCellDef translate>first.name</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row.firstName }} </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="lastName">
+						<mat-header-cell *matHeaderCellDef translate>last.name</mat-header-cell>
+						<mat-cell *matCellDef="let row"> {{ row.lastName }} </mat-cell>
+					</ng-container>
+					<mat-header-row *matHeaderRowDef="licenseeUsersModalColumns"></mat-header-row>
+					<mat-row *matRowDef="let row; columns: licenseeUsersModalColumns"></mat-row>
+				</mat-table>
+				<mat-paginator #licenseeUsersModalPaginator="matPaginator" [pageSize]="10"
+					[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+				<button type="button" class="btn btn-primary" (click)="addSelectedLicenseeUser()"
+					data-bs-dismiss="modal" translate>
+					save
+				</button>
 			</div>
 		</div>
 	</div>

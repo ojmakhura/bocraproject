@@ -17,6 +17,7 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
 import { FormGroup } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import { Observable } from 'rxjs';
+import { LicenseeShareholderVO } from '@app/model/bw/org/bocra/portal/licensee/shares/licensee-shareholder-vo';
 
 @Component({
   selector: 'app-edit-shares',
@@ -57,6 +58,16 @@ export class EditSharesComponentImpl extends EditSharesComponent {
         this.licenseeShareholderBackingList.push(item);
       });
     });
+
+    if(this.useCaseScope.pageVariables['licensee']){
+      console.log(this.useCaseScope.pageVariables['licensee']);
+      form.licensee = this.useCaseScope.pageVariables['licensee'];
+    }else {
+      if(!form?.licensee){
+        form.licensee = new LicenseeShareholderVO();
+      }
+      form.licensee.form = this.dialogData?.form;
+    }
 
     return form;
   }
@@ -106,5 +117,17 @@ export class EditSharesComponentImpl extends EditSharesComponent {
         saveAs(blob, documentName);
       }
     });
+  }
+
+  override handleDeleteFromLicenseeDocuments(documents: DocumentVO): void {
+    if(documents?.id && confirm('Are you sure you want to delete the licensee shareholder document?')){
+      this.store.dispatch(
+        DocumentActions.remove({
+          id: documents.id,
+          loading: true,
+          loaderMessage: 'Removing document from licensee shareholder ...'
+        })
+      )
+    }
   }
 }
