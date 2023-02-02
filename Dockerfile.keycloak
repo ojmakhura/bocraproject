@@ -14,9 +14,9 @@ WORKDIR /opt/keycloak
 # for demonstration purposes only, please make sure to use proper certificates in production instead
 # RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -keystore conf/server.keystore
 
-COPY --chown=keycloak:root keycloak/bocra /opt/keycloak/themes/bocra
+COPY --chown=keycloak:root keycloak/bocraportal /opt/keycloak/themes/bocraportal
 COPY --chown=keycloak:root keycloak/base /opt/keycloak/themes/base
-COPY --chown=keycloak:root keycloak/bocra/login/resources/css/bocra-login.css /opt/keycloak/themes/bocra/login/resources/css/bocra-login.css
-COPY --chown=keycloak:root keycloak/bocra/account/resources/css/bocra-account.css /opt/keycloak/themes/bocra/account/resources/css/bocra-account.css
+COPY --chown=keycloak:root keycloak/bocraportal/login/resources/css/bocraportal-login.css /opt/keycloak/themes/bocraportal/login/resources/css/bocraportal-login.css
+COPY --chown=keycloak:root keycloak/bocraportal/account/resources/css/bocraportal-account.css /opt/keycloak/themes/bocraportal/account/resources/css/bocraportal-account.css
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]

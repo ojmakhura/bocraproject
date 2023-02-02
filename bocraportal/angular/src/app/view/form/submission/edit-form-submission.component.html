@@ -94,25 +94,6 @@
 						</div>
 					</div>
 				</div>
-				<div formGroupName="licensee">
-					<div class="row mb-3">
-						<label for="formSubmissionLicenseeLicenseeName" class="col-sm-2 col-form-label"
-							translate>licensee</label>
-						<div class="input-group">
-							<input type="text" class="form-control" id="formSubmissionLicenseeLicenseeName"
-								value="{{ formSubmissionLicensee?.licenseeName }}" disabled />
-							<button type="button" (click)="formSubmissionLicenseeAddDialog()"
-								class="btn btn-outline-primary" data-bs-toggle="modal"
-								data-bs-target="#formSubmissionLicenseeModal" *ngIf="addUnrestricted && false">
-								<mat-icon>add_box</mat-icon>
-							</button>
-							<button type="button" (click)="formSubmissionLicenseeClear()"
-								class="btn btn-outline-primary" *ngIf="addUnrestricted && false">
-								<mat-icon>clear</mat-icon>
-							</button>
-						</div>
-					</div>
-				</div>
 				<div formArrayName="sections" *ngIf="isSingleEntry(); else isMultipleEntry">
 					<fieldset class="form-group border p-3" *ngFor="let section of formSubmissionSectionsControl.controls; let i = index"
 						[formGroupName]="i">

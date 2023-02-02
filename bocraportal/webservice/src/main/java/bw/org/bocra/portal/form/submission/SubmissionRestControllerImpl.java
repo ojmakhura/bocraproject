@@ -62,7 +62,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             String message = e.getMessage();
             if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
                     || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Document type with id %d not found.", id));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form submission with id %d not found.", id));
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
@@ -161,10 +161,9 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
                     } else if(message.contains("'formSubmission.period' can not be null")) {
                 
                         message = "The submission period or its id is missing.";
-                    } else if(message.contains("'formSubmission.period' can not be null")) {
-                
-                        message = "The submission period or its id is missing.";
-                    }
+                    } else {
+                        message = "One of the required attributes is null.";
+                    }                    
                 
                 } else if(message.contains("'formSubmission.submissionStatus'")) {
                 
@@ -182,6 +181,8 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
                     if(e.getCause().getMessage().contains("(form_submission_unique)")) {
 
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An submission for this has been already created.");
+                    }  else {
+                        message = "One of the unique attributes is duplicated.";
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
@@ -189,7 +190,9 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
-                    }
+                    } else {
+                        message = "One of the required columns is null.";
+                    } 
                 }
                 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
