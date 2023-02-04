@@ -9,9 +9,9 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  * The default exception thrown for unexpected errors occurring
- * within {@link bw.org.bocra.portal.message.CommunicationMessageService}.
+ * within {@link bw.org.bocra.portal.message.BocraMesssageService}.
  */
-public class CommunicationMessageServiceException
+public class BocraMesssageServiceException
     extends RuntimeException
 {
     /**
@@ -20,40 +20,40 @@ public class CommunicationMessageServiceException
     private static final long serialVersionUID = -3605680077082490048L;
 
     /**
-     * The default constructor for <code>CommunicationMessageServiceException</code>.
+     * The default constructor for <code>BocraMesssageServiceException</code>.
      */
-    public CommunicationMessageServiceException()
+    public BocraMesssageServiceException()
     {
         // Documented empty block
     }
 
     /**
-     * Constructs a new instance of <code>CommunicationMessageServiceException</code>.
+     * Constructs a new instance of <code>BocraMesssageServiceException</code>.
      *
      * @param throwable the parent Throwable
      */
-    public CommunicationMessageServiceException(Throwable throwable)
+    public BocraMesssageServiceException(Throwable throwable)
     {
         super(findRootCause(throwable));
     }
 
     /**
-     * Constructs a new instance of <code>CommunicationMessageServiceException</code>.
+     * Constructs a new instance of <code>BocraMesssageServiceException</code>.
      *
      * @param message the throwable message.
      */
-    public CommunicationMessageServiceException(String message)
+    public BocraMesssageServiceException(String message)
     {
         super(message);
     }
 
     /**
-     * Constructs a new instance of <code>CommunicationMessageServiceException</code>.
+     * Constructs a new instance of <code>BocraMesssageServiceException</code>.
      *
      * @param message the throwable message.
      * @param throwable the parent of this Throwable.
      */
-    public CommunicationMessageServiceException(String message, Throwable throwable)
+    public BocraMesssageServiceException(String message, Throwable throwable)
     {
         super(message, findRootCause(throwable));
     }

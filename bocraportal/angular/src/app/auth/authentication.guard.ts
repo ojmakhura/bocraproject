@@ -34,9 +34,8 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ) {
-
     
-    if(this.excludedUrls.find(url => url === state.url)) {
+    if(state.url.includes('/complaint/edit-complaint') || this.excludedUrls.find(url => url === state.url)) {
       return true;
     }
 

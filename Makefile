@@ -165,13 +165,23 @@ run_module_local: gen_env
 	. ./.env && cd bocraportal/${module} && mvn spring-boot:run
 	
 run_api_local: gen_env
-	. ./.env && cd bocraportal/webservice && mvn spring-boot:run
+ifdef api_secret
+	. ./.env && export KEYCLOAK_API_CLIENT_SECRET=${api_secret} && cd bocraportal/webservice && mvn spring-boot:run
+else
+	@echo 'No api_secret defined. Please run again with `make api_secret=<secret> run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> target`'
+	exit 1
+endif
 
 run_comm_local: gen_env
 	. ./.env && cd bocraportal/comm && mvn spring-boot:run
 
 run_cron_local: gen_env
-	. ./.env && cd bocraportal/cron && mvn spring-boot:run
+ifdef cron_secret
+	. ./.env && export KEYCLOAK_CRON_CLIENT_SECRET=${cron_secret} && cd bocraportal/cron && mvn spring-boot:run
+else
+	@echo 'No cron_secret defined. Please run again with `make cron_secret=<secret> run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> target`'
+	exit 1
+endif
 
 run_cron_native_local: gen_env
 	. ./.env && bocraportal/cron/target/bocraportal-cron

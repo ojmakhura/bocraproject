@@ -45,7 +45,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form with id %ld not found.", id));
             }
@@ -63,7 +63,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
             }
 
             logger.error(message, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -72,12 +72,12 @@ public class FormRestControllerImpl extends FormRestControllerBase {
         try {
             logger.debug("Load all forms");
 
-            return ResponseEntity.status(HttpStatus.OK).body(formService.getAll());
+            return ResponseEntity.ok().body(formService.getAll());
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -85,11 +85,11 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
             logger.debug("Displays all forms of the specified Page number: " + pageNumber + " and Page size: " + pageSize);
-            return ResponseEntity.status(HttpStatus.OK).body(formService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(formService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -101,7 +101,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
             ResponseEntity<?> response;
 
             if(rm) {
-                response = ResponseEntity.status(HttpStatus.OK).body(rm);
+                response = ResponseEntity.ok().body(rm);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the form with id " + id);
             }
@@ -115,7 +115,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete form with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting form with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting form with id " + id);
         }
     }
 
@@ -127,7 +127,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the form.");
             }
@@ -163,36 +163,36 @@ public class FormRestControllerImpl extends FormRestControllerBase {
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(code)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A form with this code has been already created.");
+                        return ResponseEntity.badRequest().body("A form with this code has been already created.");
                     } else if(e.getCause().getMessage().contains("(form_name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A form with this name has been already created.");
+                        return ResponseEntity.badRequest().body("A form with this name has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -200,7 +200,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     public ResponseEntity<?> handleSearch(FormCriteria criteria) {
         try{
             logger.debug("Search Form by criteria"+criteria);
-            return ResponseEntity.status(HttpStatus.OK).body(formService.search(criteria));
+            return ResponseEntity.ok().body(formService.search(criteria));
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -213,7 +213,7 @@ public class FormRestControllerImpl extends FormRestControllerBase {
     public ResponseEntity<?> handleGetFormsByPeriods(Set<Long> periodConfigIds) {
         try{
     
-            return ResponseEntity.status(HttpStatus.OK).body(formService.getFormsByPeriods(periodConfigIds));
+            return ResponseEntity.ok().body(formService.getFormsByPeriods(periodConfigIds));
             
         } catch (Exception e) {
             e.printStackTrace();

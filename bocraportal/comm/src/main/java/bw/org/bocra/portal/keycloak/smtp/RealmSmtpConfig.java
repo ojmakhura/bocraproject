@@ -1,11 +1,13 @@
-package bw.org.bocra.portal.smtp;
+package bw.org.bocra.portal.keycloak.smtp;
 
 import java.io.Serializable;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "realm_smtp_config")
 public class RealmSmtpConfig implements Serializable {
 
     @EmbeddedId

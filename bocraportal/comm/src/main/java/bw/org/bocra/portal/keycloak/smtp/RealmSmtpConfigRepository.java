@@ -1,4 +1,4 @@
-package bw.org.bocra.portal.smtp;
+package bw.org.bocra.portal.keycloak.smtp;
 
 import java.util.List;
 

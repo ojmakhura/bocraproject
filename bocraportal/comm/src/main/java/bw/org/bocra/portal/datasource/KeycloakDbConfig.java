@@ -1,52 +1,54 @@
 package bw.org.bocra.portal.datasource;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import jakarta.persistence.EntityManagerFactory;
+
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef = "keycloakEntityManagerFactory", transactionManagerRef = "keycloakTransactionManager", basePackages = {
-        "bw.org.bocra.portal.smtp" })
-public class KeycloakDbConfig {
-    
-    @Bean
-    @Primary
-    public LocalContainerEntityManagerFactoryBean keycloakEntityManager(DataSource keycloakDataSource,
-                    EntityManagerFactoryBuilder builder) {
-        
+@EnableJpaRepositories(
+    entityManagerFactoryRef = "keycloakEntityManagerFactory",
+    transactionManagerRef = "keycloakTransactionManager",
+    basePackages = {
+        "bw.org.bocra.portal.keycloak"
     }
+)
+public class KeycloakDbConfig {
 
-    @Primary
-    @Bean
-    @ConfigurationProperties(prefix="spring.datasource")
-    public DataSource keycloakDataSource() {
-
+    @Bean(name = "keycloakDataSource")
+    @ConfigurationProperties(prefix = "keycloak.datasource")
+    public DataSource customerDataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Primary
-    @Bean
-    public PlatformTransactionManager userTransactionManager() {
+    @Bean(name = "keycloakEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean
+    entityManagerFactory(
+        EntityManagerFactoryBuilder builder,
+        @Qualifier("keycloakDataSource") DataSource dataSource) {
+        return builder
+                .dataSource(dataSource)
+                .packages("bw.org.bocra.portal.keycloak")
+                .persistenceUnit("keycloakdb")
+                .build();
+    }
 
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(
-                userEntityManager().getObject());
-        return transactionManager;
+    @Bean(name = "keycloakTransactionManager")
+    public PlatformTransactionManager customerTransactionManager(
+        @Qualifier("keycloakEntityManagerFactory") EntityManagerFactory customerEntityManagerFactory ) {
+        return new JpaTransactionManager(customerEntityManagerFactory);
     }
 }

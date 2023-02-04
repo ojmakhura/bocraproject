@@ -41,7 +41,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Document type with id %ld not found.", id));
             }
@@ -58,7 +58,7 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
             }
 
             logger.error(message);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -66,10 +66,10 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Displays all document types");
-            return  ResponseEntity.status(HttpStatus.OK).body(documentTypeService.getAll());
+            return  ResponseEntity.ok().body(documentTypeService.getAll());
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -78,10 +78,10 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
         try {
             logger.debug("Displays all document types of the specified Page number: " + pageNumber
                     + "and Page size: " + pageSize);
-            return  ResponseEntity.status(HttpStatus.OK).body(documentTypeService.getAll(pageNumber, pageSize));
+            return  ResponseEntity.ok().body(documentTypeService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -91,9 +91,9 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
             logger.debug("Deletes Complaint Type by ID " + id);
             
             if (documentTypeService.remove(id)) {
-                return ResponseEntity.status(HttpStatus.OK).body("Complaint type successfully deleted.");
+                return ResponseEntity.ok().body("Complaint type successfully deleted.");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete document type");
+                return ResponseEntity.badRequest().body("Could not delete document type");
             }
 
         } catch (Exception e) {
@@ -102,10 +102,10 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
             logger.error(e.getMessage());
 
             if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete document type with id " + id);
+                return ResponseEntity.badRequest().body("Could not delete document type with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting document type with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting document type with id " + id);
         }
     }
 
@@ -117,9 +117,9 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the document type.");
+                response = ResponseEntity.badRequest().body("Could not save the document type.");
             }
 
             return response;
@@ -147,41 +147,41 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(code)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An document type with this code has been already created.");
+                        return ResponseEntity.badRequest().body("An document type with this code has been already created.");
                     } else if(e.getCause().getMessage().contains("(type_name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An document type with this name has been already created.");
+                        return ResponseEntity.badRequest().body("An document type with this name has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
 
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"code\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The code value is missing.");
+                        return ResponseEntity.badRequest().body("The code value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"name\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The type name value is missing.");
+                        return ResponseEntity.badRequest().body("The type name value is missing.");
                     }
 
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This complaint type is conflicting with an existing one.");
+                return ResponseEntity.badRequest().body("This complaint type is conflicting with an existing one.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -190,10 +190,10 @@ public class DocumentTypeRestControllerImpl extends DocumentTypeRestControllerBa
         try {
             logger.debug("Searches for a document type by criteria " + criteria);
 
-            return ResponseEntity.status(HttpStatus.OK).body(documentTypeService.search(criteria));
+            return ResponseEntity.ok().body(documentTypeService.search(criteria));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

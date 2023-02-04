@@ -41,7 +41,7 @@ public class AuthControllerImpl extends AuthControllerBase {
         ResponseEntity<String> response;
 
         if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            response = ResponseEntity.ok().body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -55,7 +55,7 @@ public class AuthControllerImpl extends AuthControllerBase {
         ResponseEntity<String> response;
 
         if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            response = ResponseEntity.ok().body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -70,7 +70,7 @@ public class AuthControllerImpl extends AuthControllerBase {
         ResponseEntity<Collection<RoleRepresentation>> response;
 
         if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            response = ResponseEntity.ok().body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -84,7 +84,7 @@ public class AuthControllerImpl extends AuthControllerBase {
         ResponseEntity<String> response;
 
         if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            response = ResponseEntity.ok().body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -108,7 +108,7 @@ public class AuthControllerImpl extends AuthControllerBase {
         ResponseEntity<String> response;
 
         if(data.isPresent()) {
-            response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+            response = ResponseEntity.ok().body(data.get());
         } else {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

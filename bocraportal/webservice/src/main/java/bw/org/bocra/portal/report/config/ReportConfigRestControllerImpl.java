@@ -33,7 +33,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
             ResponseEntity<ReportConfigVO> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -54,7 +54,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
             ResponseEntity<Collection<ReportConfigVO>> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -75,7 +75,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
             ResponseEntity<Collection<ReportConfigVO>> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -96,7 +96,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
             ResponseEntity<Boolean> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -117,7 +117,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
             ResponseEntity<ReportConfigVO> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -138,7 +138,7 @@ public class ReportConfigRestControllerImpl extends ReportConfigRestControllerBa
             ResponseEntity<Collection<ReportConfigVO>> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }

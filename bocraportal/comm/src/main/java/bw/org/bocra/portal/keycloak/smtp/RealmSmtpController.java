@@ -1,4 +1,4 @@
-package bw.org.bocra.portal.smtp;
+package bw.org.bocra.portal.keycloak.smtp;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ public class RealmSmtpController {
     }
     
     @GetMapping()
-    public RealmSmtpDTO getRealmSmtpConfig(@RequestParam String realmId) {
+    public RealmSmtpDTO getRealmSmtpConfig(@RequestParam String realmId) throws Exception {
 
         return this.realmSmtpService.getRealmSmtpConfig(realmId);
     }

@@ -1,23 +1,39 @@
-package bw.org.bocra.portal.smtp;
+package bw.org.bocra.portal.keycloak.smtp;
 
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
+
+import bw.org.bocra.portal.keycloak.realm.Realm;
+import bw.org.bocra.portal.keycloak.realm.RealmRepository;
 
 @Service
 public class RealmSmtpService {
 
     private final RealmSmtpConfigRepository configRepository;
+    private final RealmRepository realmRepository;
 
-    public RealmSmtpService(RealmSmtpConfigRepository configRepository) {
+    public RealmSmtpService(RealmSmtpConfigRepository configRepository, RealmRepository realmRepository) {
         this.configRepository = configRepository;
+        this.realmRepository = realmRepository;
     }
 
-    public RealmSmtpDTO getRealmSmtpConfig(String realmId) {
+    public RealmSmtpDTO getRealmSmtpConfig(String realmName) throws Exception {
+
+        List<Realm> realms = realmRepository.findByName(realmName);
+
+        if(CollectionUtils.isEmpty(realms)) {
+            throw new Exception("No realms with name " + realmName + " found.");
+        }
 
         RealmSmtpDTO config = new RealmSmtpDTO();
 
-        List<RealmSmtpConfig> configs = configRepository.findByIdRealmId(realmId);
+        List<RealmSmtpConfig> configs = configRepository.findByIdRealmId(realms.get(0).getId());
+
+        if(CollectionUtils.isEmpty(configs)) {
+            throw new Exception("No SMTP configurations found.");
+        }
 
         for (RealmSmtpConfig realmSmtpConfig : configs) {
             if (realmSmtpConfig.getId().getName().equals("auth")) {

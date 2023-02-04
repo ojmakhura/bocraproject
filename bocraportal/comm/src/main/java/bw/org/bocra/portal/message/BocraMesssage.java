@@ -8,32 +8,32 @@ package bw.org.bocra.portal.message;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 
 /**
- * TODO: Model Documentation for CommunicationMessage
+ * TODO: Model Documentation for BocraMesssage
  */
 // $entity.uniqueConstraints
 @Entity
 @Table(
-    name = "COMMUNICATION_MESSAGE")
-// Uncomment to enable caching for CommunicationMessage
+    name = "BOCRA_MESSAGE")
+// Uncomment to enable caching for BocraMesssage
 // @org.hibernate.annotations.Cache(usage = org.hibernate.annotations.CacheConcurrencyStrategy.read-write)
-@NamedQuery(name = "CommunicationMessage.findAll", query = "SELECT c FROM CommunicationMessage AS c")
+@NamedQuery(name = "BocraMesssage.findAll", query = "SELECT c FROM BocraMesssage AS c")
 // HibernateEntity.vsl annotations merge-point
-public class CommunicationMessage
-    implements Serializable, Comparable<CommunicationMessage>
+public class BocraMesssage
+    implements Serializable, Comparable<BocraMesssage>
 {
     /**
      * The serial version UID of this class. Needed for serialization.
@@ -44,7 +44,7 @@ public class CommunicationMessage
     private String createdBy;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.createdBy
+     * TODO: Model Documentation for BocraMesssage.createdBy
      * @return this.createdBy String
      */
     @Column(name = "CREATED_BY", unique = false, nullable = true, insertable = true, updatable = true)
@@ -54,7 +54,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.createdBy
+     * TODO: Model Documentation for BocraMesssage.createdBy
      * @param createdByIn String
      */
     public void setCreatedBy(String createdByIn)
@@ -65,7 +65,7 @@ public class CommunicationMessage
     private String updatedBy;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.updatedBy
+     * TODO: Model Documentation for BocraMesssage.updatedBy
      * @return this.updatedBy String
      */
     @Column(name = "UPDATED_BY", unique = false, nullable = true, insertable = true, updatable = true)
@@ -75,7 +75,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.updatedBy
+     * TODO: Model Documentation for BocraMesssage.updatedBy
      * @param updatedByIn String
      */
     public void setUpdatedBy(String updatedByIn)
@@ -86,7 +86,7 @@ public class CommunicationMessage
     private LocalDateTime createdDate;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.createdDate
+     * TODO: Model Documentation for BocraMesssage.createdDate
      * @return this.createdDate LocalDateTime
      */
     @Column(name = "CREATED_DATE", unique = false, nullable = false, insertable = true, updatable = true)
@@ -96,7 +96,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.createdDate
+     * TODO: Model Documentation for BocraMesssage.createdDate
      * @param createdDateIn LocalDateTime
      */
     public void setCreatedDate(LocalDateTime createdDateIn)
@@ -107,7 +107,7 @@ public class CommunicationMessage
     private LocalDateTime updatedDate;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.updatedDate
+     * TODO: Model Documentation for BocraMesssage.updatedDate
      * @return this.updatedDate LocalDateTime
      */
     @Column(name = "UPDATED_DATE", unique = false, nullable = true, insertable = true, updatable = true)
@@ -117,7 +117,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.updatedDate
+     * TODO: Model Documentation for BocraMesssage.updatedDate
      * @param updatedDateIn LocalDateTime
      */
     public void setUpdatedDate(LocalDateTime updatedDateIn)
@@ -128,7 +128,7 @@ public class CommunicationMessage
     private Collection<String> destinations;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.destinations
+     * TODO: Model Documentation for BocraMesssage.destinations
      * @return this.destinations Collection<String>
      */
     @ElementCollection
@@ -138,7 +138,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.destinations
+     * TODO: Model Documentation for BocraMesssage.destinations
      * @param destinationsIn Collection<String>
      */
     public void setDestinations(Collection<String> destinationsIn)
@@ -149,7 +149,7 @@ public class CommunicationMessage
     private Boolean sendNow = Boolean.valueOf(true);
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.sendNow
+     * TODO: Model Documentation for BocraMesssage.sendNow
      * @return this.sendNow Boolean
      */
     @Column(name = "SEND_NOW", unique = false, nullable = true, insertable = true, updatable = true)
@@ -159,7 +159,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.sendNow
+     * TODO: Model Documentation for BocraMesssage.sendNow
      * @param sendNowIn Boolean
      */
     public void setSendNow(Boolean sendNowIn)
@@ -170,7 +170,7 @@ public class CommunicationMessage
     private String subject;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.subject
+     * TODO: Model Documentation for BocraMesssage.subject
      * @return this.subject String
      */
     @Column(name = "SUBJECT", unique = false, nullable = false, insertable = true, updatable = true)
@@ -180,7 +180,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.subject
+     * TODO: Model Documentation for BocraMesssage.subject
      * @param subjectIn String
      */
     public void setSubject(String subjectIn)
@@ -191,7 +191,7 @@ public class CommunicationMessage
     private String source;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.source
+     * TODO: Model Documentation for BocraMesssage.source
      * @return this.source String
      */
     @Column(name = "SOURCE", unique = false, nullable = true, insertable = true, updatable = true)
@@ -201,7 +201,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.source
+     * TODO: Model Documentation for BocraMesssage.source
      * @param sourceIn String
      */
     public void setSource(String sourceIn)
@@ -212,7 +212,7 @@ public class CommunicationMessage
     private String text;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.text
+     * TODO: Model Documentation for BocraMesssage.text
      * @return this.text String
      */
     @Lob
@@ -223,7 +223,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.text
+     * TODO: Model Documentation for BocraMesssage.text
      * @param textIn String
      */
     public void setText(String textIn)
@@ -234,7 +234,7 @@ public class CommunicationMessage
     private LocalDateTime dispatchDate;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.dispatchDate
+     * TODO: Model Documentation for BocraMesssage.dispatchDate
      * @return this.dispatchDate LocalDateTime
      */
     @Column(name = "DISPATCH_DATE", unique = false, nullable = true, insertable = true, updatable = true)
@@ -244,7 +244,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.dispatchDate
+     * TODO: Model Documentation for BocraMesssage.dispatchDate
      * @param dispatchDateIn LocalDateTime
      */
     public void setDispatchDate(LocalDateTime dispatchDateIn)
@@ -252,48 +252,48 @@ public class CommunicationMessage
         this.dispatchDate = dispatchDateIn;
     }
 
-    private CommunicationMessagePlatform messagePlatform;
+    private BocraMesssagePlatform messagePlatform;
 
     /**
      * TODO: Model Documentation for
-     * CommunicationMessage.messagePlatform
-     * @return this.messagePlatform CommunicationMessagePlatform
+     * BocraMesssage.messagePlatform
+     * @return this.messagePlatform BocraMesssagePlatform
      */
     @Column(name = "MESSAGE_PLATFORM", unique = false, nullable = false, insertable = true, updatable = true)
     @Enumerated(EnumType.STRING)
-    public CommunicationMessagePlatform getMessagePlatform()
+    public BocraMesssagePlatform getMessagePlatform()
     {
         return this.messagePlatform;
     }
 
     /**
      * TODO: Model Documentation for
-     * CommunicationMessage.messagePlatform
-     * @param messagePlatformIn CommunicationMessagePlatform
+     * BocraMesssage.messagePlatform
+     * @param messagePlatformIn BocraMesssagePlatform
      */
-    public void setMessagePlatform(CommunicationMessagePlatform messagePlatformIn)
+    public void setMessagePlatform(BocraMesssagePlatform messagePlatformIn)
     {
         this.messagePlatform = messagePlatformIn;
     }
 
-    private CommunicationMessageStatus status;
+    private BocraMesssageStatus status;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.status
-     * @return this.status CommunicationMessageStatus
+     * TODO: Model Documentation for BocraMesssage.status
+     * @return this.status BocraMesssageStatus
      */
     @Column(name = "STATUS", unique = false, nullable = false, insertable = true, updatable = true)
     @Enumerated(EnumType.STRING)
-    public CommunicationMessageStatus getStatus()
+    public BocraMesssageStatus getStatus()
     {
         return this.status;
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.status
-     * @param statusIn CommunicationMessageStatus
+     * TODO: Model Documentation for BocraMesssage.status
+     * @param statusIn BocraMesssageStatus
      */
-    public void setStatus(CommunicationMessageStatus statusIn)
+    public void setStatus(BocraMesssageStatus statusIn)
     {
         this.status = statusIn;
     }
@@ -301,12 +301,12 @@ public class CommunicationMessage
     private Long id;
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.id
+     * TODO: Model Documentation for BocraMesssage.id
      * @return this.id Long
      */
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="COMMUNICATION_MESSAGE_SEQ")
-    @SequenceGenerator(name="COMMUNICATION_MESSAGE_SEQ", sequenceName="COMMUNICATION_MESSAGE_SEQ", allocationSize=1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="BOCRA_MESSAGE_SEQ")
+    @SequenceGenerator(name="BOCRA_MESSAGE_SEQ", sequenceName="BOCRA_MESSAGE_SEQ", allocationSize=1)
     @Column(name = "ID", unique = false, nullable = true, insertable = true, updatable = true)
     public Long getId()
     {
@@ -314,7 +314,7 @@ public class CommunicationMessage
     }
 
     /**
-     * TODO: Model Documentation for CommunicationMessage.id
+     * TODO: Model Documentation for BocraMesssage.id
      * @param idIn Long
      */
     public void setId(Long idIn)
@@ -323,7 +323,7 @@ public class CommunicationMessage
     }
 
     /**
-     * Returns <code>true</code> if the argument is an CommunicationMessage instance and all identifiers for this entity
+     * Returns <code>true</code> if the argument is an BocraMesssage instance and all identifiers for this entity
      * equal the identifiers of the argument entity. Returns <code>false</code> otherwise.
      */
     @Override
@@ -333,11 +333,11 @@ public class CommunicationMessage
         {
             return true;
         }
-        if (!(object instanceof CommunicationMessage))
+        if (!(object instanceof BocraMesssage))
         {
             return false;
         }
-        final CommunicationMessage that = (CommunicationMessage)object;
+        final BocraMesssage that = (BocraMesssage)object;
         if (this.id == null || that.getId() == null || !this.id.equals(that.getId()))
         {
             return false;
@@ -358,32 +358,32 @@ public class CommunicationMessage
     }
 
     /**
-     * Constructs new instances of {@link CommunicationMessage}.
+     * Constructs new instances of {@link BocraMesssage}.
      */
     public static final class Factory
     {
         /**
-         * Constructs a new instance of {@link CommunicationMessage}.
-         * @return new CommunicationMessage()
+         * Constructs a new instance of {@link BocraMesssage}.
+         * @return new BocraMesssage()
          */
-        public static CommunicationMessage newInstance()
+        public static BocraMesssage newInstance()
         {
-            return new CommunicationMessage();
+            return new BocraMesssage();
         }
 
         /**
-         * Constructs a new instance of {@link CommunicationMessage}, taking all required and/or
+         * Constructs a new instance of {@link BocraMesssage}, taking all required and/or
          * read-only properties as arguments, except for identifiers.
          * @param createdDate LocalDateTime
          * @param subject String
          * @param text String
-         * @param messagePlatform CommunicationMessagePlatform
-         * @param status CommunicationMessageStatus
+         * @param messagePlatform BocraMesssagePlatform
+         * @param status BocraMesssageStatus
          * @return newInstance
          */
-        public static CommunicationMessage newInstance(LocalDateTime createdDate, String subject, String text, CommunicationMessagePlatform messagePlatform, CommunicationMessageStatus status)
+        public static BocraMesssage newInstance(LocalDateTime createdDate, String subject, String text, BocraMesssagePlatform messagePlatform, BocraMesssageStatus status)
         {
-            final CommunicationMessage entity = new CommunicationMessage();
+            final BocraMesssage entity = new BocraMesssage();
             entity.setCreatedDate(createdDate);
             entity.setSubject(subject);
             entity.setText(text);
@@ -393,7 +393,7 @@ public class CommunicationMessage
         }
 
         /**
-         * Constructs a new instance of {@link CommunicationMessage}, taking all possible properties
+         * Constructs a new instance of {@link BocraMesssage}, taking all possible properties
          * (except the identifier(s))as arguments.
          * @param createdBy String
          * @param updatedBy String
@@ -405,13 +405,13 @@ public class CommunicationMessage
          * @param source String
          * @param text String
          * @param dispatchDate LocalDateTime
-         * @param messagePlatform CommunicationMessagePlatform
-         * @param status CommunicationMessageStatus
-         * @return newInstance CommunicationMessage
+         * @param messagePlatform BocraMesssagePlatform
+         * @param status BocraMesssageStatus
+         * @return newInstance BocraMesssage
          */
-        public static CommunicationMessage newInstance(String createdBy, String updatedBy, LocalDateTime createdDate, LocalDateTime updatedDate, Collection<String> destinations, Boolean sendNow, String subject, String source, String text, LocalDateTime dispatchDate, CommunicationMessagePlatform messagePlatform, CommunicationMessageStatus status)
+        public static BocraMesssage newInstance(String createdBy, String updatedBy, LocalDateTime createdDate, LocalDateTime updatedDate, Collection<String> destinations, Boolean sendNow, String subject, String source, String text, LocalDateTime dispatchDate, BocraMesssagePlatform messagePlatform, BocraMesssageStatus status)
         {
-            final CommunicationMessage entity = new CommunicationMessage();
+            final BocraMesssage entity = new BocraMesssage();
             entity.setCreatedBy(createdBy);
             entity.setUpdatedBy(updatedBy);
             entity.setCreatedDate(createdDate);
@@ -434,7 +434,7 @@ public class CommunicationMessage
      * @see Comparable#compareTo
      */
     @Override
-    public int compareTo(CommunicationMessage other)
+    public int compareTo(BocraMesssage other)
     {
         int cmp = 0;
         if (this.getId() != null)
@@ -505,7 +505,7 @@ public class CommunicationMessage
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("CommunicationMessage(");
+        sb.append("BocraMesssage(");
         sb.append(" createdBy=").append(getCreatedBy());
         sb.append(" updatedBy=").append(getUpdatedBy());
         sb.append(" createdDate=").append(getCreatedDate());

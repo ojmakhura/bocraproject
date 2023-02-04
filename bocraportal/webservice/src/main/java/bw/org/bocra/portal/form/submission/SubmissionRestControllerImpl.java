@@ -51,7 +51,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Form submission with id %ld not found.", id));
             }
@@ -68,7 +68,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             }
 
             logger.error(message);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -76,12 +76,12 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try{
             logger.debug("Display all Form Submissions");
-            return ResponseEntity.status(HttpStatus.OK).body(submissionService.getAll());
+            return ResponseEntity.ok().body(submissionService.getAll());
             
         } catch (Exception e) {
             // e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -90,7 +90,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
         try{
             logger.debug("Display all Form Submissions of the specified "+"Page number "+pageNumber+" and Page size "+pageSize);
             
-            return ResponseEntity.status(HttpStatus.OK).body(submissionService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(submissionService.getAll(pageNumber, pageSize));
     
         } catch (Exception e) {
             // e.printStackTrace();
@@ -107,7 +107,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the form submission with id " + id);
             }
@@ -121,7 +121,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete form submission with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting form submission with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting form submission with id " + id);
         }
     }
 
@@ -133,9 +133,9 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save form submission.");
+                response = ResponseEntity.badRequest().body("Could not save form submission.");
             }
     
             return response;
@@ -173,37 +173,37 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(form_submission_unique)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An submission for this has been already created.");
+                        return ResponseEntity.badRequest().body("An submission for this has been already created.");
                     }  else {
                         message = "One of the unique attributes is duplicated.";
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     } else {
                         message = "One of the required columns is null.";
                     } 
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -218,12 +218,12 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
                 criteria.setLicenseeId(user.getLicensee().getId());
             }
 
-            return ResponseEntity.status(HttpStatus.OK).body(submissionService.search(criteria));
+            return ResponseEntity.ok().body(submissionService.search(criteria));
             
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -235,7 +235,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not add a data field to the submission.");
             }
@@ -244,7 +244,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -256,7 +256,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not add data fields to the submission.");
             }
@@ -265,7 +265,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -277,9 +277,9 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete the data field with id " + id);
+                response = ResponseEntity.badRequest().body("Failed to delete the data field with id " + id);
             }
     
             return response;
@@ -291,7 +291,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete data field with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -308,13 +308,13 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             SubmissionSummary data = submissionService.getSubmissionSummary(criteria);
             ResponseEntity<SubmissionSummary> response;
     
-            response = ResponseEntity.status(HttpStatus.OK).body(data);
+            response = ResponseEntity.ok().body(data);
     
             return response;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -329,7 +329,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
         
     }
@@ -345,7 +345,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -360,7 +360,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -376,7 +376,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -384,11 +384,11 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     public ResponseEntity<?> handleCreateNewSubmissions(Set<Long> licenseeIds, Long activationId) {
 
         if(activationId == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Form activation should not be null.");
+            return ResponseEntity.badRequest().body("Form activation should not be null.");
         }
 
         if(CollectionUtils.isEmpty(licenseeIds)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Licensee IDs should not be empty.");
+            return ResponseEntity.badRequest().body("Licensee IDs should not be empty.");
         }
 
         try {
@@ -399,7 +399,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }

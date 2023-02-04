@@ -6,11 +6,11 @@
 package bw.org.bocra.portal.message;
 
 /**
- * @see CommunicationMessage
+ * @see BocraMesssage
  */
 // HibernateEntityImpl.vsl annotations merge-point
-public class CommunicationMessageImpl
-    extends CommunicationMessage
+public class BocraMesssageImpl
+    extends BocraMesssage
 {
     /**
      * The serial version UID of this class. Needed for serialization.
