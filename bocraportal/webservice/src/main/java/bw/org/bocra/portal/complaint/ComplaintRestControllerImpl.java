@@ -5,13 +5,12 @@
 //
 package bw.org.bocra.portal.complaint;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -28,9 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,10 +40,9 @@ import com.nimbusds.jose.util.JSONArrayUtils;
 import bw.org.bocra.portal.document.DocumentService;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
-import bw.org.bocra.portal.message.BocraMessageVO;
-import bw.org.bocra.portal.properties.KeycloakProperties;
-import bw.org.bocra.portal.message.BocraMessageStatus;
 import bw.org.bocra.portal.message.BocraMessagePlatform;
+import bw.org.bocra.portal.message.BocraMessageStatus;
+import bw.org.bocra.portal.properties.KeycloakProperties;
 import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
