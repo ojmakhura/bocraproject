@@ -132,7 +132,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
                 return ResponseEntity.ok(rep);
             }
     
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             logger.error(e.getMessage());
             return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
