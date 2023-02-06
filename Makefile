@@ -214,21 +214,24 @@ endif
 ##
 ## System initialisation
 ##
+swarm_label_true: gen_env
+	chmod 755 .env && . ./.env && docker node update --label-add ${STACK_NAME}_${node_label}=true ${node}
+
 swarm_init:
 	docker swarm init
 
 local_prep: gen_env
-	. ./.env && mkdir ${BOCRA_DATA}
-	. ./.env && mkdir ${BOCRA_DATA}/db
-	. ./.env && mkdir ${BOCRA_DATA}/auth
-	. ./.env && cp traefik_passwd ${BOCRA_DATA}/auth/system_passwd
-	. ./.env && mkdir ${BOCRA_DATA}/keycloak
-	. ./.env && mkdir ${BOCRA_DATA}/certs
-	. ./.env && cp deployment/certs/* ${BOCRA_DATA}/certs
-	. ./.env && mkdir ${BOCRA_DATA}/registry
-	. ./.env && mkdir ${BOCRA_DATA}/traefik
-	. ./.env && cp deployment/traefik/config.yml ${BOCRA_DATA}/traefik
-	. ./.env && mkdir ${BOCRA_DATA}/web
+	. ./.env && mkdir ${BOCRA_DATA} && \
+	mkdir ${BOCRA_DATA}/db && \
+	mkdir ${BOCRA_DATA}/auth && \
+	cp traefik_passwd ${BOCRA_DATA}/auth/system_passwd && \
+	mkdir ${BOCRA_DATA}/keycloak && \
+	mkdir ${BOCRA_DATA}/certs && \
+	cp deployment/certs/* ${BOCRA_DATA}/certs && \
+	mkdir ${BOCRA_DATA}/registry && \
+	mkdir ${BOCRA_DATA}/traefik && \
+	cp deployment/traefik/config.yml ${BOCRA_DATA}/traefik && \
+	mkdir ${BOCRA_DATA}/web && \
 
 ##
 ## Check the logs
