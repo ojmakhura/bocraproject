@@ -4,7 +4,7 @@ networks:
   net:
     driver: overlay
     attachable: true
-  bocra-public:
+  traefik-public:
     external: true
 
 volumes:
@@ -62,7 +62,7 @@ services:
     networks:
       - default
       - net
-      - bocra-public
+      - traefik-public
     environment:
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
@@ -89,8 +89,8 @@ services:
           memory: 64M
       labels:
         - traefik.enable=true
-        - traefik.docker.network=bocra-public
-        - traefik.constraint-label=bocra-public
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
         - traefik.http.routers.swarmprom-grafana-http.rule=Host(`${GRAFANA_DOMAIN}`)
         - traefik.http.routers.swarmprom-grafana-http.entrypoints=${WEB_ENTRY}
         - traefik.http.routers.swarmprom-grafana-http.middlewares=https-redirect
@@ -105,7 +105,7 @@ services:
     networks:
       - default
       - net
-      - bocra-public
+      - traefik-public
     environment:
       - SLACK_URL=${SLACK_URL:-https://hooks.slack.com/services/TOKEN}
       - SLACK_CHANNEL=${SLACK_CHANNEL:-general}
@@ -130,8 +130,8 @@ services:
           memory: 64M
       labels:
         - traefik.enable=true
-        - traefik.docker.network=bocra-public
-        - traefik.constraint-label=bocra-public
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
         - traefik.http.routers.swarmprom-alertmanager-http.rule=Host(`alertmanager.${DOMAIN?Variable not set}`)
         - traefik.http.routers.swarmprom-alertmanager-http.entrypoints=${WEB_ENTRY}
         - traefik.http.routers.swarmprom-alertmanager-http.middlewares=https-redirect
@@ -148,7 +148,7 @@ services:
     networks:
       - default
       - net
-      - bocra-public
+      - traefik-public
     # volumes:
       # - ${ROGUE_DATA}/auth/system_passwd:/var/system_passwd
     environment:
@@ -158,8 +158,8 @@ services:
       replicas: 1
       labels:
         - traefik.enable=true
-        - traefik.docker.network=bocra-public
-        - traefik.constraint-label=bocra-public
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
         - traefik.http.routers.swarmprom-unsee-http.rule=Host(`unsee.${DOMAIN?Variable not set}`)
         - traefik.http.routers.swarmprom-unsee-http.entrypoints=${WEB_ENTRY}
         - traefik.http.routers.swarmprom-unsee-http.middlewares=https-redirect
@@ -201,7 +201,7 @@ services:
     networks:
       - default
       - net
-      - bocra-public
+      - traefik-public
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -227,8 +227,8 @@ services:
           memory: 128M
       labels:
         - traefik.enable=true
-        - traefik.docker.network=bocra-public
-        - traefik.constraint-label=bocra-public
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
         - traefik.http.routers.swarmprom-prometheus-http.rule=Host(`prometheus.${DOMAIN?Variable not set}`)
         - traefik.http.routers.swarmprom-prometheus-http.entrypoints=${WEB_ENTRY}
         - traefik.http.routers.swarmprom-prometheus-http.middlewares=https-redirect

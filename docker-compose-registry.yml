@@ -10,9 +10,9 @@ services:
       - ${BOCRA_DATA}/auth:/opt/auth
     environment:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
-      REGISTRY_AUTH_TOKEN_REALM: https://keycloak.bocradev/realms/bocraportal/protocol/docker-v2/auth
-      REGISTRY_AUTH_TOKEN_SERVICE: bocraportal-registry
-      REGISTRY_AUTH_TOKEN_ISSUER: https://keycloak.bocradev/realms/bocraportal
+      REGISTRY_AUTH_TOKEN_REALM: https://keycloak.bocradev.local/realms/sysadmin/protocol/docker-v2/auth
+      REGISTRY_AUTH_TOKEN_SERVICE: bocra-registry
+      REGISTRY_AUTH_TOKEN_ISSUER: https://keycloak.bocradev.local/realms/sysadmin
       REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /opt/certs/registry_trust_chain.pem
 
       # REGISTRY_HTTP_TLS_CERTIFICATE: /opt/certs/localhost.crt
@@ -49,7 +49,7 @@ services:
     # ports:
     #   - "8086:80"
     environment:
-      - REGISTRY_HOST=bocradev
+      - REGISTRY_HOST=bocradev.local
       - REGISTRY_PORT=5000
       - REGISTRY_PROTOCOL=http
       - SSL_VERIFY=false
@@ -57,10 +57,10 @@ services:
       - PASSWORD=rxh4ulom
       - REGISTRY_USERNAME=junior
       - REGISTRY_PASSWORD=rxh4ulom
-      - TITLE=Private Docker Registry
+      - TITLE=BOCRA Private Docker Registry
       - REGISTRY_ALLOW_DELETE=true
     volumes:
-      - ./deployment/hosts:/etc/hosts
+      - ${BOCRA_DATA}/hosts:/etc/hosts
 
     networks:
       traefik-public:
