@@ -33,9 +33,10 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik-public"
-        - "traefik.tcp.routers.bocra-db.rule=HostSNI(`*`)"
+        - "traefik.tcp.routers.bocra-db.rule=HostSNI(`${DB_DOMAIN}`)"
         - "traefik.tcp.routers.bocra-db.entrypoints=postgres"
         - "traefik.tcp.services.bocra-db.loadbalancer.server.port=5432"
+        - "traefik.tcp.routers.bocra-db.tls=true"
 
   ###############################################################################
   # Postgres administration frontend

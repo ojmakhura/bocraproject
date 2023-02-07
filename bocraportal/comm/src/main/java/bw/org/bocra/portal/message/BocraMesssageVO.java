@@ -20,6 +20,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 /**
  * TODO: Model Documentation for BocraMesssageVO
  */
@@ -45,10 +53,16 @@ public class BocraMesssageVO
     /**
      * TODO: Model Documentation for BocraMesssageVO.createdDate
      */
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     protected LocalDateTime createdDate;
     /**
      * TODO: Model Documentation for BocraMesssageVO.updatedDate
      */
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     protected LocalDateTime updatedDate;
     /**
      * TODO: Model Documentation for BocraMesssageVO.status
@@ -82,6 +96,9 @@ public class BocraMesssageVO
     /**
      * TODO: Model Documentation for BocraMesssageVO.dispatchDate
      */
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     protected LocalDateTime dispatchDate;
 
     /** Default Constructor with no properties */

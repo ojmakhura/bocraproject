@@ -32,15 +32,18 @@ services:
           - node.labels.bocraportal_rabbitmq == true
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.rabbitmq-web.rule=Host(`${RABBIT_DOMAIN}`)"
+        - "traefik.http.routers.rabbitmq-web.rule=Host(`${RABBITMQ_DOMAIN}`)"
         - "traefik.http.routers.rabbitmq-web.entrypoints=web"
         - "traefik.http.routers.rabbitmq-web.middlewares=https-redirect"
         - "traefik.http.routers.rabbitmq-websecure.entrypoints=websecure"
-        - "traefik.http.routers.rabbitmq-websecure.rule=Host(`${RABBIT_DOMAIN}`)"
-        - "traefik.http.routers.rabbitmq-websecure.tls=${SSL_SECURE}"
-        - "traefik.tcp.routers.rabbitmq-ingress.rule=HostSNI(`*`)"
+        - "traefik.http.routers.rabbitmq-websecure.rule=Host(`${RABBITMQ_DOMAIN}`)"
+        - "traefik.http.routers.rabbitmq-websecure.tls=true"
+        - "traefik.http.services.rabbitmq.loadbalancer.server.port=15672"
+        #tcp
+        - "traefik.tcp.routers.rabbitmq-ingress.rule=HostSNI(`${RABBITMQ_DOMAIN}`)"
         - "traefik.tcp.routers.rabbitmq-ingress.entrypoints=rabbitmq"
         - "traefik.tcp.services.rabbitmq-ingress.loadbalancer.server.port=5672"
+        - "traefik.tcp.routers.rabbitmq-ingress.tls=true"
 
 ###############################################################################
 # Networks

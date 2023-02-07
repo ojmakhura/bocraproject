@@ -18,6 +18,7 @@ import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.postgresql.util.PSQLException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpEntity;
@@ -43,8 +44,7 @@ import bw.org.bocra.portal.licensee.LicenseeStatus;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorService;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
-import bw.org.bocra.portal.message.BocraMessagePlatform;
-import bw.org.bocra.portal.message.BocraMessageStatus;
+import bw.org.bocra.portal.properties.RabbitProperties;
 import bw.org.bocra.portal.sector.form.SectorFormVO;
 import bw.org.bocra.portal.user.UserVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,25 +60,28 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     private final LicenseeSectorService licenseeSectorService;
     private final KeycloakUserService keycloakUserService;
     private final KeycloakService keycloakService;
+    private final RabbitTemplate rabbitTemplate;
+    private final RabbitProperties rabbitProperties;
 
     @Value("${bocra.web.url}")
     private String webUrl;
 
     @Value("${bocra.comm.url}")
     private String commUrl;
-    private final RestTemplate restTemplate;
     
-    public FormActivationRestControllerImpl(FormActivationService formActivationService,
+    public FormActivationRestControllerImpl(FormActivationService formActivationService, RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties,
             SubmissionService submissionService, FormService formService, LicenseeSectorService licenseeSectorService,
-            KeycloakUserService keycloakUserService, RestTemplate restTemplate, KeycloakService keycloakService) {
+            KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
 
         super(formActivationService);
         this.submissionService = submissionService;
         this.formService = formService;
         this.licenseeSectorService = licenseeSectorService;
         this.keycloakUserService = keycloakUserService;
-        this.restTemplate = restTemplate;
         this.keycloakService = keycloakService;
+        this.rabbitTemplate = rabbitTemplate;
+        this.rabbitProperties = rabbitProperties;
+
     }
 
     @Override
@@ -199,11 +202,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                     + "BOCRA";
 
     public void sendNotifications(FormActivationVO formActivation) {
-
-        JSONObject healthStatus = restTemplate.getForObject (commUrl + "/actuator/health", JSONObject.class);
-        if(!healthStatus.get("status").toString().equals("UP")) {
-            return;
-        }
+        
         String submissionUrl = webUrl + "/form/submission/edit-form-submission";
         List<Object> messageObjects = JSONArrayUtils.newJSONArray();
         
@@ -219,11 +218,11 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             JSONObject messageObj = new JSONObject();
             
             messageObj.put("createdBy", formActivation.getCreatedBy());
-            messageObj.put("createdDate", LocalDateTime.now());
+            messageObj.put("createdDate", LocalDateTime.now().toString());
             messageObj.put("sendNow", Boolean.TRUE);
-            messageObj.put("dispatchDate", formActivation.getPeriod().getPeriodEnd().atStartOfDay());
-            messageObj.put("messagePlatform", BocraMessagePlatform.EMAIL);
-            messageObj.put("status", BocraMessageStatus.DRAFT);
+            messageObj.put("dispatchDate", formActivation.getPeriod().getPeriodEnd().atStartOfDay().toString());
+            messageObj.put("messagePlatform", "EMAIL");
+            messageObj.put("status", "DRAFT");
             messageObj.put("subject", String.format("%s data request for period %s.", formActivation.getForm().getFormName(), formActivation.getPeriod().getPeriodName()));
             messageObj.put("text", String.format(
                 emailTempate,
@@ -239,13 +238,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             messageObjects.add(messageObj);
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON); 
-        headers.set("Authorization", "Bearer " + keycloakService.getSecurityContext().getTokenString());
-        String url = commUrl + "/messages";
-        HttpEntity<Collection<?>> request = new HttpEntity<>(messageObjects, headers);
-
-        restTemplate.postForEntity(url, request, Integer.class);
+        rabbitTemplate.convertAndSend(rabbitProperties.getExchange(), rabbitProperties.getRoutingkey(), messageObjects);
     }
 
     @Override

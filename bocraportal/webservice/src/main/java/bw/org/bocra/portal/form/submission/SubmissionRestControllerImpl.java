@@ -369,7 +369,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
         
         try {
 
-            Integer overdue = submissionService.checkOverdueSubmissions();
+            Collection<FormSubmissionVO> overdue = submissionService.checkOverdueSubmissions();
             return ResponseEntity.ok(overdue);
 
         } catch(Exception e) {

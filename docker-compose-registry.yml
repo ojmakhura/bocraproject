@@ -55,10 +55,11 @@ services:
       - SSL_VERIFY=false
       - USERNAME=junior
       - PASSWORD=rxh4ulom
-      - REGISTRY_USERNAME=junior
-      - REGISTRY_PASSWORD=rxh4ulom
+      - REGISTRY_USERNAME=user1
+      - REGISTRY_PASSWORD=user1
       - TITLE=BOCRA Private Docker Registry
       - REGISTRY_ALLOW_DELETE=true
+      - ALLOW_REGISTRY_LOGIN=true
     volumes:
       - ${BOCRA_DATA}/hosts:/etc/hosts
 

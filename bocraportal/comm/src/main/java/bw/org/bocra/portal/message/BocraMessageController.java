@@ -66,9 +66,9 @@ public class BocraMessageController {
                 BocraMesssageStatus status = BocraMesssageStatus.FAILED;
 
                 if(!CollectionUtils.isEmpty(message.getDestinations())) {
-                    message.setCreatedDate(null);
-                    message.setDispatchDate(null);
-                    message.setUpdatedDate(null);
+                    // message.setCreatedDate(null);
+                    // message.setDispatchDate(null);
+                    // message.setUpdatedDate(null);
                     this.sendEmail(message);
 
                     // Update the message status

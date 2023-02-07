@@ -1,18 +1,17 @@
 package bw.org.bocra.portal.email;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import bw.org.bocra.portal.keycloak.smtp.RealmSmtpDTO;
 import bw.org.bocra.portal.keycloak.smtp.RealmSmtpService;
@@ -27,22 +26,21 @@ public class EmailService {
 
     @Value("${keycloak.realm}")
     private String realmId;
-    private final RestTemplate restTemplate;
 
     private final RealmSmtpService realmSmtpService;
     private final BocraMesssageService bocraMesssageService;
+    private final RabbitTemplate rabbitTemplate;
     
-    public EmailService(RealmSmtpService realmSmtpService, RestTemplate restTemplate,
-            BocraMesssageService bocraMesssageService) {
+    public EmailService(RealmSmtpService realmSmtpService, BocraMesssageService bocraMesssageService, RabbitTemplate rabbitTemplate) {
         this.realmSmtpService = realmSmtpService;
-        this.restTemplate = restTemplate;
         this.bocraMesssageService = bocraMesssageService;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @RabbitListener(queues = "q.send-email")
     public void sendEmail(BocraMesssageVO emailMessage) {
 
-        log.info("Sending email to {}", emailMessage.getSubject());
+        log.info("Sending email to {}", emailMessage.getDestinations());
 
         try {
 
@@ -75,6 +73,7 @@ public class EmailService {
 
             try {
                 mailSender.send(message);
+                System.out.println("******************************************");
 
                 if(emailMessage.getId() != null) {
                     emailMessage = bocraMesssageService.findById(emailMessage.getId());
@@ -103,6 +102,24 @@ public class EmailService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+    }
+    @RabbitListener(queues = "q.email_queue")
+    public void readEmailQueue(Collection<BocraMesssageVO> emailMessages) {
+        
+        for (BocraMesssageVO emailMessage : emailMessages) {
+            
+            if(emailMessage.getId() != null) {
+                emailMessage = bocraMesssageService.findById(emailMessage.getId());
+            }
+            
+            emailMessage = bocraMesssageService.save(emailMessage);
+
+            if(emailMessage.getSendNow()) {
+                rabbitTemplate.convertAndSend("", "q.communication", emailMessage);
+            }
+
         }
 
     }

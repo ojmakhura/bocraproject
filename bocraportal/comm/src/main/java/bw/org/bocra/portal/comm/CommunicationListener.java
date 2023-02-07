@@ -22,16 +22,16 @@ public class CommunicationListener {
     }
 
     @RabbitListener(queues = {"q.communication"})
-    public void onCommunication(BocraMesssageVO event)  {
-        log.info("Communication Event Received: {}", event);
+    public void onCommunication(BocraMesssageVO emailMessage)  {
+        log.info("Communication message Received: {}", emailMessage);
 
         //executeCommunication(event);
 
-        rabbitTemplate.convertAndSend("x.post-communication","", event);
+        rabbitTemplate.convertAndSend("x.post-communication","", emailMessage);
     }
 
-    private void executeCommunication(BocraMesssageVO event) {
-        log.info("Executing Communication Event: {}", event);
+    private void executeCommunication(BocraMesssageVO emailMessage) {
+        log.info("Executing Communication Event: {}", emailMessage);
 
         throw new RuntimeException("Communication Failed");
 

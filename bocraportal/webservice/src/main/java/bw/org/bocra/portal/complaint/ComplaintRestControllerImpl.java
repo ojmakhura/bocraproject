@@ -7,6 +7,7 @@ package bw.org.bocra.portal.complaint;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -14,17 +15,11 @@ import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
-import org.keycloak.OAuth2Constants;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.postgresql.util.PSQLException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,9 +35,8 @@ import com.nimbusds.jose.util.JSONArrayUtils;
 import bw.org.bocra.portal.document.DocumentService;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
-import bw.org.bocra.portal.message.BocraMessagePlatform;
-import bw.org.bocra.portal.message.BocraMessageStatus;
 import bw.org.bocra.portal.properties.KeycloakProperties;
+import bw.org.bocra.portal.properties.RabbitProperties;
 import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -67,8 +61,11 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     private String clientSecret;
 
     private final RestTemplate restTemplate;
+    private final RabbitTemplate rabbitTemplate;
+    private final RabbitProperties rabbitProperties;
 
-    public ComplaintRestControllerImpl(ComplaintService complaintService, DocumentService documentService, KeycloakProperties keycloakProperties,
+    public ComplaintRestControllerImpl(ComplaintService complaintService, DocumentService documentService,
+            KeycloakProperties keycloakProperties, RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties,
             KeycloakUserService keycloakUserService, KeycloakService keycloakService, RestTemplate restTemplate) {
 
         super(complaintService);
@@ -77,7 +74,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
         this.keycloakService = keycloakService;
         this.restTemplate = restTemplate;
         this.keycloakProperties = keycloakProperties;
-
+        this.rabbitTemplate = rabbitTemplate;
+        this.rabbitProperties = rabbitProperties;
     }
 
     @Override
@@ -90,7 +88,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             if (data.isPresent()) {
                 response = ResponseEntity.ok().body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Complaint with id %ld not found.", id));
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(String.format("Complaint with id %ld not found.", id));
             }
 
             return response;
@@ -98,7 +97,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             String message = e.getMessage();
             if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
                     || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Complaint with id %d not found.", id));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(String.format("Complaint with id %d not found.", id));
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
@@ -116,7 +116,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             return ResponseEntity.ok().body(complaintService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest()
+                    .body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -130,7 +131,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             if (data.isPresent()) {
                 response = ResponseEntity.ok().body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the complaint with id " + id);
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Failed to delete the complaint with id " + id);
             }
 
             return response;
@@ -138,7 +140,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
 
-            if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+            if (e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete compaint with id " + id);
             }
 
@@ -151,17 +153,17 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
         try {
             logger.debug("Save Complaint " + complaint);
 
-            if(complaint.getId() == null) {
-                if(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
+            if (complaint.getId() == null) {
+                if (SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
                     complaint.setCreatedDate(LocalDateTime.now());
                 }
             } else {
-                if(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
+                if (SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
                     complaint.setUpdatedDate(LocalDateTime.now());
                 }
             }
-            
-            complaint =  complaintService.save(complaint); // TODO: Add custom code here;
+
+            complaint = complaintService.save(complaint); // TODO: Add custom code here;
             ResponseEntity<?> response;
 
             if (complaint != null && complaint.getId() != null) {
@@ -169,35 +171,30 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
                 System.out.println(complaint);
 
-                JSONObject healthStatus = restTemplate.getForObject (commUrl + "/actuator/health", JSONObject.class);
-                if(healthStatus.get("status").toString().equals("UP")) {
+                String emailTempate = """
+                        Dear %s
 
-                    String emailTempate = """
-                     Dear %s
+                        We acknowledge receipt of your complaint against %s and will get back
+                        to you as soon as possible. Please note that to access your
+                        complaint, go the the url %s.
 
-                     We acknowledge receipt of your complaint against %s and will get back
-                     to you as soon as possible. Please note that to access your
-                     complaint, go the the url %s.
+                        Regards,
 
-                     Regards,
+                        BOCRA Complaint Management Team
+                        """;
 
-                     BOCRA Complaint Management Team
-                     """;
+                String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
 
-                    String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
+                String subject = String.format("Complaint against %s.", complaint.getLicensee().getLicenseeName());
+                String text = String.format(
+                        emailTempate,
+                        complaint.getFirstName() + " " + complaint.getSurname(),
+                        complaint.getLicensee().getLicenseeName(),
+                        complaintUrl);
 
-                    String subject = String.format("Complaint against %s.", complaint.getLicensee().getLicenseeName());
-                    String text = String.format(
-                            emailTempate,
-                            complaint.getFirstName() + " " + complaint.getSurname(),
-                            complaint.getLicensee().getLicenseeName(),
-                            complaintUrl
-                    );
+                this.sendComplaintMessage(complaint, subject, List.of(complaint.getEmail()), text,
+                        complaint.getFirstName() + " " + complaint.getSurname());
 
-                    this.sendComplaintMessage(complaint, subject, List.of(complaint.getEmail()), text, complaint.getFirstName() + " " + complaint.getSurname());
-
-                }
-                
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the complaint.");
             }
@@ -209,62 +206,64 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
             String message = e.getMessage();
 
-            if(e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
+            if (e instanceof IllegalArgumentException || e.getCause() instanceof IllegalArgumentException) {
 
-                if(message.contains("'complaint'")) {
+                if (message.contains("'complaint'")) {
 
                     message = "The complaint information is missing.";
 
-                } else if(message.contains("'licensee' or its id can not be null") || message.contains("'complaint.licensee' can not be null")) {
-                
+                } else if (message.contains("'licensee' or its id can not be null")
+                        || message.contains("'complaint.licensee' can not be null")) {
+
                     message = "The licensee or its id is missing.";
-                
-                }else if(message.contains("'complaintType' or its id can not be null") || message.contains("'complaint.complaintType' can not be null")) {
-                
+
+                } else if (message.contains("'complaintType' or its id can not be null")
+                        || message.contains("'complaint.complaintType' can not be null")) {
+
                     message = "The complaint type or its id is missing.";
-                
-                } else if(message.contains("'complaint.status'")) {
-                
+
+                } else if (message.contains("'complaint.status'")) {
+
                     message = "The complaint status is missing.";
-                
-                } else if(message.contains("'complaint.firstName'")) {
-                  
+
+                } else if (message.contains("'complaint.firstName'")) {
+
                     message = "The complaint first name is missing.";
-                
-                } else if(message.contains("'complaint.surname'")) {
-                  
+
+                } else if (message.contains("'complaint.surname'")) {
+
                     message = "The complaint surname is missing.";
-                
-                } else if(message.contains("'complaint.email'")) {
-                  
+
+                } else if (message.contains("'complaint.email'")) {
+
                     message = "The complaint email is missing.";
-                
-                } else if(message.contains("'complaint.subject'")) {
-                  
+
+                } else if (message.contains("'complaint.subject'")) {
+
                     message = "The complaint subject is missing.";
-                
-                } else if(message.contains("'complaint.details'")) {
-                  
+
+                } else if (message.contains("'complaint.details'")) {
+
                     message = "The complaint details is missing.";
-                
-                } else if(message.contains("'complaint.createdDate'")) {
-                  
+
+                } else if (message.contains("'complaint.createdDate'")) {
+
                     message = "The complaint created date is missing.";
-                
+
                 } else {
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
                 return ResponseEntity.badRequest().body(message);
 
-            } else if(e.getCause() instanceof PSQLException) {
+            } else if (e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
-                    if(e.getCause().getMessage().contains("(complaint_id)")) {
+                    if (e.getCause().getMessage().contains("(complaint_id)")) {
 
                         return ResponseEntity.badRequest().body("An complaint with this id has been already created.");
-                    } 
-                    
+                    }
+
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
                         return ResponseEntity.badRequest().body("The created-by value is missing.");
@@ -272,78 +271,77 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                         return ResponseEntity.badRequest().body("The created date value is missing.");
                     }
                 }
-                
-                return ResponseEntity.badRequest().body("This complaint is conflicting with an existing one.");
-            } 
 
-            return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
-        } catch(Exception e) {
+                return ResponseEntity.badRequest().body("This complaint is conflicting with an existing one.");
+            }
+
+            return ResponseEntity.badRequest()
+                    .body("An unknown database error has occured. Please contact the portal administrator.");
+        } catch (Exception e) {
 
             e.printStackTrace();
             // e.getCause().printStackTrace();
-            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest()
+                    .body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleSearch(ComplaintSeachCriteria criteria) {
-        
+
         try {
             logger.debug("Searchs for a Complaint");
             return ResponseEntity.ok().body(complaintService.search(criteria));
-            
+
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest()
+                    .body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
-    private String getAuthToken() {
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            System.out.println(keycloakProperties);
-            Keycloak keycloak = KeycloakBuilder.builder()
-                .serverUrl(keycloakProperties.getAuthServerUrl())
-                .realm( keycloakProperties.getRealm() )
-                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-                .clientId(keycloakProperties.getResource())
-                .clientSecret(clientSecret)
-                .resteasyClient(new ResteasyClientBuilderImpl()
-                    .connectionPoolSize(100)
-                    .build()
-                ) //
-                .build();
-            
-           return  keycloak.tokenManager().getAccessToken().getToken();
-        } else {
-            return keycloakService.getSecurityContext().getTokenString();
-            
-        }
-    }
+    // private String getAuthToken() {
+    // if(SecurityContextHolder.getContext().getAuthentication() instanceof
+    // AnonymousAuthenticationToken) {
+    // System.out.println(keycloakProperties);
+    // Keycloak keycloak = KeycloakBuilder.builder()
+    // .serverUrl(keycloakProperties.getAuthServerUrl())
+    // .realm( keycloakProperties.getRealm() )
+    // .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
+    // .clientId(keycloakProperties.getResource())
+    // .clientSecret(clientSecret)
+    // .resteasyClient(new ResteasyClientBuilderImpl()
+    // .connectionPoolSize(100)
+    // .build()
+    // ) //
+    // .build();
 
-    public void sendComplaintMessage(ComplaintVO complaint, String subject, List<String> destinations, String text, String user) {
+    // return keycloak.tokenManager().getAccessToken().getToken();
+    // } else {
+    // return keycloakService.getSecurityContext().getTokenString();
+
+    // }
+    // }
+
+    public void sendComplaintMessage(ComplaintVO complaint, String subject, List<String> destinations, String text,
+            String user) {
         JSONObject messageObj = new JSONObject();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
         messageObj.put("createdBy", user);
-        messageObj.put("createdDate", LocalDateTime.now());
+        messageObj.put("createdDate", format.format(LocalDateTime.now()));
         messageObj.put("sendNow", Boolean.TRUE);
-        messageObj.put("dispatchDate", LocalDate.now().atStartOfDay());
-        messageObj.put("messagePlatform", BocraMessagePlatform.EMAIL);
-        messageObj.put("status", BocraMessageStatus.DRAFT);
+        messageObj.put("dispatchDate", format.format(LocalDate.now().atStartOfDay()));
+        messageObj.put("messagePlatform", "EMAIL");
+        messageObj.put("status", "DRAFT");
         messageObj.put("subject", subject);
         messageObj.put("text", text);
 
         messageObj.put("destinations", destinations);
         List<Object> messageObjects = JSONArrayUtils.newJSONArray();
         messageObjects.add(messageObj);
-           
-        String url = commUrl + "/messages";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON); 
-
-        headers.set("Authorization", "Bearer " + getAuthToken());
-        HttpEntity<?> request = new HttpEntity<>(messageObjects, headers);
-        restTemplate.postForEntity(url, request, Integer.class);
+        rabbitTemplate.convertAndSend(rabbitProperties.getExchange(), rabbitProperties.getRoutingkey(), messageObjects);
     }
 
     @Override
@@ -351,34 +349,31 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
         try {
             logger.debug("Reply Complaint with Complaint Id:" + complaintId);
 
-
-
             ComplaintReplyVO added = complaintService.addComplaintReply(complaintId, reply);
             ResponseEntity<?> response;
 
             // if (data.isPresent()) {
             response = ResponseEntity.ok().body(added);
             // } else {
-            //     response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            // response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             // }
 
+            JSONObject healthStatus = restTemplate.getForObject(commUrl + "/actuator/health", JSONObject.class);
 
-            JSONObject healthStatus = restTemplate.getForObject (commUrl + "/actuator/health", JSONObject.class);
-                        
-            if(reply.getId() == null && healthStatus.get("status").toString().equals("UP")) {
+            if (reply.getId() == null && healthStatus.get("status").toString().equals("UP")) {
                 String emailTempate = """
-                    Dear %s
+                        Dear %s
 
-                    Your complaint %s against %s has a new reply. Go to the URL
-                    %s to view the reply and respond.
+                        Your complaint %s against %s has a new reply. Go to the URL
+                        %s to view the reply and respond.
 
-                    Regards,
+                        Regards,
 
-                    BOCRA Complaint Management Team
-                    """;
+                        BOCRA Complaint Management Team
+                        """;
 
                 ComplaintVO complaint = complaintService.findByComplaintId(complaintId);
-                
+
                 String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
                 System.out.println(1);
                 String text = String.format(
@@ -386,19 +381,18 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                         complaint.getFirstName() + " " + complaint.getSurname(),
                         complaint.getComplaintId(),
                         complaint.getLicensee().getLicenseeName(),
-                        complaintUrl
-                );
+                        complaintUrl);
                 System.out.println(2);
-                
-                this.sendComplaintMessage(complaint, "Complait reply received.", List.of(complaint.getEmail()), text, reply.getReplyUser());
+
+                this.sendComplaintMessage(complaint, "Complait reply received.", List.of(complaint.getEmail()), text,
+                        reply.getReplyUser());
             }
-
-
 
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.badRequest().body("Unable to add the reply to this complaint. Please contact administrator.");
+            return ResponseEntity.badRequest()
+                    .body("Unable to add the reply to this complaint. Please contact administrator.");
         }
 
     }
@@ -409,20 +403,21 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             logger.debug("Deletes a Complaint Reply with Id" + id);
             Optional<?> data = Optional.of(complaintService.removeComplaintReply(id)); // TODO: Add custom code here;
             ResponseEntity<?> response;
-            
+
             response = ResponseEntity.ok().body(data.get());
 
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.badRequest().body("Unable to remove the reply from this complaint. Please contact administrator.");
+            return ResponseEntity.badRequest()
+                    .body("Unable to remove the reply from this complaint. Please contact administrator.");
         }
     }
 
     @Override
     public ResponseEntity<?> handleFindByComplaintId(String complaintId) {
 
-        if(StringUtils.isBlank(complaintId)) {
+        if (StringUtils.isBlank(complaintId)) {
             return ResponseEntity.badRequest().body("Complaint ID should not be empty.");
         }
 
@@ -437,8 +432,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                     || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
 
                 message = String.format("Complaint with complaint id %s not found.", complaintId);
-            
-            } else if(e instanceof ComplaintServiceException || e.getCause() instanceof ComplaintServiceException) {
+
+            } else if (e instanceof ComplaintServiceException || e.getCause() instanceof ComplaintServiceException) {
                 message = String.format("Complaint with complaint id %s not found.", complaintId);
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";

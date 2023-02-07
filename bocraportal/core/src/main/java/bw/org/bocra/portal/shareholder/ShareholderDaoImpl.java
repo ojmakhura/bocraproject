@@ -8,7 +8,10 @@ package bw.org.bocra.portal.shareholder;
 
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentDao;
+import bw.org.bocra.portal.document.DocumentMetadataTarget;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderRepository;
 import bw.org.bocra.portal.licensee.shares.LicenseeShareholderVO;
@@ -19,6 +22,8 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,11 +60,22 @@ public class ShareholderDaoImpl
             ShareholderVO target) {
         // TODO verify behavior of toShareholderVO
         super.toShareholderVO(source, target);
-        if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByIdIn(source.getDocumentIds()));
-            docs = docs.stream().map(d -> {
-                d.setFile(null);
-                return d;
+        
+        Specification<Document> specs = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget", DocumentMetadataTarget.SHAREHOLDER)
+                                            .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", source.getId()));
+
+        Collection<Document> entities = documentRepository.findAll(specs, Sort.by("id").ascending());
+        if(CollectionUtils.isNotEmpty(entities)) {
+            Collection<DocumentVO> docs = entities.stream().map(d -> {
+                DocumentVO dv = new DocumentVO();
+                dv.setId(d.getId());
+                dv.setContentType(d.getContentType());
+                dv.setDocumentId(d.getDocumentId());
+                dv.setDocumentName(d.getDocumentName());
+                dv.setExtension(d.getExtension());
+                dv.setMetadataTargetId(d.getMetadataTargetId());
+                dv.setSize(d.getSize());
+                return dv;
             }).collect(Collectors.toSet());
             target.setDocuments(docs);
         }
@@ -128,17 +144,6 @@ public class ShareholderDaoImpl
             boolean copyIfNull) {
         // TODO verify behavior of shareholderVOToEntity
         super.shareholderVOToEntity(source, target, copyIfNull);
-        // if(CollectionUtils.isNotEmpty(source.getShares())) {
-        //     source.getShares().forEach(share -> {
-        //         if(share.getId() != null) {
-                    
-        //         }
-        //     });
-        // }
-
-        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
-            Collection<Long> ids = source.getDocuments().stream().map(doc -> doc.getId()).collect(Collectors.toSet());
-            target.setDocumentIds(ids);
-        }
+        
     }
 }

@@ -13,10 +13,15 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.complaint.ComplaintRepository;
+import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentMetadataTarget;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.form.FormRepository;
@@ -25,6 +30,7 @@ import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.licence.Licence;
 import bw.org.bocra.portal.licence.LicenceRepository;
 import bw.org.bocra.portal.licence.LicenceVO;
+import bw.org.bocra.portal.licence.type.LicenceTypeVO;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.form.LicenseeFormRepository;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
@@ -37,6 +43,7 @@ import bw.org.bocra.portal.licensee.shares.LicenseeShareholder;
 import bw.org.bocra.portal.report.ReportRepository;
 import bw.org.bocra.portal.report.config.ReportConfigRepository;
 import bw.org.bocra.portal.sector.SectorRepository;
+import bw.org.bocra.portal.sector.SectorVO;
 
 /**
  * @see Licensee
@@ -76,7 +83,21 @@ public class LicenseeDaoImpl
             for (Licence entity : source.getLicences()) {
                 LicenceVO vo = new LicenceVO();
 
-                licenceDao.toLicenceVO(entity, vo);
+                vo.setId(entity.getId());
+                vo.setLicenceNumber(entity.getLicenceNumber());
+                vo.setEndDate(entity.getEndDate());
+                vo.setStartDate(entity.getStartDate());
+                vo.setStatus(entity.getStatus());
+                vo.setProvisional(entity.getProvisional());
+
+                LicenceTypeVO typevo = new LicenceTypeVO();
+                typevo.setId(entity.getLicenceType().getId());
+                typevo.setCode(entity.getLicenceType().getCode());
+                typevo.setName(entity.getLicenceType().getName());
+                typevo.setDescription(entity.getLicenceType().getDescription());
+
+                vo.setLicenceType(typevo);
+
                 target.getLicences().add(vo);
             }
         }
@@ -86,16 +107,31 @@ public class LicenseeDaoImpl
             target.setSectors(new ArrayList<>());
 
             for (LicenseeSector entity : source.getLicenseeSectors()) {
-                LicenseeSectorVO vo = getLicenseeSectorDao().toLicenseeSectorVO(entity);
+                LicenseeSectorVO vo = new LicenseeSectorVO();
+                vo.setId(entity.getId());
+                vo.setSector(new SectorVO());
+                vo.getSector().setId(entity.getSector().getId());
+                vo.getSector().setCode(entity.getSector().getCode());
+                vo.getSector().setName(entity.getSector().getName());
                 target.getSectors().add(vo);
             }
         }
 
-        if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
-            docs = docs.stream().map(d -> {
-                d.setFile(null);
-                return d;
+        Specification<Document> specs = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget", DocumentMetadataTarget.LICENSEE)
+                                            .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", source.getId()));
+
+        Collection<Document> entities = documentRepository.findAll(specs, Sort.by("id").ascending());
+        if(CollectionUtils.isNotEmpty(entities)) {
+            Collection<DocumentVO> docs = entities.stream().map(d -> {
+                DocumentVO dv = new DocumentVO();
+                dv.setId(d.getId());
+                dv.setContentType(d.getContentType());
+                dv.setDocumentId(d.getDocumentId());
+                dv.setDocumentName(d.getDocumentName());
+                dv.setExtension(d.getExtension());
+                dv.setMetadataTargetId(d.getMetadataTargetId());
+                dv.setSize(d.getSize());
+                return dv;
             }).collect(Collectors.toSet());
             target.setDocuments(docs);
         }
@@ -187,11 +223,6 @@ public class LicenseeDaoImpl
 
             target.setLicences(types);
 
-        }
-
-        if (CollectionUtils.isNotEmpty(source.getDocuments())) {
-            target.setDocumentIds(
-                    source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toList()));
         }
 
         // if(CollectionUtils.isNotEmpty(source.getSectors()) && source.getId() != null)

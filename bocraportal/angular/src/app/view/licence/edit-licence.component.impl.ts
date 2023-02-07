@@ -118,6 +118,8 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
       form.licence.createdBy = this.keycloakService.getUsername();
       form.licence.createdDate = new Date();
     }
+    
+    form.licence.documents = undefined
 
     this.store.dispatch(
       LicenceActions.save({

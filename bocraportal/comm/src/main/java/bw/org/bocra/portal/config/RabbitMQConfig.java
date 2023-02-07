@@ -13,11 +13,16 @@ import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 @Configuration
 // @Slf4j
@@ -75,21 +80,29 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Jackson2JsonMessageConverter converter() {
-        return new Jackson2JsonMessageConverter();
+    public Jackson2JsonMessageConverter converter(ObjectMapper mapper) {
+        return new Jackson2JsonMessageConverter(mapper);
     }
 
     @Bean
     public RabbitTemplate rabbitTemplate(Jackson2JsonMessageConverter converter) {
         RabbitTemplate template = new RabbitTemplate(cachingConnectionFactory);
-        template.setMessageConverter(converter);
+        
+        // mapper.setDate;
+        template.setMessageConverter(converter(objectMapper()));
         return template;
     }
 
     @Bean
     @Primary
     public ObjectMapper objectMapper() {
-        JavaTimeModule module = new JavaTimeModule();
-        return new ObjectMapper().registerModule(module);
+        ObjectMapper mapper =
+                new ObjectMapper()
+                        .registerModule(new ParameterNamesModule())
+                        .registerModule(new Jdk8Module())
+                        .registerModule(new JavaTimeModule());
+        
+        // mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return mapper;
     }
 }
