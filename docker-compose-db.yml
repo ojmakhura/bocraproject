@@ -33,20 +33,8 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik-public"
-        # - "traefik.constraint-label=bocra_db"
-        # - "traefik.http.routers.bocra-db-http.rule=Host(`${DB_DOMAIN}`)"
-        # - "traefik.http.routers.bocra-db-http.entrypoints=web"
-        # - "traefik.http.routers.bocra-db-http.middlewares=https-redirect"
-        # - "traefik.http.routers.bocra-db-https.entrypoints=websecure"
-        # - "traefik.http.routers.bocra-db-https.rule=Host(`${DB_DOMAIN}`)"
-        # - "traefik.http.routers.bocra-db-https.tls=${SSL_SECURE}"
-        # - "traefik.http.routers.bocra-db-https.tls.certresolver=le"
-        # - "traefik.http.services.bocra-db.loadbalancer.server.port=5432"
         - "traefik.tcp.routers.bocra-db.rule=HostSNI(`*`)"
         - "traefik.tcp.routers.bocra-db.entrypoints=postgres"
-        # - "traefik.tcp.routers.bocra-db-postgres.tls=true"
-        # - "traefik.tcp.routers.bocra-db.service=bocra-db"
-        # - "traefik.tcp.routers.bocra-db-postgres.tls.certresolver=le"
         - "traefik.tcp.services.bocra-db.loadbalancer.server.port=5432"
 
   ###############################################################################

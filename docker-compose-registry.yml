@@ -10,18 +10,17 @@ services:
       - ${BOCRA_DATA}/auth:/opt/auth
     environment:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
-      # REGISTRY_AUTH_TOKEN_REALM: https://keycloak.localhost/realms/bocraportal/protocol/docker-v2/auth
-      # REGISTRY_AUTH_TOKEN_SERVICE: bocraportal-registry
-      # REGISTRY_AUTH_TOKEN_ISSUER: https://keycloak.localhost/realms/bocraportal
-      # REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /opt/certs/registry_trust_chain.pem
+      REGISTRY_AUTH_TOKEN_REALM: https://keycloak.localhost/realms/bocraportal/protocol/docker-v2/auth
+      REGISTRY_AUTH_TOKEN_SERVICE: bocraportal-registry
+      REGISTRY_AUTH_TOKEN_ISSUER: https://keycloak.localhost/realms/bocraportal
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /opt/certs/registry_trust_chain.pem
 
       # REGISTRY_HTTP_TLS_CERTIFICATE: /opt/certs/localhost.crt
       # REGISTRY_HTTP_TLS_KEY: /opt/certs/localhost.key
-      REGISTRY_AUTH: htpasswd
-      REGISTRY_AUTH_HTPASSWD_PATH: /opt/auth/registry_passwd
-      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      # REGISTRY_AUTH: htpasswd
+      # REGISTRY_AUTH_HTPASSWD_PATH: /opt/auth/registry_passwd
+      # REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
       LOG: debug
-      REGISTRY_HTTP_ADDR: 0.0.0.0:5000
     networks:
       traefik-public:
     deploy:
@@ -33,14 +32,13 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik-public"
-        # - "traefik.constraint-label=rogue-public"
+        # - "traefik.constraint-label=traefik-public"
         - "traefik.http.routers.registry-http.rule=Host(`${REGISTRY_DOMAIN}`)"
         - "traefik.http.routers.registry-http.entrypoints=${WEB_ENTRY}"
         - "traefik.http.routers.registry-http.middlewares=https-redirect"
-        - "traefik.http.routers.registry-https.entrypoints=${WEBSECURE_ENTRY}"
+        - "traefik.http.routers.registry-https.entrypoints=registry"
         - "traefik.http.routers.registry-https.rule=Host(`${REGISTRY_DOMAIN}`)"
         - "traefik.http.routers.registry-https.tls=true"
-        # - "traefik.http.routers.registry-https.tls.certresolver=le"
         - "traefik.http.services.registry.loadbalancer.server.port=5000"
 
   ###############################################################################
@@ -51,17 +49,18 @@ services:
     # ports:
     #   - "8086:80"
     environment:
-      - REGISTRY_HOST=registry
+      - REGISTRY_HOST=192.168.11.162
       - REGISTRY_PORT=5000
       - REGISTRY_PROTOCOL=http
       - SSL_VERIFY=false
-      - USERNAME=molaodi
-      - PASSWORD=molaodi
-      - REGISTRY_USERNAME=molaodi
-      - REGISTRY_PASSWORD=molaodi
+      - USERNAME=junior
+      - PASSWORD=rxh4ulom
+      - REGISTRY_USERNAME=junior
+      - REGISTRY_PASSWORD=rxh4ulom
       - TITLE=Private Docker Registry
       - REGISTRY_ALLOW_DELETE=true
-    restart: always
+    volumes:
+      - ./deployment/hosts:/etc/hosts
 
     networks:
       traefik-public:
@@ -77,10 +76,10 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         # - traefik.constraint-label=traefik-public
-        - traefik.http.routers.registry-ui-http.rule=Host(`${REGISTRY_DOMAIN}`) && PathPrefix(`/ui`)
+        - traefik.http.routers.registry-ui-http.rule=Host(`web-${REGISTRY_DOMAIN}`)
         - traefik.http.routers.registry-ui-http.entrypoints=${WEB_ENTRY}
         - traefik.http.routers.registry-ui-http.middlewares=https-redirect
-        - traefik.http.routers.registry-ui-https.rule=Host(`${REGISTRY_DOMAIN}`) && PathPrefix(`/ui`)
+        - traefik.http.routers.registry-ui-https.rule=Host(`web-${REGISTRY_DOMAIN}`)
         - traefik.http.routers.registry-ui-https.entrypoints=${WEBSECURE_ENTRY}
         - "traefik.http.routers.registry-ui-https.tls=true"
         #- "traefik.http.routers.registry.tls.certresolver=le"
