@@ -76,7 +76,6 @@ public class EmailService {
 
             try {
                 mailSender.send(message);
-                System.out.println("******************************************");
 
                 if(emailMessage.getId() != null) {
                     emailMessage = bocraMesssageService.findById(emailMessage.getId());
