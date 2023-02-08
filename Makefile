@@ -258,4 +258,4 @@ registry_logs:
 	docker compose logs registry
 
 traefik_network:
-	docker network create --driver overlay traefik-public && docker network create --driver bridge bocraportal-public
+	docker network create --driver overlay bocraportal-public && docker network create --driver bridge bocraportal-public

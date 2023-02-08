@@ -22,7 +22,7 @@ services:
       # REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
       LOG: debug
     networks:
-      traefik-public:
+      bocraportal-public:
     deploy:
       placement:
         constraints:
@@ -31,8 +31,8 @@ services:
           - node.labels.bocraportal_registry == true
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=traefik-public"
-        # - "traefik.constraint-label=traefik-public"
+        - "traefik.docker.network=bocraportal-public"
+        # - "traefik.constraint-label=bocraportal-public"
         - "traefik.http.routers.registry-http.rule=Host(`${REGISTRY_DOMAIN}`)"
         - "traefik.http.routers.registry-http.entrypoints=${WEB_ENTRY}"
         - "traefik.http.routers.registry-http.middlewares=https-redirect"
@@ -64,7 +64,7 @@ services:
       - ${BOCRA_DATA}/hosts:/etc/hosts
 
     networks:
-      traefik-public:
+      bocraportal-public:
       default:
 
     deploy:
@@ -75,8 +75,8 @@ services:
           - node.labels.bocraportal_registry == true
       labels:
         - traefik.enable=true
-        - traefik.docker.network=traefik-public
-        # - traefik.constraint-label=traefik-public
+        - traefik.docker.network=bocraportal-public
+        # - traefik.constraint-label=bocraportal-public
         - traefik.http.routers.registry-ui-http.rule=Host(`web-${REGISTRY_DOMAIN}`)
         - traefik.http.routers.registry-ui-http.entrypoints=${WEB_ENTRY}
         - traefik.http.routers.registry-ui-http.middlewares=https-redirect
@@ -89,6 +89,6 @@ services:
 # Networks
 ###############################################################################
 networks:
-  traefik-public:
+  bocraportal-public:
     external: true
 

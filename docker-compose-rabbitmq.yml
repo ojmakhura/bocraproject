@@ -20,7 +20,7 @@ services:
       timeout: 30s
       retries: 3
     networks:
-      traefik-public:
+      bocraportal-public:
       default:
     ports:
       - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
@@ -50,5 +50,5 @@ services:
 # Networks
 ###############################################################################
 networks:
-  traefik-public:
+  bocraportal-public:
     external: true

@@ -23,7 +23,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      traefik-public:
+      bocraportal-public:
     deploy:
       placement:
         constraints:
@@ -32,7 +32,7 @@ services:
           - node.labels.bocraportal_db == true
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=traefik-public"
+        - "traefik.docker.network=bocraportal-public"
         - "traefik.tcp.routers.bocra-db.rule=HostSNI(`${DB_DOMAIN}`)"
         - "traefik.tcp.routers.bocra-db.entrypoints=postgres"
         - "traefik.tcp.services.bocra-db.loadbalancer.server.port=5432"
@@ -45,7 +45,7 @@ services:
     hostname: pgadmin
     image: dpage/pgadmin4:6.18
     networks:
-      traefik-public:
+      bocraportal-public:
     # depends_on:
       # proxy:
       #   condition: service_healthy
@@ -64,7 +64,7 @@ services:
           - node.labels.bocraportal_db == true
       labels:
         - "traefik.enable=true"
-        # - "traefik.docker.network=traefik-public"
+        # - "traefik.docker.network=bocraportal-public"
         # - "traefik.constraint-label=bocra_db"
         - "traefik.http.routers.bocra-pgadmin-http.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
         - "traefik.http.routers.bocra-pgadmin-http.entrypoints=web"
@@ -79,5 +79,5 @@ services:
 # Networks
 ###############################################################################
 networks:
-  traefik-public:
+  bocraportal-public:
     external: true

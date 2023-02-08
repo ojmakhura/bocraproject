@@ -90,15 +90,27 @@ public class ShareholderDaoImpl
             ls.getLicensee().setUin(holder.getLicensee().getUin());
             ls.getLicensee().setLicenseeName(holder.getLicensee().getLicenseeName());
             ls.setNumberOfShares(holder.getNumberOfShares());
-            if (CollectionUtils.isNotEmpty(holder.getDocumentIds())) {
-                Collection<DocumentVO> docs = documentDao
-                        .toDocumentVOCollection(documentRepository.findByIdIn(holder.getDocumentIds()));
-                docs = docs.stream().map(d -> {
-                    d.setFile(null);
-                    return d;
+            
+            Specification<Document> lsSpecs = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget", DocumentMetadataTarget.LICENSEE_SHAREHOLDER)
+                                            .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", holder.getId()));
+
+            Collection<Document> dEntities = documentRepository.findAll(lsSpecs, Sort.by("id").ascending());
+            if (CollectionUtils.isNotEmpty(dEntities)) {
+
+                Collection<DocumentVO> docs = dEntities.stream().map(d -> {
+                    DocumentVO dv = new DocumentVO();
+                    dv.setId(d.getId());
+                    dv.setContentType(d.getContentType());
+                    dv.setDocumentId(d.getDocumentId());
+                    dv.setDocumentName(d.getDocumentName());
+                    dv.setExtension(d.getExtension());
+                    dv.setMetadataTargetId(d.getMetadataTargetId());
+                    dv.setSize(d.getSize());
+                    return dv;
                 }).collect(Collectors.toSet());
                 ls.setDocuments(docs);
             }
+
             target.getShares().add(ls);
         }
     }
