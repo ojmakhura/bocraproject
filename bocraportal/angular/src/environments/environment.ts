@@ -18,9 +18,9 @@ export const environment = {
   supportedLanguages: ['en-US'],
   bocraApiServer: 'http://localhost:8085',
   redirectUri: 'http://localhost:4200',
-  keycloakRealmUrl: 'https://keycloak.localhost/admin/realms/bocraportal',
+  keycloakRealmUrl: 'https://keycloak.bocradev.local/admin/realms/bocraportal',
   keycloak: {
-    issuer: 'https://keycloak.localhost',
+    issuer: 'https://keycloak.bocradev.local',
     redirectUri: window.location.origin,
     clientId: 'bocraportal-web',
     scope: 'openid profile email offline_access',

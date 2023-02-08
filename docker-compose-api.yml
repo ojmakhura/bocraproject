@@ -51,11 +51,12 @@ services:
           - node.labels.bocra_api == true
       labels:
         - "traefik.enable=true"
-        - "traefik.http.services.api.loadbalancer.server.port=8085"
-        - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-        - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
-        - "traefik.http.routers.api.tls=${SSL_SECURE}"
-        - "traefik.http.routers.api.tls.certresolver=le"
+        - "traefik.http.routers.api-web.rule=Host(`${API_DOMAIN}`)"
+        - "traefik.http.routers.api-web.entrypoints=web"
+        - "traefik.http.routers.api-web.middlewares=https-redirect"
+        - "traefik.http.routers.api-websecure.entrypoints=websecure"
+        - "traefik.http.routers.api-websecure.rule=Host(`${API_DOMAIN}`)"
+        - "traefik.http.routers.api-websecure.tls=${SSL_SECURE}"
 ###############################################################################
 # Networks
 ###############################################################################

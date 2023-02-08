@@ -360,7 +360,7 @@ public class SubmissionServiceImpl
     }
 
     @Override
-    protected Integer handleCheckOverdueSubmissions() throws Exception {
+    protected Collection<FormSubmissionVO> handleCheckOverdueSubmissions() throws Exception {
         Specification<FormSubmission> sSpecs = BocraportalSpecifications
                 .<FormSubmission, FormSubmissionStatus>findByAttribute(
                         "submissionStatus", FormSubmissionStatus.DRAFT)
@@ -380,7 +380,7 @@ public class SubmissionServiceImpl
             }
         }
 
-        return overdue.size();
+        return formSubmissionDao.toFormSubmissionVOCollection(overdue);
     }
 
     @Override

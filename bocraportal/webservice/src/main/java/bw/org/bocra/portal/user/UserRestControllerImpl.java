@@ -49,13 +49,13 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             }
                 
             if(user == null || StringUtils.isBlank(user.getUserId())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The user could not be saved.");
+                return ResponseEntity.badRequest().body("The user could not be saved.");
             }
     
-            return ResponseEntity.status(HttpStatus.OK).body(user);
+            return ResponseEntity.ok().body(user);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -63,11 +63,11 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     public ResponseEntity<?> handleLoadUsers() {
         try{
             logger.debug("Load Users ");
-            return ResponseEntity.status(HttpStatus.OK).body(this.keycloakUserService.loadUsers());
+            return ResponseEntity.ok().body(this.keycloakUserService.loadUsers());
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -79,7 +79,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             ResponseEntity<Boolean> response;
     
             if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -87,7 +87,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -100,7 +100,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
         return ResponseEntity.ok(users);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -117,7 +117,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.ok(rep);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
  
     }
@@ -132,10 +132,10 @@ public class UserRestControllerImpl extends UserRestControllerBase {
                 return ResponseEntity.ok(rep);
             }
     
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -163,7 +163,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -177,7 +177,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }

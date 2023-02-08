@@ -42,7 +42,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not create a sector form entry. Please contact administrator.");
             }
@@ -74,33 +74,33 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(sector_form_unique)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An sector form has been already created.");
+                        return ResponseEntity.badRequest().body("An sector form has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"form_fk\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The form value is missing.");
+                        return ResponseEntity.badRequest().body("The form value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"sector_fk\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The sector value is missing.");
+                        return ResponseEntity.badRequest().body("The sector value is missing.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -112,7 +112,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the sector form with this form id.");
             }
@@ -130,7 +130,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -142,7 +142,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Sector form with id %d not found.", id));
             }
@@ -160,7 +160,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             }
 
             logger.error(message, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -172,7 +172,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the sector form with this sector id.");
             }
@@ -190,7 +190,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -198,10 +198,10 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Display all sector Forms");
-            return ResponseEntity.status(HttpStatus.OK).body(sectorFormService.getAll());
+            return ResponseEntity.ok().body(sectorFormService.getAll());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -213,7 +213,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the sector form with id " + id);
             }
@@ -227,7 +227,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete sector form with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting sector form with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting sector form with id " + id);
         }
     }
 
@@ -239,7 +239,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the form id.");
             }
@@ -247,7 +247,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage(), e );
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -259,7 +259,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the sector id.");
             }
@@ -267,7 +267,7 @@ public class SectorFormRestControllerImpl extends SectorFormRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

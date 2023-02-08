@@ -42,7 +42,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
             ResponseEntity<?> response;
 
             if(shareholder != null && shareholder.getId() != null) {
-                response = ResponseEntity.status(HttpStatus.OK).body(shareholder);
+                response = ResponseEntity.ok().body(shareholder);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Shareholder with id %ld not found.", id));
             }
@@ -60,7 +60,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
             }
 
             logger.error(message, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -68,11 +68,11 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Display all Shareholders");
-            return  ResponseEntity.status(HttpStatus.OK).body(shareholderService.getAll());
+            return  ResponseEntity.ok().body(shareholderService.getAll());
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -80,11 +80,11 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
             logger.debug("Display all Shareholders with the specified page number "+pageNumber+" and page size  "+pageSize);
-            return ResponseEntity.status(HttpStatus.OK).body(shareholderService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(shareholderService.getAll(pageNumber, pageSize));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -96,7 +96,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the shareholder with id " + id);
             }
@@ -110,7 +110,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete shareholder with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting shareholder with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting shareholder with id " + id);
         }
     }
 
@@ -122,7 +122,7 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -156,43 +156,43 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("shareholder_id")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A shareholder with this id has been already created.");
+                        return ResponseEntity.badRequest().body("A shareholder with this id has been already created.");
                     } else if(e.getCause().getMessage().contains("(name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A shareholder with this name has been already created.");
+                        return ResponseEntity.badRequest().body("A shareholder with this name has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
 
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"name\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The name value is missing.");
+                        return ResponseEntity.badRequest().body("The name value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"shareholder_id\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The shareholder id value is missing.");
+                        return ResponseEntity.badRequest().body("The shareholder id value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"type\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The type id value is missing.");
+                        return ResponseEntity.badRequest().body("The type id value is missing.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -200,10 +200,10 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
     public ResponseEntity<?> handleSearch(ShareholderCriteria criteria) {
         try {
             logger.debug("Search Shareholder by criteria " + criteria);
-            return ResponseEntity.status(HttpStatus.OK).body(shareholderService.search(criteria));
+            return ResponseEntity.ok().body(shareholderService.search(criteria));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

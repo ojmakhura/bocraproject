@@ -38,7 +38,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Access point with id %ld not found.", id));
             }
@@ -56,7 +56,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             }
 
             logger.error(message, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -65,12 +65,12 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
         try {
             logger.debug("Displays all Access Points");
 
-            return ResponseEntity.status(HttpStatus.OK).body(accessPointService.getAll());
+            return ResponseEntity.ok().body(accessPointService.getAll());
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -78,11 +78,11 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
             logger.debug("Displays all Access Points of the specified "+"Page number: "+pageNumber +"and Page size: " +pageSize);
-            return ResponseEntity.status(HttpStatus.OK).body(accessPointService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(accessPointService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -90,12 +90,12 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
     public ResponseEntity<?> handlePagedSearch(Integer pageNumber, Integer pageSize, AccessPointCriteria criteria) {
         try {
             logger.debug("Searches for an Access Point of the specified Page Number: " + pageNumber + ", Page Size: " + pageSize + " and Criteria: " +criteria);
-            return ResponseEntity.status(HttpStatus.OK).body(accessPointService.search(pageNumber, pageSize, criteria));
+            return ResponseEntity.ok().body(accessPointService.search(pageNumber, pageSize, criteria));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
             String message = String.format("An error occurred when reading page %d of size %d.", pageNumber, pageSize);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -107,7 +107,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             ResponseEntity<?> response;
 
             if(rm) {
-                response = ResponseEntity.status(HttpStatus.OK).body(rm);
+                response = ResponseEntity.ok().body(rm);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the access point with id " + id);
             }
@@ -121,7 +121,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete access point with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting access point with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting access point with id " + id);
         }
     }
 
@@ -133,7 +133,7 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the access point.");
             }
@@ -177,33 +177,33 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An access point with this name has been already created.");
+                        return ResponseEntity.badRequest().body("An access point with this name has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -212,12 +212,12 @@ public class AccessPointRestControllerImpl extends AccessPointRestControllerBase
         try {
             
             logger.debug("Searches for an Access Point by criteria " + criteria);
-            return ResponseEntity.status(HttpStatus.OK).body(accessPointService.search(criteria == null ? new AccessPointCriteria() : criteria));
+            return ResponseEntity.ok().body(accessPointService.search(criteria == null ? new AccessPointCriteria() : criteria));
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

@@ -12,10 +12,15 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.complaint.type.ComplaintTypeRepository;
+import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentMetadataTarget;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
@@ -64,7 +69,7 @@ public class ComplaintDaoImpl
 
             licensee.setSectors(new HashSet<>());
 
-            for (LicenseeSector sector : source.getLicensee().getLicenseeSectors()) {
+            for(LicenseeSector sector : source.getLicensee().getLicenseeSectors()) {
                 LicenseeSectorVO vo = new LicenseeSectorVO();
                 vo.setId(sector.getId());
                 vo.setSector(new SectorVO());
@@ -87,12 +92,21 @@ public class ComplaintDaoImpl
             target.setComplaintType(getComplaintTypeDao().toComplaintTypeVO(source.getComplaintType()));
         }
 
-        if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            Collection<DocumentVO> docs = documentDao
-                    .toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
-            docs = docs.stream().map(d -> {
-                d.setFile(null);
-                return d;
+        Specification<Document> specs = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget", DocumentMetadataTarget.COMPLAINT)
+                                            .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", source.getId()));
+
+        Collection<Document> entities = documentRepository.findAll(specs, Sort.by("id").ascending());
+        if(CollectionUtils.isNotEmpty(entities)) {
+            Collection<DocumentVO> docs = entities.stream().map(d -> {
+                DocumentVO dv = new DocumentVO();
+                dv.setId(d.getId());
+                dv.setContentType(d.getContentType());
+                dv.setDocumentId(d.getDocumentId());
+                dv.setDocumentName(d.getDocumentName());
+                dv.setExtension(d.getExtension());
+                dv.setMetadataTargetId(d.getMetadataTargetId());
+                dv.setSize(d.getSize());
+                return dv;
             }).collect(Collectors.toSet());
             target.setDocuments(docs);
         }
@@ -154,12 +168,6 @@ public class ComplaintDaoImpl
         } else {
             throw new IllegalArgumentException(
                     "ComplaintDao.complaintVOToEntity - 'complaintType' or its id can not be null");
-        }
-
-        if (CollectionUtils.isNotEmpty(source.getDocuments())) {
-            Collection<String> ids = source.getDocuments().stream().map(doc -> doc.getDocumentId())
-                    .collect(Collectors.toSet());
-            target.setDocumentIds(ids);
         }
     }
 }

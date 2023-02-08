@@ -202,7 +202,7 @@ services:
       default:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.keycloak-web.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.keycloak-web.rule=Host(`${KEYCLOAK_DOMAIN}`)"
       - "traefik.http.routers.keycloak-web.entrypoints=web"
       - "traefik.http.routers.keycloak-web.middlewares=https-redirect"
       - "traefik.http.routers.keycloak-websecure.entrypoints=${ACTIVE_ROUTER_ENTRY}"

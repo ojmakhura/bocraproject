@@ -37,7 +37,7 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Complaint type with id %ld not found.", id));
             }
@@ -54,7 +54,7 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
             }
 
             logger.error(message);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -62,10 +62,10 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Displays all Complaint Types");
-            return  ResponseEntity.status(HttpStatus.OK).body(complaintTypeService.getAll());
+            return  ResponseEntity.ok().body(complaintTypeService.getAll());
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -74,10 +74,10 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
         try {
             logger.debug("Displays all Complaint Types of the specified " + "Page number: " + pageNumber
                     + "and Page size: " + pageSize);
-            return  ResponseEntity.status(HttpStatus.OK).body(complaintTypeService.getAll(pageNumber, pageSize));
+            return  ResponseEntity.ok().body(complaintTypeService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the system administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the system administrator.");
         }
     }
 
@@ -88,9 +88,9 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
             
 
             if (complaintTypeService.remove(id)) {
-                return ResponseEntity.status(HttpStatus.OK).body("Complaint type successfully deleted.");
+                return ResponseEntity.ok().body("Complaint type successfully deleted.");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete complaint type");
+                return ResponseEntity.badRequest().body("Could not delete complaint type");
             }
 
         } catch (Exception e) {
@@ -98,10 +98,10 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
             logger.error(e.getMessage());
 
             if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not delete complaint type with id " + id);
+                return ResponseEntity.badRequest().body("Could not delete complaint type with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting complaint type with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting complaint type with id " + id);
         }
     }
 
@@ -113,9 +113,9 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the complaint type.");
+                response = ResponseEntity.badRequest().body("Could not save the complaint type.");
             }
 
             return response;
@@ -143,41 +143,41 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(code)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An complaint type with this code has been already created.");
+                        return ResponseEntity.badRequest().body("An complaint type with this code has been already created.");
                     } else if(e.getCause().getMessage().contains("(type_name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An complaint type with this name has been already created.");
+                        return ResponseEntity.badRequest().body("An complaint type with this name has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
 
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"code\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The code value is missing.");
+                        return ResponseEntity.badRequest().body("The code value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"type_name\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The type name value is missing.");
+                        return ResponseEntity.badRequest().body("The type name value is missing.");
                     }
 
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This complaint type is conflicting with an existing one.");
+                return ResponseEntity.badRequest().body("This complaint type is conflicting with an existing one.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -186,10 +186,10 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
         try {
             logger.debug("Searches for a Complaint Type by criteria " + criteria);
 
-            return ResponseEntity.status(HttpStatus.OK).body(complaintTypeService.search(criteria));
+            return ResponseEntity.ok().body(complaintTypeService.search(criteria));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

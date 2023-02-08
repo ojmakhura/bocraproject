@@ -56,15 +56,15 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not add sector to licensee.");
+                response = ResponseEntity.badRequest().body("Could not add sector to licensee.");
             }
 
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -78,7 +78,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             if(licensee != null && licensee.getId() != null) {
                 Collection<UserVO> users = this.keycloakUserService.getLicenseeUsers(licensee.getId());
                 licensee.setUsers(users);
-                response = ResponseEntity.status(HttpStatus.OK).body(licensee);
+                response = ResponseEntity.ok().body(licensee);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Licensee with id %ld not found.", id));
             }
@@ -96,7 +96,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             }
 
             logger.error(message, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -104,11 +104,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Display all Licensees ");
-            return ResponseEntity.status(HttpStatus.OK).body(licenseeService.getAll());
+            return ResponseEntity.ok().body(licenseeService.getAll());
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -116,11 +116,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
             logger.debug("Display all Licensees with specified page number " + pageNumber + " and page size " + pageSize);
-            return ResponseEntity.status(HttpStatus.OK).body(licenseeService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(licenseeService.getAll(pageNumber, pageSize));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -128,11 +128,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleGetDocuments(Long id) {
         try {
             logger.debug("Display Licensee Document with "+id);
-            return ResponseEntity.status(HttpStatus.OK).body(this.licenseeService.getDocuments(id));
+            return ResponseEntity.ok().body(this.licenseeService.getDocuments(id));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -140,11 +140,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleGetForms(Long id) {
         try {
             logger.debug("Display Licensee Forms with "+id);
-            return ResponseEntity.status(HttpStatus.OK).body(this.licenseeService.getForms(id));
+            return ResponseEntity.ok().body(this.licenseeService.getForms(id));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -156,7 +156,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -164,7 +164,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -172,11 +172,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleGetLicences(Long id) {
         try {
             logger.debug("Display Licensees with Id "+id);
-            return ResponseEntity.status(HttpStatus.OK).body(this.licenseeService.getLicences(id));
+            return ResponseEntity.ok().body(this.licenseeService.getLicences(id));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -188,7 +188,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -196,7 +196,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -204,11 +204,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleGetReports(Long id) {
         try {
             logger.debug("Display Licensee Reports "+id);
-            return ResponseEntity.status(HttpStatus.OK).body(this.licenseeService.getReports(id));
+            return ResponseEntity.ok().body(this.licenseeService.getReports(id));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -216,11 +216,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleGetSectors(Long id) {
         try {
             logger.debug("Display Licensee Sectors with Id "+id);
-            return ResponseEntity.status(HttpStatus.OK).body(this.licenseeService.getSectors(id));
+            return ResponseEntity.ok().body(this.licenseeService.getSectors(id));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -228,11 +228,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleGetShareholders(Long id) {
         try {
             logger.debug("Display Licensee Shareholders with Id "+id);
-            return ResponseEntity.status(HttpStatus.OK).body(this.licenseeService.getShareholders(id));
+            return ResponseEntity.ok().body(this.licenseeService.getShareholders(id));
            
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -244,7 +244,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the licensee with id " + id);
             }
@@ -258,7 +258,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete licensee with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting licensee with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting licensee with id " + id);
         }
     }
 
@@ -270,7 +270,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not remove sector from licensee.");
             }
@@ -278,7 +278,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -286,7 +286,7 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleSave(LicenseeVO licensee) {
         try {
             logger.debug("Save Licensee "+licensee);
-            return ResponseEntity.status(HttpStatus.OK).body(this.licenseeService.save(licensee));
+            return ResponseEntity.ok().body(this.licenseeService.save(licensee));
             
         } catch (IllegalArgumentException | LicenseeServiceException e) {
 
@@ -316,37 +316,37 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(uin)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee with this uin has been already created.");
+                        return ResponseEntity.badRequest().body("An licensee with this uin has been already created.");
                     } else if(e.getCause().getMessage().contains("(licensee_name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee with this name has been already created.");
+                        return ResponseEntity.badRequest().body("An licensee with this name has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
 
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -354,11 +354,11 @@ public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     public ResponseEntity<?> handleSearch(LicenseeCriteria criteria) {
         try {
             logger.debug("Search Licensee by criteria "+criteria);
-            return  ResponseEntity.status(HttpStatus.OK).body(this.licenseeService.search(criteria));
+            return  ResponseEntity.ok().body(this.licenseeService.search(criteria));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

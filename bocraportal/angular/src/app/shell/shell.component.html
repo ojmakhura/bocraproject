@@ -25,50 +25,49 @@
 							<a class="nav-link" routerLink="active"><i class="fa fa-phone fa-lg" aria-hidden="true"
 									title="Contact Us"></i>&nbsp; Contact Us</a>
 						</li> -->
-            <li class="nav-item px-2" *ngIf="(isLoggedIn | async) === false">
-              <a class="nav-link" routerLink="/complaint"><i class="fa fa-commenting fa-lg"
-                  aria-hidden="false"></i>&nbsp; Complaints</a>
-            </li>
-            <!-- <li class="nav-item px-2" *ngIf="isLoggedIn | async">
+						<li class="nav-item px-2">
+							<a class="nav-link" routerLink="/complaint"><i class="fa fa-commenting fa-lg"
+									aria-hidden="false"></i>&nbsp; File A Complaint</a>
+						</li>
+						<!-- <li class="nav-item px-2" *ngIf="isLoggedIn | async">
 							<a class="nav-link" routerLink="active"><i class="fa fa-bell fa-lg"
 									aria-hidden="false"></i>&nbsp; Notifications</a>
 						</li> -->
-          </ul>
-        </div>
-        <ul class="navbar-nav">
-          <div class="topbar-divider d-none d-sm-block" *ngIf="!isMobile"></div>
-          <button class="btn btn-primary" *ngIf="(isLoggedIn | async) === false" (click)="login()">Login</button>
-          <li class="nav-item dropdown" *ngIf="isLoggedIn | async">
-            <a class="nav-link dropdown-toggle" [matMenuTriggerFor]="userMenu" id="navbarDropdown" role="button"
-              aria-expanded="false" aria-haspopup="true"><span *ngIf="!isMobile">{{ username }} &nbsp;</span>
-              <i class="fa fa-user-circle fa-lg" aria-hidden="false"></i>
-            </a>
-            <mat-menu #userMenu="matMenu">
-              <mat-list *ngIf="isMobile">
-                <mat-list-item>
-                  <p>
-                    Logged in as <span class="fw-bold">{{ username }}</span>
-                  </p>
-                </mat-list-item>
-                <mat-divider></mat-divider>
-              </mat-list>
-              <mat-list>
-                <mat-list-item>
-                  <a class="dropdown-item" (click)="editProfile()"><i class="fa fa-user" aria-hidden="false"></i>&nbsp;
-                    Profile</a>
-                </mat-list-item>
-                <mat-divider></mat-divider>
-              </mat-list>
-              <button mat-menu-item (click)="logout()" translate>
-                <i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp; Logout
-              </button>
-            </mat-menu>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </div>
-  <!-- Navbar end -->
+					</ul>
+				</div>
+				<ul class="navbar-nav">
+					<div class="topbar-divider d-none d-sm-block" *ngIf="!isMobile"></div>
+					<button class="btn btn-primary" *ngIf="(isLoggedIn | async) === false"
+						(click)="login()">Login</button>
+					<li class="nav-item dropdown" *ngIf="isLoggedIn | async">
+						<a class="nav-link dropdown-toggle" [matMenuTriggerFor]="userMenu" id="navbarDropdown"
+							role="button" aria-expanded="false" aria-haspopup="true"><span *ngIf="!isMobile">{{ username
+								}} &nbsp;</span>
+							<i class="fa fa-user-circle fa-lg" aria-hidden="false"></i>
+						</a>
+						<mat-menu #userMenu="matMenu">
+							<mat-list *ngIf="isMobile">
+								<mat-list-item>
+									<p>Logged in as <span class="fw-bold">{{ username }}</span></p>
+								</mat-list-item>
+								<mat-divider></mat-divider>
+							</mat-list>
+							<mat-list>
+								<mat-list-item>
+									<a class="dropdown-item" href="{{accoutUri}}"><i class="fa fa-user"
+											aria-hidden="false"></i>&nbsp; Profile</a>
+								</mat-list-item>
+								<mat-divider></mat-divider>
+							</mat-list>
+							<button mat-menu-item (click)="logout()" translate><i class="fa fa-sign-out"
+									aria-hidden="true"></i>&nbsp; Logout</button>
+						</mat-menu>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<!-- Navbar end -->
 
   <!-- Title -->
   <nav aria-label="breadcrumb" *ngIf="title !== 'Home'" class="mt-2">
