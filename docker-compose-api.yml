@@ -4,7 +4,7 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocra-api
     hostname: api
     healthcheck:
@@ -24,7 +24,7 @@ services:
     networks:
       bocraportal-public:
     environment:
-      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}

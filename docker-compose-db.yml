@@ -17,6 +17,8 @@ services:
     # depends_on:
     #   proxy:
     #     condition: service_healthy
+    # ports:
+    #   - "5432:5432"
     healthcheck:
       test: ["CMD", "/opt/bitnami/postgresql/bin/pg_isready", "--username=postgres"]
       interval: 5s
