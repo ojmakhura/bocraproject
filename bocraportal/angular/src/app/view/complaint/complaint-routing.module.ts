@@ -14,45 +14,52 @@ import { ComplaintDocumentComponentImpl } from '@app/view/complaint/complaint-do
 import { ReplyComponentImpl } from '@app/view/complaint/reply.component.impl';
 import { ReplyDocumentComponentImpl } from '@app/view/complaint/reply-document.component.impl';
 import { ComplaintsAnalysisComponentImpl } from '@app/view/complaint/complaints-analysis.component.impl';
+import { ComplaintsDashboardComponentImpl } from '@app/view/complaint/complaints-dashboard.component.impl';
 
 const routes: Routes = [
-  { 
-      path: '', 
-      component: EditComplaintComponentImpl, 
-      canActivate: [AuthenticationGuard],
-      data: { title: marker('Complaints') } 
+  {
+    path: '',
+    component: EditComplaintComponentImpl,
+    canActivate: [AuthenticationGuard],
+    data: { title: marker('Complaints') },
   },
-  { 
-      path: 'edit-complaint', 
-      component: EditComplaintComponentImpl, 
-      data: { title: marker('Edit Complaint') } 
+  {
+    path: 'edit-complaint',
+    component: EditComplaintComponentImpl,
+    data: { title: marker('Edit Complaint') },
   },
-  { 
-      path: 'search-complaints', 
-      component: SearchComplaintsComponentImpl, 
-      data: { title: marker('Search Complaints') } 
+  {
+    path: 'search-complaints',
+    component: SearchComplaintsComponentImpl,
+    data: { title: marker('Search Complaints') },
   },
-  { 
-      path: 'complaint-document', 
-      component: ComplaintDocumentComponentImpl, 
-      data: { title: marker('Complaint Document') } 
+  {
+    path: 'complaint-document',
+    component: ComplaintDocumentComponentImpl,
+    data: { title: marker('Complaint Document') },
   },
-  { 
-      path: 'reply', 
-      component: ReplyComponentImpl, 
-      data: { title: marker('Reply') } 
+  {
+    path: 'reply',
+    component: ReplyComponentImpl,
+    data: { title: marker('Reply') },
   },
-  { 
-      path: 'reply-document', 
-      component: ReplyDocumentComponentImpl, 
-      canActivate: [AuthenticationGuard],
-      data: { title: marker('Reply Document') } 
+  {
+    path: 'reply-document',
+    component: ReplyDocumentComponentImpl,
+    canActivate: [AuthenticationGuard],
+    data: { title: marker('Reply Document') },
   },
-  { 
-      path: 'complaints-analysis', 
-      component: ComplaintsAnalysisComponentImpl, 
-      canActivate: [AuthenticationGuard],
-      data: { title: marker('Complaints Analysis') } 
+  {
+    path: 'complaints-analysis',
+    component: ComplaintsAnalysisComponentImpl,
+    canActivate: [AuthenticationGuard],
+    data: { title: marker('Complaints Analysis') },
+  },
+  {
+    path: 'complaints-dashboard',
+    component: ComplaintsDashboardComponentImpl,
+    canActivate: [AuthenticationGuard],
+    data: { title: marker('Complaints Dashboard') },
   },
 ];
 

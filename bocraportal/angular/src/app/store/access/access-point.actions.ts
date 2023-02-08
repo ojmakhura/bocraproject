@@ -23,7 +23,10 @@ export enum AccessPointActionType {
   ACCESS_POINT_LOADING = '[AccessPoint] AccessPoint Loading',
 }
 
-export const findById = createAction(AccessPointActionType.FIND_BY_ID, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
+export const findById = createAction(
+  AccessPointActionType.FIND_BY_ID,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const findByIdSuccess = createAction(
   AccessPointActionType.FIND_BY_ID_SUCCESS,
@@ -32,7 +35,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
   AccessPointActionType.SAVE,
-  props<{ accessPoint: AccessPointVO | any; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ accessPoint: AccessPointVO | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -40,14 +43,20 @@ export const saveSuccess = createAction(
   props<{ accessPoint: AccessPointVO | any; messages: any[]; success: boolean }>()
 );
 
-export const remove = createAction(AccessPointActionType.REMOVE, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
+export const remove = createAction(
+  AccessPointActionType.REMOVE,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const removeSuccess = createAction(
   AccessPointActionType.REMOVE_SUCCESS,
   props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
-export const getAll = createAction(AccessPointActionType.GET_ALL, props<{ loading: boolean, loaderMessage: string | undefined }>());
+export const getAll = createAction(
+  AccessPointActionType.GET_ALL,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const getAllSuccess = createAction(
   AccessPointActionType.GET_ALL_SUCCESS,
@@ -56,7 +65,7 @@ export const getAllSuccess = createAction(
 
 export const search = createAction(
   AccessPointActionType.SEARCH,
-  props<{ criteria: AccessPointCriteria | any; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ criteria: AccessPointCriteria | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
@@ -66,7 +75,7 @@ export const searchSuccess = createAction(
 
 export const getAllPaged = createAction(
   AccessPointActionType.GET_ALL_PAGED,
-  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
@@ -76,7 +85,13 @@ export const getAllPagedSuccess = createAction(
 
 export const pagedSearch = createAction(
   AccessPointActionType.PAGED_SEARCH,
-  props<{ pageNumber: number | any; pageSize: number | any; criteria: AccessPointCriteria | any; loading: boolean, loaderMessage: string | undefined }>()
+  props<{
+    pageNumber: number | any;
+    pageSize: number | any;
+    criteria: AccessPointCriteria | any;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
 );
 
 export const pagedSearchSuccess = createAction(

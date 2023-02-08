@@ -5,61 +5,42 @@ import { LicenceTypeFormVO } from '@app/model/bw/org/bocra/portal/licence/type/f
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LicenceTypeFormRestController {
-    
-    protected path = '/licence/type/form';
+  protected path = '/licence/type/form';
 
-    constructor(private http: HttpClient) {
-    }
+  constructor(private http: HttpClient) {}
 
-    public create(licenceTypeId: number | any , formId: number | any ): Observable<LicenceTypeFormVO | any> {
+  public create(licenceTypeId: number | any, formId: number | any): Observable<LicenceTypeFormVO | any> {
+    return this.http.post<LicenceTypeFormVO | any>(`${this.path}?licenceTypeId=${licenceTypeId}&formId=${formId}`, {});
+  }
 
-        return this.http.post<LicenceTypeFormVO | any>(`${this.path}?licenceTypeId=${licenceTypeId}&formId=${formId}`, {});
+  public findByForm(formId: number | any): Observable<LicenceTypeFormVO[] | any[]> {
+    return this.http.get<LicenceTypeFormVO[] | any[]>(`${this.path}/${formId}/formId/${formId}`);
+  }
 
-    }
+  public findById(id: number | any): Observable<LicenceTypeFormVO | any> {
+    return this.http.get<LicenceTypeFormVO | any>(`${this.path}/${id}`);
+  }
 
-    public findByForm(formId: number | any ): Observable<LicenceTypeFormVO[] | any[]> {
+  public findByLicenceType(licenceTypeId: number | any): Observable<LicenceTypeFormVO[] | any[]> {
+    return this.http.get<LicenceTypeFormVO[] | any[]>(`${this.path}/${licenceTypeId}`);
+  }
 
-        return this.http.get<LicenceTypeFormVO[] | any[]>(`${this.path}/${formId}/formId/${formId}`);
+  public getAll(): Observable<LicenceTypeFormVO[] | any[]> {
+    return this.http.get<LicenceTypeFormVO[] | any[]>(`${this.path}/all`);
+  }
 
-    }
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(`${this.path}/${id}`);
+  }
 
-    public findById(id: number | any ): Observable<LicenceTypeFormVO | any> {
+  public updateForm(id: number | any, formId: number | any): Observable<LicenceTypeFormVO | any> {
+    return this.http.patch<LicenceTypeFormVO | any>(`${this.path}/${id}/${formId}`, {});
+  }
 
-        return this.http.get<LicenceTypeFormVO | any>(`${this.path}/${id}`);
-
-    }
-
-    public findByLicenceType(licenceTypeId: number | any ): Observable<LicenceTypeFormVO[] | any[]> {
-
-        return this.http.get<LicenceTypeFormVO[] | any[]>(`${this.path}/${licenceTypeId}`);
-
-    }
-
-    public getAll(): Observable<LicenceTypeFormVO[] | any[]> {
-
-        return this.http.get<LicenceTypeFormVO[] | any[]>(`${this.path}/all`);
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(`${this.path}/${id}`);
-
-    }
-
-    public updateForm(id: number | any , formId: number | any ): Observable<LicenceTypeFormVO | any> {
-
-        return this.http.patch<LicenceTypeFormVO | any>(`${this.path}/${id}/${formId}`, {});
-
-    }
-
-    public updateLicenceType(id: number | any , licenceTypeId: number | any ): Observable<LicenceTypeFormVO | any> {
-
-        return this.http.patch<LicenceTypeFormVO | any>(`${this.path}/${id}/${licenceTypeId}`, {});
-
-    }
-
+  public updateLicenceType(id: number | any, licenceTypeId: number | any): Observable<LicenceTypeFormVO | any> {
+    return this.http.patch<LicenceTypeFormVO | any>(`${this.path}/${id}/${licenceTypeId}`, {});
+  }
 }

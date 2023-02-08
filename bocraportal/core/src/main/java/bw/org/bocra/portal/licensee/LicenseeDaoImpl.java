@@ -161,6 +161,15 @@ public class LicenseeDaoImpl
             ls.getShareholder().setType(holder.getShareholder().getType());
             ls.getShareholder().setName(holder.getShareholder().getName());
             ls.setNumberOfShares(holder.getNumberOfShares());
+            if (CollectionUtils.isNotEmpty(holder.getDocumentIds())) {
+                Collection<DocumentVO> docs = documentDao
+                        .toDocumentVOCollection(documentRepository.findByIdIn(holder.getDocumentIds()));
+                docs = docs.stream().map(d -> {
+                    d.setFile(null);
+                    return d;
+                }).collect(Collectors.toSet());
+                ls.setDocuments(docs);
+            }
 
             target.getShareholders().add(ls);
         }

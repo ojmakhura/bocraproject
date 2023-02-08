@@ -4,17 +4,14 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportRestController {
-    
-    protected path = '/report';
+  protected path = '/report';
 
-    constructor(private http: HttpClient) {
-    }
+  constructor(private http: HttpClient) {}
 
-    public createWordDocument(): Observable<string[][] | any[]> {
-        return this.http.get<string[][] | any[]>(`${this.path}/word`);
-    }
-
+  public createWordDocument(): Observable<string[][] | any[]> {
+    return this.http.get<string[][] | any[]>(`${this.path}/word`);
+  }
 }

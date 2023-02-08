@@ -5,15 +5,12 @@ import { EditFormActivationFormSubmissionsComponent } from '@app/view/form/activ
 @Component({
   selector: 'edit-form-activation-form-submissions',
   templateUrl: './edit-form-activation-form-submissions.component.html',
-  styleUrls: [ './edit-form-activation-form-submissions.component.scss' ]
+  styleUrls: ['./edit-form-activation-form-submissions.component.scss'],
 })
 export class EditFormActivationFormSubmissionsComponentImpl extends EditFormActivationFormSubmissionsComponent {
-
   constructor(private injector: Injector) {
     super(injector);
   }
 
-
-	override doEditFormActivationEdit(): any {
-	}
+  override doEditFormActivationEdit(): any {}
 }

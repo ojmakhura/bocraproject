@@ -2,40 +2,40 @@
 import { UserCriteria } from '@app/model/bw/org/bocra/portal/user/user-criteria';
 import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
 
-export const userKey = "user";
+export const userKey = 'user';
 
 export interface UserState {
-    criteria: UserCriteria | any,
-    userId: String | any,
-    users: Array<UserVO> | Array<any>,
-    id: number | any,
-    user: UserVO | any,
-    password: string,
-    confirmPassword: string,
-    newPassword: string,
-    currentPassword: string,
-    removed: boolean,
-    success: boolean;
-    loading: boolean;
-    loaderMessage: string | undefined,
-    error: boolean,
-    messages: any[]
+  criteria: UserCriteria | any;
+  userId: String | any;
+  users: Array<UserVO> | Array<any>;
+  id: number | any;
+  user: UserVO | any;
+  password: string;
+  confirmPassword: string;
+  newPassword: string;
+  currentPassword: string;
+  removed: boolean;
+  success: boolean;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  error: boolean;
+  messages: any[];
 }
 
 export const initialState: UserState = {
-    criteria: null,
-    userId: null,
-    users: [],
-    id: null,
-    user: null,
-    removed: false,
-    success: false,
-    loading: false,
-    error: false,
-    messages: [],
-    password: '',
-    confirmPassword: '',
-    newPassword: '',
-    currentPassword: '',
-    loaderMessage: undefined
+  criteria: null,
+  userId: null,
+  users: [],
+  id: null,
+  user: null,
+  removed: false,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
+  password: '',
+  confirmPassword: '',
+  newPassword: '',
+  currentPassword: '',
+  loaderMessage: undefined,
 };

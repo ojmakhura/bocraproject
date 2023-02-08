@@ -2,76 +2,41 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { complaintKey, ComplaintState } from './complaint.state';
 
-export const selectComplaintState = createFeatureSelector<ComplaintState> (
-    complaintKey
-);
+export const selectComplaintState = createFeatureSelector<ComplaintState>(complaintKey);
 
 export const selectComplaintReply = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.complaintReply
+  selectComplaintState,
+  (state: ComplaintState) => state.complaintReply
 );
 
 export const selectComplaintReplies = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.complaintReplies
+  selectComplaintState,
+  (state: ComplaintState) => state.complaintReplies
 );
 
-export const selectId = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.id
-);
+export const selectId = createSelector(selectComplaintState, (state: ComplaintState) => state.id);
 
-export const selectComplaintId = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.complaintId
-);
+export const selectComplaintId = createSelector(selectComplaintState, (state: ComplaintState) => state.complaintId);
 
-export const selectCriteria = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.criteria
-);
+export const selectCriteria = createSelector(selectComplaintState, (state: ComplaintState) => state.criteria);
 
-export const selectComplaints = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.complaints
-);
+export const selectComplaints = createSelector(selectComplaintState, (state: ComplaintState) => state.complaints);
 
 export const selectLoggedInSearch = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.loggedInSearch
+  selectComplaintState,
+  (state: ComplaintState) => state.loggedInSearch
 );
 
-export const selectDocument = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.document
-);
+export const selectDocument = createSelector(selectComplaintState, (state: ComplaintState) => state.document);
 
-export const selectComplaint = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.complaint
-);
+export const selectComplaint = createSelector(selectComplaintState, (state: ComplaintState) => state.complaint);
 
-export const selectLoaderMessage = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.loaderMessage
-);
+export const selectLoaderMessage = createSelector(selectComplaintState, (state: ComplaintState) => state.loaderMessage);
 
-export const selectMessages = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.messages
-);
+export const selectMessages = createSelector(selectComplaintState, (state: ComplaintState) => state.messages);
 
-export const selectSuccess = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.success
-);
+export const selectSuccess = createSelector(selectComplaintState, (state: ComplaintState) => state.success);
 
-export const selectLoading = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.loading
-);
+export const selectLoading = createSelector(selectComplaintState, (state: ComplaintState) => state.loading);
 
-export const selectError = createSelector(
-    selectComplaintState,
-    (state: ComplaintState) => state.error
-);
+export const selectError = createSelector(selectComplaintState, (state: ComplaintState) => state.error);

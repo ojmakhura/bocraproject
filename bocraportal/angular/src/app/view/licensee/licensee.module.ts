@@ -43,7 +43,7 @@ import { LicenseeShareholderEffects } from '@app/store/licensee/shares/licensee-
     StoreModule.forFeature(licenseeSectorFeature),
     StoreModule.forFeature(licenseeShareholderFeature),
     StoreModule.forFeature(viewFeature),
-    EffectsModule.forFeature([ LicenseeEffects, ViewEffects, LicenseeSectorEffects, LicenseeShareholderEffects ])
+    EffectsModule.forFeature([LicenseeEffects, ViewEffects, LicenseeSectorEffects, LicenseeShareholderEffects]),
   ],
   declarations: [
     EditLicenseeComponentImpl,
@@ -53,10 +53,6 @@ import { LicenseeShareholderEffects } from '@app/store/licensee/shares/licensee-
     SearchLicenseesLicenseesComponentImpl,
   ],
   entryComponents: [],
-  providers: [
-    LicenseeControllerImpl,
-    DocumentRestController,
-    LicenseeRestController,
-  ],
+  providers: [LicenseeControllerImpl, DocumentRestController, LicenseeRestController],
 })
 export class LicenseeModule {}

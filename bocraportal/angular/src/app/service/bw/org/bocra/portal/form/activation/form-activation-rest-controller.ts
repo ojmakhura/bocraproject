@@ -7,49 +7,46 @@ import { FormActivationVO } from '@app/model/bw/org/bocra/portal/form/activation
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FormActivationRestController {
-    
-    protected path = '/form/activation';
+  protected path = '/form/activation';
 
-    constructor(private http: HttpClient) {
-    }
+  constructor(private http: HttpClient) {}
 
-    public activateDueForms(): Observable<FormActivationVO[] | any[]> {
-        return this.http.get<FormActivationVO[] | any[]>(`${this.path}/activate`);
-    }
+  public activateDueForms(): Observable<FormActivationVO[] | any[]> {
+    return this.http.get<FormActivationVO[] | any[]>(`${this.path}/activate`);
+  }
 
-    public createMissingSubmissions(id: number | any ): Observable<FormSubmissionVO[] | any[]> {
-        return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/submission/missing?id=${id}`, {});
-    }
+  public createMissingSubmissions(id: number | any): Observable<FormSubmissionVO[] | any[]> {
+    return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/submission/missing?id=${id}`, {});
+  }
 
-    public findById(id: number | any ): Observable<FormActivationVO | any> {
-        return this.http.get<FormActivationVO | any>(`${this.path}/${id}`, {});
-    }
+  public findById(id: number | any): Observable<FormActivationVO | any> {
+    return this.http.get<FormActivationVO | any>(`${this.path}/${id}`, {});
+  }
 
-    public getAll(): Observable<FormActivationVO[] | any[]> {
-        return this.http.get<FormActivationVO[] | any[]>(`${this.path}/all`);
-    }
+  public getAll(): Observable<FormActivationVO[] | any[]> {
+    return this.http.get<FormActivationVO[] | any[]>(`${this.path}/all`);
+  }
 
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<FormActivationVO[] | any[]> {
-        return this.http.get<FormActivationVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
-    }
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<FormActivationVO[] | any[]> {
+    return this.http.get<FormActivationVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
+  }
 
-    public recreateActivationSubmission(id: number | any ): Observable<FormActivationVO | any> {
-        return this.http.get<FormActivationVO | any>(`${this.path}/submissions/recreate/id/${id}`, {});
-    }
+  public recreateActivationSubmission(id: number | any): Observable<FormActivationVO | any> {
+    return this.http.get<FormActivationVO | any>(`${this.path}/submissions/recreate/id/${id}`, {});
+  }
 
-    public remove(id: number | any ): Observable<boolean | any> {
-        return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
-    }
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
+  }
 
-    public save(formActivation: FormActivationVO | any ): Observable<FormActivationVO | any> {
-        return this.http.post<FormActivationVO | any>(`${this.path}`, formActivation);
-    }
+  public save(formActivation: FormActivationVO | any): Observable<FormActivationVO | any> {
+    return this.http.post<FormActivationVO | any>(`${this.path}`, formActivation);
+  }
 
-    public search(criteria: FormActivationCriteria | any ): Observable<FormActivationVO[] | any[]> {
-        return this.http.post<FormActivationVO[] | any[]>(`${this.path}/search`, criteria);
-    }
-
+  public search(criteria: FormActivationCriteria | any): Observable<FormActivationVO[] | any[]> {
+    return this.http.post<FormActivationVO[] | any[]>(`${this.path}/search`, criteria);
+  }
 }

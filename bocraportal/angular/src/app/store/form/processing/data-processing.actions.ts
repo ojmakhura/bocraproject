@@ -6,44 +6,43 @@ import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/subm
 import { SubmissionSummary } from '@app/model/bw/org/bocra/portal/form/submission/submission-summary';
 
 export enum DataProcessingActionType {
-    LOAD_DATA = '[DataProcessing] Load Data',
-    LOAD_DATA_SUCCESS = '[DataProcessing] Load Data Success',
-    SUBMISSION_SUMMARY = '[DataProcessing] Load Summary',
-    SUBMISSION_SUMMARY_SUCCESS = '[DataProcessing] Load Summary Success',
-    DATA_PROCESSING_RESET = '[DataProcessing] DataProcessing Reset',
-    DATA_PROCESSING_FAILURE = '[DataProcessing] DataProcessing Action Failure',
-    DATA_PROCESSING_LOADING = '[DataProcessing] DataProcessing Loading'
+  LOAD_DATA = '[DataProcessing] Load Data',
+  LOAD_DATA_SUCCESS = '[DataProcessing] Load Data Success',
+  SUBMISSION_SUMMARY = '[DataProcessing] Load Summary',
+  SUBMISSION_SUMMARY_SUCCESS = '[DataProcessing] Load Summary Success',
+  DATA_PROCESSING_RESET = '[DataProcessing] DataProcessing Reset',
+  DATA_PROCESSING_FAILURE = '[DataProcessing] DataProcessing Action Failure',
+  DATA_PROCESSING_LOADING = '[DataProcessing] DataProcessing Loading',
 }
 
 export const dataCaptureSummary = createAction(
-    DataProcessingActionType.SUBMISSION_SUMMARY,
-    props<{ loading: boolean, loaderMessage: string | undefined }>()
+  DataProcessingActionType.SUBMISSION_SUMMARY,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const dataCaptureSummarySuccess = createAction(
-    DataProcessingActionType.SUBMISSION_SUMMARY_SUCCESS,
-    props<{ submissionSummary: SubmissionSummary | any, messages: any[], success: boolean }>()
+  DataProcessingActionType.SUBMISSION_SUMMARY_SUCCESS,
+  props<{ submissionSummary: SubmissionSummary | any; messages: any[]; success: boolean }>()
 );
 
 export const loadData = createAction(
-    DataProcessingActionType.LOAD_DATA,
-    props<{ criteria: FormSubmissionCriteria,loading: boolean, loaderMessage: string | undefined }>()
+  DataProcessingActionType.LOAD_DATA,
+  props<{ criteria: FormSubmissionCriteria; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const loadDataSuccess = createAction(
-    DataProcessingActionType.LOAD_DATA_SUCCESS,
-    props<{ formSubmissions: FormSubmissionVO[] | any, messages: any[], success: boolean }>()
+  DataProcessingActionType.LOAD_DATA_SUCCESS,
+  props<{ formSubmissions: FormSubmissionVO[] | any; messages: any[]; success: boolean }>()
 );
 
 export const dataProcessingLoading = createAction(
-    DataProcessingActionType.DATA_PROCESSING_LOADING,
-    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
+  DataProcessingActionType.DATA_PROCESSING_LOADING,
+  props<{ loading: boolean; loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
 export const dataProcessingFailure = createAction(
-    DataProcessingActionType.DATA_PROCESSING_FAILURE,
-    props<{ messages: any[] }>()
+  DataProcessingActionType.DATA_PROCESSING_FAILURE,
+  props<{ messages: any[] }>()
 );
 
 export const dataProcessingReset = createAction(DataProcessingActionType.DATA_PROCESSING_RESET);
-

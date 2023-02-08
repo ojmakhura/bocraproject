@@ -36,7 +36,7 @@ import { FormReportComponent } from './form-report.component';
     SharedModule,
     NgChartsModule,
     StoreModule.forFeature(reportFeature),
-    EffectsModule.forFeature([ ReportEffects ])
+    EffectsModule.forFeature([ReportEffects]),
   ],
   declarations: [
     ReportComponentImpl,
@@ -48,8 +48,6 @@ import { FormReportComponent } from './form-report.component';
     SearchFormSubmissionsComponentImpl,
   ],
   entryComponents: [],
-  providers: [
-    ReportControllerImpl,
-  ],
+  providers: [ReportControllerImpl],
 })
 export class ReportModule {}

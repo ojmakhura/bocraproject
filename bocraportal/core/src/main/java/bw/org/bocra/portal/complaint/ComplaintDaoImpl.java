@@ -160,16 +160,14 @@ public class ComplaintDaoImpl
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
         } else {
             throw new IllegalArgumentException(
-                "ComplaintDao.complaintVOToEntity - 'licensee' or its id can not be null"
-            );
+                    "ComplaintDao.complaintVOToEntity - 'licensee' or its id can not be null");
         }
 
         if (source.getComplaintType() != null && StringUtils.isNotBlank(source.getComplaintType().getCode())) {
             target.setComplaintType(getComplaintTypeDao().complaintTypeVOToEntity(source.getComplaintType()));
         } else {
             throw new IllegalArgumentException(
-                "ComplaintDao.complaintVOToEntity - 'complaintType' or its id can not be null"
-            );
+                    "ComplaintDao.complaintVOToEntity - 'complaintType' or its id can not be null");
         }
     }
 }

@@ -18,10 +18,9 @@ import { select } from '@ngrx/store';
 @Component({
   selector: 'app-complaint-document',
   templateUrl: './complaint-document.component.html',
-  styleUrls: ['./complaint-document.component.scss']
+  styleUrls: ['./complaint-document.component.scss'],
 })
 export class ComplaintDocumentComponentImpl extends ComplaintDocumentComponent {
-
   currentFile?: File = undefined;
 
   constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
@@ -31,39 +30,38 @@ export class ComplaintDocumentComponentImpl extends ComplaintDocumentComponent {
     this.documentDocumentTypes$ = this.store.pipe(select(DocumentTypeSelectors.selectDocumentTypes));
   }
 
-  doNgOnDestroy(): void {
-  }
+  doNgOnDestroy(): void {}
 
   override documentLicenceSearch(): void {
     this.store.dispatch(
       LicenceActions.search({
         criteria: { licenceNumber: this.documentLicenceSearchField.value },
         loading: true,
-        loaderMessage: 'Searching licences ...'
-      })
-    )
-  }
-
-  override documentLicenseeSearch() : void {
-    let criteria: string = '';
-    criteria = this.documentLicenseeSearchField.value;
-    this.store.dispatch(
-      LicenseeActions.search({
-        criteria: {licenseeName: criteria },
-        loading: true,
-        loaderMessage: 'Searching licensees ...'
+        loaderMessage: 'Searching licences ...',
       })
     );
   }
 
-  override documentDocumentTypeSearch() : void {
+  override documentLicenseeSearch(): void {
+    let criteria: string = '';
+    criteria = this.documentLicenseeSearchField.value;
+    this.store.dispatch(
+      LicenseeActions.search({
+        criteria: { licenseeName: criteria },
+        loading: true,
+        loaderMessage: 'Searching licensees ...',
+      })
+    );
+  }
+
+  override documentDocumentTypeSearch(): void {
     let criteria: string = '';
     criteria = this.documentDocumentTypeSearchField.value;
     this.store.dispatch(
       DocumentTypeActions.search({
         criteria: criteria,
         loading: true,
-        loaderMessage: 'Searching document types ...'
+        loaderMessage: 'Searching document types ...',
       })
     );
   }
@@ -71,12 +69,12 @@ export class ComplaintDocumentComponentImpl extends ComplaintDocumentComponent {
   onFileSelected(event: any) {
     if (event) {
       this.currentFile = event.target.files[0];
-      this.documentDocumentNameControl.patchValue(this.currentFile?.name)
+      this.documentDocumentNameControl.patchValue(this.currentFile?.name);
     }
   }
 
   override handleDialogDone(data: any): any {
-    if(data.document) {
+    if (data.document) {
       data.document.file = this.currentFile;
     }
     return data;

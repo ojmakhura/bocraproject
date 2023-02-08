@@ -5,12 +5,10 @@ import { SearchFormsFormsComponent } from '@app/view/form/search-forms-forms.com
 @Component({
   selector: 'search-forms-forms',
   templateUrl: './search-forms-forms.component.html',
-  styleUrls: [ './search-forms-forms.component.scss' ]
+  styleUrls: ['./search-forms-forms.component.scss'],
 })
 export class SearchFormsFormsComponentImpl extends SearchFormsFormsComponent {
-
-    constructor(private injector: Injector) {
-        super(injector);
-    }
-
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 }

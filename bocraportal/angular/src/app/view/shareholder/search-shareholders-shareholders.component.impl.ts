@@ -5,16 +5,14 @@ import { SearchShareholdersShareholdersComponent } from '@app/view/shareholder/s
 @Component({
   selector: 'search-shareholders-shareholders',
   templateUrl: './search-shareholders-shareholders.component.html',
-  styleUrls: [ './search-shareholders-shareholders.component.scss' ]
+  styleUrls: ['./search-shareholders-shareholders.component.scss'],
 })
 export class SearchShareholdersShareholdersComponentImpl extends SearchShareholdersShareholdersComponent {
-
   constructor(private injector: Injector) {
     super(injector);
   }
 
-
-	override doSearchShareholdersEdit(form: any): any {
+  override doSearchShareholdersEdit(form: any): any {
     return form;
-	}
+  }
 }

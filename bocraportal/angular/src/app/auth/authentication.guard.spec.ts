@@ -13,7 +13,7 @@ describe('AuthenticationAuthorisation', () => {
 
   beforeEach(() => {
     mockRouter = {
-      navigate: jasmine.createSpy('navigate')
+      navigate: jasmine.createSpy('navigate'),
     };
     mockSnapshot = jasmine.createSpyObj<RouterStateSnapshot>('RouterStateSnapshot', ['toString']);
 
@@ -21,8 +21,8 @@ describe('AuthenticationAuthorisation', () => {
       providers: [
         AuthenticationAuthorisation,
         { provide: CredentialsService, useClass: MockCredentialsService },
-        { provide: Router, useValue: mockRouter }
-      ]
+        { provide: Router, useValue: mockRouter },
+      ],
     });
 
     authenticationAuthorisation = TestBed.inject(AuthenticationAuthorisation);
@@ -47,7 +47,7 @@ describe('AuthenticationAuthorisation', () => {
     // Assert
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
       queryParams: { redirect: undefined },
-      replaceUrl: true
+      replaceUrl: true,
     });
     expect(result).toBe(false);
   });
@@ -60,7 +60,7 @@ describe('AuthenticationAuthorisation', () => {
     authenticationAuthorisation.canActivate(new ActivatedRouteSnapshot(), mockSnapshot);
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
       queryParams: { redirect: mockRouter.url },
-      replaceUrl: true
+      replaceUrl: true,
     });
   });
 });

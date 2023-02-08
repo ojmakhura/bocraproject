@@ -3,92 +3,91 @@ import { createAction, props } from '@ngrx/store';
 import { DocumentTypeVO } from '@app/model/bw/org/bocra/portal/document/type/document-type-vo';
 
 export enum DocumentTypeActionType {
-    FIND_BY_ID = '[DocumentType] Find By Id',
-    FIND_BY_ID_SUCCESS = '[DocumentType] Find By Id Success',
-    SAVE = '[DocumentType] Save',
-    SAVE_SUCCESS = '[DocumentType] Save Success',
-    REMOVE = '[DocumentType] Remove',
-    REMOVE_SUCCESS = '[DocumentType] Remove Success',
-    GET_ALL = '[DocumentType] Get All',
-    GET_ALL_SUCCESS = '[DocumentType] Get All Success',
-    SEARCH = '[DocumentType] Search',
-    SEARCH_SUCCESS = '[DocumentType] Search Success',
-    GET_ALL_PAGED = '[DocumentType] Get All Paged',
-    GET_ALL_PAGED_SUCCESS = '[DocumentType] Get All Paged Success',
-    DOCUMENT_TYPE_RESET = '[DocumentType] DocumentType Reset',
-    DOCUMENT_TYPE_FAILURE = '[DocumentType] DocumentType Action Failure',
-    DOCUMENT_TYPE_LOADING = '[DocumentType] DocumentType Loading'
+  FIND_BY_ID = '[DocumentType] Find By Id',
+  FIND_BY_ID_SUCCESS = '[DocumentType] Find By Id Success',
+  SAVE = '[DocumentType] Save',
+  SAVE_SUCCESS = '[DocumentType] Save Success',
+  REMOVE = '[DocumentType] Remove',
+  REMOVE_SUCCESS = '[DocumentType] Remove Success',
+  GET_ALL = '[DocumentType] Get All',
+  GET_ALL_SUCCESS = '[DocumentType] Get All Success',
+  SEARCH = '[DocumentType] Search',
+  SEARCH_SUCCESS = '[DocumentType] Search Success',
+  GET_ALL_PAGED = '[DocumentType] Get All Paged',
+  GET_ALL_PAGED_SUCCESS = '[DocumentType] Get All Paged Success',
+  DOCUMENT_TYPE_RESET = '[DocumentType] DocumentType Reset',
+  DOCUMENT_TYPE_FAILURE = '[DocumentType] DocumentType Action Failure',
+  DOCUMENT_TYPE_LOADING = '[DocumentType] DocumentType Loading',
 }
 
 export const findById = createAction(
-    DocumentTypeActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentTypeActionType.FIND_BY_ID,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
-    DocumentTypeActionType.FIND_BY_ID_SUCCESS,
-    props<{ documentType: DocumentTypeVO | any, messages: any[], success: boolean}>()
+  DocumentTypeActionType.FIND_BY_ID_SUCCESS,
+  props<{ documentType: DocumentTypeVO | any; messages: any[]; success: boolean }>()
 );
 
 export const save = createAction(
-    DocumentTypeActionType.SAVE,
-    props<{ documentType: DocumentTypeVO | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentTypeActionType.SAVE,
+  props<{ documentType: DocumentTypeVO | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
-    DocumentTypeActionType.SAVE_SUCCESS,
-    props<{ documentType: DocumentTypeVO | any, messages: any[], success: boolean}>()
+  DocumentTypeActionType.SAVE_SUCCESS,
+  props<{ documentType: DocumentTypeVO | any; messages: any[]; success: boolean }>()
 );
 
 export const remove = createAction(
-    DocumentTypeActionType.REMOVE,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentTypeActionType.REMOVE,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
-    DocumentTypeActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, messages: any[], success: boolean}>()
+  DocumentTypeActionType.REMOVE_SUCCESS,
+  props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
 export const getAll = createAction(
-    DocumentTypeActionType.GET_ALL,
-    props<{  loading: boolean, loaderMessage: string | undefined }>()
+  DocumentTypeActionType.GET_ALL,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
-    DocumentTypeActionType.GET_ALL_SUCCESS,
-    props<{ documentTypes: DocumentTypeVO[] | any[], messages: any[], success: boolean}>()
+  DocumentTypeActionType.GET_ALL_SUCCESS,
+  props<{ documentTypes: DocumentTypeVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const search = createAction(
-    DocumentTypeActionType.SEARCH,
-    props<{ criteria: string | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentTypeActionType.SEARCH,
+  props<{ criteria: string | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
-    DocumentTypeActionType.SEARCH_SUCCESS,
-    props<{ documentTypes: DocumentTypeVO[] | any[], messages: any[], success: boolean}>()
+  DocumentTypeActionType.SEARCH_SUCCESS,
+  props<{ documentTypes: DocumentTypeVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const getAllPaged = createAction(
-    DocumentTypeActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentTypeActionType.GET_ALL_PAGED,
+  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
-    DocumentTypeActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ documentTypes: DocumentTypeVO[] | any[], messages: any[], success: boolean}>()
+  DocumentTypeActionType.GET_ALL_PAGED_SUCCESS,
+  props<{ documentTypes: DocumentTypeVO[] | any[]; messages: any[]; success: boolean }>()
 );
-
 
 export const documentTypeReset = createAction(DocumentTypeActionType.DOCUMENT_TYPE_RESET);
 
 export const documentTypeLoading = createAction(
-    DocumentTypeActionType.DOCUMENT_TYPE_LOADING,
-    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
+  DocumentTypeActionType.DOCUMENT_TYPE_LOADING,
+  props<{ loading: boolean; loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
 export const documentTypeFailure = createAction(
-    DocumentTypeActionType.DOCUMENT_TYPE_FAILURE,
-    props<{ messages: any[] }>()
+  DocumentTypeActionType.DOCUMENT_TYPE_FAILURE,
+  props<{ messages: any[] }>()
 );

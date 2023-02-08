@@ -6,7 +6,5 @@ import * as DashboardActions from './dashboard.actions';
 
 @Injectable()
 export class DashboardEffects {
-
-    constructor(private actions$: Actions) {}
-
+  constructor(private actions$: Actions) {}
 }

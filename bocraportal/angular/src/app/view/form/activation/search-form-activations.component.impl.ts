@@ -9,28 +9,28 @@ import { FormActivationCriteria } from '@app/model/bw/org/bocra/portal/form/acti
 @Component({
   selector: 'app-search-form-activations',
   templateUrl: './search-form-activations.component.html',
-  styleUrls: ['./search-form-activations.component.scss']
+  styleUrls: ['./search-form-activations.component.scss'],
 })
 export class SearchFormActivationsComponentImpl extends SearchFormActivationsComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: SearchFormActivationsVarsForm): SearchFormActivationsVarsForm {
+    return form;
+  }
 
-    override beforeOnInit(form: SearchFormActivationsVarsForm): SearchFormActivationsVarsForm{     
-        return form;
-    }
+  doNgOnDestroy(): void {}
 
-    doNgOnDestroy(): void {
-    }
-
-    override beforeSearchFormActivationsSearch(form: SearchFormActivationsSearchForm): void {
-        let criteria: FormActivationCriteria = new FormActivationCriteria
-        criteria.activationName = form.activationName;
-        this.store.dispatch(FormActivationActions.search({
-            criteria: criteria,
-            loading: true,
-            loaderMessage: 'Searching form activations ...'
-        }));
-    }
+  override beforeSearchFormActivationsSearch(form: SearchFormActivationsSearchForm): void {
+    let criteria: FormActivationCriteria = new FormActivationCriteria();
+    criteria.activationName = form.activationName;
+    this.store.dispatch(
+      FormActivationActions.search({
+        criteria: criteria,
+        loading: true,
+        loaderMessage: 'Searching form activations ...',
+      })
+    );
+  }
 }

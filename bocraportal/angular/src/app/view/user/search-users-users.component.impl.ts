@@ -5,12 +5,10 @@ import { SearchUsersUsersComponent } from '@app/view/user/search-users-users.com
 @Component({
   selector: 'search-users-users',
   templateUrl: './search-users-users.component.html',
-  styleUrls: [ './search-users-users.component.scss' ]
+  styleUrls: ['./search-users-users.component.scss'],
 })
 export class SearchUsersUsersComponentImpl extends SearchUsersUsersComponent {
-
-    constructor(private injector: Injector) {
-        super(injector);
-    }
-
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 }

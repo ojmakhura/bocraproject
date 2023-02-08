@@ -11,17 +11,14 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-submission-notes',
   templateUrl: './submission-notes.component.html',
-  styleUrls: ['./submission-notes.component.scss']
+  styleUrls: ['./submission-notes.component.scss'],
 })
 export class SubmissionNotesComponentImpl extends SubmissionNotesComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
+    super(data, injector);
+  }
 
-    constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
-        super(data, injector);
-    }
+  override beforeOnInit(): void {}
 
-    override beforeOnInit(): void{     
-    }
-
-    doNgOnDestroy(): void {
-    }
+  doNgOnDestroy(): void {}
 }

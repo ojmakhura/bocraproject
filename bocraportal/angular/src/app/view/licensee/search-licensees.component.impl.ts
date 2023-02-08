@@ -31,7 +31,7 @@ export class SearchLicenseesComponentImpl extends SearchLicenseesComponent {
       LicenseeActions.search({
         criteria: form.criteria,
         loading: true,
-        loaderMessage: 'Searching licensees ...'
+        loaderMessage: 'Searching licensees ...',
       })
     );
   }

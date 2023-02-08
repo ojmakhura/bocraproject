@@ -9,9 +9,9 @@
           </button>
         </div>
       </section>
-			<div *ngIf="loading | async">
-				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
-			</div>
+      <div *ngIf="loading | async">
+        <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+      </div>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}
@@ -24,29 +24,48 @@
       </div>
       <div formGroupName="user">
         <div class="mb-3">
-          <label id="userUsername_label" class="col-sm-2 col-form-label" for="userUsername"><span
-              translate>username</span>*</label>
-          <input type="text" id="userUsername" class="form-control" name="username" formControlName="username"
-            required *ngIf="!userUserId"/>
-          <label id="userUsername_label" class="col-sm-2 col-form-label" for="userUsername" *ngIf="userUserId">{{userUsername}}</label>
-          <div *ngIf="
+          <label id="userUsername_label" class="col-sm-2 col-form-label" for="userUsername"
+            ><span translate>username</span>*</label
+          >
+          <input
+            type="text"
+            id="userUsername"
+            class="form-control"
+            name="username"
+            formControlName="username"
+            required
+            *ngIf="!userUserId"
+          />
+          <label id="userUsername_label" class="col-sm-2 col-form-label" for="userUsername" *ngIf="userUserId">{{
+            userUsername
+          }}</label>
+          <div
+            *ngIf="
               !userUserId &&
               editUserForm.invalid &&
               userUsernameControl.invalid &&
               (userUsernameControl.dirty || userUsernameControl.touched)
-            " class="alert alert-danger" role="alert">
+            "
+            class="alert alert-danger"
+            role="alert"
+          >
             <div *ngIf="userUsernameControl.errors['required']">
               <span translate>username.required</span>
             </div>
           </div>
         </div>
         <div class="mb-3">
-          <label id="userEmail_label" class="col-sm-2 col-form-label" for="userEmail"><span
-              translate>email</span>*</label>
+          <label id="userEmail_label" class="col-sm-2 col-form-label" for="userEmail"
+            ><span translate>email</span>*</label
+          >
           <input type="email" id="userEmail" class="form-control" name="email" formControlName="email" required />
-          <div *ngIf="
+          <div
+            *ngIf="
               editUserForm.invalid && userEmailControl.invalid && (userEmailControl.dirty || userEmailControl.touched)
-            " class="alert alert-danger" role="alert">
+            "
+            class="alert alert-danger"
+            role="alert"
+          >
             <div *ngIf="userEmailControl.errors['required']">
               <span translate>email.required</span>
             </div>
@@ -56,63 +75,112 @@
           </div>
         </div>
         <div class="mb-3">
-          <label id="userPassword_label" class="col-sm-2 col-form-label" for="userPassword"><span
-              translate>password</span>*</label>
-          <input type="password" id="userPassword" class="form-control" name="password" [value]="userPassword" required
-            disabled *ngIf="false"/>
+          <label id="userPassword_label" class="col-sm-2 col-form-label" for="userPassword"
+            ><span translate>password</span>*</label
+          >
+          <input
+            type="password"
+            id="userPassword"
+            class="form-control"
+            name="password"
+            [value]="userPassword"
+            required
+            disabled
+            *ngIf="false"
+          />
           <label id="userPassword_label" class="col-sm-2 col-form-label" for="userPassword">{{ starPass }}</label>
-          <div *ngIf="
+          <div
+            *ngIf="
               editUserForm.invalid &&
               userPasswordControl.invalid &&
               (userPasswordControl.dirty || userPasswordControl.touched)
-            " class="alert alert-danger" role="alert">
+            "
+            class="alert alert-danger"
+            role="alert"
+          >
             <div *ngIf="userPasswordControl.errors['required']">
               <span translate>password.required</span>
             </div>
           </div>
           <div>
-            <button *ngIf="userUsername" type="button" color="accent" (click)="editUserChangePassword()"
-              class="btn btn-primary">
+            <button
+              *ngIf="userUsername"
+              type="button"
+              color="accent"
+              (click)="editUserChangePassword()"
+              class="btn btn-primary"
+            >
               <span *ngIf="userUserId; else noUser" translate>change.password</span>
               <ng-template #noUser><span>Set Password</span></ng-template>
             </button>
           </div>
         </div>
         <div class="mb-3">
-          <label id="userFirstName_label" class="col-sm-2 col-form-label" for="userFirstName"><span
-              translate>first.name</span>*</label>
-          <input type="text" id="userFirstName" class="form-control" name="firstName" formControlName="firstName"
-            required />
-          <div *ngIf="
+          <label id="userFirstName_label" class="col-sm-2 col-form-label" for="userFirstName"
+            ><span translate>first.name</span>*</label
+          >
+          <input
+            type="text"
+            id="userFirstName"
+            class="form-control"
+            name="firstName"
+            formControlName="firstName"
+            required
+          />
+          <div
+            *ngIf="
               editUserForm.invalid &&
               userFirstNameControl.invalid &&
               (userFirstNameControl.dirty || userFirstNameControl.touched)
-            " class="alert alert-danger" role="alert">
+            "
+            class="alert alert-danger"
+            role="alert"
+          >
             <div *ngIf="userFirstNameControl.errors['required']">
               <span translate>first.name.required</span>
             </div>
           </div>
         </div>
         <div class="mb-3">
-          <label id="userLastName_label" class="col-sm-2 col-form-label" for="userLastName"><span
-              translate>last.name</span>*</label>
-          <input type="text" id="userLastName" class="form-control" name="lastName" formControlName="lastName"
-            required />
-          <div *ngIf="
+          <label id="userLastName_label" class="col-sm-2 col-form-label" for="userLastName"
+            ><span translate>last.name</span>*</label
+          >
+          <input
+            type="text"
+            id="userLastName"
+            class="form-control"
+            name="lastName"
+            formControlName="lastName"
+            required
+          />
+          <div
+            *ngIf="
               editUserForm.invalid &&
               userLastNameControl.invalid &&
               (userLastNameControl.dirty || userLastNameControl.touched)
-            " class="alert alert-danger" role="alert">
+            "
+            class="alert alert-danger"
+            role="alert"
+          >
             <div *ngIf="userLastNameControl.errors['required']">
               <span translate>last.name.required</span>
             </div>
           </div>
         </div>
         <div class="mb-3">
-          <label id="userEnabled_label" class="col-sm-2 form-check-label" for="userEnabled"><span
-              translate>enabled</span></label>
-          <input type="checkbox" id="userEnabled" class="form-check-input" formControlName="enabled" onLabel="#{yes}"
-            offLabel="#{messages['no']}" onIcon="ui-icon-check" offIcon="ui-icon-close" />
+          <label id="userEnabled_label" class="col-sm-2 form-check-label" for="userEnabled"
+            ><span translate>enabled</span></label
+          >
+          <input
+            type="checkbox"
+            id="userEnabled"
+            class="form-check-input"
+            formControlName="enabled"
+            onLabel="#{yes}"
+            offLabel="#{messages['no']}"
+            onIcon="ui-icon-check"
+            offIcon="ui-icon-close"
+          />
         </div>
         <br />
         <fieldset class="form-group border p-3" formGroupName="licensee">
@@ -120,20 +188,37 @@
             <span translate><b>LICENSEE</b></span>
           </legend>
           <div class="input-group">
-            <input type="text" class="form-control" id="userLicenseeLicenseeName"
-              value="{{ userLicensee?.licenseeName }}" disabled />
-            <button type="button" (click)="userLicenseeAddDialog()" class="btn btn-outline-primary" data-bs-toggle="modal"
-              data-bs-target="#userLicenseeModal" *ngIf="(assignedLicensee$ | async) === false">
+            <input
+              type="text"
+              class="form-control"
+              id="userLicenseeLicenseeName"
+              value="{{ userLicensee?.licenseeName }}"
+              disabled
+            />
+            <button
+              type="button"
+              (click)="userLicenseeAddDialog()"
+              class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#userLicenseeModal"
+              *ngIf="(assignedLicensee$ | async) === false"
+            >
               <mat-icon>add_box</mat-icon>
             </button>
-            <button type="button" (click)="userLicenseeClear()" class="btn btn-outline-primary" *ngIf="(assignedLicensee$ | async) === false">
+            <button
+              type="button"
+              (click)="userLicenseeClear()"
+              class="btn btn-outline-primary"
+              *ngIf="(assignedLicensee$ | async) === false"
+            >
               <mat-icon>clear</mat-icon>
             </button>
           </div>
         </fieldset>
         <div class="mb-3">
-          <label id="userRoles_label" class="col-sm-2 form-check-label" for="userRoles"><span
-              translate>roles</span></label>
+          <label id="userRoles_label" class="col-sm-2 form-check-label" for="userRoles"
+            ><span translate>roles</span></label
+          >
           <article formArrayName="roles" id="userRolesArticle">
             <mat-form-field class="form-group">
               <mat-label translate>select.value.text</mat-label>
@@ -159,7 +244,13 @@
     <br />
 
     <div class="text-end">
-      <button type="button" color="accent" (click)="editUserSave()" (click)="scroll(target)" class="btn btn-outline-primary">
+      <button
+        type="button"
+        color="accent"
+        (click)="editUserSave()"
+        (click)="scroll(target)"
+        class="btn btn-outline-primary"
+      >
         <span translate>save</span>
       </button>
       <!-- <button type="button" color="accent" (click)="editUserDelete()" class="btn btn-outline-primary"
@@ -198,8 +289,13 @@
             </button>
           </form>
         </div>
-        <mat-table matSort [dataSource]="userLicenseesDataSource" #userLicenseeModalSort="matSort"
-          class="table table-bordered" style="width: 100%">
+        <mat-table
+          matSort
+          [dataSource]="userLicenseesDataSource"
+          #userLicenseeModalSort="matSort"
+          class="table table-bordered"
+          style="width: 100%"
+        >
           <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
             <mat-cell *matCellDef="let row; let i = index">
@@ -223,13 +319,22 @@
           <mat-header-row *matHeaderRowDef="userLicenseeModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: userLicenseeModalColumns"></mat-row>
         </mat-table>
-        <mat-paginator #userLicenseeModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]"
-          showFirstLastButtons></mat-paginator>
+        <mat-paginator
+          #userLicenseeModalPaginator="matPaginator"
+          [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 15]"
+          showFirstLastButtons
+        ></mat-paginator>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-        <button type="button" class="btn btn-primary" (click)="addSelectedUserLicensee()" data-bs-dismiss="modal"
-          translate>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="addSelectedUserLicensee()"
+          data-bs-dismiss="modal"
+          translate
+        >
           save
         </button>
       </div>

@@ -10,26 +10,24 @@ import { select } from '@ngrx/store';
 @Component({
   selector: 'app-new-document',
   templateUrl: './new-document.component.html',
-  styleUrls: ['./new-document.component.scss']
+  styleUrls: ['./new-document.component.scss'],
 })
 export class NewDocumentComponentImpl extends NewDocumentComponent {
+  currentFile?: File = undefined;
 
-    currentFile?: File = undefined;
-
-    constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
-        super(data, injector);
+  constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
+    super(data, injector);
     this.documentLicences$ = this.store.pipe(select(LicenceSelectors.selectLicences));
     this.documentDocumentTypes$ = this.store.pipe(select(DocumentTypeSelectors.selectDocumentTypes));
-    }
+  }
 
-    override beforeOnInit(form: NewDocumentVarsForm): NewDocumentVarsForm{     
-        return form;
-    }
+  override beforeOnInit(form: NewDocumentVarsForm): NewDocumentVarsForm {
+    return form;
+  }
 
-    doNgOnDestroy(): void {
-    }
+  doNgOnDestroy(): void {}
 
-    override documentLicenceSearch(): void {
+  override documentLicenceSearch(): void {
     //   let criteria: LicenseeCriteria = new LicenseeCriteria();
     //   criteria.licenseeName = this.documentLicenseeSearchField.value;
     //   criteria.uin = this.documentLicenseeSearchField.value;
@@ -39,30 +37,29 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
     //       loading: true,
     //     })
     //   );
-    }
+  }
 
-    override documentDocumentTypeSearch(): void {
-        
-      this.store.dispatch(
-        DocumentTypeActions.search({
-          criteria: this.documentDocumentTypeSearchField.value,
-          loading: true,
-          loaderMessage: 'Search document types ...'
-        })
-      );
+  override documentDocumentTypeSearch(): void {
+    this.store.dispatch(
+      DocumentTypeActions.search({
+        criteria: this.documentDocumentTypeSearchField.value,
+        loading: true,
+        loaderMessage: 'Search document types ...',
+      })
+    );
+  }
+
+  onFileSelected(event: any) {
+    if (event) {
+      this.currentFile = event.target.files[0];
+      this.documentDocumentNameControl.patchValue(this.currentFile?.name);
     }
-  
-    onFileSelected(event: any) {
-      if (event) {
-        this.currentFile = event.target.files[0];
-        this.documentDocumentNameControl.patchValue(this.currentFile?.name)
-      }
+  }
+
+  override handleDialogDone(data: any): any {
+    if (data.document) {
+      data.document.file = this.currentFile;
     }
-  
-    override handleDialogDone(data: any): any {
-      if(data.document) {
-        data.document.file = this.currentFile;
-      }
-      return data;
-    }
+    return data;
+  }
 }

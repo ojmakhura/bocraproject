@@ -3,32 +3,32 @@ import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo'
 import { LicenseeFormVO } from '@model/bw/org/bocra/portal/licensee/form/licensee-form-vo';
 import { FormVO } from '@model/bw/org/bocra/portal/form/form-vo';
 
-export const licenseeFormKey = "licenseeForm";
+export const licenseeFormKey = 'licenseeForm';
 
 export interface LicenseeFormState {
-    id: number | any,
-    licenseeForms: Array<LicenseeFormVO> | Array<any>,
-    licenseeForm: LicenseeFormVO | any,
-    licensee: LicenseeVO | any,
-    form: FormVO | any,
-    removed: boolean,
-    success: boolean,
-    loading: boolean,
-    loaderMessage: string | undefined,
-    error: boolean,
-    messages: any[]
+  id: number | any;
+  licenseeForms: Array<LicenseeFormVO> | Array<any>;
+  licenseeForm: LicenseeFormVO | any;
+  licensee: LicenseeVO | any;
+  form: FormVO | any;
+  removed: boolean;
+  success: boolean;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  error: boolean;
+  messages: any[];
 }
 
 export const initialState: LicenseeFormState = {
-    id: undefined,
-    licenseeForms: [],
-    licenseeForm: undefined,
-    licensee: undefined,
-    form: undefined,
-    removed: false,
-    success: false,
-    loading: false,
-    error: false,
-    messages: [],
-    loaderMessage: undefined
+  id: undefined,
+  licenseeForms: [],
+  licenseeForm: undefined,
+  licensee: undefined,
+  form: undefined,
+  removed: false,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
+  loaderMessage: undefined,
 };

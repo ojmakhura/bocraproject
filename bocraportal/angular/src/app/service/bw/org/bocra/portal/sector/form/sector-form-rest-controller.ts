@@ -5,61 +5,42 @@ import { SectorFormVO } from '@app/model/bw/org/bocra/portal/sector/form/sector-
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SectorFormRestController {
-    
-    protected path = '/sector/form';
+  protected path = '/sector/form';
 
-    constructor(private http: HttpClient) {
-    }
+  constructor(private http: HttpClient) {}
 
-    public create(sectorId: number | any , formId: number | any ): Observable<SectorFormVO | any> {
+  public create(sectorId: number | any, formId: number | any): Observable<SectorFormVO | any> {
+    return this.http.post<SectorFormVO | any>(`${this.path}?sectorId=${sectorId}&formId=${formId}`, {});
+  }
 
-        return this.http.post<SectorFormVO | any>(`${this.path}?sectorId=${sectorId}&formId=${formId}`, {});
+  public findByForm(formId: number | any): Observable<SectorFormVO[] | any[]> {
+    return this.http.get<SectorFormVO[] | any[]>(`${this.path}/${formId}/formId/${formId}`);
+  }
 
-    }
+  public findById(id: number | any): Observable<SectorFormVO | any> {
+    return this.http.get<SectorFormVO | any>(`${this.path}/${id}`);
+  }
 
-    public findByForm(formId: number | any ): Observable<SectorFormVO[] | any[]> {
+  public findBySector(sectorId: number | any): Observable<SectorFormVO[] | any[]> {
+    return this.http.get<SectorFormVO[] | any[]>(`${this.path}/${sectorId}`);
+  }
 
-        return this.http.get<SectorFormVO[] | any[]>(`${this.path}/${formId}/formId/${formId}`);
+  public getAll(): Observable<SectorFormVO[] | any[]> {
+    return this.http.get<SectorFormVO[] | any[]>(`${this.path}/all`);
+  }
 
-    }
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(`${this.path}/${id}`);
+  }
 
-    public findById(id: number | any ): Observable<SectorFormVO | any> {
+  public updateForm(id: number | any, formId: number | any): Observable<SectorFormVO | any> {
+    return this.http.patch<SectorFormVO | any>(`${this.path}/${id}/${formId}`, {});
+  }
 
-        return this.http.get<SectorFormVO | any>(`${this.path}/${id}`);
-
-    }
-
-    public findBySector(sectorId: number | any ): Observable<SectorFormVO[] | any[]> {
-
-        return this.http.get<SectorFormVO[] | any[]>(`${this.path}/${sectorId}`);
-
-    }
-
-    public getAll(): Observable<SectorFormVO[] | any[]> {
-
-        return this.http.get<SectorFormVO[] | any[]>(`${this.path}/all`);
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(`${this.path}/${id}`);
-
-    }
-
-    public updateForm(id: number | any , formId: number | any ): Observable<SectorFormVO | any> {
-
-        return this.http.patch<SectorFormVO | any>(`${this.path}/${id}/${formId}`, {});
-
-    }
-
-    public updateSector(id: number | any , sectorId: number | any ): Observable<SectorFormVO | any> {
-
-        return this.http.patch<SectorFormVO | any>(`${this.path}/${id}/${sectorId}`, {});
-
-    }
-
+  public updateSector(id: number | any, sectorId: number | any): Observable<SectorFormVO | any> {
+    return this.http.patch<SectorFormVO | any>(`${this.path}/${id}/${sectorId}`, {});
+  }
 }

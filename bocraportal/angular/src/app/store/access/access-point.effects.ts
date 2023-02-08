@@ -12,12 +12,18 @@ export class AccessPointEffects {
   findById$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointActions.findById),
-      mergeMap(({id}) =>
+      mergeMap(({ id }) =>
         this.accessPointRestController.findById(id).pipe(
           map((accessPoint) =>
-            AccessPointActions.findByIdSuccess({ accessPoint, messages: [`Access point ${accessPoint.name} found.`], success: true })
+            AccessPointActions.findByIdSuccess({
+              accessPoint,
+              messages: [`Access point ${accessPoint.name} found.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [
+            AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
       )
     )
@@ -26,28 +32,38 @@ export class AccessPointEffects {
   save$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointActions.save),
-      mergeMap(({accessPoint}) =>
+      mergeMap(({ accessPoint }) =>
         this.accessPointRestController.save(accessPoint).pipe(
           map((accessPoint) =>
-            AccessPointActions.saveSuccess({ accessPoint, messages: [`Access point ${accessPoint.name} saved.`], success: true })
+            AccessPointActions.saveSuccess({
+              accessPoint,
+              messages: [`Access point ${accessPoint.name} saved.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [
+            AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
       )
     )
   );
 
-
-
   remove$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointActions.remove),
-      mergeMap(({id}) =>
+      mergeMap(({ id }) =>
         this.accessPointRestController.remove(id).pipe(
           map((removed) =>
-            AccessPointActions.removeSuccess({ removed, messages: [`Access point successfully removed.`], success: true })
+            AccessPointActions.removeSuccess({
+              removed,
+              messages: [`Access point successfully removed.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [
+            AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
       )
     )
@@ -59,9 +75,15 @@ export class AccessPointEffects {
       mergeMap(() =>
         this.accessPointRestController.getAll().pipe(
           map((accessPoints) =>
-            AccessPointActions.getAllSuccess({ accessPoints, messages: [`${accessPoints.length} access point types found.`], success: true })
+            AccessPointActions.getAllSuccess({
+              accessPoints,
+              messages: [`${accessPoints.length} access point types found.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [
+            AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
       )
     )
@@ -70,12 +92,18 @@ export class AccessPointEffects {
   search$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointActions.search),
-      mergeMap(({criteria}) =>
+      mergeMap(({ criteria }) =>
         this.accessPointRestController.search(criteria).pipe(
           map((accessPoints) =>
-            AccessPointActions.searchSuccess({ accessPoints, messages: [`${accessPoints.length} access point types found.`], success: true })
+            AccessPointActions.searchSuccess({
+              accessPoints,
+              messages: [`${accessPoints.length} access point types found.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [
+            AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
       )
     )
@@ -84,12 +112,18 @@ export class AccessPointEffects {
   getAllPaged$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccessPointActions.getAllPaged),
-      mergeMap(({pageNumber, pageSize}) =>
+      mergeMap(({ pageNumber, pageSize }) =>
         this.accessPointRestController.getAllPaged(pageNumber, pageSize).pipe(
           map((accessPoints) =>
-            AccessPointActions.getAllPagedSuccess({ accessPoints, messages: [`Page ${pageNumber} found with ${pageSize} access points.`], success: true })
+            AccessPointActions.getAllPagedSuccess({
+              accessPoints,
+              messages: [`Page ${pageNumber} found with ${pageSize} access points.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [
+            AccessPointActions.accessPointFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
       )
     )

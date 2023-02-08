@@ -23,7 +23,10 @@ export enum LicenceTypeFormActionType {
   LICENSEE_FORM_LOADING = '[Licence Form Form] Licence Form Form Loading',
 }
 
-export const findById = createAction(LicenceTypeFormActionType.FIND_BY_ID, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
+export const findById = createAction(
+  LicenceTypeFormActionType.FIND_BY_ID,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const findByIdSuccess = createAction(
   LicenceTypeFormActionType.FIND_BY_ID_SUCCESS,
@@ -32,7 +35,7 @@ export const findByIdSuccess = createAction(
 
 export const findByLicenceType = createAction(
   LicenceTypeFormActionType.FIND_BY_LICENCE_TYPE,
-  props<{ licenceTypeId: number | any; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ licenceTypeId: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByLicenceTypeSuccess = createAction(
@@ -42,7 +45,7 @@ export const findByLicenceTypeSuccess = createAction(
 
 export const findByForm = createAction(
   LicenceTypeFormActionType.FIND_BY_FORM,
-  props<{ formId: number | any; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ formId: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByFormSuccess = createAction(
@@ -52,7 +55,7 @@ export const findByFormSuccess = createAction(
 
 export const create = createAction(
   LicenceTypeFormActionType.CREATE,
-  props<{ licenceTypeId: number; formId: number; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ licenceTypeId: number; formId: number; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const createSuccess = createAction(
@@ -62,12 +65,12 @@ export const createSuccess = createAction(
 
 export const updateLicenceType = createAction(
   LicenceTypeFormActionType.UPDATE_LICENSEE,
-  props<{ id: number; licenceTypeId: number; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ id: number; licenceTypeId: number; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const updateForm = createAction(
   LicenceTypeFormActionType.UPDATE_FORM,
-  props<{ id: number; formId: number; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ id: number; formId: number; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const updateSuccess = createAction(
@@ -75,14 +78,20 @@ export const updateSuccess = createAction(
   props<{ licenceTypeForm: LicenceTypeFormVO | any; messages: any[]; success: boolean }>()
 );
 
-export const remove = createAction(LicenceTypeFormActionType.REMOVE, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
+export const remove = createAction(
+  LicenceTypeFormActionType.REMOVE,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const removeSuccess = createAction(
   LicenceTypeFormActionType.REMOVE_SUCCESS,
   props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
-export const getAll = createAction(LicenceTypeFormActionType.GET_ALL, props<{ loading: boolean, loaderMessage: string | undefined }>());
+export const getAll = createAction(
+  LicenceTypeFormActionType.GET_ALL,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const getAllSuccess = createAction(
   LicenceTypeFormActionType.GET_ALL_SUCCESS,
@@ -93,7 +102,10 @@ export const licenceTypeFormReset = createAction(LicenceTypeFormActionType.LICEN
 
 export const licenceTypeFormLoading = createAction(
   LicenceTypeFormActionType.LICENSEE_FORM_LOADING,
-  props<{ loading: boolean, loaderMessage: string | undefined; success: boolean; messages: any[] }>()
+  props<{ loading: boolean; loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
-export const licenceTypeFormFailure = createAction(LicenceTypeFormActionType.LICENSEE_FORM_FAILURE, props<{ messages: any[] }>());
+export const licenceTypeFormFailure = createAction(
+  LicenceTypeFormActionType.LICENSEE_FORM_FAILURE,
+  props<{ messages: any[] }>()
+);

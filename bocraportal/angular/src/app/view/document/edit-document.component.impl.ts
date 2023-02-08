@@ -7,7 +7,11 @@ import * as DocumentSelectors from '@app/store/document/document.selectors';
 import * as LicenceSelectors from '@app/store/licence/licence.selectors';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
-import { EditDocumentComponent, EditDocumentSaveForm, EditDocumentVarsForm } from '@app/view/document/edit-document.component';
+import {
+  EditDocumentComponent,
+  EditDocumentSaveForm,
+  EditDocumentVarsForm,
+} from '@app/view/document/edit-document.component';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
@@ -37,9 +41,7 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
     return form;
   }
 
-  override afterOnInit() {
-    
-  }
+  override afterOnInit() {}
 
   override doNgAfterViewInit(): void {
     this.route.queryParams.subscribe((queryParams: any) => {
@@ -48,7 +50,7 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
           DocumentActions.findByDocumentId({
             documentId: queryParams?.documentId,
             loading: true,
-            loaderMessage: 'Loading by documentId ...'
+            loaderMessage: 'Loading by documentId ...',
           })
         );
       }
@@ -56,19 +58,19 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
 
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/document/edit-document",
+        viewUrl: '/document/edit-document',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
     this.document$.subscribe((document) => {
-      this.setEditDocumentFormValue({document: document});
+      this.setEditDocumentFormValue({ document: document });
     });
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
-        if(item === '/document/edit-document/{button:delete}') {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
+        if (item === '/document/edit-document/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -93,24 +95,23 @@ export class EditDocumentComponentImpl extends EditDocumentComponent {
       DocumentActions.save({
         document: form.document,
         loading: false,
-        loaderMessage: 'Saving document ...'
+        loaderMessage: 'Saving document ...',
       })
     );
   }
 
   downloadFile() {
-
     this.store.dispatch(
       DocumentActions.downloadFile({
         documentId: this.documentDocumentId,
         loading: false,
-        loaderMessage: 'Downloading document ...'
+        loaderMessage: 'Downloading document ...',
       })
     );
 
-    this.file$.subscribe(file => {
-      if(file) {
-        let blob:any = new Blob([file], { type: this.documentContentType });
+    this.file$.subscribe((file) => {
+      if (file) {
+        let blob: any = new Blob([file], { type: this.documentContentType });
         const url = window.URL.createObjectURL(blob);
         saveAs(blob, this.documentDocumentName);
       }

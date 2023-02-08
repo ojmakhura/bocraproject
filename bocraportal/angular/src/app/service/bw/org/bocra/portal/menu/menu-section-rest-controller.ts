@@ -5,55 +5,38 @@ import { MenuSectionVO } from '@app/model/bw/org/bocra/portal/menu/menu-section-
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MenuSectionRestController {
-    protected path = '/menu/section';
+  protected path = '/menu/section';
 
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {
-    }
+  public findByAuthorisationRoles(roles: Set<string> | any): Observable<MenuSectionVO[] | any[]> {
+    return this.http.get<MenuSectionVO[] | any[]>(this.path + `/authorised`);
+  }
 
-    public findByAuthorisationRoles(roles: Set<string> | any ): Observable<MenuSectionVO[] | any[]> {
+  public findById(id: number | any): Observable<MenuSectionVO | any> {
+    return this.http.get<MenuSectionVO | any>(this.path + `/id/${id}`);
+  }
 
-        return this.http.get<MenuSectionVO[] | any[]>(this.path + `/authorised`);
+  public getAll(): Observable<MenuSectionVO[] | any[]> {
+    return this.http.get<MenuSectionVO[] | any[]>(this.path + `/all`);
+  }
 
-    }
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<MenuSectionVO[] | any[]> {
+    return this.http.get<MenuSectionVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+  }
 
-    public findById(id: number | any ): Observable<MenuSectionVO | any> {
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(this.path + `/id/${id}`);
+  }
 
-        return this.http.get<MenuSectionVO | any>(this.path + `/id/${id}`);
+  public save(menuSection: MenuSectionVO | any): Observable<MenuSectionVO | any> {
+    return this.http.post<MenuSectionVO | any>(this.path, menuSection);
+  }
 
-    }
-
-    public getAll(): Observable<MenuSectionVO[] | any[]> {
-
-        return this.http.get<MenuSectionVO[] | any[]>(this.path + `/all`);
-
-    }
-
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<MenuSectionVO[] | any[]> {
-
-        return this.http.get<MenuSectionVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(this.path + `/id/${id}`);
-
-    }
-
-    public save(menuSection: MenuSectionVO | any ): Observable<MenuSectionVO | any> {
-
-        return this.http.post<MenuSectionVO | any>(this.path, menuSection);
-
-    }
-
-    public search(criteria: string | any ): Observable<MenuSectionVO[] | any[]> {
-
-        return this.http.post<MenuSectionVO[] | any[]>(this.path + `/search`, criteria);
-
-    }
-
+  public search(criteria: string | any): Observable<MenuSectionVO[] | any[]> {
+    return this.http.post<MenuSectionVO[] | any[]>(this.path + `/search`, criteria);
+  }
 }

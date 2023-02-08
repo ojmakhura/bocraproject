@@ -5,11 +5,10 @@ import { SearchLicencesLicencesComponent } from '@app/view/licence/search-licenc
 @Component({
   selector: 'search-licences-licences',
   templateUrl: './search-licences-licences.component.html',
-  styleUrls: [ './search-licences-licences.component.scss' ]
+  styleUrls: ['./search-licences-licences.component.scss'],
 })
 export class SearchLicencesLicencesComponentImpl extends SearchLicencesLicencesComponent {
-
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 }

@@ -80,7 +80,7 @@ export class SectorFormEffects {
             SectorFormActions.createSuccess({
               sectorForm,
               messages: [`Sector form created.`],
-              success: true
+              success: true,
             })
           ),
           catchError(({ error }) => [

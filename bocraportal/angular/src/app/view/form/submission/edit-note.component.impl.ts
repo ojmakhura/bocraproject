@@ -12,18 +12,16 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-edit-note',
   templateUrl: './edit-note.component.html',
-  styleUrls: ['./edit-note.component.scss']
+  styleUrls: ['./edit-note.component.scss'],
 })
 export class EditNoteComponentImpl extends EditNoteComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
+    super(data, injector);
+  }
 
-    constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
-        super(data, injector);
-    }
+  override beforeOnInit(form: EditNoteVarsForm): EditNoteVarsForm {
+    return form;
+  }
 
-    override beforeOnInit(form: EditNoteVarsForm): EditNoteVarsForm{     
-        return form;
-    }
-
-    doNgOnDestroy(): void {
-    }
+  doNgOnDestroy(): void {}
 }

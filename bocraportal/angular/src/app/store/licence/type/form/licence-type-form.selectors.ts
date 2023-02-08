@@ -2,23 +2,18 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { licenceTypeFormKey, LicenceTypeFormState } from './licence-type-form.state';
 
-export const selectLicenceTypeFormState = createFeatureSelector<LicenceTypeFormState> (
-    licenceTypeFormKey
-);
+export const selectLicenceTypeFormState = createFeatureSelector<LicenceTypeFormState>(licenceTypeFormKey);
 
-export const selectId = createSelector(
-    selectLicenceTypeFormState,
-    (state: LicenceTypeFormState) => state.id
-);
+export const selectId = createSelector(selectLicenceTypeFormState, (state: LicenceTypeFormState) => state.id);
 
 export const selectLicenceTypeForm = createSelector(
-    selectLicenceTypeFormState,
-    (state: LicenceTypeFormState) => state.licenceTypeForm
+  selectLicenceTypeFormState,
+  (state: LicenceTypeFormState) => state.licenceTypeForm
 );
 
 export const selectLicenceTypeForms = createSelector(
-    selectLicenceTypeFormState,
-    (state: LicenceTypeFormState) => state.licenceTypeForms
+  selectLicenceTypeFormState,
+  (state: LicenceTypeFormState) => state.licenceTypeForms
 );
 
 // export const selectForm = createSelector(
@@ -27,21 +22,12 @@ export const selectLicenceTypeForms = createSelector(
 // );
 
 export const selectMessages = createSelector(
-    selectLicenceTypeFormState,
-    (state: LicenceTypeFormState) => state.messages
+  selectLicenceTypeFormState,
+  (state: LicenceTypeFormState) => state.messages
 );
 
-export const selectSuccess = createSelector(
-    selectLicenceTypeFormState,
-    (state: LicenceTypeFormState) => state.success
-);
+export const selectSuccess = createSelector(selectLicenceTypeFormState, (state: LicenceTypeFormState) => state.success);
 
-export const selectLoading = createSelector(
-    selectLicenceTypeFormState,
-    (state: LicenceTypeFormState) => state.loading
-);
+export const selectLoading = createSelector(selectLicenceTypeFormState, (state: LicenceTypeFormState) => state.loading);
 
-export const selectError = createSelector(
-    selectLicenceTypeFormState,
-    (state: LicenceTypeFormState) => state.error
-);
+export const selectError = createSelector(selectLicenceTypeFormState, (state: LicenceTypeFormState) => state.error);

@@ -90,9 +90,16 @@ public class ShareholderDaoImpl
             ls.getLicensee().setUin(holder.getLicensee().getUin());
             ls.getLicensee().setLicenseeName(holder.getLicensee().getLicenseeName());
             ls.setNumberOfShares(holder.getNumberOfShares());
-
+            if (CollectionUtils.isNotEmpty(holder.getDocumentIds())) {
+                Collection<DocumentVO> docs = documentDao
+                        .toDocumentVOCollection(documentRepository.findByIdIn(holder.getDocumentIds()));
+                docs = docs.stream().map(d -> {
+                    d.setFile(null);
+                    return d;
+                }).collect(Collectors.toSet());
+                ls.setDocuments(docs);
+            }
             target.getShares().add(ls);
-
         }
     }
 

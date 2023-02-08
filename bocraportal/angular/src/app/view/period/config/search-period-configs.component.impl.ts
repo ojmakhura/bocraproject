@@ -8,29 +8,29 @@ import * as PeriodConfigActions from '@app/store/period/config/period-config.act
 @Component({
   selector: 'app-search-period-configs',
   templateUrl: './search-period-configs.component.html',
-  styleUrls: ['./search-period-configs.component.scss']
+  styleUrls: ['./search-period-configs.component.scss'],
 })
 export class SearchPeriodConfigsComponentImpl extends SearchPeriodConfigsComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: SearchPeriodConfigsVarsForm) {
+    return form;
+  }
 
-    override beforeOnInit(form: SearchPeriodConfigsVarsForm){
-        return form;
-    }
-	
-    override doNgOnDestroy(){}
+  override doNgOnDestroy() {}
 
-    /**
-     * This method may be overwritten
-     */
-    override beforeSearchPeriodConfigsSearch(form: SearchPeriodConfigsSearchForm): void {
-
-        this.store.dispatch(PeriodConfigActions.search({
-            criteria: form.criteria,
-            loading: true,
-            loaderMessage: 'Searching period configs ...'
-        }));
-    }    
+  /**
+   * This method may be overwritten
+   */
+  override beforeSearchPeriodConfigsSearch(form: SearchPeriodConfigsSearchForm): void {
+    this.store.dispatch(
+      PeriodConfigActions.search({
+        criteria: form.criteria,
+        loading: true,
+        loaderMessage: 'Searching period configs ...',
+      })
+    );
+  }
 }

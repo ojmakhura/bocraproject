@@ -5,12 +5,10 @@ import { SearchPeriodsPeriodsComponent } from '@app/view/period/search-periods-p
 @Component({
   selector: 'search-periods-periods',
   templateUrl: './search-periods-periods.component.html',
-  styleUrls: [ './search-periods-periods.component.scss' ]
+  styleUrls: ['./search-periods-periods.component.scss'],
 })
 export class SearchPeriodsPeriodsComponentImpl extends SearchPeriodsPeriodsComponent {
-
-    constructor(private injector: Injector) {
-        super(injector);
-    }
-
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 }

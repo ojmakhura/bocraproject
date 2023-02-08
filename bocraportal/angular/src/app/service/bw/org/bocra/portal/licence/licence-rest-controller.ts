@@ -7,59 +7,48 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LicenceRestController {
-    protected path = '/licence';
+  protected path = '/licence';
 
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {
-    }
+  public addDocument(
+    id: number | any,
+    documentTypeId: number | any,
+    file: File | any,
+    fileName: string | any
+  ): Observable<DocumentVO | any> {
+    const formData: FormData = new FormData();
+    formData.append('documentTypeId', documentTypeId);
+    formData.append('file', file);
+    formData.append('fileName', fileName);
 
-    public addDocument(id: number | any , documentTypeId: number | any , file: File | any , fileName: string | any ): Observable<DocumentVO | any> {
+    return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, formData);
+  }
 
-        const formData: FormData = new FormData();
-        formData.append('documentTypeId', documentTypeId);
-        formData.append('file', file);
-        formData.append('fileName', fileName);
-        
-        return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, formData);
-    }
+  public findById(id: number | any): Observable<LicenceVO | any> {
+    return this.http.get<LicenceVO | any>(this.path + `/${id}`);
+  }
 
-    public findById(id: number | any ): Observable<LicenceVO | any> {
+  public getAll(): Observable<LicenceVO[] | any[]> {
+    return this.http.get<LicenceVO[] | any[]>(this.path + `/all`);
+  }
 
-        return this.http.get<LicenceVO | any>(this.path + `/${id}`);
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<LicenceVO[] | any[]> {
+    return this.http.get<LicenceVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+  }
 
-    }
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(this.path + `/${id}`);
+  }
 
-    public getAll(): Observable<LicenceVO[] | any[]> {
+  public save(licence: LicenceVO | any): Observable<LicenceVO | any> {
+    return this.http.post<LicenceVO | any>(this.path, licence);
+  }
 
-        return this.http.get<LicenceVO[] | any[]>(this.path + `/all`);
-
-    }
-
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<LicenceVO[] | any[]> {
-
-        return this.http.get<LicenceVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(this.path + `/${id}`);
-
-    }
-
-    public save(licence: LicenceVO | any ): Observable<LicenceVO | any> {
-
-        return this.http.post<LicenceVO | any>(this.path, licence);
-
-    }
-
-    public search(criteria: LicenceCriteria | any ): Observable<LicenceVO[] | any[]> {
-
-        return this.http.post<LicenceVO[] | any[]>(this.path + `/search`, criteria);
-
-    }
-
+  public search(criteria: LicenceCriteria | any): Observable<LicenceVO[] | any[]> {
+    return this.http.post<LicenceVO[] | any[]>(this.path + `/search`, criteria);
+  }
 }

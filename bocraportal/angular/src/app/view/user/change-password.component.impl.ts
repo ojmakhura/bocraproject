@@ -7,68 +7,66 @@ import { ChangePasswordComponent, ChangePasswordVarsForm } from '@app/view/user/
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.scss']
+  styleUrls: ['./change-password.component.scss'],
 })
 export class ChangePasswordComponentImpl extends ChangePasswordComponent {
+  passwordMessages: string[] = [];
+  passwordErrors: string[] = [];
+  userId: string | any = null;
 
-    passwordMessages: string[] = []
-    passwordErrors: string[] = []
-    userId: string | any = null;
+  constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
+    super(data, injector);
+    this.userId = data?.userId;
+  }
 
-    constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
-        super(data, injector);
-        this.userId = data?.userId;
+  override beforeOnInit(form: ChangePasswordVarsForm): ChangePasswordVarsForm {
+    return form;
+  }
+
+  doNgOnDestroy(): void {}
+
+  override handleFormChanges(change: any): void {
+    if (change?.newPassword != change?.confirmPassword) {
+      this.passwordErrors = ['Passwords entered are not the same.'];
+    } else {
+      this.passwordErrors = [];
+    }
+  }
+
+  /**
+   * Before we return the dialog data, we need to check if the data in
+   * the dialog is valid by checking that the form has no errors and that
+   * the password and confirm fielda are the same.
+   * @param data
+   * @returns
+   */
+  override handleDialogDone(data: any): any {
+    if (this.changePasswordForm.valid && this.newPassword === this.confirmPassword) {
+      return data;
     }
 
-    override beforeOnInit(form: ChangePasswordVarsForm): ChangePasswordVarsForm{     
-        return form;
+    return null;
+  }
+
+  override newForm(changePasswordVarsForm$: ChangePasswordVarsForm): FormGroup {
+    if (this.userId) {
+      return this.formBuilder.group({
+        currentPassword: [{ value: changePasswordVarsForm$?.currentPassword, disabled: false }, [Validators.required]],
+        newPassword: [
+          { value: changePasswordVarsForm$?.newPassword, disabled: false },
+          [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)],
+        ],
+        confirmPassword: [{ value: changePasswordVarsForm$?.confirmPassword, disabled: false }, [Validators.required]],
+      });
+    } else {
+      return this.formBuilder.group({
+        currentPassword: [{ value: changePasswordVarsForm$?.currentPassword, disabled: false }],
+        newPassword: [
+          { value: changePasswordVarsForm$?.newPassword, disabled: false },
+          [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)],
+        ],
+        confirmPassword: [{ value: changePasswordVarsForm$?.confirmPassword, disabled: false }, [Validators.required]],
+      });
     }
-
-    doNgOnDestroy(): void {
-    }
-
-    override handleFormChanges(change: any): void {
-        if(change?.newPassword != change?.confirmPassword) {
-            this.passwordErrors = ["Passwords entered are not the same."];
-        } else {
-            this.passwordErrors = [];
-        }
-    }
-
-    /**
-     * Before we return the dialog data, we need to check if the data in
-     * the dialog is valid by checking that the form has no errors and that
-     * the password and confirm fielda are the same.
-     * @param data 
-     * @returns 
-     */
-    override handleDialogDone(data: any): any {
-
-        if(this.changePasswordForm.valid && this.newPassword === this.confirmPassword) {
-            return data;
-        }
-
-        return null;
-    }
-
-    override newForm(changePasswordVarsForm$: ChangePasswordVarsForm): FormGroup {
-
-        if(this.userId) {
-
-            return this.formBuilder.group({
-                currentPassword: [{value: changePasswordVarsForm$?.currentPassword, disabled: false}, [Validators.required, ]],
-                newPassword: [{value: changePasswordVarsForm$?.newPassword, disabled: false}, [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/), ]],
-                confirmPassword: [{value: changePasswordVarsForm$?.confirmPassword, disabled: false}, [Validators.required, ]],
-            });
-
-        } else {
-
-            return this.formBuilder.group({
-                currentPassword: [{value: changePasswordVarsForm$?.currentPassword, disabled: false}],
-                newPassword: [{value: changePasswordVarsForm$?.newPassword, disabled: false}, [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/), ]],
-                confirmPassword: [{value: changePasswordVarsForm$?.confirmPassword, disabled: false}, [Validators.required, ]],
-            });
-
-        }
-    }
+  }
 }

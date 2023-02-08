@@ -5,16 +5,14 @@ import { SearchComplaintTypesComplaintTypesComponent } from '@app/view/complaint
 @Component({
   selector: 'search-complaint-types-complaint-types',
   templateUrl: './search-complaint-types-complaint-types.component.html',
-  styleUrls: [ './search-complaint-types-complaint-types.component.scss' ]
+  styleUrls: ['./search-complaint-types-complaint-types.component.scss'],
 })
 export class SearchComplaintTypesComplaintTypesComponentImpl extends SearchComplaintTypesComplaintTypesComponent {
-
   constructor(private injector: Injector) {
     super(injector);
   }
 
-
-	override doSearchComplaintTypesEdit(form: any): any {
+  override doSearchComplaintTypesEdit(form: any): any {
     return form;
-	}
+  }
 }

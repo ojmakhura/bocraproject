@@ -13,7 +13,7 @@ import {
   MatNativeDateModule,
   MatOptionModule,
   MatPseudoCheckboxModule,
-  MatRippleModule
+  MatRippleModule,
 } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -89,11 +89,11 @@ import { MatTreeModule } from '@angular/material/tree';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule
+    MatTreeModule,
   ],
   providers: [
     { provide: MAT_DIALOG_DATA, useValue: {} },
-    { provide: MatDialogRef, useValue: {} }
-  ]
+    { provide: MatDialogRef, useValue: {} },
+  ],
 })
-export class MaterialModule { }
+export class MaterialModule {}

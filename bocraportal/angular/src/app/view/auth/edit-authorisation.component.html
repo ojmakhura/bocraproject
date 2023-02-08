@@ -9,36 +9,35 @@
 </div> -->
 
 <div class="card container px-5 py-2 bg-light mb-4">
-	<div class="card-body">
-		<form [formGroup]="editAuthorisationForm">
-			<section>
-				<div class="text-end">
-					<button type="button" (click)="editAuthorisationSearch()" class="btn btn-primary">
-						<span translate>Search</span>
-					</button>
-				</div>
-			</section>
-			<div *ngIf="loading | async">
-				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
-			</div>
-			<div *ngIf="success | async" class="alert alert-success" role="alert">
-				<div *ngFor="let message of messages | async">
-					{{ message }}
-				</div>
-			</div>
-			<div *ngIf="error | async" class="alert alert-danger" role="alert">
-				<div *ngFor="let message of messages | async">
-					{{ message }}
-				</div>
-			</div>
-			<div formGroupName="authorisation">
-				<fieldset class="form-group border p-3" formGroupName="accessPoint">
-					<legend id="authorisationAccessPoint_label" class="col-sm-2 col-form-label"
-						for="authorisationAccessPoint">
-						<span translate>access.point</span>*
-					</legend>
-					<div class="col my-3 view-buttons">
-						<!-- <button type="button" type="button" color="accent" (click)="editAuthorisationSave()" class="btn btn-primary">
+  <div class="card-body">
+    <form [formGroup]="editAuthorisationForm">
+      <section>
+        <div class="text-end">
+          <button type="button" (click)="editAuthorisationSearch()" class="btn btn-primary">
+            <span translate>Search</span>
+          </button>
+        </div>
+      </section>
+      <div *ngIf="loading | async">
+        <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+      </div>
+      <div *ngIf="success | async" class="alert alert-success" role="alert">
+        <div *ngFor="let message of messages | async">
+          {{ message }}
+        </div>
+      </div>
+      <div *ngIf="error | async" class="alert alert-danger" role="alert">
+        <div *ngFor="let message of messages | async">
+          {{ message }}
+        </div>
+      </div>
+      <div formGroupName="authorisation">
+        <fieldset class="form-group border p-3" formGroupName="accessPoint">
+          <legend id="authorisationAccessPoint_label" class="col-sm-2 col-form-label" for="authorisationAccessPoint">
+            <span translate>access.point</span>*
+          </legend>
+          <div class="col my-3 view-buttons">
+            <!-- <button type="button" type="button" color="accent" (click)="editAuthorisationSave()" class="btn btn-primary">
               <span translate>save</span>
             </button>
             <button type="button" color="accent" (click)="editAuthorisationSearch()" class="btn btn-primary">
@@ -50,170 +49,221 @@
             <button color="accent" type="button" (click)="editAuthorisationFormReset()" class="btn btn-primary">
               <span translate>reset</span>
             </button> -->
-						<button (click)="authorisationAccessPointAddDialog()" class="btn btn-primary"
-							data-bs-toggle="modal" data-bs-target="#authorisationAccessPointModal">
-							<mat-icon>add_box</mat-icon>
-						</button>
-						<button type="button" (click)="authorisationAccessPointClear()" class="btn btn-primary">
-							<mat-icon>clear</mat-icon>
-						</button>
-					</div>
-					<!-- <div class="row mb-3">
+            <button
+              (click)="authorisationAccessPointAddDialog()"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#authorisationAccessPointModal"
+            >
+              <mat-icon>add_box</mat-icon>
+            </button>
+            <button type="button" (click)="authorisationAccessPointClear()" class="btn btn-primary">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </div>
+          <!-- <div class="row mb-3">
 						<label for="authorisationAccessPointId" class="col-sm-2 col-form-label" translate>id</label>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="authorisationAccessPointId"
 								value="{{ authorisationAccessPoint?.id }}" disabled />
 						</div>
 					</div> -->
-					<div class="row mb-3">
-						<label for="authorisationAccessPointAccessPointType.name" class="col-sm-2 col-form-label"
-							translate>
-							access.point.type
-						</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="authorisationAccessPointAccessPointType.name"
-								value="{{ authorisationAccessPoint?.accessPointType?.name }}" disabled />
-						</div>
-					</div>
-					<div class="row mb-3">
-						<label for="authorisationAccessPointName" class="col-sm-2 col-form-label" translate>name</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="authorisationAccessPointName"
-								value="{{ authorisationAccessPoint?.name }}" disabled />
-						</div>
-					</div>
-					<div class="row mb-3">
-						<label for="authorisationAccessPointUrl" class="col-sm-2 col-form-label" translate>url</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="authorisationAccessPointUrl"
-								value="{{ authorisationAccessPoint?.url }}" disabled />
-						</div>
-					</div>
-					<div *ngIf="
+          <div class="row mb-3">
+            <label for="authorisationAccessPointAccessPointType.name" class="col-sm-2 col-form-label" translate>
+              access.point.type
+            </label>
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control"
+                id="authorisationAccessPointAccessPointType.name"
+                value="{{ authorisationAccessPoint?.accessPointType?.name }}"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="authorisationAccessPointName" class="col-sm-2 col-form-label" translate>name</label>
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control"
+                id="authorisationAccessPointName"
+                value="{{ authorisationAccessPoint?.name }}"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="authorisationAccessPointUrl" class="col-sm-2 col-form-label" translate>url</label>
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control"
+                id="authorisationAccessPointUrl"
+                value="{{ authorisationAccessPoint?.url }}"
+                disabled
+              />
+            </div>
+          </div>
+          <div
+            *ngIf="
               editAuthorisationForm.invalid &&
               authorisationAccessPointControl.invalid &&
               (authorisationAccessPointControl.dirty || authorisationAccessPointControl.touched)
-            " class="alert alert-danger" role="alert">
-						<div *ngIf="authorisationAccessPointControl.errors['required']">
-							<span translate>access.point.required</span>
-						</div>
-					</div>
-				</fieldset>
-				<div class="mb-3">
-					<label id="authorisationRoles_label" class="col-sm-2 form-check-label"
-						for="authorisationRoles"><span translate>roles</span></label>
-					<article formArrayName="roles" id="authorisationRolesArticle">
-						<mat-form-field class="form-group">
-							<mat-label translate>select.value.text</mat-label>
-							<mat-select name="authorisationRolesSelector" id="authorisationRolesSelector"
-								(selectionChange)="onAuthorisationRolesChange($event)">
-								<mat-option *ngFor="let item of authorisationRolesBackingList" [value]="item.value">
-									{{ item.label }}
-								</mat-option>
-							</mat-select>
-						</mat-form-field>
-						<ul class="list-group"
-							*ngFor="let control of authorisationRolesControl.controls; let i = index">
-							<li class="list-group-item">
-								<button type="button" class="btn btn-primary" (click)="authorisationRolesDelete(i)">
-									<i class="bi bi-trash"></i>
-								</button>
-								{{ getAuthorisationRolesLabel(control.value) }}
-							</li>
-						</ul>
-					</article>
-				</div>
-			</div>
+            "
+            class="alert alert-danger"
+            role="alert"
+          >
+            <div *ngIf="authorisationAccessPointControl.errors['required']">
+              <span translate>access.point.required</span>
+            </div>
+          </div>
+        </fieldset>
+        <div class="mb-3">
+          <label id="authorisationRoles_label" class="col-sm-2 form-check-label" for="authorisationRoles"
+            ><span translate>roles</span></label
+          >
+          <article formArrayName="roles" id="authorisationRolesArticle">
+            <mat-form-field class="form-group">
+              <mat-label translate>select.value.text</mat-label>
+              <mat-select
+                name="authorisationRolesSelector"
+                id="authorisationRolesSelector"
+                (selectionChange)="onAuthorisationRolesChange($event)"
+              >
+                <mat-option *ngFor="let item of authorisationRolesBackingList" [value]="item.value">
+                  {{ item.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <ul class="list-group" *ngFor="let control of authorisationRolesControl.controls; let i = index">
+              <li class="list-group-item">
+                <button type="button" class="btn btn-primary" (click)="authorisationRolesDelete(i)">
+                  <i class="bi bi-trash"></i>
+                </button>
+                {{ getAuthorisationRolesLabel(control.value) }}
+              </li>
+            </ul>
+          </article>
+        </div>
+      </div>
 
-			<br />
+      <br />
 
-			<div class="text-end">
-				<button type="button" color="accent" (click)="editAuthorisationSave()" class="btn btn-outline-primary">
-					<span translate>save</span>
-				</button>
-				<!-- <button type="button" color="accent" (click)="editAuthorisationSearch()" class="btn btn-outline-primary">
+      <div class="text-end">
+        <button type="button" color="accent" (click)="editAuthorisationSave()" class="btn btn-outline-primary">
+          <span translate>save</span>
+        </button>
+        <!-- <button type="button" color="accent" (click)="editAuthorisationSearch()" class="btn btn-outline-primary">
           <span translate>search</span>
         </button> -->
-				<button type="button" color="accent" (click)="editAuthorisationDelete()" class="btn btn-outline-primary"
-					*ngIf="authorisationId && deleteUnrestricted">
-					<span translate>delete</span>
-				</button>
-				<button color="accent" type="button" (click)="editAuthorisationFormReset()"
-					class="btn btn-outline-primary">
-					<span translate>reset</span>
-				</button>
-			</div>
-		</form>
-	</div>
+        <button
+          type="button"
+          color="accent"
+          (click)="editAuthorisationDelete()"
+          class="btn btn-outline-primary"
+          *ngIf="authorisationId && deleteUnrestricted"
+        >
+          <span translate>delete</span>
+        </button>
+        <button color="accent" type="button" (click)="editAuthorisationFormReset()" class="btn btn-outline-primary">
+          <span translate>reset</span>
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 <!-- Modal for accessPoint -->
-<div class="modal fade" id="authorisationAccessPointModal" tabindex="-1" aria-labelledby="authorisationAccessPointLabel"
-	aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="authorisationAccessPointAddLabel" translate>
-					action.select
-					<span translate>access.point</span>
-				</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<div>
-					<form>
-						<div>
-							<mat-form-field>
-								<mat-label translate>search</mat-label>
-								<input matInput type="text" [formControl]="authorisationAccessPointSearchField"
-									id="authorisationAccessPointSearchField" />
-							</mat-form-field>
-						</div>
-						<button type="button" (click)="authorisationAccessPointSearch()" class="btn btn-primary">
-							<mat-icon>search</mat-icon>
-						</button>
-					</form>
-				</div>
-				<mat-table matSort [dataSource]="authorisationAccessPointsDataSource"
-					#authorisationAccessPointModalSort="matSort" class="table table-bordered" style="width: 100%">
-					<ng-container matColumnDef="actions">
-						<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-						<mat-cell *matCellDef="let row; let i = index">
-							<mat-radio-group (change)="authorisationAccessPointSelected($event, row)">
-								<mat-radio-button [value]="row"
-									[checked]="authorisationAccessPointSelect.id === row.id">
-								</mat-radio-button>
-							</mat-radio-group>
-						</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="id">
-						<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-						<mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="accessPointType.name">
-						<mat-header-cell *matHeaderCellDef translate>access.point.type.name</mat-header-cell>
-						<mat-cell *matCellDef="let row"> {{ row.accessPointType.name }} </mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="name">
-						<mat-header-cell *matHeaderCellDef translate>name</mat-header-cell>
-						<mat-cell *matCellDef="let row"> {{ row.name }} </mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="url">
-						<mat-header-cell *matHeaderCellDef translate>url</mat-header-cell>
-						<mat-cell *matCellDef="let row"> {{ row.url }} </mat-cell>
-					</ng-container>
-					<mat-header-row *matHeaderRowDef="authorisationAccessPointModalColumns"></mat-header-row>
-					<mat-row *matRowDef="let row; columns: authorisationAccessPointModalColumns"></mat-row>
-				</mat-table>
-				<mat-paginator #authorisationAccessPointModalPaginator="matPaginator" [pageSize]="10"
-					[pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-				<button type="button" class="btn btn-primary" (click)="addSelectedAuthorisationAccessPoint()"
-					data-bs-dismiss="modal" translate>
-					save
-				</button>
-			</div>
-		</div>
-	</div>
+<div
+  class="modal fade"
+  id="authorisationAccessPointModal"
+  tabindex="-1"
+  aria-labelledby="authorisationAccessPointLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="authorisationAccessPointAddLabel" translate>
+          action.select
+          <span translate>access.point</span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <form>
+            <div>
+              <mat-form-field>
+                <mat-label translate>search</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  [formControl]="authorisationAccessPointSearchField"
+                  id="authorisationAccessPointSearchField"
+                />
+              </mat-form-field>
+            </div>
+            <button type="button" (click)="authorisationAccessPointSearch()" class="btn btn-primary">
+              <mat-icon>search</mat-icon>
+            </button>
+          </form>
+        </div>
+        <mat-table
+          matSort
+          [dataSource]="authorisationAccessPointsDataSource"
+          #authorisationAccessPointModalSort="matSort"
+          class="table table-bordered"
+          style="width: 100%"
+        >
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+            <mat-cell *matCellDef="let row; let i = index">
+              <mat-radio-group (change)="authorisationAccessPointSelected($event, row)">
+                <mat-radio-button [value]="row" [checked]="authorisationAccessPointSelect.id === row.id">
+                </mat-radio-button>
+              </mat-radio-group>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="accessPointType.name">
+            <mat-header-cell *matHeaderCellDef translate>access.point.type.name</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row.accessPointType.name }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef translate>name</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row.name }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="url">
+            <mat-header-cell *matHeaderCellDef translate>url</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row.url }} </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="authorisationAccessPointModalColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: authorisationAccessPointModalColumns"></mat-row>
+        </mat-table>
+        <mat-paginator
+          #authorisationAccessPointModalPaginator="matPaginator"
+          [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 15]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="addSelectedAuthorisationAccessPoint()"
+          data-bs-dismiss="modal"
+          translate
+        >
+          save
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
