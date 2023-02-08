@@ -8,12 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class FallBackCommunicationService {
+public class FallBackEmailDispatchService {
 
-    // protected Logger logger = LoggerFactory.getLogger(FallBackCommunicationService.class);
+    // protected Logger logger = LoggerFactory.getLogger(FallBackEmailDispatchService.class);
     
-    @RabbitListener(queues = {"q.fall-back-communication"})
-    public void onCommunicationFailure(BocraMesssageVO failedCommunication){
+    @RabbitListener(queues = {"q.fall-back-email-dispatch"})
+    public void onEmailDispatchFailure(BocraMesssageVO failedEmailDispatch){
         //log.info("Executing fallback for failed registration {}", failedRegistration);
     }
 }

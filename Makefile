@@ -165,12 +165,7 @@ run_module_local: gen_env
 	. ./.env && cd bocraportal/${module} && mvn spring-boot:run
 	
 run_api_local: gen_env
-ifdef api_secret
-	. ./.env && export KEYCLOAK_API_CLIENT_SECRET=${api_secret} && cd bocraportal/webservice && mvn spring-boot:run
-else
-	@echo 'No api_secret defined. Please run again with `make api_secret=<secret> run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> target`'
-	exit 1
-endif
+	. ./.env && cd bocraportal/webservice && mvn spring-boot:run
 
 run_comm_local: gen_env
 	. ./.env && cd bocraportal/comm && mvn spring-boot:run

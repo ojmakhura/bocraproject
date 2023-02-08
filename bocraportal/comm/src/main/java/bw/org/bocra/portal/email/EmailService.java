@@ -19,6 +19,7 @@ import bw.org.bocra.portal.message.BocraMesssageService;
 import bw.org.bocra.portal.message.BocraMesssageStatus;
 import bw.org.bocra.portal.message.BocraMesssageVO;
 import lombok.extern.slf4j.Slf4j;
+import bw.org.bocra.portal.properties.RabbitProperties;
 
 @Service
 @Slf4j
@@ -30,14 +31,16 @@ public class EmailService {
     private final RealmSmtpService realmSmtpService;
     private final BocraMesssageService bocraMesssageService;
     private final RabbitTemplate rabbitTemplate;
+    private final RabbitProperties rabbitProperties;
     
-    public EmailService(RealmSmtpService realmSmtpService, BocraMesssageService bocraMesssageService, RabbitTemplate rabbitTemplate) {
+    public EmailService(RabbitProperties rabbitProperties, RealmSmtpService realmSmtpService, BocraMesssageService bocraMesssageService, RabbitTemplate rabbitTemplate) {
         this.realmSmtpService = realmSmtpService;
         this.bocraMesssageService = bocraMesssageService;
         this.rabbitTemplate = rabbitTemplate;
+        this.rabbitProperties = rabbitProperties;
     }
 
-    @RabbitListener(queues = "q.send-email")
+    @RabbitListener(queues = {"q.email-dispatch"})
     public void sendEmail(BocraMesssageVO emailMessage) {
 
         log.info("Sending email to {}", emailMessage.getDestinations());
@@ -105,7 +108,8 @@ public class EmailService {
         }
 
     }
-    @RabbitListener(queues = "q.email_queue")
+
+    @RabbitListener(queues = "q.email-queue")
     public void readEmailQueue(Collection<BocraMesssageVO> emailMessages) {
         
         for (BocraMesssageVO emailMessage : emailMessages) {
@@ -117,7 +121,7 @@ public class EmailService {
             emailMessage = bocraMesssageService.save(emailMessage);
 
             if(emailMessage.getSendNow()) {
-                rabbitTemplate.convertAndSend("", "q.communication", emailMessage);
+                rabbitTemplate.convertAndSend("", rabbitProperties.getEmailQueueRoutingKey(), emailMessage);
             }
 
         }

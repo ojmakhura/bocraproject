@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
+import bw.org.bocra.portal.properties.RabbitProperties;
 
 @RestController
 @RequestMapping("/messages")
@@ -22,12 +23,14 @@ public class BocraMessageController {
     private final RabbitTemplate rabbitTemplate;
     private final RestTemplate restTemplate;
     private final BocraMesssageService bocraMesssageService;
+    private final RabbitProperties rabbitProperties;
     
-    public BocraMessageController(RabbitTemplate rabbitTemplate, RestTemplate restTemplate, BocraMesssageService bocraMesssageService) {
+    public BocraMessageController(RabbitProperties rabbitProperties, RabbitTemplate rabbitTemplate, RestTemplate restTemplate, BocraMesssageService bocraMesssageService) {
 
         this.rabbitTemplate = rabbitTemplate;
         this.restTemplate = restTemplate;
         this.bocraMesssageService = bocraMesssageService;
+        this.rabbitProperties = rabbitProperties;
     }
 
     @PostMapping()
@@ -50,7 +53,8 @@ public class BocraMessageController {
         message.setCreatedDate(null);
         message.setDispatchDate(null);
         log.info(message.toString());
-        rabbitTemplate.convertAndSend("", "q.communication", message);
+        rabbitTemplate.convertAndSend("", rabbitProperties.getEmailHandler(), message);
+        // rabbitTemplate.convertAndSend("", "q.communication", message);
         
         return ResponseEntity.ok().build();
     }

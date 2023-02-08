@@ -238,7 +238,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             messageObjects.add(messageObj);
         }
 
-        rabbitTemplate.convertAndSend(rabbitProperties.getExchange(), rabbitProperties.getRoutingkey(), messageObjects);
+        rabbitTemplate.convertAndSend(rabbitProperties.getEmailQueueExchange(), rabbitProperties.getEmailQueueRoutingKey(), messageObjects);
     }
 
     @Override

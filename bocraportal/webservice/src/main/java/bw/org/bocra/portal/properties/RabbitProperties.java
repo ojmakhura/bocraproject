@@ -11,19 +11,28 @@ public class RabbitProperties {
     private final int port;
     private final String username;
     private final String password;
-    private final String exchange;
-    private final String queue;
-    private final String routingkey;
+    private final String emailHandler;
+    private final String emailDispatchExchange;
+    private final String emailDispatchQueue;
+    private final String emailDispatchRoutingKey;
+    private final String emailQueueExchange;
+    private final String emailQueue;
+    private final String emailQueueRoutingKey;
 
-    public RabbitProperties(String host, int port, String username, String password, String exchange, String queue,
-            String routingkey) {
+
+    public RabbitProperties(String host, int port, String username, String password, String emailDispatchExchange, String emailQueueExchange,
+            String emailHandler, String emailDispatchQueue, String emailDispatchRoutingKey, String emailQueue, String emailQueueRoutingKey) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
-        this.exchange = exchange;
-        this.queue = queue;
-        this.routingkey = routingkey;
+        this.emailDispatchExchange = emailDispatchExchange;
+        this.emailDispatchQueue = emailDispatchQueue;
+        this.emailDispatchRoutingKey = emailDispatchRoutingKey;
+        this.emailQueue = emailQueue;
+        this.emailQueueRoutingKey = emailQueueRoutingKey;
+        this.emailQueueExchange = emailQueueExchange;
+        this.emailHandler = emailHandler;
     }
 
     public String getHost() {
@@ -42,21 +51,41 @@ public class RabbitProperties {
         return password;
     }
 
-    public String getExchange() {
-        return exchange;
+    public String getEmailDispatchQueue() {
+        return emailDispatchQueue;
     }
 
-    public String getQueue() {
-        return queue;
+    public String getEmailDispatchRoutingKey() {
+        return emailDispatchRoutingKey;
     }
 
-    public String getRoutingkey() {
-        return routingkey;
+    public String getEmailQueue() {
+        return emailQueue;
+    }
+
+    public String getEmailQueueRoutingKey() {
+        return emailQueueRoutingKey;
+    }
+
+    public String getEmailDispatchExchange() {
+        return emailDispatchExchange;
+    }
+
+    public String getEmailQueueExchange() {
+        return emailQueueExchange;
+    }
+
+    public String getEmailHandler() {
+        return emailHandler;
     }
 
     @Override
     public String toString() {
         return "RabbitProperties [host=" + host + ", port=" + port + ", username=" + username + ", password=" + password
-                + ", exchange=" + exchange + ", queue=" + queue + ", routingkey=" + routingkey + "]";
+                + ", emailHandler=" + emailHandler + ", emailDispatchExchange=" + emailDispatchExchange
+                + ", emailDispatchQueue=" + emailDispatchQueue + ", emailDispatchRoutingKey=" + emailDispatchRoutingKey
+                + ", emailQueueExchange=" + emailQueueExchange + ", emailQueue=" + emailQueue
+                + ", emailQueueRoutingKey=" + emailQueueRoutingKey + "]";
     }
+    
 }

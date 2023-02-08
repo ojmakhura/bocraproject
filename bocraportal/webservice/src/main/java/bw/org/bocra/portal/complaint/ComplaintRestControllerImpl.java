@@ -32,10 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
-import bw.org.bocra.portal.document.DocumentService;
-import bw.org.bocra.portal.keycloak.KeycloakService;
-import bw.org.bocra.portal.keycloak.KeycloakUserService;
-import bw.org.bocra.portal.properties.KeycloakProperties;
 import bw.org.bocra.portal.properties.RabbitProperties;
 import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,34 +42,21 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Complaint", description = "Managing the complaints.")
 public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
-    private final DocumentService documentService;
-    private final KeycloakUserService keycloakUserService;
-    private final KeycloakService keycloakService;
-    private final KeycloakProperties keycloakProperties;
-
     @Value("${bocra.comm.url}")
     private String commUrl;
 
     @Value("${bocra.web.url}")
     private String webUrl;
 
-    @Value("${keycloak.credentials.secret}")
-    private String clientSecret;
-
     private final RestTemplate restTemplate;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitProperties rabbitProperties;
 
-    public ComplaintRestControllerImpl(ComplaintService complaintService, DocumentService documentService,
-            KeycloakProperties keycloakProperties, RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties,
-            KeycloakUserService keycloakUserService, KeycloakService keycloakService, RestTemplate restTemplate) {
+    public ComplaintRestControllerImpl(ComplaintService complaintService, RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties,
+            RestTemplate restTemplate) {
 
         super(complaintService);
-        this.documentService = documentService;
-        this.keycloakUserService = keycloakUserService;
-        this.keycloakService = keycloakService;
         this.restTemplate = restTemplate;
-        this.keycloakProperties = keycloakProperties;
         this.rabbitTemplate = rabbitTemplate;
         this.rabbitProperties = rabbitProperties;
     }
@@ -341,7 +324,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
         List<Object> messageObjects = JSONArrayUtils.newJSONArray();
         messageObjects.add(messageObj);
 
-        rabbitTemplate.convertAndSend(rabbitProperties.getExchange(), rabbitProperties.getRoutingkey(), messageObjects);
+        rabbitTemplate.convertAndSend(rabbitProperties.getEmailQueueExchange(), rabbitProperties.getEmailQueueRoutingKey(), messageObjects);
     }
 
     @Override

@@ -188,10 +188,5 @@ public class LicenseeShareholderDaoImpl
                 "LicenseeShareholderDao.licenseeShareholderVOToEntity - 'shareholder' or its id can not be null"
             );
         }
-
-        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
-            Collection<Long> ids = source.getDocuments().stream().map(doc -> doc.getId()).collect(Collectors.toSet());
-            target.setDocumentIds(ids);
-        }
     }
 }

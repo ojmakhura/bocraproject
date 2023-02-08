@@ -3,8 +3,10 @@ package bw.org.bocra.portal.config;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Declarables;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -31,18 +33,35 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue createEmailQueue() {
+        
+        return QueueBuilder.durable(rabbitProperties.getEmailQueue())
+                .build();
+    }
+
+    @Bean
+    public Declarables createEmailQueueSchema() {
+        
+        return new Declarables(
+            new DirectExchange(rabbitProperties.getEmailQueueExchange()),
+            emailQueue(),
+            emailQueueBinding()
+        );
+    }
+
+    @Bean
 	Queue emailQueue() {
-		return new Queue(rabbitProperties.getQueue(), false);
+		return new Queue(rabbitProperties.getEmailQueue(), true);
 	}
 
 	@Bean
-	DirectExchange exchange() {
-		return new DirectExchange(rabbitProperties.getExchange());
+	DirectExchange emailQueueExchange() {
+		return new DirectExchange(rabbitProperties.getEmailQueueExchange());
 	}
 
 	@Bean
-	Binding binding(Queue emailQueue, DirectExchange exchange) {
-		return BindingBuilder.bind(emailQueue()).to(exchange()).with(rabbitProperties.getRoutingkey());
+	Binding emailQueueBinding() {
+		return BindingBuilder.bind(emailQueue()).to(emailQueueExchange()).with(rabbitProperties.getEmailQueueRoutingKey());
 	}
 
 	@Bean

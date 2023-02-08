@@ -24,22 +24,44 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
+import bw.org.bocra.portal.properties.RabbitProperties;
+
 @Configuration
 // @Slf4j
 public class RabbitMQConfig {
     private final CachingConnectionFactory cachingConnectionFactory;
+    private final RabbitProperties rabbitProperties;
 
-    public RabbitMQConfig(CachingConnectionFactory cachingConnectionFactory) {
+    public RabbitMQConfig(CachingConnectionFactory cachingConnectionFactory, RabbitProperties rabbitProperties) {
         this.cachingConnectionFactory = cachingConnectionFactory;
+        this.rabbitProperties = rabbitProperties;
     }
 
     @Bean
-    public Queue createCommunicationQueue() {
-
-        return QueueBuilder.durable("q.communication")
-                .withArgument("x-dead-letter-exchange","x.communication-failure")
+    public Queue createEmailExchangeQueue() {
+        
+        return QueueBuilder.durable(rabbitProperties.getEmailHandler())
+                .withArgument("x-dead-letter-exchange","x.email-dispatch-failure")
                 .withArgument("x-dead-letter-routing-key","fall-back")
                 .build();
+    }
+
+    @Bean
+    public Declarables createPostDispatchSchema(){
+        return new Declarables(
+                new FanoutExchange("x.post-email-dispatch"),
+                new Queue(rabbitProperties.getEmailDispatchQueue() ),
+                new Binding(rabbitProperties.getEmailDispatchQueue(), Binding.DestinationType.QUEUE, "x.post-email-dispatch", rabbitProperties.getEmailDispatchRoutingKey(), null)
+        );
+    }
+
+    @Bean
+    public Declarables createDeadLetterSchema(){
+        return new Declarables(
+            new DirectExchange("x.email-dispatch-failure"),
+            new Queue("q.fall-back-email-dispatch"),
+            new Binding("q.fall-back-email-dispatch", Binding.DestinationType.QUEUE,"x.email-dispatch-failure", "fall-back", null)
+        );
     }
 
     @Bean
@@ -62,22 +84,36 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Declarables createPostCommunicationSchema(){
+    public Queue createEmailQueue() {
+        
+        return QueueBuilder.durable(rabbitProperties.getEmailQueue())
+                .build();
+    }
+
+    @Bean
+    public Declarables createEmailQueueSchema() {
+        
         return new Declarables(
-                new FanoutExchange("x.post-communication"),
-                new Queue("q.send-email" ),
-                new Binding("q.send-email", Binding.DestinationType.QUEUE, "x.post-communication", "send-email", null)
+            new DirectExchange(rabbitProperties.getEmailQueueExchange()),
+            emailQueue(),
+            emailQueueBinding()
         );
     }
 
     @Bean
-    public Declarables createDeadLetterSchema(){
-        return new Declarables(
-            new DirectExchange("x.communication-failure"),
-            new Queue("q.fall-back-communication"),
-            new Binding("q.fall-back-communication", Binding.DestinationType.QUEUE,"x.communication-failure", "fall-back", null)
-        );
-    }
+	Queue emailQueue() {
+		return new Queue(rabbitProperties.getEmailQueue(), true);
+	}
+
+	@Bean
+	DirectExchange emailQueueExchange() {
+		return new DirectExchange(rabbitProperties.getEmailQueueExchange());
+	}
+
+	@Bean
+	Binding emailQueueBinding() {
+		return BindingBuilder.bind(emailQueue()).to(emailQueueExchange()).with(rabbitProperties.getEmailQueueRoutingKey());
+	}
 
     @Bean
     public Jackson2JsonMessageConverter converter(ObjectMapper mapper) {

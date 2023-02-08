@@ -1,4 +1,4 @@
-package bw.org.bocra.portal.config;
+package bw.org.bocra.portal.properties;
 
 import lombok.Getter;
 import lombok.Setter;
