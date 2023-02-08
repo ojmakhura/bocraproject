@@ -9,7 +9,10 @@ import { LicenseeShareholderRestController } from '@app/service/bw/org/bocra/por
 export class LicenseeShareholderEffects {
   documentRestController: any;
 
-  constructor(private actions$: Actions, private licenseeShareholderRestController: LicenseeShareholderRestController) {}
+  constructor(
+    private actions$: Actions,
+    private licenseeShareholderRestController: LicenseeShareholderRestController
+  ) {}
 
   findById$ = createEffect(() =>
     this.actions$.pipe(
@@ -80,7 +83,7 @@ export class LicenseeShareholderEffects {
             LicenseeShareholderActions.createSuccess({
               licenseeShareholder,
               messages: [`Licensee shareholder created.`],
-              success: true
+              success: true,
             })
           ),
           catchError(({ error }) => [
@@ -99,7 +102,7 @@ export class LicenseeShareholderEffects {
           map((licenseeShareholder) =>
             LicenseeShareholderActions.updateSuccess({
               licenseeShareholder,
-              messages: [`Licensee shareholder created.`],
+              messages: [`Licensee shareholder updated.`],
               success: true,
             })
           ),
@@ -119,7 +122,27 @@ export class LicenseeShareholderEffects {
           map((licenseeShareholder) =>
             LicenseeShareholderActions.updateSuccess({
               licenseeShareholder,
-              messages: [`Licensee shareholder created.`],
+              messages: [`Licensee shareholder updated.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            LicenseeShareholderActions.licenseeShareholderFailure({ messages: [error?.error ? error.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
+  updateNumberOfShares$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(LicenseeShareholderActions.updateNumberOfShares),
+      mergeMap(({ id, numberOfShares }) =>
+        this.licenseeShareholderRestController.updateNumberOfShares(id, numberOfShares).pipe(
+          map((licenseeShareholder) =>
+            LicenseeShareholderActions.updateSuccess({
+              licenseeShareholder,
+              messages: [`Licensee shareholder updated.`],
               success: true,
             })
           ),

@@ -15,7 +15,11 @@ export class MenuSectionEffects {
       mergeMap(({ id }) =>
         this.menuSectionRestController.findById(id).pipe(
           map((menuSection) =>
-            MenuSectionActions.findByIdSuccess({ menuSection, messages: [`Menu Section ${menuSection.displayName} found.`], success: true })
+            MenuSectionActions.findByIdSuccess({
+              menuSection,
+              messages: [`Menu Section ${menuSection.displayName} found.`],
+              success: true,
+            })
           ),
           catchError(({ error }) => [
             MenuSectionActions.menuSectionFailure({ messages: [error?.error ? error?.error : error] }),
@@ -31,7 +35,11 @@ export class MenuSectionEffects {
       mergeMap(({ menuSection }) =>
         this.menuSectionRestController.save(menuSection).pipe(
           map((menuSection) =>
-            MenuSectionActions.saveSuccess({ menuSection, messages: [`Menu Section ${menuSection.displayName} saved.`], success: true })
+            MenuSectionActions.saveSuccess({
+              menuSection,
+              messages: [`Menu Section ${menuSection.displayName} saved.`],
+              success: true,
+            })
           ),
           catchError(({ error }) => [
             MenuSectionActions.menuSectionFailure({ messages: [error?.error ? error?.error : error] }),
@@ -47,7 +55,11 @@ export class MenuSectionEffects {
       mergeMap(({ id }) =>
         this.menuSectionRestController.remove(id).pipe(
           map((removed) =>
-            MenuSectionActions.removeSuccess({ removed, messages: [`Menu Section ${id} removed successful.`], success: true })
+            MenuSectionActions.removeSuccess({
+              removed,
+              messages: [`Menu Section ${id} removed successful.`],
+              success: true,
+            })
           ),
           catchError(({ error }) => [
             MenuSectionActions.menuSectionFailure({ messages: [error?.error ? error?.error : error] }),
@@ -63,7 +75,11 @@ export class MenuSectionEffects {
       mergeMap(({}) =>
         this.menuSectionRestController.getAll().pipe(
           map((menuSections) =>
-            MenuSectionActions.getAllSuccess({ menuSections, messages: [`${menuSections.length} menu sections found.`], success: true })
+            MenuSectionActions.getAllSuccess({
+              menuSections,
+              messages: [`${menuSections.length} menu sections found.`],
+              success: true,
+            })
           ),
           catchError(({ error }) => [
             MenuSectionActions.menuSectionFailure({ messages: [error?.error ? error?.error : error] }),
@@ -79,7 +95,11 @@ export class MenuSectionEffects {
       mergeMap(({ criteria }) =>
         this.menuSectionRestController.search(criteria).pipe(
           map((menuSections) =>
-            MenuSectionActions.searchSuccess({ menuSections, messages: [`${menuSections.length} menu sections found.`], success: true })
+            MenuSectionActions.searchSuccess({
+              menuSections,
+              messages: [`${menuSections.length} menu sections found.`],
+              success: true,
+            })
           ),
           catchError(({ error }) => [
             MenuSectionActions.menuSectionFailure({ messages: [error?.error ? error?.error : error] }),
@@ -95,7 +115,11 @@ export class MenuSectionEffects {
       mergeMap(({ pageNumber, pageSize }) =>
         this.menuSectionRestController.getAllPaged(pageNumber, pageSize).pipe(
           map((menuSections) =>
-            MenuSectionActions.getAllPagedSuccess({ menuSections, messages: [`Page ${pageNumber} found with ${menuSections.length} menu sections.`], success: true })
+            MenuSectionActions.getAllPagedSuccess({
+              menuSections,
+              messages: [`Page ${pageNumber} found with ${menuSections.length} menu sections.`],
+              success: true,
+            })
           ),
           catchError(({ error }) => [
             MenuSectionActions.menuSectionFailure({ messages: [error?.error ? error?.error : error] }),

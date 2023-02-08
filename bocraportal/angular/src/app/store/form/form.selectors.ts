@@ -2,112 +2,46 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { formKey, FormState } from './form.state';
 
-export const selectFormState = createFeatureSelector<FormState> (
-    formKey
-);
+export const selectFormState = createFeatureSelector<FormState>(formKey);
 
-export const selectFieldType = createSelector(
-    selectFormState,
-    (state: FormState) => state.fieldType
-);
+export const selectFieldType = createSelector(selectFormState, (state: FormState) => state.fieldType);
 
-export const selectId = createSelector(
-    selectFormState,
-    (state: FormState) => state.id
-);
+export const selectId = createSelector(selectFormState, (state: FormState) => state.id);
 
-export const selectForm = createSelector(
-    selectFormState,
-    (state: FormState) => state.form
-);
+export const selectForm = createSelector(selectFormState, (state: FormState) => state.form);
 
-export const selectForms = createSelector(
-    selectFormState,
-    (state: FormState) => state.forms
-);
+export const selectForms = createSelector(selectFormState, (state: FormState) => state.forms);
 
-export const selectCriteria = createSelector(
-    selectFormState,
-    (state: FormState) => state.criteria
-);
+export const selectCriteria = createSelector(selectFormState, (state: FormState) => state.criteria);
 
-export const selectDefaultValue = createSelector(
-    selectFormState,
-    (state: FormState) => state.defaultValue
-);
+export const selectDefaultValue = createSelector(selectFormState, (state: FormState) => state.defaultValue);
 
-export const selectMin = createSelector(
-    selectFormState,
-    (state: FormState) => state.min
-);
+export const selectMin = createSelector(selectFormState, (state: FormState) => state.min);
 
-export const selectFormFields = createSelector(
-    selectFormState,
-    (state: FormState) => state.formFields
-);
+export const selectFormFields = createSelector(selectFormState, (state: FormState) => state.formFields);
 
-export const selectFormField = createSelector(
-    selectFormState,
-    (state: FormState) => state.formField
-);
+export const selectFormField = createSelector(selectFormState, (state: FormState) => state.formField);
 
-export const selectFieldName = createSelector(
-    selectFormState,
-    (state: FormState) => state.fieldName
-);
+export const selectFieldName = createSelector(selectFormState, (state: FormState) => state.fieldName);
 
-export const selectMax = createSelector(
-    selectFormState,
-    (state: FormState) => state.max
-);
+export const selectMax = createSelector(selectFormState, (state: FormState) => state.max);
 
-export const selectFormSection = createSelector(
-    selectFormState,
-    (state: FormState) => state.formSection
-);
+export const selectFormSection = createSelector(selectFormState, (state: FormState) => state.formSection);
 
-export const selectFormSections = createSelector(
-    selectFormState,
-    (state: FormState) => state.formSections
-);
+export const selectFormSections = createSelector(selectFormState, (state: FormState) => state.formSections);
 
-export const selectLicenseeForm = createSelector(
-    selectFormState,
-    (state: FormState) => state.licenseeForm
-);
+export const selectLicenseeForm = createSelector(selectFormState, (state: FormState) => state.licenseeForm);
 
-export const selectLicenseeForms = createSelector(
-    selectFormState,
-    (state: FormState) => state.licenseeForms
-);
+export const selectLicenseeForms = createSelector(selectFormState, (state: FormState) => state.licenseeForms);
 
-export const selectRequired = createSelector(
-    selectFormState,
-    (state: FormState) => state.required
-);
+export const selectRequired = createSelector(selectFormState, (state: FormState) => state.required);
 
-export const selectLoading = createSelector(
-    selectFormState,
-    (state: FormState) => state.loading
-);
+export const selectLoading = createSelector(selectFormState, (state: FormState) => state.loading);
 
-export const selectLoaderMessage = createSelector(
-    selectFormState,
-    (state: FormState) => state.loaderMessage
-);
+export const selectLoaderMessage = createSelector(selectFormState, (state: FormState) => state.loaderMessage);
 
-export const selectSuccess = createSelector(
-    selectFormState,
-    (state: FormState) => state.success
-);
+export const selectSuccess = createSelector(selectFormState, (state: FormState) => state.success);
 
-export const selectMessages = createSelector(
-    selectFormState,
-    (state: FormState) => state.messages
-);
+export const selectMessages = createSelector(selectFormState, (state: FormState) => state.messages);
 
-export const selectError = createSelector(
-    selectFormState,
-    (state: FormState) => state.error
-);
-
+export const selectError = createSelector(selectFormState, (state: FormState) => state.error);

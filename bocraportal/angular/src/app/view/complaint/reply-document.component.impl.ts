@@ -11,14 +11,12 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-reply-document',
   templateUrl: './reply-document.component.html',
-  styleUrls: ['./reply-document.component.scss']
+  styleUrls: ['./reply-document.component.scss'],
 })
 export class ReplyDocumentComponentImpl extends ReplyDocumentComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
+    super(data, injector);
+  }
 
-    constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
-        super(data, injector);
-    }
-
-    doNgOnDestroy(): void {
-    }
+  doNgOnDestroy(): void {}
 }

@@ -55,7 +55,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
           SectorActions.findById({
             id: queryParams?.id,
             loading: true,
-            loaderMessage: 'Loading sector by id ...'
+            loaderMessage: 'Loading sector by id ...',
           })
         );
       }
@@ -70,7 +70,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
     });
 
     this.sectorForm$.subscribe((sf) => {
-      if(sf?.id) {
+      if (sf?.id) {
         this.addToSectorForms(sf);
       }
     });
@@ -104,29 +104,28 @@ export class EditSectorComponentImpl extends EditSectorComponent {
       LicenseeActions.search({
         criteria: { licenseeName: criteria },
         loading: true,
-        loaderMessage: 'Searching licensees ...'
+        loaderMessage: 'Searching licensees ...',
       })
     );
   }
 
   override beforeEditSectorDelete(form: EditSectorDeleteForm): void {
-    if(form?.sector?.id){
-      if(!(form?.sector?.forms.length>0) && confirm('Are you sure you want to delete the Sector?')) {
-
+    if (form?.sector?.id) {
+      if (!(form?.sector?.forms.length > 0) && confirm('Are you sure you want to delete the Sector?')) {
         this.store.dispatch(
           SectorActions.remove({
             id: form?.sector?.id,
             loading: true,
-            loaderMessage: 'Removing form sectors ...'
+            loaderMessage: 'Removing form sectors ...',
           })
         );
         this.editSectorFormReset();
-      }else{
-        this.store.dispatch(SectorActions.sectorFailure({ messages: ['This Sector has forms hence can not be deleted'] }));
+      } else {
+        this.store.dispatch(
+          SectorActions.sectorFailure({ messages: ['This Sector has forms hence can not be deleted'] })
+        );
       }
-    }
-
-    else {
+    } else {
       this.store.dispatch(SectorActions.sectorFailure({ messages: ['Please select something to delete'] }));
     }
   }
@@ -148,7 +147,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
         SectorActions.save({
           sector: form.sector,
           loading: true,
-          loaderMessage: 'Saving sector ...'
+          loaderMessage: 'Saving sector ...',
         })
       );
     } else {
@@ -180,9 +179,9 @@ export class EditSectorComponentImpl extends EditSectorComponent {
   override sectorFormsSearch() {
     this.store.dispatch(
       FormActions.searchForms({
-        criteria: {formName: this.sectorFormsSearchField.value},
+        criteria: { formName: this.sectorFormsSearchField.value },
         loading: true,
-        loaderMessage: 'Searching forms ...'
+        loaderMessage: 'Searching forms ...',
       })
     );
   }
@@ -194,7 +193,7 @@ export class EditSectorComponentImpl extends EditSectorComponent {
         LicenseeSectorActions.remove({
           id: lic.id,
           loading: true,
-          loaderMessage: 'Removing licensee from sector ...'
+          loaderMessage: 'Removing licensee from sector ...',
         })
       );
     }

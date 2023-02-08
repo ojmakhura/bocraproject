@@ -12,29 +12,29 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 @Component({
   selector: 'app-search-access-point-types',
   templateUrl: './search-access-point-types.component.html',
-  styleUrls: ['./search-access-point-types.component.scss']
+  styleUrls: ['./search-access-point-types.component.scss'],
 })
 export class SearchAccessPointTypesComponentImpl extends SearchAccessPointTypesComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: SearchAccessPointTypesVarsForm): SearchAccessPointTypesVarsForm {
+    return form;
+  }
 
-    override beforeOnInit(form: SearchAccessPointTypesVarsForm): SearchAccessPointTypesVarsForm{     
-        return form;
-    }
-	
-    override doNgOnDestroy(){}
+  override doNgOnDestroy() {}
 
-    /**
-     * This method may be overwritten
-     */
-    override beforeSearchAccessPointTypesSearch(form: SearchAccessPointTypesSearchForm): void {
-      this.store.dispatch(AccessPointTypeActions.search({
+  /**
+   * This method may be overwritten
+   */
+  override beforeSearchAccessPointTypesSearch(form: SearchAccessPointTypesSearchForm): void {
+    this.store.dispatch(
+      AccessPointTypeActions.search({
         criteria: form.criteria,
         loading: true,
-        loaderMessage: 'Searching access point types ...'
-      }));
-      
-    }
+        loaderMessage: 'Searching access point types ...',
+      })
+    );
+  }
 }

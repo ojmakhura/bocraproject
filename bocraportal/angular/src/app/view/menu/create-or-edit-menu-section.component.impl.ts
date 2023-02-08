@@ -15,22 +15,20 @@ import { AuthorisationCriteria } from '@model/bw/org/bocra/portal/auth/authorisa
 @Component({
   selector: 'app-create-or-edit-menu-section',
   templateUrl: './create-or-edit-menu-section.component.html',
-  styleUrls: ['./create-or-edit-menu-section.component.scss']
+  styleUrls: ['./create-or-edit-menu-section.component.scss'],
 })
 export class CreateOrEditMenuSectionComponentImpl extends CreateOrEditMenuSectionComponent {
+  deleteUnrestricted: boolean = false;
 
-    deleteUnrestricted: boolean = false;
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: CreateOrEditMenuSectionVarsForm): CreateOrEditMenuSectionVarsForm {
+    return form;
+  }
 
-    override beforeOnInit(form: CreateOrEditMenuSectionVarsForm): CreateOrEditMenuSectionVarsForm{     
-        return form;
-    }
-
-    doNgOnDestroy(): void {
-    }
+  doNgOnDestroy(): void {}
   override menuSectionAuthorisationsSearch(): void {
     let criteria: AuthorisationCriteria = new AuthorisationCriteria();
     criteria.accessPointName = this.menuSectionAuthorisationsSearchField.value;

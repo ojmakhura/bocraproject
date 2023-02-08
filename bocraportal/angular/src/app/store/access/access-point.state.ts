@@ -2,30 +2,30 @@
 import { AccessPointCriteria } from '@app/model/bw/org/bocra/portal/access/access-point-criteria';
 import { AccessPointVO } from '@app/model/bw/org/bocra/portal/access/access-point-vo';
 
-export const accessPointKey = "accessPoint";
+export const accessPointKey = 'accessPoint';
 
 export interface AccessPointState {
-    accessPoints: Array<AccessPointVO> | Array<any>,
-    id: number | any,
-    accessPoint: AccessPointVO | any,
-    criteria: AccessPointCriteria | any,
-    removed: boolean,
-    loading: boolean,
-    loaderMessage: string | undefined;
-    success: boolean,
-    error: boolean,
-    messages: string[]
+  accessPoints: Array<AccessPointVO> | Array<any>;
+  id: number | any;
+  accessPoint: AccessPointVO | any;
+  criteria: AccessPointCriteria | any;
+  removed: boolean;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  success: boolean;
+  error: boolean;
+  messages: string[];
 }
 
 export const initialState: AccessPointState = {
-    accessPoints: [],
-    id: null,
-    accessPoint: null,
-    criteria: null,
-    removed: false,
-    loading: false,
-    loaderMessage: undefined,
-    success: false,
-    error: false,
-    messages: []
+  accessPoints: [],
+  id: null,
+  accessPoint: null,
+  criteria: null,
+  removed: false,
+  loading: false,
+  loaderMessage: undefined,
+  success: false,
+  error: false,
+  messages: [],
 };

@@ -1,29 +1,37 @@
 <div class="row list-group-item-dark max-vh-100">
-	<div class="col-lg-6 p-5">
-		<h2 class="mb-2">Botswana Communications Regulatory Authority(BOCRA)</h2>
-		<p class="mb-4">
-			Welcome to BOCRA Online Portal, this data collection portal is designed for the licensees
-			regulated by BOCRA
-		</p>
-		<div class="accordion accordion-flush" id="sectors">
-			<div class="accordion-item mb-3" *ngFor="let sec of sectors$ | async; let i = index">
-				<h2 class="accordion-header" [id]="'heading'+i">
-					<button class="accordion-button collapsed text-white" type="button" data-bs-toggle="collapse"
-					[attr.data-bs-target]="'#collapse'+i" aria-expanded="false" [attr.aria-controls]="'collapse'+i" [ngStyle]="{ 'background-color': sec.themeColour }">
-						{{sec.name}}
-					</button>
-				</h2>
-				<div [id]="'collapse'+i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading'+i"
-					data-bs-parent="#sectors">
-					<div class="accordion-body" [innerHtml]="sec.description | sanitizeHtml">
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="col-lg-6 p-5">
+    <h2 class="mb-2">Botswana Communications Regulatory Authority(BOCRA)</h2>
+    <p class="mb-4">
+      Welcome to BOCRA Online Portal, this data collection portal is designed for the licensees regulated by BOCRA
+    </p>
+    <div class="accordion accordion-flush" id="sectors">
+      <div class="accordion-item mb-3" *ngFor="let sec of sectors$ | async; let i = index">
+        <h2 class="accordion-header" [id]="'heading' + i">
+          <button
+            class="accordion-button collapsed text-white"
+            type="button"
+            data-bs-toggle="collapse"
+            [attr.data-bs-target]="'#collapse' + i"
+            aria-expanded="false"
+            [attr.aria-controls]="'collapse' + i"
+            [ngStyle]="{ 'background-color': sec.themeColour }"
+          >
+            {{ sec.name }}
+          </button>
+        </h2>
+        <div
+          [id]="'collapse' + i"
+          class="accordion-collapse collapse"
+          [attr.aria-labelledby]="'heading' + i"
+          data-bs-parent="#sectors"
+        >
+          <div class="accordion-body" [innerHtml]="sec.description | sanitizeHtml"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-	<div class="col-lg-6 p-5">
-		<img src="../assets/wallpaper.jpg" alt="image" class="img-fluid mb-4">
-	</div>
-
+  <div class="col-lg-6 p-5">
+    <img src="../assets/wallpaper.jpg" alt="image" class="img-fluid mb-4" />
+  </div>
 </div>

@@ -30,7 +30,6 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
   constructor(private injector: Injector) {
     super(injector);
     this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
-    
   }
 
   override beforeOnInit(form: SearchFormSubmissionsVarsForm): SearchFormSubmissionsVarsForm {
@@ -73,20 +72,22 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
   formSearch(): void {
     let criteria: FormCriteria = new FormCriteria();
     criteria.formName = this.formSearchField.value;
-    this.store.dispatch(FormActions.searchForms({ criteria: criteria, loading: true, loaderMessage: 'Searching forms ...' }));
+    this.store.dispatch(
+      FormActions.searchForms({ criteria: criteria, loading: true, loaderMessage: 'Searching forms ...' })
+    );
   }
 
   formAddDialog(): void {}
 
   formClear(): void {
-    this.criteriaControl.patchValue({form: new FormVO()});
+    this.criteriaControl.patchValue({ form: new FormVO() });
   }
 
   get submissionFormControl(): FormGroup {
-      return this.searchFormSubmissionsForm.get('submissionForm') as FormGroup;
+    return this.searchFormSubmissionsForm.get('submissionForm') as FormGroup;
   }
 
   get submissionForm(): FormVO {
-      return this.submissionFormControl?.value;
+    return this.submissionFormControl?.value;
   }
 }

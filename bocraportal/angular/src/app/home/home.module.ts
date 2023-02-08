@@ -10,17 +10,7 @@ import { HomeComponent } from './home.component';
 import { SanitizeHtml } from '@app/pipe/sanitize-html.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    TranslateModule,
-    SharedModule,
-    FlexLayoutModule,
-    MaterialModule,
-    HomeRoutingModule
-  ],
-  declarations: [
-    HomeComponent,
-    SanitizeHtml
-  ]
+  imports: [CommonModule, TranslateModule, SharedModule, FlexLayoutModule, MaterialModule, HomeRoutingModule],
+  declarations: [HomeComponent, SanitizeHtml],
 })
-export class HomeModule { }
+export class HomeModule {}

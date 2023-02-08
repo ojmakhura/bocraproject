@@ -6,42 +6,38 @@ import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ComplaintTypeRestController {
-    
-    protected path = '/complaint/type';
+  protected path = '/complaint/type';
 
-    constructor(private http: HttpClient) {
+  constructor(private http: HttpClient) {}
+
+  public findById(id: number | any): Observable<ComplaintTypeVO | any> {
+    return this.http.get<ComplaintTypeVO | any>(`${this.path}/${id}`, {});
+  }
+
+  public getAll(): Observable<ComplaintTypeVO[] | any[]> {
+    return this.http.get<ComplaintTypeVO[] | any[]>(`${this.path}/all`);
+  }
+
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<ComplaintTypeVO[] | any[]> {
+    return this.http.get<ComplaintTypeVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
+  }
+
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
+  }
+
+  public save(complaintType: ComplaintTypeVO | any): Observable<ComplaintTypeVO | any> {
+    return this.http.post<ComplaintTypeVO | any>(`${this.path}`, complaintType);
+  }
+
+  public search(criteria: string | any): Observable<ComplaintVO[] | any[]> {
+    if (criteria === null) {
+      return this.getAll();
     }
 
-    public findById(id: number | any ): Observable<ComplaintTypeVO | any> {
-        return this.http.get<ComplaintTypeVO | any>(`${this.path}/${id}`, {});
-    }
-
-    public getAll(): Observable<ComplaintTypeVO[] | any[]> {
-        return this.http.get<ComplaintTypeVO[] | any[]>(`${this.path}/all`);
-    }
-
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<ComplaintTypeVO[] | any[]> {
-        return this.http.get<ComplaintTypeVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-        return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
-    }
-
-    public save(complaintType: ComplaintTypeVO | any ): Observable<ComplaintTypeVO | any> {
-        return this.http.post<ComplaintTypeVO | any>(`${this.path}`, complaintType);
-    }
-
-    public search(criteria: string | any ): Observable<ComplaintVO[] | any[]> {
-
-        if(criteria === null) {
-            return this.getAll();
-        }
-
-        return this.http.get<ComplaintVO[] | any[]>(`${this.path}/search?criteria=${criteria}`, {});
-    }
-
+    return this.http.get<ComplaintVO[] | any[]>(`${this.path}/search?criteria=${criteria}`, {});
+  }
 }

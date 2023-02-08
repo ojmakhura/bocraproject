@@ -169,9 +169,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       });
     });
 
-    this.formPeriodConfigs$?.subscribe(periods => {
-
-    });
+    this.formPeriodConfigs$?.subscribe((periods) => {});
   }
 
   /**
@@ -428,16 +426,15 @@ export class EditFormComponentImpl extends EditFormComponent {
     });
   }
 
-  override formPeriodConfigAddDialog(): void {
-  }
+  override formPeriodConfigAddDialog(): void {}
 
   override formPeriodConfigSearch(): void {
     let cr = this.formPeriodConfigSearchField.value;
     this.store.dispatch(
       PeriodConfigActions.search({
-        criteria: {periodConfigName: cr},
+        criteria: { periodConfigName: cr },
         loaderMessage: '',
-        loading: true
+        loading: true,
       })
     );
   }

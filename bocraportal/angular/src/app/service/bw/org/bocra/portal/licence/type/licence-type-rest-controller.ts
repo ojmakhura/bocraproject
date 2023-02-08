@@ -6,49 +6,34 @@ import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licen
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LicenceTypeRestController {
-    protected path = '/licence/type';
+  protected path = '/licence/type';
 
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {
-    }
+  public findById(id: number | any): Observable<LicenceTypeVO | any> {
+    return this.http.get<LicenceTypeVO | any>(this.path + `/${id}`);
+  }
 
-    public findById(id: number | any ): Observable<LicenceTypeVO | any> {
+  public getAll(): Observable<LicenceTypeVO[] | any[]> {
+    return this.http.get<LicenceTypeVO[] | any[]>(this.path + `/all`);
+  }
 
-        return this.http.get<LicenceTypeVO | any>(this.path + `/${id}`);
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<LicenceTypeVO[] | any[]> {
+    return this.http.get<LicenceTypeVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+  }
 
-    }
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(this.path + `/${id}`);
+  }
 
-    public getAll(): Observable<LicenceTypeVO[] | any[]> {
+  public save(licenseType: LicenceTypeVO | any): Observable<LicenceTypeVO | any> {
+    return this.http.post<LicenceTypeVO | any>(this.path, licenseType);
+  }
 
-        return this.http.get<LicenceTypeVO[] | any[]>(this.path + `/all`);
-
-    }
-
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<LicenceTypeVO[] | any[]> {
-
-        return this.http.get<LicenceTypeVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(this.path + `/${id}`);
-
-    }
-
-    public save(licenseType: LicenceTypeVO | any ): Observable<LicenceTypeVO | any> {
-
-        return this.http.post<LicenceTypeVO | any>(this.path, licenseType);
-
-    }
-
-    public search(searchCriteria: LicenceTypeCriteria | any ): Observable<LicenceTypeVO[] | any[]> {
-
-        return this.http.post<LicenceTypeVO[] | any[]>(this.path + `/search`, searchCriteria);
-
-    }
-
+  public search(searchCriteria: LicenceTypeCriteria | any): Observable<LicenceTypeVO[] | any[]> {
+    return this.http.post<LicenceTypeVO[] | any[]>(this.path + `/search`, searchCriteria);
+  }
 }

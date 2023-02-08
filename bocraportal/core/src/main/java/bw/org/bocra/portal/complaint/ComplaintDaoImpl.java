@@ -7,6 +7,7 @@
 package bw.org.bocra.portal.complaint;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -19,6 +20,9 @@ import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.licensee.sector.LicenseeSector;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
+import bw.org.bocra.portal.sector.SectorVO;
 
 /**
  * @see Complaint
@@ -58,6 +62,18 @@ public class ComplaintDaoImpl
             licensee.setUin(source.getLicensee().getUin());
             licensee.setLicenseeName(source.getLicensee().getLicenseeName());
 
+            licensee.setSectors(new HashSet<>());
+
+            for (LicenseeSector sector : source.getLicensee().getLicenseeSectors()) {
+                LicenseeSectorVO vo = new LicenseeSectorVO();
+                vo.setId(sector.getId());
+                vo.setSector(new SectorVO());
+                vo.getSector().setId(sector.getSector().getId());
+                vo.getSector().setCode(sector.getSector().getCode());
+                vo.getSector().setName(sector.getSector().getName());
+                licensee.getSectors().add(vo);
+            }
+
             target.setLicensee(licensee);
         }
 
@@ -71,8 +87,9 @@ public class ComplaintDaoImpl
             target.setComplaintType(getComplaintTypeDao().toComplaintTypeVO(source.getComplaintType()));
         }
 
-        if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
+        if (CollectionUtils.isNotEmpty(source.getDocumentIds())) {
+            Collection<DocumentVO> docs = documentDao
+                    .toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
             docs = docs.stream().map(d -> {
                 d.setFile(null);
                 return d;
@@ -129,20 +146,19 @@ public class ComplaintDaoImpl
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
         } else {
             throw new IllegalArgumentException(
-                "ComplaintDao.complaintVOToEntity - 'licensee' or its id can not be null"
-            );
+                    "ComplaintDao.complaintVOToEntity - 'licensee' or its id can not be null");
         }
 
         if (source.getComplaintType() != null && StringUtils.isNotBlank(source.getComplaintType().getCode())) {
             target.setComplaintType(getComplaintTypeDao().complaintTypeVOToEntity(source.getComplaintType()));
         } else {
             throw new IllegalArgumentException(
-                "ComplaintDao.complaintVOToEntity - 'complaintType' or its id can not be null"
-            );
+                    "ComplaintDao.complaintVOToEntity - 'complaintType' or its id can not be null");
         }
 
-        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
-            Collection<String> ids = source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toSet());
+        if (CollectionUtils.isNotEmpty(source.getDocuments())) {
+            Collection<String> ids = source.getDocuments().stream().map(doc -> doc.getDocumentId())
+                    .collect(Collectors.toSet());
             target.setDocumentIds(ids);
         }
     }

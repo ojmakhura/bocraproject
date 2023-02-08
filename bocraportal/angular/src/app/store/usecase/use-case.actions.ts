@@ -12,13 +12,25 @@ export enum UseCaseScopeActionType {
   ACTION_FAILURE = '[UseCase] Action Failure',
 }
 
-export const setPageVariables = createAction(UseCaseScopeActionType.SET_PAGE_VARIABLES, props<{ pageVariables: any }>());
+export const setPageVariables = createAction(
+  UseCaseScopeActionType.SET_PAGE_VARIABLES,
+  props<{ pageVariables: any }>()
+);
 
-export const setUseCaseParameters = createAction(UseCaseScopeActionType.SET_USECASE_PARAMETERS, props<{ useCaseParameters: any }>());
+export const setUseCaseParameters = createAction(
+  UseCaseScopeActionType.SET_USECASE_PARAMETERS,
+  props<{ useCaseParameters: any }>()
+);
 
-export const setUseCaseReturnValues = createAction(UseCaseScopeActionType.SET_USECASE_RETURN_VALUES, props<{ useCaseReturnValues: any }>());
+export const setUseCaseReturnValues = createAction(
+  UseCaseScopeActionType.SET_USECASE_RETURN_VALUES,
+  props<{ useCaseReturnValues: any }>()
+);
 
-export const setUseCaseInDialog = createAction(UseCaseScopeActionType.SET_USECASE_IN_DIALOG, props<{ useCaseInDialog: boolean }>());
+export const setUseCaseInDialog = createAction(
+  UseCaseScopeActionType.SET_USECASE_IN_DIALOG,
+  props<{ useCaseInDialog: boolean }>()
+);
 
 export const reset = createAction(UseCaseScopeActionType.RESET_USECASE);
 

@@ -4,164 +4,168 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
 import { DocumentMetadataTarget } from '@app/model/bw/org/bocra/portal/document/document-metadata-target';
 
 export enum DocumentActionType {
-    FIND_BY_ID = '[Document] Find By Id',
-    FIND_BY_ID_SUCCESS = '[Document] Find By Id Success',
-    FIND_BY_DOCUMENT_ID = '[Document] Find By Document Id',
-    FIND_BY_DOCUMENT_ID_SUCCESS = '[Document] Find By Document Id Success',
-    SAVE = '[Document] Save',
-    SAVE_SUCCESS = '[Document] Save Success',
-    REMOVE = '[Document] Remove',
-    REMOVE_SUCCESS = '[Document] Remove Success',
-    GET_ALL = '[Document] Get All',
-    GET_ALL_SUCCESS = '[Document] Get All Success',
-    UPLOAD_FILE = '[Document] Upload File',
-    UPLOAD_FILE_SUCCESS = '[Document] Upload File Success',
-    DOWNLOAD_FILE = '[Document] Download File',
-    DOWNLOAD_FILE_SUCCESS = '[Document] Download File Success',
-    SEARCH = '[Document] Search',
-    SEARCH_SUCCESS = '[Document] Search Success',
-    GET_ALL_PAGED = '[Document] Get All Paged',
-    GET_ALL_PAGED_SUCCESS = '[Document] Get All Paged Success',
-    GET_LICENSEE_DOCUMENTS = '[Document] Get Licensee Documents',
-    GET_LICENSEE_DOCUMENTS_SUCCESS = '[Document] Get Licensee Documents Success',
-    GET_LICENCE_DOCUMENTS = '[Document] Get Licence Documents',
-    GET_LICENCE_DOCUMENTS_SUCCESS = '[Document] Get Licence Documents Success',
-    GET_COMPLAINT_DOCUMENTS = '[Document] Get Complaint Documents',
-    GET_COMPLAINT_DOCUMENTS_SUCCESS = '[Document] Get Complaint Documents Success',
-    DOCUMENT_RESET = '[Document] Document Reset',
-    DOCUMENT_FAILURE = '[Document] Document Action Failure',
-    DOCUMENT_LOADING = '[Document] Document Loading'
+  FIND_BY_ID = '[Document] Find By Id',
+  FIND_BY_ID_SUCCESS = '[Document] Find By Id Success',
+  FIND_BY_DOCUMENT_ID = '[Document] Find By Document Id',
+  FIND_BY_DOCUMENT_ID_SUCCESS = '[Document] Find By Document Id Success',
+  SAVE = '[Document] Save',
+  SAVE_SUCCESS = '[Document] Save Success',
+  REMOVE = '[Document] Remove',
+  REMOVE_SUCCESS = '[Document] Remove Success',
+  GET_ALL = '[Document] Get All',
+  GET_ALL_SUCCESS = '[Document] Get All Success',
+  UPLOAD_FILE = '[Document] Upload File',
+  UPLOAD_FILE_SUCCESS = '[Document] Upload File Success',
+  DOWNLOAD_FILE = '[Document] Download File',
+  DOWNLOAD_FILE_SUCCESS = '[Document] Download File Success',
+  SEARCH = '[Document] Search',
+  SEARCH_SUCCESS = '[Document] Search Success',
+  GET_ALL_PAGED = '[Document] Get All Paged',
+  GET_ALL_PAGED_SUCCESS = '[Document] Get All Paged Success',
+  GET_LICENSEE_DOCUMENTS = '[Document] Get Licensee Documents',
+  GET_LICENSEE_DOCUMENTS_SUCCESS = '[Document] Get Licensee Documents Success',
+  GET_LICENCE_DOCUMENTS = '[Document] Get Licence Documents',
+  GET_LICENCE_DOCUMENTS_SUCCESS = '[Document] Get Licence Documents Success',
+  GET_COMPLAINT_DOCUMENTS = '[Document] Get Complaint Documents',
+  GET_COMPLAINT_DOCUMENTS_SUCCESS = '[Document] Get Complaint Documents Success',
+  DOCUMENT_RESET = '[Document] Document Reset',
+  DOCUMENT_FAILURE = '[Document] Document Action Failure',
+  DOCUMENT_LOADING = '[Document] Document Loading',
 }
 
 export const findById = createAction(
-    DocumentActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.FIND_BY_ID,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
-    DocumentActionType.FIND_BY_ID_SUCCESS,
-    props<{ document: DocumentVO | any, messages: any[], success: boolean}>()
+  DocumentActionType.FIND_BY_ID_SUCCESS,
+  props<{ document: DocumentVO | any; messages: any[]; success: boolean }>()
 );
 
 export const findByDocumentId = createAction(
-    DocumentActionType.FIND_BY_DOCUMENT_ID,
-    props<{ documentId: string | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.FIND_BY_DOCUMENT_ID,
+  props<{ documentId: string | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByDocumentIdSuccess = createAction(
-    DocumentActionType.FIND_BY_DOCUMENT_ID_SUCCESS,
-    props<{ document: DocumentVO | any, messages: any[], success: boolean}>()
+  DocumentActionType.FIND_BY_DOCUMENT_ID_SUCCESS,
+  props<{ document: DocumentVO | any; messages: any[]; success: boolean }>()
 );
 
 export const downloadFile = createAction(
-    DocumentActionType.DOWNLOAD_FILE,
-    props<{ documentId: string | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.DOWNLOAD_FILE,
+  props<{ documentId: string | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const downloadFileSuccess = createAction(
-    DocumentActionType.DOWNLOAD_FILE_SUCCESS,
-    props<{ file: any, messages: any[], success: boolean}>()
+  DocumentActionType.DOWNLOAD_FILE_SUCCESS,
+  props<{ file: any; messages: any[]; success: boolean }>()
 );
 
 export const save = createAction(
-    DocumentActionType.SAVE,
-    props<{ document: DocumentVO | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.SAVE,
+  props<{ document: DocumentVO | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
-    DocumentActionType.SAVE_SUCCESS,
-    props<{ document: DocumentVO | any, messages: any[], success: boolean}>()
+  DocumentActionType.SAVE_SUCCESS,
+  props<{ document: DocumentVO | any; messages: any[]; success: boolean }>()
 );
 
 export const remove = createAction(
-    DocumentActionType.REMOVE,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.REMOVE,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
-    DocumentActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, messages: any[], success: boolean}>()
+  DocumentActionType.REMOVE_SUCCESS,
+  props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
 export const getAll = createAction(
-    DocumentActionType.GET_ALL,
-    props<{  loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.GET_ALL,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
-    DocumentActionType.GET_ALL_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
+  DocumentActionType.GET_ALL_SUCCESS,
+  props<{ documents: DocumentVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const search = createAction(
-    DocumentActionType.SEARCH,
-    props<{ criteria: string | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.SEARCH,
+  props<{ criteria: string | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
-    DocumentActionType.SEARCH_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
+  DocumentActionType.SEARCH_SUCCESS,
+  props<{ documents: DocumentVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const uploadFile = createAction(
-    DocumentActionType.UPLOAD_FILE,
-    props<{ documentTypeId: number | any , file: File | any , fileName: string | any , metadataTarget: DocumentMetadataTarget | any , metadataTargetId: number | any, loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.UPLOAD_FILE,
+  props<{
+    documentTypeId: number | any;
+    file: File | any;
+    fileName: string | any;
+    metadataTarget: DocumentMetadataTarget | any;
+    metadataTargetId: number | any;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
 );
 
 export const uploadFileSuccess = createAction(
-    DocumentActionType.UPLOAD_FILE_SUCCESS,
-    props<{ document: DocumentVO | any, messages: any[], success: boolean}>()
+  DocumentActionType.UPLOAD_FILE_SUCCESS,
+  props<{ document: DocumentVO | any; messages: any[]; success: boolean }>()
 );
 
 export const getAllPaged = createAction(
-    DocumentActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.GET_ALL_PAGED,
+  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
-    DocumentActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
+  DocumentActionType.GET_ALL_PAGED_SUCCESS,
+  props<{ documents: DocumentVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const getLicenseeDocuments = createAction(
-    DocumentActionType.GET_LICENSEE_DOCUMENTS,
-    props<{ licenseeId: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.GET_LICENSEE_DOCUMENTS,
+  props<{ licenseeId: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getLicenseeDocumentsSuccess = createAction(
-    DocumentActionType.GET_LICENSEE_DOCUMENTS_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
+  DocumentActionType.GET_LICENSEE_DOCUMENTS_SUCCESS,
+  props<{ documents: DocumentVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const getLicenceDocuments = createAction(
-    DocumentActionType.GET_LICENCE_DOCUMENTS,
-    props<{ licenceId: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.GET_LICENCE_DOCUMENTS,
+  props<{ licenceId: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getLicenceDocumentsSuccess = createAction(
-    DocumentActionType.GET_LICENCE_DOCUMENTS_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
+  DocumentActionType.GET_LICENCE_DOCUMENTS_SUCCESS,
+  props<{ documents: DocumentVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const getComplaintDocuments = createAction(
-    DocumentActionType.GET_COMPLAINT_DOCUMENTS,
-    props<{ complaintId: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  DocumentActionType.GET_COMPLAINT_DOCUMENTS,
+  props<{ complaintId: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getComplaintDocumentsSuccess = createAction(
-    DocumentActionType.GET_COMPLAINT_DOCUMENTS_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
+  DocumentActionType.GET_COMPLAINT_DOCUMENTS_SUCCESS,
+  props<{ documents: DocumentVO[] | any[]; messages: any[]; success: boolean }>()
 );
-
 
 export const documentReset = createAction(DocumentActionType.DOCUMENT_RESET);
 
 export const documentLoading = createAction(
-    DocumentActionType.DOCUMENT_LOADING,
-    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
+  DocumentActionType.DOCUMENT_LOADING,
+  props<{ loading: boolean; loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
-export const documentFailure = createAction(
-    DocumentActionType.DOCUMENT_FAILURE,
-    props<{ messages: any[] }>()
-);
+export const documentFailure = createAction(DocumentActionType.DOCUMENT_FAILURE, props<{ messages: any[] }>());

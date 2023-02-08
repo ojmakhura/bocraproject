@@ -5,10 +5,9 @@ import { SearchDocumentTypesDocumentTypesComponent } from '@app/view/document/ty
 @Component({
   selector: 'search-document-types-document-types',
   templateUrl: './search-document-types-document-types.component.html',
-  styleUrls: [ './search-document-types-document-types.component.scss' ]
+  styleUrls: ['./search-document-types-document-types.component.scss'],
 })
 export class SearchDocumentTypesDocumentTypesComponentImpl extends SearchDocumentTypesDocumentTypesComponent {
-
   constructor(private injector: Injector) {
     super(injector);
   }

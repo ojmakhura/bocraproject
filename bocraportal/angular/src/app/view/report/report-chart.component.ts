@@ -51,7 +51,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.periodControl.patchValue('all');
 
     this.datasets = this.basicDatasets();
-    
   }
 
   ngAfterViewInit(): void {}
@@ -70,19 +69,16 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     let rowSelector = this.dataColumns === 'licensees' ? 'alias' : 'licensee';
     let colourSelector = this.dataColumns === 'licensees' ? 'licensee' : 'fieldId';
 
-    let periods = this.period === 'all' ? this.selectedPeriods : this.selectedPeriods.filter(p => this.period === p?.period);
+    let periods =
+      this.period === 'all' ? this.selectedPeriods : this.selectedPeriods.filter((p) => this.period === p?.period);
 
     periods?.forEach((pr) => {
       let gridValues = Object.values(this.grid);
 
       rows.forEach((row) => {
         let found: any = gridValues.find((gv: any) => gv?.label === row[rowSelector]);
-        let key =
-          periods.length > 1
-            ? `${pr.alias}: ${row[rowSelector]}`
-            : row[rowSelector];
+        let key = periods.length > 1 ? `${pr.alias}: ${row[rowSelector]}` : row[rowSelector];
 
-        
         if (tset[key]?.data === undefined) {
           tset[key] = {
             label: key,
@@ -97,19 +93,13 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
           tset[key]?.data.push(foundData ? foundData.value : '0');
         });
       });
-
     });
-
 
     let dset: any[] = [];
 
     periods.forEach((pr) => {
-
-      rows.forEach(row => {
-        let key =
-          periods.length > 1
-            ? `${pr.alias}: ${row[rowSelector]}`
-            : row[rowSelector];
+      rows.forEach((row) => {
+        let key = periods.length > 1 ? `${pr.alias}: ${row[rowSelector]}` : row[rowSelector];
 
         if (tset[key]) {
           if (this.dataRows === 'licensees') {
@@ -119,7 +109,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     });
-    
+
     this.labelNames =
       this.dataColumns === 'licensees'
         ? this.selectedLicensees?.map((lic) => lic.licensee)

@@ -2,24 +2,24 @@
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { SubmissionSummary } from '@app/model/bw/org/bocra/portal/form/submission/submission-summary';
 
-export const dataProcessingKey = "dataProcessing";
+export const dataProcessingKey = 'dataProcessing';
 
 export interface DataProcessingState {
-    submissionSummary: SubmissionSummary;
-    formSubmissions: Array<FormSubmissionVO> | Array<any>;
-    loading: boolean;
-    loaderMessage: string | undefined,
-    success: boolean;
-    error: boolean;
-    messages: string[];
+  submissionSummary: SubmissionSummary;
+  formSubmissions: Array<FormSubmissionVO> | Array<any>;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  success: boolean;
+  error: boolean;
+  messages: string[];
 }
 
 export const initialState: DataProcessingState = {
-    formSubmissions: [],
-    loading: false,
-    success: false,
-    error: false,
-    messages: [],
-    submissionSummary: new SubmissionSummary,
-    loaderMessage: undefined
+  formSubmissions: [],
+  loading: false,
+  success: false,
+  error: false,
+  messages: [],
+  submissionSummary: new SubmissionSummary(),
+  loaderMessage: undefined,
 };

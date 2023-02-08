@@ -8,7 +8,6 @@ import { DashboardComponent, DashboardVarsForm } from '@app/view/dashboard/dashb
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponentImpl extends DashboardComponent {
-  
   constructor(private injector: Injector) {
     super(injector);
   }
@@ -16,7 +15,6 @@ export class DashboardComponentImpl extends DashboardComponent {
   doNgOnDestroy() {}
 
   override beforeOnInit(form: DashboardVarsForm): DashboardVarsForm {
-
     return form;
   }
 }

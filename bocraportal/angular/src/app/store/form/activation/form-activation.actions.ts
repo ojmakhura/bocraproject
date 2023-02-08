@@ -4,91 +4,91 @@ import { FormActivationVO } from '@app/model/bw/org/bocra/portal/form/activation
 import { FormActivationCriteria } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-criteria';
 
 export enum FormActivationActionType {
-    FIND_BY_ID = '[FormActivation] Find By Id',
-    FIND_BY_ID_SUCCESS = '[FormActivation] Find By Id Success',
-    SAVE = '[FormActivation] Save',
-    SAVE_SUCCESS = '[FormActivation] Save Success',
-    REMOVE = '[FormActivation] Remove',
-    REMOVE_SUCCESS = '[FormActivation] Remove Success',
-    GET_ALL = '[FormActivation] Get All',
-    GET_ALL_SUCCESS = '[FormActivation] Get All Success',
-    SEARCH = '[FormActivation] Search',
-    SEARCH_SUCCESS = '[FormActivation] Search Success',
-    GET_ALL_PAGED = '[FormActivation] Get All Paged',
-    GET_ALL_PAGED_SUCCESS = '[FormActivation] Get All Paged Success',
-    FORM_ACTIVATION_RESET = '[FormActivation] FormActivation Reset',
-    FORM_ACTIVATION_FAILURE = '[FormActivation] FormActivation Action Failure',
-    FORM_ACTIVATION_LOADING = '[FormActivation] FormActivation Loading'
+  FIND_BY_ID = '[FormActivation] Find By Id',
+  FIND_BY_ID_SUCCESS = '[FormActivation] Find By Id Success',
+  SAVE = '[FormActivation] Save',
+  SAVE_SUCCESS = '[FormActivation] Save Success',
+  REMOVE = '[FormActivation] Remove',
+  REMOVE_SUCCESS = '[FormActivation] Remove Success',
+  GET_ALL = '[FormActivation] Get All',
+  GET_ALL_SUCCESS = '[FormActivation] Get All Success',
+  SEARCH = '[FormActivation] Search',
+  SEARCH_SUCCESS = '[FormActivation] Search Success',
+  GET_ALL_PAGED = '[FormActivation] Get All Paged',
+  GET_ALL_PAGED_SUCCESS = '[FormActivation] Get All Paged Success',
+  FORM_ACTIVATION_RESET = '[FormActivation] FormActivation Reset',
+  FORM_ACTIVATION_FAILURE = '[FormActivation] FormActivation Action Failure',
+  FORM_ACTIVATION_LOADING = '[FormActivation] FormActivation Loading',
 }
 
 export const findById = createAction(
-    FormActivationActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  FormActivationActionType.FIND_BY_ID,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
-    FormActivationActionType.FIND_BY_ID_SUCCESS,
-    props<{ formActivation: FormActivationVO | any, messages: any[], success: boolean}>()
+  FormActivationActionType.FIND_BY_ID_SUCCESS,
+  props<{ formActivation: FormActivationVO | any; messages: any[]; success: boolean }>()
 );
 
 export const save = createAction(
-    FormActivationActionType.SAVE,
-    props<{ formActivation: FormActivationVO | any , loading: boolean, loaderMessage: string | undefined }>()
+  FormActivationActionType.SAVE,
+  props<{ formActivation: FormActivationVO | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
-    FormActivationActionType.SAVE_SUCCESS,
-    props<{ formActivation: FormActivationVO | any, messages: any[], success: boolean}>()
+  FormActivationActionType.SAVE_SUCCESS,
+  props<{ formActivation: FormActivationVO | any; messages: any[]; success: boolean }>()
 );
 
 export const remove = createAction(
-    FormActivationActionType.REMOVE,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  FormActivationActionType.REMOVE,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
-    FormActivationActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, messages: any[], success: boolean}>()
+  FormActivationActionType.REMOVE_SUCCESS,
+  props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
 export const getAll = createAction(
-    FormActivationActionType.GET_ALL,
-    props<{  loading: boolean, loaderMessage: string | undefined }>()
+  FormActivationActionType.GET_ALL,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
-    FormActivationActionType.GET_ALL_SUCCESS,
-    props<{ formActivations: FormActivationVO[] | any[], messages: any[], success: boolean}>()
+  FormActivationActionType.GET_ALL_SUCCESS,
+  props<{ formActivations: FormActivationVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const search = createAction(
-    FormActivationActionType.SEARCH,
-    props<{ criteria: FormActivationCriteria | any , loading: boolean, loaderMessage: string | undefined }>()
+  FormActivationActionType.SEARCH,
+  props<{ criteria: FormActivationCriteria | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
-    FormActivationActionType.SEARCH_SUCCESS,
-    props<{ formActivations: FormActivationVO[] | any[], messages: any[], success: boolean}>()
+  FormActivationActionType.SEARCH_SUCCESS,
+  props<{ formActivations: FormActivationVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const getAllPaged = createAction(
-    FormActivationActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  FormActivationActionType.GET_ALL_PAGED,
+  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
-    FormActivationActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ formActivations: FormActivationVO[] | any[], messages: any[], success: boolean}>()
+  FormActivationActionType.GET_ALL_PAGED_SUCCESS,
+  props<{ formActivations: FormActivationVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const formActivationReset = createAction(FormActivationActionType.FORM_ACTIVATION_RESET);
 
 export const formActivationLoading = createAction(
-    FormActivationActionType.FORM_ACTIVATION_LOADING,
-    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
+  FormActivationActionType.FORM_ACTIVATION_LOADING,
+  props<{ loading: boolean; loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
 export const formActivationFailure = createAction(
-    FormActivationActionType.FORM_ACTIVATION_FAILURE,
-    props<{ messages: any[] }>()
+  FormActivationActionType.FORM_ACTIVATION_FAILURE,
+  props<{ messages: any[] }>()
 );

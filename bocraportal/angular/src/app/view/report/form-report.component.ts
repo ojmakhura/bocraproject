@@ -15,28 +15,21 @@ export class FormReport {
   selector: 'app-form-report',
   templateUrl: './form-report.component.html',
 })
-export class FormReportComponent  implements OnInit, AfterViewInit, OnDestroy {
-
+export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() formReportGroup: FormGroup | any;
   protected formBuilder: FormBuilder;
-  
+
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
-
-  clearReport() {
-    
-  }
+  clearReport() {}
 
   get reportElementsControl(): FormArray {
     return this.formReportGroup.get('reportElements') as FormArray;
@@ -71,7 +64,6 @@ export class FormReportComponent  implements OnInit, AfterViewInit, OnDestroy {
   }
 
   createReportElementGroup(reportElement: ReportElement): FormGroup {
-    
     return this.formBuilder.group({
       groupBy: [reportElement?.groupBy],
       reportType: [reportElement?.reportType],
@@ -91,7 +83,9 @@ export class FormReportComponent  implements OnInit, AfterViewInit, OnDestroy {
     return this.formBuilder.group({
       formName: [{ value: formReport?.formName, disabled: false }],
       formCode: [{ value: formReport?.formCode, disabled: false }],
-      licensees: this.formBuilder.array([...new Set(formReport?.formSubmissions?.map(sub => sub?.licensee?.licenseeName))]),
+      licensees: this.formBuilder.array([
+        ...new Set(formReport?.formSubmissions?.map((sub) => sub?.licensee?.licenseeName)),
+      ]),
       formSubmissions: this.formBuilder.array(formReport?.formSubmissions),
       reportElements: this.formBuilder.array([]),
     });

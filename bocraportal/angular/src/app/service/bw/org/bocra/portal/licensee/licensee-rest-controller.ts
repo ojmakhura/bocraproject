@@ -15,120 +15,88 @@ import { HttpClient } from '@angular/common/http';
 import { ShareholderVO } from '@app/model/bw/org/bocra/portal/shareholder/shareholder-vo';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LicenseeRestController {
-    protected path = '/licensee';
+  protected path = '/licensee';
 
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {
-    }
+  public addDocument(
+    id: number | any,
+    documentTypeId: number | any,
+    file: File | any,
+    fileName: string | any
+  ): Observable<DocumentVO | any> {
+    const formData: FormData = new FormData();
+    formData.append('documentTypeId', documentTypeId);
+    formData.append('file', file);
+    formData.append('fileName', fileName);
 
-    public addDocument(id: number | any , documentTypeId: number | any , file: File | any , fileName: string | any ): Observable<DocumentVO | any> {
+    return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, formData);
+  }
 
-        const formData: FormData = new FormData();
-        formData.append('documentTypeId', documentTypeId);
-        formData.append('file', file);
-        formData.append('fileName', fileName);
-        
-        return this.http.post<DocumentVO | any>(this.path + `/${id}/document`, formData);
+  public addSector(licenseeId: number | any, sectorId: number | any): Observable<LicenseeSectorVO | any> {
+    return this.http.get<LicenseeSectorVO | any>(this.path + `/${licenseeId}/add/sector/${sectorId}`);
+  }
 
-    }
+  public findById(id: number | any): Observable<LicenseeVO | any> {
+    return this.http.get<LicenseeVO | any>(this.path + `/${id}`);
+  }
 
-    public addSector(licenseeId: number | any , sectorId: number | any ): Observable<LicenseeSectorVO | any> {
+  public getAll(): Observable<LicenseeVO[] | any[]> {
+    return this.http.get<LicenseeVO[] | any[]>(this.path + `/all`);
+  }
 
-        return this.http.get<LicenseeSectorVO | any>(this.path + `/${licenseeId}/add/sector/${sectorId}`);
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<LicenseeVO[] | any[]> {
+    return this.http.get<LicenseeVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+  }
 
-    }
+  public getDocuments(id: number | any): Observable<DocumentVO[] | any[]> {
+    return this.http.get<DocumentVO[] | any[]>(this.path + `/${id}/documents`);
+  }
 
-    public findById(id: number | any ): Observable<LicenseeVO | any> {
+  public getForms(id: number | any): Observable<FormVO[] | any[]> {
+    return this.http.get<FormVO[] | any[]>(this.path + `/${id}/forms`);
+  }
 
-        return this.http.get<LicenseeVO | any>(this.path + `/${id}`);
+  public getFormSubmissions(id: number | any): Observable<FormSubmissionVO[] | any[]> {
+    return this.http.get<FormSubmissionVO[] | any[]>(this.path + `/${id}/submissions`);
+  }
 
-    }
+  public getLicences(id: number | any): Observable<LicenceVO[] | any[]> {
+    return this.http.get<LicenceVO[] | any[]>(this.path + `/${id}/licences`);
+  }
 
-    public getAll(): Observable<LicenseeVO[] | any[]> {
+  public getReportConfigurations(id: number | any): Observable<ReportConfigVO[] | any[]> {
+    return this.http.get<ReportConfigVO[] | any[]>(this.path + `/${id}/report/configs`);
+  }
 
-        return this.http.get<LicenseeVO[] | any[]>(this.path + `/all`);
+  public getReports(id: number | any): Observable<ReportVO[] | any[]> {
+    return this.http.get<ReportVO[] | any[]>(this.path + `/${id}/reports`);
+  }
 
-    }
+  public getSectors(id: number | any): Observable<SectorVO[] | any[]> {
+    return this.http.get<SectorVO[] | any[]>(this.path + `/${id}/sectors`);
+  }
 
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<LicenseeVO[] | any[]> {
+  public getShareholders(id: number | any): Observable<ShareholderVO[] | any[]> {
+    return this.http.get<ShareholderVO[] | any[]>(this.path + `/${id}/shareholders`);
+  }
 
-        return this.http.get<LicenseeVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(this.path + `/${id}`);
+  }
 
-    }
+  public removeSector(licenseeSectorId: number | any): Observable<Boolean | any> {
+    return this.http.delete<Boolean | any>(this.path + `/sector/delete/{licenseeSectorId}`);
+  }
 
-    public getDocuments(id: number | any ): Observable<DocumentVO[] | any[]> {
+  public save(licensee: LicenseeVO | any): Observable<LicenseeVO | any> {
+    return this.http.post<LicenseeVO | any>(this.path, licensee);
+  }
 
-        return this.http.get<DocumentVO[] | any[]>(this.path + `/${id}/documents`);
-
-    }
-
-    public getForms(id: number | any ): Observable<FormVO[] | any[]> {
-
-        return this.http.get<FormVO[] | any[]>(this.path + `/${id}/forms`);
-
-    }
-
-    public getFormSubmissions(id: number | any ): Observable<FormSubmissionVO[] | any[]> {
-
-        return this.http.get<FormSubmissionVO[] | any[]>(this.path + `/${id}/submissions`);
-
-    }
-
-    public getLicences(id: number | any ): Observable<LicenceVO[] | any[]> {
-
-        return this.http.get<LicenceVO[] | any[]>(this.path + `/${id}/licences`);
-
-    }
-
-    public getReportConfigurations(id: number | any ): Observable<ReportConfigVO[] | any[]> {
-
-        return this.http.get<ReportConfigVO[] | any[]>(this.path + `/${id}/report/configs`);
-
-    }
-
-    public getReports(id: number | any ): Observable<ReportVO[] | any[]> {
-
-        return this.http.get<ReportVO[] | any[]>(this.path + `/${id}/reports`);
-
-    }
-
-    public getSectors(id: number | any ): Observable<SectorVO[] | any[]> {
-
-        return this.http.get<SectorVO[] | any[]>(this.path + `/${id}/sectors`);
-
-    }
-
-    public getShareholders(id: number | any ): Observable<ShareholderVO[] | any[]> {
-
-        return this.http.get<ShareholderVO[] | any[]>(this.path + `/${id}/shareholders`);
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(this.path + `/${id}`);
-
-    }
-
-    public removeSector(licenseeSectorId: number | any ): Observable<Boolean | any> {
-
-        return this.http.delete<Boolean | any>(this.path + `/sector/delete/{licenseeSectorId}`);
-
-    }
-
-    public save(licensee: LicenseeVO | any ): Observable<LicenseeVO | any> {
-
-        return this.http.post<LicenseeVO | any>(this.path, licensee);
-
-    }
-
-    public search(criteria: LicenseeCriteria | any ): Observable<LicenseeVO[] | any[]> {
-
-        return this.http.post<LicenseeVO[] | any[]>(this.path + `/search`, criteria);
-
-    }
-
+  public search(criteria: LicenseeCriteria | any): Observable<LicenseeVO[] | any[]> {
+    return this.http.post<LicenseeVO[] | any[]>(this.path + `/search`, criteria);
+  }
 }

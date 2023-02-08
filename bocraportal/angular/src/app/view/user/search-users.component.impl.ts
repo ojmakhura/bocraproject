@@ -8,30 +8,29 @@ import * as UserActions from '@app/store/user/user.actions';
 @Component({
   selector: 'app-search-users',
   templateUrl: './search-users.component.html',
-  styleUrls: ['./search-users.component.scss']
+  styleUrls: ['./search-users.component.scss'],
 })
 export class SearchUsersComponentImpl extends SearchUsersComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: SearchUsersVarsForm): SearchUsersVarsForm {
+    return form;
+  }
 
-    override beforeOnInit(form: SearchUsersVarsForm): SearchUsersVarsForm{
+  override doNgOnDestroy() {}
 
-        return form;
-    }
-	
-    override doNgOnDestroy(){}
-
-    /**
-     * This method may be overwritten
-     */
-    override beforeSearchUsersSearch(form: SearchUsersSearchForm): void {
-        this.store.dispatch(UserActions.search({
-            criteria: form.criteria.searchCriteria,
-            loading: true,
-            loaderMessage: 'Searching users ...'
-        }));
-    }
-    
+  /**
+   * This method may be overwritten
+   */
+  override beforeSearchUsersSearch(form: SearchUsersSearchForm): void {
+    this.store.dispatch(
+      UserActions.search({
+        criteria: form.criteria.searchCriteria,
+        loading: true,
+        loaderMessage: 'Searching users ...',
+      })
+    );
+  }
 }

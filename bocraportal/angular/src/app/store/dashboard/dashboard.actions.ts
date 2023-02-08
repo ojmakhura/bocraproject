@@ -2,20 +2,16 @@
 import { createAction, props } from '@ngrx/store';
 
 export enum DashboardActionType {
-    DASHBOARD_RESET = '[Dashboard] Dashboard Reset',
-    DASHBOARD_FAILURE = '[Dashboard] Dashboard Action Failure',
-    DASHBOARD_LOADING = '[Dashboard] Dashboard Loading'
+  DASHBOARD_RESET = '[Dashboard] Dashboard Reset',
+  DASHBOARD_FAILURE = '[Dashboard] Dashboard Action Failure',
+  DASHBOARD_LOADING = '[Dashboard] Dashboard Loading',
 }
-
 
 export const dashboardReset = createAction(DashboardActionType.DASHBOARD_RESET);
 
 export const dashboardLoading = createAction(
-    DashboardActionType.DASHBOARD_LOADING,
-    props<{ loading: boolean, success: boolean, messages: any[] }>()
+  DashboardActionType.DASHBOARD_LOADING,
+  props<{ loading: boolean; success: boolean; messages: any[] }>()
 );
 
-export const dashboardFailure = createAction(
-    DashboardActionType.DASHBOARD_FAILURE,
-    props<{ messages: any[] }>()
-);
+export const dashboardFailure = createAction(DashboardActionType.DASHBOARD_FAILURE, props<{ messages: any[] }>());

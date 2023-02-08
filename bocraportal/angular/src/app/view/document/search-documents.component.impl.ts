@@ -10,29 +10,29 @@ import * as DocumentActions from '@app/store/document/document.actions';
 @Component({
   selector: 'app-search-documents',
   templateUrl: './search-documents.component.html',
-  styleUrls: ['./search-documents.component.scss']
+  styleUrls: ['./search-documents.component.scss'],
 })
 export class SearchDocumentsComponentImpl extends SearchDocumentsComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: SearchDocumentsVarsForm): SearchDocumentsVarsForm {
+    return form;
+  }
 
-    override beforeOnInit(form: SearchDocumentsVarsForm): SearchDocumentsVarsForm {     
-      return form;
-    }
-	
-    override doNgOnDestroy(){}
+  override doNgOnDestroy() {}
 
-    /**
-     * This method may be overwritten
-     */
-    override beforeSearchDocumentsSearch(form: SearchDocumentsSearchForm): void {
-      this.store.dispatch(DocumentActions.search({
+  /**
+   * This method may be overwritten
+   */
+  override beforeSearchDocumentsSearch(form: SearchDocumentsSearchForm): void {
+    this.store.dispatch(
+      DocumentActions.search({
         criteria: form.criteria,
         loading: true,
-        loaderMessage: 'Searching documents ...'
-      }));
-    }
-    
+        loaderMessage: 'Searching documents ...',
+      })
+    );
+  }
 }

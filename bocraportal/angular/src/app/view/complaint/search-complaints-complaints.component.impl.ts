@@ -6,10 +6,9 @@ import { KeycloakService } from 'keycloak-angular';
 @Component({
   selector: 'search-complaints-complaints',
   templateUrl: './search-complaints-complaints.component.html',
-  styleUrls: [ './search-complaints-complaints.component.scss' ]
+  styleUrls: ['./search-complaints-complaints.component.scss'],
 })
 export class SearchComplaintsComplaintsComponentImpl extends SearchComplaintsComplaintsComponent {
-
   constructor(private injector: Injector, public override keycloakService: KeycloakService) {
     super(injector, keycloakService);
   }
@@ -19,8 +18,7 @@ export class SearchComplaintsComplaintsComponentImpl extends SearchComplaintsCom
     this.router.navigate([`/complaint/complaints-analysis`]);
   }
 
-
-	override doSearchComplaintsEdit(form: any): any {
+  override doSearchComplaintsEdit(form: any): any {
     return form;
-	}
+  }
 }

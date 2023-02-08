@@ -7,91 +7,125 @@ import { DocumentTypeRestController } from '@app/service/bw/org/bocra/portal/doc
 
 @Injectable()
 export class DocumentTypeEffects {
+  constructor(private actions$: Actions, private documentTypeRestController: DocumentTypeRestController) {}
 
-    constructor(private actions$: Actions, private documentTypeRestController: DocumentTypeRestController) {}
-
-    findById$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DocumentTypeActions.findById),
-            mergeMap(({ id }) => this.documentTypeRestController.findById(id).pipe(
-                map( documentType => DocumentTypeActions.findByIdSuccess({
-                    documentType,
-                    messages: [`Document type ${documentType.name} found.`],
-                    success: true
-                })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  findById$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DocumentTypeActions.findById),
+      mergeMap(({ id }) =>
+        this.documentTypeRestController.findById(id).pipe(
+          map((documentType) =>
+            DocumentTypeActions.findByIdSuccess({
+              documentType,
+              messages: [`Document type ${documentType.name} found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            DocumentTypeActions.documentTypeFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    save$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DocumentTypeActions.save),
-            mergeMap(({ documentType }) => this.documentTypeRestController.save(documentType).pipe(
-                map( documentType => DocumentTypeActions.saveSuccess({
-                    documentType,
-                    messages: [`Document type ${documentType.name} saved.`],
-                    success: true
-                })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  save$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DocumentTypeActions.save),
+      mergeMap(({ documentType }) =>
+        this.documentTypeRestController.save(documentType).pipe(
+          map((documentType) =>
+            DocumentTypeActions.saveSuccess({
+              documentType,
+              messages: [`Document type ${documentType.name} saved.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            DocumentTypeActions.documentTypeFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    remove$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DocumentTypeActions.remove),
-            mergeMap(({ id }) => this.documentTypeRestController.remove(id).pipe(
-                map( removed => DocumentTypeActions.removeSuccess({
-                    removed,
-                    messages: [`Document type ${id} removed.`],
-                    success: true
-                })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  remove$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DocumentTypeActions.remove),
+      mergeMap(({ id }) =>
+        this.documentTypeRestController.remove(id).pipe(
+          map((removed) =>
+            DocumentTypeActions.removeSuccess({
+              removed,
+              messages: [`Document type ${id} removed.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            DocumentTypeActions.documentTypeFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    getAll$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DocumentTypeActions.getAll),
-            mergeMap(() => this.documentTypeRestController.getAll().pipe(
-                map( documentTypes => DocumentTypeActions.getAllSuccess({
-                    documentTypes,
-                    messages: [`${documentTypes.length} document types found.`],
-                    success: true
-                })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  getAll$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DocumentTypeActions.getAll),
+      mergeMap(() =>
+        this.documentTypeRestController.getAll().pipe(
+          map((documentTypes) =>
+            DocumentTypeActions.getAllSuccess({
+              documentTypes,
+              messages: [`${documentTypes.length} document types found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            DocumentTypeActions.documentTypeFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    search$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DocumentTypeActions.search),
-            mergeMap(({ criteria }) => this.documentTypeRestController.search(criteria).pipe(
-                map( documentTypes => DocumentTypeActions.searchSuccess({
-                    documentTypes,
-                    messages: [`${documentTypes.length} document types found.`],
-                    success: true
-                })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  search$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DocumentTypeActions.search),
+      mergeMap(({ criteria }) =>
+        this.documentTypeRestController.search(criteria).pipe(
+          map((documentTypes) =>
+            DocumentTypeActions.searchSuccess({
+              documentTypes,
+              messages: [`${documentTypes.length} document types found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            DocumentTypeActions.documentTypeFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    getAllPaged$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DocumentTypeActions.getAllPaged),
-            mergeMap(({ pageNumber, pageSize }) => this.documentTypeRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( documentTypes => DocumentTypeActions.getAllPagedSuccess({
-                    documentTypes,
-                    messages: [`Page ${pageNumber} found with ${pageSize} document types.`],
-                    success: true
-                })),
-                catchError(({error}) => [DocumentTypeActions.documentTypeFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  getAllPaged$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DocumentTypeActions.getAllPaged),
+      mergeMap(({ pageNumber, pageSize }) =>
+        this.documentTypeRestController.getAllPaged(pageNumber, pageSize).pipe(
+          map((documentTypes) =>
+            DocumentTypeActions.getAllPagedSuccess({
+              documentTypes,
+              messages: [`Page ${pageNumber} found with ${pageSize} document types.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            DocumentTypeActions.documentTypeFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
-
+      )
+    )
+  );
 }

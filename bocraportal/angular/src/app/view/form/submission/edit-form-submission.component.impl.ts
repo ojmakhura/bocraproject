@@ -64,10 +64,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   submissionStatus: FormSubmissionStatus = FormSubmissionStatus.NEW;
 
-  constructor(
-    private changeDetectorRefs: ChangeDetectorRef,
-    private injector: Injector
-  ) {
+  constructor(private changeDetectorRefs: ChangeDetectorRef, private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
@@ -86,19 +83,17 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       FormSubmissionActions.findById({
         id: id,
         loading: true,
-        loaderMessage: 'Loading form submissions by id ...'
+        loaderMessage: 'Loading form submissions by id ...',
       })
     );
-
   }
 
   override doNgAfterViewInit() {
-
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/form/submission/edit-form-submission",
+        viewUrl: '/form/submission/edit-form-submission',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
@@ -114,23 +109,23 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/form/submission/edit-form-submission",
+        viewUrl: '/form/submission/edit-form-submission',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
-        if(item === '/form/submission/edit-form-submission/{button:delete}') {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
+        if (item === '/form/submission/edit-form-submission/{button:delete}') {
           this.deleteUnrestricted = false;
         }
 
-        if(item === '/form/submission/edit-form-submission/{button:return}') {
+        if (item === '/form/submission/edit-form-submission/{button:return}') {
           this.returnUnrestricted = false;
         }
 
-        if(item === '/form/submission/edit-form-submission/{button:accept}') {
+        if (item === '/form/submission/edit-form-submission/{button:accept}') {
           this.acceptUnrestricted = false;
         }
 
@@ -143,9 +138,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.formSubmission$.subscribe((submission) => {
       this.rowGroups = [];
       this.formFields = submission?.form?.formFields;
-      if(this.formFields) {
-        this.templateHeaders = [this.formFields.map(field => field.fieldId)];
-        
+      if (this.formFields) {
+        this.templateHeaders = [this.formFields.map((field) => field.fieldId)];
+
         this.submissionName = `${submission.licensee.licenseeName}-${submission?.form?.formName} - ${submission?.period?.periodName}`;
       } else {
         this.templateHeaders = [];
@@ -183,7 +178,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         let fieldControl: FormGroup = <FormGroup>fieldsControls.controls[i];
         let field: DataFieldVO = fieldControl.value;
         let formField: FormFieldVO = field.formField;
-        
+
         if (
           formField.fieldValueType === FieldValueType.CALCULATED &&
           formField.expression.includes(`[${dataField?.formField?.fieldId}]`)
@@ -209,33 +204,36 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
   }
 
-  doNgOnDestroy() { }
+  doNgOnDestroy() {}
 
   /**
    * This method may be overwritten
    */
 
-   override beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
-    if(form?.formSubmission?.id){
-      if(!(form?.formSubmission?.period?.id) && confirm('Are you sure you want to delete the form activation?')) {
-
+  override beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
+    if (form?.formSubmission?.id) {
+      if (!form?.formSubmission?.period?.id && confirm('Are you sure you want to delete the form activation?')) {
         this.store.dispatch(
           FormSubmissionActions.remove({
             id: form.formSubmission?.id,
             loading: true,
-            loaderMessage: 'Removing form submission ...'
+            loaderMessage: 'Removing form submission ...',
           })
         );
         this.editFormSubmissionFormReset();
-      }else{
-        this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['This form submission can not be deleted, it has attachments'] }));
+      } else {
+        this.store.dispatch(
+          FormSubmissionActions.formSubmissionFailure({
+            messages: ['This form submission can not be deleted, it has attachments'],
+          })
+        );
       }
+    } else {
+      this.store.dispatch(
+        FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] })
+      );
     }
-
-    else {
-      this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
-    }
-  } 
+  }
   // override beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
   //   if (form?.formSubmission?.id && confirm('Are you sure you want to delete the form?')) {
   //     this.store.dispatch(
@@ -250,66 +248,64 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   //     this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
   //   }
   // }
-  
-  override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
 
+  override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
     console.log(form);
 
     if (this.formSubmissionControl.valid) {
-      if(form.formSubmission.submissionStatus != FormSubmissionStatus.SUBMITTED && form.formSubmission.submissionStatus != FormSubmissionStatus.ACCEPTED) {
+      if (
+        form.formSubmission.submissionStatus != FormSubmissionStatus.SUBMITTED &&
+        form.formSubmission.submissionStatus != FormSubmissionStatus.ACCEPTED
+      ) {
         form.formSubmission.submissionStatus = FormSubmissionStatus.DRAFT;
       }
-      
+
       this.doFormSubmissionSave(form.formSubmission);
     } else {
-      let messages: string[] = []
+      let messages: string[] = [];
       if (!this.formSubmissionControl.valid) {
-        messages.push("Form Submission has errors, Please fill in the required form fields")
+        messages.push('Form Submission has errors, Please fill in the required form fields');
       }
       if (!this.formSubmissionSubmissionStatusControl.valid) {
-        messages.push("Form Submission Status is missing!")
+        messages.push('Form Submission Status is missing!');
       }
       this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: messages }));
     }
   }
 
   override beforeEditFormSubmissionSubmit(form: EditFormSubmissionSubmitForm): void {
-
-    if(confirm('Are you sure you want to submit the form submission? You will not be able to edit the data afterwards.')) {
-
+    if (
+      confirm('Are you sure you want to submit the form submission? You will not be able to edit the data afterwards.')
+    ) {
       let formSubmission: FormSubmissionVO = form.formSubmission;
 
       formSubmission.submittedBy = this.keycloakService.getUsername();
       formSubmission.submissionDate = new Date();
       formSubmission.submissionStatus = FormSubmissionStatus.SUBMITTED;
-      
-      this.doFormSubmissionStatusChange(formSubmission)
-    }
 
+      this.doFormSubmissionStatusChange(formSubmission);
+    }
   }
 
   override beforeEditFormSubmissionAccept(form: EditFormSubmissionAcceptForm): void {
-    if(confirm('Are you sure you want to accept the form submission?')) {
-
+    if (confirm('Are you sure you want to accept the form submission?')) {
       let formSubmission: FormSubmissionVO = this.formSubmission;
       formSubmission.submissionStatus = FormSubmissionStatus.ACCEPTED;
-      
-      this.doFormSubmissionStatusChange(formSubmission)
+
+      this.doFormSubmissionStatusChange(formSubmission);
     }
   }
 
   override beforeEditFormSubmissionReturn(form: EditFormSubmissionReturnForm): void {
-      
-    if(confirm('Are you sure you want to return the form submission?')) {
-
+    if (confirm('Are you sure you want to return the form submission?')) {
       let formSubmission: FormSubmissionVO = form.formSubmission;
       formSubmission.submissionStatus = FormSubmissionStatus.RETURNED;
       // this.doFormSubmissionSave(formSubmission);
-      this.doFormSubmissionStatusChange(formSubmission)
+      this.doFormSubmissionStatusChange(formSubmission);
     }
   }
 
-  private doFormSubmissionStatusChange(formSubmission: FormSubmissionVO){
+  private doFormSubmissionStatusChange(formSubmission: FormSubmissionVO) {
     if (formSubmission?.id) {
       formSubmission.updatedBy = this.keycloakService.getUsername();
       formSubmission.updatedDate = new Date();
@@ -325,13 +321,12 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         updateTime: new Date(),
         username: this.keycloakService.getUsername(),
         loaderMessage: 'Update status ...',
-        loading: true
+        loading: true,
       })
     );
 
-    this.statusUpdated$.subscribe(updated => {
-      
-      if(updated) {
+    this.statusUpdated$.subscribe((updated) => {
+      if (updated) {
         this.formSubmissionControl.get('submissionStatus')?.patchValue(formSubmission.submissionStatus);
       }
     });
@@ -346,7 +341,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       formSubmission.createdDate = new Date();
     }
 
-    this.store.dispatch(SubmissionActions.save({ formSubmission, loading: true, loaderMessage: 'Saving form submission ...' }));
+    this.store.dispatch(
+      SubmissionActions.save({ formSubmission, loading: true, loaderMessage: 'Saving form submission ...' })
+    );
   }
 
   getFormObject(form: string) {
@@ -431,7 +428,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   formDisabled(): boolean {
-    return this.submissionStatus == FormSubmissionStatus.SUBMITTED || this.submissionStatus == FormSubmissionStatus.ACCEPTED;
+    return (
+      this.submissionStatus == FormSubmissionStatus.SUBMITTED || this.submissionStatus == FormSubmissionStatus.ACCEPTED
+    );
   }
 
   override createDataFieldVOGroup(dataField: DataFieldVO): FormGroup {
@@ -441,41 +440,47 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       id: [dataField?.id],
       row: [dataField?.row],
       formField: this.createFormFieldForm(dataField?.formField),
-      value: [{ value: value, disabled: false } ],
+      value: [{ value: value, disabled: false }],
     });
   }
 
   override createDataFieldVOArray(values: DataFieldVO[]): FormArray {
-    if(values) {
-        let formArray: FormArray = this.formBuilder.array([]);
-        values?.slice()?.sort((a: DataFieldVO, b: DataFieldVO) => {
-            return a?.formField?.position - b?.formField?.position;
-        })?.forEach(value => formArray.push(this.createDataFieldVOGroup(value)))
+    if (values) {
+      let formArray: FormArray = this.formBuilder.array([]);
+      values
+        ?.slice()
+        ?.sort((a: DataFieldVO, b: DataFieldVO) => {
+          return a?.formField?.position - b?.formField?.position;
+        })
+        ?.forEach((value) => formArray.push(this.createDataFieldVOGroup(value)));
 
-        return formArray;
+      return formArray;
     } else {
-        return new FormArray([]);
+      return new FormArray([]);
     }
   }
 
   override createDataFieldSectionVOArray(values: DataFieldSectionVO[]): FormArray {
-      if(values) {
-          let formArray: FormArray = this.formBuilder.array([]);
-          values?.slice()?.sort((a: DataFieldSectionVO, b: DataFieldSectionVO) => {
-            return a?.position - b?.position;
-        })?.forEach(value => formArray.push(this.createDataFieldSectionVOGroup(value)))
+    if (values) {
+      let formArray: FormArray = this.formBuilder.array([]);
+      values
+        ?.slice()
+        ?.sort((a: DataFieldSectionVO, b: DataFieldSectionVO) => {
+          return a?.position - b?.position;
+        })
+        ?.forEach((value) => formArray.push(this.createDataFieldSectionVOGroup(value)));
 
-          return formArray;
-      } else {
-          return new FormArray([]);
-      }
+      return formArray;
+    } else {
+      return new FormArray([]);
+    }
   }
 
   getFieldDefaultValue(field: DataFieldVO) {
     return field.formField.defaultValue;
   }
 
-  override handleFormChanges(change: any): void { }
+  override handleFormChanges(change: any): void {}
 
   getDataFieldName(data: DataFieldVO) {
     return `${data.formField.fieldName}`;
@@ -618,7 +623,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     }
   }
 
-  doEditDataRow(row: number, group: RowGroup) { }
+  doEditDataRow(row: number, group: RowGroup) {}
 
   getColumnValue(columnId: string, group: RowGroup) {
     if (columnId === 'row') return group.row;
@@ -708,12 +713,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   getDataFieldId(dataField: DataFieldVO): string {
-    
     return `${dataField.row}_${dataField.formField.fieldId}`;
   }
 
   scroll(el: HTMLElement) {
     el.scrollIntoView();
   }
-  
 }

@@ -13,6 +13,7 @@ export enum LicenseeShareholderActionType {
   CREATE_SUCCESS = '[Licensee Shareholder] Save Success',
   UPDATE_LICENSEE = '[Licensee Shareholder] Update Licensee',
   UPDATE_SHAREHOLDER = '[Licensee Shareholder] Update Shareholder',
+  UPDATE_NUMBER_OF_SHARES = '[Licensee Shareholder] Update Number of Shares',
   UPDATE_SUCCESS = '[Licensee Shareholder] Update Success',
   REMOVE = '[Licensee Shareholder] Remove',
   REMOVE_SUCCESS = '[Licensee Shareholder] Remove Success',
@@ -23,7 +24,10 @@ export enum LicenseeShareholderActionType {
   LICENSEE_SHAREHOLDER_LOADING = '[Licensee Shareholder] Licensee Shareholder Loading',
 }
 
-export const findById = createAction(LicenseeShareholderActionType.FIND_BY_ID, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
+export const findById = createAction(
+  LicenseeShareholderActionType.FIND_BY_ID,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const findByIdSuccess = createAction(
   LicenseeShareholderActionType.FIND_BY_ID_SUCCESS,
@@ -32,7 +36,7 @@ export const findByIdSuccess = createAction(
 
 export const findByLicensee = createAction(
   LicenseeShareholderActionType.FIND_BY_LICENSEE,
-  props<{ licenseeId: number | any; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ licenseeId: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByLicenseeSuccess = createAction(
@@ -42,7 +46,7 @@ export const findByLicenseeSuccess = createAction(
 
 export const findByShareholder = createAction(
   LicenseeShareholderActionType.FIND_BY_SHAREHOLDER,
-  props<{ shareholderId: number | any; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ shareholderId: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByShareholderSuccess = createAction(
@@ -52,7 +56,13 @@ export const findByShareholderSuccess = createAction(
 
 export const create = createAction(
   LicenseeShareholderActionType.CREATE,
-  props<{ licenseeId: number; shareholderId: number; numberOfShares: number; loading: boolean, loaderMessage: string | undefined }>()
+  props<{
+    licenseeId: number;
+    shareholderId: number;
+    numberOfShares: number;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
 );
 
 export const createSuccess = createAction(
@@ -62,12 +72,17 @@ export const createSuccess = createAction(
 
 export const updateLicensee = createAction(
   LicenseeShareholderActionType.UPDATE_LICENSEE,
-  props<{ id: number; licenseeId: number; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ id: number; licenseeId: number; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const updateShareholder = createAction(
   LicenseeShareholderActionType.UPDATE_SHAREHOLDER,
-  props<{ id: number; shareholderId: number; loading: boolean, loaderMessage: string | undefined }>()
+  props<{ id: number; shareholderId: number; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const updateNumberOfShares = createAction(
+  LicenseeShareholderActionType.UPDATE_NUMBER_OF_SHARES,
+  props<{ id: number; numberOfShares: number; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const updateSuccess = createAction(
@@ -75,14 +90,20 @@ export const updateSuccess = createAction(
   props<{ licenseeShareholder: LicenseeShareholderVO | any; messages: any[]; success: boolean }>()
 );
 
-export const remove = createAction(LicenseeShareholderActionType.REMOVE, props<{ id: number | any; loading: boolean, loaderMessage: string | undefined }>());
+export const remove = createAction(
+  LicenseeShareholderActionType.REMOVE,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const removeSuccess = createAction(
   LicenseeShareholderActionType.REMOVE_SUCCESS,
   props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
-export const getAll = createAction(LicenseeShareholderActionType.GET_ALL, props<{ loading: boolean, loaderMessage: string | undefined }>());
+export const getAll = createAction(
+  LicenseeShareholderActionType.GET_ALL,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const getAllSuccess = createAction(
   LicenseeShareholderActionType.GET_ALL_SUCCESS,
@@ -93,7 +114,10 @@ export const licenseeShareholderReset = createAction(LicenseeShareholderActionTy
 
 export const licenseeShareholderLoading = createAction(
   LicenseeShareholderActionType.LICENSEE_SHAREHOLDER_LOADING,
-  props<{ loading: boolean, loaderMessage: string | undefined; success: boolean; messages: any[] }>()
+  props<{ loading: boolean; loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
-export const licenseeShareholderFailure = createAction(LicenseeShareholderActionType.LICENSEE_SHAREHOLDER_FAILURE, props<{ messages: any[] }>());
+export const licenseeShareholderFailure = createAction(
+  LicenseeShareholderActionType.LICENSEE_SHAREHOLDER_FAILURE,
+  props<{ messages: any[] }>()
+);

@@ -6,165 +6,173 @@ import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-
 import { ComplaintSeachCriteria } from '@app/model/bw/org/bocra/portal/complaint/complaint-seach-criteria';
 
 export enum ComplaintActionType {
-    FIND_BY_ID = '[Complaint] Find By Id',
-    FIND_BY_ID_SUCCESS = '[Complaint] Find By Id Success',
-    FIND_BY_COMPLAINT_ID = '[Complaint] Find By Complaint Id',
-    FIND_BY_COMPLAINT_ID_SUCCESS = '[Complaint] Find By Complaint Id Success',
-    SAVE = '[Complaint] Save',
-    SAVE_SUCCESS = '[Complaint] Save Success',
-    REMOVE = '[Complaint] Remove',
-    REMOVE_SUCCESS = '[Complaint] Remove Success',
-    GET_ALL = '[Complaint] Get All',
-    GET_ALL_SUCCESS = '[Complaint] Get All Success',
-    SEARCH = '[Complaint] Search',
-    SEARCH_SUCCESS = '[Complaint] Search Success',
-    GET_ALL_PAGED = '[Complaint] Get All Paged',
-    GET_ALL_PAGED_SUCCESS = '[Complaint] Get All Paged Success',
-    GET_COMPLAINT_DOCUMENTS = '[Complaint] Get Complaint Documents',
-    GET_COMPLAINT_DOCUMENTS_SUCCESS = '[Complaint] Get Complaint Documents Success',
-    ADD_COMPLAINT_REPLY = '[Complaint] Add Complaint Reply',
-    ADD_COMPLAINT_REPLY_SUCCESS = '[Complaint] Add Complaint Reply Success',
-    REMOVE_COMPLAINT_REPLY = '[Complaint] Remove Complaint Reply',
-    REMOVE_COMPLAINT_REPLY_SUCCESS = '[Complaint] Remove Complaint Reply Success',
-    COMPLAINT_RESET = '[Complaint] Complaint Reset',
-    COMPLAINT_FAILURE = '[Complaint] Complaint Action Failure',
-    COMPLAINT_LOADING = '[Complaint] Complaint Loading',
-    COMPLAINT_LOADER_MESSAGE = '[Complaint] Complaint Loader Message',
-    ADD_DOCUMENT = '[Complaint] Add Complaint Document',
-    ADD_DOCUMENT_SUCCESS = '[Complaint] Add Complaint Document Succcess',
-    REMOVE_DOCUMENT = '[Complaint] Remove Complaint Document',
-    REMOVE_DOCUMENT_SUCCESS = '[Complaint] Remove Complaint Document Succcess'
+  FIND_BY_ID = '[Complaint] Find By Id',
+  FIND_BY_ID_SUCCESS = '[Complaint] Find By Id Success',
+  FIND_BY_COMPLAINT_ID = '[Complaint] Find By Complaint Id',
+  FIND_BY_COMPLAINT_ID_SUCCESS = '[Complaint] Find By Complaint Id Success',
+  SAVE = '[Complaint] Save',
+  SAVE_SUCCESS = '[Complaint] Save Success',
+  REMOVE = '[Complaint] Remove',
+  REMOVE_SUCCESS = '[Complaint] Remove Success',
+  GET_ALL = '[Complaint] Get All',
+  GET_ALL_SUCCESS = '[Complaint] Get All Success',
+  SEARCH = '[Complaint] Search',
+  SEARCH_SUCCESS = '[Complaint] Search Success',
+  GET_ALL_PAGED = '[Complaint] Get All Paged',
+  GET_ALL_PAGED_SUCCESS = '[Complaint] Get All Paged Success',
+  GET_COMPLAINT_DOCUMENTS = '[Complaint] Get Complaint Documents',
+  GET_COMPLAINT_DOCUMENTS_SUCCESS = '[Complaint] Get Complaint Documents Success',
+  ADD_COMPLAINT_REPLY = '[Complaint] Add Complaint Reply',
+  ADD_COMPLAINT_REPLY_SUCCESS = '[Complaint] Add Complaint Reply Success',
+  REMOVE_COMPLAINT_REPLY = '[Complaint] Remove Complaint Reply',
+  REMOVE_COMPLAINT_REPLY_SUCCESS = '[Complaint] Remove Complaint Reply Success',
+  COMPLAINT_RESET = '[Complaint] Complaint Reset',
+  COMPLAINT_FAILURE = '[Complaint] Complaint Action Failure',
+  COMPLAINT_LOADING = '[Complaint] Complaint Loading',
+  COMPLAINT_LOADER_MESSAGE = '[Complaint] Complaint Loader Message',
+  ADD_DOCUMENT = '[Complaint] Add Complaint Document',
+  ADD_DOCUMENT_SUCCESS = '[Complaint] Add Complaint Document Succcess',
+  REMOVE_DOCUMENT = '[Complaint] Remove Complaint Document',
+  REMOVE_DOCUMENT_SUCCESS = '[Complaint] Remove Complaint Document Succcess',
 }
 
 export const findById = createAction(
-    ComplaintActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.FIND_BY_ID,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
-    ComplaintActionType.FIND_BY_ID_SUCCESS,
-    props<{ complaint: ComplaintVO | any, messages: any[], success: boolean}>()
+  ComplaintActionType.FIND_BY_ID_SUCCESS,
+  props<{ complaint: ComplaintVO | any; messages: any[]; success: boolean }>()
 );
 
 export const findByComplaintId = createAction(
-    ComplaintActionType.FIND_BY_COMPLAINT_ID,
-    props<{ complaintId: string | any , loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.FIND_BY_COMPLAINT_ID,
+  props<{ complaintId: string | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByComplaintIdSuccess = createAction(
-    ComplaintActionType.FIND_BY_COMPLAINT_ID_SUCCESS,
-    props<{ complaint: ComplaintVO | any, messages: any[], success: boolean}>()
+  ComplaintActionType.FIND_BY_COMPLAINT_ID_SUCCESS,
+  props<{ complaint: ComplaintVO | any; messages: any[]; success: boolean }>()
 );
 
 export const save = createAction(
-    ComplaintActionType.SAVE,
-    props<{ complaint: ComplaintVO | any , loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.SAVE,
+  props<{ complaint: ComplaintVO | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
-    ComplaintActionType.SAVE_SUCCESS,
-    props<{ complaint: ComplaintVO | any, messages: any[], success: boolean}>()
+  ComplaintActionType.SAVE_SUCCESS,
+  props<{ complaint: ComplaintVO | any; messages: any[]; success: boolean }>()
 );
 
 export const remove = createAction(
-    ComplaintActionType.REMOVE,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.REMOVE,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
-    ComplaintActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, messages: any[], success: boolean}>()
+  ComplaintActionType.REMOVE_SUCCESS,
+  props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
 export const getAll = createAction(
-    ComplaintActionType.GET_ALL,
-    props<{  loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.GET_ALL,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
-    ComplaintActionType.GET_ALL_SUCCESS,
-    props<{ complaints: ComplaintVO[] | any[], messages: any[], success: boolean}>()
+  ComplaintActionType.GET_ALL_SUCCESS,
+  props<{ complaints: ComplaintVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const search = createAction(
-    ComplaintActionType.SEARCH,
-    props<{ criteria: ComplaintSeachCriteria | any , loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.SEARCH,
+  props<{ criteria: ComplaintSeachCriteria | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
-    ComplaintActionType.SEARCH_SUCCESS,
-    props<{ complaints: ComplaintVO[] | any[], messages: any[], success: boolean}>()
+  ComplaintActionType.SEARCH_SUCCESS,
+  props<{ complaints: ComplaintVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const getAllPaged = createAction(
-    ComplaintActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.GET_ALL_PAGED,
+  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
-    ComplaintActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ complaints: ComplaintVO[] | any[], messages: any[], success: boolean}>()
+  ComplaintActionType.GET_ALL_PAGED_SUCCESS,
+  props<{ complaints: ComplaintVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const getComplaintDocuments = createAction(
-    ComplaintActionType.GET_COMPLAINT_DOCUMENTS,
-    props<{ complaintId: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.GET_COMPLAINT_DOCUMENTS,
+  props<{ complaintId: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getComplaintDocumentsSuccess = createAction(
-    ComplaintActionType.GET_COMPLAINT_DOCUMENTS_SUCCESS,
-    props<{ documents: DocumentVO[] | any[], messages: any[], success: boolean}>()
+  ComplaintActionType.GET_COMPLAINT_DOCUMENTS_SUCCESS,
+  props<{ documents: DocumentVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const addComplaintReply = createAction(
-    ComplaintActionType.ADD_COMPLAINT_REPLY,
-    props<{ complaintId: string | any , reply: ComplaintReplyVO | any , loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.ADD_COMPLAINT_REPLY,
+  props<{
+    complaintId: string | any;
+    reply: ComplaintReplyVO | any;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
 );
 
 export const addComplaintReplySuccess = createAction(
-    ComplaintActionType.ADD_COMPLAINT_REPLY_SUCCESS,
-    props<{ complaintReply: ComplaintReplyVO | any, messages: any[], success: boolean}>()
+  ComplaintActionType.ADD_COMPLAINT_REPLY_SUCCESS,
+  props<{ complaintReply: ComplaintReplyVO | any; messages: any[]; success: boolean }>()
 );
 
 export const removeComplaintReply = createAction(
-    ComplaintActionType.REMOVE_COMPLAINT_REPLY,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.REMOVE_COMPLAINT_REPLY,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const removeComplaintReplySuccess = createAction(
-    ComplaintActionType.REMOVE_COMPLAINT_REPLY_SUCCESS,
-    props<{ removed: Boolean | any, messages: any[], success: boolean}>()
+  ComplaintActionType.REMOVE_COMPLAINT_REPLY_SUCCESS,
+  props<{ removed: Boolean | any; messages: any[]; success: boolean }>()
 );
 
 export const addDocument = createAction(
-    ComplaintActionType.ADD_DOCUMENT,
-    props<{ id: number, documentTypeId: number, file: File, fileName: string, loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.ADD_DOCUMENT,
+  props<{
+    id: number;
+    documentTypeId: number;
+    file: File;
+    fileName: string;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
 );
 
 export const addDocumentSuccess = createAction(
-    ComplaintActionType.ADD_DOCUMENT_SUCCESS,
-    props<{ document: DocumentVO | any, messages: any[], success: boolean }>()
+  ComplaintActionType.ADD_DOCUMENT_SUCCESS,
+  props<{ document: DocumentVO | any; messages: any[]; success: boolean }>()
 );
 
 export const removeDocument = createAction(
-    ComplaintActionType.REMOVE_DOCUMENT,
-    props<{ id: number, loading: boolean, loaderMessage: string | undefined }>()
+  ComplaintActionType.REMOVE_DOCUMENT,
+  props<{ id: number; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const removeDocumentSuccess = createAction(
-    ComplaintActionType.REMOVE_DOCUMENT_SUCCESS,
-    props<{ messages: any[], success: boolean }>()
+  ComplaintActionType.REMOVE_DOCUMENT_SUCCESS,
+  props<{ messages: any[]; success: boolean }>()
 );
-
 
 export const complaintReset = createAction(ComplaintActionType.COMPLAINT_RESET);
 
 export const complaintLoading = createAction(
-    ComplaintActionType.COMPLAINT_LOADING,
-    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
+  ComplaintActionType.COMPLAINT_LOADING,
+  props<{ loading: boolean; loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
-export const complaintFailure = createAction(
-    ComplaintActionType.COMPLAINT_FAILURE,
-    props<{ messages: any[] }>()
-);
+export const complaintFailure = createAction(ComplaintActionType.COMPLAINT_FAILURE, props<{ messages: any[] }>());

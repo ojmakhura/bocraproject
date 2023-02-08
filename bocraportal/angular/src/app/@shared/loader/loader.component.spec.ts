@@ -11,14 +11,9 @@ describe('LoaderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        FlexLayoutModule,
-        MaterialModule
-      ],
-      declarations: [LoaderComponent]
-    })
-    .compileComponents();
+      imports: [BrowserAnimationsModule, FlexLayoutModule, MaterialModule],
+      declarations: [LoaderComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

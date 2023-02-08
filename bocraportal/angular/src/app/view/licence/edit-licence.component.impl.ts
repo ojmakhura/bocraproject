@@ -12,7 +12,13 @@ import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
-import { EditLicenceComponent, EditLicenceDeleteForm, EditLicenceNewDocumentForm, EditLicenceSaveForm, EditLicenceVarsForm } from '@app/view/licence/edit-licence.component';
+import {
+  EditLicenceComponent,
+  EditLicenceDeleteForm,
+  EditLicenceNewDocumentForm,
+  EditLicenceSaveForm,
+  EditLicenceVarsForm,
+} from '@app/view/licence/edit-licence.component';
 import { DocumentMetadataTarget } from '@model/bw/org/bocra/portal/document/document-metadata-target';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
@@ -54,7 +60,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
           LicenceActions.findById({
             id: queryParams?.id,
             loading: true,
-            loaderMessage: 'Find licence by id ...'
+            loaderMessage: 'Find licence by id ...',
           })
         );
       }
@@ -66,46 +72,44 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
 
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/licence/edit-licence",
+        viewUrl: '/licence/edit-licence',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
         if (item === '/licence/edit-licence/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
     });
 
-    this.licenceDocument$.subscribe(document => {
+    this.licenceDocument$.subscribe((document) => {
       this.addToLicenceDocuments(document);
     });
   }
 
-  
   downloadFile(documentId: number, documentName: string) {
-
     this.store.dispatch(
       DocumentActions.downloadFile({
         documentId: documentId,
         loading: true,
-        loaderMessage: 'Downloading document ...'
+        loaderMessage: 'Downloading document ...',
       })
     );
 
     this.file$.subscribe((file: any) => {
-      if(file) {
-        let blob:any = file as Blob;
+      if (file) {
+        let blob: any = file as Blob;
         const url = window.URL.createObjectURL(blob);
         saveAs(blob, documentName);
       }
     });
   }
 
-  override doNgOnDestroy() { }
+  override doNgOnDestroy() {}
 
   /**
    * This method may be overwritten
@@ -123,35 +127,33 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
       LicenceActions.save({
         licence: form.licence,
         loading: true,
-        loaderMessage: 'Saving licence ...'
+        loaderMessage: 'Saving licence ...',
       })
     );
   }
 
   override beforeEditLicenceDelete(form: EditLicenceDeleteForm): void {
-    if(form?.licence?.id){
-      if(!(form?.licence?.documents.length>0) && confirm('Are you sure you want to delete the form activation?')) {
-
+    if (form?.licence?.id) {
+      if (!(form?.licence?.documents.length > 0) && confirm('Are you sure you want to delete the form activation?')) {
         this.store.dispatch(
           LicenceActions.remove({
             id: form.licence.id,
             loading: true,
-            loaderMessage: 'Removing form Licence ...'
+            loaderMessage: 'Removing form Licence ...',
           })
         );
         this.editLicenceFormReset();
-      }else{
-        this.store.dispatch(LicenceActions.licenceFailure({ messages: ['This Licence can not be deleted it has documents attached'] }));
+      } else {
+        this.store.dispatch(
+          LicenceActions.licenceFailure({ messages: ['This Licence can not be deleted it has documents attached'] })
+        );
       }
-    }
-
-    else {
+    } else {
       this.store.dispatch(LicenceActions.licenceFailure({ messages: ['Please select something to delete'] }));
     }
   }
   override afterEditLicenceNewDocument(form: EditLicenceNewDocumentForm, dialogData: any): void {
-
-    if(dialogData) {
+    if (dialogData) {
       this.store.dispatch(
         DocumentActions.uploadFile({
           metadataTarget: DocumentMetadataTarget.LICENCE,
@@ -160,7 +162,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
           file: dialogData.document.file,
           fileName: dialogData.document.documentName,
           loading: true,
-          loaderMessage: 'Adding document to licence ...'
+          loaderMessage: 'Adding document to licence ...',
         })
       );
     }
@@ -172,7 +174,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
       LicenceTypeActions.search({
         criteria: criteria,
         loading: true,
-        loaderMessage: 'Searching licence types ...'
+        loaderMessage: 'Searching licence types ...',
       })
     );
   }
@@ -182,29 +184,28 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
     criteria = this.licenceLicenseeSearchField.value;
     this.store.dispatch(
       LicenseeActions.search({
-        criteria: {licenseeName: criteria },
+        criteria: { licenseeName: criteria },
         loading: true,
-        loaderMessage: 'Searching licensees ...'
+        loaderMessage: 'Searching licensees ...',
       })
     );
   }
 
   override deleteFromLicenceDocuments(index: number) {
-    if(confirm('Are you sure you want to delete the licence document?')) {
+    if (confirm('Are you sure you want to delete the licence document?')) {
       const doc: DocumentVO = this.licenceDocuments[index];
       this.store.dispatch(
         DocumentActions.remove({
           id: doc.id,
           loading: true,
-          loaderMessage: 'Removing document ...'
+          loaderMessage: 'Removing document ...',
         })
       );
-      this.documentDelete$.subscribe(removed => {
-        if(removed){
+      this.documentDelete$.subscribe((removed) => {
+        if (removed) {
           this.licenceDocumentsControl.removeAt(index);
         }
       });
-      
     }
   }
 
@@ -222,7 +223,7 @@ export class EditLicenceComponentImpl extends EditLicenceComponent {
         id: [value?.documentType?.id],
         code: [value?.documentType?.code],
         name: [value?.documentType?.name],
-      }
+      },
     });
   }
 }

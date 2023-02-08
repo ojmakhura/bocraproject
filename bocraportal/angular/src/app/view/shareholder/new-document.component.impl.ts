@@ -14,7 +14,7 @@ import { select } from '@ngrx/store';
 @Component({
   selector: 'app-new-document',
   templateUrl: './new-document.component.html',
-  styleUrls: ['./new-document.component.scss']
+  styleUrls: ['./new-document.component.scss'],
 })
 export class NewDocumentComponentImpl extends NewDocumentComponent {
   currentFile?: File = undefined;
@@ -28,15 +28,14 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
     return form;
   }
 
-  doNgOnDestroy(): void {
-  }
+  doNgOnDestroy(): void {}
 
   override documentDocumentTypeSearch(): void {
     this.store.dispatch(
       DocumentTypeActions.search({
         criteria: this.documentDocumentTypeSearchField.value,
         loading: true,
-        loaderMessage: 'Searching document types ...'
+        loaderMessage: 'Searching document types ...',
       })
     );
   }
@@ -44,12 +43,12 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
   onFileSelected(event: any) {
     if (event) {
       this.currentFile = event.target.files[0];
-      this.documentDocumentNameControl.patchValue(this.currentFile?.name)
+      this.documentDocumentNameControl.patchValue(this.currentFile?.name);
     }
   }
 
   override handleDialogDone(data: any): any {
-    if(data.document) {
+    if (data.document) {
       data.document.file = this.currentFile;
     }
     return data;

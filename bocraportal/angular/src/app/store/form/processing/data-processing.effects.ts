@@ -8,30 +8,45 @@ import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/subm
 
 @Injectable()
 export class DataProcessingEffects {
+  constructor(private actions$: Actions, private submissionRestController: SubmissionRestController) {}
 
-    constructor(private actions$: Actions, private submissionRestController: SubmissionRestController) {}
-    
-    dataCaptureSummary$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DataProcessingActions.dataCaptureSummary),
-            mergeMap(({}) => this.submissionRestController.getSubmissionSummary(new FormSubmissionCriteria()).pipe(
-                map( submissionSummary => DataProcessingActions.dataCaptureSummarySuccess({submissionSummary, messages: [`Submission summary loaded.`], success: true})),
-                catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error?.error : error]})])
-            ))
+  dataCaptureSummary$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DataProcessingActions.dataCaptureSummary),
+      mergeMap(({}) =>
+        this.submissionRestController.getSubmissionSummary(new FormSubmissionCriteria()).pipe(
+          map((submissionSummary) =>
+            DataProcessingActions.dataCaptureSummarySuccess({
+              submissionSummary,
+              messages: [`Submission summary loaded.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            DataProcessingActions.dataProcessingFailure({ messages: [error?.error ? error?.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    loadData$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(DataProcessingActions.loadData),
-            mergeMap(({ criteria }) => this.submissionRestController.search(criteria).pipe(
-                map( formSubmissions => DataProcessingActions.loadDataSuccess({
-                    formSubmissions,
-                    messages: [`${formSubmissions.length} submissions found.`],
-                    success: true
-                })),
-                catchError(({error}) => [DataProcessingActions.dataProcessingFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  loadData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DataProcessingActions.loadData),
+      mergeMap(({ criteria }) =>
+        this.submissionRestController.search(criteria).pipe(
+          map((formSubmissions) =>
+            DataProcessingActions.loadDataSuccess({
+              formSubmissions,
+              messages: [`${formSubmissions.length} submissions found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            DataProcessingActions.dataProcessingFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 }

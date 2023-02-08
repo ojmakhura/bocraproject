@@ -2,61 +2,26 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { documentKey, DocumentState } from './document.state';
 
-export const selectDocumentState = createFeatureSelector<DocumentState> (
-    documentKey
-);
+export const selectDocumentState = createFeatureSelector<DocumentState>(documentKey);
 
-export const selectCriteria = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.criteria
-);
+export const selectCriteria = createSelector(selectDocumentState, (state: DocumentState) => state.criteria);
 
-export const selectFile = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.file
-);
+export const selectFile = createSelector(selectDocumentState, (state: DocumentState) => state.file);
 
-export const selectDocuments = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.documents
-);
+export const selectDocuments = createSelector(selectDocumentState, (state: DocumentState) => state.documents);
 
-export const selectId = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.id
-);
+export const selectId = createSelector(selectDocumentState, (state: DocumentState) => state.id);
 
-export const selectDocument = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.document
-);
+export const selectDocument = createSelector(selectDocumentState, (state: DocumentState) => state.document);
 
-export const selectMessages = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.messages
-);
+export const selectMessages = createSelector(selectDocumentState, (state: DocumentState) => state.messages);
 
-export const selectSuccess = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.success
-);
+export const selectSuccess = createSelector(selectDocumentState, (state: DocumentState) => state.success);
 
-export const selectRemoved = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.removed
-);
+export const selectRemoved = createSelector(selectDocumentState, (state: DocumentState) => state.removed);
 
-export const selectLoading = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.loading
-);
+export const selectLoading = createSelector(selectDocumentState, (state: DocumentState) => state.loading);
 
-export const selectLoaderMessage = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.loaderMessage
-);
+export const selectLoaderMessage = createSelector(selectDocumentState, (state: DocumentState) => state.loaderMessage);
 
-export const selectError = createSelector(
-    selectDocumentState,
-    (state: DocumentState) => state.error
-);
+export const selectError = createSelector(selectDocumentState, (state: DocumentState) => state.error);
