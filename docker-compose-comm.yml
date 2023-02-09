@@ -25,7 +25,7 @@ services:
     networks:
       bocraportal-public:
     environment:
-      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      POSTGRES_SERVER: db
       COMM_SERVER_PORT: ${COMM_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
