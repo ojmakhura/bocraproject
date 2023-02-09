@@ -57,9 +57,6 @@
   "name":"[Ljava.lang.String;"
 },
 {
-  "name":"[Ljava.lang.annotation.Annotation;"
-},
-{
   "name":"[Ljava.lang.constant.Constable;"
 },
 {
@@ -421,10 +418,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.properties.RabbitProperties","bw.org.bocra.portal.keycloak.smtp.RealmSmtpService","bw.org.bocra.portal.message.BocraMesssageService","org.springframework.amqp.rabbit.core.RabbitTemplate"] }, 
-    {"name":"readEmailQueue","parameterTypes":["java.util.Collection"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":["bw.org.bocra.portal.properties.RabbitProperties","bw.org.bocra.portal.keycloak.smtp.RealmSmtpService","bw.org.bocra.portal.message.BocraMesssageService","org.springframework.amqp.rabbit.core.RabbitTemplate"] }]
 },
 {
   "name":"bw.org.bocra.portal.keycloak.realm.Realm",
@@ -610,31 +604,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getCreatedBy","parameterTypes":[] }, 
-    {"name":"getCreatedDate","parameterTypes":[] }, 
-    {"name":"getDestinations","parameterTypes":[] }, 
-    {"name":"getDispatchDate","parameterTypes":[] }, 
-    {"name":"getId","parameterTypes":[] }, 
-    {"name":"getMessagePlatform","parameterTypes":[] }, 
-    {"name":"getSendNow","parameterTypes":[] }, 
-    {"name":"getSource","parameterTypes":[] }, 
-    {"name":"getStatus","parameterTypes":[] }, 
-    {"name":"getSubject","parameterTypes":[] }, 
-    {"name":"getText","parameterTypes":[] }, 
-    {"name":"getUpdatedBy","parameterTypes":[] }, 
-    {"name":"getUpdatedDate","parameterTypes":[] }, 
-    {"name":"setCreatedBy","parameterTypes":["java.lang.String"] }, 
-    {"name":"setCreatedDate","parameterTypes":["java.time.LocalDateTime"] }, 
-    {"name":"setDestinations","parameterTypes":["java.util.Collection"] }, 
-    {"name":"setDispatchDate","parameterTypes":["java.time.LocalDateTime"] }, 
-    {"name":"setMessagePlatform","parameterTypes":["bw.org.bocra.portal.message.BocraMesssagePlatform"] }, 
-    {"name":"setSendNow","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setStatus","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageStatus"] }, 
-    {"name":"setSubject","parameterTypes":["java.lang.String"] }, 
-    {"name":"setText","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"bw.org.bocra.portal.message.BocraMesssage_"
@@ -787,8 +757,8 @@
   "queryAllDeclaredMethods":true,
   "methods":[
     {"name":"getJsonFactory","parameterTypes":[] }, 
-    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.ResolvedType"] }, 
-    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.TypeReference"] }
+    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.TypeReference"] }, 
+    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","java.lang.Class"] }
   ]
 },
 {
@@ -921,10 +891,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"com.fasterxml.jackson.module.paramnames.ParameterNamesModule",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -996,11 +962,9 @@
 {
   "name":"com.rabbitmq.client.Channel",
   "methods":[
-    {"name":"basicAck","parameterTypes":["long","boolean"] }, 
     {"name":"basicCancel","parameterTypes":["java.lang.String"] }, 
     {"name":"basicConsume","parameterTypes":["java.lang.String","boolean","java.lang.String","boolean","boolean","java.util.Map","com.rabbitmq.client.Consumer"] }, 
     {"name":"basicNack","parameterTypes":["long","boolean","boolean"] }, 
-    {"name":"basicPublish","parameterTypes":["java.lang.String","java.lang.String","boolean","com.rabbitmq.client.AMQP$BasicProperties","byte[]"] }, 
     {"name":"basicQos","parameterTypes":["int","boolean"] }, 
     {"name":"exchangeDeclare","parameterTypes":["java.lang.String","java.lang.String","boolean","boolean","boolean","java.util.Map"] }, 
     {"name":"queueBind","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.util.Map"] }, 
@@ -4122,10 +4086,6 @@
 },
 {
   "name":"org.hibernate.engine.config.internal.ConfigurationServiceImpl",
-  "queryAllPublicMethods":true
-},
-{
-  "name":"org.hibernate.engine.jdbc.batch.internal.BatchBuilderImpl",
   "queryAllPublicMethods":true
 },
 {
@@ -9286,10 +9246,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":["org.springframework.data.jpa.repository.support.JpaEntityInformation","jakarta.persistence.EntityManager"] }, 
-    {"name":"save","parameterTypes":["java.lang.Object"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":["org.springframework.data.jpa.repository.support.JpaEntityInformation","jakarta.persistence.EntityManager"] }]
 },
 {
   "name":"org.springframework.data.jpa.util.HibernateProxyDetector",
@@ -9340,8 +9297,8 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "methods":[
+    {"name":"getPersistentEntity","parameterTypes":["java.lang.Class"] }, 
     {"name":"getPersistentEntity","parameterTypes":["org.springframework.data.mapping.PersistentProperty"] }, 
-    {"name":"getPersistentEntity","parameterTypes":["org.springframework.data.util.TypeInformation"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["java.lang.Class"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["org.springframework.data.mapping.PersistentProperty"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["org.springframework.data.util.TypeInformation"] }
@@ -10196,7 +10153,6 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "methods":[
-    {"name":"createNativeEntityManager","parameterTypes":["java.util.Map"] }, 
     {"name":"getBeanClassLoader","parameterTypes":[] }, 
     {"name":"getDataSource","parameterTypes":[] }, 
     {"name":"getEntityManagerInterface","parameterTypes":[] }, 
