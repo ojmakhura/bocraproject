@@ -104,11 +104,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -273,12 +268,12 @@
 					<metadataRepository>
 						<enabled>true</enabled>
 					</metadataRepository>
-					<buildArgs>
+					<!-- <buildArgs>
 						<arg>
-							--initialize-at-run-time=org.apache.commons.logging.LogFactoryService,org.apache.commons.logging.LogFactory</arg>
+							initialize-at-run-time=org.apache.commons.logging.LogFactoryService,org.apache.commons.logging.LogFactory</arg>
 						<arg>-H:+AddAllCharsets</arg>
-						<arg>--trace-class-initialization=org.apache.commons.logging.LogFactoryService,org.apache.commons.logging.LogFactory</arg>
-					</buildArgs>
+						<arg>trace-class-initialization=org.springframework.data.repository.util.QueryExecutionConverters,org.apache.commons.logging.LogFactoryService,org.apache.commons.logging.LogFactory</arg>
+					</buildArgs> -->
 				</configuration>
 			</plugin>
 			<plugin>
