@@ -55,7 +55,7 @@ public class BocraMesssageVO
      */
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     protected LocalDateTime createdDate;
     /**
      * TODO: Model Documentation for BocraMesssageVO.updatedDate

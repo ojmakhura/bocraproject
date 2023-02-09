@@ -311,14 +311,14 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                 e.printStackTrace();
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
-                    if (e.getCause().getMessage().contains("(form_period_unique)")) {
+                    if (e.getCause().getMessage().contains("form_period_unique")) {
 
                         return ResponseEntity.badRequest()
                                 .body("An form activation with this form and period has been already created.");
-                    } else if (e.getCause().getMessage().contains("(activation_name)")) {
+                    } else if (e.getCause().getMessage().contains("activation_name")) {
 
                         return ResponseEntity.badRequest()
-                                .body("An form activation with this name and period has been already created.");
+                                .body("An form activation with this name has been already created.");
                     }
 
                 } else if (e.getCause().getMessage().contains("null value in column")) {

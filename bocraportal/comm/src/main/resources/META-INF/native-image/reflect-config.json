@@ -57,6 +57,9 @@
   "name":"[Ljava.lang.String;"
 },
 {
+  "name":"[Ljava.lang.annotation.Annotation;"
+},
+{
   "name":"[Ljava.lang.constant.Constable;"
 },
 {
@@ -225,6 +228,7 @@
   "name":"bw.org.bocra.portal.config.CommConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"jsonCustomizer","parameterTypes":[] }, 
@@ -287,6 +291,7 @@
   "name":"bw.org.bocra.portal.config.RabbitMQConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":["org.springframework.amqp.rabbit.connection.CachingConnectionFactory","bw.org.bocra.portal.properties.RabbitProperties"] }, 
     {"name":"converter","parameterTypes":["com.fasterxml.jackson.databind.ObjectMapper"] }, 
@@ -338,6 +343,7 @@
   "name":"bw.org.bocra.portal.datasource.CommDbConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"commDataSource","parameterTypes":[] }, 
@@ -372,6 +378,7 @@
   "name":"bw.org.bocra.portal.datasource.KeycloakDbConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"customerDataSource","parameterTypes":[] }, 
@@ -414,7 +421,10 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["bw.org.bocra.portal.properties.RabbitProperties","bw.org.bocra.portal.keycloak.smtp.RealmSmtpService","bw.org.bocra.portal.message.BocraMesssageService","org.springframework.amqp.rabbit.core.RabbitTemplate"] }]
+  "methods":[
+    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.properties.RabbitProperties","bw.org.bocra.portal.keycloak.smtp.RealmSmtpService","bw.org.bocra.portal.message.BocraMesssageService","org.springframework.amqp.rabbit.core.RabbitTemplate"] }, 
+    {"name":"readEmailQueue","parameterTypes":["java.util.Collection"] }
+  ]
 },
 {
   "name":"bw.org.bocra.portal.keycloak.realm.Realm",
@@ -541,7 +551,9 @@
   "methods":[{"name":"CGLIB$SET_THREAD_CALLBACKS","parameterTypes":["org.springframework.cglib.proxy.Callback[]"] }]
 },
 {
-  "name":"bw.org.bocra.portal.message.BocraMesssagePlatform"
+  "name":"bw.org.bocra.portal.message.BocraMesssagePlatform",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"bw.org.bocra.portal.message.BocraMesssageRepository",
@@ -589,7 +601,40 @@
   "methods":[{"name":"CGLIB$SET_THREAD_CALLBACKS","parameterTypes":["org.springframework.cglib.proxy.Callback[]"] }]
 },
 {
-  "name":"bw.org.bocra.portal.message.BocraMesssageStatus"
+  "name":"bw.org.bocra.portal.message.BocraMesssageStatus",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"bw.org.bocra.portal.message.BocraMesssageVO",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getCreatedBy","parameterTypes":[] }, 
+    {"name":"getCreatedDate","parameterTypes":[] }, 
+    {"name":"getDestinations","parameterTypes":[] }, 
+    {"name":"getDispatchDate","parameterTypes":[] }, 
+    {"name":"getId","parameterTypes":[] }, 
+    {"name":"getMessagePlatform","parameterTypes":[] }, 
+    {"name":"getSendNow","parameterTypes":[] }, 
+    {"name":"getSource","parameterTypes":[] }, 
+    {"name":"getStatus","parameterTypes":[] }, 
+    {"name":"getSubject","parameterTypes":[] }, 
+    {"name":"getText","parameterTypes":[] }, 
+    {"name":"getUpdatedBy","parameterTypes":[] }, 
+    {"name":"getUpdatedDate","parameterTypes":[] }, 
+    {"name":"setCreatedBy","parameterTypes":["java.lang.String"] }, 
+    {"name":"setCreatedDate","parameterTypes":["java.time.LocalDateTime"] }, 
+    {"name":"setDestinations","parameterTypes":["java.util.Collection"] }, 
+    {"name":"setDispatchDate","parameterTypes":["java.time.LocalDateTime"] }, 
+    {"name":"setMessagePlatform","parameterTypes":["bw.org.bocra.portal.message.BocraMesssagePlatform"] }, 
+    {"name":"setSendNow","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setStatus","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageStatus"] }, 
+    {"name":"setSubject","parameterTypes":["java.lang.String"] }, 
+    {"name":"setText","parameterTypes":["java.lang.String"] }
+  ]
 },
 {
   "name":"bw.org.bocra.portal.message.BocraMesssage_"
@@ -757,6 +802,9 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"com.fasterxml.jackson.databind.DeserializationContext"
+},
+{
   "name":"com.fasterxml.jackson.databind.Module",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -785,6 +833,25 @@
     {"name":"writeTree","parameterTypes":["com.fasterxml.jackson.core.JsonGenerator","com.fasterxml.jackson.core.TreeNode"] }, 
     {"name":"writeValue","parameterTypes":["com.fasterxml.jackson.core.JsonGenerator","java.lang.Object"] }
   ]
+},
+{
+  "name":"com.fasterxml.jackson.databind.deser.BeanDeserializer"
+},
+{
+  "name":"com.fasterxml.jackson.databind.deser.DefaultDeserializationContext"
+},
+{
+  "name":"com.fasterxml.jackson.databind.deser.impl.MethodProperty"
+},
+{
+  "name":"com.fasterxml.jackson.databind.deser.std.CollectionDeserializer"
+},
+{
+  "name":"com.fasterxml.jackson.databind.exc.InvalidFormatException"
+},
+{
+  "name":"com.fasterxml.jackson.databind.ext.Java7HandlersImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.fasterxml.jackson.databind.ext.Java7SupportImpl",
@@ -844,6 +911,17 @@
 },
 {
   "name":"com.fasterxml.jackson.datatype.jsr310.JavaTimeModule",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.fasterxml.jackson.datatype.jsr310.deser.JSR310DeserializerBase"
+},
+{
+  "name":"com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -918,8 +996,11 @@
 {
   "name":"com.rabbitmq.client.Channel",
   "methods":[
+    {"name":"basicAck","parameterTypes":["long","boolean"] }, 
     {"name":"basicCancel","parameterTypes":["java.lang.String"] }, 
     {"name":"basicConsume","parameterTypes":["java.lang.String","boolean","java.lang.String","boolean","boolean","java.util.Map","com.rabbitmq.client.Consumer"] }, 
+    {"name":"basicNack","parameterTypes":["long","boolean","boolean"] }, 
+    {"name":"basicPublish","parameterTypes":["java.lang.String","java.lang.String","boolean","com.rabbitmq.client.AMQP$BasicProperties","byte[]"] }, 
     {"name":"basicQos","parameterTypes":["int","boolean"] }, 
     {"name":"exchangeDeclare","parameterTypes":["java.lang.String","java.lang.String","boolean","boolean","boolean","java.util.Map"] }, 
     {"name":"queueBind","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.util.Map"] }, 
@@ -1002,12 +1083,7 @@
 },
 {
   "name":"com.sun.management.GcInfo",
-  "queryAllPublicMethods":true,
-  "fields":[
-    {"name":"builder"}, 
-    {"name":"extAttributes"}
-  ],
-  "methods":[{"name":"getMemoryUsageBeforeGc","parameterTypes":[] }]
+  "queryAllPublicMethods":true
 },
 {
   "name":"com.sun.management.HotSpotDiagnosticMXBean",
@@ -2069,6 +2145,9 @@
   "methods":[{"name":"getSecurityManager","parameterTypes":[] }]
 },
 {
+  "name":"java.lang.Thread"
+},
+{
   "name":"java.lang.Throwable",
   "allDeclaredFields":true
 },
@@ -2166,8 +2245,7 @@
 },
 {
   "name":"java.lang.management.MemoryUsage",
-  "queryAllPublicMethods":true,
-  "methods":[{"name":"from","parameterTypes":["javax.management.openmbean.CompositeData"] }]
+  "queryAllPublicMethods":true
 },
 {
   "name":"java.lang.management.MonitorInfo",
@@ -2286,7 +2364,6 @@
   "name":"java.lang.reflect.ParameterizedType",
   "methods":[
     {"name":"getActualTypeArguments","parameterTypes":[] }, 
-    {"name":"getOwnerType","parameterTypes":[] }, 
     {"name":"getRawType","parameterTypes":[] }
   ]
 },
@@ -2402,6 +2479,9 @@
 },
 {
   "name":"java.time.LocalDateTime"
+},
+{
+  "name":"java.time.format.DateTimeFormatter"
 },
 {
   "name":"java.util.ArrayList"
@@ -2625,6 +2705,12 @@
   "name":"jdk.internal.module.SystemModuleFinders$SystemModuleReader",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
+},
+{
+  "name":"jdk.internal.reflect.DelegatingMethodAccessorImpl"
+},
+{
+  "name":"jdk.internal.reflect.NativeMethodAccessorImpl"
 },
 {
   "name":"jdk.management.jfr.ConfigurationInfo",
@@ -4039,6 +4125,10 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"org.hibernate.engine.jdbc.batch.internal.BatchBuilderImpl",
+  "queryAllPublicMethods":true
+},
+{
   "name":"org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl",
   "queryAllPublicMethods":true,
   "methods":[{"name":"setJndiService","parameterTypes":["org.hibernate.engine.jndi.spi.JndiService"] }]
@@ -4624,6 +4714,9 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"org.springframework.amqp.rabbit.config.StatelessRetryOperationsInterceptorFactoryBean"
+},
+{
   "name":"org.springframework.amqp.rabbit.connection.AbstractConnectionFactory",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -4852,8 +4945,12 @@
   ]
 },
 {
+  "name":"org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer"
+},
+{
   "name":"org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer$ContainerDelegate",
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"invokeListener","parameterTypes":["com.rabbitmq.client.Channel","java.lang.Object"] }]
 },
 {
   "name":"org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory",
@@ -4880,6 +4977,21 @@
   ]
 },
 {
+  "name":"org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer"
+},
+{
+  "name":"org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer"
+},
+{
+  "name":"org.springframework.amqp.rabbit.listener.adapter.AbstractAdaptableMessageListener"
+},
+{
+  "name":"org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter"
+},
+{
+  "name":"org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter$MessagingMessageConverterAdapter"
+},
+{
   "name":"org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener",
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
@@ -4887,6 +4999,9 @@
     {"name":"onMessage","parameterTypes":["org.springframework.amqp.core.Message"] }, 
     {"name":"onMessageBatch","parameterTypes":["java.util.List","com.rabbitmq.client.Channel"] }
   ]
+},
+{
+  "name":"org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer"
 },
 {
   "name":"org.springframework.amqp.rabbit.support.ListenerContainerAware",
@@ -4938,6 +5053,9 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"org.springframework.amqp.support.converter.MessagingMessageConverter"
+},
+{
   "name":"org.springframework.amqp.support.converter.SmartMessageConverter",
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
@@ -4956,6 +5074,7 @@
 },
 {
   "name":"org.springframework.aop.TargetClassAware",
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"getTargetClass","parameterTypes":[] }]
 },
 {
@@ -4994,6 +5113,9 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"org.springframework.aop.framework.JdkDynamicAopProxy"
+},
+{
   "name":"org.springframework.aop.framework.ProxyConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -5022,6 +5144,9 @@
     {"name":"setOrder","parameterTypes":["int"] }, 
     {"name":"setProxyClassLoader","parameterTypes":["java.lang.ClassLoader"] }
   ]
+},
+{
+  "name":"org.springframework.aop.framework.ReflectiveMethodInvocation"
 },
 {
   "name":"org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator",
@@ -5082,6 +5207,9 @@
     {"name":"isPerInstance","parameterTypes":[] }, 
     {"name":"setOrder","parameterTypes":["int"] }
   ]
+},
+{
+  "name":"org.springframework.aop.support.AopUtils"
 },
 {
   "name":"org.springframework.aot.hint.annotation.Reflective",
@@ -8673,6 +8801,15 @@
   "name":"org.springframework.cache.jcache.JCacheCache"
 },
 {
+  "name":"org.springframework.cglib.proxy.Dispatcher"
+},
+{
+  "name":"org.springframework.cglib.proxy.MethodInterceptor"
+},
+{
+  "name":"org.springframework.cglib.proxy.NoOp"
+},
+{
   "name":"org.springframework.context.ApplicationContextAware",
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
@@ -9149,7 +9286,10 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["org.springframework.data.jpa.repository.support.JpaEntityInformation","jakarta.persistence.EntityManager"] }]
+  "methods":[
+    {"name":"<init>","parameterTypes":["org.springframework.data.jpa.repository.support.JpaEntityInformation","jakarta.persistence.EntityManager"] }, 
+    {"name":"save","parameterTypes":["java.lang.Object"] }
+  ]
 },
 {
   "name":"org.springframework.data.jpa.util.HibernateProxyDetector",
@@ -9200,8 +9340,8 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "methods":[
-    {"name":"getPersistentEntity","parameterTypes":["java.lang.Class"] }, 
     {"name":"getPersistentEntity","parameterTypes":["org.springframework.data.mapping.PersistentProperty"] }, 
+    {"name":"getPersistentEntity","parameterTypes":["org.springframework.data.util.TypeInformation"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["java.lang.Class"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["org.springframework.data.mapping.PersistentProperty"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["org.springframework.data.util.TypeInformation"] }
@@ -10056,6 +10196,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "methods":[
+    {"name":"createNativeEntityManager","parameterTypes":["java.util.Map"] }, 
     {"name":"getBeanClassLoader","parameterTypes":[] }, 
     {"name":"getDataSource","parameterTypes":[] }, 
     {"name":"getEntityManagerInterface","parameterTypes":[] }, 
@@ -10155,6 +10296,15 @@
   "name":"org.springframework.retry.interceptor.RetryOperationsInterceptor",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
+},
+{
+  "name":"org.springframework.retry.interceptor.RetryOperationsInterceptor$1"
+},
+{
+  "name":"org.springframework.retry.interceptor.RetryOperationsInterceptor$ItemRecovererCallback"
+},
+{
+  "name":"org.springframework.retry.support.RetryTemplate"
 },
 {
   "name":"org.springframework.scheduling.SchedulingTaskExecutor",
