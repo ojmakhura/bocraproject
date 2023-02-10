@@ -70,11 +70,11 @@ public class BocraMesssageDaoImpl
     /**
      * {@inheritDoc}
      */
-    public BocraMesssage BocraMesssageVOToEntity(BocraMesssageVO BocraMesssageVO)
+    public BocraMesssage bocraMesssageVOToEntity(BocraMesssageVO BocraMesssageVO)
     {
         // TODO verify behavior of BocraMesssageVOToEntity
         BocraMesssage entity = this.loadBocraMesssageFromBocraMesssageVO(BocraMesssageVO);
-        this.BocraMesssageVOToEntity(BocraMesssageVO, entity, true);
+        this.bocraMesssageVOToEntity(BocraMesssageVO, entity, true);
         return entity;
     }
 
@@ -82,13 +82,13 @@ public class BocraMesssageDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public void BocraMesssageVOToEntity(
+    public void bocraMesssageVOToEntity(
         BocraMesssageVO source,
         BocraMesssage target,
         boolean copyIfNull)
     {
         // TODO verify behavior of BocraMesssageVOToEntity
-        super.BocraMesssageVOToEntity(source, target, copyIfNull);
+        super.bocraMesssageVOToEntity(source, target, copyIfNull);
         // No conversion for target.dispatchDate (can't convert source.getDispatchDate():java.time.LocalDateTime to java.time.LocalDate
     }
 }

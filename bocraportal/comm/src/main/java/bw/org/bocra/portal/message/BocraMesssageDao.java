@@ -83,7 +83,7 @@ public interface BocraMesssageDao
      * @param copyIfNull If FALSE, the value object's field will not be copied to the entity if the value is NULL. If TRUE,
      * it will be copied regardless of its value.
      */
-    public void BocraMesssageVOToEntity(
+    public void bocraMesssageVOToEntity(
         BocraMesssageVO source,
         BocraMesssage target,
         boolean copyIfNull);
@@ -93,14 +93,14 @@ public interface BocraMesssageDao
      * @param BocraMesssageVO
      * @return BocraMesssage
      */
-    public BocraMesssage BocraMesssageVOToEntity(BocraMesssageVO BocraMesssageVO);
+    public BocraMesssage bocraMesssageVOToEntity(BocraMesssageVO BocraMesssageVO);
 
     /**
      * Converts a Collection of instances of type {@link BocraMesssageVO} to this
      * DAO's entity.
      * @param instances
      */
-    public void BocraMesssageVOToEntityCollection(Collection<?> instances);
+    public void bocraMesssageVOToEntityCollection(Collection<?> instances);
 
     /**
      * Allows transformation of entities into value objects

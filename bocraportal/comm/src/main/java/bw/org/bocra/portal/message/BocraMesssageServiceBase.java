@@ -29,17 +29,17 @@ public abstract class BocraMesssageServiceBase
     implements BocraMesssageService
 {
     protected Logger logger = LoggerFactory.getLogger(BocraMesssageService.class);
-    protected final BocraMesssageDao BocraMesssageDao;
-    protected final BocraMesssageRepository BocraMesssageRepository;
+    protected final BocraMesssageDao bocraMesssageDao;
+    protected final BocraMesssageRepository bocraMesssageRepository;
     protected final MessageSource messageSource;
 
     public BocraMesssageServiceBase(
-        BocraMesssageDao BocraMesssageDao,
-        BocraMesssageRepository BocraMesssageRepository,
+        BocraMesssageDao bocraMesssageDao,
+        BocraMesssageRepository bocraMesssageRepository,
         MessageSource messageSource
     ) {
-        this.BocraMesssageDao = BocraMesssageDao;
-        this.BocraMesssageRepository = BocraMesssageRepository;
+        this.bocraMesssageDao = bocraMesssageDao;
+        this.bocraMesssageRepository = bocraMesssageRepository;
         this.messageSource = messageSource;
     }
 
@@ -49,7 +49,7 @@ public abstract class BocraMesssageServiceBase
      */
     protected BocraMesssageDao getBocraMesssageDao()
     {
-        return this.BocraMesssageDao;
+        return this.bocraMesssageDao;
     }
 
     /**
@@ -57,7 +57,7 @@ public abstract class BocraMesssageServiceBase
      * @return BocraMesssageRepository
      */
     public BocraMesssageRepository getBocraMesssageRepository() {
-        return BocraMesssageRepository;
+        return bocraMesssageRepository;
     }
 
     /**

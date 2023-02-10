@@ -15,14 +15,19 @@ import org.springframework.stereotype.Service;
 
 import bw.org.bocra.portal.keycloak.smtp.RealmSmtpDTO;
 import bw.org.bocra.portal.keycloak.smtp.RealmSmtpService;
+import bw.org.bocra.portal.message.BocraMesssageDao;
+import bw.org.bocra.portal.message.BocraMesssageRepository;
 import bw.org.bocra.portal.message.BocraMesssageService;
 import bw.org.bocra.portal.message.BocraMesssageStatus;
 import bw.org.bocra.portal.message.BocraMesssageVO;
 import lombok.extern.slf4j.Slf4j;
 import bw.org.bocra.portal.properties.RabbitProperties;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 public class EmailService {
 
     @Value("${keycloak.realm}")
@@ -30,14 +35,21 @@ public class EmailService {
 
     private final RealmSmtpService realmSmtpService;
     private final BocraMesssageService bocraMesssageService;
+    private final BocraMesssageRepository bocraMesssageRepository;
+    private final BocraMesssageDao bocraMesssageDao;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitProperties rabbitProperties;
     
-    public EmailService(RabbitProperties rabbitProperties, RealmSmtpService realmSmtpService, BocraMesssageService bocraMesssageService, RabbitTemplate rabbitTemplate) {
+    public EmailService(RabbitProperties rabbitProperties, 
+                RealmSmtpService realmSmtpService, BocraMesssageService bocraMesssageService, 
+                RabbitTemplate rabbitTemplate, BocraMesssageRepository bocraMesssageRepository,
+                BocraMesssageDao bocraMesssageDao) {
         this.realmSmtpService = realmSmtpService;
         this.bocraMesssageService = bocraMesssageService;
         this.rabbitTemplate = rabbitTemplate;
         this.rabbitProperties = rabbitProperties;
+        this.bocraMesssageRepository = bocraMesssageRepository;
+        this.bocraMesssageDao = bocraMesssageDao;
     }
 
     @RabbitListener(queues = {"q.email-dispatch"})
@@ -110,6 +122,8 @@ public class EmailService {
 
     @RabbitListener(queues = "q.email-queue")
     public void readEmailQueue(Collection<BocraMesssageVO> emailMessages) {
+
+        log.info("Getting {} from email queue.", emailMessages.size());
         
         for (BocraMesssageVO emailMessage : emailMessages) {
             
@@ -120,7 +134,7 @@ public class EmailService {
             emailMessage = bocraMesssageService.save(emailMessage);
 
             if(emailMessage.getSendNow()) {
-                rabbitTemplate.convertAndSend("", rabbitProperties.getEmailQueueRoutingKey(), emailMessage);
+                rabbitTemplate.convertAndSend("x.post-email-dispatch", rabbitProperties.getEmailDispatchRoutingKey(), emailMessage);
             }
 
         }

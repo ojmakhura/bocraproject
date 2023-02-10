@@ -10,13 +10,12 @@ package bw.org.bocra.portal.message;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
-import org.apache.commons.lang3.StringUtils;
+// import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * @see bw.org.bocra.portal.message.BocraMesssageService
@@ -38,14 +38,14 @@ public class BocraMesssageServiceImpl
     private final EntityManager entityManager;
 
     public BocraMesssageServiceImpl(
-        BocraMesssageDao BocraMesssage, 
-        BocraMesssageRepository BocraMesssageRepository,
+        BocraMesssageDao bocraMesssage, 
+        BocraMesssageRepository bocraMesssageRepository,
         MessageSource messageSource, EntityManager entityManager
     ) {
         
         super(
-            BocraMesssage,
-            BocraMesssageRepository,
+            bocraMesssage,
+            bocraMesssageRepository,
             messageSource
         );
 
@@ -59,9 +59,9 @@ public class BocraMesssageServiceImpl
     protected BocraMesssageVO handleFindById(Long id)
         throws Exception
     {
-        BocraMesssage message = BocraMesssageRepository.getReferenceById(id);
+        BocraMesssage message = bocraMesssageRepository.getReferenceById(id);
 
-        return BocraMesssageDao.toBocraMesssageVO(message);
+        return bocraMesssageDao.toBocraMesssageVO(message);
     }
 
     /**
@@ -71,8 +71,8 @@ public class BocraMesssageServiceImpl
     protected Collection<BocraMesssageVO> handleGetAll()
         throws Exception
     {
-        Collection<BocraMesssage> messages = BocraMesssageRepository.findAll();
-        return BocraMesssageDao.toBocraMesssageVOCollection(messages);
+        Collection<BocraMesssage> messages = bocraMesssageRepository.findAll();
+        return bocraMesssageDao.toBocraMesssageVOCollection(messages);
     }
 
     /**
@@ -83,9 +83,9 @@ public class BocraMesssageServiceImpl
         throws Exception
     {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Collection<BocraMesssage> messages = BocraMesssageRepository.findAll(pageable).getContent();
+        Collection<BocraMesssage> messages = bocraMesssageRepository.findAll(pageable).getContent();
 
-        return BocraMesssageDao.toBocraMesssageVOCollection(messages);
+        return bocraMesssageDao.toBocraMesssageVOCollection(messages);
     }
 
     /**
@@ -95,7 +95,7 @@ public class BocraMesssageServiceImpl
     protected boolean handleRemove(Long id)
         throws Exception
     {
-        BocraMesssageRepository.deleteById(id);
+        bocraMesssageRepository.deleteById(id);
         return true;
     }
 
@@ -106,10 +106,10 @@ public class BocraMesssageServiceImpl
     protected BocraMesssageVO handleSave(BocraMesssageVO BocraMesssage)
         throws Exception
     {
-        BocraMesssage message = BocraMesssageDao.BocraMesssageVOToEntity(BocraMesssage);
-        message = BocraMesssageRepository.save(message);
+        BocraMesssage message = bocraMesssageDao.bocraMesssageVOToEntity(BocraMesssage);
+        message = bocraMesssageRepository.save(message);
 
-        return BocraMesssageDao.toBocraMesssageVO(message);
+        return bocraMesssageDao.toBocraMesssageVO(message);
     }
 
     /**
@@ -121,13 +121,13 @@ public class BocraMesssageServiceImpl
     {
         Specification<BocraMesssage> spec = null;
 
-        if(StringUtils.isNotBlank(criteria)) {
+        if(StringUtils.hasText(criteria)) {
             spec = this.findByAttributeLikeIgnoreCase("subject", criteria);
         }
 
-        Collection<BocraMesssage> messages = BocraMesssageRepository.findAll(spec, Sort.by("id").descending());
+        Collection<BocraMesssage> messages = bocraMesssageRepository.findAll(spec, Sort.by("id").descending());
 
-        return BocraMesssageDao.toBocraMesssageVOCollection(messages);
+        return bocraMesssageDao.toBocraMesssageVOCollection(messages);
     }
 
     /**
@@ -139,15 +139,15 @@ public class BocraMesssageServiceImpl
     {
         Specification<BocraMesssage> spec = null;
 
-        if(StringUtils.isNotBlank(criteria)) {
+        if(StringUtils.hasText(criteria)) {
             spec = this.findByAttributeLikeIgnoreCase("subject", criteria);
         }
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
 
-        Collection<BocraMesssage> messages = BocraMesssageRepository.findAll(spec, pageable).toList();
+        Collection<BocraMesssage> messages = bocraMesssageRepository.findAll(spec, pageable).toList();
         
-        return BocraMesssageDao.toBocraMesssageVOCollection(messages);
+        return bocraMesssageDao.toBocraMesssageVOCollection(messages);
     }
 
     /**
@@ -199,17 +199,17 @@ public class BocraMesssageServiceImpl
         Specification<BocraMesssage> spec = this.<BocraMesssage, LocalDateTime>findByAttributeLessThan("dispatchDate", LocalDate.now().atStartOfDay())
                                     .and(this.<BocraMesssage, BocraMesssageStatus>findByAttribute("status", BocraMesssageStatus.DRAFT));
 
-        Collection<BocraMesssage> messages = BocraMesssageRepository.findAll(spec);
+        Collection<BocraMesssage> messages = bocraMesssageRepository.findAll(spec);
 
-        return BocraMesssageDao.toBocraMesssageVOCollection(messages);
+        return bocraMesssageDao.toBocraMesssageVOCollection(messages);
     }
 
     @Override
     protected Boolean handleUpdateMessageStatus(Long id, BocraMesssageStatus status) throws Exception {
         
-        BocraMesssage message = BocraMesssageRepository.getReferenceById(id);
+        BocraMesssage message = bocraMesssageRepository.getReferenceById(id);
         message.setStatus(status);
-        message = BocraMesssageRepository.save(message);
+        message = bocraMesssageRepository.save(message);
 
         return true;
     }

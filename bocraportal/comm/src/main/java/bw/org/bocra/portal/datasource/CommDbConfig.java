@@ -21,9 +21,12 @@ import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef = "commEntityManagerFactory", transactionManagerRef = "commTransactionManager", basePackages = {
+@EnableJpaRepositories(entityManagerFactoryRef = "commEntityManagerFactory", 
+    transactionManagerRef = "commTransactionManager", 
+    basePackages = {
         "bw.org.bocra.portal.message"
-})
+    }
+)
 public class CommDbConfig {
 
     @Primary

@@ -5,7 +5,7 @@
 //
 package bw.org.bocra.portal.message;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * The default exception thrown for unexpected errors occurring
@@ -69,27 +69,9 @@ public class BocraMesssageServiceException
             // Reflectively get any exception causes.
             try
             {
-                Throwable targetException = null;
 
-                // java.lang.reflect.InvocationTargetException
-                String exceptionProperty = "targetException";
-                if (PropertyUtils.isReadable(th, exceptionProperty))
-                {
-                    targetException = (Throwable)PropertyUtils.getProperty(th, exceptionProperty);
-                }
-                else
-                {
-                    exceptionProperty = "causedByException";
-                    //javax.ejb.EJBException
-                    if (PropertyUtils.isReadable(th, exceptionProperty))
-                    {
-                        targetException = (Throwable)PropertyUtils.getProperty(th, exceptionProperty);
-                    }
-                }
-                if (targetException != null)
-                {
-                    th = targetException;
-                }
+                th = ExceptionUtils.getRootCause(th);
+            
             }
             catch (Exception ex)
             {

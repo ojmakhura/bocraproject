@@ -237,7 +237,7 @@ public abstract class BocraMesssageDaoBase
      * {@inheritDoc}
      */
     @Override
-    public void BocraMesssageVOToEntityCollection(java.util.Collection<?> instances)
+    public void bocraMesssageVOToEntityCollection(java.util.Collection<?> instances)
     {
         if (instances != null)
         {
@@ -259,7 +259,7 @@ public abstract class BocraMesssageDaoBase
             @Override
             public Object transform(Object input)
             {
-                return BocraMesssageVOToEntity((bw.org.bocra.portal.message.BocraMesssageVO)input);
+                return bocraMesssageVOToEntity((bw.org.bocra.portal.message.BocraMesssageVO)input);
             }
         };
 
@@ -314,7 +314,7 @@ public abstract class BocraMesssageDaoBase
      * {@inheritDoc}
      */
     @Override
-    public void BocraMesssageVOToEntity(
+    public void bocraMesssageVOToEntity(
         bw.org.bocra.portal.message.BocraMesssageVO source,
         bw.org.bocra.portal.message.BocraMesssage target,
         boolean copyIfNull)

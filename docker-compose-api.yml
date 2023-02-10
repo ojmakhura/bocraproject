@@ -7,12 +7,12 @@ services:
     image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocra-api
     hostname: api
-    healthcheck:
-      test: "curl -m 5 --silent --fail --request GET http://localhost:8085/actuator/health | grep UP || exit 1"
-      interval: 5s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
+    # healthcheck:
+    #   test: "curl -m 5 --silent --fail --request GET http://localhost:8085/actuator/health | grep UP || exit 1"
+    #   interval: 5s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 5s
     volumes:
       - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
@@ -24,7 +24,7 @@ services:
     networks:
       bocraportal-public:
     environment:
-      POSTGRES_SERVER: db
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}

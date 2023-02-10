@@ -106,8 +106,6 @@ services:
       POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRESQL_DATABASE: ${POSTGRES_DB}
       TZ: Africa/Gaborone
-    ports:
-      - 5432
     depends_on:
       proxy:
         condition: service_healthy
@@ -123,7 +121,7 @@ services:
       default:
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=bocraportal-public"
+      # - "traefik.docker.network=bocraportal-public"
       - "traefik.tcp.routers.bocra-db-postgres.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.bocra-db-postgres.entrypoints=postgres"
       - "traefik.tcp.routers.bocra-db.service=postgres"
@@ -178,6 +176,8 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
       context: .
       dockerfile: Dockerfile.keycloak
@@ -245,7 +245,7 @@ services:
         ipv4_address: ${BOCRA_API_ADDRESS}
       default:
     environment:
-      POSTGRES_SERVER: db
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}

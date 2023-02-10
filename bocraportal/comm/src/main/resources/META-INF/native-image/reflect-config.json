@@ -1,8 +1,5 @@
 [
 {
-  "name":"System"
-},
-{
   "name":"[B"
 },
 {
@@ -228,6 +225,7 @@
   "name":"bw.org.bocra.portal.config.CommConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"jsonCustomizer","parameterTypes":[] }, 
@@ -290,6 +288,7 @@
   "name":"bw.org.bocra.portal.config.RabbitMQConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":["org.springframework.amqp.rabbit.connection.CachingConnectionFactory","bw.org.bocra.portal.properties.RabbitProperties"] }, 
     {"name":"converter","parameterTypes":["com.fasterxml.jackson.databind.ObjectMapper"] }, 
@@ -341,6 +340,7 @@
   "name":"bw.org.bocra.portal.datasource.CommDbConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"commDataSource","parameterTypes":[] }, 
@@ -375,6 +375,7 @@
   "name":"bw.org.bocra.portal.datasource.KeycloakDbConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"customerDataSource","parameterTypes":[] }, 
@@ -406,21 +407,23 @@
   "methods":[{"name":"<init>","parameterTypes":["java.lang.Class"] }]
 },
 {
-  "name":"bw.org.bocra.portal.email.EmailController",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["bw.org.bocra.portal.email.EmailService","bw.org.bocra.portal.message.BocraMesssageService"] }]
-},
-{
   "name":"bw.org.bocra.portal.email.EmailService",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.properties.RabbitProperties","bw.org.bocra.portal.keycloak.smtp.RealmSmtpService","bw.org.bocra.portal.message.BocraMesssageService","org.springframework.amqp.rabbit.core.RabbitTemplate"] }, 
-    {"name":"readEmailQueue","parameterTypes":["java.util.Collection"] }
+    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.properties.RabbitProperties","bw.org.bocra.portal.keycloak.smtp.RealmSmtpService","bw.org.bocra.portal.message.BocraMesssageService","org.springframework.amqp.rabbit.core.RabbitTemplate","bw.org.bocra.portal.message.BocraMesssageRepository","bw.org.bocra.portal.message.BocraMesssageDao"] }, 
+    {"name":"readEmailQueue","parameterTypes":["java.util.Collection"] }, 
+    {"name":"sendEmail","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO"] }
   ]
+},
+{
+  "name":"bw.org.bocra.portal.email.EmailService$$SpringCGLIB$$0",
+  "fields":[
+    {"name":"CGLIB$CALLBACK_FILTER"}, 
+    {"name":"CGLIB$FACTORY_DATA"}
+  ],
+  "methods":[{"name":"CGLIB$SET_THREAD_CALLBACKS","parameterTypes":["org.springframework.cglib.proxy.Callback[]"] }]
 },
 {
   "name":"bw.org.bocra.portal.keycloak.realm.Realm",
@@ -488,13 +491,6 @@
   "methods":[{"name":"<init>","parameterTypes":["bw.org.bocra.portal.keycloak.smtp.RealmSmtpConfigRepository","bw.org.bocra.portal.keycloak.realm.RealmRepository"] }]
 },
 {
-  "name":"bw.org.bocra.portal.message.BocraMessageController",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["bw.org.bocra.portal.properties.RabbitProperties","org.springframework.amqp.rabbit.core.RabbitTemplate","org.springframework.web.client.RestTemplate","bw.org.bocra.portal.message.BocraMesssageService"] }]
-},
-{
   "name":"bw.org.bocra.portal.message.BocraMesssage",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -517,7 +513,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[
-    {"name":"BocraMesssageVOToEntityCollection","parameterTypes":["java.util.Collection"] }, 
+    {"name":"bocraMesssageVOToEntityCollection","parameterTypes":["java.util.Collection"] }, 
     {"name":"toBocraMesssageVOArray","parameterTypes":["java.util.Collection"] }, 
     {"name":"toBocraMesssageVOCollection","parameterTypes":["java.util.Collection"] }, 
     {"name":"toEntities","parameterTypes":["java.util.Collection"] }, 
@@ -532,8 +528,8 @@
   "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageRepository"] }, 
-    {"name":"BocraMesssageVOToEntity","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO"] }, 
-    {"name":"BocraMesssageVOToEntity","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO","bw.org.bocra.portal.message.BocraMesssage","boolean"] }, 
+    {"name":"bocraMesssageVOToEntity","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO"] }, 
+    {"name":"bocraMesssageVOToEntity","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO","bw.org.bocra.portal.message.BocraMesssage","boolean"] }, 
     {"name":"toBocraMesssageVO","parameterTypes":["bw.org.bocra.portal.message.BocraMesssage"] }, 
     {"name":"toBocraMesssageVO","parameterTypes":["bw.org.bocra.portal.message.BocraMesssage","bw.org.bocra.portal.message.BocraMesssageVO"] }
   ]
@@ -625,11 +621,15 @@
     {"name":"setCreatedDate","parameterTypes":["java.time.LocalDateTime"] }, 
     {"name":"setDestinations","parameterTypes":["java.util.Collection"] }, 
     {"name":"setDispatchDate","parameterTypes":["java.time.LocalDateTime"] }, 
+    {"name":"setId","parameterTypes":["java.lang.Long"] }, 
     {"name":"setMessagePlatform","parameterTypes":["bw.org.bocra.portal.message.BocraMesssagePlatform"] }, 
     {"name":"setSendNow","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setSource","parameterTypes":["java.lang.String"] }, 
     {"name":"setStatus","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageStatus"] }, 
     {"name":"setSubject","parameterTypes":["java.lang.String"] }, 
-    {"name":"setText","parameterTypes":["java.lang.String"] }
+    {"name":"setText","parameterTypes":["java.lang.String"] }, 
+    {"name":"setUpdatedBy","parameterTypes":["java.lang.String"] }, 
+    {"name":"setUpdatedDate","parameterTypes":["java.time.LocalDateTime"] }
   ]
 },
 {
@@ -784,6 +784,7 @@
   "methods":[
     {"name":"getJsonFactory","parameterTypes":[] }, 
     {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.ResolvedType"] }, 
+    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.TypeReference"] }, 
     {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","java.lang.Class"] }
   ]
 },
@@ -1041,12 +1042,24 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.crypto.provider.HmacCore$HmacSHA384",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.crypto.provider.PBKDF2Core$HmacSHA256",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.sun.crypto.provider.TlsMasterSecretGenerator",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.mail.handlers.text_plain",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.mail.smtp.SMTPTransport",
+  "methods":[{"name":"<init>","parameterTypes":["jakarta.mail.Session","jakarta.mail.URLName"] }]
 },
 {
   "name":"com.sun.management.GarbageCollectionNotificationInfo"
@@ -1973,7 +1986,6 @@
 },
 {
   "name":"java.lang.Class",
-  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[
     {"name":"getAnnotatedInterfaces","parameterTypes":[] }, 
@@ -1992,7 +2004,6 @@
 },
 {
   "name":"java.lang.ClassLoader",
-  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[
     {"name":"defineClass","parameterTypes":["java.lang.String","byte[]","int","int","java.security.ProtectionDomain"] }, 
@@ -2020,10 +2031,6 @@
   "fields":[{"name":"TYPE"}]
 },
 {
-  "name":"java.lang.Enum",
-  "methods":[{"name":"valueOf","parameterTypes":["java.lang.Class","java.lang.String"] }]
-},
-{
   "name":"java.lang.Float",
   "fields":[{"name":"TYPE"}]
 },
@@ -2046,24 +2053,11 @@
 },
 {
   "name":"java.lang.Module",
-  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[
     {"name":"addExports","parameterTypes":["java.lang.String","java.lang.Module"] }, 
-    {"name":"getLayer","parameterTypes":[] }, 
     {"name":"isExported","parameterTypes":["java.lang.String"] }, 
     {"name":"isNamed","parameterTypes":[] }
-  ]
-},
-{
-  "name":"java.lang.ModuleLayer",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[
-    {"name":"boot","parameterTypes":[] }, 
-    {"name":"configuration","parameterTypes":[] }, 
-    {"name":"findLoader","parameterTypes":["java.lang.String"] }, 
-    {"name":"parents","parameterTypes":[] }
   ]
 },
 {
@@ -2100,20 +2094,6 @@
 {
   "name":"java.lang.StackTraceElement",
   "queryAllPublicMethods":true
-},
-{
-  "name":"java.lang.StackWalker",
-  "methods":[
-    {"name":"forEach","parameterTypes":["java.util.function.Consumer"] }, 
-    {"name":"getInstance","parameterTypes":["java.lang.StackWalker$Option"] }
-  ]
-},
-{
-  "name":"java.lang.StackWalker$Option"
-},
-{
-  "name":"java.lang.StackWalker$StackFrame",
-  "methods":[{"name":"getDeclaringClass","parameterTypes":[] }]
 },
 {
   "name":"java.lang.String",
@@ -2158,7 +2138,6 @@
 },
 {
   "name":"java.lang.constant.Constable",
-  "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
 },
 {
@@ -2175,12 +2154,7 @@
   ]
 },
 {
-  "name":"java.lang.invoke.TypeDescriptor",
-  "queryAllDeclaredMethods":true
-},
-{
   "name":"java.lang.invoke.TypeDescriptor$OfField",
-  "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
 },
 {
@@ -2248,58 +2222,11 @@
   "queryAllPublicMethods":true
 },
 {
-  "name":"java.lang.module.Configuration",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"modules","parameterTypes":[] }]
-},
-{
-  "name":"java.lang.module.ModuleDescriptor",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[
-    {"name":"name","parameterTypes":[] }, 
-    {"name":"packages","parameterTypes":[] }, 
-    {"name":"rawVersion","parameterTypes":[] }
-  ]
-},
-{
-  "name":"java.lang.module.ModuleReader",
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"list","parameterTypes":[] }]
-},
-{
-  "name":"java.lang.module.ModuleReference",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[
-    {"name":"descriptor","parameterTypes":[] }, 
-    {"name":"location","parameterTypes":[] }, 
-    {"name":"open","parameterTypes":[] }
-  ]
-},
-{
-  "name":"java.lang.module.ResolvedModule",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"reference","parameterTypes":[] }]
-},
-{
-  "name":"java.lang.reflect.AccessibleObject",
-  "methods":[
-    {"name":"canAccess","parameterTypes":["java.lang.Object"] }, 
-    {"name":"isAccessible","parameterTypes":[] }, 
-    {"name":"setAccessible","parameterTypes":["boolean"] }, 
-    {"name":"trySetAccessible","parameterTypes":[] }
-  ]
-},
-{
   "name":"java.lang.reflect.AnnotatedArrayType",
   "methods":[{"name":"getAnnotatedGenericComponentType","parameterTypes":[] }]
 },
 {
   "name":"java.lang.reflect.AnnotatedElement",
-  "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
 },
 {
@@ -2322,7 +2249,6 @@
 },
 {
   "name":"java.lang.reflect.GenericDeclaration",
-  "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
 },
 {
@@ -2351,7 +2277,6 @@
 },
 {
   "name":"java.lang.reflect.Type",
-  "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
 },
 {
@@ -2402,10 +2327,7 @@
 },
 {
   "name":"java.security.AccessController",
-  "methods":[
-    {"name":"doPrivileged","parameterTypes":["java.security.PrivilegedAction"] }, 
-    {"name":"doPrivileged","parameterTypes":["java.security.PrivilegedExceptionAction"] }
-  ]
+  "methods":[{"name":"doPrivileged","parameterTypes":["java.security.PrivilegedExceptionAction"] }]
 },
 {
   "name":"java.security.AlgorithmParametersSpi"
@@ -2417,11 +2339,7 @@
   "name":"java.security.KeyStoreSpi"
 },
 {
-  "name":"java.security.PrivilegedAction"
-},
-{
   "name":"java.security.SecureClassLoader",
-  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
 },
 {
@@ -2429,6 +2347,12 @@
 },
 {
   "name":"java.security.SecurityPermission"
+},
+{
+  "name":"java.security.interfaces.ECPrivateKey"
+},
+{
+  "name":"java.security.interfaces.ECPublicKey"
 },
 {
   "name":"java.security.interfaces.RSAPrivateKey"
@@ -2479,15 +2403,6 @@
   "name":"java.util.HashSet"
 },
 {
-  "name":"java.util.Optional",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[
-    {"name":"get","parameterTypes":[] }, 
-    {"name":"isPresent","parameterTypes":[] }
-  ]
-},
-{
   "name":"java.util.PropertyPermission",
   "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }]
 },
@@ -2506,9 +2421,6 @@
   "queryAllPublicMethods":true
 },
 {
-  "name":"java.util.function.Consumer"
-},
-{
   "name":"java.util.function.Supplier",
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
@@ -2524,44 +2436,6 @@
 {
   "name":"java.util.logging.SimpleFormatter",
   "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"java.util.stream.AbstractPipeline",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"java.util.stream.BaseStream",
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"java.util.stream.Collector"
-},
-{
-  "name":"java.util.stream.Collectors",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"toList","parameterTypes":[] }]
-},
-{
-  "name":"java.util.stream.PipelineHelper",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"java.util.stream.ReferencePipeline",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"java.util.stream.ReferencePipeline$Head",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"java.util.stream.Stream",
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"collect","parameterTypes":["java.util.stream.Collector"] }]
 },
 {
   "name":"javafx.beans.value.ObservableValue"
@@ -2654,31 +2528,6 @@
 },
 {
   "name":"javax.sql.XADataSource"
-},
-{
-  "name":"jdk.internal.loader.BuiltinClassLoader",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"jdk.internal.loader.ClassLoaders$AppClassLoader",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"jdk.internal.loader.ClassLoaders$PlatformClassLoader",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"jdk.internal.module.ModuleReferenceImpl",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"jdk.internal.module.SystemModuleFinders$SystemModuleReader",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
 },
 {
   "name":"jdk.management.jfr.ConfigurationInfo",
@@ -2886,170 +2735,6 @@
 {
   "name":"net.bytebuddy.utility.Invoker$Dispatcher",
   "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.AntClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.ClassGraphClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.CxfContainerClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.EquinoxClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.EquinoxContextFinderClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.FallbackClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.FelixClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.JBossClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.JPMSClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.OSGiDefaultClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.ParentLastDelegationOrderTestClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.PlexusClassWorldsClassRealmClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.QuarkusClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.SpringBootRestartClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.TomcatWebappClassLoaderBaseHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.URLClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.UnoOneJarClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.WeblogicClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.WebsphereLibertyClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.classloaderhandler.WebsphereTraditionalClassLoaderHandler",
-  "methods":[
-    {"name":"canHandle","parameterTypes":["java.lang.Class","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClassLoaderOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClassLoaderOrder","nonapi.io.github.classgraph.utils.LogNode"] }, 
-    {"name":"findClasspathOrder","parameterTypes":["java.lang.ClassLoader","nonapi.io.github.classgraph.classpath.ClasspathOrder","nonapi.io.github.classgraph.scanspec.ScanSpec","nonapi.io.github.classgraph.utils.LogNode"] }
-  ]
-},
-{
-  "name":"nonapi.io.github.classgraph.scanspec.ScanSpec",
-  "allDeclaredFields":true
 },
 {
   "name":"oracle.jdbc.OracleConnection"
@@ -4317,6 +4002,9 @@
   ]
 },
 {
+  "name":"org.hibernate.query.TypedParameterValue"
+},
+{
   "name":"org.hibernate.query.hql.HqlLogging_$logger",
   "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
 },
@@ -4351,6 +4039,26 @@
 },
 {
   "name":"org.hibernate.sql.ast.tree.SqlAstTreeLogger_$logger_en_BW"
+},
+{
+  "name":"org.hibernate.sql.exec.SqlExecLogger_$logger",
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
+},
+{
+  "name":"org.hibernate.sql.exec.SqlExecLogger_$logger_en"
+},
+{
+  "name":"org.hibernate.sql.exec.SqlExecLogger_$logger_en_BW"
+},
+{
+  "name":"org.hibernate.sql.results.LoadingLogger_$logger",
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
+},
+{
+  "name":"org.hibernate.sql.results.LoadingLogger_$logger_en"
+},
+{
+  "name":"org.hibernate.sql.results.LoadingLogger_$logger_en_BW"
 },
 {
   "name":"org.hibernate.sql.results.ResultsLogger_$logger",
@@ -5015,6 +4723,7 @@
 },
 {
   "name":"org.springframework.aop.TargetClassAware",
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"getTargetClass","parameterTypes":[] }]
 },
 {
@@ -6512,11 +6221,6 @@
   "queryAllDeclaredMethods":true
 },
 {
-  "name":"org.springframework.boot.autoconfigure.AutoConfigurationExcludeFilter",
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"org.springframework.boot.autoconfigure.AutoConfigurationImportSelector",
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -7307,6 +7011,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"org.springframework.boot.autoconfigure.security.oauth2.client.ClientsConfiguredCondition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientRegistrationRepositoryConfiguration"
+},
+{
+  "name":"org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2WebSecurityConfiguration"
+},
+{
   "name":"org.springframework.boot.autoconfigure.security.oauth2.resource.IssuerUriCondition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -7843,27 +7564,6 @@
   ]
 },
 {
-  "name":"org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration$ResourceChainCustomizerConfiguration",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"resourceHandlerRegistrationCustomizer","parameterTypes":["org.springframework.boot.autoconfigure.web.WebProperties"] }
-  ]
-},
-{
-  "name":"org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration$ResourceChainResourceHandlerRegistrationCustomizer",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"customize","parameterTypes":["org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration"] }]
-},
-{
-  "name":"org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration$ResourceHandlerRegistrationCustomizer",
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
-},
-{
   "name":"org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration$WebMvcAutoConfigurationAdapter",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -8068,11 +7768,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"org.springframework.boot.context.TypeExcludeFilter",
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"org.springframework.boot.context.config.AnsiOutputApplicationListener",
   "queryAllPublicConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -8130,14 +7825,16 @@
 {
   "name":"org.springframework.boot.context.properties.BoundConfigurationProperties",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"org.springframework.boot.context.properties.ConfigurationProperties",
   "queryAllDeclaredMethods":true
 },
 {
-  "name":"org.springframework.boot.context.properties.ConfigurationPropertiesBinder$Factory",
+  "name":"org.springframework.boot.context.properties.ConfigurationPropertiesBinder$ConfigurationPropertiesBinderFactory",
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -8498,7 +8195,9 @@
   "name":"org.springframework.boot.web.server.ErrorPageRegistrarBeanPostProcessor",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"postProcessAfterInitialization","parameterTypes":["java.lang.Object","java.lang.String"] }, 
     {"name":"postProcessBeforeInitialization","parameterTypes":["java.lang.Object","java.lang.String"] }
   ]
@@ -8522,7 +8221,9 @@
   "name":"org.springframework.boot.web.server.WebServerFactoryCustomizerBeanPostProcessor",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"postProcessAfterInitialization","parameterTypes":["java.lang.Object","java.lang.String"] }, 
     {"name":"postProcessBeforeInitialization","parameterTypes":["java.lang.Object","java.lang.String"] }
   ]
@@ -8730,6 +8431,15 @@
 },
 {
   "name":"org.springframework.cache.jcache.JCacheCache"
+},
+{
+  "name":"org.springframework.cglib.proxy.Dispatcher"
+},
+{
+  "name":"org.springframework.cglib.proxy.MethodInterceptor"
+},
+{
+  "name":"org.springframework.cglib.proxy.NoOp"
 },
 {
   "name":"org.springframework.context.ApplicationContextAware",
@@ -9210,6 +8920,7 @@
   "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":["org.springframework.data.jpa.repository.support.JpaEntityInformation","jakarta.persistence.EntityManager"] }, 
+    {"name":"getReferenceById","parameterTypes":["java.lang.Object"] }, 
     {"name":"save","parameterTypes":["java.lang.Object"] }
   ]
 },
@@ -9262,7 +8973,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "methods":[
-    {"name":"getPersistentEntity","parameterTypes":["org.springframework.data.mapping.PersistentProperty"] }, 
+    {"name":"getPersistentEntity","parameterTypes":["java.lang.Class"] }, 
     {"name":"getPersistentEntity","parameterTypes":["org.springframework.data.util.TypeInformation"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["java.lang.Class"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["org.springframework.data.mapping.PersistentProperty"] }, 
@@ -10584,6 +10295,29 @@
   ]
 },
 {
+  "name":"org.springframework.security.config.annotation.web.configuration.OAuth2ClientConfiguration",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.springframework.security.config.annotation.web.configuration.OAuth2ClientConfiguration$OAuth2ClientWebMvcImportSelector",
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.springframework.security.config.annotation.web.configuration.OAuth2ClientConfiguration$OAuth2ClientWebMvcSecurityConfiguration",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"addArgumentResolvers","parameterTypes":["java.util.List"] }
+  ]
+},
+{
   "name":"org.springframework.security.config.annotation.web.configuration.OAuth2ImportSelector",
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -10659,9 +10393,6 @@
 },
 {
   "name":"org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"
-},
-{
-  "name":"org.springframework.security.oauth2.client.registration$ClientRegistration"
 },
 {
   "name":"org.springframework.security.oauth2.client.registration.ClientRegistration"
@@ -11256,10 +10987,6 @@
 },
 {
   "name":"org.springframework.web.bind.annotation.Mapping",
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"org.springframework.web.bind.annotation.PostMapping",
   "queryAllDeclaredMethods":true
 },
 {
@@ -12049,6 +11776,9 @@
   "name":"org.thymeleaf.spring6.SpringTemplateEngine"
 },
 {
+  "name":"org.webjars$WebJarAssetLocator"
+},
+{
   "name":"org.webjars.WebJarAssetLocator"
 },
 {
@@ -12129,11 +11859,6 @@
   "queryAllPublicConstructors":true
 },
 {
-  "name":"sun.misc.Unsafe",
-  "fields":[{"name":"theUnsafe"}],
-  "methods":[{"name":"invokeCleaner","parameterTypes":["java.nio.ByteBuffer"] }]
-},
-{
   "name":"sun.reflect.ReflectionFactory",
   "methods":[
     {"name":"getReflectionFactory","parameterTypes":[] }, 
@@ -12197,6 +11922,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"sun.security.provider.certpath.PKIXCertPathValidator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"sun.security.rsa.PSSParameters",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -12210,6 +11939,10 @@
 },
 {
   "name":"sun.security.rsa.RSASignature$SHA224withRSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.RSASignature$SHA256withRSA",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
