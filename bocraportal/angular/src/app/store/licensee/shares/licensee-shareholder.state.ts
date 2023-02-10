@@ -3,34 +3,34 @@ import { LicenseeVO } from '@app/model/bw/org/bocra/portal/licensee/licensee-vo'
 import { LicenseeShareholderVO } from '@model/bw/org/bocra/portal/licensee/shares/licensee-shareholder-vo';
 import { ShareholderVO } from '@model/bw/org/bocra/portal/shareholder/shareholder-vo';
 
-export const licenseeShareholderKey = "licenseeShareholder";
+export const licenseeShareholderKey = 'licenseeShareholder';
 
 export interface LicenseeShareholderState {
-    id: number | any,
-    licenseeShareholders: Array<LicenseeShareholderVO> | Array<any>,
-    licenseeShareholder: LicenseeShareholderVO | any,
-    licensee: LicenseeVO | any,
-    shareholder: ShareholderVO | any,
-    numberOfShares: number | any,
-    removed: boolean,
-    success: boolean,
-    loading: boolean,
-    loaderMessage: string | undefined,
-    error: boolean,
-    messages: any[]
+  id: number | any;
+  licenseeShareholders: Array<LicenseeShareholderVO> | Array<any>;
+  licenseeShareholder: LicenseeShareholderVO | any;
+  licensee: LicenseeVO | any;
+  shareholder: ShareholderVO | any;
+  numberOfShares: number | any;
+  removed: boolean;
+  success: boolean;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  error: boolean;
+  messages: any[];
 }
 
 export const initialState: LicenseeShareholderState = {
-    id: undefined,
-    licenseeShareholders: [],
-    licenseeShareholder: undefined,
-    licensee: undefined,
-    shareholder: undefined,
-    removed: false,
-    success: false,
-    loading: false,
-    error: false,
-    messages: [],
-    loaderMessage: undefined,
-    numberOfShares: undefined
+  id: undefined,
+  licenseeShareholders: [],
+  licenseeShareholder: undefined,
+  licensee: undefined,
+  shareholder: undefined,
+  removed: false,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
+  loaderMessage: undefined,
+  numberOfShares: undefined,
 };

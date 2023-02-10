@@ -6,7 +6,5 @@ import * as ReportActions from './report.actions';
 
 @Injectable()
 export class ReportEffects {
-
-    constructor(private actions$: Actions) {}
-
+  constructor(private actions$: Actions) {}
 }

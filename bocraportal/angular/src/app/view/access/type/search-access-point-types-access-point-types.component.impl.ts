@@ -5,16 +5,14 @@ import { SearchAccessPointTypesAccessPointTypesComponent } from '@app/view/acces
 @Component({
   selector: 'search-access-point-types-access-point-types',
   templateUrl: './search-access-point-types-access-point-types.component.html',
-  styleUrls: [ './search-access-point-types-access-point-types.component.scss' ]
+  styleUrls: ['./search-access-point-types-access-point-types.component.scss'],
 })
 export class SearchAccessPointTypesAccessPointTypesComponentImpl extends SearchAccessPointTypesAccessPointTypesComponent {
-
   constructor(private injector: Injector) {
     super(injector);
   }
 
-
-	override doSearchAccessPointTypesEdit(form: any): any {
+  override doSearchAccessPointTypesEdit(form: any): any {
     return form;
-	}
+  }
 }

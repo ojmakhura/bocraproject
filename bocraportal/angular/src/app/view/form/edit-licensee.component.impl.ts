@@ -40,12 +40,12 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     let criteria: FormCriteria = new FormCriteria();
     criteria.code = this.licenseeFormFormSearchField.value;
     criteria.formName = this.licenseeFormFormSearchField.value;
-    
+
     this.store.dispatch(
       FormActions.searchForms({
         criteria: criteria,
         loading: true,
-        loaderMessage: 'Searching forms ...'
+        loaderMessage: 'Searching forms ...',
       })
     );
   }
@@ -53,9 +53,9 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
   override licenseeFormLicenseeSearch(): void {
     this.store.dispatch(
       LicenseeActions.search({
-        criteria: { licenseeName: this.licenseeFormLicenseeSearchField.value},
+        criteria: { licenseeName: this.licenseeFormLicenseeSearchField.value },
         loading: true,
-        loaderMessage: 'Searching licensees ...'
+        loaderMessage: 'Searching licensees ...',
       })
     );
   }

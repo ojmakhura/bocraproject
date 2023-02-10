@@ -5,42 +5,42 @@ import { ShareholderVO } from '@app/model/bw/org/bocra/portal/shareholder/shareh
 import { LicenseeSectorVO } from '@model/bw/org/bocra/portal/licensee/sector/licensee-sector-vo';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
 
-export const licenseeKey = "licensee";
+export const licenseeKey = 'licensee';
 
 export interface LicenseeState {
-    id: number | any,
-    licensees: Array<LicenseeVO> | Array<any>,
-    criteria: LicenseeCriteria | any,
-    licensee: LicenseeVO | any,
-    shareholders: ShareholderVO[] | any[],
-    shareholder: ShareholderVO | any,
-    sector: LicenseeSectorVO | any,
-    sectors: Array<LicenseeSectorVO> | Array<any>,
-    document: DocumentVO | any,
-    documents: Array<DocumentVO> | Array<any>,
-    removed: boolean,
-    success: boolean,
-    loading: boolean,
-    loaderMessage: string | undefined,
-    error: boolean,
-    messages: any[]
+  id: number | any;
+  licensees: Array<LicenseeVO> | Array<any>;
+  criteria: LicenseeCriteria | any;
+  licensee: LicenseeVO | any;
+  shareholders: ShareholderVO[] | any[];
+  shareholder: ShareholderVO | any;
+  sector: LicenseeSectorVO | any;
+  sectors: Array<LicenseeSectorVO> | Array<any>;
+  document: DocumentVO | any;
+  documents: Array<DocumentVO> | Array<any>;
+  removed: boolean;
+  success: boolean;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  error: boolean;
+  messages: any[];
 }
 
 export const initialState: LicenseeState = {
-    id: null,
-    licensees: [],
-    criteria: null,
-    shareholders: [],
-    shareholder: null,
-    licensee: null,
-    sector: null,
-    sectors: [],
-    removed: false,
-    success: false,
-    loading: false,
-    error: false,
-    messages: [],
-    document: undefined,
-    documents: [],
-    loaderMessage: undefined
+  id: null,
+  licensees: [],
+  criteria: null,
+  shareholders: [],
+  shareholder: null,
+  licensee: null,
+  sector: null,
+  sectors: [],
+  removed: false,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
+  document: undefined,
+  documents: [],
+  loaderMessage: undefined,
 };

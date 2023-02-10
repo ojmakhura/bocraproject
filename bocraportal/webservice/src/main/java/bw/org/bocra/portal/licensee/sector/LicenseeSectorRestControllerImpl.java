@@ -41,7 +41,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not create a licensee sector entry. Please contact administrator.");
             }
@@ -73,33 +73,33 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(licensee_sector_unique)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee sector has been already created.");
+                        return ResponseEntity.badRequest().body("An licensee sector has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"sector_fk\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The sector value is missing.");
+                        return ResponseEntity.badRequest().body("The sector value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"licence_type_fk\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The licensee value is missing.");
+                        return ResponseEntity.badRequest().body("The licensee value is missing.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -111,7 +111,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Licensee sector with id %d not found.", id));
             }
@@ -129,7 +129,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             }
 
             logger.error(message, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -141,7 +141,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the licensee sector with this licensee id.");
             }
@@ -159,7 +159,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -171,7 +171,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the licensee sector with this sector id.");
             }
@@ -189,7 +189,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -197,11 +197,11 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Display all Licensee Sectors ");
-            return ResponseEntity.status(HttpStatus.OK).body(licenseeSectorService.getAll());
+            return ResponseEntity.ok().body(licenseeSectorService.getAll());
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -213,7 +213,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the licensee sector with id " + id);
             }
@@ -227,7 +227,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete licensee sector with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting licensee sector with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting licensee sector with id " + id);
         }
     }
 
@@ -239,7 +239,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the licensee id.");
             }
@@ -247,7 +247,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -259,7 +259,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the sector id.");
             }
@@ -267,7 +267,7 @@ public class LicenseeSectorRestControllerImpl extends LicenseeSectorRestControll
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage(), e );
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

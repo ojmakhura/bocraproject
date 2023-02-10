@@ -2,18 +2,15 @@
 import { createAction, props } from '@ngrx/store';
 
 export enum ViewActionType {
-  SET_VIEW_NAME = "[View] Set View Name",
-  LOAD_VIEW_AUTHORISATIONS = "[View] Load View Authorisations",
-  LOAD_VIEW_AUTHORISATIONS_SUCCESS = "[View] Load View Authorisations Success",
+  SET_VIEW_NAME = '[View] Set View Name',
+  LOAD_VIEW_AUTHORISATIONS = '[View] Load View Authorisations',
+  LOAD_VIEW_AUTHORISATIONS_SUCCESS = '[View] Load View Authorisations Success',
   VIEW_RESET = '[View] View Reset',
   VIEW_FAILURE = '[View] View Action Failure',
   VIEW_LOADING = '[View] View Loading',
 }
 
-export const setViewName = createAction(
-  ViewActionType.SET_VIEW_NAME,
-  props<{ viewName: string }>()
-);
+export const setViewName = createAction(ViewActionType.SET_VIEW_NAME, props<{ viewName: string }>());
 
 export const loadViewAuthorisations = createAction(
   ViewActionType.LOAD_VIEW_AUTHORISATIONS,
@@ -32,7 +29,4 @@ export const viewLoading = createAction(
   props<{ loading: boolean; success: boolean; messages: any[] }>()
 );
 
-export const viewFailure = createAction(
-  ViewActionType.VIEW_FAILURE,
-  props<{ messages: any[] }>()
-);
+export const viewFailure = createAction(ViewActionType.VIEW_FAILURE, props<{ messages: any[] }>());

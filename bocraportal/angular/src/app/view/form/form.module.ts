@@ -56,11 +56,6 @@ import { LicenceTypeFormEffects } from '@app/store/licence/type/form/licence-typ
     EditFieldComponentImpl,
   ],
   entryComponents: [],
-  providers: [
-    FormControllerImpl,
-    FormSectionRestController,
-    FormFieldRestController,
-    FormRestController,
-  ],
+  providers: [FormControllerImpl, FormSectionRestController, FormFieldRestController, FormRestController],
 })
 export class FormModule {}

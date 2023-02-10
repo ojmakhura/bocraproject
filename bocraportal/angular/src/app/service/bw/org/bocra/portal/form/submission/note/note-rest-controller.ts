@@ -5,37 +5,26 @@ import { NoteVO } from '@app/model/bw/org/bocra/portal/form/submission/note/note
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NoteRestController {
-    protected path = '/form/submission/note';
+  protected path = '/form/submission/note';
 
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {
-    }
+  public findById(id: number | any): Observable<NoteVO | any> {
+    return this.http.get<NoteVO | any>(this.path + `/${id}`);
+  }
 
-    public findById(id: number | any ): Observable<NoteVO | any> {
+  public getFormSubmissionNotes(formSubmissionId: number | any): Observable<NoteVO[] | any[]> {
+    return this.http.post<NoteVO[] | any[]>(this.path, formSubmissionId);
+  }
 
-        return this.http.get<NoteVO | any>(this.path + `/${id}`);
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(this.path + `/${id}`);
+  }
 
-    }
-
-    public getFormSubmissionNotes(formSubmissionId: number | any ): Observable<NoteVO[] | any[]> {
-
-        return this.http.post<NoteVO[] | any[]>(this.path, formSubmissionId);
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(this.path + `/${id}`);
-
-    }
-
-    public save(note: NoteVO | any ): Observable<NoteVO | any> {
-
-        return this.http.post<NoteVO | any>(this.path, note);
-
-    }
-
+  public save(note: NoteVO | any): Observable<NoteVO | any> {
+    return this.http.post<NoteVO | any>(this.path, note);
+  }
 }

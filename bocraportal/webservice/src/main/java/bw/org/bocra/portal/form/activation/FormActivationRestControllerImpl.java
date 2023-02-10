@@ -6,8 +6,10 @@
 package bw.org.bocra.portal.form.activation;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
@@ -17,27 +19,33 @@ import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.postgresql.util.PSQLException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.nimbusds.jose.shaded.json.JSONObject;
+import com.nimbusds.jose.util.JSONArrayUtils;
 
 import bw.org.bocra.portal.form.FormService;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.form.submission.SubmissionService;
+import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.licensee.LicenseeStatus;
 import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorService;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
-import bw.org.bocra.portal.message.CommunicationMessagePlatform;
-import bw.org.bocra.portal.message.CommunicationMessageService;
-import bw.org.bocra.portal.message.CommunicationMessageStatus;
-import bw.org.bocra.portal.message.CommunicationMessageVO;
+import bw.org.bocra.portal.properties.RabbitProperties;
 import bw.org.bocra.portal.sector.form.SectorFormVO;
 import bw.org.bocra.portal.user.UserVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,22 +59,30 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     private final SubmissionService submissionService;
     private final FormService formService;
     private final LicenseeSectorService licenseeSectorService;
-    private final CommunicationMessageService communicationMessageService;
     private final KeycloakUserService keycloakUserService;
+    private final KeycloakService keycloakService;
+    private final RabbitTemplate rabbitTemplate;
+    private final RabbitProperties rabbitProperties;
 
     @Value("${bocra.web.url}")
     private String webUrl;
+
+    @Value("${bocra.comm.url}")
+    private String commUrl;
     
-    public FormActivationRestControllerImpl(FormActivationService formActivationService,
+    public FormActivationRestControllerImpl(FormActivationService formActivationService, RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties,
             SubmissionService submissionService, FormService formService, LicenseeSectorService licenseeSectorService,
-            CommunicationMessageService communicationMessageService, KeycloakUserService keycloakUserService) {
+            KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
 
         super(formActivationService);
         this.submissionService = submissionService;
         this.formService = formService;
         this.licenseeSectorService = licenseeSectorService;
-        this.communicationMessageService = communicationMessageService;
         this.keycloakUserService = keycloakUserService;
+        this.keycloakService = keycloakService;
+        this.rabbitTemplate = rabbitTemplate;
+        this.rabbitProperties = rabbitProperties;
+
     }
 
     @Override
@@ -77,7 +93,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             ResponseEntity<?> response;
 
             if (data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(String.format("Form activation with id %ld not found.", id));
@@ -97,7 +113,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             }
 
             logger.error(message);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -105,12 +121,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Displays all Form Activations");
-            return ResponseEntity.status(HttpStatus.OK).body(formActivationService.getAll());
+            return ResponseEntity.ok().body(formActivationService.getAll());
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.badRequest()
                     .body("An unknown error has occured. Please contact the system administrator.");
         }
     }
@@ -120,12 +136,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         try {
             logger.debug("Displays all Form Activations of the specified " + "Page Number:" + pageNumber
                     + "and Page Size:" + pageSize);
-            return ResponseEntity.status(HttpStatus.OK).body(formActivationService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(formActivationService.getAll(pageNumber, pageSize));
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.badRequest()
                     .body("An unknown error has occured. Please contact the system administrator.");
         }
     }
@@ -138,7 +154,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             ResponseEntity<?> response;
 
             if (rm) {
-                response = ResponseEntity.status(HttpStatus.OK).body(rm);
+                response = ResponseEntity.ok().body(rm);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("Failed to delete the form activation with id " + id);
@@ -154,7 +170,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                         .body("Could not delete form activation with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.badRequest()
                     .body("Unknown error encountered when deleting form activation with id " + id);
         }
     }
@@ -186,10 +202,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                     + "Kind Regards\n\n"
                     + "BOCRA";
 
-    public void scheduleNotifications(FormActivationVO formActivation) {
-
+    public void sendNotifications(FormActivationVO formActivation) {
+        
         String submissionUrl = webUrl + "/form/submission/edit-form-submission";
-
+        List<Object> messageObjects = JSONArrayUtils.newJSONArray();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        
         for (FormSubmissionVO submission : formActivation.getFormSubmissions()) {
 
             Collection<UserVO> users = keycloakUserService.getLicenseeUsers(submission.getLicensee().getId());
@@ -199,31 +217,30 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                 continue;
             }
 
-            CommunicationMessageVO message = new CommunicationMessageVO();
+            JSONObject messageObj = new JSONObject();
+            
+            messageObj.put("createdBy", formActivation.getCreatedBy());
+            messageObj.put("createdDate", format.format(LocalDateTime.now()));
+            messageObj.put("sendNow", Boolean.TRUE);
+            messageObj.put("dispatchDate", format.format(formActivation.getPeriod().getPeriodEnd().atStartOfDay()));
+            messageObj.put("messagePlatform", "EMAIL");
+            messageObj.put("status", "DRAFT");
+            messageObj.put("subject", String.format("%s data request for period %s.", formActivation.getForm().getFormName(), formActivation.getPeriod().getPeriodName()));
+            messageObj.put("text", String.format(
+                emailTempate,
+                submission.getLicensee().getLicenseeName(),
+                formActivation.getForm().getFormName(),
+                submissionUrl,
+                submission.getId(),
+                submission.getExpectedSubmissionDate()
+            ));
+                
+            messageObj.put("destinations", userEmails);
 
-            message.setCreatedBy(formActivation.getCreatedBy());
-            message.setCreatedDate(LocalDateTime.now());
-            message.setSendNow(false);
-            message.setDispatchDate(formActivation.getPeriod().getPeriodEnd().atStartOfDay());
-            message.setMessagePlatform(CommunicationMessagePlatform.EMAIL);
-            message.setStatus(CommunicationMessageStatus.DRAFT);
-            message.setSubject(String.format("%s data request for period %s.", formActivation.getForm().getFormName(), formActivation.getPeriod().getPeriodName()));
-            message.setText(
-                String.format(
-                    emailTempate,
-                    submission.getLicensee().getLicenseeName(),
-                    formActivation.getForm().getFormName(),
-                    submissionUrl,
-                    submission.getId(),
-                    submission.getExpectedSubmissionDate()
-                )
-            );
-
-            message.setDestinations(userEmails);
-
-            communicationMessageService.save(message);
-    
+            messageObjects.add(messageObj);
         }
+
+        rabbitTemplate.convertAndSend(rabbitProperties.getEmailQueueExchange(), rabbitProperties.getEmailQueueRoutingKey(), messageObjects);
     }
 
     @Override
@@ -237,8 +254,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             if (activation.getId() != null) {
 
-                // FormActivationVO activation = (FormActivationVO) data.get();
-
                 /**
                  * The form activations is a new one so we need to
                  * create form submissions for all the licensees
@@ -251,12 +266,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                             .createNewSubmissions(this.getLicenseeIds(f), activation.getId());
 
                     activation.setFormSubmissions(submissions);
-                    this.scheduleNotifications(activation);
+                    this.sendNotifications(activation);
                 }
 
-                response = ResponseEntity.status(HttpStatus.OK).body(activation);
+                response = ResponseEntity.ok().body(activation);
             } else {
-                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the form activation");
+                response = ResponseEntity.badRequest().body("Could not save the form activation");
             }
 
             return response;
@@ -291,42 +306,42 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if (e.getCause() instanceof PSQLException) {
 
                 e.printStackTrace();
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
-                    if (e.getCause().getMessage().contains("(form_period_unique)")) {
+                    if (e.getCause().getMessage().contains("form_period_unique")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        return ResponseEntity.badRequest()
                                 .body("An form activation with this form and period has been already created.");
-                    } else if (e.getCause().getMessage().contains("(activation_name)")) {
+                    } else if (e.getCause().getMessage().contains("activation_name")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("An form activation with this name and period has been already created.");
+                        return ResponseEntity.badRequest()
+                                .body("An form activation with this name has been already created.");
                     }
 
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     }
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                return ResponseEntity.badRequest()
                         .body("An unknown database error has occured. Please contact the administrator.");
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.badRequest()
                     .body("An unknown database error has occured. Please contact the portal administrator.");
         } catch (Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.badRequest()
                     .body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
@@ -335,12 +350,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleSearch(FormActivationCriteria criteria) {
         try {
             logger.debug("Search Form Activation by " + criteria);
-            return ResponseEntity.status(HttpStatus.OK).body(formActivationService.search(criteria));
+            return ResponseEntity.ok().body(formActivationService.search(criteria));
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.badRequest()
                     .body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
@@ -349,12 +364,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleActivateDueForms() {
         try {
             logger.debug("Activating due forms");
-            return ResponseEntity.status(HttpStatus.OK).body(formActivationService.activateDueForms());
+            return ResponseEntity.ok().body(formActivationService.activateDueForms());
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.badRequest()
                     .body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
@@ -363,17 +378,17 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleCreateMissingSubmissions(Long id) {
 
         if (id == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Form activation should not be null.");
+            return ResponseEntity.badRequest().body("Form activation should not be null.");
         }
 
         try {
             logger.debug("Creating missing submission for activation " + id);
-            return ResponseEntity.status(HttpStatus.OK).body(formActivationService.createMissingSubmissions(id));
+            return ResponseEntity.ok().body(formActivationService.createMissingSubmissions(id));
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.badRequest()
                     .body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
@@ -382,17 +397,17 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleRecreateActivationSubmission(Long id) {
 
         if (id == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Form activation should not be null.");
+            return ResponseEntity.badRequest().body("Form activation should not be null.");
         }
 
         try {
             logger.debug("Recreating submission for activation " + id);
-            return ResponseEntity.status(HttpStatus.OK).body(formActivationService.recreateActivationSubmission(id));
+            return ResponseEntity.ok().body(formActivationService.recreateActivationSubmission(id));
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.badRequest()
                     .body("An unknown error has occured. Please contact the portal administrator.");
         }
     }

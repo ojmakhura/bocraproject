@@ -5,15 +5,12 @@ import { SubmissionNotesNotesComponent } from '@app/view/form/submission/submiss
 @Component({
   selector: 'submission-notes-notes',
   templateUrl: './submission-notes-notes.component.html',
-  styleUrls: ['./submission-notes-notes.component.scss']
+  styleUrls: ['./submission-notes-notes.component.scss'],
 })
 export class SubmissionNotesNotesComponentImpl extends SubmissionNotesNotesComponent {
-
   constructor(private injector: Injector) {
     super(injector);
   }
 
-
-  override doSubmissionNotesView(): any {
-  }
+  override doSubmissionNotesView(): any {}
 }

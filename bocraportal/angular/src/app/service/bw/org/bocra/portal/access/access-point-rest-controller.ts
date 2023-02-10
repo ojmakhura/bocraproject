@@ -6,55 +6,46 @@ import { AccessPointCriteria } from '@app/model/bw/org/bocra/portal/access/acces
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccessPointRestController {
-    protected path = '/access';
+  protected path = '/access';
 
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {
-    }
+  public findById(id: number | any): Observable<AccessPointVO | any> {
+    return this.http.get<AccessPointVO | any>(this.path + `/id/${id}`);
+  }
 
-    public findById(id: number | any ): Observable<AccessPointVO | any> {
+  public getAll(): Observable<AccessPointVO[] | any[]> {
+    return this.http.get<AccessPointVO[] | any[]>(this.path + `/all`);
+  }
 
-        return this.http.get<AccessPointVO | any>(this.path + `/id/${id}`);
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<AccessPointVO[] | any[]> {
+    return this.http.get<AccessPointVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+  }
 
-    }
+  public pagedSearch(
+    pageNumber: number | any,
+    pageSize: number | any,
+    criteria: AccessPointCriteria | any
+  ): Observable<AccessPointVO[] | any[]> {
+    return this.http.post<AccessPointVO[] | any[]>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      criteria: criteria,
+    });
+  }
 
-    public getAll(): Observable<AccessPointVO[] | any[]> {
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(this.path + `/id/${id}`);
+  }
 
-        return this.http.get<AccessPointVO[] | any[]>(this.path + `/all`);
+  public save(accessPoint: AccessPointVO | any): Observable<AccessPointVO | any> {
+    return this.http.post<AccessPointVO | any>(this.path, accessPoint);
+  }
 
-    }
-
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<AccessPointVO[] | any[]> {
-
-        return this.http.get<AccessPointVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
-
-    }
-
-    public pagedSearch(pageNumber: number | any , pageSize: number | any , criteria: AccessPointCriteria | any ): Observable<AccessPointVO[] | any[]> {
-
-        return this.http.post<AccessPointVO[] | any[]>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, {pageNumber: pageNumber, pageSize: pageSize, criteria: criteria});
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(this.path + `/id/${id}`);
-
-    }
-
-    public save(accessPoint: AccessPointVO | any ): Observable<AccessPointVO | any> {
-
-        return this.http.post<AccessPointVO | any>(this.path, accessPoint);
-
-    }
-
-    public search(criteria: AccessPointCriteria | any ): Observable<AccessPointVO[] | any[]> {
-
-        return this.http.post<AccessPointVO[] | any[]>(this.path + `/search`, criteria);
-
-    }
-
+  public search(criteria: AccessPointCriteria | any): Observable<AccessPointVO[] | any[]> {
+    return this.http.post<AccessPointVO[] | any[]>(this.path + `/search`, criteria);
+  }
 }

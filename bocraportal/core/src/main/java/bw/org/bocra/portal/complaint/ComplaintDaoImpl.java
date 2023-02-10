@@ -7,18 +7,27 @@
 package bw.org.bocra.portal.complaint;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.complaint.type.ComplaintTypeRepository;
+import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentMetadataTarget;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
+import bw.org.bocra.portal.licensee.sector.LicenseeSector;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
+import bw.org.bocra.portal.sector.SectorVO;
 
 /**
  * @see Complaint
@@ -58,6 +67,18 @@ public class ComplaintDaoImpl
             licensee.setUin(source.getLicensee().getUin());
             licensee.setLicenseeName(source.getLicensee().getLicenseeName());
 
+            licensee.setSectors(new HashSet<>());
+
+            for(LicenseeSector sector : source.getLicensee().getLicenseeSectors()) {
+                LicenseeSectorVO vo = new LicenseeSectorVO();
+                vo.setId(sector.getId());
+                vo.setSector(new SectorVO());
+                vo.getSector().setId(sector.getSector().getId());
+                vo.getSector().setCode(sector.getSector().getCode());
+                vo.getSector().setName(sector.getSector().getName());
+                licensee.getSectors().add(vo);
+            }
+
             target.setLicensee(licensee);
         }
 
@@ -71,11 +92,21 @@ public class ComplaintDaoImpl
             target.setComplaintType(getComplaintTypeDao().toComplaintTypeVO(source.getComplaintType()));
         }
 
-        if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
-            docs = docs.stream().map(d -> {
-                d.setFile(null);
-                return d;
+        Specification<Document> specs = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget", DocumentMetadataTarget.COMPLAINT)
+                                            .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", source.getId()));
+
+        Collection<Document> entities = documentRepository.findAll(specs, Sort.by("id").ascending());
+        if(CollectionUtils.isNotEmpty(entities)) {
+            Collection<DocumentVO> docs = entities.stream().map(d -> {
+                DocumentVO dv = new DocumentVO();
+                dv.setId(d.getId());
+                dv.setContentType(d.getContentType());
+                dv.setDocumentId(d.getDocumentId());
+                dv.setDocumentName(d.getDocumentName());
+                dv.setExtension(d.getExtension());
+                dv.setMetadataTargetId(d.getMetadataTargetId());
+                dv.setSize(d.getSize());
+                return dv;
             }).collect(Collectors.toSet());
             target.setDocuments(docs);
         }
@@ -129,21 +160,14 @@ public class ComplaintDaoImpl
             target.setLicensee(getLicenseeDao().load(source.getLicensee().getId()));
         } else {
             throw new IllegalArgumentException(
-                "ComplaintDao.complaintVOToEntity - 'licensee' or its id can not be null"
-            );
+                    "ComplaintDao.complaintVOToEntity - 'licensee' or its id can not be null");
         }
 
         if (source.getComplaintType() != null && StringUtils.isNotBlank(source.getComplaintType().getCode())) {
             target.setComplaintType(getComplaintTypeDao().complaintTypeVOToEntity(source.getComplaintType()));
         } else {
             throw new IllegalArgumentException(
-                "ComplaintDao.complaintVOToEntity - 'complaintType' or its id can not be null"
-            );
-        }
-
-        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
-            Collection<String> ids = source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toSet());
-            target.setDocumentIds(ids);
+                    "ComplaintDao.complaintVOToEntity - 'complaintType' or its id can not be null");
         }
     }
 }

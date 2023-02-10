@@ -5,53 +5,57 @@ import { CommunicationMessageVO } from '@app/model/bw/org/bocra/portal/message/c
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommunicationMessageController {
-    
-    protected path = '/message';
+  protected path = '/message';
 
-    constructor(private http: HttpClient) {
-    }
+  constructor(private http: HttpClient) {}
 
-    public clearFailedMessages(): Observable<number | any> {
-        return this.http.get<number | any>(`${this.path}/clear/failed`);
-    }
+  public clearFailedMessages(): Observable<number | any> {
+    return this.http.get<number | any>(`${this.path}/clear/failed`);
+  }
 
-    public clearSentMessages(): Observable<number | any> {
-        return this.http.get<number | any>(`${this.path}/clear/sent`);
-    }
+  public clearSentMessages(): Observable<number | any> {
+    return this.http.get<number | any>(`${this.path}/clear/sent`);
+  }
 
-    public findById(id: number | any ): Observable<CommunicationMessageVO | any> {
-        return this.http.get<CommunicationMessageVO | any>(`${this.path}/id/${id}`, {});
-    }
+  public findById(id: number | any): Observable<CommunicationMessageVO | any> {
+    return this.http.get<CommunicationMessageVO | any>(`${this.path}/id/${id}`, {});
+  }
 
-    public getAll(): Observable<CommunicationMessageVO[] | any[]> {
-        return this.http.get<CommunicationMessageVO[] | any[]>(`${this.path}/all`);
-    }
+  public getAll(): Observable<CommunicationMessageVO[] | any[]> {
+    return this.http.get<CommunicationMessageVO[] | any[]>(`${this.path}/all`);
+  }
 
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<CommunicationMessageVO[] | any[]> {
-        return this.http.get<CommunicationMessageVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
-    }
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<CommunicationMessageVO[] | any[]> {
+    return this.http.get<CommunicationMessageVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
+  }
 
-    public loadTodayMessages(): Observable<CommunicationMessageVO[] | any[]> {
-        return this.http.get<CommunicationMessageVO[] | any[]>(`${this.path}/today`);
-    }
+  public loadTodayMessages(): Observable<CommunicationMessageVO[] | any[]> {
+    return this.http.get<CommunicationMessageVO[] | any[]>(`${this.path}/today`);
+  }
 
-    public pagedSearch(pageNumber: number | any , pageSize: number | any , criteria: string | any ): Observable<CommunicationMessageVO[] | any[]> {
-        return this.http.get<CommunicationMessageVO[] | any[]>(`${this.path}/search?pageNumber=${pageNumber}&pageSize=${pageSize}&criteria=${criteria}`, {});
-    }
+  public pagedSearch(
+    pageNumber: number | any,
+    pageSize: number | any,
+    criteria: string | any
+  ): Observable<CommunicationMessageVO[] | any[]> {
+    return this.http.get<CommunicationMessageVO[] | any[]>(
+      `${this.path}/search?pageNumber=${pageNumber}&pageSize=${pageSize}&criteria=${criteria}`,
+      {}
+    );
+  }
 
-    public remove(id: number | any ): Observable<boolean | any> {
-        return this.http.delete<boolean | any>(`${this.path}/id/${id}`, {});
-    }
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(`${this.path}/id/${id}`, {});
+  }
 
-    public save(communicationMessage: CommunicationMessageVO | any ): Observable<CommunicationMessageVO | any> {
-        return this.http.post<CommunicationMessageVO | any>(`${this.path}`, communicationMessage);
-    }
+  public save(communicationMessage: CommunicationMessageVO | any): Observable<CommunicationMessageVO | any> {
+    return this.http.post<CommunicationMessageVO | any>(`${this.path}`, communicationMessage);
+  }
 
-    public search(criteria: string | any ): Observable<CommunicationMessageVO[] | any[]> {
-        return this.http.post<CommunicationMessageVO[] | any[]>(`${this.path}/search?criteria=${criteria}`, {});
-    }
-
+  public search(criteria: string | any): Observable<CommunicationMessageVO[] | any[]> {
+    return this.http.post<CommunicationMessageVO[] | any[]>(`${this.path}/search?criteria=${criteria}`, {});
+  }
 }

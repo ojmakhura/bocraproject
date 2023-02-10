@@ -11,49 +11,51 @@ import { KeycloakService } from 'keycloak-angular';
 @Component({
   selector: 'app-search-complaints',
   templateUrl: './search-complaints.component.html',
-  styleUrls: ['./search-complaints.component.scss']
+  styleUrls: ['./search-complaints.component.scss'],
 })
 export class SearchComplaintsComponentImpl extends SearchComplaintsComponent {
   loggedIn!: boolean;
   constructor(private injector: Injector, public override keycloakService: KeycloakService) {
     super(injector, keycloakService);
   }
-  override afterOnInit(): void {
-    
-  }
+  override afterOnInit(): void {}
 
-  doNgOnDestroy(): void {
-  }
+  doNgOnDestroy(): void {}
 
   /**
    * This method may be overwritten
    */
   override beforeSearchComplaintsSearch(form: SearchComplaintsSearchForm): void {
-    this.isLoggedIn.subscribe(loggedin => {
+    this.isLoggedIn.subscribe((loggedin) => {
       if (loggedin) {
-        this.store.dispatch(ComplaintActions.search({
-          criteria: form.loggedInSearch,
-          loading: true,
-          loaderMessage: 'Searching access points ...'
-        }));
+        this.store.dispatch(
+          ComplaintActions.search({
+            criteria: form.loggedInSearch,
+            loading: true,
+            loaderMessage: 'Searching access points ...',
+          })
+        );
       } else {
         if (this.criteriaControl.valid) {
-          this.store.dispatch(ComplaintActions.findByComplaintId({
-            complaintId: form.criteria,
-            loading: true,
-            loaderMessage: 'Searching access points ...'
-          }));
+          console.log(form.criteria);
+          this.store.dispatch(
+            ComplaintActions.findByComplaintId({
+              complaintId: form.criteria,
+              loading: true,
+              loaderMessage: 'Searching access points ...',
+            })
+          );
         } else {
-          
-          if(this?.criteriaControl?.errors['required']) {
-            this.store.dispatch(ComplaintActions.complaintFailure({
-              messages: ['Complaint ID is required']
-            }))
+          if (this?.criteriaControl?.errors['required']) {
+            this.store.dispatch(
+              ComplaintActions.complaintFailure({
+                messages: ['Complaint ID is required'],
+              })
+            );
           }
         }
       }
     });
-   
   }
 
   override searchComplaintsAnalyse() {

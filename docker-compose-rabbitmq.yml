@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # Rabbit MQ
+  ###############################################################################
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: bocraportal-rabbitmq
+    hostname: rabbitmq
+    # volumes:
+    #  - ${BOCRA_DATA}/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    #  - ${BOCRA_DATA}/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      TZ: Africa/Gaborone
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    networks:
+      bocraportal-public:
+      default:
+    ports:
+      - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
+      - "${RABBITMQ_WEB_PORT}:${RABBITMQ_WEB_PORT}"
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocraportal_rabbitmq == true
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.rabbitmq-web.rule=Host(`${RABBITMQ_DOMAIN}`)"
+        - "traefik.http.routers.rabbitmq-web.entrypoints=web"
+        - "traefik.http.routers.rabbitmq-web.middlewares=https-redirect"
+        - "traefik.http.routers.rabbitmq-websecure.entrypoints=websecure"
+        - "traefik.http.routers.rabbitmq-websecure.rule=Host(`${RABBITMQ_DOMAIN}`)"
+        - "traefik.http.routers.rabbitmq-websecure.tls=true"
+        - "traefik.http.services.rabbitmq.loadbalancer.server.port=15672"
+        #tcp
+        - "traefik.tcp.routers.rabbitmq-ingress.rule=HostSNI(`*`)"
+        - "traefik.tcp.routers.rabbitmq-ingress.entrypoints=rabbitmq"
+        - "traefik.tcp.services.rabbitmq-ingress.loadbalancer.server.port=5672"
+        - "traefik.tcp.routers.rabbitmq-ingress.tls=true"
+
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  bocraportal-public:
+    external: true

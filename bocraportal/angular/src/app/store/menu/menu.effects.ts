@@ -9,30 +9,33 @@ import * as nav from '@app/shell/navigation';
 
 @Injectable()
 export class MenuEffects {
-  constructor(private actions$: Actions, private keycloakService: KeycloakService, private authorisationRestController: AuthorisationRestController) {}
+  constructor(
+    private actions$: Actions,
+    private keycloakService: KeycloakService,
+    private authorisationRestController: AuthorisationRestController
+  ) {}
 
-//   getMenus$ = createEffect(() =>
-//   this.actions$.pipe(
-//     ofType(MenuActions.getMenus),
-//     mergeMap(() => {
-//       let criteria: AuthorisationCriteria = new AuthorisationCriteria();
-//       criteria.type = AuthorisationType.MENU;
-//       criteria.roles = this.keycloakService.getUserRoles();
+  //   getMenus$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(MenuActions.getMenus),
+  //     mergeMap(() => {
+  //       let criteria: AuthorisationCriteria = new AuthorisationCriteria();
+  //       criteria.type = AuthorisationType.MENU;
+  //       criteria.roles = this.keycloakService.getUserRoles();
 
-//       this.authorisationRestController.search(criteria).pipe(
-//         map(({ authorisations }) => {
-//           nav.menuItems.forEach((value) => {
-//             authorisations.find((authorisation) => {
-//               if (authorisation.url === value.routerLink) {
-//                 MenuActions.addMenu({menu: value})
-//               }
-//             });
-//           });
-//         }),
-//         catchError(({ errors }) => [MenuActions.authFailure(messages)])
-//       )
-//     })
-//   )
-// );
-
+  //       this.authorisationRestController.search(criteria).pipe(
+  //         map(({ authorisations }) => {
+  //           nav.menuItems.forEach((value) => {
+  //             authorisations.find((authorisation) => {
+  //               if (authorisation.url === value.routerLink) {
+  //                 MenuActions.addMenu({menu: value})
+  //               }
+  //             });
+  //           });
+  //         }),
+  //         catchError(({ errors }) => [MenuActions.authFailure(messages)])
+  //       )
+  //     })
+  //   )
+  // );
 }

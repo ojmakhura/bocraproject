@@ -80,7 +80,7 @@ export class LicenceTypeFormEffects {
             LicenceTypeFormActions.createSuccess({
               licenceTypeForm,
               messages: [`Licence type form created.`],
-              success: true
+              success: true,
             })
           ),
           catchError(({ error }) => [

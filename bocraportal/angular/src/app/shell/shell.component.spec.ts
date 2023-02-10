@@ -24,17 +24,14 @@ describe('ShellComponent', () => {
         BrowserAnimationsModule,
         FlexLayoutModule,
         MaterialModule,
-        RouterTestingModule
+        RouterTestingModule,
       ],
       providers: [
         { provide: AuthenticationService, useClass: MockAuthenticationService },
-        { provide: CredentialsService, useClass: MockCredentialsService }
+        { provide: CredentialsService, useClass: MockCredentialsService },
       ],
-      declarations: [
-        ShellComponent
-      ]
-  })
-    .compileComponents();
+      declarations: [ShellComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

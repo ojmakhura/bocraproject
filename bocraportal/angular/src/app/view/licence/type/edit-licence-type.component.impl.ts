@@ -10,7 +10,9 @@ import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import {
   EditLicenceTypeComponent,
-  EditLicenceTypeDeleteForm, EditLicenceTypeSaveForm, EditLicenceTypeVarsForm
+  EditLicenceTypeDeleteForm,
+  EditLicenceTypeSaveForm,
+  EditLicenceTypeVarsForm,
 } from '@app/view/licence/type/edit-licence-type.component';
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
@@ -25,12 +27,7 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   deleteUnrestricted: boolean = true;
   unauthorisedUrls$: Observable<string[]>;
   protected keycloakService: KeycloakService;
-  formsModalColumns = [
-      'actions',
-      'id',
-      'code',
-      'formName',
-  ];
+  formsModalColumns = ['actions', 'id', 'code', 'formName'];
 
   forms$: Observable<FormVO[]>;
 
@@ -38,23 +35,22 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
-    this.licenceTypeForms$ = this.store.pipe(select(LicenceTypeFormSelectors.selectLicenceTypeForms))
-    this.forms$ = this.store.pipe(select(FormSelectors.selectForms))
+    this.licenceTypeForms$ = this.store.pipe(select(LicenceTypeFormSelectors.selectLicenceTypeForms));
+    this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
   }
 
   override beforeOnInit(form: EditLicenceTypeVarsForm): EditLicenceTypeVarsForm {
     return form;
   }
 
-  override afterOnInit() {
-  }
+  override afterOnInit() {}
 
   override doNgAfterViewInit(): void {
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/licence/type/edit-licence-type",
+        viewUrl: '/licence/type/edit-licence-type',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
@@ -64,19 +60,19 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
           licenceTypeActions.findById({
             id: queryParams?.id,
             loading: true,
-            loaderMessage: 'Load licence type by id ...'
+            loaderMessage: 'Load licence type by id ...',
           })
         );
       }
     });
 
     this.licenceType$.subscribe((licenceType) => {
-      this.setEditLicenceTypeFormValue({licenceType: licenceType});
+      this.setEditLicenceTypeFormValue({ licenceType: licenceType });
     });
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
-        if(item === '/licence/type/edit-licence-type/{button:delete}') {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
+        if (item === '/licence/type/edit-licence-type/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
@@ -88,7 +84,7 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   /**
    * This method may be overwritten
    */
-   override beforeEditLicenceTypeSave(form: EditLicenceTypeSaveForm): void {
+  override beforeEditLicenceTypeSave(form: EditLicenceTypeSaveForm): void {
     if (this.editLicenceTypeForm.valid) {
       if (form.licenceType?.id) {
         form.licenceType.updatedBy = this.keycloakService.getUsername();
@@ -102,36 +98,36 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
         licenceTypeActions.save({
           licenceType: form.licenceType,
           loading: true,
-          loaderMessage: 'Saving licence type ...'
+          loaderMessage: 'Saving licence type ...',
         })
       );
-    }
-    else {
-      let messages: string[] = []
+    } else {
+      let messages: string[] = [];
       if (!this.licenceTypeControl.valid) {
-        messages.push("Licence has errors, Please fill in the required form fields.")
+        messages.push('Licence has errors, Please fill in the required form fields.');
       }
       if (!this.licenceTypeCodeControl.valid) {
-        messages.push("Licence Type Code is missing!")
+        messages.push('Licence Type Code is missing!');
       }
       if (!this.licenceTypeNameControl.valid) {
-        messages.push("Licence Type Name is missing!")
+        messages.push('Licence Type Name is missing!');
       }
       this.store.dispatch(licenceTypeActions.licenceTypeFailure({ messages: messages }));
+    }
   }
-}
 
   override beforeEditLicenceTypeDelete(form: EditLicenceTypeDeleteForm): void {
-
-    if(form?.licenceType?.id && confirm('Are you sure you want to delete the license type?')){
-      this.store.dispatch(licenceTypeActions.remove({
-        id: form?.licenceType?.id,
-        loading: true,
-        loaderMessage: 'Removing licence types ...'
-      }));
+    if (form?.licenceType?.id && confirm('Are you sure you want to delete the license type?')) {
+      this.store.dispatch(
+        licenceTypeActions.remove({
+          id: form?.licenceType?.id,
+          loading: true,
+          loaderMessage: 'Removing licence types ...',
+        })
+      );
       this.editLicenceTypeFormReset();
-    }else {
-      this.store.dispatch(licenceTypeActions.licenceTypeFailure({ messages: ['Please select something to delete'] }))
+    } else {
+      this.store.dispatch(licenceTypeActions.licenceTypeFailure({ messages: ['Please select something to delete'] }));
     }
   }
   editLicenseTypeFormReset() {
@@ -139,14 +135,15 @@ export class EditLicenceTypeComponentImpl extends EditLicenceTypeComponent {
   }
 
   override licenceTypeFormsSearch(): void {
-
-    let criteria: FormCriteria = new  FormCriteria();
+    let criteria: FormCriteria = new FormCriteria();
     criteria.code = this.licenceTypeFormsSearchField.value;
     criteria.formName = this.licenceTypeFormsSearchField.value;
-    this.store.dispatch(FormActions.searchForms({
-      criteria,
-      loading: true,
-      loaderMessage: 'Searching forms ...'
-    }));
+    this.store.dispatch(
+      FormActions.searchForms({
+        criteria,
+        loading: true,
+        loaderMessage: 'Searching forms ...',
+      })
+    );
   }
 }

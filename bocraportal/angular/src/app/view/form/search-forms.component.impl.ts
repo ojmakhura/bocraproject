@@ -16,7 +16,6 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
   }
 
   override beforeOnInit(form: SearchFormsVarsForm): SearchFormsVarsForm {
-
     this.store.dispatch(FormActions.formReset());
     return form;
   }
@@ -27,10 +26,12 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
    * This method may be overwritten
    */
   override beforeSearchFormsSearch(form: SearchFormsSearchForm): void {
-    this.store.dispatch(FormActions.searchForms({
-      criteria: form.criteria,
-      loading: true,
-      loaderMessage: 'Searching forms ...'
-    }));
+    this.store.dispatch(
+      FormActions.searchForms({
+        criteria: form.criteria,
+        loading: true,
+        loaderMessage: 'Searching forms ...',
+      })
+    );
   }
 }

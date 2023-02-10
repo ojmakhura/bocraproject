@@ -36,7 +36,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Notification with id %ld not found.", id));
             }
@@ -51,7 +51,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             }
 
             logger.error(message);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -60,7 +60,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
         try{
 
             logger.debug("Loading all notifications");
-            return ResponseEntity.status(HttpStatus.OK).body(this.notificationService.getAll());
+            return ResponseEntity.ok().body(this.notificationService.getAll());
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +73,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
             logger.debug("Load all notifications of the specified page number "+pageNumber+" and page size"+pageSize);
-            return ResponseEntity.status(HttpStatus.OK).body(this.notificationService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(this.notificationService.getAll(pageNumber, pageSize));
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +90,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             ResponseEntity<?> response;
 
             if(rm) {
-                response = ResponseEntity.status(HttpStatus.OK).body(rm);
+                response = ResponseEntity.ok().body(rm);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the notification with id " + id);
             }
@@ -105,7 +105,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete notification with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting notification with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting notification with id " + id);
         }
     }
 
@@ -117,7 +117,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the access point type.");
             }
@@ -152,40 +152,40 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(code)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This notification with this code has been already created.");
+                        return ResponseEntity.badRequest().body("This notification with this code has been already created.");
 
                     } else if(e.getCause().getMessage().contains("(name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This notification with this name has been already created.");
+                        return ResponseEntity.badRequest().body("This notification with this name has been already created.");
                     } else {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This notification is conflicting with an existing one.");
+                        return ResponseEntity.badRequest().body("This notification is conflicting with an existing one.");
                     }
                     
                 }  else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database has occured.");
+                return ResponseEntity.badRequest().body("An unknown database has occured.");
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             // e.printStackTrace();
             e.getCause().printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -194,12 +194,12 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
         try{
             logger.debug("Search notification by criteria "+criteria);
 
-            return ResponseEntity.status(HttpStatus.OK).body(this.notificationService.search(criteria));
+            return ResponseEntity.ok().body(this.notificationService.search(criteria));
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -211,7 +211,7 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -219,12 +219,12 @@ public class NotificationRestControllerImpl extends NotificationRestControllerBa
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<?> handleGetUnreadCount() {
-        return ResponseEntity.status(HttpStatus.OK).body(notificationService.getUnreadCount());
+        return ResponseEntity.ok().body(notificationService.getUnreadCount());
     }
 }

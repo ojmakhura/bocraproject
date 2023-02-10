@@ -75,7 +75,7 @@ export class ReportComponentImpl extends ReportComponent {
         this.formReportsControl.push(this.createFormReportGroup(rep));
       });
 
-      this.report = this.reportForm.value
+      this.report = this.reportForm.value;
     });
   }
 
@@ -86,11 +86,10 @@ export class ReportComponentImpl extends ReportComponent {
   }
 
   get formReports(): FormReport[] {
-    return this.formReportsControl.value
+    return this.formReportsControl.value;
   }
 
-  actionOnElement(index: number) {
-  }
+  actionOnElement(index: number) {}
 
   createSubmissionsControl(submission: FormSubmissionVO): FormGroup {
     return this.formBuilder.group({
@@ -111,7 +110,9 @@ export class ReportComponentImpl extends ReportComponent {
     return this.formBuilder.group({
       formName: [{ value: formReport?.formName, disabled: false }],
       formCode: [{ value: formReport?.formCode, disabled: false }],
-      licensees: this.formBuilder.array([...new Set(formReport?.formSubmissions?.map(sub => sub?.licensee?.licenseeName))]),
+      licensees: this.formBuilder.array([
+        ...new Set(formReport?.formSubmissions?.map((sub) => sub?.licensee?.licenseeName)),
+      ]),
       formSubmissions: this.formBuilder.array(formReport?.formSubmissions),
       reportElements: this.formBuilder.array([]),
     });
@@ -124,22 +125,19 @@ export class ReportComponentImpl extends ReportComponent {
   }
 
   getLabels(index: number, element: AbstractControl) {
-    this.report = this.reportForm.value
+    this.report = this.reportForm.value;
     const reportElement = element?.value;
 
-    if(reportElement?.reportLabels === 'licensees') {
-
-    } else if(reportElement?.reportLabels === 'periods') {
+    if (reportElement?.reportLabels === 'licensees') {
+    } else if (reportElement?.reportLabels === 'periods') {
     }
   }
 
   generateReport(formIndex: number, elementIndex: number) {
-
-    this.report = this.reportForm.value
+    this.report = this.reportForm.value;
     const reportType = this.formReports[formIndex]?.reportElements[elementIndex]?.reportType;
 
-    if(reportType === 'default') {
-      
+    if (reportType === 'default') {
     }
   }
 
@@ -154,9 +152,8 @@ export class ReportComponentImpl extends ReportComponent {
   }
 
   override afterReportSearch(form: ReportSearchForm, dialogData: any): void {
-
-    if(dialogData?.formSubmissions) {
-      this.loadData(dialogData?.formSubmissions?.map((sub: FormSubmissionVO) => sub?.id))
+    if (dialogData?.formSubmissions) {
+      this.loadData(dialogData?.formSubmissions?.map((sub: FormSubmissionVO) => sub?.id));
     }
   }
 }

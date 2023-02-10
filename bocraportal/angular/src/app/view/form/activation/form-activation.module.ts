@@ -9,7 +9,7 @@ import { SharedModule } from '@shared';
 import { CsvModule } from '@ctrl/ngx-csv';
 import { MaterialModule } from '@app/material.module';
 import { FormActivationRoutingModule } from './form-activation-routing.module';
-import { EditFormActivationComponentImpl } from '@app/view/form/activation/edit-form-activation.component.impl'; 
+import { EditFormActivationComponentImpl } from '@app/view/form/activation/edit-form-activation.component.impl';
 import { SearchFormActivationsComponentImpl } from '@app/view/form/activation/search-form-activations.component.impl';
 import { SearchFormActivationsFormActivationsComponentImpl } from '@app/view/form/activation/search-form-activations-form-activations.component.impl'; // 2
 import { StoreModule } from '@ngrx/store';
@@ -33,7 +33,7 @@ import { FormActivationRestController } from '@app/service/bw/org/bocra/portal/f
     CsvModule,
     FormActivationRoutingModule,
     StoreModule.forFeature(formActivationFeature),
-    EffectsModule.forFeature([ FormActivationEffects ])
+    EffectsModule.forFeature([FormActivationEffects]),
   ],
   declarations: [
     EditFormActivationComponentImpl,
@@ -46,7 +46,7 @@ import { FormActivationRestController } from '@app/service/bw/org/bocra/portal/f
     LicenseeFormRestController,
     LicenseeSectorRestController,
     FormActivationRestController,
-    DatePipe
+    DatePipe,
   ],
 })
 export class FormActivationModule {}

@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class LicenseeShareholderServiceImpl
         extends LicenseeShareholderServiceBase {
+            
     public LicenseeShareholderServiceImpl(LicenseeShareholderDao licenseeShareholderDao,
             LicenseeShareholderRepository licenseeShareholderRepository, ShareholderDao shareholderDao,
             ShareholderRepository shareholderRepository, LicenseeDao licenseeDao,
@@ -145,16 +146,6 @@ public class LicenseeShareholderServiceImpl
     protected LicenseeShareholderVO handleCreate(Long licenseeId, Long shareholderId, Integer numberOfShares)
             throws Exception {
 
-        // if (!licenseeRepository.findById(licenseeId).isPresent()) {
-        // throw new IllegalArgumentException(
-        // "Licensee id does not exist!");
-        // }
-
-        // if (!shareholderRepository.findById(shareholderId).isPresent()) {
-        // throw new IllegalArgumentException(
-        // "Shareholder id does not exist!");
-        // }
-
         Licensee licensee = getLicenseeDao().load(licenseeId);
         Shareholder holder = getShareholderDao().load(shareholderId);
         LicenseeShareholder ls = LicenseeShareholder.Factory.newInstance();
@@ -170,12 +161,6 @@ public class LicenseeShareholderServiceImpl
     @Override
     protected LicenseeShareholderVO handleAttachDocument(Long id, Long documentId) throws Exception {
         LicenseeShareholder ls = licenseeShareholderRepository.getReferenceById(id);
-        if (CollectionUtils.isEmpty(ls.getDocumentIds())) {
-            ls.setDocumentIds(new HashSet<>());
-        }
-
-        ls.getDocumentIds().add(documentId);
-        ls = licenseeShareholderRepository.save(ls);
         return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
     }
 
@@ -184,6 +169,16 @@ public class LicenseeShareholderServiceImpl
 
         LicenseeShareholder ls = licenseeShareholderDao.licenseeShareholderVOToEntity(licenseeShareholder);
         ls = licenseeShareholderRepository.save(ls);
+        return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
+    }
+
+    @Override
+    protected LicenseeShareholderVO handleUpdateNumberOfShares(Long id, Integer numberOfShares) throws Exception {
+        
+        LicenseeShareholder ls = getLicenseeShareholderDao().load(id);
+        ls.setNumberOfShares(numberOfShares);
+        ls = getLicenseeShareholderRepository().save(ls);
+
         return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
     }
 

@@ -80,7 +80,7 @@ export class LicenseeFormEffects {
             LicenseeFormActions.createSuccess({
               licenseeForm,
               messages: [`Licensee form created.`],
-              success: true
+              success: true,
             })
           ),
           catchError(({ error }) => [

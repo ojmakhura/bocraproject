@@ -71,6 +71,11 @@ export const licenseeShareholderReducer = createReducer(
     loading: action.loading,
     loaderMessage: action.loaderMessage,
   })),
+  on(LicenseeShareholderActions.updateNumberOfShares, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+  })),
   on(LicenseeShareholderActions.updateSuccess, (state, action) => ({
     ...state,
     licenseeShareholder: action.licenseeShareholder,

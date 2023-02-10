@@ -4,7 +4,7 @@ import { authKey, initialState } from './auth.state';
 
 export const authReducer = createReducer(
   initialState,
-  
+
   on(AuthActions.setId, (state, action) => ({
     ...state,
     id: action.id,

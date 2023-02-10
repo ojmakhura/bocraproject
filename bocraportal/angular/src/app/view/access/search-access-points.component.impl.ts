@@ -12,29 +12,29 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 @Component({
   selector: 'app-search-access-points',
   templateUrl: './search-access-points.component.html',
-  styleUrls: ['./search-access-points.component.scss']
+  styleUrls: ['./search-access-points.component.scss'],
 })
 export class SearchAccessPointsComponentImpl extends SearchAccessPointsComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: SearchAccessPointsVarsForm): SearchAccessPointsVarsForm {
+    return form;
+  }
 
-    override beforeOnInit(form: SearchAccessPointsVarsForm): SearchAccessPointsVarsForm{     
-        return form;
-    }
-	
-    override doNgOnDestroy(){}
-    
-    /**
-     * This method may be overwritten
-     */
-    override beforeSearchAccessPointsSearch(form: SearchAccessPointsSearchForm): void {
-      this.store.dispatch(AccessPointActions.search({
+  override doNgOnDestroy() {}
+
+  /**
+   * This method may be overwritten
+   */
+  override beforeSearchAccessPointsSearch(form: SearchAccessPointsSearchForm): void {
+    this.store.dispatch(
+      AccessPointActions.search({
         criteria: form.criteria,
         loading: true,
-        loaderMessage: 'Searching access points ...'
-      }));
-      
-    }
+        loaderMessage: 'Searching access points ...',
+      })
+    );
+  }
 }

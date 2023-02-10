@@ -10,59 +10,290 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 @Component({
   selector: 'app-complaints-analysis',
   templateUrl: './complaints-analysis.component.html',
-  styleUrls: ['./complaints-analysis.component.scss']
+  styleUrls: ['./complaints-analysis.component.scss'],
 })
 export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent {
-
   constructor(private injector: Injector) {
     super(injector);
   }
   yearFilter: string[] = [];
   licenseeFilter: string[] = [];
   typeFilter: string[] = [];
+  statusFilter: string[] = [];
+  sectorFilter: string[] = [];
   override doNgAfterViewInit(): void {
-    this.yearFilter.push(this.useCaseScope.pageVariables.map((entry: { createdDate: string; }) => entry.createdDate.substring(0, 4)));
+    this.yearFilter.push(
+      this.useCaseScope.pageVariables.map((entry: { createdDate: string }) => entry.createdDate.substring(0, 4))
+    );
     this.reportLabel = [...new Set(this.yearFilter[0])];
 
     for (let year of this.reportLabel) {
-      let data = this.useCaseScope.pageVariables.filter((entry: { createdDate: string | string[]; }) => entry.createdDate.includes(year)).length;
+      let data = this.useCaseScope.pageVariables.filter((entry: { createdDate: string | string[] }) =>
+        entry.createdDate.includes(year)
+      ).length;
       this.reportData.push(data);
     }
 
-    this.barChartData.datasets = [{ data: this.reportData, label: 'Complaints Report Analysis' }];
+    this.barChartData.datasets = [
+      {
+        data: this.reportData,
+        label: 'Complaints Per Year Analysis',
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(255, 159, 64, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(153, 102, 255, 0.5)',
+          'rgba(201, 203, 207, 0.5)',
+          'rgba(0, 172, 230, 0.5)',
+          'rgba(230, 0, 115, 0.5)',
+          'rgba(255, 51, 102, 0.5)',
+          'rgba(255, 51, 204, 0.5)',
+          'rgba(255, 140, 26, 0.5)',
+          'rgba(255, 140, 102, 0.5)',
+          'rgba(0, 204, 102, 0.5)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132)',
+          'rgba(255, 159, 64)',
+          'rgba(54, 162, 235)',
+          'rgba(153, 102, 255)',
+          'rgba(201, 203, 207)',
+          'rgba(0, 172, 230)',
+          'rgba(230, 0, 115)',
+          'rgba(255, 51, 102)',
+          'rgba(255, 51, 204)',
+          'rgba(255, 140, 26)',
+          'rgba(255, 140, 102)',
+          'rgba(0, 204, 102)',
+        ],
+      },
+    ];
     this.pieChartData.datasets = [{ data: this.reportData, label: 'Complaints Report Analysis' }];
 
     this.barChartData.labels = this.reportLabel;
     this.pieChartData.labels = this.reportLabel;
 
-    this.licenseeFilter.push(this.useCaseScope.pageVariables.map((entry: { licensee: { licenseeName: any; }; }) => entry.licensee.licenseeName));
+    this.licenseeFilter.push(
+      this.useCaseScope.pageVariables.map((entry: { licensee: { licenseeName: any } }) => entry.licensee.licenseeName)
+    );
     this.reportLicenseesLabel = [...new Set(this.licenseeFilter[0])];
-    for (let licensee of this.reportLicenseesLabel){
-      let data = this.useCaseScope.pageVariables.filter((entry: { licensee: { licenseeName: string | string[]; }; }) => entry.licensee.licenseeName.includes(licensee)).length;
+    for (let licensee of this.reportLicenseesLabel) {
+      let data = this.useCaseScope.pageVariables.filter((entry: { licensee: { licenseeName: string | string[] } }) =>
+        entry.licensee.licenseeName.includes(licensee)
+      ).length;
       this.reportLicenseesData.push(data);
     }
 
-    this.barChartLicenseeData.datasets = [{ data: this.reportLicenseesData, label: 'Licensee Complaints Analysis'}];
-    this.pieChartLicenseeData.datasets = [{ data: this.reportLicenseesData, label: 'Licensee Complaints Analysis'}];
+    this.barChartLicenseeData.datasets = [
+      {
+        data: this.reportLicenseesData,
+        label: 'Complaints Per Year Analysis',
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(255, 159, 64, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(153, 102, 255, 0.5)',
+          'rgba(201, 203, 207, 0.5)',
+          'rgba(0, 172, 230, 0.5)',
+          'rgba(230, 0, 115, 0.5)',
+          'rgba(255, 51, 102, 0.5)',
+          'rgba(255, 51, 204, 0.5)',
+          'rgba(255, 140, 26, 0.5)',
+          'rgba(255, 140, 102, 0.5)',
+          'rgba(0, 204, 102, 0.5)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132)',
+          'rgba(255, 159, 64)',
+          'rgba(54, 162, 235)',
+          'rgba(153, 102, 255)',
+          'rgba(201, 203, 207)',
+          'rgba(0, 172, 230)',
+          'rgba(230, 0, 115)',
+          'rgba(255, 51, 102)',
+          'rgba(255, 51, 204)',
+          'rgba(255, 140, 26)',
+          'rgba(255, 140, 102)',
+          'rgba(0, 204, 102)',
+        ],
+      },
+    ];
+    this.pieChartLicenseeData.datasets = [{ data: this.reportLicenseesData, label: 'Licensee Complaints Analysis' }];
 
     this.barChartLicenseeData.labels = this.reportLicenseesLabel;
     this.pieChartLicenseeData.labels = this.reportLicenseesLabel;
 
-    this.typeFilter.push(this.useCaseScope.pageVariables.map((entry: { complaintType: { typeName: any; }; }) => entry.complaintType.typeName));
+    this.typeFilter.push(
+      this.useCaseScope.pageVariables.map((entry: { complaintType: { typeName: any } }) => entry.complaintType.typeName)
+    );
     this.reportTypeLabel = [...new Set(this.typeFilter[0])];
 
-    for(let type of this.reportTypeLabel) {
-      let data = this.useCaseScope.pageVariables.filter((entry: { complaintType: { typeName: any; }; }) => entry.complaintType.typeName.includes(type)).length;
+    for (let type of this.reportTypeLabel) {
+      let data = this.useCaseScope.pageVariables.filter((entry: { complaintType: { typeName: any } }) =>
+        entry.complaintType.typeName.includes(type)
+      ).length;
       this.reportTypeData.push(data);
     }
 
-    this.barChartTypeData.datasets = [{ data: this.reportTypeData, label: 'Complaint Type Complaints Analysis'}];
-    this.pieChartTypeData.datasets = [{ data: this.reportTypeData, label: 'Complaint Type Complaints Analysis'}];
+    this.barChartTypeData.datasets = [
+      {
+        data: this.reportTypeData,
+        label: 'Complaints Per Complaint Type Analysis',
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(255, 159, 64, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(153, 102, 255, 0.5)',
+          'rgba(201, 203, 207, 0.5)',
+          'rgba(0, 172, 230, 0.5)',
+          'rgba(230, 0, 115, 0.5)',
+          'rgba(255, 51, 102, 0.5)',
+          'rgba(255, 51, 204, 0.5)',
+          'rgba(255, 140, 26, 0.5)',
+          'rgba(255, 140, 102, 0.5)',
+          'rgba(0, 204, 102, 0.5)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132)',
+          'rgba(255, 159, 64)',
+          'rgba(54, 162, 235)',
+          'rgba(153, 102, 255)',
+          'rgba(201, 203, 207)',
+          'rgba(0, 172, 230)',
+          'rgba(230, 0, 115)',
+          'rgba(255, 51, 102)',
+          'rgba(255, 51, 204)',
+          'rgba(255, 140, 26)',
+          'rgba(255, 140, 102)',
+          'rgba(0, 204, 102)',
+        ],
+      },
+    ];
+    this.pieChartTypeData.datasets = [{ data: this.reportTypeData, label: 'Complaint Type Complaints Analysis' }];
 
     this.barChartTypeData.labels = this.reportTypeLabel;
     this.pieChartTypeData.labels = this.reportTypeLabel;
+
+    this.statusFilter.push(
+      this.useCaseScope.pageVariables.map((entry: { status: string }) => entry.status)
+    );
+    this.reportStatusLabel = [...new Set(this.statusFilter[0])];
+    for (let status of this.reportStatusLabel) {
+      let data = this.useCaseScope.pageVariables.filter((entry: { status: string | string[] }) =>
+        entry.status.includes(status)).length;
+      this.reportStatusData.push(data);
+    }
+
+    this.barChartStatusData.datasets = [
+      {
+        data: this.reportStatusData,
+        label: 'Complaints Per Status Analysis',
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(255, 159, 64, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(153, 102, 255, 0.5)',
+          'rgba(201, 203, 207, 0.5)',
+          'rgba(0, 172, 230, 0.5)',
+          'rgba(230, 0, 115, 0.5)',
+          'rgba(255, 51, 102, 0.5)',
+          'rgba(255, 51, 204, 0.5)',
+          'rgba(255, 140, 26, 0.5)',
+          'rgba(255, 140, 102, 0.5)',
+          'rgba(0, 204, 102, 0.5)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132)',
+          'rgba(255, 159, 64)',
+          'rgba(54, 162, 235)',
+          'rgba(153, 102, 255)',
+          'rgba(201, 203, 207)',
+          'rgba(0, 172, 230)',
+          'rgba(230, 0, 115)',
+          'rgba(255, 51, 102)',
+          'rgba(255, 51, 204)',
+          'rgba(255, 140, 26)',
+          'rgba(255, 140, 102)',
+          'rgba(0, 204, 102)',
+        ],
+      },
+    ];
+    this.pieChartStatusData.datasets = [{ data: this.reportStatusData, label: 'Complaints Report Analysis' }];
+
+    this.barChartStatusData.labels = this.reportStatusLabel;
+    this.pieChartStatusData.labels = this.reportStatusLabel;
+
+    // this.sectorFilter.push(
+    //   this.useCaseScope.pageVariables.map((entry: { licensee: { sector: { name: any; }; }; }) => entry.licensee.sector.name)
+    // );
+    // this.reportSectorLabel = [...new Set(this.sectorFilter[0])];
+    // for (let sector of this.reportSectorLabel) {
+    //   let data = this.useCaseScope.pageVariables.map((entry: { licensee: { sector: { name: any; }; }; }) => entry.licensee.sector.name.includes(sector)).length;
+    //   this.reportSectorData.push(data);
+    // }
+
+    for (let complaint of this.useCaseScope.pageVariables) {
+      for (let sector of complaint.licensee.sectors) {
+        this.sectorFilter.push(sector.sector.name);
+      }
+    }
+    this.reportSectorLabel = [...new Set(this.sectorFilter)];
+
+    for (let sectorName of this.reportSectorLabel) {
+      let total = 0;
+      for (let complaint of this.useCaseScope.pageVariables) {
+        for (let sector of complaint.licensee.sectors) {
+          if (sector.sector.name.includes(sectorName)) {
+            total = total + 1;
+          }
+        }
+      }
+      this.reportSectorData.push(total);
+    }
+
+    this.barChartSectorData.datasets = [
+      {
+        data: this.reportSectorData,
+        label: 'Complaints Per Sector Analysis',
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(255, 159, 64, 0.5)',
+          // 'rgba(75, 192, 192, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(153, 102, 255, 0.5)',
+          'rgba(201, 203, 207, 0.5)',
+          'rgba(0, 172, 230, 0.5)',
+          'rgba(230, 0, 115, 0.5)',
+          'rgba(255, 51, 102, 0.5)',
+          'rgba(255, 51, 204, 0.5)',
+          'rgba(255, 140, 26, 0.5)',
+          'rgba(255, 140, 102, 0.5)',
+          'rgba(0, 204, 102, 0.5)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132)',
+          'rgba(255, 159, 64)',
+          // 'rgba(75, 192, 192)',
+          'rgba(54, 162, 235)',
+          'rgba(153, 102, 255)',
+          'rgba(201, 203, 207)',
+          'rgba(0, 172, 230)',
+          'rgba(230, 0, 115)',
+          'rgba(255, 51, 102)',
+          'rgba(255, 51, 204)',
+          'rgba(255, 140, 26)',
+          'rgba(255, 140, 102)',
+          'rgba(0, 204, 102)',
+        ],
+      },
+    ];
+    this.pieChartSectorData.datasets = [{ data: this.reportSectorData, label: 'Sector Complaints Analysis' }];
+
+    this.barChartSectorData.labels = this.reportSectorLabel;
+    this.pieChartSectorData.labels = this.reportSectorLabel;
+
+
   }
 
-  doNgOnDestroy(): void {
-  }
+  doNgOnDestroy(): void { }
 }

@@ -1,0 +1,94 @@
+version: "3.9"
+services:
+  registry: 
+    image: registry:2
+    ports:
+      - 5000:5000
+    volumes:
+      - ${BOCRA_DATA}/registry/data:/var/lib/registry
+      - ${BOCRA_DATA}/certs:/opt/certs
+      - ${BOCRA_DATA}/auth:/opt/auth
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+      REGISTRY_AUTH_TOKEN_REALM: https://keycloak.bocradev.local/realms/sysadmin/protocol/docker-v2/auth
+      REGISTRY_AUTH_TOKEN_SERVICE: bocra-registry
+      REGISTRY_AUTH_TOKEN_ISSUER: https://keycloak.bocradev.local/realms/sysadmin
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /opt/certs/registry_trust_chain.pem
+
+      # REGISTRY_HTTP_TLS_CERTIFICATE: /opt/certs/localhost.crt
+      # REGISTRY_HTTP_TLS_KEY: /opt/certs/localhost.key
+      # REGISTRY_AUTH: htpasswd
+      # REGISTRY_AUTH_HTPASSWD_PATH: /opt/auth/registry_passwd
+      # REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      LOG: debug
+    networks:
+      bocraportal-public:
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocraportal_registry == true
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=bocraportal-public"
+        # - "traefik.constraint-label=bocraportal-public"
+        - "traefik.http.routers.registry-http.rule=Host(`${REGISTRY_DOMAIN}`)"
+        - "traefik.http.routers.registry-http.entrypoints=${WEB_ENTRY}"
+        - "traefik.http.routers.registry-http.middlewares=https-redirect"
+        - "traefik.http.routers.registry-https.entrypoints=registry"
+        - "traefik.http.routers.registry-https.rule=Host(`${REGISTRY_DOMAIN}`)"
+        - "traefik.http.routers.registry-https.tls=true"
+        - "traefik.http.services.registry.loadbalancer.server.port=5000"
+
+  ###############################################################################
+  # Local docker container registry ui
+  ###############################################################################
+  registry-ui:
+    image: parabuzzle/craneoperator:latest
+    # ports:
+    #   - "8086:80"
+    environment:
+      - REGISTRY_HOST=bocradev.local
+      - REGISTRY_PORT=5000
+      - REGISTRY_PROTOCOL=http
+      - SSL_VERIFY=false
+      - USERNAME=junior
+      - PASSWORD=rxh4ulom
+      - REGISTRY_USERNAME=user1
+      - REGISTRY_PASSWORD=user1
+      - TITLE=BOCRA Private Docker Registry
+      - REGISTRY_ALLOW_DELETE=true
+      - ALLOW_REGISTRY_LOGIN=true
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
+
+    networks:
+      bocraportal-public:
+      default:
+
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocraportal_registry == true
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=bocraportal-public
+        # - traefik.constraint-label=bocraportal-public
+        - traefik.http.routers.registry-ui-http.rule=Host(`web-${REGISTRY_DOMAIN}`)
+        - traefik.http.routers.registry-ui-http.entrypoints=${WEB_ENTRY}
+        - traefik.http.routers.registry-ui-http.middlewares=https-redirect
+        - traefik.http.routers.registry-ui-https.rule=Host(`web-${REGISTRY_DOMAIN}`)
+        - traefik.http.routers.registry-ui-https.entrypoints=${WEBSECURE_ENTRY}
+        - "traefik.http.routers.registry-ui-https.tls=true"
+        #- "traefik.http.routers.registry.tls.certresolver=le"
+        - traefik.http.services.registry-ui.loadbalancer.server.port=80
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  bocraportal-public:
+    external: true
+

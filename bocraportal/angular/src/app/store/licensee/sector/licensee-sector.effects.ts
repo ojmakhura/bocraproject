@@ -80,7 +80,7 @@ export class LicenseeSectorEffects {
             LicenseeSectorActions.createSuccess({
               licenseeSector,
               messages: [`Licensee sector created.`],
-              success: true
+              success: true,
             })
           ),
           catchError(({ error }) => [

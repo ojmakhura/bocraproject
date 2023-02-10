@@ -12,10 +12,10 @@ export interface SectorState {
   licensee: LicenseeSectorVO | any;
   licensees: Array<LicenseeSectorVO>;
   loading: boolean;
-  loaderMessage: string | undefined,
+  loaderMessage: string | undefined;
   success: boolean;
   removed: boolean;
-  error: boolean,
+  error: boolean;
   messages: any[];
 }
 
@@ -31,5 +31,5 @@ export const initialState: SectorState = {
   removed: false,
   error: false,
   messages: [],
-  loaderMessage: undefined
+  loaderMessage: undefined,
 };

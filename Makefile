@@ -29,6 +29,9 @@ test_api:
 build_comm:
 	. ./.env && mvn -f bocraportal/comm -Pnative clean install -DskipTests -o
 
+package_comm:
+	. ./.env && mvn -f bocraportal/comm -Pnative clean package -DskipTests -o
+
 build_comm_native:
 	. ./.env && mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
 
@@ -171,7 +174,12 @@ run_comm_local: gen_env
 	. ./.env && cd bocraportal/comm && mvn spring-boot:run
 
 run_cron_local: gen_env
-	. ./.env && cd bocraportal/cron && mvn spring-boot:run
+ifdef cron_secret
+	. ./.env && export KEYCLOAK_CRON_CLIENT_SECRET=${cron_secret} && cd bocraportal/cron && mvn spring-boot:run
+else
+	@echo 'No cron_secret defined. Please run again with `make cron_secret=<secret> run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> target`'
+	exit 1
+endif
 
 run_cron_native_local: gen_env
 	. ./.env && bocraportal/cron/target/bocraportal-cron
@@ -204,21 +212,24 @@ endif
 ##
 ## System initialisation
 ##
+swarm_label_true: gen_env
+	chmod 755 .env && . ./.env && docker node update --label-add ${STACK_NAME}_${node_label}=true ${node}
+
 swarm_init:
 	docker swarm init
 
 local_prep: gen_env
-	. ./.env && mkdir ${BOCRA_DATA}
-	. ./.env && mkdir ${BOCRA_DATA}/db
-	. ./.env && mkdir ${BOCRA_DATA}/auth
-	. ./.env && cp traefik_passwd ${BOCRA_DATA}/auth/system_passwd
-	. ./.env && mkdir ${BOCRA_DATA}/keycloak
-	. ./.env && mkdir ${BOCRA_DATA}/certs
-	. ./.env && cp deployment/certs/* ${BOCRA_DATA}/certs
-	. ./.env && mkdir ${BOCRA_DATA}/registry
-	. ./.env && mkdir ${BOCRA_DATA}/traefik
-	. ./.env && cp deployment/traefik/config.yml ${BOCRA_DATA}/traefik
-	. ./.env && mkdir ${BOCRA_DATA}/web
+	. ./.env && mkdir ${BOCRA_DATA} && \
+	mkdir ${BOCRA_DATA}/db && \
+	mkdir ${BOCRA_DATA}/auth && \
+	cp traefik_passwd ${BOCRA_DATA}/auth/system_passwd && \
+	mkdir ${BOCRA_DATA}/keycloak && \
+	mkdir ${BOCRA_DATA}/certs && \
+	cp deployment/certs/* ${BOCRA_DATA}/certs && \
+	mkdir ${BOCRA_DATA}/registry && \
+	mkdir ${BOCRA_DATA}/traefik && \
+	cp deployment/traefik/config.yml ${BOCRA_DATA}/traefik && \
+	mkdir ${BOCRA_DATA}/web && \
 
 ##
 ## Check the logs
@@ -250,4 +261,4 @@ registry_logs:
 	docker compose logs registry
 
 traefik_network:
-	docker network create --driver overlay traefik-public
+	docker network create --driver overlay bocraportal-public && docker network create --driver bridge bocraportal-public

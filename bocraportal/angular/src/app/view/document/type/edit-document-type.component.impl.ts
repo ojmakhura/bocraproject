@@ -46,7 +46,7 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
           DocumentTypeActions.findById({
             id: queryParams?.id,
             loading: false,
-            loaderMessage: 'Loading document type by id ...'
+            loaderMessage: 'Loading document type by id ...',
           })
         );
       }
@@ -72,8 +72,8 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
       });
     });
 
-    this.removed$.subscribe(removed => {
-      if(removed) {
+    this.removed$.subscribe((removed) => {
+      if (removed) {
         this.editDocumentTypeFormReset();
       }
     });
@@ -98,7 +98,7 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
         DocumentTypeActions.save({
           documentType: form.documentType,
           loading: true,
-          loaderMessage: 'Saving document type by id ...'
+          loaderMessage: 'Saving document type by id ...',
         })
       );
     } else {
@@ -122,7 +122,7 @@ export class EditDocumentTypeComponentImpl extends EditDocumentTypeComponent {
         DocumentTypeActions.remove({
           id: form.documentType.id,
           loading: true,
-          loaderMessage: 'Removing type by id ...'
+          loaderMessage: 'Removing type by id ...',
         })
       );
     }

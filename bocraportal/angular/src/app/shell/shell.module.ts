@@ -29,11 +29,8 @@ import { MenuEffects } from '@app/store/menu/menu.effects';
     StoreModule.forFeature(useCaseFeature),
     StoreModule.forFeature(authFeature),
     StoreModule.forFeature(menuFeature),
-    EffectsModule.forFeature([AuthEffects, MenuEffects])
+    EffectsModule.forFeature([AuthEffects, MenuEffects]),
   ],
-  declarations: [
-    ShellComponent
-  ]
+  declarations: [ShellComponent],
 })
-export class ShellModule {
-}
+export class ShellModule {}

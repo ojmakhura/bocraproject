@@ -12,28 +12,25 @@ import { FormSectionVO } from '@model/bw/org/bocra/portal/form/section/form-sect
 @Component({
   selector: 'app-edit-section',
   templateUrl: './edit-section.component.html',
-  styleUrls: ['./edit-section.component.scss']
+  styleUrls: ['./edit-section.component.scss'],
 })
 export class EditSectionComponentImpl extends EditSectionComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
+    super(data, injector);
+  }
 
-    constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
-        super(data, injector);
+  override beforeOnInit(form: EditSectionVarsForm): EditSectionVarsForm {
+    if (this.useCaseScope.pageVariables['formSection']) {
+      form.formSection = this.useCaseScope.pageVariables['formSection'];
+    } else {
+      if (!form?.formSection) {
+        form.formSection = new FormSectionVO();
+      }
+      form.formSection.form = this.dialogData?.form;
     }
 
-    override beforeOnInit(form: EditSectionVarsForm): EditSectionVarsForm { 
+    return form;
+  }
 
-        if(this.useCaseScope.pageVariables['formSection']) {
-            form.formSection = this.useCaseScope.pageVariables['formSection'];
-        } else {
-
-            if(!form?.formSection) {
-                form.formSection = new FormSectionVO();
-            }
-            form.formSection.form = this.dialogData?.form; 
-        }
-
-        return form;
-    }
-	
-    override doNgOnDestroy(){}
+  override doNgOnDestroy() {}
 }

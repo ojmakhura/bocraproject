@@ -2,56 +2,30 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { licenseeFormKey, LicenseeFormState } from './licensee-form.state';
 
-export const selectLicenseeFormState = createFeatureSelector<LicenseeFormState> (
-    licenseeFormKey
-);
+export const selectLicenseeFormState = createFeatureSelector<LicenseeFormState>(licenseeFormKey);
 
-export const selectId = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.id
-);
+export const selectId = createSelector(selectLicenseeFormState, (state: LicenseeFormState) => state.id);
 
 export const selectLicenseeForm = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.licenseeForm
+  selectLicenseeFormState,
+  (state: LicenseeFormState) => state.licenseeForm
 );
 
-export const selectLicensee = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.licensee
-);
+export const selectLicensee = createSelector(selectLicenseeFormState, (state: LicenseeFormState) => state.licensee);
 
-export const selectForm = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.form
-);
+export const selectForm = createSelector(selectLicenseeFormState, (state: LicenseeFormState) => state.form);
 
-export const selectRemoved = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.removed
-);
+export const selectRemoved = createSelector(selectLicenseeFormState, (state: LicenseeFormState) => state.removed);
 
-export const selectMessages = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.messages
-);
+export const selectMessages = createSelector(selectLicenseeFormState, (state: LicenseeFormState) => state.messages);
 
-export const selectSuccess = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.success
-);
+export const selectSuccess = createSelector(selectLicenseeFormState, (state: LicenseeFormState) => state.success);
 
-export const selectLoading = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.loading
-);
+export const selectLoading = createSelector(selectLicenseeFormState, (state: LicenseeFormState) => state.loading);
 
 export const selectLoaderMessage = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.loaderMessage
+  selectLicenseeFormState,
+  (state: LicenseeFormState) => state.loaderMessage
 );
 
-export const selectError = createSelector(
-    selectLicenseeFormState,
-    (state: LicenseeFormState) => state.error
-);
+export const selectError = createSelector(selectLicenseeFormState, (state: LicenseeFormState) => state.error);

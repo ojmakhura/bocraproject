@@ -11,7 +11,7 @@ services:
     networks:
       bocra-network:
         ipv4_address: ${BOCRA_PROXY_ADDRESS}
-      traefik-public:
+      bocraportal-public:
       default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -43,7 +43,7 @@ services:
       - "--ping.entrypoint=ping"
       - "--metrics"
       - "--metrics.prometheus"
-      - "--providers.docker.network=traefik-public"
+      - "--providers.docker.network=bocraportal-public"
       - "--providers.docker"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"

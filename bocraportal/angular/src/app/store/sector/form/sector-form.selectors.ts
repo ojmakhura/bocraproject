@@ -2,56 +2,27 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { sectorFormKey, SectorFormState } from './sector-form.state';
 
-export const selectSectorFormState = createFeatureSelector<SectorFormState> (
-    sectorFormKey
-);
+export const selectSectorFormState = createFeatureSelector<SectorFormState>(sectorFormKey);
 
-export const selectId = createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.id
-);
+export const selectId = createSelector(selectSectorFormState, (state: SectorFormState) => state.id);
 
-export const selectSectorForm = createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.sectorForm
-);
+export const selectSectorForm = createSelector(selectSectorFormState, (state: SectorFormState) => state.sectorForm);
 
-export const selectSector = createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.sector
-);
+export const selectSector = createSelector(selectSectorFormState, (state: SectorFormState) => state.sector);
 
-export const selectForm = createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.form
-);
+export const selectForm = createSelector(selectSectorFormState, (state: SectorFormState) => state.form);
 
-export const selectRemoved= createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.removed
-);
+export const selectRemoved = createSelector(selectSectorFormState, (state: SectorFormState) => state.removed);
 
-export const selectMessages = createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.messages
-);
+export const selectMessages = createSelector(selectSectorFormState, (state: SectorFormState) => state.messages);
 
-export const selectSuccess = createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.success
-);
+export const selectSuccess = createSelector(selectSectorFormState, (state: SectorFormState) => state.success);
 
-export const selectLoading = createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.loading
-);
+export const selectLoading = createSelector(selectSectorFormState, (state: SectorFormState) => state.loading);
 
 export const selectLoaderMessage = createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.loaderMessage
+  selectSectorFormState,
+  (state: SectorFormState) => state.loaderMessage
 );
 
-export const selectError = createSelector(
-    selectSectorFormState,
-    (state: SectorFormState) => state.error
-);
+export const selectError = createSelector(selectSectorFormState, (state: SectorFormState) => state.error);

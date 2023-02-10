@@ -28,6 +28,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
   username$: Observable<string>;
   isLoggedIn: Observable<boolean> = of(false);
   toggled = false;
+  accoutUri: string;
 
   constructor(
     private router: Router,
@@ -46,6 +47,8 @@ export class ShellComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.keycloakService.isLoggedIn().then((loggedIn) => {
       if (loggedIn) {
+        this.accoutUri = 
+          `${environment.keycloak.issuer}/realms/${environment.keycloak.realm}/account?referrer=' + ${encodeURIComponent(environment.keycloak.clientId)}&referrer_uri=' + ${encodeURIComponent(environment.keycloak.redirectUri)}`;
         this.isLoggedIn = of(loggedIn);
         this.store.dispatch(AuthActions.setUsername({ username: this.keycloakService.getUsername() }));
         this.authorisationRestController
@@ -88,13 +91,5 @@ export class ShellComponent implements OnInit, AfterViewInit {
 
   get title(): string {
     return this.titleService.getTitle();
-  }
-
-  editProfile() {
-    this.keycloakService.loadUserProfile().then((profile) => {
-      if (profile?.id) {
-        this.router.navigate(['/user/edit-user'], { queryParams: { userId: profile?.id } });
-      }
-    });
   }
 }

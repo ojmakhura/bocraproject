@@ -54,22 +54,21 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   doNgOnDestroy(): void {}
 
   override doNgAfterViewInit(): void {
-
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/form/activation/edit-form-activation",
+        viewUrl: '/form/activation/edit-form-activation',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
-            FormActivationActions.findById({
+          FormActivationActions.findById({
             id: queryParams.id,
             loading: true,
-            loaderMessage: 'Loading form activation by id ...'
+            loaderMessage: 'Loading form activation by id ...',
           })
         );
       }
@@ -103,8 +102,8 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
       }
     });
 
-    this.formActivation$.subscribe(formActivation => {
-        this.setEditFormActivationFormValue({formActivation});
+    this.formActivation$.subscribe((formActivation) => {
+      this.setEditFormActivationFormValue({ formActivation });
     });
 
     // this.store.dispatch(
@@ -115,42 +114,53 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     //   })
     // );
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
-        if(item === '/form/activation/edit-form-activation/{button:delete}') {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
+        if (item === '/form/activation/edit-form-activation/{button:delete}') {
           this.deleteUnrestricted = false;
         }
       });
     });
   }
 
-  override handleFormChanges(change: any): void {
-  }
+  override handleFormChanges(change: any): void {}
 
   override beforeEditFormActivationDelete(form: EditFormActivationDeleteForm): void {
-    if(form?.formActivation?.id){
-      if(!(form?.formActivation?.formSubmissions.length>0) && confirm('Are you sure you want to delete the form activation?')) {
-
+    if (form?.formActivation?.id) {
+      if (
+        !(form?.formActivation?.formSubmissions.length > 0) &&
+        confirm('Are you sure you want to delete the form activation?')
+      ) {
         this.store.dispatch(
           FormActivationActions.remove({
             id: form.formActivation.id,
             loading: true,
-            loaderMessage: 'Removing form activations ...'
+            loaderMessage: 'Removing form activations ...',
           })
         );
         this.editFormActivationFormReset();
-      }else{
-        this.store.dispatch(FormActivationActions.formActivationFailure({ messages: ['This Form activation can not be deleted, it has submissions'] }));
+      } else {
+        this.store.dispatch(
+          FormActivationActions.formActivationFailure({
+            messages: ['This Form activation can not be deleted, it has submissions'],
+          })
+        );
       }
-    }
-
-    else {
-      this.store.dispatch(FormActivationActions.formActivationFailure({ messages: ['Please select something to delete'] }));
+    } else {
+      this.store.dispatch(
+        FormActivationActions.formActivationFailure({ messages: ['Please select something to delete'] })
+      );
     }
   }
 
   override formActivationFormSearch(): void {
-    this.store.dispatch(FormActions.searchForms({ criteria: {formName: this.formActivationFormSearchField.value}, loading: true, loaderMessage: 'Searching forms ...' }));
+    this.store.dispatch(
+      FormActions.searchForms({
+        criteria: { formName: this.formActivationFormSearchField.value },
+        loading: true,
+        loaderMessage: 'Searching forms ...',
+      })
+    );
   }
 
   override formActivationPeriodSearch(): void {
@@ -180,19 +190,19 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
         FormActivationActions.save({
           formActivation: form.formActivation,
           loading: true,
-          loaderMessage: 'Saving form activation ...'
+          loaderMessage: 'Saving form activation ...',
         })
       );
     } else {
-      let messages: string[] = []
-      if(!this.formActivationControl.valid) {
-        messages.push("Period has errors, Please fill in the required form fields")
-      } 
-      if(!this.formActivationActivationNameControl.valid) {
-        messages.push("Activation Name is missing")
-      }  
-      if(!this.formActivationPeriodControl.valid) {
-        messages.push("Period is missing!")
+      let messages: string[] = [];
+      if (!this.formActivationControl.valid) {
+        messages.push('Period has errors, Please fill in the required form fields');
+      }
+      if (!this.formActivationActivationNameControl.valid) {
+        messages.push('Activation Name is missing');
+      }
+      if (!this.formActivationPeriodControl.valid) {
+        messages.push('Period is missing!');
       }
       // if(!this.periodPeriodConfigControl.valid) {
       //   messages.push("Period Name missing!")
@@ -200,72 +210,70 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
       // if(!this.periodPeriodConfigControl.valid) {
       //   messages.push("Repeat Period missing!")
       // }
-    this.store.dispatch(FormActivationActions.formActivationFailure({ messages: messages }));
-  }
+      this.store.dispatch(FormActivationActions.formActivationFailure({ messages: messages }));
+    }
   }
 
   override createFormSubmissionVOGroup(value: FormSubmissionVO): FormGroup {
-      return this.formBuilder.group({
-          id: [value?.id],
-          createdBy: [value?.createdBy],
-          updatedBy: [value?.updatedBy],
-          createdDate: [value?.createdDate],
-          updatedDate: [value?.updatedDate],
-          submittedBy: [value?.submittedBy],
-          submissionDate: [value?.submissionDate],
-          submissionStatus: [value?.submissionStatus],
-          upload: [value?.upload],
-          form: {
-            id: value?.form?.id,
-            code: value?.form?.code,
-            formName: value?.form?.formName,
-            entryType: value?.form?.entryType,
-          },
-          period: {
-            id: value?.period?.id,
-            periodName: value?.period?.periodName,
-            periodStart: value?.period?.periodStart,
-            periodEnd: value?.period?.periodEnd,
-          },
-          licensee: {
-            id: value?.licensee?.id,
-            uin: value?.licensee?.uin,
-            licenseeName: value?.licensee?.licenseeName,
-            status: value?.licensee?.status,
-          }
-      });
+    return this.formBuilder.group({
+      id: [value?.id],
+      createdBy: [value?.createdBy],
+      updatedBy: [value?.updatedBy],
+      createdDate: [value?.createdDate],
+      updatedDate: [value?.updatedDate],
+      submittedBy: [value?.submittedBy],
+      submissionDate: [value?.submissionDate],
+      submissionStatus: [value?.submissionStatus],
+      upload: [value?.upload],
+      form: {
+        id: value?.form?.id,
+        code: value?.form?.code,
+        formName: value?.form?.formName,
+        entryType: value?.form?.entryType,
+      },
+      period: {
+        id: value?.period?.id,
+        periodName: value?.period?.periodName,
+        periodStart: value?.period?.periodStart,
+        periodEnd: value?.period?.periodEnd,
+      },
+      licensee: {
+        id: value?.licensee?.id,
+        uin: value?.licensee?.uin,
+        licenseeName: value?.licensee?.licenseeName,
+        status: value?.licensee?.status,
+      },
+    });
   }
 
   override createPeriodVOGroup(value: PeriodVO): FormGroup {
-    
     return this.formBuilder.group({
-        id: [value?.id],
-        periodName: [value?.periodName],
-        periodStart: [value?.periodStart],
-        periodEnd: [value?.periodEnd],
-        createdBy: [value?.createdBy],
-        updatedBy: [value?.updatedBy],
-        createdDate: [value?.createdDate],
-        updatedDate: [value?.updatedDate],
-        periodConfig: {
-          id: [value?.periodConfig?.id],
-          finalDay: [value?.periodConfig?.finalDay],
-          periodConfigName: [value?.periodConfig?.periodConfigName],
-        }
+      id: [value?.id],
+      periodName: [value?.periodName],
+      periodStart: [value?.periodStart],
+      periodEnd: [value?.periodEnd],
+      createdBy: [value?.createdBy],
+      updatedBy: [value?.updatedBy],
+      createdDate: [value?.createdDate],
+      updatedDate: [value?.updatedDate],
+      periodConfig: {
+        id: [value?.periodConfig?.id],
+        finalDay: [value?.periodConfig?.finalDay],
+        periodConfigName: [value?.periodConfig?.periodConfigName],
+      },
     });
   }
 
   override editFormActivationFormReset() {
-
     this.store.dispatch(FormActivationActions.formActivationReset());
-    this.formActivationFormSubmissionsControl.clear()
-    this.editFormActivationForm.reset()
+    this.formActivationFormSubmissionsControl.clear();
+    this.editFormActivationForm.reset();
     this.editFormActivationForm.markAsPristine();
 
-    if(this.router.url.substring(0, this.router.url.indexOf('?'))) {
-        this.router.navigate([this.router.url.substring(0, this.router.url.indexOf('?'))]);
+    if (this.router.url.substring(0, this.router.url.indexOf('?'))) {
+      this.router.navigate([this.router.url.substring(0, this.router.url.indexOf('?'))]);
     } else {
-        this.router.navigate([this.router.url]);
+      this.router.navigate([this.router.url]);
     }
-}
+  }
 }

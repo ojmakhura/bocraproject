@@ -9,8 +9,7 @@
 <div class="card container mb-10 px-5 py-2 bg-light">
   <div class="card-body">
     <form [formGroup]="editAccessPointTypeForm">
-     
-       <section>
+      <section>
         <div class="text-end">
           <button type="button" (click)="editAccessPointTypeSearch()" class="btn btn-primary">
             <span translate>Search</span>
@@ -24,13 +23,11 @@
           <button type="button" color="accent" (click)="editAccessPointTypeDelete()" class="btn btn-primary">
             <span translate>delete</span>
           </button> -->
-          
-         
         </div>
-      </section> 
-			<div *ngIf="loading | async">
-				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
-			</div>
+      </section>
+      <div *ngIf="loading | async">
+        <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+      </div>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}
@@ -110,7 +107,12 @@
       <button type="button" (click)="editAccessPointTypeFormReset()" class="btn btn-outline-primary">
         <span translate>reset</span>
       </button>
-      <button type="button" (click)="editAccessPointTypeDelete()" class="btn btn-outline-primary" *ngIf="accessPointTypeId && deleteUnrestricted">
+      <button
+        type="button"
+        (click)="editAccessPointTypeDelete()"
+        class="btn btn-outline-primary"
+        *ngIf="accessPointTypeId && deleteUnrestricted"
+      >
         <span translate>delete</span>
       </button>
     </div>

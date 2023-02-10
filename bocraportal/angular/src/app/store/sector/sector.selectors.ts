@@ -2,61 +2,26 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { sectorKey, SectorState } from './sector.state';
 
-export const selectSectorState = createFeatureSelector<SectorState> (
-    sectorKey
-);
+export const selectSectorState = createFeatureSelector<SectorState>(sectorKey);
 
-export const selectCriteria = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.criteria
-);
+export const selectCriteria = createSelector(selectSectorState, (state: SectorState) => state.criteria);
 
-export const selectSector = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.sector
-);
+export const selectSector = createSelector(selectSectorState, (state: SectorState) => state.sector);
 
-export const selectSectors = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.sectors
-);
+export const selectSectors = createSelector(selectSectorState, (state: SectorState) => state.sectors);
 
-export const selectLicensee = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.licensee
-);
+export const selectLicensee = createSelector(selectSectorState, (state: SectorState) => state.licensee);
 
-export const selectLicensees = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.licensees
-);
+export const selectLicensees = createSelector(selectSectorState, (state: SectorState) => state.licensees);
 
-export const selectId = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.id
-);
+export const selectId = createSelector(selectSectorState, (state: SectorState) => state.id);
 
-export const selectMessages = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.messages
-);
+export const selectMessages = createSelector(selectSectorState, (state: SectorState) => state.messages);
 
-export const selectSuccess = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.success
-);
+export const selectSuccess = createSelector(selectSectorState, (state: SectorState) => state.success);
 
-export const selectLoading = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.loading
-);
+export const selectLoading = createSelector(selectSectorState, (state: SectorState) => state.loading);
 
-export const selectLoaderMessage = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.loaderMessage
-);
+export const selectLoaderMessage = createSelector(selectSectorState, (state: SectorState) => state.loaderMessage);
 
-export const selectError = createSelector(
-    selectSectorState,
-    (state: SectorState) => state.error
-);
+export const selectError = createSelector(selectSectorState, (state: SectorState) => state.error);

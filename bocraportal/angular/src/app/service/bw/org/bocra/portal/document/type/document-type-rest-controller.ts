@@ -5,38 +5,37 @@ import { DocumentTypeVO } from '@app/model/bw/org/bocra/portal/document/type/doc
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DocumentTypeRestController {
-    protected path = '/document/type';
-    constructor(private http: HttpClient) {
-    }
+  protected path = '/document/type';
+  constructor(private http: HttpClient) {}
 
-    public findById(id: number | any ): Observable<DocumentTypeVO | any> {
-        return this.http.get<DocumentTypeVO | any>(this.path + `/${id}`);
-    }
+  public findById(id: number | any): Observable<DocumentTypeVO | any> {
+    return this.http.get<DocumentTypeVO | any>(this.path + `/${id}`);
+  }
 
-    public getAll(): Observable<DocumentTypeVO[] | any[]> {
-        return this.http.get<DocumentTypeVO[] | any[]>(this.path + `/all`);
-    }
+  public getAll(): Observable<DocumentTypeVO[] | any[]> {
+    return this.http.get<DocumentTypeVO[] | any[]>(this.path + `/all`);
+  }
 
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<DocumentTypeVO[] | any[]> {
-        return this.http.get<DocumentTypeVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
-    }
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<DocumentTypeVO[] | any[]> {
+    return this.http.get<DocumentTypeVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+  }
 
-    public remove(id: number | any ): Observable<boolean | any> {
-        return this.http.delete<boolean | any>(this.path + `/${id}`);
-    }
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(this.path + `/${id}`);
+  }
 
-    public save(documentType: DocumentTypeVO | any ): Observable<DocumentTypeVO | any> {
-        return this.http.post<DocumentTypeVO | any>(this.path, documentType);
-    }
+  public save(documentType: DocumentTypeVO | any): Observable<DocumentTypeVO | any> {
+    return this.http.post<DocumentTypeVO | any>(this.path, documentType);
+  }
 
-    public search(criteria: string | any ): Observable<DocumentTypeVO[] | any[]> {
-        if(criteria) {
-            return this.http.get<DocumentTypeVO[] | any[]>(this.path + `/search?criteria=${criteria}`);
-        } else {
-            return this.getAll();
-        }
+  public search(criteria: string | any): Observable<DocumentTypeVO[] | any[]> {
+    if (criteria) {
+      return this.http.get<DocumentTypeVO[] | any[]>(this.path + `/search?criteria=${criteria}`);
+    } else {
+      return this.getAll();
     }
+  }
 }

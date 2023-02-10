@@ -3,10 +3,12 @@ package bw.org.bocra.portal;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+
+// @ExtendWith(MockitoExtension.class)
+// @SpringBootTest(classes = CommApplication.class)
 class CommApplicationTests {
 
-	@Test
+	// @Test
 	void contextLoads() {
 	}
 

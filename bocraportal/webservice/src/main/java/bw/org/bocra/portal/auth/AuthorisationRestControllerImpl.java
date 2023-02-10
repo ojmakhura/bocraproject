@@ -38,7 +38,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Authorisation with id %d not found.", id));
             }
@@ -56,7 +56,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             }
 
             logger.error(message);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -65,12 +65,12 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
         try {
             
             logger.debug("Displays all Authorisations");
-            return ResponseEntity.status(HttpStatus.OK).body(this.authorisationService.getAll());
+            return ResponseEntity.ok().body(this.authorisationService.getAll());
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered. Please contact administrator.");
+            return ResponseEntity.badRequest().body("Unknown error encountered. Please contact administrator.");
         }
     }
 
@@ -82,7 +82,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             ResponseEntity<Boolean> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -97,7 +97,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete authorisation with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting authorisation with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting authorisation with id " + id);
         }
     }
 
@@ -109,7 +109,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save authorisation.");
             }
@@ -136,34 +136,34 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
                     message = "Unknown error encountered. Please contact administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(access_point_fk)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authorisation for this access point has already been created. Please edit it instead.");
+                        return ResponseEntity.badRequest().body("Authorisation for this access point has already been created. Please edit it instead.");
                     }
                 } else if (e.getCause().getMessage().contains("null value in column")) {
 
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     }
                     
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered. Please contact administrator.");
+            return ResponseEntity.badRequest().body("Unknown error encountered. Please contact administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             // e.getCause().printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered. Please contact administrator.");
+            return ResponseEntity.badRequest().body("Unknown error encountered. Please contact administrator.");
         }
     }
 
@@ -172,12 +172,12 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
         try {
             logger.debug("Searche for an Authorisation by criteria "+criteria);
             
-            return ResponseEntity.status(HttpStatus.OK).body(authorisationService.search(criteria));
+            return ResponseEntity.ok().body(authorisationService.search(criteria));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered. Please contact administrator.");
+            return ResponseEntity.badRequest().body("Unknown error encountered. Please contact administrator.");
         }
     }
 
@@ -185,7 +185,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try {
             logger.debug("Displays all Authoristions by specified Page Number: "+pageNumber+", Page Size: "+pageSize);
-            return ResponseEntity.status(HttpStatus.OK).body(authorisationService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(authorisationService.getAll(pageNumber, pageSize));
                         
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,7 +199,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     public ResponseEntity<?> handleGetAccessTypeCodeAuthorisations(Set<String> roles, Set<String> accessPointTypeCode) {
         try {
             logger.debug("Displays Authorisation by specified roles: " + roles + " and Access Point Type Code: " + accessPointTypeCode);
-            return ResponseEntity.status(HttpStatus.OK).body(authorisationService.getAccessTypeCodeAuthorisations(roles, accessPointTypeCode));
+            return ResponseEntity.ok().body(authorisationService.getAccessTypeCodeAuthorisations(roles, accessPointTypeCode));
             
             
         } catch (Exception e) {
@@ -213,7 +213,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     public ResponseEntity<?> handleAssignMenuSection(Long authorisationId, Long menuSectionId) {
         try {
             logger.debug(" Assigns Menu section with Authorisation Id: " + authorisationId + " and  Menu Section: " + menuSectionId);
-            return ResponseEntity.status(HttpStatus.OK).body(authorisationService.assignMenuSection(authorisationId, menuSectionId));
+            return ResponseEntity.ok().body(authorisationService.assignMenuSection(authorisationId, menuSectionId));
                         
         } catch (Exception e) {
             e.printStackTrace();
@@ -226,7 +226,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
     public ResponseEntity<?> handleFindByRolesAndUrl(String url, Set<String> roles) {
         try {
             logger.debug("Searches for an Authorisation by "+"Url: "+url+" and Roles: "+ roles);
-            return ResponseEntity.status(HttpStatus.OK).body(authorisationService.findByRolesAndUrl(url, roles));
+            return ResponseEntity.ok().body(authorisationService.findByRolesAndUrl(url, roles));
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -262,7 +262,7 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
                 }
             }
     
-            return ResponseEntity.status(HttpStatus.OK).body(restrictedUrls);
+            return ResponseEntity.ok().body(restrictedUrls);
             
         } catch (Exception e) {
             e.printStackTrace();

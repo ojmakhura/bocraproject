@@ -11,7 +11,7 @@ services:
     networks:
       bocra-network:
         ipv4_address: ${BOCRA_PROXY_ADDRESS}
-      traefik-public:
+      bocraportal-public:
       default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -43,7 +43,7 @@ services:
       - "--ping.entrypoint=ping"
       - "--metrics"
       - "--metrics.prometheus"
-      - "--providers.docker.network=traefik-public"
+      - "--providers.docker.network=bocraportal-public"
       - "--providers.docker"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
@@ -94,7 +94,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_DB_ADDRESS}
       default:
@@ -119,7 +119,7 @@ services:
     #  retries: 3
     #  start_period: 15s
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_PGADMIN_ADDRESS}
       default:
@@ -140,7 +140,7 @@ services:
       - "traefik.http.routers.bocra-pgadmin.tls.certresolver=le"
 
 networks:
-  traefik-public:
+  bocraportal-public:
     # Allow setting it to false for testing
     external: true
   bocra-network:

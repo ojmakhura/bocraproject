@@ -5,16 +5,14 @@ import { SearchFormActivationsFormActivationsComponent } from '@app/view/form/ac
 @Component({
   selector: 'search-form-activations-form-activations',
   templateUrl: './search-form-activations-form-activations.component.html',
-  styleUrls: [ './search-form-activations-form-activations.component.scss' ]
+  styleUrls: ['./search-form-activations-form-activations.component.scss'],
 })
 export class SearchFormActivationsFormActivationsComponentImpl extends SearchFormActivationsFormActivationsComponent {
-
   constructor(private injector: Injector) {
     super(injector);
   }
 
-
-	override doSearchFormActivationsEdit(form: any): any {
+  override doSearchFormActivationsEdit(form: any): any {
     return form;
-	}
+  }
 }

@@ -72,7 +72,7 @@ public class BocraSchedule {
     @Scheduled(cron = "1 0 0 1 JAN,APR,JUL,OCT ?", zone = "Africa/Gaborone")
     public void quarterlySchedule() {
         String formatTime = this.getDateTime();
-        log.info("Monthly cron job at " + formatTime);
+        log.info("Quarterly cron job at " + formatTime);
     }
 
     @Async

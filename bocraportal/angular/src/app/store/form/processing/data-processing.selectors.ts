@@ -2,71 +2,57 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { dataProcessingKey, DataProcessingState } from './data-processing.state';
 
-export const selectDataProcessingState = createFeatureSelector<DataProcessingState> (
-    dataProcessingKey
-);
+export const selectDataProcessingState = createFeatureSelector<DataProcessingState>(dataProcessingKey);
 
 export const selectSubmissionSummary = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.submissionSummary
+  selectDataProcessingState,
+  (state: DataProcessingState) => state.submissionSummary
 );
 
 export const selectAllSubmission = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.submissionSummary.allSubmissions
+  selectDataProcessingState,
+  (state: DataProcessingState) => state.submissionSummary.allSubmissions
 );
 
 export const selectMySubmission = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.submissionSummary.mySubmissions
+  selectDataProcessingState,
+  (state: DataProcessingState) => state.submissionSummary.mySubmissions
 );
 
 export const selectDraftSubmission = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.submissionSummary.draftSubmissions
+  selectDataProcessingState,
+  (state: DataProcessingState) => state.submissionSummary.draftSubmissions
 );
 
 export const selectNewSubmission = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.submissionSummary.newSubmissions
+  selectDataProcessingState,
+  (state: DataProcessingState) => state.submissionSummary.newSubmissions
 );
 
 export const selectOverdueSubmission = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.submissionSummary.overdueSubmissions
+  selectDataProcessingState,
+  (state: DataProcessingState) => state.submissionSummary.overdueSubmissions
 );
 
 export const selectReturnedSubmission = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.submissionSummary.returnedSubmissions
+  selectDataProcessingState,
+  (state: DataProcessingState) => state.submissionSummary.returnedSubmissions
 );
 
 export const selectFormSubmissions = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.formSubmissions
+  selectDataProcessingState,
+  (state: DataProcessingState) => state.formSubmissions
 );
 
-export const selectMessages = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.messages
-);
+export const selectMessages = createSelector(selectDataProcessingState, (state: DataProcessingState) => state.messages);
 
-export const selectSuccess = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.success
-);
+export const selectSuccess = createSelector(selectDataProcessingState, (state: DataProcessingState) => state.success);
 
-export const selectLoading = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.loading
-);
+export const selectLoading = createSelector(selectDataProcessingState, (state: DataProcessingState) => state.loading);
 
 export const selectLoaderMessage = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.loaderMessage
+  selectDataProcessingState,
+  (state: DataProcessingState) => state.loaderMessage
 );
 
-export const selectError = createSelector(
-    selectDataProcessingState,
-    (state: DataProcessingState) => state.error
-);
+export const selectError = createSelector(selectDataProcessingState, (state: DataProcessingState) => state.error);

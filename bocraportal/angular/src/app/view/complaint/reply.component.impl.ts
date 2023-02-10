@@ -12,10 +12,9 @@ import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/compl
 @Component({
   selector: 'app-reply',
   templateUrl: './reply.component.html',
-  styleUrls: ['./reply.component.scss']
+  styleUrls: ['./reply.component.scss'],
 })
 export class ReplyComponentImpl extends ReplyComponent {
-
   constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
     super(data, injector);
   }
@@ -32,6 +31,5 @@ export class ReplyComponentImpl extends ReplyComponent {
     return form;
   }
 
-  doNgOnDestroy(): void {
-  }
+  doNgOnDestroy(): void {}
 }

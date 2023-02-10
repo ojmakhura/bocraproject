@@ -39,7 +39,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not create a licensee form entry. Please contact administrator.");
             }
@@ -71,33 +71,33 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(licensee_form_unique)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licensee form has been already created.");
+                        return ResponseEntity.badRequest().body("An licensee form has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"form_fk\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The form value is missing.");
+                        return ResponseEntity.badRequest().body("The form value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"licensee_fk\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The licensee value is missing.");
+                        return ResponseEntity.badRequest().body("The licensee value is missing.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -109,7 +109,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the licensee form with this form id.");
             }
@@ -127,7 +127,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -139,7 +139,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Licensee form with id %d not found.", id));
             }
@@ -157,7 +157,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             }
 
             logger.error(message, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -169,7 +169,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the licensee form with this licensee id.");
             }
@@ -187,7 +187,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -195,10 +195,10 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Display all licensee Forms");
-            return ResponseEntity.status(HttpStatus.OK).body(licenseeFormService.getAll());
+            return ResponseEntity.ok().body(licenseeFormService.getAll());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -210,7 +210,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the licensee form with id " + id);
             }
@@ -224,7 +224,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete licensee form with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting licensee form with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting licensee form with id " + id);
         }
     }
 
@@ -236,7 +236,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the form id.");
             }
@@ -244,7 +244,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage(), e );
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -256,7 +256,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the licensee id.");
             }
@@ -264,7 +264,7 @@ public class LicenseeFormRestControllerImpl extends LicenseeFormRestControllerBa
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

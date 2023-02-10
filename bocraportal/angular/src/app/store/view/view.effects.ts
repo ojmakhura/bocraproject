@@ -8,20 +8,19 @@ import * as ViewActions from './view.actions';
 
 @Injectable()
 export class ViewEffects {
-  constructor(private actions$: Actions, private authorisationRestController: AuthorisationRestController) { }
-
+  constructor(private actions$: Actions, private authorisationRestController: AuthorisationRestController) {}
 
   loadViewAuthorisations$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ViewActions.loadViewAuthorisations),
       mergeMap(({ viewUrl, roles }) => {
         return this.authorisationRestController.findRestrictedViewItems(viewUrl, roles).pipe(
-          map((urls) =>{
-            return ViewActions.loadViewAuthorisationsSuccess({ unauthorisedUrls: urls, success: true })
+          map((urls) => {
+            return ViewActions.loadViewAuthorisationsSuccess({ unauthorisedUrls: urls, success: true });
           }),
           catchError((error) => [ViewActions.viewFailure({ messages: [error.error] })])
-        )
-        })
+        );
+      })
     )
   );
 }

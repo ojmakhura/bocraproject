@@ -10,35 +10,25 @@ import { SanitizeHtml } from '@app/pipe/sanitize-html.pipe';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-
   quote: string | undefined;
   isLoading = false;
 
   sectors$!: Observable<Array<SectorVO>>;
   protected store!: Store<SectorState>;
 
-
   constructor(public injector: Injector) {
     this.store = this.injector.get(Store);
     this.sectors$ = this.store.pipe(select(SectorSelectors.selectSectors));
   }
 
-  ngAfterViewInit(): void {
-        
-  }
+  ngAfterViewInit(): void {}
 
-  ngOnDestroy(): void {
-  }
-
+  ngOnDestroy(): void {}
 
   ngOnInit() {
-    this.store.dispatch(
-      SectorActions.getAll({ loading: true, loaderMessage: 'Loading all sectors' })
-    );
-    
+    this.store.dispatch(SectorActions.getAll({ loading: true, loaderMessage: 'Loading all sectors' }));
   }
-
 }

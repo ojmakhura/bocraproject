@@ -17,10 +17,9 @@ import { select } from '@ngrx/store';
 @Component({
   selector: 'app-edit-period-config',
   templateUrl: './edit-period-config.component.html',
-  styleUrls: ['./edit-period-config.component.scss']
+  styleUrls: ['./edit-period-config.component.scss'],
 })
 export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
-
   protected keycloakService: KeycloakService;
   deleteUnrestricted: boolean = true;
   unauthorisedUrls$: Observable<string[]>;
@@ -40,14 +39,13 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
   }
 
   override doNgAfterViewInit() {
-
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
         this.store.dispatch(
           PeriodConfigActions.findById({
             id: queryParams?.id,
             loading: true,
-            loaderMessage: 'Loading period config by id ...'
+            loaderMessage: 'Loading period config by id ...',
           })
         );
       }
@@ -58,14 +56,14 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
     });
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/period/config/edit-period-config",
+        viewUrl: '/period/config/edit-period-config',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
         if (item === '/period/config/edit-period-config/{button:delete}') {
           this.deleteUnrestricted = false;
         }
@@ -73,15 +71,15 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
     });
   }
 
-  override doNgOnDestroy() { }
+  override doNgOnDestroy() {}
 
   override beforeEditPeriodConfigDelete(form: EditPeriodConfigDeleteForm): void {
     if (form?.periodConfig?.id && confirm('Are you sure you want to delete the license type?')) {
       this.store.dispatch(
-        PeriodConfigActions.remove({ 
-          id: form.periodConfig.id, 
+        PeriodConfigActions.remove({
+          id: form.periodConfig.id,
           loading: true,
-          loaderMessage: 'Removing period config ...'
+          loaderMessage: 'Removing period config ...',
         })
       );
       this.editPeriodConfigFormReset();
@@ -99,25 +97,26 @@ export class EditPeriodConfigComponentImpl extends EditPeriodConfigComponent {
         form.periodConfig.updatedBy = this.keycloakService.getUsername();
         form.periodConfig.updatedDate = new Date();
       } else {
-
         form.periodConfig.createdBy = this.keycloakService.getUsername();
         form.periodConfig.createdDate = new Date();
       }
-      this.store.dispatch(PeriodConfigActions.save({
-        periodConfig: form.periodConfig,
-        loading: true,
-        loaderMessage: 'Saving period config ...'
-      }));
+      this.store.dispatch(
+        PeriodConfigActions.save({
+          periodConfig: form.periodConfig,
+          loading: true,
+          loaderMessage: 'Saving period config ...',
+        })
+      );
     } else {
-      let messages: string[] = []
+      let messages: string[] = [];
       if (!this.periodConfigControl.valid) {
-        messages.push("Period Configuration has errors, Please fill in the required form fields")
+        messages.push('Period Configuration has errors, Please fill in the required form fields');
       }
       if (!this.periodConfigPeriodConfigNameControl.valid) {
-        messages.push("Period Config Name missing!")
+        messages.push('Period Config Name missing!');
       }
       if (!this.periodConfigRepeatPeriodControl.valid) {
-        messages.push("Repeat Period missing!")
+        messages.push('Repeat Period missing!');
       }
       this.store.dispatch(PeriodConfigActions.periodConfigFailure({ messages: messages }));
     }

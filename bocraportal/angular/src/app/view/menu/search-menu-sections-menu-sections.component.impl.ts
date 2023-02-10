@@ -5,16 +5,14 @@ import { SearchMenuSectionsMenuSectionsComponent } from '@app/view/menu/search-m
 @Component({
   selector: 'search-menu-sections-menu-sections',
   templateUrl: './search-menu-sections-menu-sections.component.html',
-  styleUrls: [ './search-menu-sections-menu-sections.component.scss' ]
+  styleUrls: ['./search-menu-sections-menu-sections.component.scss'],
 })
 export class SearchMenuSectionsMenuSectionsComponentImpl extends SearchMenuSectionsMenuSectionsComponent {
-
   constructor(private injector: Injector) {
     super(injector);
   }
 
-
-	override doSearchMenuSectionsEdit(form: any): any {
+  override doSearchMenuSectionsEdit(form: any): any {
     return form;
-	}
+  }
 }

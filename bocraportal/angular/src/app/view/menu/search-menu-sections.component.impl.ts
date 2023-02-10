@@ -8,28 +8,26 @@ import * as MenuSectionActions from '@app/store/menu/menu-section.actions';
 @Component({
   selector: 'app-search-menu-sections',
   templateUrl: './search-menu-sections.component.html',
-  styleUrls: ['./search-menu-sections.component.scss']
+  styleUrls: ['./search-menu-sections.component.scss'],
 })
 export class SearchMenuSectionsComponentImpl extends SearchMenuSectionsComponent {
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  override beforeOnInit(form: SearchMenuSectionsVarsForm): SearchMenuSectionsVarsForm {
+    return form;
+  }
 
-    override beforeOnInit(form: SearchMenuSectionsVarsForm): SearchMenuSectionsVarsForm{     
-        return form;
-    }
+  doNgOnDestroy(): void {}
 
-    doNgOnDestroy(): void {
-    }
-
-    override beforeSearchMenuSectionsSearch(form: SearchMenuSectionsSearchForm): void {
-        this.store.dispatch(
-            MenuSectionActions.search({
-                criteria: form.criteria ? form.criteria : '',
-                loading: true,
-                loaderMessage: 'Searching menu sections ...'
-            })
-        );
-    }
+  override beforeSearchMenuSectionsSearch(form: SearchMenuSectionsSearchForm): void {
+    this.store.dispatch(
+      MenuSectionActions.search({
+        criteria: form.criteria ? form.criteria : '',
+        loading: true,
+        loaderMessage: 'Searching menu sections ...',
+      })
+    );
+  }
 }

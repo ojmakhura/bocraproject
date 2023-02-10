@@ -2,30 +2,30 @@
 import { AuthorisationCriteria } from '@app/model/bw/org/bocra/portal/auth/authorisation-criteria';
 import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
 
-export const authorisationKey = "authorisation";
+export const authorisationKey = 'authorisation';
 
 export interface AuthorisationState {
-    authorisation: AuthorisationVO | any,
-    id: number | any,
-    criteria: AuthorisationCriteria | any,
-    authorisations: Array<AuthorisationVO> | Array<any>,
-    removed: boolean,
-    success: boolean,
-    loading: boolean,   
-    loaderMessage: string | undefined,
-    error: boolean, 
-    messages: any[]
+  authorisation: AuthorisationVO | any;
+  id: number | any;
+  criteria: AuthorisationCriteria | any;
+  authorisations: Array<AuthorisationVO> | Array<any>;
+  removed: boolean;
+  success: boolean;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  error: boolean;
+  messages: any[];
 }
 
 export const initialState: AuthorisationState = {
-    authorisation: null,
-    id: null,
-    criteria: null,
-    authorisations: [],
-    removed: false,
-    success: false,
-    loading: false,
-    error: false,
-    messages: [],
-    loaderMessage: undefined
+  authorisation: null,
+  id: null,
+  criteria: null,
+  authorisations: [],
+  removed: false,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
+  loaderMessage: undefined,
 };
