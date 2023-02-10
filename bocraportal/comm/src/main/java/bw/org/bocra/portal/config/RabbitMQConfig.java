@@ -50,7 +50,7 @@ public class RabbitMQConfig {
     public Declarables createPostDispatchSchema(){
         return new Declarables(
                 new FanoutExchange("x.post-email-dispatch"),
-                new Queue(rabbitProperties.getEmailDispatchQueue() ),
+                new Queue(rabbitProperties.getEmailDispatchQueue(), true),
                 new Binding(rabbitProperties.getEmailDispatchQueue(), Binding.DestinationType.QUEUE, "x.post-email-dispatch", rabbitProperties.getEmailDispatchRoutingKey(), null)
         );
     }

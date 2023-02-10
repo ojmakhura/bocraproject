@@ -22,6 +22,8 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 5432:5432
+      - 5672:5672
       # - 8080:8080
     healthcheck:
       test: [ "CMD", "wget", "http://localhost:8082/ping","--spider" ]
@@ -126,6 +128,7 @@ services:
       - "traefik.tcp.routers.bocra-db-postgres.entrypoints=postgres"
       - "traefik.tcp.routers.bocra-db.service=postgres"
       - "traefik.tcp.services.bocra-db.loadbalancer.server.port=5432"
+      - "traefik.tcp.routers.bocra-db.tls=true"
 
   ###############################################################################
   # Postgres administration frontend
@@ -170,14 +173,14 @@ services:
     command:
       - "start"
       - "--optimized"
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
-      interval: 5s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
-    volumes:
-      - ${BOCRA_DATA}/hosts:/etc/hosts
+    # healthcheck:
+    #   test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 15s
+    # volumes:
+    #   - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
       context: .
       dockerfile: Dockerfile.keycloak
@@ -231,8 +234,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      keycloak:
-        condition: service_healthy
+      # keycloak:
+      #   condition: service_healthy
     build:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile
@@ -296,13 +299,13 @@ services:
         condition: service_healthy
       api:
         condition: service_healthy
-      keycloak:
-        condition: service_healthy
+      # keycloak:
+      #   condition: service_healthy
       rabbitmq:
         condition: service_healthy
     build:
       context: .
-      dockerfile: bocraportal/comm/Dockerfile.native
+      dockerfile: bocraportal/comm/Dockerfile
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
@@ -336,8 +339,8 @@ services:
       COMM_URL: ${COMM_URL}
       API_URL: ${API_URL}
       TZ: Africa/Gaborone
-    volumes:
-      - ${BOCRA_DATA}/hosts:/etc/hosts
+    # volumes:
+    #   - ${BOCRA_DATA}/hosts:/etc/hosts
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.comm-web.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
@@ -369,8 +372,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      keycloak:
-        condition: service_healthy
+      # keycloak:
+      #   condition: service_healthy
       api:
         condition: service_healthy
     networks:
@@ -411,16 +414,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      keycloak:
-        condition: service_healthy
+      # keycloak:
+      #   condition: service_healthy
     networks:
       bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_RABBIT_ADDRESS}
       default:
-    ports:
-      - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
-      - "${RABBITMQ_WEB_PORT}:${RABBITMQ_WEB_PORT}"
+    # ports:
+    #   - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
+    #   - "${RABBITMQ_WEB_PORT}:${RABBITMQ_WEB_PORT}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.rabbitmq-web.rule=Host(`${RABBITMQ_DOMAIN}`)"

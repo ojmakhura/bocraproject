@@ -212,7 +212,10 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["org.springframework.amqp.rabbit.core.RabbitTemplate","bw.org.bocra.portal.properties.RabbitProperties"] }]
+  "methods":[
+    {"name":"<init>","parameterTypes":["org.springframework.amqp.rabbit.core.RabbitTemplate","bw.org.bocra.portal.properties.RabbitProperties"] }, 
+    {"name":"onCommunication","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO"] }
+  ]
 },
 {
   "name":"bw.org.bocra.portal.comm.FallBackEmailDispatchService",
@@ -225,7 +228,6 @@
   "name":"bw.org.bocra.portal.config.CommConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"jsonCustomizer","parameterTypes":[] }, 
@@ -288,7 +290,6 @@
   "name":"bw.org.bocra.portal.config.RabbitMQConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":["org.springframework.amqp.rabbit.connection.CachingConnectionFactory","bw.org.bocra.portal.properties.RabbitProperties"] }, 
     {"name":"converter","parameterTypes":["com.fasterxml.jackson.databind.ObjectMapper"] }, 
@@ -340,7 +341,6 @@
   "name":"bw.org.bocra.portal.datasource.CommDbConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"commDataSource","parameterTypes":[] }, 
@@ -375,7 +375,6 @@
   "name":"bw.org.bocra.portal.datasource.KeycloakDbConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"customerDataSource","parameterTypes":[] }, 
@@ -412,8 +411,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.properties.RabbitProperties","bw.org.bocra.portal.keycloak.smtp.RealmSmtpService","bw.org.bocra.portal.message.BocraMesssageService","org.springframework.amqp.rabbit.core.RabbitTemplate","bw.org.bocra.portal.message.BocraMesssageRepository","bw.org.bocra.portal.message.BocraMesssageDao"] }, 
-    {"name":"readEmailQueue","parameterTypes":["java.util.Collection"] }, 
+    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.properties.RabbitProperties","bw.org.bocra.portal.keycloak.smtp.RealmSmtpService","org.springframework.amqp.rabbit.core.RabbitTemplate","bw.org.bocra.portal.message.BocraMesssageDao","bw.org.bocra.portal.message.BocraMesssageRepository"] }, 
     {"name":"sendEmail","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO"] }
   ]
 },
@@ -505,8 +503,24 @@
 },
 {
   "name":"bw.org.bocra.portal.message.BocraMesssageDao",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageRepository"] }, 
+    {"name":"bocraMesssageVOToEntity","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO"] }, 
+    {"name":"bocraMesssageVOToEntity","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO","bw.org.bocra.portal.message.BocraMesssage","boolean"] }, 
+    {"name":"toBocraMesssageVO","parameterTypes":["bw.org.bocra.portal.message.BocraMesssage"] }, 
+    {"name":"toBocraMesssageVO","parameterTypes":["bw.org.bocra.portal.message.BocraMesssage","bw.org.bocra.portal.message.BocraMesssageVO"] }
+  ]
+},
+{
+  "name":"bw.org.bocra.portal.message.BocraMesssageDao$$SpringCGLIB$$0",
+  "fields":[
+    {"name":"CGLIB$CALLBACK_FILTER"}, 
+    {"name":"CGLIB$FACTORY_DATA"}
+  ],
+  "methods":[{"name":"CGLIB$SET_THREAD_CALLBACKS","parameterTypes":["org.springframework.cglib.proxy.Callback[]"] }]
 },
 {
   "name":"bw.org.bocra.portal.message.BocraMesssageDaoBase",
@@ -522,27 +536,6 @@
   ]
 },
 {
-  "name":"bw.org.bocra.portal.message.BocraMesssageDaoImpl",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageRepository"] }, 
-    {"name":"bocraMesssageVOToEntity","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO"] }, 
-    {"name":"bocraMesssageVOToEntity","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageVO","bw.org.bocra.portal.message.BocraMesssage","boolean"] }, 
-    {"name":"toBocraMesssageVO","parameterTypes":["bw.org.bocra.portal.message.BocraMesssage"] }, 
-    {"name":"toBocraMesssageVO","parameterTypes":["bw.org.bocra.portal.message.BocraMesssage","bw.org.bocra.portal.message.BocraMesssageVO"] }
-  ]
-},
-{
-  "name":"bw.org.bocra.portal.message.BocraMesssageDaoImpl$$SpringCGLIB$$0",
-  "fields":[
-    {"name":"CGLIB$CALLBACK_FILTER"}, 
-    {"name":"CGLIB$FACTORY_DATA"}
-  ],
-  "methods":[{"name":"CGLIB$SET_THREAD_CALLBACKS","parameterTypes":["org.springframework.cglib.proxy.Callback[]"] }]
-},
-{
   "name":"bw.org.bocra.portal.message.BocraMesssagePlatform",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
@@ -554,8 +547,21 @@
 },
 {
   "name":"bw.org.bocra.portal.message.BocraMesssageService",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageDao","org.springframework.amqp.rabbit.core.RabbitTemplate","bw.org.bocra.portal.message.BocraMesssageRepository","bw.org.bocra.portal.properties.RabbitProperties","org.springframework.context.MessageSource","jakarta.persistence.EntityManager"] }, 
+    {"name":"readEmailQueue","parameterTypes":["java.util.Collection"] }
+  ]
+},
+{
+  "name":"bw.org.bocra.portal.message.BocraMesssageService$$SpringCGLIB$$0",
+  "fields":[
+    {"name":"CGLIB$CALLBACK_FILTER"}, 
+    {"name":"CGLIB$FACTORY_DATA"}
+  ],
+  "methods":[{"name":"CGLIB$SET_THREAD_CALLBACKS","parameterTypes":["org.springframework.cglib.proxy.Callback[]"] }]
 },
 {
   "name":"bw.org.bocra.portal.message.BocraMesssageServiceBase",
@@ -576,21 +582,6 @@
     {"name":"search","parameterTypes":["java.lang.String"] }, 
     {"name":"updateMessageStatus","parameterTypes":["java.lang.Long","bw.org.bocra.portal.message.BocraMesssageStatus"] }
   ]
-},
-{
-  "name":"bw.org.bocra.portal.message.BocraMesssageServiceImpl",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["bw.org.bocra.portal.message.BocraMesssageDao","bw.org.bocra.portal.message.BocraMesssageRepository","org.springframework.context.MessageSource","jakarta.persistence.EntityManager"] }]
-},
-{
-  "name":"bw.org.bocra.portal.message.BocraMesssageServiceImpl$$SpringCGLIB$$0",
-  "fields":[
-    {"name":"CGLIB$CALLBACK_FILTER"}, 
-    {"name":"CGLIB$FACTORY_DATA"}
-  ],
-  "methods":[{"name":"CGLIB$SET_THREAD_CALLBACKS","parameterTypes":["org.springframework.cglib.proxy.Callback[]"] }]
 },
 {
   "name":"bw.org.bocra.portal.message.BocraMesssageStatus",
@@ -784,8 +775,7 @@
   "methods":[
     {"name":"getJsonFactory","parameterTypes":[] }, 
     {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.ResolvedType"] }, 
-    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.TypeReference"] }, 
-    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","java.lang.Class"] }
+    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.TypeReference"] }
   ]
 },
 {
@@ -2267,6 +2257,7 @@
   "name":"java.lang.reflect.ParameterizedType",
   "methods":[
     {"name":"getActualTypeArguments","parameterTypes":[] }, 
+    {"name":"getOwnerType","parameterTypes":[] }, 
     {"name":"getRawType","parameterTypes":[] }
   ]
 },
@@ -4723,7 +4714,6 @@
 },
 {
   "name":"org.springframework.aop.TargetClassAware",
-  "queryAllDeclaredMethods":true,
   "methods":[{"name":"getTargetClass","parameterTypes":[] }]
 },
 {
@@ -8433,15 +8423,6 @@
   "name":"org.springframework.cache.jcache.JCacheCache"
 },
 {
-  "name":"org.springframework.cglib.proxy.Dispatcher"
-},
-{
-  "name":"org.springframework.cglib.proxy.MethodInterceptor"
-},
-{
-  "name":"org.springframework.cglib.proxy.NoOp"
-},
-{
   "name":"org.springframework.context.ApplicationContextAware",
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
@@ -8973,7 +8954,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "methods":[
-    {"name":"getPersistentEntity","parameterTypes":["java.lang.Class"] }, 
+    {"name":"getPersistentEntity","parameterTypes":["org.springframework.data.mapping.PersistentProperty"] }, 
     {"name":"getPersistentEntity","parameterTypes":["org.springframework.data.util.TypeInformation"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["java.lang.Class"] }, 
     {"name":"getRequiredPersistentEntity","parameterTypes":["org.springframework.data.mapping.PersistentProperty"] }, 

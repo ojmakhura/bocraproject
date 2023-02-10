@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   ###############################################################################
-  # The main API 
+  # The communication API 
   ###############################################################################
   comm:
     image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}"
@@ -17,7 +17,7 @@ services:
       - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
       context: .
-      dockerfile: bocraportal/comm/Dockerfile.native
+      dockerfile: bocraportal/comm/Dockerfile
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
@@ -41,6 +41,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
       RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_DOMAIN: ${RABBITMQ_DOMAIN}
       RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
       COMM_LOG_LEVEL: ${COMM_LOG_LEVEL}
       WEB_URL: ${WEB_URL}

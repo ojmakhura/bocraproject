@@ -29,6 +29,9 @@ test_api:
 build_comm:
 	. ./.env && mvn -f bocraportal/comm -Pnative clean install -DskipTests -o
 
+package_comm:
+	. ./.env && mvn -f bocraportal/comm -Pnative clean package -DskipTests -o
+
 build_comm_native:
 	. ./.env && mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
 
