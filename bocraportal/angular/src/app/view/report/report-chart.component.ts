@@ -50,14 +50,22 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.chartTypeControl.patchValue('bar');
     this.periodControl.patchValue('all');
 
-    this.datasets = this.basicDatasets();
+    this.basicDatasets().then(d => {
+      this.datasets = d;
+
+      if(!this.reportChartGroup.get('chartImage')) {
+        this.reportChartGroup.addControl('chartImage', new FormControl(this.chart.toBase64Image()));
+      } else {
+        this.reportChartGroup.setControl('chartImage', new FormControl(this.chart.toBase64Image()));
+      }
+    });
   }
 
   ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {}
 
-  basicDatasets() {
+  async basicDatasets() {
     let tset = {};
     this.labelNames = [];
     this.periods = [];
@@ -117,7 +125,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.periods = this.selectedPeriods?.map((per) => per.alias);
 
-    return dset;
+    return await dset;
   }
 
   newForm(chart: ReportChart): FormGroup {
@@ -127,11 +135,20 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       chartCaption: [chart?.chartCaption],
       labels: this.formBuilder.array(chart?.labels),
       data: this.formBuilder.array(chart?.data),
+      chartImage: []
     });
   }
 
   selectedPeriod() {
-    this.datasets = this.basicDatasets();
+    this.basicDatasets().then(d => {
+      this.datasets = d;
+
+      if(!this.reportChartGroup.get('chartImage')) {
+        this.reportChartGroup.addControl('chartImage', new FormControl(this.chart.toBase64Image()));
+      } else {
+        this.reportChartGroup.setControl('chartImage', new FormControl(this.chart.toBase64Image()));
+      }
+    });
   }
 
   selectedFormSection() {}
@@ -162,13 +179,29 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectedChartType() {
     if (this.chartType === 'bar') {
-      this.datasets = this.basicDatasets();
+      this.basicDatasets().then(d => {
+        this.datasets = d;
+
+        if(!this.reportChartGroup.get('chartImage')) {
+          this.reportChartGroup.addControl('chartImage', new FormControl(this.chart.toBase64Image()));
+        } else {
+          this.reportChartGroup.setControl('chartImage', new FormControl(this.chart.toBase64Image()));
+        }
+      });
     }
   }
 
   clearReport() {}
 
   refreshChart() {
-    this.datasets = this.basicDatasets();
+    this.basicDatasets().then(d => {
+      this.datasets = d;
+
+      if(!this.reportChartGroup.get('chartImage')) {
+        this.reportChartGroup.addControl('chartImage', new FormControl(this.chart.toBase64Image()));
+      } else {
+        this.reportChartGroup.setControl('chartImage', new FormControl(this.chart.toBase64Image()));
+      }
+    });
   }
 }

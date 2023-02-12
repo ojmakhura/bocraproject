@@ -179,8 +179,8 @@ services:
     #   timeout: 5s
     #   retries: 3
     #   start_period: 15s
-    # volumes:
-    #   - ${BOCRA_DATA}/hosts:/etc/hosts
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
       context: .
       dockerfile: Dockerfile.keycloak

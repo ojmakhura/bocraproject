@@ -2,7 +2,9 @@
 import { AfterViewInit, Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { ReportRestController } from '@app/service/bw/org/bocra/portal/report/report-rest-controller';
 import { ReportElement } from './report-element.component';
+import { saveAs } from 'file-saver';
 
 export class FormReport {
   formName: string = '';
@@ -18,18 +20,20 @@ export class FormReport {
 export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() formReportGroup: FormGroup | any;
   protected formBuilder: FormBuilder;
+  reportController: ReportRestController;
 
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
+    this.reportController = this.injector.get(ReportRestController)
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
-  clearReport() {}
+  clearReport() { }
 
   get reportElementsControl(): FormArray {
     return this.formReportGroup.get('reportElements') as FormArray;
@@ -88,6 +92,60 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
       ]),
       formSubmissions: this.formBuilder.array(formReport?.formSubmissions),
       reportElements: this.formBuilder.array([]),
+    });
+  }
+  dataURItoBlob(dataURI: string) {
+    const byteString = window.atob(dataURI);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      int8Array[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([int8Array], { type: 'image/png' });
+    return blob;
+  }
+
+  downloadFormReport() {
+    console.log(this.formReportGroup.value);
+
+    let value = this.formReportGroup.value;
+
+    let d: any = {};
+
+    d.formName = value.formName;
+    d.reportElements = []
+    value.reportElements.forEach((element: any) => {
+      let el: any = {
+        charts: []
+      }
+
+      console.log(element)
+      element.charts.forEach((ch: any) => {
+
+        const imageName = 'name.png';
+        const imageBlob = this.dataURItoBlob(ch.chartImage);
+        const imageFile = new File([imageBlob], imageName, { type: 'image/png' });
+        
+        console.log(imageFile)
+        
+        el.charts.push({
+          caption: ch.chartCaption,
+          type: ch.chartType,
+          image: imageFile
+        });
+      });
+
+      console.log(element)
+
+      d.reportElements.push(el);
+    });
+
+    this.reportController.createWordDocument(d).subscribe(file => {
+      if (file) {
+        let blob: any = file as Blob;
+        const url = window.URL.createObjectURL(blob);
+        saveAs(blob, "documentName.docx");
+      }
     });
   }
 }

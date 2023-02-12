@@ -11,7 +11,7 @@ export class ReportRestController {
 
   constructor(private http: HttpClient) {}
 
-  public createWordDocument(): Observable<string[][] | any[]> {
-    return this.http.get<string[][] | any[]>(`${this.path}/word`);
+  public createWordDocument(data: any): Observable<any> {
+    return this.http.post(`${this.path}/word`, data);
   }
 }
