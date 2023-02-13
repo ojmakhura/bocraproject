@@ -12,6 +12,6 @@ export class ReportRestController {
   constructor(private http: HttpClient) {}
 
   public createWordDocument(data: any): Observable<any> {
-    return this.http.post(`${this.path}/word`, data);
+    return this.http.post(`${this.path}/word`, data, { responseType: 'blob' });
   }
 }

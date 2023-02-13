@@ -5,15 +5,26 @@
 //
 package bw.org.bocra.portal.report;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
+import org.apache.poi.util.Units;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -39,12 +50,16 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
         try {
             XWPFDocument document = new XWPFDocument();
 
-            System.out.println(data.entrySet());
+            // System.out.println(data.entrySet());
+            String formName = data.get("formName").toString();
 
-            System.out.println(data.get("formName"));
+            // System.out.println(formName);
             XWPFParagraph title = document.createParagraph();
             XWPFRun titleRun = title.createRun();
-            titleRun.setText(data.get("formName").toString());
+            titleRun.setText(formName);
+            titleRun.setFontSize(15);
+            titleRun.setFontFamily("Calibri");
+            // titleRun.setColor("fff000");
             titleRun.addBreak();
 
             ArrayList<HashMap> reportElements = (ArrayList<HashMap>) data.get("reportElements");
@@ -54,24 +69,52 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
 
                 for (HashMap chart : charts) {
 
+                    // String chartLabel = (String) chart.get("label");
+                    // if (StringUtils.isNotEmpty(chartLabel)) {
+
+                    //     XWPFParagraph label = document.createParagraph();
+                    //     XWPFRun labelRun = label.createRun();
+                    //     labelRun.setText(chartLabel);
+                    //     labelRun.addBreak();
+                    // }
+
                     String image64 = (String) chart.get("image");
 
-                    image64 = image64.substring(image64.indexOf(','));
+                    if (StringUtils.isNotEmpty(image64)) {
 
-                    byte[] imageData = Base64.getDecoder().decode(image64);
+                        image64 = image64.split(",")[1];
+                        byte[] imageData = Base64.getDecoder().decode(image64);
+
+                        XWPFParagraph image = document.createParagraph();
+                        XWPFRun imageRun = image.createRun();
+                        InputStream inStream = new ByteArrayInputStream(imageData);
+
+                        ByteArrayInputStream imageStream = new ByteArrayInputStream(imageData);
+                        BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
+                        imageStream.close();
+                        
+                        imageRun.addPicture(inStream, XWPFDocument.PICTURE_TYPE_PNG, "chart",
+                                Units.toEMU(img.getWidth()), Units.toEMU(img.getHeight()));
+                        inStream.close();
+                        imageRun.addBreak();
+
+                    }
                 }
             }
 
-            System.out.println(reportElements);
+            // System.out.println(reportElements);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             document.write(out);
+            FileOutputStream out2 = new FileOutputStream("/home/junior/tester.docx");
+            document.write(out2);
+            out2.close();
             out.close();
             document.close();
 
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType
                             .parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"tester.docx\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + formName + ".docx\"")
                     .body(new ByteArrayResource(out.toByteArray()));
         } catch (Exception e) {
             e.printStackTrace();

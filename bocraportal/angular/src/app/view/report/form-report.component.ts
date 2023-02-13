@@ -94,6 +94,7 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
       reportElements: this.formBuilder.array([]),
     });
   }
+  
   dataURItoBlob(dataURI: string) {
     const byteString = window.atob(dataURI);
     const arrayBuffer = new ArrayBuffer(byteString.length);
@@ -106,10 +107,8 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   downloadFormReport() {
-    console.log(this.formReportGroup.value);
 
     let value = this.formReportGroup.value;
-
     let d: any = {};
 
     d.formName = value.formName;
@@ -119,23 +118,15 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
         charts: []
       }
 
-      console.log(element)
       element.charts.forEach((ch: any) => {
-
-        const imageName = 'name.png';
-        const imageBlob = this.dataURItoBlob(ch.chartImage);
-        const imageFile = new File([imageBlob], imageName, { type: 'image/png' });
-        
-        console.log(imageFile)
-        
+       
         el.charts.push({
           caption: ch.chartCaption,
+          label: ch.chartLabel,
           type: ch.chartType,
-          image: imageFile
+          image: ch.chartImage
         });
       });
-
-      console.log(element)
 
       d.reportElements.push(el);
     });
@@ -144,8 +135,9 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
       if (file) {
         let blob: any = file as Blob;
         const url = window.URL.createObjectURL(blob);
-        saveAs(blob, "documentName.docx");
+        saveAs(blob, `${d.formName}.docx`);
       }
     });
   }
 }
+
