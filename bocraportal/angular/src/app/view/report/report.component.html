@@ -8,6 +8,9 @@
           </button>
         </div>
       </section>
+      <div *ngIf="loading | async">
+        <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+      </div>
       <div formArrayName="formReports" class="container">
         <div
           class="card-body"

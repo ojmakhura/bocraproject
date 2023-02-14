@@ -6,12 +6,14 @@
 package bw.org.bocra.portal.report;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -19,6 +21,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.imageio.ImageIO;
+import javax.xml.bind.DatatypeConverter;
+
 import org.apache.poi.util.Units;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,8 +36,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.impl.Base64Codec;
 
 @RestController
 @RequestMapping("/report")
@@ -45,12 +59,100 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
         super();
     }
 
+    @PostMapping(path = "/create/word", consumes = {
+            MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE
+    })
+    public ResponseEntity<?> handleCreateWordDocument(@RequestPart("images") MultipartFile[] files,
+            @RequestParam("data") String data) throws JsonMappingException, JsonProcessingException {
+        System.out.println("*****************************************************************");
+        System.out.println(data);
+
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, ?> content = mapper.readValue(data, HashMap.class);
+        try {
+            XWPFDocument document = new XWPFDocument();
+
+            System.out.println(content.entrySet());
+            String formName = content.get("formName").toString();
+
+            // System.out.println(formName);
+            XWPFParagraph title = document.createParagraph();
+            XWPFRun titleRun = title.createRun();
+            titleRun.setText(formName);
+            titleRun.setFontSize(15);
+            titleRun.setFontFamily("Calibri");
+            // titleRun.setColor("fff000");
+            titleRun.addBreak();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+
+            ArrayList<HashMap> reportElements = (ArrayList<HashMap>) content.get("reportElements");
+
+            for (HashMap element : reportElements) {
+                ArrayList<HashMap> charts = (ArrayList<HashMap>) element.get("charts");
+
+                for (HashMap chart : charts) {
+
+                    // String chartLabel = (String) chart.get("label");
+                    // if (StringUtils.isNotEmpty(chartLabel)) {
+
+                    // XWPFParagraph label = document.createParagraph();
+                    // XWPFRun labelRun = label.createRun();
+                    // labelRun.setText(chartLabel);
+                    // labelRun.addBreak();
+                    // }
+
+                    Integer index = (Integer) chart.get("imageIndex");
+
+                    if (index != null) {
+
+                        InputStream stream = files[index.intValue()].getInputStream();
+                        byte[] buffer = new byte[stream.available()];
+                        stream.read(buffer);
+
+                        File targetFile = new File("src/main/resources/targetFile" + index + ".png");
+                        try (OutputStream outStream = new FileOutputStream(targetFile)) {
+                            outStream.write(buffer);
+                        }
+                        // System.out.println(files[index.intValue()].getOriginalFilename());
+                        // System.out.println(files[index.intValue()].getSize());
+                        // System.out.println(files[index.intValue()].getContentType());
+                        // XWPFParagraph image = document.createParagraph();
+                        // XWPFRun imageRun = image.createRun();
+                        // imageRun.addPicture(stream, XWPFDocument.PICTURE_TYPE_JPEG, "chart",
+                        // Units.toEMU(50), Units.toEMU(50));
+                        // stream.close();
+                    }
+
+                }
+            }
+
+            // System.out.println(reportElements);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            document.write(out);
+            byte[] outArray = out.toByteArray();
+            out.flush();
+            out.close();
+            document.close();
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .contentType(MediaType
+                            .parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + formName + ".docx\"")
+                    .body(new ByteArrayResource(outArray));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @Override
     public ResponseEntity<?> handleCreateWordDocument(Map data) {
         try {
             XWPFDocument document = new XWPFDocument();
-
-            // System.out.println(data.entrySet());
             String formName = data.get("formName").toString();
 
             // System.out.println(formName);
@@ -69,45 +171,59 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
 
                 for (HashMap chart : charts) {
 
-                    // String chartLabel = (String) chart.get("label");
-                    // if (StringUtils.isNotEmpty(chartLabel)) {
+                    String chartLabel = (String) chart.get("label");
+                    if (StringUtils.isNotEmpty(chartLabel)) {
 
-                    //     XWPFParagraph label = document.createParagraph();
-                    //     XWPFRun labelRun = label.createRun();
-                    //     labelRun.setText(chartLabel);
-                    //     labelRun.addBreak();
-                    // }
+                        XWPFParagraph label = document.createParagraph();
+                        XWPFRun labelRun = label.createRun();
+                        labelRun.setText(chartLabel);
+                        labelRun.addBreak();
+                    }
 
                     String image64 = (String) chart.get("image");
 
                     if (StringUtils.isNotEmpty(image64)) {
-
-                        image64 = image64.split(",")[1];
+                        image64 = image64.split(";base64,")[1];
+                        image64 = image64.split("=")[0];
+                        
                         byte[] imageData = Base64.getDecoder().decode(image64);
-
+                        InputStream in2 = new ByteArrayInputStream(imageData);
                         XWPFParagraph image = document.createParagraph();
                         XWPFRun imageRun = image.createRun();
-                        InputStream inStream = new ByteArrayInputStream(imageData);
 
-                        ByteArrayInputStream imageStream = new ByteArrayInputStream(imageData);
                         BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
-                        imageStream.close();
-                        
-                        imageRun.addPicture(inStream, XWPFDocument.PICTURE_TYPE_PNG, "chart",
-                                Units.toEMU(img.getWidth()), Units.toEMU(img.getHeight()));
-                        inStream.close();
-                        imageRun.addBreak();
+
+                        int w = img.getWidth();
+                        int h = img.getTileHeight();
+
+                        if(w > 450) {
+                            double scale = 450.0/w;
+
+                            w = (int) (img.getWidth() * scale);
+                            h = (int) (img.getHeight() * scale);
+                        }
+
+                        imageRun.addPicture(in2, XWPFDocument.PICTURE_TYPE_PNG, "chart",
+                                Units.toEMU(w), Units.toEMU(h));
+
+                        String caption = (String) chart.get("caption");
+                        if (StringUtils.isNotEmpty(caption)) {
+    
+                            XWPFParagraph captionParagraph = document.createParagraph();
+                            XWPFRun run = captionParagraph.createRun();
+                            run.setText(caption);
+                            run.addBreak();
+                        }
+    
+
+                        in2.close();
 
                     }
                 }
             }
-
-            // System.out.println(reportElements);
+                        
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             document.write(out);
-            FileOutputStream out2 = new FileOutputStream("/home/junior/tester.docx");
-            document.write(out2);
-            out2.close();
             out.close();
             document.close();
 

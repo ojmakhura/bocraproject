@@ -334,7 +334,7 @@
           ></mat-paginator>
         </div>
         <div *ngFor="let chartControl of chartsControl?.controls; let i = index" #test>
-          <app-report-chart
+          <app-report-chart #reportChart
             [dataColumns]="dataColumns"
             [dataRows]="dataRows"
             [reportType]="reportType"
