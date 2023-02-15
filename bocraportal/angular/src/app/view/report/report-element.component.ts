@@ -21,6 +21,7 @@ import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submissi
 import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
+import { MatTableExporterDirective } from 'mat-table-exporter';
 import * as math from 'mathjs';
 import { floor } from 'mathjs';
 import { ReportChart, ReportChartComponent } from './report-chart.component';
@@ -55,7 +56,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   protected formBuilder: FormBuilder;
   @Input() formSubmissions: FormSubmissionVO[] | undefined;
   @Output() actionIndexEvent = new EventEmitter<number>();
-  @ViewChildren("reportChart") reportChartComponents: ReportChartComponent[];
+  @ViewChildren('reportChart') reportChartComponents: ReportChartComponent[];
+  @ViewChild(MatTableExporterDirective) matTableExporter: MatTableExporterDirective;
 
   colors = {};
   selectedLicensees: any[] = [];
@@ -1288,11 +1290,10 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   getChartImageData() {
     let charts: any[] = [];
-    this.reportChartComponents.forEach(chartComponent => {
+    this.reportChartComponents.forEach((chartComponent) => {
       charts.push(chartComponent.getChartImageData());
     });
 
     return charts;
   }
 }
-

@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,6 +31,8 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -180,48 +183,73 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
                         labelRun.addBreak();
                     }
 
-                    String image64 = (String) chart.get("image");
+                    String chartType = (String) chart.get("type");
 
-                    if (StringUtils.isNotEmpty(image64)) {
-                        image64 = image64.split(";base64,")[1];
-                        image64 = image64.split("=")[0];
-                        
-                        byte[] imageData = Base64.getDecoder().decode(image64);
-                        InputStream in2 = new ByteArrayInputStream(imageData);
-                        XWPFParagraph image = document.createParagraph();
-                        XWPFRun imageRun = image.createRun();
+                    if (chartType.equals("table")) {
 
-                        BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
+                        Map<String, List<?>> tableData = (Map<String, List<?>>) chart.get("tableData");
+                        System.out.println(tableData);
 
-                        int w = img.getWidth();
-                        int h = img.getTileHeight();
-
-                        if(w > 450) {
-                            double scale = 450.0/w;
-
-                            w = (int) (img.getWidth() * scale);
-                            h = (int) (img.getHeight() * scale);
+                        XWPFTable table = document.createTable();
+                        List<String> labels = (List<String>) tableData.get("labels");
+                        XWPFTableRow labelRow = table.getRow(0);
+                        labelRow.getCell(0).setText("");
+                        for (int i = 1; i < labels.size(); i++) {
+                            labelRow.addNewTableCell().setText(labels.get(i));
                         }
 
-                        imageRun.addPicture(in2, XWPFDocument.PICTURE_TYPE_PNG, "chart",
-                                Units.toEMU(w), Units.toEMU(h));
+                        List<List<String>> tableValues = (List<List<String>>) tableData.get("data");
+                        for (List<String> values : tableValues) {
 
-                        String caption = (String) chart.get("caption");
-                        if (StringUtils.isNotEmpty(caption)) {
-    
-                            XWPFParagraph captionParagraph = document.createParagraph();
-                            XWPFRun run = captionParagraph.createRun();
-                            run.setText(caption);
-                            run.addBreak();
+                            XWPFTableRow tableRow = table.createRow();
+                            for (int i = 0; i < values.size(); i++) {
+                                tableRow.getCell(i).setText(values.get(i));
+                            }
                         }
-    
 
-                        in2.close();
+                    } else {
 
+                        String image64 = (String) chart.get("image");
+
+                        if (StringUtils.isNotEmpty(image64)) {
+                            image64 = image64.split(";base64,")[1];
+                            image64 = image64.split("=")[0];
+
+                            byte[] imageData = Base64.getDecoder().decode(image64);
+                            InputStream in2 = new ByteArrayInputStream(imageData);
+                            XWPFParagraph image = document.createParagraph();
+                            XWPFRun imageRun = image.createRun();
+
+                            BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
+
+                            int w = img.getWidth();
+                            int h = img.getTileHeight();
+
+                            if (w > 450) {
+                                double scale = 450.0 / w;
+
+                                w = (int) (img.getWidth() * scale);
+                                h = (int) (img.getHeight() * scale);
+                            }
+
+                            imageRun.addPicture(in2, XWPFDocument.PICTURE_TYPE_PNG, "chart",
+                                    Units.toEMU(w), Units.toEMU(h));
+
+                            in2.close();
+
+                        }
+                    }
+                    String caption = (String) chart.get("caption");
+                    if (StringUtils.isNotEmpty(caption)) {
+
+                        XWPFParagraph captionParagraph = document.createParagraph();
+                        XWPFRun run = captionParagraph.createRun();
+                        run.setText(caption);
+                        run.addBreak();
                     }
                 }
             }
-                        
+
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             document.write(out);
             out.close();

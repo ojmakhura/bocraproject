@@ -301,8 +301,10 @@
           <table
             mat-table
             matSort
+            matTableExporter
             [dataSource]="gridDataSource"
             #gridSort="matSort"
+            #exporter="matTableExporter"
             class="table table-bordered table-striped"
           >
             <ng-container matColumnDef="label">
@@ -333,8 +335,14 @@
             showFirstLastButtons
           ></mat-paginator>
         </div>
+        <div class="mb-3" >
+          <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('xlsx', {fileName:'table_download', sheet: 'table_download'})">XLSX</button>
+          <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('csv', {fileName:'table_download'})">CSV</button>
+          <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('json', {fileName:'table_download'})">JSON</button>
+        </div>
         <div *ngFor="let chartControl of chartsControl?.controls; let i = index" #test>
-          <app-report-chart #reportChart
+          <app-report-chart
+            #reportChart
             [dataColumns]="dataColumns"
             [dataRows]="dataRows"
             [reportType]="reportType"
