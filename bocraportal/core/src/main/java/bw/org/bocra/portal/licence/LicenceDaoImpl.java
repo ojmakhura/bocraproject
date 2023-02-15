@@ -10,9 +10,14 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentMetadataTarget;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.licence.type.LicenceType;
@@ -66,11 +71,21 @@ public class LicenceDaoImpl
             target.setLicenceType(type);
         }
 
-        if(CollectionUtils.isNotEmpty(source.getDocumentIds())) {
-            Collection<DocumentVO> docs = documentDao.toDocumentVOCollection(documentRepository.findByDocumentIdIn(source.getDocumentIds()));
-            docs = docs.stream().map(d -> {
-                d.setFile(null);
-                return d;
+        Specification<Document> specs = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget", DocumentMetadataTarget.LICENCE)
+                                            .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", source.getId()));
+
+        Collection<Document> entities = documentRepository.findAll(specs, Sort.by("id").ascending());
+        if(CollectionUtils.isNotEmpty(entities)) {
+            Collection<DocumentVO> docs = entities.stream().map(d -> {
+                DocumentVO dv = new DocumentVO();
+                dv.setId(d.getId());
+                dv.setContentType(d.getContentType());
+                dv.setDocumentId(d.getDocumentId());
+                dv.setDocumentName(d.getDocumentName());
+                dv.setExtension(d.getExtension());
+                dv.setMetadataTargetId(d.getMetadataTargetId());
+                dv.setSize(d.getSize());
+                return dv;
             }).collect(Collectors.toSet());
             target.setDocuments(docs);
         }
@@ -141,11 +156,6 @@ public class LicenceDaoImpl
             throw new IllegalArgumentException(
                 "LicenceDao.licenceVOToEntity - 'licenceType' or its id can not be null"
             );
-        }
-
-        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
-            target.setDocumentIds(source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toSet()));
-        }
-        
+        }        
     }
 }

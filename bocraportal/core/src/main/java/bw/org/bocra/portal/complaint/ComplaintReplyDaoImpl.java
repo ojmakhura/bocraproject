@@ -6,11 +6,18 @@
  */
 package bw.org.bocra.portal.complaint;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentMetadataTarget;
 import bw.org.bocra.portal.document.DocumentRepository;
+import bw.org.bocra.portal.document.DocumentVO;
 
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +65,24 @@ public class ComplaintReplyDaoImpl
         // source.getDocuments():bw.org.bocra.portal.document.Document to
         // bw.org.bocra.portal.document.DocumentVO
 
-        // ief(CollectionUtils.isNotEmpty(source.))
+        Specification<Document> specs = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget", DocumentMetadataTarget.COMPLAINT_REPLY)
+                                            .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", source.getId()));
+
+        Collection<Document> entities = documentRepository.findAll(specs, Sort.by("id").ascending());
+        if(CollectionUtils.isNotEmpty(entities)) {
+            Collection<DocumentVO> docs = entities.stream().map(d -> {
+                DocumentVO dv = new DocumentVO();
+                dv.setId(d.getId());
+                dv.setContentType(d.getContentType());
+                dv.setDocumentId(d.getDocumentId());
+                dv.setDocumentName(d.getDocumentName());
+                dv.setExtension(d.getExtension());
+                dv.setMetadataTargetId(d.getMetadataTargetId());
+                dv.setSize(d.getSize());
+                return dv;
+            }).collect(Collectors.toSet());
+            target.setDocuments(docs);
+        }
     }
 
     /**
@@ -107,10 +131,6 @@ public class ComplaintReplyDaoImpl
 
         if(source.getComplaint() != null && source.getComplaint().getId() != null) {
             target.setComplaint(complaintRepository.getReferenceById(source.getComplaint().getId()));
-        }
-
-        if(CollectionUtils.isNotEmpty(source.getDocuments())) {
-            //target.set (source.getDocuments().stream().map(doc -> doc.getDocumentId()).collect(Collectors.toList()));
         }
     }
 }

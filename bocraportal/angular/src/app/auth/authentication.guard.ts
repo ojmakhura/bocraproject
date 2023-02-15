@@ -22,8 +22,12 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     super(router$, keycloak);
   }
 
-  public async isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (this.excludedUrls.find((url) => url === state.url)) {
+  public async isAccessAllowed(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ) {
+    
+    if(state.url.includes('/complaint/edit-complaint') || this.excludedUrls.find(url => url === state.url)) {
       return true;
     }
 

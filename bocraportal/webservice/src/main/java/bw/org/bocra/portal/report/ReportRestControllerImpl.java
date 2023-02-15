@@ -32,7 +32,7 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -40,7 +40,7 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

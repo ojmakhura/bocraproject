@@ -38,7 +38,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not create a licence type form entry. Please contact administrator.");
             }
@@ -70,33 +70,33 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(licencetypeformunique)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An licence type form has been already created.");
+                        return ResponseEntity.badRequest().body("An licence type form has been already created.");
                     } 
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"form_fk\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The form value is missing.");
+                        return ResponseEntity.badRequest().body("The form value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"licence_type_fk\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The licence type value is missing.");
+                        return ResponseEntity.badRequest().body("The licence type value is missing.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -108,7 +108,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the licence type form with this form id.");
             }
@@ -126,7 +126,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -138,7 +138,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Licence type form with id %ld not found.", id));
             }
@@ -156,7 +156,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             }
 
             logger.error(message, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -168,7 +168,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find the licence type form with this licence type id.");
             }
@@ -186,7 +186,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             } else {
                 message = "An unknown error has occured. Please contact the system administrator.";
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -194,10 +194,10 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
     public ResponseEntity<?> handleGetAll() {
         try {
             logger.debug("Display all Licence Type Forms");
-            return ResponseEntity.status(HttpStatus.OK).body(licenceTypeFormService.getAll());
+            return ResponseEntity.ok().body(licenceTypeFormService.getAll());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -209,7 +209,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the licence type form with id " + id);
             }
@@ -223,7 +223,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete licence type form with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting licence type form with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting licence type form with id " + id);
         }
     }
 
@@ -235,7 +235,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the form id.");
             }
@@ -243,7 +243,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage(), e );
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 
@@ -255,7 +255,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to change the licence type id.");
             }
@@ -263,7 +263,7 @@ public class LicenceTypeFormRestControllerImpl extends LicenceTypeFormRestContro
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 }

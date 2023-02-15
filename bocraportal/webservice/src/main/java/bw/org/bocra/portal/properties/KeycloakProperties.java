@@ -10,16 +10,16 @@ public class KeycloakProperties {
     private String authServerUrl;
     private String sslRequired;
     private boolean publicClient;
-    private String resourse;
+    private String resource;
     private boolean bearerOnly;
 
     public KeycloakProperties(String realm, String authServerUrl, String sslRequired, boolean publicClient,
-            String resourse, boolean bearerOnly) {
+            String resource, boolean bearerOnly) {
         this.realm = realm;
         this.authServerUrl = authServerUrl;
         this.sslRequired = sslRequired;
         this.publicClient = publicClient;
-        this.resourse = resourse;
+        this.resource = resource;
         this.bearerOnly = bearerOnly;
     }
 
@@ -55,12 +55,12 @@ public class KeycloakProperties {
         this.publicClient = publicClient;
     }
 
-    public String getResourse() {
-        return resourse;
+    public String getResource() {
+        return resource;
     }
 
-    public void setResourse(String resourse) {
-        this.resourse = resourse;
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
     public boolean isBearerOnly() {
@@ -71,4 +71,11 @@ public class KeycloakProperties {
         this.bearerOnly = bearerOnly;
     }
 
+    @Override
+    public String toString() {
+        return "KeycloakProperties [realm=" + realm + ", authServerUrl=" + authServerUrl + ", sslRequired="
+                + sslRequired + ", publicClient=" + publicClient + ", resourse=" + resource + ", bearerOnly="
+                + bearerOnly + "]";
+    }
+    
 }

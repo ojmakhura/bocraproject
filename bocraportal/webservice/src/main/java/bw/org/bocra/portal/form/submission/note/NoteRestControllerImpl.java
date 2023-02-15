@@ -40,7 +40,7 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not load the submission note.");
             }
@@ -58,7 +58,7 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
             }
 
             logger.error(message, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -66,11 +66,11 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
     public ResponseEntity<?> handleGetFormSubmissionNotes(Long formSubmissionId) {
         try {
             logger.debug("Display Form Submission Notes " + formSubmissionId);
-            return ResponseEntity.status(HttpStatus.OK).body(noteService.getFormSubmissionNotes(formSubmissionId));
+            return ResponseEntity.ok().body(noteService.getFormSubmissionNotes(formSubmissionId));
             
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -81,7 +81,7 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
             ResponseEntity<?> response;
 
             if(noteService.remove(id)) {
-                response = ResponseEntity.status(HttpStatus.OK).body("Submission note deleted.");
+                response = ResponseEntity.ok().body("Submission note deleted.");
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the submission note with id " + id);
             }
@@ -95,7 +95,7 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete submission note with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting submission note with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting submission note with id " + id);
         }
     }
 
@@ -107,9 +107,9 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
-                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not save the submission note.");
+                response = ResponseEntity.badRequest().body("Could not save the submission note.");
             }
 
             return response;
@@ -139,7 +139,7 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
@@ -148,19 +148,19 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
                     
                 } else if (e.getCause().getMessage().contains("null value in column")) {
                     if (e.getCause().getMessage().contains("column \"note\"")) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The note value is missing.");
+                        return ResponseEntity.badRequest().body("The note value is missing.");
                     } 
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown database error has occured. Please contact the portal administrator.");
+                return ResponseEntity.badRequest().body("An unknown database error has occured. Please contact the portal administrator.");
             } 
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.printStackTrace();
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }

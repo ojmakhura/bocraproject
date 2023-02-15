@@ -40,10 +40,13 @@ services:
           - node.labels.bocra_web == true
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
-        - "traefik.http.routers.bocra-web.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-        - "traefik.http.routers.bocra-web.tls=${SSL_SECURE}"
-        - "traefik.http.routers.bocra-web.tls.certresolver=le"
+        - "traefik.http.routers.bocra-web-http.rule=Host(`${WEB_DOMAIN}`)"
+        - "traefik.http.routers.bocra-web-http.entrypoints=web"
+        - "traefik.http.routers.bocra-web-http.middlewares=https-redirect"
+        - "traefik.http.routers.bocra-web-https.rule=Host(`${WEB_DOMAIN}`)"
+        - "traefik.http.routers.bocra-web-https.entrypoints=websecure"
+        - "traefik.http.routers.bocra-web-https.tls=${SSL_SECURE}"
+        # - "traefik.http.routers.bocra-web.tls.certresolver=le"
 
 ###############################################################################
 # Networks

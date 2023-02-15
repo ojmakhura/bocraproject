@@ -161,12 +161,6 @@ public class LicenseeShareholderServiceImpl
     @Override
     protected LicenseeShareholderVO handleAttachDocument(Long id, Long documentId) throws Exception {
         LicenseeShareholder ls = licenseeShareholderRepository.getReferenceById(id);
-        if (CollectionUtils.isEmpty(ls.getDocumentIds())) {
-            ls.setDocumentIds(new HashSet<>());
-        }
-
-        ls.getDocumentIds().add(documentId);
-        ls = licenseeShareholderRepository.save(ls);
         return getLicenseeShareholderDao().toLicenseeShareholderVO(ls);
     }
 
