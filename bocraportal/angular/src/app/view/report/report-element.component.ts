@@ -1,362 +1,1298 @@
-<div class="card container">
-  <div class="card-body">
-    <form [formGroup]="reportElementGroup">
-      <div>
-        <div class="mb-3 row">
-          <label for="report-type" class="col-sm-2 col-form-label">Report Type</label>
-          <div class="col-sm-10">
-            <select
-              id="report-type"
-              class="form-select"
-              (change)="reportTypeChange()"
-              formControlName="reportType"
-              aria-label="Select report type"
-            >
-              <option></option>
-              <option value="default">Default</option>
-              <option value="custom">Custom</option>
-            </select>
-          </div>
-        </div>
-        <div *ngIf="reportType">
-          <div class="mb-3" *ngIf="reportType === 'custom'">
-            <div class="mb-3">
-              <mat-tab-group animationDuration="0ms" class="view-tabs">
-                <mat-tab label="{{ 'periods' | translate }}">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Select</th>
-                        <th scope="col">Periods</th>
-                        <th scope="col">Alias</th>
-                      </tr>
-                    </thead>
-                    <tbody formArrayName="periodSelections">
-                      <tr *ngFor="let period of periodSelectionsArray.controls; let k = index" [formGroupName]="k">
-                        <td scope="col">
-                          <input
-                            type="checkbox"
-                            formControlName="selected"
-                            aria-label="Checkbox for following text input"
-                            (change)="periodSelectionChange($event, k)"
-                          />
-                        </td>
-                        <td scope="col">
-                          {{ period.value.period }}
-                        </td>
-                        <td scope="col">
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="alias"
-                            (change)="periodAliasChange(period?.value, k)"
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </mat-tab>
-                <mat-tab label="{{ 'licensees' | translate }}">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Select</th>
-                        <th scope="col">Licensee</th>
-                      </tr>
-                    </thead>
-                    <tbody formArrayName="licenseeSelections">
-                      <tr *ngFor="let licensee of licenseeSelectionsArray.controls; let j = index" [formGroupName]="j">
-                        <td scope="col">
-                          <input
-                            type="checkbox"
-                            formControlName="selected"
-                            aria-label="Checkbox for following text input"
-                            (change)="licenseeSelectionChange($event, j)"
-                          />
-                        </td>
-                        <td scope="col">
-                          {{ licensee.value.licensee }}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </mat-tab>
-                <mat-tab label="{{ 'data.fields' | translate }}">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Select</th>
-                        <th scope="col">Field ID</th>
-                        <th scope="col">Field Name</th>
-                        <th scope="col">Alias</th>
-                      </tr>
-                    </thead>
-                    <tbody formArrayName="fieldSelections">
-                      <tr *ngFor="let fieldControl of fieldSelectionsArray.controls; let j = index" [formGroupName]="j">
-                        <td scope="col">
-                          <input
-                            type="checkbox"
-                            formControlName="selected"
-                            aria-label="Checkbox for following text input"
-                            (change)="fieldSelectionChange($event, j)"
-                          />
-                        </td>
-                        <td scope="col">
-                          {{ fieldControl?.value?.fieldId }}
-                        </td>
-                        <td scope="col">
-                          {{ fieldControl?.value?.fieldName }}
-                        </td>
-                        <td scope="col">
-                          <input
-                            type="text"
-                            class="form-control"
-                            formControlName="alias"
-                            (change)="fieldAliasChange($event, j)"
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </mat-tab>
-              </mat-tab-group>
-            </div>
-          </div>
+// Generated by andromda-angular cartridge (view\view.component.imp.ts.vsl) CAN EDIT!
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Inject,
+  Injector,
+  Input,
+  LOCALE_ID,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
+import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
+import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
+import * as math from 'mathjs';
+import { floor } from 'mathjs';
+import { ReportChart, ReportChartComponent } from './report-chart.component';
 
-          <div class="mb-3 row">
-            <label for="report-labels" class="col-sm-2 col-form-label">Columns</label>
-            <div class="col-sm-10">
-              <select
-                id="report-labels"
-                class="form-select"
-                formControlName="dataColumns"
-                aria-label="Default select example"
-                (change)="createReportGrid()"
-              >
-                <option value="licensees">Licensees</option>
-                <!-- <option value="periods">Periods</option> -->
-                <option value="fields">Data Fields</option>
-              </select>
-            </div>
-          </div>
-          <div class="card mb-3">
-            <table class="table" *ngIf="dataColumnsAnalyticsControl?.length > 0">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th scope="col">Type</th>
-                  <th scope="col">Tag</th>
-                  <th scope="col">Analytic Name</th>
-                  <th scope="col">Analytic Sources</th>
-                </tr>
-              </thead>
-              <tbody formArrayName="dataColumnsAnalytics">
-                <tr
-                  *ngFor="let fieldControl of dataColumnsAnalyticsControl.controls; let j = index"
-                  [formGroupName]="j"
-                >
-                  <td scope="col">
-                    <button
-                      type="button"
-                      (click)="removeCustomColumns(j); dataColumnsAnalyticsControl.removeAt(j)"
-                      class="btn btn-outline-primary"
-                    >
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </td>
-                  <td scope="col">
-                    <div class="col-sm-10">
-                      <select
-                        id="report-labels"
-                        class="form-select"
-                        formControlName="type"
-                        aria-label="Default select example"
-                        (change)="additionalDataColumnChange(j)"
-                      >
-                        <option value="custom">Custom</option>
-                        <option value="sum">Sum</option>
-                        <option value="mean">Mean</option>
-                        <option value="mode">Mode</option>
-                        <option value="median">Median</option>
-                        <option value="variance">Variance</option>
-                        <option value="std">Standard Deviation</option>
-                        <option value="min">Minimum</option>
-                        <option value="max">Maximum</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td scope="col">
-                    <input type="text" class="form-control" formControlName="tag" />
-                  </td>
-                  <td scope="col">
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="name"
-                      (change)="additionalDataColumnNameChange($event, j)"
-                      *ngIf="fieldControl.value?.type"
-                    />
-                  </td>
-                  <td scope="col">
-                    <textarea
-                      type="text"
-                      class="form-control"
-                      formControlName="sources"
-                      (change)="additionalDataColumnChange(j)"
-                      *ngIf="fieldControl.value?.name"
-                    ></textarea>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="mb-3">
-              <button type="button" class="btn btn-primary" (click)="addLabelsAnalytic('report')">Add</button>
-            </div>
-          </div>
-          <div class="mb-3 row" *ngIf="dataColumns !== null">
-            <label for="data-labels" class="col-sm-2 col-form-label">Rows</label>
-            <div class="col-sm-10">
-              <select
-                id="data-labels"
-                class="form-select"
-                formControlName="dataRows"
-                aria-label="Default select example"
-                (change)="createReportGrid(); generateColors(true)"
-              >
-                <option></option>
-                <option value="fields">Data Fields</option>
-                <option value="licensees" *ngIf="dataColumns !== 'licensees'">Licensees</option>
-                <!-- <option value="periods">Periods</option> -->
-              </select>
-            </div>
-          </div>
-        </div>
+export class ReportElement {
+  groupBy: string = '';
+  reportType: string = '';
+  dataColumns: string = '';
+  dataRows: string = '';
+  selectAllLicensees: boolean = false;
+  selectAllPeriods: boolean = false;
+  selectAllForms: boolean = false;
+  formSubmissions: FormSubmissionVO[] = [];
+  selectedLicensees: any[] = [];
+  selectedPeriods: string[] = [];
+  selectedFields: string[] = [];
+  charts: ReportChart[] = [];
+}
 
-        <div class="card mb-3">
-          <table class="table" *ngIf="dataRowsAnalyticsControl?.length > 0">
-            <thead>
-              <tr>
-                <th></th>
-                <th scope="col">Type</th>
-                <th scope="col">Analytic Name</th>
-                <th scope="col">Analytic Sources</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="dataRowsAnalytics">
-              <tr *ngFor="let fieldControl of dataRowsAnalyticsControl.controls; let j = index" [formGroupName]="j">
-                <td scope="col">
-                  <button type="button" (click)="removeCustomRows(j)" class="btn btn-outline-primary">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-                <td scope="col">
-                  <div class="col-sm-10">
-                    <select
-                      id="report-labels"
-                      class="form-select"
-                      formControlName="type"
-                      aria-label="Default select example"
-                      (change)="additionalRowChange(j)"
-                    >
-                      <option value="custom">Custom</option>
-                      <option value="sum">Sum</option>
-                      <option value="mean">Mean</option>
-                      <option value="mode">Mode</option>
-                      <option value="median">Median</option>
-                      <option value="variance">Variance</option>
-                      <option value="std">Standard Deviation</option>
-                      <option value="min">Minimum</option>
-                      <option value="max">Maximum</option>
-                    </select>
-                  </div>
-                </td>
-                <td scope="col">
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="name"
-                    (change)="additionalRowNameChange(j)"
-                  />
-                </td>
-                <td scope="col">
-                  <textarea
-                    type="text"
-                    class="form-control"
-                    formControlName="sources"
-                    (change)="additionalRowChange(j)"
-                    *ngIf="fieldControl.value?.name"
-                  ></textarea>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="mb-3">
-            <button type="button" class="btn btn-primary" (click)="addLabelsAnalytic('data')">Add</button>
-          </div>
-        </div>
-        <div class="mb-3" *ngIf="this.chartsControl?.length > 0">
-          <button type="button" class="btn btn-primary" (click)="refreshColors()">Colors</button>
-        </div>
-        <div class="accordion-body" *ngIf="gridDataPeriods.length > 0">
-          <table
-            mat-table
-            matSort
-            [dataSource]="gridDataSource"
-            #gridSort="matSort"
-            class="table table-bordered table-striped"
-          >
-            <ng-container matColumnDef="label">
-              <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2"></th>
-              <td mat-cell *matCellDef="let data">{{ data.row }}: {{ data?.label }}</td>
-            </ng-container>
-            <ng-container *ngFor="let period of gridDataPeriods; let m = index" matColumnDef="{{ period }}">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="periodLengths[periods[m]?.name]">
-                {{ periodAliases[periods[m]?.name] }}
-              </th>
-            </ng-container>
-            <ng-container
-              *ngFor="let ch of gridColumnHeaders; let m = index"
-              matColumnDef="{{ ch.elementId }}_{{ ch.header }}"
-            >
-              <th mat-header-cell *matHeaderCellDef>{{ ch.label }} ({{ ch.header }})</th>
-              <td mat-cell *matCellDef="let data">{{ data[ch?.header]?.value }}</td>
-            </ng-container>
+export class AdditionalSource {
+  rows: string[] = [];
+  cols: string[] = [];
+}
 
-            <tr mat-header-row *matHeaderRowDef="gridDataPeriodHeaders"></tr>
-            <tr mat-header-row *matHeaderRowDef="gridDataColumnHeaders"></tr>
-            <tr mat-row *matRowDef="let row; columns: gridDataColDefs"></tr>
-          </table>
-          <mat-paginator
-            #gridPaginator="matPaginator"
-            [pageSize]="10"
-            [pageSizeOptions]="[5, 10, 20, 30, 40, 50, 60, 70, 80, 90]"
-            showFirstLastButtons
-          ></mat-paginator>
-        </div>
-        <div *ngFor="let chartControl of chartsControl?.controls; let i = index" #test>
-          <app-report-chart #reportChart
-            [dataColumns]="dataColumns"
-            [dataRows]="dataRows"
-            [reportType]="reportType"
-            [colors]="colors"
-            [reportChartGroup]="chartControl"
-            [selectedLicensees]="selectedLicensees"
-            [selectedFields]="selectedFields"
-            [selectedPeriods]="selectedPeriods"
-            [chartIndex]="i"
-            [grid]="grid"
-          >
-          </app-report-chart>
-          <div class="mb-3">
-            <button type="button" class="btn btn-info" (click)="removeReportChart(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </div>
-        <div class="mb-3">
-          <button type="button" class="btn bi bi-plus-circle" (click)="addReportChart()"></button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
+@Component({
+  selector: 'app-report-element',
+  templateUrl: './report-element.component.html',
+  styleUrls: ['./report-element.component.scss'],
+})
+export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() reportElementGroup: FormGroup | any;
+  protected formBuilder: FormBuilder;
+  @Input() formSubmissions: FormSubmissionVO[] | undefined;
+  @Output() actionIndexEvent = new EventEmitter<number>();
+  @ViewChildren("reportChart") reportChartComponents: ReportChartComponent[];
+
+  colors = {};
+  selectedLicensees: any[] = [];
+  selectedFields: any[] = [];
+  selectedPeriods: any[] = [];
+  additionalDataColumns: any[] = [];
+  additionalReportCalculations: any[] = [];
+  additionalDataRows: any[] = [];
+  customDataColumns: any = {};
+  customDataRows: any = {};
+  grid = {};
+  gridColumnHeaders: any[] = [];
+  gridRowHeaders: any[] = [];
+  alphabet = [
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
+  ];
+
+  gridDataSource = new MatTableDataSource<any>([]);
+  @ViewChild('gridPaginator', { static: true }) gridPaginator: MatPaginator;
+  @ViewChild('gridSort', { static: true }) gridSort: MatSort;
+  gridDataPeriodHeaders: any[] = [];
+  gridDataPeriods: any[] = [];
+  gridDataColumnHeaders: any[] = [];
+  gridDataColumns: any[] = [];
+  gridDataColDefs: any[] = [];
+
+  testDataSource: any[] = [];
+
+  periodLengths: any = {};
+  periods: any[] = [];
+  periodAliases: any = {};
+  originalColumnLen: number = 0;
+
+  constructor(private injector: Injector, @Inject(LOCALE_ID) public locale: string) {
+    this.formBuilder = this.injector.get(FormBuilder);
+  }
+
+  ngOnInit(): void {
+    this.licensees.forEach((lic, index) => {
+      this.licenseeSelectionsArray.insert(index, this.createLicenseeSelectionGroup(true, lic));
+    });
+
+    this.getPeriods();
+
+    this.periods.forEach((per, index) => {
+      this.periodSelectionsArray.insert(index, this.createPeriodSelectionGroup(true, per?.name));
+    });
+
+    if (!this.fieldSelectionsArray) {
+      this.reportElementGroup.addControl('fieldSelection', this.formBuilder.array([]));
+    }
+
+    this.fields.forEach((field, index) => {
+      this.fieldSelectionsArray.insert(index, this.createFieldSelectionGroup(true, field));
+    });
+
+    this.reportTypeControl.patchValue('default');
+    this.dataColumnsControl.setValue('licensees');
+
+    this.reportElementGroup.addControl('dataColumnsAnalytics', this.formBuilder.array([]));
+    this.reportElementGroup.addControl('dataRowsAnalytics', this.formBuilder.array([]));
+
+    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
+    this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
+    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
+
+    this.createReportGrid();
+  }
+
+  createReportGrid() {
+    this.gridDataSource.data = [];
+    this.grid = {};
+    let cindex = 0;
+
+    if (!this.formSubmissions || this.formSubmissions.length == 0) {
+      return;
+    }
+
+    let columnHeaders = {};
+    let rowLabels = {};
+
+    let colLabels = {};
+    this.periodLengths = {};
+
+    this.licenseeSelections?.forEach((sel, index) => {
+      if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
+        rowLabels[sel?.licensee] = index;
+        this.grid[index] = {
+          label: sel?.licensee,
+          row: index,
+        };
+      } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
+        colLabels[sel?.licensee] = index;
+      }
+    });
+
+    this.fieldSelections?.forEach((field, index) => {
+      if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
+        colLabels[field?.fieldId] = index;
+      } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
+        rowLabels[field?.fieldId] = index;
+        this.grid[index] = {
+          label: field?.alias,
+          elementId: field?.fieldId,
+          row: index,
+        };
+      }
+    });
+
+    this.periodSelections?.forEach((per, pindex) => {
+      let fs = this.formSubmissions?.filter((sub) => {
+        return (
+          per.period === sub?.period?.periodName &&
+          this.licenseeSelections?.find((sel) => sel.licensee === sub?.licensee?.licenseeName)
+        );
+      });
+
+      if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
+        this.periodLengths[per.period] = fs?.length;
+      } else if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
+        this.periodLengths[per.period] = this.fieldSelections?.length;
+      }
+
+      fs?.forEach((sub) => {
+        let colIndex = pindex * this.licenseeSelections?.length + colLabels[sub?.licensee?.licenseeName];
+        let colAlphabet = this.getColumnAlphabet(colIndex);
+        let rowIndex = sub?.licensee?.licenseeName;
+
+        let fields: DataFieldVO[] = this.extractFields(sub);
+
+        if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
+          fields = fields?.filter((field) => colLabels[field?.formField?.fieldId] !== undefined);
+        }
+
+        fields?.forEach((field, findex) => {
+          let selF = this.fieldSelections.find((f) => f.fieldId === field.formField.fieldId);
+
+          let label = selF.alias;
+          let elementId = field?.formField?.fieldId;
+
+          if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
+            colIndex = pindex * fields?.length + colLabels[field?.formField?.fieldId];
+            colAlphabet = this.getColumnAlphabet(colIndex);
+          } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
+            rowIndex = field?.formField?.fieldId;
+            label = sub?.licensee?.licenseeName;
+            elementId = `${sub?.id}_${sub?.licensee?.licenseeName}`;
+            colIndex = cindex;
+            colAlphabet = this.getColumnAlphabet(colIndex);
+          }
+
+          if (rowLabels[rowIndex] === undefined) {
+            return;
+          }
+
+          this.grid[rowLabels[rowIndex]][colAlphabet] = {
+            period: per.period,
+            label: label,
+            elementId: elementId,
+            value: field?.value,
+          };
+
+          if (columnHeaders[colAlphabet] === undefined) {
+            columnHeaders[colAlphabet] = {
+              colIndex: colIndex,
+              header: colAlphabet,
+              period: per.period,
+              elementId: elementId,
+              label: label,
+            };
+          }
+        });
+
+        if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
+          cindex++;
+        }
+      });
+    });
+
+    this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a?.colIndex - b?.colIndex);
+    this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a?.localeCompare(b));
+    this.gridDataColumnHeaders = this.gridColumnHeaders?.map((ch) => `${ch.elementId}_${ch.header}`);
+    this.gridDataColumns = this.gridColumnHeaders?.map((ch) => {
+      return { field: ch.fieldId, header: ch.header, label: ch.label };
+    });
+
+    this.gridDataPeriods = this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_'));
+    this.gridDataPeriodHeaders = ['label', ...this.gridDataPeriods];
+    this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
+
+    this.originalColumnLen = this.gridColumnHeaders.length;
+
+    this.setGridTableData();
+  }
+
+  getColumnAlphabet(index: number) {
+    let quotient = floor(index / 26) - 1;
+    let remainder = index % 26;
+
+    return `${quotient >= 0 ? this.alphabet[quotient] : ''}` + this.alphabet[remainder];
+  }
+
+  get licensees() {
+    return [...new Set(this.formSubmissions?.map((sub) => sub?.licensee?.licenseeName))];
+  }
+
+  periodAliasChange(period: any, k: number) {
+    this.periodAliases[period.period] = period.alias;
+    let found = this.selectedPeriods.find((pr) => pr.period === period.period);
+    found.alias = period.alias;
+  }
+
+  getPeriods() {
+    let prs: PeriodVO[] | undefined = this.formSubmissions?.map((sub) => sub?.period);
+    let prTmp = {};
+    prs?.forEach((p) => {
+      prTmp[p?.periodName] = p;
+    });
+
+    prs = Object.values(prTmp);
+    this.periods = prs
+      ?.sort((p1, p2) => {
+        let start1 = new Date(p1.periodStart);
+        let start2 = new Date(p2.periodStart);
+
+        return start1.getTime() - start2.getTime();
+      })
+      .map((p) => {
+        return {
+          name: p.periodName,
+          length: 0,
+        };
+      });
+  }
+
+  get fields() {
+    let formFields: string[] = [];
+
+    if (this.formSubmissions && this.formSubmissions?.length > 0) {
+      this.formSubmissions[0]?.form?.formSections?.forEach((sec) => {
+        formFields = [
+          ...formFields,
+          ...sec?.formFields?.map((field: any) => {
+            return { fieldId: field?.fieldId, fieldName: field?.fieldName };
+          }),
+        ];
+      });
+    }
+
+    return formFields;
+  }
+
+  generateColors(reset: boolean) {
+    if (reset) {
+      this.colors = {};
+    }
+
+    if (this.formSubmissions) {
+      if (this.dataRows === 'fields') {
+        this.formSubmissions[0].sections?.forEach((section: DataFieldSectionVO) => {
+          section?.dataFields?.forEach((field: DataFieldVO) => {
+            this.colors[field.formField.fieldId] = this.getRandomColor();
+          });
+        });
+      } else if (this.dataRows === 'licensees') {
+        this.formSubmissions?.forEach((submission) => {
+          if (!this.colors[submission?.licensee?.licenseeName]) {
+            this.colors[submission?.licensee?.licenseeName] = this.getRandomColor();
+          }
+        });
+      } else if (this.dataRows === 'periods') {
+        this.formSubmissions?.forEach((submission) => {
+          this.colors[submission?.period?.periodName] = this.getRandomColor();
+        });
+      }
+    }
+
+    if (this.dataRowsAnalytics?.length > 0) {
+      this.dataRowsAnalytics?.forEach((analytic) => {
+        this.colors[analytic?.name] = this.getRandomColor();
+      });
+    }
+
+    this.dataRowsAnalytics?.forEach((row) => {
+      if (row?.name) {
+        this.colors[row?.name] = this.getRandomColor();
+      }
+    });
+  }
+
+  newForm(reportElement: ReportElement): FormGroup {
+    return this.formBuilder.group({
+      groupBy: [reportElement?.groupBy],
+      reportType: [reportElement?.reportType],
+      selectAllLicensees: [reportElement?.selectAllLicensees],
+      selectAllPeriods: [reportElement?.selectAllPeriods],
+      selectAllForms: [reportElement?.selectAllForms],
+      dataColumns: [reportElement?.dataColumns],
+      dataRows: [reportElement?.dataRows],
+      charts: this.createChartsArrayControl([]),
+      licenseeSelections: this.createLicenseeSelectionArray(reportElement?.selectedLicensees),
+      periodSelections: this.createPeriodSelectionArray(reportElement?.selectedPeriods),
+      fieldSelections: this.createFieldSelectionArray(reportElement?.selectedFields),
+    });
+  }
+
+  getRandomColor() {
+    var length = 6;
+    var chars = '0123456789ABCDEF';
+    var hex = '#';
+    while (length--) hex += chars[(Math.random() * 16) | 0];
+    return hex;
+  }
+
+  refreshColors() {
+    Object.keys(this.colors).forEach((key) => {
+      this.colors[key] = this.getRandomColor();
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.dataRowsControl.patchValue('fields');
+    this.generateColors(false);
+    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
+    this.selectedFields = this.fieldSelections;
+    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
+    this.createReportGrid();
+  }
+
+  ngOnDestroy(): void {}
+
+  private calculate(values: number[], calculationType: string) {
+    if (calculationType === 'sum') {
+      return math.sum(values);
+    } else if (calculationType === 'mean') {
+      return math.mean(values);
+    } else if (calculationType === 'mode') {
+      return math.mode(values);
+    } else if (calculationType === 'median') {
+      return math.median(values);
+    } else if (calculationType === 'variance') {
+      return math.variance(values);
+    } else if (calculationType === 'std') {
+      return math.std(values);
+    } else if (calculationType === 'min') {
+      return math.min(values);
+    } else if (calculationType === 'max') {
+      return math.max(values);
+    }
+  }
+
+  getExpressionElements(expression: string) {
+    let results = [];
+    // Stores the indices of
+    let dels = [];
+    for (let i = 0; i < expression.length; i++) {
+      // If opening delimiter
+      // is encountered
+      if (expression[i] == '[') {
+        dels.push(i);
+      }
+
+      // If closing delimiter
+      // is encountered
+      else if (expression[i] == ']' && dels.length > 0) {
+        // Extract the position
+        // of opening delimiter
+        let pos = dels[dels.length - 1];
+        dels.pop();
+
+        // Length of substring
+        let len = i - 1 - pos;
+
+        results.push(expression.substring(pos + 1, i));
+      }
+    }
+    return [...new Set(results)];
+  }
+
+  additionalDataColumnNameChange(event: any, index: number) {
+    this.additionalDataColumns = this.dataColumnsAnalytics;
+    let changingCol: any = this.additionalDataColumns[index];
+
+    let colIndex = this.originalColumnLen + index;
+
+    if (!changingCol?.type || !changingCol?.name || !changingCol?.sources) {
+      return;
+    }
+
+    let colAlphabet = this.getColumnAlphabet(colIndex);
+
+    Object.keys(this.grid).forEach((rowKey) => {
+      let row = this.grid[rowKey];
+
+      let cell = row[colAlphabet];
+      cell.element = changingCol?.name?.replaceAll(' ', '_')?.toLowerCase();
+      cell.label = changingCol?.name;
+    });
+
+    let found = this.gridColumnHeaders.find((gch) => gch.header === colAlphabet);
+
+    if (found) {
+      found.element = `${index}_${changingCol?.name}`;
+      found.label = `${changingCol?.name}`;
+    }
+  }
+
+  additionalDataColumnChange(index: number) {
+    this.generateColors(false);
+
+    this.additionalDataColumns = this.dataColumnsAnalytics;
+    let changingCol: any = this.additionalDataColumns[index];
+
+    if (!changingCol?.type || !changingCol?.name || !changingCol?.sources) {
+      return;
+    }
+
+    /// Update the periods
+    if (this.selectedPeriods.find((lic) => lic.period === changingCol.tag) === undefined) {
+      this.selectedPeriods.push({
+        selected: true,
+        period: changingCol?.tag,
+        alias: changingCol?.tag,
+      });
+    }
+
+    let source = '';
+
+    let sourceSplit = this.getSources(changingCol?.sources);
+
+    if (changingCol?.type === 'custom') {
+      source = sourceSplit.cols[0];
+      sourceSplit.cols = Object.keys(this.grid)?.filter((key) => source.includes(`[${key}]`));
+    }
+
+    let colIndex = this.originalColumnLen + index;
+
+    let colAlphabet = this.getColumnAlphabet(colIndex);
+
+    sourceSplit?.rows?.forEach((rowKey) => {
+      let row = this.grid[rowKey];
+
+      row[colAlphabet] = {
+        period: changingCol?.tag,
+        label: changingCol?.name,
+        elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
+        value: changingCol?.type === 'custom' ? source : undefined,
+        source: [],
+      };
+
+      let cell = row[colAlphabet];
+
+      // if(cell === undefined) {
+
+      //   cell = {
+      //     period: changingCol?.tag,
+      //     label: changingCol?.name,
+      //     elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
+      //     value: changingCol?.type === 'custom' ? source : undefined,
+      //     source: []
+      //   };
+
+      //   // this.grid[colIndex] = row;
+      //   row[colAlphabet] = cell;
+      // } else {
+      //   cell['period'] = changingCol?.tag;
+      //   cell['elementId'] = changingCol?.name?.replaceAll(' ', '_')?.toLowerCase();
+      //   cell['label'] = changingCol?.name;
+      //   cell['value'] = changingCol?.type === 'custom' ? source : undefined;
+      //   cell['source'] = [];
+      // }
+
+      sourceSplit.cols?.forEach((colKey) => {
+        if (row[colKey] !== undefined) {
+          if (changingCol?.type !== 'custom') {
+            cell.source.push(row[colKey]);
+          }
+        }
+      });
+
+      if (changingCol?.type === 'custom') {
+        Object.keys(row)?.forEach((rk) => {
+          if (cell.value.includes(`[${rk}]`)) {
+            cell.value = cell.value.replaceAll(`[${rk}]`, row[rk].value);
+          }
+        });
+      }
+
+      cell.value = Math.round(
+        changingCol?.type === 'custom'
+          ? math.evaluate(cell.value)
+          : this.calculate(
+              cell.source?.map((src: any) => src?.value),
+              changingCol?.type
+            )
+      );
+
+      delete cell.source;
+    });
+
+    if (this.gridColumnHeaders.find((gch) => gch.elementId.startsWith(`${index}_`)) === undefined) {
+      this.gridColumnHeaders.push({
+        colIndex: this.gridColumnHeaders.length,
+        header: this.getColumnAlphabet(this.gridColumnHeaders.length),
+        period: changingCol?.tag,
+        elementId: `${index}_${changingCol?.name}`,
+        label: changingCol?.name,
+      });
+      this.gridDataColumnHeaders = this.gridColumnHeaders?.map((ch) => `${ch.elementId}_${ch.header}`);
+
+      this.gridDataColumns = this.gridColumnHeaders?.map((ch) => {
+        return { field: ch.fieldId, header: ch.header, label: ch.label };
+      });
+
+      if (!this.gridDataPeriods?.find((dp) => dp === changingCol?.tag))
+        this.gridDataPeriods = this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_'));
+
+      if (this.periodAliases[changingCol?.tag] === undefined) {
+        this.periods.push({
+          name: changingCol?.tag,
+          length: 1,
+        });
+        this.periodAliases[changingCol?.tag] = changingCol?.tag;
+      }
+
+      this.gridDataPeriodHeaders = ['label', ...this.gridDataPeriods];
+      this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
+    }
+
+    if (this.periodLengths[changingCol?.tag]) {
+      this.periodLengths[changingCol?.tag] += 1;
+    } else {
+      this.periodLengths[changingCol?.tag] = 1;
+    }
+
+    // Update the selected fields or licensees depending on what the columns are.
+    if (this.dataColumns === 'fields') {
+      if (this.selectedFields.find((field) => field.fieldName === changingCol.name) === undefined) {
+        this.selectedFields.push({
+          selected: true,
+          fieldName: changingCol.name,
+          fieldId: changingCol?.name?.replaceAll(' ', '_'),
+          alias: changingCol.name,
+        });
+      }
+    } else if (this.dataColumns === 'licensees') {
+      if (this.selectedLicensees.find((lic) => lic.licensee === changingCol.name) === undefined) {
+        this.selectedLicensees.push({ selected: true, licensee: changingCol.name });
+      }
+    }
+
+    this.setGridTableData();
+  }
+
+  setGridTableData() {
+    this.gridDataSource.data = Object.values(this.grid);
+    this.gridDataSource.paginator = this.gridPaginator;
+    this.gridDataSource.sort = this.gridSort;
+  }
+
+  extractFields(formSubmission: FormSubmissionVO) {
+    let fields: DataFieldVO[] = [];
+    formSubmission?.sections?.forEach((section: DataFieldSectionVO) => {
+      fields = [...fields, ...section.dataFields];
+    });
+
+    return fields;
+  }
+
+  concatenate(first: string, second: string): string {
+    return `${first}: ${second}`;
+  }
+
+  getSources(sources: string, type?: string) {
+    let additionalSource: AdditionalSource = new AdditionalSource();
+
+    let sourceSplit: string[] = sources
+      ?.split('::')
+      ?.map((val: any) => val.trim())
+      ?.filter((val: any) => val?.length > 0);
+
+    additionalSource.rows = sourceSplit[0]
+      ?.split(',')
+      ?.map((val: any) => val.trim())
+      ?.filter((val: any) => val?.length > 0);
+
+    if (sourceSplit.length == 2) {
+      additionalSource.cols = sourceSplit[1]
+        ?.split(',')
+        ?.map((val: any) => val.trim())
+        ?.filter((val: any) => val?.length > 0);
+
+      if (additionalSource.cols.length === 0) {
+        additionalSource.cols?.push('all');
+      }
+    }
+
+    if (additionalSource.rows.length === 1 && additionalSource.rows[0] === 'all') {
+      additionalSource.rows = Object.keys(this.grid);
+    }
+
+    if (additionalSource.cols.length === 1 && additionalSource.cols[0] === 'all') {
+      additionalSource.cols = this.gridColumnHeaders.map((gc) => gc.header);
+    }
+
+    return additionalSource;
+  }
+
+  additionalRowNameChange(index: number) {
+    this.additionalDataRows = this.dataRowsAnalytics;
+    let changingRow = this.dataRowsAnalytics[index];
+
+    if (!changingRow?.type || !changingRow?.name || !changingRow?.sources) {
+      return;
+    }
+
+    let rowIndex: number =
+      this.dataColumns === 'fields' ? index + this.licenseeSelections.length : index + this.gridRowHeaders.length;
+
+    let tmp = this.grid[rowIndex];
+
+    tmp.elementId = changingRow?.name?.replaceAll(' ', '_');
+    tmp.label = changingRow?.name;
+
+    this.setGridTableData();
+  }
+
+  additionalRowChange(index: number) {
+    this.generateColors(false);
+
+    this.additionalDataRows = this.dataRowsAnalytics;
+    let changingRow = this.dataRowsAnalytics[index];
+
+    if (!changingRow?.type || !changingRow?.name || !changingRow?.sources) {
+      return;
+    }
+
+    let source = '';
+
+    let sourceSplit = this.getSources(changingRow?.sources);
+
+    if (changingRow?.type === 'custom') {
+      source = sourceSplit.rows[0];
+      sourceSplit.rows = Object.keys(this.grid)?.filter((key) => source.includes(`[${key}]`));
+    }
+
+    let rowIndex: number =
+      this.dataColumns === 'fields' ? index + this.licenseeSelections.length : index + this.gridRowHeaders.length;
+
+    let tmp = this.grid[rowIndex];
+
+    if (tmp === undefined) {
+      tmp = {
+        label: changingRow?.name,
+        row: rowIndex,
+        elementId: `${changingRow?.name?.replaceAll(' ', '_')}`,
+      };
+      this.grid[rowIndex] = tmp;
+    }
+
+    sourceSplit?.rows?.forEach((rowKey) => {
+      let row = this.grid[rowKey];
+
+      sourceSplit.cols?.forEach((colKey) => {
+        if (tmp[colKey] === undefined) {
+          tmp[colKey] = {
+            value: changingRow?.type === 'custom' ? source : undefined,
+            source: [],
+            period: this.grid[0][colKey]?.period,
+            label: this.grid[0][colKey]?.label,
+            elementId: `${changingRow?.name?.replaceAll(' ', '_')}_${this.grid[0][colKey]?.label}`,
+          };
+        }
+
+        if (row[colKey] !== undefined) {
+          if (changingRow?.type === 'custom') {
+            if (tmp[colKey].value.includes(`[${rowKey}]`)) {
+              tmp[colKey].value = tmp[colKey].value?.replaceAll(`[${rowKey}]`, row[colKey].value);
+            }
+          } else {
+            tmp[colKey].source.push(row[colKey]);
+          }
+        }
+      });
+    });
+
+    sourceSplit.rows?.forEach((rowKey) => {
+      sourceSplit.cols?.forEach((colKey) => {
+        if (tmp[colKey]?.value?.includes(`[${rowKey}]`)) {
+          tmp[colKey].value = tmp[colKey].value?.replaceAll(`[${rowKey}]`, 0);
+        }
+      });
+    });
+
+    Object.keys(tmp)?.forEach((tk) => {
+      if (tk !== 'label' && tk !== 'row' && tk !== 'elementId') {
+        tmp[tk].value = Math.round(
+          changingRow?.type === 'custom'
+            ? math.evaluate(tmp[tk].value)
+            : this.calculate(
+                tmp[tk].source?.map((src: any) => src?.value),
+                changingRow?.type
+              )
+        );
+
+        delete tmp[tk].source;
+      }
+    });
+
+    if (this.dataRows === 'fields') {
+      if (this.selectedFields.find((lic) => lic.licensee === changingRow.name) === undefined) {
+        this.selectedFields.push({
+          selected: true,
+          fieldName: changingRow.name,
+          fieldId: changingRow?.name?.replaceAll(' ', '_'),
+          alias: changingRow.name,
+        });
+      }
+    } else if (this.dataRows === 'licensees') {
+      if (this.selectedLicensees.find((lic) => lic.licensee === changingRow.name) === undefined) {
+        this.selectedLicensees.push({ selected: true, licensee: changingRow.name });
+      }
+    }
+
+    this.setGridTableData();
+  }
+
+  createChartsArrayControl(charts: ReportChart[]) {
+    let chartControl: FormArray = this.formBuilder.array([]);
+    charts.forEach((chart) => {
+      chartControl.push(
+        this.formBuilder.group({
+          chartLabel: [chart?.chartLabel],
+          chartType: [chart?.chartType],
+          chartCaption: [chart?.chartCaption],
+        })
+      );
+    });
+    return chartControl;
+  }
+
+  createFieldSelectionArray(fields: any[]) {
+    let selections: FormArray = this.formBuilder.array([]);
+    this.fields?.forEach((field) => {
+      selections?.push(this.createFieldSelectionGroup(fields?.find((f) => f === field) ? true : false, field));
+    });
+    return selections;
+  }
+
+  createFieldSelectionGroup(selected: boolean, field: any): FormGroup {
+    return this.formBuilder.group({
+      selected: [selected],
+      fieldId: [field?.fieldId],
+      fieldName: [field?.fieldName],
+      alias: [field?.fieldName],
+    });
+  }
+
+  createLicenseeSelectionArray(licensees: any[]): FormArray {
+    let selections: FormArray = this.formBuilder.array([]);
+    this.licensees?.forEach((licensee) => {
+      selections?.push(
+        this.createLicenseeSelectionGroup(licensees?.find((lic) => lic === licensee) ? true : false, licensee)
+      );
+    });
+    return selections;
+  }
+
+  createLicenseeSelectionGroup(selected: boolean, licensee: string): FormGroup {
+    return this.formBuilder.group({
+      selected: [selected],
+      licensee: [licensee],
+    });
+  }
+
+  createPeriodSelectionArray(periods: any[]): FormArray {
+    this.getPeriods();
+    let selections: FormArray = this.formBuilder.array([]);
+    this.periods?.forEach((period) => {
+      selections?.push(
+        this.createPeriodSelectionGroup(periods?.find((p) => p === period) ? true : false, period?.name)
+      );
+    });
+    return selections;
+  }
+
+  createPeriodSelectionGroup(selected: boolean, period: string): FormGroup {
+    this.periodAliases[period] = period;
+    return this.formBuilder.group({
+      selected: [selected],
+      period: [period],
+      alias: [period],
+    });
+  }
+
+  periodSelectionChange(event: any, j: number) {
+    this.selectionChange(event, j, this.periodSelections, this.periodSelectionsArray, this.selectedPeriods);
+
+    let filtered = this.formSubmissions?.filter((sub) => {
+      let f = this.selectedPeriods.find((p) => p.period === sub.period.periodName);
+      return f !== undefined;
+    });
+
+    this.licenseeSelectionsArray?.controls?.forEach((lc) => {
+      if (filtered?.find((sub) => sub.licensee.licenseeName === lc.value.licensee)) {
+        lc.get('selected')?.patchValue(true);
+      } else {
+        lc.get('selected')?.patchValue(false);
+      }
+    });
+  }
+
+  fieldAliasChange(event: any, j: number) {
+    let tmp = this.fieldSelectionsArray.at(j).value;
+
+    if (tmp.selected) {
+      let index = this.selectedFields?.findIndex((sf) => sf?.fieldId === tmp?.fieldId);
+      this.selectedFields[index].alias = tmp.alias;
+    }
+
+    Object.values(this.grid).forEach((value: any) => {
+      if (this.dataColumns === 'licensees') {
+        if (value.elementId === tmp?.fieldId) {
+          value.label = tmp.alias;
+        }
+      } else {
+        Object.values(value).forEach((v: any) => {
+          if (v?.elementId === tmp?.fieldId) {
+            v.label = tmp.alias;
+          }
+        });
+
+        this.gridColumnHeaders?.forEach((ch) => {
+          if (ch?.elementId === tmp?.fieldId) {
+            ch.label = tmp.alias;
+          }
+        });
+      }
+    });
+  }
+
+  fieldSelectionChange(event: any, j: number) {
+    this.selectionChange(event, j, this.fieldSelections, this.fieldSelectionsArray, this.selectedFields);
+  }
+
+  licenseeSelectionChange(event: any, j: number) {
+    console.log(this.grid);
+
+    this.selectionChange(event, j, this.licenseeSelections, this.licenseeSelectionsArray, this.selectedLicensees);
+
+    let filtered = this.formSubmissions?.filter((sub) => {
+      let f = this.selectedLicensees.find((l) => l.licensee === sub.licensee.licenseeName);
+      return f !== undefined;
+    });
+
+    this.periodSelectionsArray?.controls?.forEach((pr) => {
+      if (filtered?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
+        pr.get('selected')?.patchValue(true);
+      } else {
+        pr.get('selected')?.patchValue(false);
+      }
+    });
+  }
+
+  private selectionChange(event: any, j: number, selections: any[], selectionsControl: FormArray, selected: any[]) {
+    let tmp = selectionsControl.at(j).value;
+
+    if (event.target.checked) {
+      let selects = selections?.filter((sel) => sel.selected);
+      let select = selects.findIndex((sf) => {
+        if (sf?.fieldId) return sf?.fieldId === tmp?.fieldId;
+        if (sf?.licensee) return sf?.licensee === tmp?.licensee;
+        else return sf?.period === tmp?.period;
+      });
+
+      selected.splice(select, 0, tmp);
+    } else {
+      let index = selected?.findIndex((sf) => {
+        if (sf?.fieldId) return sf?.fieldId === tmp?.fieldId;
+        if (sf?.licensee) return sf?.licensee === tmp?.licensee;
+        else return sf?.period === tmp?.period;
+      });
+
+      selected.splice(index, 1);
+    }
+    return selected;
+  }
+
+  selectedChartType() {}
+
+  get allLiceseesSelected() {
+    return this.licenseeSelections?.filter((sel) => sel.selected)?.length === this.licensees.length;
+  }
+
+  addReportChart() {
+    this.chartsControl?.push(
+      this.formBuilder.group({
+        chartLabel: [],
+        chartType: [],
+        chartCaption: [],
+      })
+    );
+  }
+
+  get dataColumnsAnalyticsControl(): FormArray {
+    return this.reportElementGroup?.get('dataColumnsAnalytics') as FormArray;
+  }
+
+  addLabelsAnalytic(target: string) {
+    if (target === 'report') {
+      this.dataColumnsAnalyticsControl.push(
+        this.formBuilder.group({
+          type: [],
+          sources: [],
+          name: [],
+          tag: ['Custom'],
+        })
+      );
+    } else {
+      this.dataRowsAnalyticsControl.push(
+        this.formBuilder.group({
+          type: [],
+          sources: [],
+          name: [],
+        })
+      );
+    }
+
+    this.additionalDataRows = this.dataRowsAnalytics;
+  }
+
+  removeCustomRows(index: number) {
+    let i: number = Object.values(this.grid).findIndex(
+      (value: any) => value['label'] == this.dataRowsAnalyticsControl.at(index).value.name
+    );
+    delete this.grid[`${i}`];
+
+    let tmp = this.dataRowsAnalyticsControl.at(index).value;
+
+    this.dataRowsAnalyticsControl.removeAt(index);
+
+    this.customDataRows = {};
+    this.additionalDataRows?.forEach((row, index) => {
+      this.additionalRowChange(index);
+    });
+
+    if (this.dataColumns === 'licensees') {
+      let i = this.selectedFields?.findIndex((s) => s.fieldName === tmp.name);
+
+      if (i > -1) {
+        this.selectedFields?.splice(i, 1);
+      }
+    } else {
+      let i = this.selectedLicensees?.findIndex((s) => s.fieldName === tmp.name);
+
+      if (i > -1) {
+        this.selectedLicensees?.splice(i, 1);
+      }
+    }
+
+    this.setGridTableData();
+  }
+
+  removeCustomColumns(index: number) {
+    this.additionalDataColumns = this.dataColumnsAnalytics;
+
+    let changingCol: any = this.additionalDataColumns[index];
+    if (Object.keys(this.grid).length > 0) {
+      let firstRow = this.grid['0'];
+      let cellKey = '';
+
+      Object.keys(firstRow).forEach((cellIndex) => {
+        if (firstRow[cellIndex]?.label === changingCol?.name) {
+          cellKey = cellIndex;
+        }
+      });
+
+      if (cellKey !== '') {
+        let keyIndex = this.alphabet.findIndex((a) => a === cellKey);
+        let colAlphabet = this.getColumnAlphabet(keyIndex);
+
+        Object.keys(this.grid).forEach((rowIndex) => {
+          let ti = keyIndex;
+          colAlphabet = this.getColumnAlphabet(ti);
+          let colAlphabet1 = this.getColumnAlphabet(ti + 1);
+
+          while (this.grid[rowIndex][colAlphabet1] !== undefined) {
+            this.grid[rowIndex][colAlphabet] = this.grid[rowIndex][colAlphabet1];
+            ti++;
+            colAlphabet = this.getColumnAlphabet(ti);
+            colAlphabet1 = this.getColumnAlphabet(ti + 1);
+          }
+          delete this.grid[rowIndex][colAlphabet];
+        });
+
+        this.dataColumnsAnalyticsControl.removeAt(index);
+        this.additionalDataColumns = this.dataColumnsAnalytics;
+
+        this.gridColumnHeaders = this.gridColumnHeaders.filter((gch) => changingCol?.tag !== gch.period);
+
+        this.gridRowHeaders = Object.keys(this.grid).sort((a: any, b: any) => a.localeCompare(b));
+        this.gridDataColumnHeaders = this.gridColumnHeaders?.map((ch) => `${ch.elementId}_${ch.header}`);
+
+        this.gridDataColumns = this.gridColumnHeaders?.map((ch) => {
+          return { field: ch.fieldId, header: ch.header, label: ch.label };
+        });
+
+        this.dataColumnsAnalyticsControl.controls?.forEach((col, index) => {
+          this.additionalDataColumnChange(index);
+        });
+
+        /**
+         * Handle the last custom row in a tag
+         */
+        this.periodLengths[changingCol?.tag] = this.periodLengths[changingCol?.tag] - 1;
+        if (this.periodLengths[changingCol?.tag] == 0) {
+          delete this.periodLengths[changingCol?.tag];
+          delete this.periodAliases[changingCol?.tag];
+
+          let index = this.selectedPeriods.findIndex((s) => s?.period === changingCol?.tag);
+          if (index != -1) {
+            this.selectedPeriods.splice(index, 1);
+          }
+
+          if (this.dataColumns === 'licensees') {
+            index = this.selectedLicensees.findIndex((l) => l?.licensee === changingCol?.name);
+            if (index != -1) {
+              this.selectedLicensees.splice(index, 1);
+            }
+          } else {
+            index = this.selectedFields.findIndex((l) => l?.fieldName === changingCol?.name);
+            if (index != -1) {
+              this.selectedFields.splice(index, 1);
+            }
+          }
+        }
+
+        this.setGridTableData();
+        this.gridDataPeriods = [
+          ...this.selectedPeriods?.map((period) => period.period.replaceAll(' ', '_')),
+          ...new Set(this.additionalDataColumns?.map((col) => col?.tag?.replaceAll(' ', '_'))),
+        ];
+        this.gridDataPeriodHeaders = ['label', ...this.gridDataPeriods];
+        this.gridDataColDefs = ['label', ...this.gridDataColumnHeaders];
+
+        Object.keys(this.periodLengths).forEach((pl) => {
+          if (this.periodLengths[pl] === 0) {
+            let a = this.periods.find((p) => p.name === pl);
+            this.periods = this.periods.filter((p) => p.name !== pl);
+
+            delete this.periodLengths[pl];
+            delete this.periodAliases[pl];
+          }
+        });
+      } else {
+        this.dataColumnsAnalyticsControl.removeAt(index);
+      }
+    } else {
+      this.dataColumnsAnalyticsControl.removeAt(index);
+    }
+  }
+
+  removeFromArray(arrayControl: FormArray, index: number) {
+    arrayControl.removeAt(index);
+  }
+
+  get dataColumnsAnalytics(): any[] {
+    return this.dataColumnsAnalyticsControl.value;
+  }
+
+  get dataRowsAnalyticsControl(): FormArray {
+    return this.reportElementGroup?.get('dataRowsAnalytics') as FormArray;
+  }
+
+  get dataRowsAnalytics(): any[] {
+    return this.dataRowsAnalyticsControl.value;
+  }
+
+  get reportElement(): ReportElement {
+    return this.reportElementGroup.value;
+  }
+
+  get reportTypeControl() {
+    return this.reportElementGroup?.get('reportType') as FormControl;
+  }
+
+  get reportType() {
+    return this.reportTypeControl?.value;
+  }
+
+  get dataColumnsControl() {
+    return this.reportElementGroup?.get('dataColumns') as FormControl;
+  }
+
+  get dataColumns() {
+    return this.dataColumnsControl?.value;
+  }
+
+  get dataRowsControl() {
+    return this.reportElementGroup?.get('dataRows') as FormControl;
+  }
+
+  get dataRows() {
+    return this.dataRowsControl?.value;
+  }
+
+  get groupByControl() {
+    return this.reportElementGroup?.get('groupBy') as FormControl;
+  }
+
+  get groupBy() {
+    return this.groupByControl?.value;
+  }
+
+  get fieldSelectionsArray(): FormArray {
+    return this.reportElementGroup?.get('fieldSelections') as FormArray;
+  }
+
+  get fieldSelections(): any[] {
+    return this.fieldSelectionsArray?.value;
+  }
+
+  get licenseeSelectionsArray(): FormArray {
+    return this.reportElementGroup?.get('licenseeSelections') as FormArray;
+  }
+
+  get licenseeSelections(): any[] {
+    return this.licenseeSelectionsArray?.value;
+  }
+
+  get periodSelectionsArray(): FormArray {
+    return this.reportElementGroup?.get('periodSelections') as FormArray;
+  }
+
+  get periodSelections(): any[] {
+    return this.periodSelectionsArray?.value;
+  }
+
+  get chartsControl(): FormArray {
+    return this.reportElementGroup?.get('charts') as FormArray;
+  }
+
+  get charts(): ReportChart[] {
+    return this.chartsControl.value;
+  }
+
+  removeReportChart(chartIndex: number) {
+    this.chartsControl.removeAt(chartIndex);
+  }
+
+  selectAllChange(event: any, table: string) {
+    let arrayControls: FormArray = this.licenseeSelectionsArray;
+
+    if (table === 'periods') {
+      arrayControls = this.periodSelectionsArray;
+    } else if (table === 'licensees') {
+      arrayControls = this.licenseeSelectionsArray;
+    }
+
+    if (event?.target?.checked) {
+      arrayControls?.controls?.forEach((value) => {
+        value.get('selected')?.patchValue(true);
+      });
+    } else {
+      arrayControls?.controls?.forEach((value) => {
+        value.get('selected')?.patchValue(false);
+      });
+    }
+  }
+
+  selectDataColumns(event: any) {}
+
+  reportTypeChange() {}
+
+  /**
+   * Filter the form submissions based on the selected periods and
+   * selected licensees
+   */
+  get filteredFormSubmissions(): FormSubmissionVO[] {
+    // let selectedPeriods = this.periodSelections?.filter((pr) => pr.selected);
+    // let selectedLicensees = this.licenseeSelections?.filter((lc) => lc.selected);
+
+    let filtered = this.formSubmissions
+      ?.filter((submission) => this.selectedPeriods?.find((pr) => pr.period === submission?.period?.periodName))
+      ?.filter((submission) =>
+        this.selectedLicensees?.find((lc) => lc.licensee === submission?.licensee?.licenseeName)
+      );
+
+    return filtered ? filtered : [];
+  }
+
+  extractDataColumns(source: string) {
+    if (source === 'licensees') {
+      return this.licenseeSelections?.filter((lc) => lc.selected).map((lc) => lc.licensee);
+    } else if (source === 'periods') {
+      return this.periodSelections?.filter((pr) => pr.selected).map((pr) => pr.period);
+    } else if (source === 'fields') {
+      return this.fieldSelections
+        ?.filter((field) => field.selected)
+        .map((field) => (field.alias ? field.alias : field.fieldName));
+    }
+
+    return [];
+  }
+
+  getChartImageData() {
+    let charts: any[] = [];
+    this.reportChartComponents.forEach(chartComponent => {
+      charts.push(chartComponent.getChartImageData());
+    });
+
+    return charts;
+  }
+}
+

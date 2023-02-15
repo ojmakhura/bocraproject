@@ -173,12 +173,12 @@ services:
     command:
       - "start"
       - "--optimized"
-    # healthcheck:
-    #   test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
-    #   interval: 5s
-    #   timeout: 5s
-    #   retries: 3
-    #   start_period: 15s
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     volumes:
       - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
@@ -234,8 +234,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      # keycloak:
-      #   condition: service_healthy
+      keycloak:
+        condition: service_healthy
     build:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile
@@ -299,8 +299,8 @@ services:
         condition: service_healthy
       api:
         condition: service_healthy
-      # keycloak:
-      #   condition: service_healthy
+      keycloak:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
     build:
@@ -372,8 +372,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      # keycloak:
-      #   condition: service_healthy
+      keycloak:
+        condition: service_healthy
       api:
         condition: service_healthy
     networks:
@@ -414,8 +414,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      # keycloak:
-      #   condition: service_healthy
+      keycloak:
+        condition: service_healthy
     networks:
       bocraportal-public:
       bocra-network:

@@ -144,7 +144,6 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
     this.reportController.createWordDocument(d).subscribe(file => {
       if (file) {
 
-        console.log(file)
         let blob: any = file as Blob;
         const url = window.URL.createObjectURL(blob);
         saveAs(blob, `${d.formName}.docx`);
