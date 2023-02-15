@@ -3,12 +3,17 @@
     <form [formGroup]="formReportGroup">
       <div class="row mb-3">
         <h4>{{ formName }} Report</h4>
+        <div class="col">
+          <button type="button" class="btn btn-primary" (click)="downloadFormReport()">
+            <mat-icon>download</mat-icon>
+          </button>
+        </div>
         <div class="row mb-3">
           <label id="submission_num-label" class="col-sm-2 col-form-label">Number of Submissions: </label>
           <label id="submission_num-label" class="col-sm-2 col-form-label">{{ formSubmissions?.length }}</label>
         </div>
         <div class="row mb-3" *ngFor="let reportElementsGroup of reportElementsControl.controls; let i = index">
-          <app-report-element [formSubmissions]="formSubmissions" [reportElementGroup]="reportElementsGroup">
+          <app-report-element #reportElement [formSubmissions]="formSubmissions" [reportElementGroup]="reportElementsGroup">
           </app-report-element>
           <div class="col">
             <button type="button" class="btn btn-primary" (click)="removeReportElement(i)">

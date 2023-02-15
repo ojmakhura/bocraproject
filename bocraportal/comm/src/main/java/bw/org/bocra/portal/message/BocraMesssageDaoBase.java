@@ -13,31 +13,50 @@ package bw.org.bocra.portal.message;
  *
  * @see bw.org.bocra.portal.message.BocraMesssage
  */
-public abstract class BocraMesssageDaoBase
-    implements bw.org.bocra.portal.message.BocraMesssageDao
-{
+public abstract class BocraMesssageDaoBase {
 
     protected final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(BocraMesssageDaoBase.class);
 
     protected final bw.org.bocra.portal.message.BocraMesssageRepository BocraMesssageRepository;
 
     public BocraMesssageDaoBase(
-        bw.org.bocra.portal.message.BocraMesssageRepository BocraMesssageRepository
-    ) {
+            bw.org.bocra.portal.message.BocraMesssageRepository BocraMesssageRepository) {
         this.BocraMesssageRepository = BocraMesssageRepository;
     }
 
     /**
+     * This constant is used as a transformation flag; entities can be converted
+     * automatically into value objects
+     * or other types, different methods in a class implementing this interface
+     * support this feature: look for
+     * an <code>int</code> parameter called <code>transform</code>.
+     * <p>
+     * This specific flag denotes no transformation will occur.
+     */
+    public static final int TRANSFORM_NONE = 0;
+
+    /**
+     * This constant is used as a transformation flag; entities can be converted
+     * automatically into value objects
+     * or other types, different methods in a class implementing this interface
+     * support this feature: look for
+     * an <code>int</code> parameter called <code>transform</code>.
+     * <p>
+     * This specific flag denotes entities must be transformed into objects of type
+     * {@link BocraMesssageVO}.
+     */
+    public static final int TRANSFORM_BOCRAMESSAGEVO = 1;
+
+    /**
      * firstResult = (pageNumber - 1) * pageSize
+     * 
      * @param pageNumber
      * @param pageSize
      * @return firstResult
      */
-    protected int calculateFirstResult(int pageNumber, int pageSize)
-    {
+    protected int calculateFirstResult(int pageNumber, int pageSize) {
         int firstResult = 0;
-        if (pageNumber > 0)
-        {
+        if (pageNumber > 0) {
             firstResult = (pageNumber - 1) * pageSize;
         }
         return firstResult;
@@ -46,35 +65,37 @@ public abstract class BocraMesssageDaoBase
     /**
      * Allows transformation of entities into value objects
      * (or something else for that matter), when the <code>transform</code>
-     * flag is set to one of the constants defined in <code>bw.org.bocra.portal.message.BocraMesssageDao</code>, please note
-     * that the {@link #TRANSFORM_NONE} constant denotes no transformation, so the entity itself
+     * flag is set to one of the constants defined in
+     * <code>bw.org.bocra.portal.message.BocraMesssageDao</code>, please note
+     * that the {@link #TRANSFORM_NONE} constant denotes no transformation, so the
+     * entity itself
      * will be returned.
      * <p>
      * This method will return instances of these types:
      * <ul>
-     *   <li>{@link bw.org.bocra.portal.message.BocraMesssage} - {@link #TRANSFORM_NONE}</li>
-     *   <li>{@link bw.org.bocra.portal.message.BocraMesssageVO} - {@link #TRANSFORM_BocraMesssageVO}</li>
+     * <li>{@link bw.org.bocra.portal.message.BocraMesssage} -
+     * {@link #TRANSFORM_NONE}</li>
+     * <li>{@link bw.org.bocra.portal.message.BocraMesssageVO} -
+     * {@link #TRANSFORM_BocraMesssageVO}</li>
      * </ul>
      *
      * If the integer argument value is unknown {@link #TRANSFORM_NONE} is assumed.
      *
-     * @param transform one of the constants declared in {@link bw.org.bocra.portal.message.BocraMesssageDao}
-     * @param entity an entity that was found
+     * @param transform one of the constants declared in
+     *                  {@link bw.org.bocra.portal.message.BocraMesssageDao}
+     * @param entity    an entity that was found
      * @return the transformed entity (i.e. new value object, etc)
-     * @see bw.org.bocra.portal.message.BocraMesssageDao#transformEntity(int, bw.org.bocra.portal.message.BocraMesssage)
+     * @see bw.org.bocra.portal.message.BocraMesssageDao#transformEntity(int,
+     *      bw.org.bocra.portal.message.BocraMesssage)
      */
-    @Override
-    public Object transformEntity(final int transform, final bw.org.bocra.portal.message.BocraMesssage entity)
-    {
+    public Object transformEntity(final int transform, final bw.org.bocra.portal.message.BocraMesssage entity) {
         Object target = null;
-        if (entity != null)
-        {
-            switch (transform)
-            {
-                case TRANSFORM_BocraMesssageVO :
+        if (entity != null) {
+            switch (transform) {
+                case TRANSFORM_BOCRAMESSAGEVO:
                     target = toBocraMesssageVO(entity);
                     break;
-                case bw.org.bocra.portal.message.BocraMesssageDao.TRANSFORM_NONE : // fall-through
+                case bw.org.bocra.portal.message.BocraMesssageDao.TRANSFORM_NONE: // fall-through
                 default:
                     target = entity;
             }
@@ -85,16 +106,13 @@ public abstract class BocraMesssageDaoBase
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void transformEntities(final int transform, final java.util.Collection<?> entities)
-    {
-        switch (transform)
-        {
-            case TRANSFORM_BocraMesssageVO :
+    public void transformEntities(final int transform, final java.util.Collection<?> entities) {
+        switch (transform) {
+            case TRANSFORM_BOCRAMESSAGEVO:
                 org.apache.commons.collections4.CollectionUtils.transform(entities, this.BocraMesssageVO_TRANSFORMER);
                 break;
-            case bw.org.bocra.portal.message.BocraMesssageDao.TRANSFORM_NONE : // fall-through
-                default:
+            case bw.org.bocra.portal.message.BocraMesssageDao.TRANSFORM_NONE: // fall-through
+            default:
                 // do nothing;
         }
     }
@@ -102,56 +120,44 @@ public abstract class BocraMesssageDaoBase
     /**
      * @see bw.org.bocra.portal.message.BocraMesssageDao#toEntities(java.util.Collection)
      */
-    @Override
-    public void toEntities(final java.util.Collection<?> results)
-    {
-        if (results != null)
-        {
+    public void toEntities(final java.util.Collection<?> results) {
+        if (results != null) {
             org.apache.commons.collections4.CollectionUtils.transform(results, this.ENTITYTRANSFORMER);
         }
     }
 
     /**
      * This anonymous transformer is designed to transform report query results
-     * (which result in an array of entities) to {@link bw.org.bocra.portal.message.BocraMesssage}
+     * (which result in an array of entities) to
+     * {@link bw.org.bocra.portal.message.BocraMesssage}
      * using the Jakarta Commons-Collections Transformation API.
      */
-    private org.apache.commons.collections4.Transformer ENTITYTRANSFORMER =
-        new org.apache.commons.collections4.Transformer()
-        {
-            @Override
-            public Object transform(Object input)
-            {
-                Object result = null;
-                if (input instanceof Object[])
-                {
-                    final Object[] rows = (Object[])input;
-                    result = toEntity(rows);
-                }
-                else if (input instanceof bw.org.bocra.portal.message.BocraMesssage)
-                {
-                    result = input;
-                }
-                return result;
+    private org.apache.commons.collections4.Transformer ENTITYTRANSFORMER = new org.apache.commons.collections4.Transformer() {
+        @Override
+        public Object transform(Object input) {
+            Object result = null;
+            if (input instanceof Object[]) {
+                final Object[] rows = (Object[]) input;
+                result = toEntity(rows);
+            } else if (input instanceof bw.org.bocra.portal.message.BocraMesssage) {
+                result = input;
             }
-        };
+            return result;
+        }
+    };
 
     /**
      * @param row
      * @return bw.org.bocra.portal.message.BocraMesssage
      */
-    protected bw.org.bocra.portal.message.BocraMesssage toEntity(Object[] row)
-    {
+    protected bw.org.bocra.portal.message.BocraMesssage toEntity(Object[] row) {
         bw.org.bocra.portal.message.BocraMesssage target = null;
-        if (row != null)
-        {
+        if (row != null) {
             final int numberOfObjects = row.length;
-            for (int ctr = 0; ctr < numberOfObjects; ctr++)
-            {
+            for (int ctr = 0; ctr < numberOfObjects; ctr++) {
                 final Object object = row[ctr];
-                if (object instanceof bw.org.bocra.portal.message.BocraMesssage)
-                {
-                    target = (bw.org.bocra.portal.message.BocraMesssage)object;
+                if (object instanceof bw.org.bocra.portal.message.BocraMesssage) {
+                    target = (bw.org.bocra.portal.message.BocraMesssage) object;
                     break;
                 }
             }
@@ -162,12 +168,10 @@ public abstract class BocraMesssageDaoBase
     /**
      * {@inheritDoc}
      */
-    @Override
-    @SuppressWarnings({"unchecked"})
-    public java.util.Collection<bw.org.bocra.portal.message.BocraMesssageVO> toBocraMesssageVOCollection(java.util.Collection<bw.org.bocra.portal.message.BocraMesssage> entities)
-    {
-        if (entities == null)
-        {
+    @SuppressWarnings({ "unchecked" })
+    public java.util.Collection<bw.org.bocra.portal.message.BocraMesssageVO> toBocraMesssageVOCollection(
+            java.util.Collection<bw.org.bocra.portal.message.BocraMesssage> entities) {
+        if (entities == null) {
             return null;
         }
         @SuppressWarnings("rawtypes")
@@ -179,99 +183,93 @@ public abstract class BocraMesssageDaoBase
     /**
      * {@inheritDoc}
      */
-    @Override
     @SuppressWarnings({ "unchecked" })
-    public bw.org.bocra.portal.message.BocraMesssageVO[] toBocraMesssageVOArray(java.util.Collection<?> entities)
-    {
+    public bw.org.bocra.portal.message.BocraMesssageVO[] toBocraMesssageVOArray(java.util.Collection<?> entities) {
         bw.org.bocra.portal.message.BocraMesssageVO[] result = null;
-        if (entities != null)
-        {
-        @SuppressWarnings("rawtypes")
+        if (entities != null) {
+            @SuppressWarnings("rawtypes")
             final java.util.Collection collection = new java.util.ArrayList(entities);
             this.toBocraMesssageVOCollection(collection);
-            result = (bw.org.bocra.portal.message.BocraMesssageVO[]) collection.toArray(new bw.org.bocra.portal.message.BocraMesssageVO[collection.size()]);
+            result = (bw.org.bocra.portal.message.BocraMesssageVO[]) collection
+                    .toArray(new bw.org.bocra.portal.message.BocraMesssageVO[collection.size()]);
         }
         return result;
     }
 
     /**
-     * Default implementation for transforming the results of a report query into a value object. This
-     * implementation exists for convenience reasons only. It needs only be overridden in the
+     * Default implementation for transforming the results of a report query into a
+     * value object. This
+     * implementation exists for convenience reasons only. It needs only be
+     * overridden in the
      * {@link BocraMesssageDaoImpl} class if you intend to use reporting queries.
+     * 
      * @param row
      * @return toBocraMesssageVO(this.toEntity(row))
      * @see bw.org.bocra.portal.message.BocraMesssageDao#toBocraMesssageVO(bw.org.bocra.portal.message.BocraMesssage)
      */
-    protected bw.org.bocra.portal.message.BocraMesssageVO toBocraMesssageVO(Object[] row)
-    {
+    protected bw.org.bocra.portal.message.BocraMesssageVO toBocraMesssageVO(Object[] row) {
         return this.toBocraMesssageVO(this.toEntity(row));
     }
 
     /**
-     * This anonymous transformer is designed to transform entities or report query results
-     * (which result in an array of objects) to {@link bw.org.bocra.portal.message.BocraMesssageVO}
+     * This anonymous transformer is designed to transform entities or report query
+     * results
+     * (which result in an array of objects) to
+     * {@link bw.org.bocra.portal.message.BocraMesssageVO}
      * using the Jakarta Commons-Collections Transformation API.
      */
-    private org.apache.commons.collections4.Transformer BocraMesssageVO_TRANSFORMER =
-        new org.apache.commons.collections4.Transformer()
-        {
-            @Override
-            public Object transform(Object input)
-            {
-                Object result = null;
-                if (input instanceof bw.org.bocra.portal.message.BocraMesssage)
-                {
-                    final bw.org.bocra.portal.message.BocraMesssage entity = (bw.org.bocra.portal.message.BocraMesssage)input;
-                    result = toBocraMesssageVO(entity);
-                }
-                else if (input instanceof Object[])
-                {
-                    final Object[] rows = (Object[])input;
-                    result = toBocraMesssageVO(rows);
-                }
-                return result;
+    private org.apache.commons.collections4.Transformer BocraMesssageVO_TRANSFORMER = new org.apache.commons.collections4.Transformer() {
+        @Override
+        public Object transform(Object input) {
+            Object result = null;
+            if (input instanceof bw.org.bocra.portal.message.BocraMesssage) {
+                final bw.org.bocra.portal.message.BocraMesssage entity = (bw.org.bocra.portal.message.BocraMesssage) input;
+                result = toBocraMesssageVO(entity);
+            } else if (input instanceof Object[]) {
+                final Object[] rows = (Object[]) input;
+                result = toBocraMesssageVO(rows);
             }
-        };
+            return result;
+        }
+    };
 
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void BocraMesssageVOToEntityCollection(java.util.Collection<?> instances)
-    {
-        if (instances != null)
-        {
-            for (final java.util.Iterator<?> iterator = instances.iterator(); iterator.hasNext();)
-            {
+    public void bocraMesssageVOToEntityCollection(java.util.Collection<?> instances) {
+        if (instances != null) {
+            for (final java.util.Iterator<?> iterator = instances.iterator(); iterator.hasNext();) {
                 // - remove an objects that are null or not of the correct instance
-                if (!(iterator.next() instanceof bw.org.bocra.portal.message.BocraMesssageVO))
-                {
+                if (!(iterator.next() instanceof bw.org.bocra.portal.message.BocraMesssageVO)) {
                     iterator.remove();
                 }
             }
-            org.apache.commons.collections4.CollectionUtils.transform(instances, this.BocraMesssageVOToEntityTransformer);
+            org.apache.commons.collections4.CollectionUtils.transform(instances,
+                    this.BocraMesssageVOToEntityTransformer);
         }
     }
 
-    private final org.apache.commons.collections4.Transformer BocraMesssageVOToEntityTransformer =
-        new org.apache.commons.collections4.Transformer()
-        {
-            @Override
-            public Object transform(Object input)
-            {
-                return BocraMesssageVOToEntity((bw.org.bocra.portal.message.BocraMesssageVO)input);
-            }
-        };
+    private final org.apache.commons.collections4.Transformer BocraMesssageVOToEntityTransformer = new org.apache.commons.collections4.Transformer() {
+        @Override
+        public Object transform(Object input) {
+            return bocraMesssageVOToEntity((bw.org.bocra.portal.message.BocraMesssageVO) input);
+        }
+    };
 
+    /**
+     * Converts an instance of type {@link BocraMesssageVO} to this DAO's entity.
+     * 
+     * @param BocraMesssageVO
+     * @return BocraMesssage
+     */
+    public abstract BocraMesssage bocraMesssageVOToEntity(BocraMesssageVO BocraMesssageVO);
 
     /**
      * {@inheritDoc}
      */
-    @Override
     public void toBocraMesssageVO(
-        bw.org.bocra.portal.message.BocraMesssage source,
-        bw.org.bocra.portal.message.BocraMesssageVO target)
-    {
+            bw.org.bocra.portal.message.BocraMesssage source,
+            bw.org.bocra.portal.message.BocraMesssageVO target) {
         target.setId(source.getId());
         target.setCreatedBy(source.getCreatedBy());
         target.setUpdatedBy(source.getUpdatedBy());
@@ -281,13 +279,13 @@ public abstract class BocraMesssageDaoBase
         target.setMessagePlatform(source.getMessagePlatform());
         target.setSendNow(source.getSendNow());
         target.setSubject(source.getSubject());
-        if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(target.getDestinations())){
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(target.getDestinations())) {
             target.getDestinations().clear();
         } else {
             target.setDestinations(new java.util.ArrayList<>());
         }
-        
-        if(null!=source.getDestinations()) {
+
+        if (null != source.getDestinations()) {
             target.getDestinations().addAll(source.getDestinations());
         }
         target.setSource(source.getSource());
@@ -298,13 +296,11 @@ public abstract class BocraMesssageDaoBase
     /**
      * {@inheritDoc}
      */
-    @Override
-    public bw.org.bocra.portal.message.BocraMesssageVO toBocraMesssageVO(final bw.org.bocra.portal.message.BocraMesssage entity)
-    {
+    public bw.org.bocra.portal.message.BocraMesssageVO toBocraMesssageVO(
+            final bw.org.bocra.portal.message.BocraMesssage entity) {
         bw.org.bocra.portal.message.BocraMesssageVO target = null;
-        if (entity != null)
-        {
-            target =  new bw.org.bocra.portal.message.BocraMesssageVO();
+        if (entity != null) {
+            target = new bw.org.bocra.portal.message.BocraMesssageVO();
             this.toBocraMesssageVO(entity, target);
         }
         return target;
@@ -313,65 +309,51 @@ public abstract class BocraMesssageDaoBase
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void BocraMesssageVOToEntity(
-        bw.org.bocra.portal.message.BocraMesssageVO source,
-        bw.org.bocra.portal.message.BocraMesssage target,
-        boolean copyIfNull)
-    {
-        if (copyIfNull || source.getCreatedBy() != null)
-        {
+    public void bocraMesssageVOToEntity(
+            bw.org.bocra.portal.message.BocraMesssageVO source,
+            bw.org.bocra.portal.message.BocraMesssage target,
+            boolean copyIfNull) {
+        if (copyIfNull || source.getCreatedBy() != null) {
             target.setCreatedBy(source.getCreatedBy());
         }
-        if (copyIfNull || source.getUpdatedBy() != null)
-        {
+        if (copyIfNull || source.getUpdatedBy() != null) {
             target.setUpdatedBy(source.getUpdatedBy());
         }
-        if (copyIfNull || source.getCreatedDate() != null)
-        {
+        if (copyIfNull || source.getCreatedDate() != null) {
             target.setCreatedDate(source.getCreatedDate());
         }
-        if (copyIfNull || source.getUpdatedDate() != null)
-        {
+        if (copyIfNull || source.getUpdatedDate() != null) {
             target.setUpdatedDate(source.getUpdatedDate());
         }
-        if (copyIfNull || source.getDestinations() != null)
-        {
-            if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(target.getDestinations())){
+        if (copyIfNull || source.getDestinations() != null) {
+            if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(target.getDestinations())) {
                 target.getDestinations().clear();
             } else {
                 target.setDestinations(new java.util.ArrayList<>());
             }
-            if(null != source.getDestinations()) {
+            if (null != source.getDestinations()) {
                 target.getDestinations().addAll(source.getDestinations());
             }
         }
-        if (copyIfNull || source.getSendNow() != null)
-        {
+        if (copyIfNull || source.getSendNow() != null) {
             target.setSendNow(source.getSendNow());
         }
-        if (copyIfNull || source.getSubject() != null)
-        {
+        if (copyIfNull || source.getSubject() != null) {
             target.setSubject(source.getSubject());
         }
-        if (copyIfNull || source.getSource() != null)
-        {
+        if (copyIfNull || source.getSource() != null) {
             target.setSource(source.getSource());
         }
-        if (copyIfNull || source.getText() != null)
-        {
+        if (copyIfNull || source.getText() != null) {
             target.setText(source.getText());
         }
-        if (copyIfNull || source.getDispatchDate() != null)
-        {
+        if (copyIfNull || source.getDispatchDate() != null) {
             target.setDispatchDate(source.getDispatchDate());
         }
-        if (copyIfNull || source.getMessagePlatform() != null)
-        {
+        if (copyIfNull || source.getMessagePlatform() != null) {
             target.setMessagePlatform(source.getMessagePlatform());
         }
-        if (copyIfNull || source.getStatus() != null)
-        {
+        if (copyIfNull || source.getStatus() != null) {
             target.setStatus(source.getStatus());
         }
     }

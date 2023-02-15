@@ -12,32 +12,44 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import bw.org.bocra.portal.keycloak.smtp.RealmSmtpDTO;
 import bw.org.bocra.portal.keycloak.smtp.RealmSmtpService;
+import bw.org.bocra.portal.message.BocraMesssage;
+import bw.org.bocra.portal.message.BocraMesssageDao;
+import bw.org.bocra.portal.message.BocraMesssageRepository;
 import bw.org.bocra.portal.message.BocraMesssageService;
 import bw.org.bocra.portal.message.BocraMesssageStatus;
 import bw.org.bocra.portal.message.BocraMesssageVO;
 import lombok.extern.slf4j.Slf4j;
 import bw.org.bocra.portal.properties.RabbitProperties;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@Transactional(propagation = Propagation.REQUIRED, readOnly=false)
 public class EmailService {
 
     @Value("${keycloak.realm}")
     private String realmId;
 
     private final RealmSmtpService realmSmtpService;
-    private final BocraMesssageService bocraMesssageService;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitProperties rabbitProperties;
+    private BocraMesssageDao bocraMesssageDao;
+    private BocraMesssageRepository bocraMesssageRepository;
     
-    public EmailService(RabbitProperties rabbitProperties, RealmSmtpService realmSmtpService, BocraMesssageService bocraMesssageService, RabbitTemplate rabbitTemplate) {
+    @Autowired
+    public EmailService(RabbitProperties rabbitProperties, RealmSmtpService realmSmtpService,
+                RabbitTemplate rabbitTemplate, BocraMesssageDao bocraMesssageDao, BocraMesssageRepository bocraMesssageRepository) {
+
         this.realmSmtpService = realmSmtpService;
-        this.bocraMesssageService = bocraMesssageService;
         this.rabbitTemplate = rabbitTemplate;
         this.rabbitProperties = rabbitProperties;
+        this.bocraMesssageDao = bocraMesssageDao;
+        this.bocraMesssageRepository = bocraMesssageRepository;
     }
 
     @RabbitListener(queues = {"q.email-dispatch"})
@@ -46,6 +58,8 @@ public class EmailService {
         log.info("Sending email to {}", emailMessage.getDestinations());
 
         try {
+
+            BocraMesssage bocraMesssage = bocraMesssageDao.bocraMesssageVOToEntity(emailMessage);
 
             RealmSmtpDTO dto = realmSmtpService.getRealmSmtpConfig(realmId);
 
@@ -69,61 +83,39 @@ public class EmailService {
                 message.setReplyTo(dto.getReplyTo());
             }
 
-            message.setTo(emailMessage.getDestinations().toArray(new String[0]));
+            message.setTo(bocraMesssage.getDestinations().toArray(new String[0]));
             
-            message.setSubject(emailMessage.getSubject());
-            message.setText(emailMessage.getText());
+            message.setSubject(bocraMesssage.getSubject());
+            message.setText(bocraMesssage.getText());
 
             try {
                 mailSender.send(message);
 
-                if(emailMessage.getId() != null) {
-                    emailMessage = bocraMesssageService.findById(emailMessage.getId());
-                } else {
-                    emailMessage.setCreatedBy(dto.getUser());
-                    emailMessage.setCreatedDate(LocalDateTime.now());
+                if(bocraMesssage.getId() == null) {
+                    bocraMesssage.setCreatedBy(dto.getUser());
+                    bocraMesssage.setCreatedDate(LocalDateTime.now());
                 }
 
-                emailMessage.setStatus(BocraMesssageStatus.SENT);
-                emailMessage.setDispatchDate(LocalDateTime.now());
-                
-                bocraMesssageService.save(emailMessage);
+                bocraMesssage.setStatus(BocraMesssageStatus.SENT);
+                bocraMesssage.setDispatchDate(LocalDateTime.now());
 
             } catch(MailException e) {
 
-                if(emailMessage.getId() != null) {
-                    emailMessage = bocraMesssageService.findById(emailMessage.getId());
-                } else {
-                    emailMessage.setCreatedBy(dto.getUser());
-                    emailMessage.setCreatedDate(LocalDateTime.now());
+                if(bocraMesssage.getId() == null) {
+                    bocraMesssage.setCreatedBy(dto.getUser());
+                    bocraMesssage.setCreatedDate(LocalDateTime.now());
                 }
-                emailMessage.setStatus(BocraMesssageStatus.FAILED);
-                bocraMesssageService.save(emailMessage);
+                bocraMesssage.setStatus(BocraMesssageStatus.FAILED);
 
                 throw e;
             }
+
+            bocraMesssage = bocraMesssageRepository.save(bocraMesssage);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    @RabbitListener(queues = "q.email-queue")
-    public void readEmailQueue(Collection<BocraMesssageVO> emailMessages) {
-        
-        for (BocraMesssageVO emailMessage : emailMessages) {
-            
-            if(emailMessage.getId() != null) {
-                emailMessage = bocraMesssageService.findById(emailMessage.getId());
-            }
-            
-            emailMessage = bocraMesssageService.save(emailMessage);
-
-            if(emailMessage.getSendNow()) {
-                rabbitTemplate.convertAndSend("", rabbitProperties.getEmailQueueRoutingKey(), emailMessage);
-            }
-
-        }
-
-    }
 }

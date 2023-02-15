@@ -28,7 +28,7 @@ services:
       - ${BOCRA_DATA}/portainer:/data
     networks:
       - agent-network
-      - traefik-public
+      - bocraportal-public
     deploy:
       mode: global
       placement:
@@ -38,8 +38,8 @@ services:
           - node.labels.bocraportal_portainer == true
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=traefik-public"
-        - "traefik.constraint-label=traefik-public"
+        - "traefik.docker.network=bocraportal-public"
+        - "traefik.constraint-label=bocraportal-public"
         - "traefik.http.routers.portainer-http.rule=Host(`${PORTAINER_DOMAIN}`)"
         - "traefik.http.routers.portainer-http.entrypoints=web"
         - "traefik.http.routers.portainer-http.middlewares=https-redirect"
@@ -58,5 +58,5 @@ services:
 networks:
   agent-network:
     attachable: true
-  traefik-public:
+  bocraportal-public:
     external: true

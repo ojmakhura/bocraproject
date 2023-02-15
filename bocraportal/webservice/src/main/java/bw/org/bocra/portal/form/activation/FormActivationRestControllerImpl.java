@@ -6,6 +6,7 @@
 package bw.org.bocra.portal.form.activation;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -205,6 +206,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         
         String submissionUrl = webUrl + "/form/submission/edit-form-submission";
         List<Object> messageObjects = JSONArrayUtils.newJSONArray();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         
         for (FormSubmissionVO submission : formActivation.getFormSubmissions()) {
 
@@ -218,9 +220,9 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             JSONObject messageObj = new JSONObject();
             
             messageObj.put("createdBy", formActivation.getCreatedBy());
-            messageObj.put("createdDate", LocalDateTime.now().toString());
+            messageObj.put("createdDate", format.format(LocalDateTime.now()));
             messageObj.put("sendNow", Boolean.TRUE);
-            messageObj.put("dispatchDate", formActivation.getPeriod().getPeriodEnd().atStartOfDay().toString());
+            messageObj.put("dispatchDate", format.format(formActivation.getPeriod().getPeriodEnd().atStartOfDay()));
             messageObj.put("messagePlatform", "EMAIL");
             messageObj.put("status", "DRAFT");
             messageObj.put("subject", String.format("%s data request for period %s.", formActivation.getForm().getFormName(), formActivation.getPeriod().getPeriodName()));
@@ -311,14 +313,14 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                 e.printStackTrace();
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
-                    if (e.getCause().getMessage().contains("(form_period_unique)")) {
+                    if (e.getCause().getMessage().contains("form_period_unique")) {
 
                         return ResponseEntity.badRequest()
                                 .body("An form activation with this form and period has been already created.");
-                    } else if (e.getCause().getMessage().contains("(activation_name)")) {
+                    } else if (e.getCause().getMessage().contains("activation_name")) {
 
                         return ResponseEntity.badRequest()
-                                .body("An form activation with this name and period has been already created.");
+                                .body("An form activation with this name has been already created.");
                     }
 
                 } else if (e.getCause().getMessage().contains("null value in column")) {

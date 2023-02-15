@@ -151,6 +151,7 @@ public class LicenseeDaoImpl
         }
 
         target.setShareholders(new ArrayList<>());
+        
         for (LicenseeShareholder holder : source.getLicenseeShareholders()) {
             LicenseeShareholderVO ls = new LicenseeShareholderVO();
             ls.setId(holder.getId());
@@ -161,12 +162,23 @@ public class LicenseeDaoImpl
             ls.getShareholder().setType(holder.getShareholder().getType());
             ls.getShareholder().setName(holder.getShareholder().getName());
             ls.setNumberOfShares(holder.getNumberOfShares());
-            if (CollectionUtils.isNotEmpty(holder.getDocumentIds())) {
-                Collection<DocumentVO> docs = documentDao
-                        .toDocumentVOCollection(documentRepository.findByIdIn(holder.getDocumentIds()));
-                docs = docs.stream().map(d -> {
-                    d.setFile(null);
-                    return d;
+
+            Specification<Document> lsSpecs = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget", DocumentMetadataTarget.LICENSEE_SHAREHOLDER)
+                                            .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", holder.getId()));
+
+            Collection<Document> dEntities = documentRepository.findAll(lsSpecs, Sort.by("id").ascending());
+            if (CollectionUtils.isNotEmpty(dEntities)) {
+
+                Collection<DocumentVO> docs = dEntities.stream().map(d -> {
+                    DocumentVO dv = new DocumentVO();
+                    dv.setId(d.getId());
+                    dv.setContentType(d.getContentType());
+                    dv.setDocumentId(d.getDocumentId());
+                    dv.setDocumentName(d.getDocumentName());
+                    dv.setExtension(d.getExtension());
+                    dv.setMetadataTargetId(d.getMetadataTargetId());
+                    dv.setSize(d.getSize());
+                    return dv;
                 }).collect(Collectors.toSet());
                 ls.setDocuments(docs);
             }

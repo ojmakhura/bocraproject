@@ -3,6 +3,7 @@ package bw.org.bocra.portal.keycloak.smtp;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bw.org.bocra.portal.keycloak.realm.Realm;
@@ -11,9 +12,10 @@ import bw.org.bocra.portal.keycloak.realm.RealmRepository;
 @Service
 public class RealmSmtpService {
 
-    private final RealmSmtpConfigRepository configRepository;
-    private final RealmRepository realmRepository;
+    private RealmSmtpConfigRepository configRepository;
+    private RealmRepository realmRepository;
 
+    @Autowired
     public RealmSmtpService(RealmSmtpConfigRepository configRepository, RealmRepository realmRepository) {
         this.configRepository = configRepository;
         this.realmRepository = realmRepository;

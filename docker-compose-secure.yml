@@ -10,7 +10,7 @@ services:
     networks:
       bocra-network:
         ipv4_address: ${BOCRA_PROXY_ADDRESS}
-      traefik-public:
+      bocraportal-public:
       default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -47,7 +47,7 @@ services:
       - "--ping.entrypoint=ping"
       - "--metrics"
       - "--metrics.prometheus"
-      # - "--providers.docker.network=traefik-public"
+      # - "--providers.docker.network=bocraportal-public"
       - "--providers.docker"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
@@ -93,7 +93,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_DB_ADDRESS}
       default:
@@ -112,7 +112,7 @@ services:
     container_name: bocra-pgadmin
     restart: unless-stopped
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_PGADMIN_ADDRESS}
       default:
@@ -182,7 +182,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_KEYCLOAK_ADDRESS}
       default:
@@ -216,7 +216,7 @@ services:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_API_ADDRESS}
       default:
@@ -265,7 +265,7 @@ services:
       api:
         condition: service_healthy
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_WEB_ADDRESS}
       default:
@@ -303,7 +303,7 @@ services:
     networks:
       bocra-network:
         ipv4_address: ${BOCRA_REGISTRY_ADDRESS}
-      traefik-public:
+      bocraportal-public:
       default:
     labels:
       - "traefik.enable=true"
@@ -331,7 +331,7 @@ services:
     networks:
       bocra-network:
         ipv4_address: ${BOCRA_JENKINS_ADDRESS}
-      traefik-public:
+      bocraportal-public:
       default:
     labels:
       - "traefik.enable=true"
@@ -344,7 +344,7 @@ services:
 # Networks
 ###############################################################################
 networks:
-  traefik-public:
+  bocraportal-public:
     # Allow setting it to false for testing
     external: true
   bocra-network:

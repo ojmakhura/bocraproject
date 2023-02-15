@@ -26,20 +26,19 @@ import org.springframework.context.MessageSource;
  * @see BocraMesssageService
  */
 public abstract class BocraMesssageServiceBase
-    implements BocraMesssageService
 {
     protected Logger logger = LoggerFactory.getLogger(BocraMesssageService.class);
-    protected final BocraMesssageDao BocraMesssageDao;
-    protected final BocraMesssageRepository BocraMesssageRepository;
+    protected final BocraMesssageDao bocraMesssageDao;
+    protected final BocraMesssageRepository bocraMesssageRepository;
     protected final MessageSource messageSource;
 
     public BocraMesssageServiceBase(
-        BocraMesssageDao BocraMesssageDao,
-        BocraMesssageRepository BocraMesssageRepository,
+        BocraMesssageDao bocraMesssageDao,
+        BocraMesssageRepository bocraMesssageRepository,
         MessageSource messageSource
     ) {
-        this.BocraMesssageDao = BocraMesssageDao;
-        this.BocraMesssageRepository = BocraMesssageRepository;
+        this.bocraMesssageDao = bocraMesssageDao;
+        this.bocraMesssageRepository = bocraMesssageRepository;
         this.messageSource = messageSource;
     }
 
@@ -49,7 +48,7 @@ public abstract class BocraMesssageServiceBase
      */
     protected BocraMesssageDao getBocraMesssageDao()
     {
-        return this.BocraMesssageDao;
+        return this.bocraMesssageDao;
     }
 
     /**
@@ -57,13 +56,12 @@ public abstract class BocraMesssageServiceBase
      * @return BocraMesssageRepository
      */
     public BocraMesssageRepository getBocraMesssageRepository() {
-        return BocraMesssageRepository;
+        return bocraMesssageRepository;
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
     public BocraMesssageVO findById(final Long id)
     {
         try
@@ -90,7 +88,6 @@ public abstract class BocraMesssageServiceBase
     /**
      * {@inheritDoc}
      */
-    @Override
     public Collection<BocraMesssageVO> getAll()
     {
         try
@@ -116,7 +113,6 @@ public abstract class BocraMesssageServiceBase
     /**
      * {@inheritDoc}
      */
-    @Override
     public Collection<BocraMesssageVO> getAll(final Integer pageNumber, final Integer pageSize)
     {
         try
@@ -146,7 +142,6 @@ BocraMesssageService.getAll(pageSize)
     /**
      * {@inheritDoc}
      */
-    @Override
     public boolean remove(final Long id)
     {
         try
@@ -173,7 +168,6 @@ BocraMesssageService.getAll(pageSize)
     /**
      * {@inheritDoc}
      */
-    @Override
     public BocraMesssageVO save(final BocraMesssageVO BocraMesssage)
     {
         if (BocraMesssage == null)
@@ -226,7 +220,6 @@ BocraMesssageService.save(BocraMesssage)
     /**
      * {@inheritDoc}
      */
-    @Override
     public Collection<BocraMesssageVO> search(final String criteria)
     {
         if (criteria == null || criteria.trim().length() == 0)
@@ -259,7 +252,6 @@ BocraMesssageService.search(criteria)
     /**
      * {@inheritDoc}
      */
-    @Override
     public Collection<BocraMesssageVO> search(final Integer pageNumber, final Integer pageSize, final String criteria)
     {
         if (criteria == null || criteria.trim().length() == 0)
@@ -296,7 +288,6 @@ BocraMesssageService.search(criteria)
     /**
      * {@inheritDoc}
      */
-    @Override
     public Collection<BocraMesssageVO> loadTodayMessages()
     {
         try
@@ -322,7 +313,6 @@ BocraMesssageService.search(criteria)
     /**
      * {@inheritDoc}
      */
-    @Override
     public Integer clearSentMessages()
     {
         try
@@ -348,7 +338,6 @@ BocraMesssageService.search(criteria)
     /**
      * {@inheritDoc}
      */
-    @Override
     public Integer clearFailedMessages()
     {
         try
@@ -374,7 +363,6 @@ BocraMesssageService.search(criteria)
     /**
      * {@inheritDoc}
      */
-    @Override
     public Collection<BocraMesssageVO> loadDueSubmissionMessages()
     {
         try
@@ -400,7 +388,6 @@ BocraMesssageService.search(criteria)
     /**
      * {@inheritDoc}
      */
-    @Override
     public Boolean updateMessageStatus(final Long id, final BocraMesssageStatus status)
     {
         if (status == null)

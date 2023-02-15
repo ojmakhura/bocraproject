@@ -12,29 +12,29 @@ import bw.org.bocra.portal.message.BocraMesssageService;
 import bw.org.bocra.portal.message.BocraMesssageVO;
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
-@RequestMapping("/email")
-@Slf4j
+// @RestController
+// @RequestMapping("/email")
+// @Slf4j
 public class EmailController {
 
-    private final EmailService emailService;
-    private final BocraMesssageService bocraMesssageService;
+    // private final EmailService emailService;
+    // private final BocraMesssageService bocraMesssageService;
 
-    public EmailController(EmailService emailService, BocraMesssageService bocraMesssageService) {
-        this.emailService = emailService;
-        this.bocraMesssageService = bocraMesssageService;
-    }
+    // public EmailController(EmailService emailService, BocraMesssageService bocraMesssageService) {
+    //     this.emailService = emailService;
+    //     this.bocraMesssageService = bocraMesssageService;
+    // }
 
-    @PostMapping
-    public ResponseEntity<?> sendEmail(@RequestBody BocraMesssageVO emailMessage) {
-        try {
+    // @PostMapping
+    // public ResponseEntity<?> sendEmail(@RequestBody BocraMesssageVO emailMessage) {
+    //     try {
 
-            emailService.sendEmail(emailMessage);       
+    //         emailService.sendEmail(emailMessage);       
 
-            return ResponseEntity.ok().body(emailMessage);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
+    //         return ResponseEntity.ok().body(emailMessage);
+    //     } catch (Exception e) {
+    //         log.error(e.getMessage());
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    //     }
+    // }
 }

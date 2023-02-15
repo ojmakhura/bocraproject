@@ -11,6 +11,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
@@ -22,7 +23,7 @@ import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
 import * as math from 'mathjs';
 import { floor } from 'mathjs';
-import { ReportChart } from './report-chart.component';
+import { ReportChart, ReportChartComponent } from './report-chart.component';
 
 export class ReportElement {
   groupBy: string = '';
@@ -54,6 +55,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   protected formBuilder: FormBuilder;
   @Input() formSubmissions: FormSubmissionVO[] | undefined;
   @Output() actionIndexEvent = new EventEmitter<number>();
+  @ViewChildren("reportChart") reportChartComponents: ReportChartComponent[];
 
   colors = {};
   selectedLicensees: any[] = [];
@@ -1283,4 +1285,14 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     return [];
   }
+
+  getChartImageData() {
+    let charts: any[] = [];
+    this.reportChartComponents.forEach(chartComponent => {
+      charts.push(chartComponent.getChartImageData());
+    });
+
+    return charts;
+  }
 }
+

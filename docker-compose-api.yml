@@ -4,7 +4,7 @@ services:
   # The main API 
   ###############################################################################
   api:
-    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocra-api
     hostname: api
     healthcheck:
@@ -13,6 +13,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 5s
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile
@@ -20,9 +22,9 @@ services:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
     networks:
-      traefik-public:
+      bocraportal-public:
     environment:
-      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -48,7 +50,7 @@ services:
         constraints:
           # Make the traefik service run only on the node with this label
           # as the node with it has the volume for the certificates
-          - node.labels.bocra_api == true
+          - node.labels.bocraportal_api == true
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.api-web.rule=Host(`${API_DOMAIN}`)"
@@ -61,4 +63,4 @@ services:
 # Networks
 ###############################################################################
 networks:
-  traefik-public:
+  bocraportal-public:

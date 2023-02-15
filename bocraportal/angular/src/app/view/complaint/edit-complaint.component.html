@@ -7,16 +7,16 @@
           <button type="button" (click)="editComplaintSearch()" class="btn btn-primary me-2">
             <span translate>search</span>
           </button>
-          <button type="button" (click)="accessDashboard()" class="btn btn-primary">
+          <button type="button" (click)="accessDashboard()" class="btn btn-primary" *ngIf="false">
             <span translate>dashboard</span>
           </button>
         </div>
         <div class="text-start mb-3">
-          <button class="btn btn-outline-primary me-2" type="submit" (click)="editComplaintFormReset()"
+          <button class="btn btn-outline-primary me-2" type="submit"
             (click)="newComplaint()" *ngIf="!loadNew && newUnrestricted">
             New Complaint
           </button>
-          <button class="btn btn-outline-primary" type="submit" (click)="load()" (click)="editComplaintFormReset()" *ngIf="complaintId || loadNew && loadUnrestricted">
+          <button class="btn btn-outline-primary" type="submit" (click)="load()" *ngIf="complaintId || loadNew && loadUnrestricted">
             Load Complaint
           </button>
         </div>

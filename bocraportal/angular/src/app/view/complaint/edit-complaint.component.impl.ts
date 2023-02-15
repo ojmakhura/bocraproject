@@ -404,12 +404,16 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
   }
 
   newComplaint(): void {
+    this.editComplaintFormReset();
     this.loadNew = true;
+    this.ngOnInit();
   }
 
   load(): void {
+    this.editComplaintFormReset();
     this.loadNew = false;
     this.loadComplaint = false;
+    this.ngOnInit();
   }
 
   override licenseeUsersSearch(): void {
