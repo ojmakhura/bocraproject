@@ -946,6 +946,14 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
 
   addSelectedLicenseeUser(): void {
     this.complaintControl.patchValue({ assignedTo: this.licenseeUserSelect });
+    this.store.dispatch(
+      ComplaintActions.assignToUser({
+        username: this.licenseeUserSelect,
+        complaintId: this.complaintComplaintId,
+        loading: true,
+        loaderMessage: 'Assigning user ...'
+      })
+    );
   }
 
   licenseeUserClear(): void {

@@ -60,6 +60,13 @@ public class KeycloakService {
         return keycloak.realm(context.getRealm()).users();
     }
 
+    public RolesResource getRealmRolesResource() {
+        RefreshableKeycloakSecurityContext context = getSecurityContext();
+        Keycloak keycloak = getKeycloak();
+
+        return keycloak.realm(context.getRealm()).roles();
+    }
+
     public RolesResource getClientRolesResource(String clientId) {
 
         RefreshableKeycloakSecurityContext context = getSecurityContext();

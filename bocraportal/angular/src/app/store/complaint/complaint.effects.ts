@@ -204,4 +204,24 @@ export class ComplaintEffects {
       )
     )
   );
+
+  assignToUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ComplaintActions.assignToUser),
+      mergeMap(({ complaintId, username }) =>
+        this.complaintRestController.assignToUser(complaintId, username).pipe(
+          map((assigned) =>
+            ComplaintActions.assignToUserSuccess({
+              assigned,
+              messages: ['User successfully assigned to this complaint.'],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] }),
+          ])
+        )
+      )
+    )
+  );
 }
