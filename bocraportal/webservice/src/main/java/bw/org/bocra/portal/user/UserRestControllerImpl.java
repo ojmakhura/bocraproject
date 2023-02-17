@@ -195,7 +195,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleFindByClientRoles(String client, Set<String> roles) {
+    public ResponseEntity<?> handleFindByClientRoles(Set<String> roles, String client) {
         try{
             logger.debug("Search user by licensee name.");
             Collection<UserVO> users = this.keycloakUserService.getUsersByRoles(client, roles);

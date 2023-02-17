@@ -20,6 +20,7 @@ import { FormActivationControllerImpl } from '@app/controller/form/activation/fo
 import { LicenseeFormRestController } from '@app/service/bw/org/bocra/portal/licensee/form/licensee-form-rest-controller';
 import { LicenseeSectorRestController } from '@app/service/bw/org/bocra/portal/licensee/sector/licensee-sector-rest-controller';
 import { FormActivationRestController } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { FormActivationRestController } from '@app/service/bw/org/bocra/portal/f
     TranslateModule,
     SharedModule,
     FlexLayoutModule,
+    MatTableExporterModule,
     MaterialModule,
     CsvModule,
     FormActivationRoutingModule,

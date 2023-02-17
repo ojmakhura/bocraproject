@@ -27,6 +27,7 @@ import { licenseeSectorFeature } from '@app/store/licensee/sector/licensee-secto
 import { LicenseeSectorEffects } from '@app/store/licensee/sector/licensee-sector.effects';
 import { licenseeShareholderFeature } from '@app/store/licensee/shares/licensee-shareholder.reducers';
 import { LicenseeShareholderEffects } from '@app/store/licensee/shares/licensee-shareholder.effects';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 @NgModule({
   imports: [
@@ -35,6 +36,7 @@ import { LicenseeShareholderEffects } from '@app/store/licensee/shares/licensee-
     ReactiveFormsModule,
     TranslateModule,
     SharedModule,
+    MatTableExporterModule,
     FlexLayoutModule,
     MaterialModule,
     CsvModule,

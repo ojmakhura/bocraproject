@@ -150,7 +150,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   licenseeUsers$: Observable<UserVO[]>;
   licenseeUsersDataSource = new MatTableDataSource<UserVO>([]);
   licenseeUsersSearchField: FormControl = new FormControl();
-  licenseeUserSelect: String = '';
+  licenseeUserSelect: string = '';
 
   statusT = ComplaintStatus;
   statusOptions: string[] = Object.keys(this.statusT);
