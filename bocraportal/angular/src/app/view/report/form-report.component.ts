@@ -75,8 +75,8 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
       selectAllLicensees: [reportElement?.selectAllLicensees],
       selectAllPeriods: [reportElement?.selectAllPeriods],
       selectAllForms: [reportElement?.selectAllForms],
-      dataColumns: [reportElement?.dataColumns],
-      dataRows: [reportElement?.dataRows],
+      dataColumns: [reportElement?.dataColumns ? reportElement?.dataColumns : 'licensees'],
+      dataRows: [reportElement?.dataRows ? reportElement?.dataRows : 'fields'],
       licenseeSelections: this.formBuilder.array([]),
       periodSelections: this.formBuilder.array([]),
       fieldSelections: this.formBuilder.array([]),
@@ -95,7 +95,7 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
       reportElements: this.formBuilder.array([]),
     });
   }
-  
+
   dataURItoBlob(dataURI: string) {
     const byteString = window.atob(dataURI);
     const arrayBuffer = new ArrayBuffer(byteString.length);
@@ -134,7 +134,7 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
     d.reportElements = []
 
     this.reportElementComponents.forEach(elementComponent => {
-      
+
       d.reportElements.push({
         charts: elementComponent.getChartImageData()
       });
@@ -161,14 +161,14 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
     d.formName = value.formName;
     d.reportElements = []
     value.reportElements.forEach((element: any) => {
-      
+
       let el: any = {
         charts: []
       }
 
       element.charts.forEach((ch: any) => {
         let sarr: string[] = ch.chartImage?.split(',')
-        
+
         let bstr: string | undefined = atob(sarr[1])
         let n = bstr.length
         let u8arr = new Uint8Array(n);
@@ -185,7 +185,7 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
         link.click();
 
         let image: File = new File([blob], `${ch.chartType}Chart`);
-               
+
         el.charts.push({
           caption: ch.chartCaption,
           label: ch.chartLabel,
@@ -199,14 +199,5 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
 
       d.reportElements.push(el);
     });
-
-    // this.reportController._createWordDocument(d, images).subscribe(file => {
-    //   if (file) {
-    //     console.log(file)
-    //     let blob: any = file as Blob;
-    //     const url = window.URL.createObjectURL(blob);
-    //     saveAs(blob, `${d.formName}.docx`);
-    //   }
-    // });
   }
 }

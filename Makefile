@@ -218,8 +218,14 @@ swarm_label_true: gen_env
 swarm_init:
 	docker swarm init
 
+
+
 local_prep: gen_env
 	. ./.env && mkdir ${BOCRA_DATA} && \
+	echo "127.0.0.1	localhost" && \
+    	echo "$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}') ${LOCAL_DOMAIN} ${DB_DOMAIN} ${REGISTRY_DOMAIN} ${RABBITMQ_HOST} ${KEYCLOAK_DOMAIN} ${API_DOMAIN}" >> ${BOCRA_DATA}/hosts && \
+    	echo "$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}') portainer.${LOCAL_DOMAIN} grafana.${LOCAL_DOMAIN} swarmprom.${LOCAL_DOMAIN}" >> ${BOCRA_DATA}/hosts && \
+    	echo "$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}') unsee.${LOCAL_DOMAIN} alertmanager.${LOCAL_DOMAIN}" >> ${BOCRA_DATA}/hosts && \
 	mkdir ${BOCRA_DATA}/db && \
 	mkdir ${BOCRA_DATA}/auth && \
 	cp traefik_passwd ${BOCRA_DATA}/auth/system_passwd && \
