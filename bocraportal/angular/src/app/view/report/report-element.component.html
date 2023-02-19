@@ -171,7 +171,7 @@
                       class="form-select"
                       formControlName="type"
                       aria-label="Default select example"
-                      (change)="additionalDataColumnChange(j)"
+                      (change)="customDataColumn(j)"
                     >
                       <option value="custom">Custom</option>
                       <option value="sum">Sum</option>
@@ -202,7 +202,7 @@
                       type="text"
                       class="form-control"
                       formControlName="sources"
-                      (change)="additionalDataColumnChange(j)"
+                      (change)="customDataColumn(j)"
                       *ngIf="fieldControl.value?.name"
                     ></textarea>
                 </td>

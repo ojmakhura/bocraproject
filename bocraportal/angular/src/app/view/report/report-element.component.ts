@@ -203,7 +203,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         fields?.forEach((field, findex) => {
           let selF = this.fieldSelections.find((f) => f.fieldId === field.formField.fieldId);
 
-          if(this.dataColumns === 'fields' && this.dataRows === 'licensees') {
+          if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
 
             col = field?.formField?.fieldId;
             colLabel = selF?.alias;
@@ -211,7 +211,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
             colIndex = findex;
             colLength = fields?.length
 
-          } else if(this.dataColumns === 'licensees' && this.dataRows === 'fields'){
+          } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
 
             row = field?.formField?.fieldId;
             rowIndex = findex;
@@ -222,7 +222,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
           this.gridData[per.period]['length'] = rowLength;
 
-          if(!this.gridData[per.period][row]) {
+          if (!this.gridData[per.period][row]) {
             this.gridData[per.period][row] = {
               label: rowLabel,
               elementId: rowElementId,
@@ -265,10 +265,10 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
       Object.keys(periodData)?.forEach(rkey => {
 
-        if(!exclude.includes(rkey)) {
+        if (!exclude.includes(rkey)) {
           let row = periodData[rkey];
 
-          if(!this.grid[row?.position]) {
+          if (!this.grid[row?.position]) {
 
             this.grid[row?.position] = {
               row: row?.position,
@@ -278,10 +278,10 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           }
 
           Object.keys(row)?.forEach(ckey => {
-            if(!exclude.includes(ckey)) {
+            if (!exclude.includes(ckey)) {
               let col = row[ckey]
 
-              if(!periodCols[`${periodData?.position} ${col?.position}`]) {
+              if (!periodCols[`${periodData?.position} ${col?.position}`]) {
                 let alphabet = this.getColumnAlphabet(cindex);
                 periodCols[`${periodData?.position} ${col?.position}`] = alphabet;
                 columnHeaders[alphabet] = {
@@ -459,7 +459,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.generateGridData();
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   private calculate(values: number[], calculationType: string) {
     if (calculationType === 'sum') {
@@ -557,7 +557,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
       this.periodAliases[changingCol?.tag] = changingCol?.tag;
       this.periodLengths[changingCol?.tag] = 0
-      this.periods.push({name: changingCol?.tag, length: 0});
+      this.periods.push({ name: changingCol?.tag, length: 0 });
 
     }
 
@@ -575,9 +575,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     let max = Math.max(...Object.values(this.gridData).map((g: any) => g?.position ? g?.position : 0));
 
-    if(!this.gridData[changingCol?.tag]) {
+    if (!this.gridData[changingCol?.tag]) {
       this.gridData[changingCol?.tag] = {
-        position: max+1,
+        position: max + 1,
         alias: changingCol?.tag,
         length: 0
       }
@@ -590,7 +590,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     sourceSplit?.rows?.forEach((rowKey) => {
       let gridRow = this.grid[rowKey];
 
-      if(!gridDataRow[gridRow?.elementId]) {
+      if (!gridDataRow[gridRow?.elementId]) {
         gridDataRow[gridRow?.elementId] = {
           label: gridRow?.label,
           elementId: gridRow?.elementId,
@@ -601,7 +601,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         gridDataRow.length++;
       }
 
-      if(!gridDataRow[gridRow?.elementId][changingCol?.name]) {
+      if (!gridDataRow[gridRow?.elementId][changingCol?.name]) {
 
         gridDataRow[gridRow?.elementId][changingCol?.name] = {
           label: changingCol?.name,
@@ -645,9 +645,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         changingCol?.type === 'custom'
           ? math.evaluate(cell.value)
           : this.calculate(
-              cell.source?.map((src: any) => src?.value),
-              changingCol?.type
-            )
+            cell.source?.map((src: any) => src?.value),
+            changingCol?.type
+          )
       );
 
       delete cell.source;
@@ -746,7 +746,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.setGridTableData();
   }
 
-  additionalRowChange(index: number) {
+  async additionalRowChange(index: number) {
     this.generateColors(false);
 
     this.additionalDataRows = this.dataRowsAnalytics;
@@ -765,86 +765,150 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       sourceSplit.rows = Object.keys(this.grid)?.filter((key) => source.includes(`[${key}]`));
     }
 
-    let rowIndex: number =
-      this.dataColumns === 'fields' ? index + this.licenseeSelections.length : index + this.gridRowHeaders.length;
-
+    let rowIndex: number = this.gridRowHeaders.length;
     let elementId = `${changingRow?.name?.replaceAll(' ', '_')}`.toLowerCase();
 
+    let rowDefaults: any = {}
+    let colPositions: any = {}
+
+    Object.values(this.gridData)?.forEach((periodData: any) => {
+     
+      Object.values(periodData)?.forEach((row: any) => {
+       
+        if(row?.elementId ) {
+
+          if(!rowDefaults[row?.elementId]) {
+            rowDefaults[row?.elementId] = {
+              elementId: row?.elementId,
+              label: row?.label,
+              position: row?.position,
+            }
+          }
+
+          Object.values(row)?.forEach((cell: any) => {
+            if(cell?.elementId) {
+              colPositions[cell?.elementId] = cell?.position;
+            }
+          })
+        }
+      })
+    });
+
+    let cellDefaults: any = {}
+
     sourceSplit?.rows?.forEach((rowKey) => {
+      
+      sourceSplit.cols?.forEach((colKey) => {
+        let cell = this.grid[rowKey][colKey];
+        
+        if (cell && !cellDefaults[colKey]) {
+          cellDefaults[colKey] = {
+            period: cell.period,
+            label: cell.label,
+            elementId: cell.elementId
+          };
+        }
+      })
+    })
+
+    sourceSplit?.rows?.forEach(async (rowKey) => {
       let row = this.grid[rowKey];
 
-      sourceSplit.cols?.forEach((colKey) => {
+      await sourceSplit.cols?.forEach(async (colKey) => {
+        let cell: any = row[colKey]
 
-        let cell: any = row[colKey];
+        if (!cell) return;
 
-        if(!this.gridData[cell.period][elementId]) {
-          this.gridData[cell.period][elementId] = {
+        let cellDefault = cellDefaults[colKey]
+
+        if (!this.gridData[cellDefault.period][elementId]) {
+          
+          this.gridData[cellDefault.period][elementId] = {
 
             elementId: elementId,
             label: changingRow?.name,
-            position: this.gridRowHeaders.length, /// maybe set to row length
+            position: rowIndex, /// maybe set to row length
             length: 0
           }
         }
 
-        let gridCell: any = this.gridData[cell.period][elementId];
+        this.gridData[cellDefault.period][elementId].position = rowIndex;
+        let gridRow: any = this.gridData[cellDefault.period][elementId];
 
-        if(!gridCell[cell.label]) {
-          gridCell[cell.label] = {
-            label: cell.label,
-            position: this.gridData[cell.period][row.elementId][cell.label].position,
-            value: changingRow?.type === 'custom' ? source : [],
+        if (!gridRow[cellDefault.label]) {
+
+          gridRow[cellDefault.label] = {
+            label: cellDefault.label,
+            position: colPositions[cell.elementId],
+            value: undefined,
+            source: changingRow?.type === 'custom' ? source : [],
             elementId: cell.elementId
           }
 
-          gridCell.length++;
+          gridRow.length++;
         }
 
-        if (row[colKey] !== undefined) {
-          if (changingRow?.type === 'custom') {
-            if (gridCell[cell.label].value.includes(`[${rowKey}]`)) {
-              gridCell[cell.label].value = gridCell[cell.label].value?.replaceAll(`[${rowKey}]`, row[colKey].value);
+        if (gridRow[cellDefault.label]) {
+
+          if (!gridRow[cellDefault.label].source) {
+            gridRow[cellDefault.label].source = changingRow?.type === 'custom' ? source : [];
+            gridRow[cellDefault.label].position = colPositions[cell.elementId];
+          }
+
+
+          if (row[colKey] !== undefined) {
+            if (changingRow?.type === 'custom') {
+              if (gridRow[cellDefault.label].source.includes(`[${rowKey}]`)) {
+                gridRow[cellDefault.label].source = gridRow[cellDefault.label].source?.replaceAll(`[${rowKey}]`, row[colKey].value);
+              }
+            } else {
+              gridRow[cellDefault.label].source.push(row[colKey]);
             }
-          } else {
-            gridCell[cell.label].value.push(row[colKey]);
           }
         }
       });
     });
 
-    let tmpRows: any[] = []
     sourceSplit.rows?.forEach((rowKey) => {
       let row = this.grid[rowKey];
       sourceSplit.cols?.forEach((colKey) => {
+        let cellDefault = cellDefaults[colKey]
         let cell: any = row[colKey];
-        let gridRow: any = this.gridData[cell.period][elementId];
-        if (gridRow[cell.label]?.value?.includes(`[${rowKey}]`)) {
-          gridRow[cell.label].value = gridRow[cell.label].value?.replaceAll(`[${rowKey}]`, 0);
+        
+        if (cell && this.gridData[cellDefault.period][elementId]) {
+          let gridRow: any = this.gridData[cellDefault.period][elementId];
+          
+          if (gridRow[cellDefault.label]?.source && gridRow[cellDefault.label]?.source?.includes(`[${rowKey}]`)) {
+            gridRow[cellDefault.label].source = gridRow[cellDefault.label].source?.replaceAll(`[${rowKey}]`, 0);
+          }
         }
-
-        tmpRows.push(this.gridData[cell.period][elementId])
       });
     });
 
-    Object.keys(this.gridData)?.forEach(key => {
+    let excludes = ['length', 'alias', 'position'];
 
-      if(key === 'length') return;
+    await Object.keys(this.gridData)?.forEach(key => {
+      if (excludes.includes(key)) return;
 
       let tmpRow = this.gridData[key][elementId];
 
-      Object.keys(tmpRow)?.forEach((key: any) => {
+      if (!tmpRow) return;
+
+      Object.keys(tmpRow)?.forEach(async (key: any) => {
         if (key !== 'label' && key !== 'position' && key != 'length' && key !== 'elementId') {
           let gridCell: any = tmpRow[key];
-          let t = gridCell.value
+          let t = gridCell.source
 
-          gridCell.value = Math.round(
+          gridCell.value = await Math.round(
             changingRow?.type === 'custom'
-              ? math.evaluate(gridCell.value)
+              ? math.evaluate(gridCell.source)
               : this.calculate(
                 t?.map((src: any) => src?.value),
-                  changingRow?.type
-                )
+                changingRow?.type
+              )
           );
+
+          delete gridCell.source;
         }
       });
     });
@@ -1028,7 +1092,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return selected;
   }
 
-  selectedChartType() {}
+  selectedChartType() { }
 
   get allLiceseesSelected() {
     return this.licenseeSelections?.filter((sel) => sel.selected)?.length === this.licensees.length;
@@ -1071,44 +1135,65 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.additionalDataRows = this.dataRowsAnalytics;
   }
 
-  removeCustomRows(index: number) {
+  async removeCustomRows(index: number) {
     let i: number = Object.values(this.grid).findIndex(
       (value: any) => value['label'] == this.dataRowsAnalyticsControl.at(index).value.name
     );
-    delete this.grid[`${i}`];
+
+    await delete this.grid[`${i}`];
 
     let tmp = this.dataRowsAnalyticsControl.at(index).value;
     let changingRow = this.dataRowsAnalytics[index];
     let elementId = `${changingRow?.name?.replaceAll(' ', '_')}`.toLowerCase();
 
-    Object.values(this.gridData)?.forEach((periodData: any) => {
+    await Object.values(this.gridData)?.forEach((periodData: any) => {
       delete periodData[elementId]
     })
 
-
-    this.dataRowsAnalyticsControl.removeAt(index);
-
-    this.customDataRows = {};
-    this.additionalDataRows?.forEach((row, index) => {
-      this.additionalRowChange(index);
-    });
+    await this.dataRowsAnalyticsControl.removeAt(index);
 
     if (this.dataColumns === 'licensees') {
-      let i = this.selectedFields?.findIndex((s) => s.fieldName === tmp.name);
+      let i = await this.selectedFields?.findIndex((s) => s.fieldName === tmp.name);
 
       if (i > -1) {
-        this.selectedFields?.splice(i, 1);
+        await this.selectedFields?.splice(i, 1);
+        this.gridRowHeaders = await this.selectedFields?.map((fd: any, i: number) => i)
       }
     } else {
-      let i = this.selectedLicensees?.findIndex((s) => s.fieldName === tmp.name);
+      let i = await this.selectedLicensees?.findIndex((s) => s.fieldName === tmp.name);
 
       if (i > -1) {
         this.selectedLicensees?.splice(i, 1);
+        this.gridRowHeaders = await this.selectedLicensees?.map((fd: any, i: number) => i)
       }
     }
 
-    this.setGridTableData();
-    // this.extractGrid();
+    Object.values(this.gridData).forEach((periodData: any) => {
+      
+      if (periodData?.alias) {
+        Object.values(periodData)?.forEach((row: any) => {
+          if (row?.position && row?.position > i) {
+            
+            row.position--;
+          }
+        })
+      }
+    });
+
+    // await Object.values(this.grid)?.forEach(async (row: any | undefined) => {
+
+    //   if(row?.position > i) {
+    //     await Object.defineProperty(
+    //       this.grid,
+    //       `${row?.position+1}`,
+    //       Object.getOwnPropertyDescriptor(this.grid, `${row?.position}`)
+    //     );
+    //     delete this.grid[`${row?.position}`];
+    //   }
+    // })
+
+    // this.setGridTableData();
+    await this.extractGrid();
   }
 
   removeCustomColumns(index: number) {
@@ -1118,17 +1203,17 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     Object.values(periodData)?.forEach((row: any) => {
 
-      if(!row[changingCol?.name]) return;
+      if (!row[changingCol?.name]) return;
 
       delete row[changingCol?.name]
       row.length--;
 
-      if(row?.length < 1) {
+      if (row?.length < 1) {
         periodData.length--;
       }
     });
 
-    if(periodData.length < 1) {
+    if (periodData.length < 1) {
       delete this.gridData[changingCol?.tag];
       delete this.periodAliases[changingCol?.tag]
 
@@ -1149,13 +1234,13 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.dataColumns === 'fields') {
 
       let idx: number = this.selectedFields?.findIndex((field) => field.fieldName === changingCol.name);
-      if(idx == -1) {
+      if (idx == -1) {
         this.selectedFields.splice(idx, 1);
       }
 
     } else if (this.dataColumns === 'licensees') {
       let idx: number = this.selectedLicensees?.findIndex((lic) => lic.licensee === changingCol.name);
-      if(idx == -1) {
+      if (idx == -1) {
         this.selectedLicensees.splice(idx, 1);
       }
     }
@@ -1271,9 +1356,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  selectDataColumns(event: any) {}
+  selectDataColumns(event: any) { }
 
-  reportTypeChange() {}
+  reportTypeChange() { }
 
   /**
    * Filter the form submissions based on the selected periods and
