@@ -42,4 +42,12 @@ export class UserRestController {
   public updateUserName(userId: string | any, username: string | any): Observable<Boolean | any> {
     return this.http.patch<Boolean | any>(`${this.path}/${userId}?username=${username}`, {});
   }
+
+  findByRealmRoles(roles: string[]): Observable<UserVO[] | any[]> {
+    return this.http.get<UserVO[] | any[]>(`${this.path}/realm/roles?roles=${roles}`);
+  }
+
+  findByClientRoles(roles: string[]): Observable<UserVO[] | any[]> {
+    return this.http.get<UserVO[] | any[]>(`${this.path}/client/roles?roles=${roles}`);
+  }
 }

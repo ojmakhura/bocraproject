@@ -56,6 +56,13 @@ export const complaintReducer = createReducer(
     error: false,
     messages: action.messages,
   })),
+  on(ComplaintActions.assignToUserSuccess, (state, action) => ({
+    ...state,
+    assigned: action.assigned,
+    success: action.success,
+    error: false,
+    messages: action.messages,
+  })),
   on(ComplaintActions.remove, (state, action) => ({
     ...state,
     loading: action.loading,

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -163,9 +164,27 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
                         criteria.getComplaintType()));
         }
 
-        Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
+        if(criteria.getStartDate() != null) {
+            if (spec == null)
+                spec =  BocraportalSpecifications.findByAttributeGreaterThanEqual("createdDate",
+                            criteria.getStartDate().atStartOfDay());
+            else
+                spec = spec.and( BocraportalSpecifications.findByAttributeGreaterThanEqual("createdDate",
+                                criteria.getStartDate().atStartOfDay()));
+        }
 
-        for (Complaint complaint : specs) {
+        if(criteria.getEndDate() != null) {
+            if (spec == null)
+                spec =  BocraportalSpecifications.findByAttributeLessThan("createdDate",
+                            criteria.getEndDate().plusDays(1).atStartOfDay());
+            else
+                spec = spec.and( BocraportalSpecifications.findByAttributeGreaterThan("createdDate",
+                                criteria.getEndDate().plusDays(1).atStartOfDay()));
+        }
+
+        Collection<Complaint> entities = getComplaintRepository().findAll(spec, Sort.by("id").descending());
+
+        for (Complaint complaint : entities) {
             complaints.add(complaintDao.toComplaintVO(complaint));
         }
 
@@ -226,8 +245,20 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
 
     @Override
     protected Collection<ComplaintVO> handleFindByIds(Set<Long> ids) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+
+        return complaintRepository.findByIdIn(ids).stream()
+                    .map(complaint -> complaintDao.toComplaintVO(complaint))
+                    .collect(Collectors.toSet());
+    }
+
+    @Override
+    protected Boolean handleAssignToUser(String complaintId, String username) throws Exception {
+        
+        Complaint complaint = complaintDao.searchUniqueComplaintId(complaintId);
+        complaint.setAssignedTo(username);
+        complaintRepository.save(complaint);
+
+        return true;
     }
 
 }

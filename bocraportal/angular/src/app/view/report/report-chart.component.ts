@@ -129,7 +129,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       chartCaption: [chart?.chartCaption],
       labels: this.formBuilder.array(chart?.labels),
       data: this.formBuilder.array(chart?.data),
-      chartImage: []
+      chartImage: [],
     });
   }
 
@@ -192,11 +192,25 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getChartImageData(): any {
-    return {
-      caption: this.chartCaption,
-      label: this.chartLabel,
-      type: this.chartType,
-      image: this.chart.toBase64Image()
+    if(this.chartType === 'table') {
+      return {
+        caption: this.chartCaption,
+        label: this.chartLabel,
+        type: this.chartType,
+        tableData: {
+          labels: ['', ...this.labelNames],
+          data: this.datasets
+        },
+      };
+
+    } else {
+      return {
+        caption: this.chartCaption,
+        label: this.chartLabel,
+        type: this.chartType,
+        image: this.chart.toBase64Image(),
+      };
+
     }
   }
 }

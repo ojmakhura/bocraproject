@@ -150,7 +150,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   licenseeUsers$: Observable<UserVO[]>;
   licenseeUsersDataSource = new MatTableDataSource<UserVO>([]);
   licenseeUsersSearchField: FormControl = new FormControl();
-  licenseeUserSelect: String = '';
+  licenseeUserSelect: string = '';
 
   statusT = ComplaintStatus;
   statusOptions: string[] = Object.keys(this.statusT);
@@ -946,6 +946,14 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
 
   addSelectedLicenseeUser(): void {
     this.complaintControl.patchValue({ assignedTo: this.licenseeUserSelect });
+    this.store.dispatch(
+      ComplaintActions.assignToUser({
+        username: this.licenseeUserSelect,
+        complaintId: this.complaintComplaintId,
+        loading: true,
+        loaderMessage: 'Assigning user ...'
+      })
+    );
   }
 
   licenseeUserClear(): void {

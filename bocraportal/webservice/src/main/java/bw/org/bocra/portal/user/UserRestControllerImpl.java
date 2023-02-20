@@ -180,4 +180,30 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleFindByRealmRoles(Set<String> roles) {
+        try{
+            logger.debug("Search user by licensee name.");
+            Collection<UserVO> users = this.keycloakUserService.getUsersByRoles(roles);
+
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleFindByClientRoles(Set<String> roles, String client) {
+        try{
+            logger.debug("Search user by licensee name.");
+            Collection<UserVO> users = this.keycloakUserService.getUsersByRoles(client, roles);
+
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
 }

@@ -67,4 +67,8 @@ export class ComplaintRestController {
   public search(criteria: ComplaintSeachCriteria | any): Observable<ComplaintVO[] | any[]> {
     return this.http.post<ComplaintVO[] | any[]>(`${this.path}/search`, criteria);
   }
+
+  public assignToUser(complaintId: string, username: string): Observable<boolean | any> {
+    return this.http.get<boolean | any>(`${this.path}/assign?complaintId=${complaintId}&username=${username}`);
+  }
 }
