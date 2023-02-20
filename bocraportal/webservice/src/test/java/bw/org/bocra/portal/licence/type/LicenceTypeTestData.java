@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -12,14 +13,15 @@ import bw.org.bocra.portal.GenericTestData;
 
 @Component
 @Profile("test")
-public class LicenceTypeTestData extends GenericTestData<LicenceTypeVO, LicenceTypeRepository, String, LicenceTypeRestController> {
+public class LicenceTypeTestData extends GenericTestData<LicenceTypeVO, LicenceTypeRepository, LicenceTypeCriteria, LicenceTypeRestController> {
     
-    private final LicenceTypeRestController licenceTypeRestController;
+    // private final LicenceTypeRestController licenceTypeRestController;
     private final LicenceTypeService licenceTypeService;
 
-    public LicenceTypeTestData(LicenceTypeRestController licenceTypeRestController, LicenceTypeRepository repository, LicenceTypeService licenceTypeService) {
-        super(repository, licenceTypeRestController);
-        this.licenceTypeRestController = licenceTypeRestController;
+    // @Autowired
+    public LicenceTypeTestData(LicenceTypeRestController restController, LicenceTypeRepository repository, LicenceTypeService licenceTypeService) {
+        super(repository, restController);
+        // this.licenceTypeRestController = licenceTypeRestController;
         this.licenceTypeService = licenceTypeService;
     }
     
@@ -30,36 +32,47 @@ public class LicenceTypeTestData extends GenericTestData<LicenceTypeVO, LicenceT
     public void clean() {
         repository.deleteAll();
     }
-    public LicenceTypeVO createUnsavedLicenceType() {
-        LicenceTypeVO type = new LicenceTypeVO();
+
+    public LicenceTypeVO createUnsavedData() {
+		LicenceTypeVO type = new LicenceTypeVO();
 
         type.setCode("test");
         type.setName("Test Type");
         type.setDescription("This is a test");
         type.setCreatedBy("testuser4");
-        type.setCreatedDate(LocalDateTime.now());
 
         return type;
-    }
+	}
+    // public LicenceTypeVO createUnsavedLicenceType() {
+    //     LicenceTypeVO type = new LicenceTypeVO();
 
-    public LicenceTypeVO createLicenceType() {
-        LicenceTypeVO type = new LicenceTypeVO();
+    //     type.setCode("test");
+    //     type.setName("Test Type");
+    //     type.setDescription("This is a test");
+    //     type.setCreatedBy("testuser4");
+    //     type.setCreatedDate(LocalDateTime.now());
 
-        type.setCode("test");
-        type.setName("Test Type");
-        type.setDescription("This is a test");
-        type.setCreatedBy("testuser4");
-        type.setCreatedDate(LocalDateTime.now());
-        type = (LicenceTypeVO) licenceTypeRestController.save(type).getBody();
+    //     return type;
+    // }
+
+    // public LicenceTypeVO createLicenceType() {
+    //     LicenceTypeVO type = new LicenceTypeVO();
+
+    //     type.setCode("test");
+    //     type.setName("Test Type");
+    //     type.setDescription("This is a test");
+    //     type.setCreatedBy("testuser4");
+    //     type.setCreatedDate(LocalDateTime.now());
+    //     type = licenceTypeService.save(type);
         
-        return type;
-    }
+    //     return type;
+    // }
 
     public Collection<LicenceTypeVO> generateSequentialData(int size) {
         
         return generateUnsavedSequentialData(size)
             .stream()
-            .map(type -> (LicenceTypeVO)licenceTypeRestController.save(type).getBody())
+            .map(type -> licenceTypeService.save(type))
             .collect(Collectors.toList());
     }
 
@@ -68,7 +81,8 @@ public class LicenceTypeTestData extends GenericTestData<LicenceTypeVO, LicenceT
         for (int i = 1; i <= size; i++) {
 
             LicenceTypeVO type = new LicenceTypeVO();
-
+            
+            
             type.setCode("test" + i);
             type.setName("Test Type " + i);
             type.setDescription("This is a test " + i);
@@ -80,93 +94,6 @@ public class LicenceTypeTestData extends GenericTestData<LicenceTypeVO, LicenceT
         }
         return types;
     }
-    
-    public Collection<LicenceTypeVO> generateSearchData() {
-        Collection<LicenceTypeVO> types = new ArrayList<>();
-
-        LicenceTypeVO type = new LicenceTypeVO();
-
-        type.setCode("test");
-        type.setName("Test Type");
-        type.setDescription("This is a test");
-        type.setCreatedBy("testuser4");
-        type.setCreatedDate(LocalDateTime.now());
-
-        types.add((LicenceTypeVO) licenceTypeRestController.save(type).getBody());
-
-        type = new LicenceTypeVO();
-
-        type.setCode("serious");
-        type.setName("Serious Type");
-        type.setDescription("This is a test");
-        type.setCreatedBy("testuser4");
-        type.setCreatedDate(LocalDateTime.now());
-
-        types.add((LicenceTypeVO) licenceTypeRestController.save(type).getBody());
-
-        type = new LicenceTypeVO();
-
-        type.setCode("onelove");
-        type.setName("Top love");
-        type.setDescription("This is a test");
-        type.setCreatedBy("testuser4");
-        type.setCreatedDate(LocalDateTime.now());
-
-        types.add((LicenceTypeVO) licenceTypeRestController.save(type).getBody());
-
-        type = new LicenceTypeVO();
-
-        type.setCode("test6");
-        type.setName("Test Type 6");
-        type.setDescription("This is a test");
-        type.setCreatedBy("testuser4");
-        type.setCreatedDate(LocalDateTime.now());
-
-        types.add((LicenceTypeVO) licenceTypeRestController.save(type).getBody());
-
-        type = new LicenceTypeVO();
-
-        type.setCode("sixteen");
-        type.setName("One Six");
-        type.setDescription("This is a test");
-        type.setCreatedBy("testuser4");
-        type.setCreatedDate(LocalDateTime.now());
-
-        types.add((LicenceTypeVO) licenceTypeRestController.save(type).getBody());
-
-        type = new LicenceTypeVO();
-
-        type.setCode("test16");
-        type.setName("Testing sixteen");
-        type.setDescription("This is a test");
-        type.setCreatedBy("testuser4");
-        type.setCreatedDate(LocalDateTime.now());
-
-        types.add((LicenceTypeVO) licenceTypeRestController.save(type).getBody());
-
-        type = new LicenceTypeVO();
-
-        type.setCode("stop");
-        type.setName("Test Type Stop");
-        type.setDescription("This is a test");
-        type.setCreatedBy("testuser4");
-        type.setCreatedDate(LocalDateTime.now());
-
-        types.add((LicenceTypeVO) licenceTypeRestController.save(type).getBody());
-        return types;
-    }
-
-	@Override
-	public LicenceTypeVO createUnsavedData() {
-		// TODO Auto-generated method stub
-		LicenceTypeVO type = new LicenceTypeVO();
-
-        type.setCode("test");
-        type.setName("Test Type");
-        type.setDescription("This is a test");
-
-        return type;
-	}
 
 	public Collection<LicenceTypeVO> searchData() {
         Collection<LicenceTypeVO> types = new ArrayList<>();
@@ -230,19 +157,19 @@ public class LicenceTypeTestData extends GenericTestData<LicenceTypeVO, LicenceT
     }
 
 	@Override
-	public String searchCriteria() {
+	public LicenceTypeCriteria searchCriteria() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String searchCriteriaEmpty() {
+	public LicenceTypeCriteria searchCriteriaEmpty() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String searchCriteriaNone() {
+	public LicenceTypeCriteria searchCriteriaNone() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -250,6 +177,6 @@ public class LicenceTypeTestData extends GenericTestData<LicenceTypeVO, LicenceT
 	@Override
 	public Class<LicenceTypeVO> getDataClass() {
 		// TODO Auto-generated method stub
-		return null;
+		return LicenceTypeVO.class;
 	}
 }

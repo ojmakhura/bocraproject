@@ -9,20 +9,29 @@ import java.util.stream.Collectors;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import bw.org.bocra.portal.GenericTestData;
+
 @Component
 @Profile("test")
-public class LicenseeTestData {
-    private final LicenseeRestController licenseeFormRestController;
+public class LicenseeTestData extends GenericTestData<LicenseeVO, LicenseeRepository, LicenseeCriteria, LicenseeRestController> {
+    // private final LicenseeRestController licenseeFormRestController;
 
-    public LicenseeTestData(LicenseeRestController licenseeFormRestController) {
-        this.licenseeFormRestController = licenseeFormRestController;
+    private final LicenseeService licenseeService;
+
+    public LicenseeTestData(LicenseeRestController restController, LicenseeRepository licenseeRepository, LicenseeService licenseeService) {
+        super(licenseeRepository, restController);
+        this.licenseeService = licenseeService;
     }
     
-    public LicenseeRestController getLicenseeRestController() {
-        return licenseeFormRestController;
+    // public LicenseeRestController getLicenseeRestController() {
+    //     return licenseeFormRestController;
+    // }
+
+    public void clean() {
+        repository.deleteAll();
     }
 
-    public LicenseeVO createUnsavedLicensee() {
+    public LicenseeVO createUnsavedData() {
         LicenseeVO licensee = new LicenseeVO();
 
         licensee.setAddress("test address");
@@ -32,20 +41,27 @@ public class LicenseeTestData {
         licensee.setUin(UUID.randomUUID().toString());
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
+        
+
 
         return licensee;
     }
 
-    public LicenseeVO createLicensee() {
+    // public LicenseeVO createLicensee() {
+
+       
+    //     LicenseeVO licensee = createUnsavedData();
+
         
-        return (LicenseeVO) licenseeFormRestController.save(createUnsavedLicensee()).getBody();
-    }
+        
+    //     return (LicenseeVO) licenseeFormRestController.save(createUnsavedData()).getBody();
+    // }
 
     public Collection<LicenseeVO> generateSequentialData(int size) {
         
         return generateUnsavedSequentialData(size)
             .stream()
-            .map(licensee -> (LicenseeVO)licenseeFormRestController.save(licensee).getBody())
+            .map(licensee -> licenseeService.save(licensee))
             .collect(Collectors.toList());
     }
 
@@ -69,7 +85,7 @@ public class LicenseeTestData {
         return licensees;
     }
     
-    public Collection<LicenseeVO> generateSearchData() {
+    public Collection<LicenseeVO> searchData() {
         Collection<LicenseeVO> licensees = new ArrayList<>();
 
         LicenseeVO licensee = new LicenseeVO();
@@ -82,7 +98,7 @@ public class LicenseeTestData {
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
 
-        licensees.add((LicenseeVO) licenseeFormRestController.save(licensee).getBody());
+        licensees.add(licenseeService.save(licensee));
 
         licensee = new LicenseeVO();
 
@@ -94,7 +110,7 @@ public class LicenseeTestData {
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
 
-        licensees.add((LicenseeVO) licenseeFormRestController.save(licensee).getBody());
+        licensees.add(licenseeService.save(licensee));
 
         licensee = new LicenseeVO();
 
@@ -106,7 +122,7 @@ public class LicenseeTestData {
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
 
-        licensees.add((LicenseeVO) licenseeFormRestController.save(licensee).getBody());
+        licensees.add(licenseeService.save(licensee));
 
         licensee = new LicenseeVO();
 
@@ -118,7 +134,7 @@ public class LicenseeTestData {
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
 
-        licensees.add((LicenseeVO) licenseeFormRestController.save(licensee).getBody());
+        licensees.add(licenseeService.save(licensee));
 
         licensee = new LicenseeVO();
 
@@ -130,7 +146,7 @@ public class LicenseeTestData {
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
 
-        licensees.add((LicenseeVO) licenseeFormRestController.save(licensee).getBody());
+        licensees.add(licenseeService.save(licensee));
 
         licensee = new LicenseeVO();
 
@@ -142,7 +158,7 @@ public class LicenseeTestData {
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
 
-        licensees.add((LicenseeVO) licenseeFormRestController.save(licensee).getBody());
+        licensees.add(licenseeService.save(licensee));
 
         licensee = new LicenseeVO();
 
@@ -154,7 +170,32 @@ public class LicenseeTestData {
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
 
-        licensees.add((LicenseeVO) licenseeFormRestController.save(licensee).getBody());
+        licensees.add(licenseeService.save(licensee));
         return licensees;
     }
+
+    @Override
+    public LicenseeCriteria searchCriteria() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public LicenseeCriteria searchCriteriaEmpty() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public LicenseeCriteria searchCriteriaNone() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Class<LicenseeVO> getDataClass() {
+        // TODO Auto-generated method stub
+        return LicenseeVO.class;
+    }
+
 }

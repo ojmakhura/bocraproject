@@ -6,6 +6,9 @@
 package bw.org.bocra.portal.form;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -30,7 +33,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class FormRestControllerTest {
+public class FormRestControllerTest 
+        extends GenericRestTest<FormVO, FormRepository, String, FormRestController>{
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -49,46 +53,219 @@ public class FormRestControllerTest {
     private FormRestController formRestController;
 
     @Autowired
-    protected FormService formService;
+    private FormService formService;
+
+    @Autowired
+    private FormTestData formTestData;
+
+    @Autowired
+    public FormRestControllerTest(FormRestController restController,
+            GenericTestData<FormVO, FormRepository, String, FormRestController> testData) {
+        super(restController, testData);
+        //TODO Auto-generated constructor stub
+    }
 
     @BeforeEach
     public void clean() {
+        testData.clean();
+        formTestData.clean();
+    }
+
+    public Collection<FormVO> dummyData(int size) {
+
+        return formTestData.generateSequentialData(size);
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
-    public void findById() {
+    public void saveFormTest_missing() {
 
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAll() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAllPaged() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void save() {
+        ResponseEntity<?> response = restController.save(null);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+        String message = response.getBody().toString();
+        Assertions.assertTrue(message.contains("information is missing"));
 
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
-    public void search() {
+    public void saveFormTest_missingCode() {
+        FormVO form = formTestData.createUnsavedData();
 
+        form.setCode(null);
+        ResponseEntity<?> response = restController.save(form);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+        String message = response.getBody().toString();
+        Assertions.assertTrue(message.contains("code is missing"));
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveFormTest_missingFormName() {
+        FormVO form = formTestData.createUnsavedData();
+
+        form.setCode(null);
+        ResponseEntity<?> response = restController.save(form);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+        // String message = response.getBody().toString();
+        // Assertions.assertTrue(message.contains("name is missing"));
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveFormTest_missingDescription() {
+        FormVO form = formTestData.createUnsavedData();
+
+        form.setDescription(null);
+
+        ResponseEntity<?> response = restController.save(form);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        form = (FormVO) response.getBody();
+        Assertions.assertNotNull(form);
+        Assertions.assertNotNull(form.getId());
+        logger.info(form.toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveFormTest_missingEntryType() {
+        FormVO type = formTestData.createUnsavedData();
+
+        type.setDescription(null);
+
+        ResponseEntity<?> response = restController.save(type);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        type = (FormVO) response.getBody();
+        Assertions.assertNotNull(type);
+        Assertions.assertNotNull(type.getId());
+        logger.info(type.toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveFormTest_sameCode() {
+        FormVO exists = (FormVO) dummyData(1).iterator().next();
+
+        FormVO form = new FormVO();
+
+        form.setCode(exists.getCode());
+        form.setCreatedBy("testuser4");
+        form.setCreatedDate(LocalDateTime.now());
+        form.setDescription("This is a test");
+        form.setEntryType(FormEntryType.SINGLE);
+        form.setFormName("Test Form");
+        ResponseEntity<?> response = restController.save(form);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveFormTest_sameFormName() {
+        FormVO exists = (FormVO) dummyData(1).iterator().next();
+
+        FormVO form = new FormVO();
+
+        form.setFormName(exists.getFormName());
+        form.setCreatedBy("testuser4");
+        form.setCreatedDate(LocalDateTime.now());
+        form.setDescription("This is a test");
+        form.setEntryType(FormEntryType.SINGLE);
+        form.setCode("TEST");
+        ResponseEntity<?> response = restController.save(form);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveFormTest_sameDescription() {
+        FormVO exists = (FormVO) dummyData(1).iterator().next();
+
+        FormVO form = new FormVO();
+
+        form.setDescription(exists.getDescription());
+        form.setCreatedBy("testuser4");
+        form.setCreatedDate(LocalDateTime.now());
+        form.setFormName("Test Form");
+        form.setEntryType(FormEntryType.SINGLE);
+        form.setCode("TEST");
+        ResponseEntity<?> response = restController.save(form);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        logger.info(response.getBody().toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveFormTest_sameEntryType() {
+        FormVO exists = (FormVO) dummyData(1).iterator().next();
+
+        FormVO form = new FormVO();
+
+        form.setEntryType(exists.getEntryType());
+        form.setCreatedBy("testuser4");
+        form.setCreatedDate(LocalDateTime.now());
+        form.setFormName("Test Form");
+        form.setDescription("This is a test");
+        form.setCode("TEST");
+        ResponseEntity<?> response = restController.save(form);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        logger.info(response.getBody().toString());
+
+    }
+
+    @Override
+    protected void basicCompareAssertions(FormVO o1, FormVO o2) {
+        FormVO form1 = (FormVO) o1;
+        FormVO form2 = (FormVO) o2;
+
+        Assertions.assertEquals(form1.getCode(), form2.getCode());
+        Assertions.assertEquals(form1.getFormName(), form2.getFormName());
+        Assertions.assertEquals(form1.getEntryType(), form2.getEntryType());
+        Assertions.assertEquals(form1.getDescription(), form2.getDescription());
+
+    }
+
+    @Override
+    protected Class<String> getCriteriaClass() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Class<FormVO> getDataClass() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
+        Collection<FormVO> forms = (Collection<FormVO>) response.getBody();
+        Assertions.assertEquals(forms.size(), 7);
+        
     }
 
 }

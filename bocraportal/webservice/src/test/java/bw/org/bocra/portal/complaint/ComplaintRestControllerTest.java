@@ -6,6 +6,9 @@
 package bw.org.bocra.portal.complaint;
 
 import bw.org.bocra.portal.BocraportalTestContainer;
+import bw.org.bocra.portal.GenericRestTest;
+import bw.org.bocra.portal.GenericTestData;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -30,7 +33,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class ComplaintRestControllerTest {
+public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, ComplaintRepository, String, ComplaintRestController>{
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = BocraportalTestContainer.getInstance();
@@ -51,68 +54,126 @@ public class ComplaintRestControllerTest {
     @Autowired
     protected ComplaintService complaintService;
 
+    @Autowired
+    private ComplaintTestData complaintTestData;
+
+    @Autowired
+    public ComplaintRestControllerTest(ComplaintRestController restController, ComplaintTestData testData) {
+        super(restController, testData);
+        //TODO Auto-generated constructor stub
+    }    
+
     @BeforeEach
     public void clean() {
+        testData.clean();
+        complaintTestData.clean();
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
-    public void addComplaintReply() {
+    public void save_noType() {
+        
+        ComplaintVO complaint = ((ComplaintTestData)testData).createUnsavedComplaintNoType();
 
+        ResponseEntity<?> response = restController.save(complaint);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        String message = response.getBody().toString();
+        System.out.println(message);
+     
     }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
-    public void addDocument() {
+    public void save_badType() {
 
+        ComplaintVO complaint = ((ComplaintTestData)testData).createUnsavedComplaintUnsavedType();
+
+        ResponseEntity<?> response = restController.save(complaint);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        String message = response.getBody().toString();
+        System.out.println(message);
+        
     }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void save_nullCreatedDate() {
+
+    //     ComplaintVO complaint = testData.createUnsavedData();
+    //     complaint.setCreatedDate(null);
+
+    //     ResponseEntity<?> response = restController.save(complaint);
+    //     Assertions.assertNotNull(response);
+    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+    //     String message = response.getBody().toString();
+    //     System.out.println(message);
+    //     Assertions.assertTrue(message.contains("created date value is missing"));
+    // }
+
+    // @WithMockUser(username = "testuser4", password = "testuser1")
+    // @Test
+    // public void save_nullFirstName() {
+    //     ComplaintVO complaint = testData.createUnsavedData();
+
+    //     complaint.setFirstName(null);
+
+    //     ResponseEntity<?> response = restController.save(complaint);
+    //     Assertions.assertNotNull(response);
+    //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+    //     String message = response.getBody().toString();
+    //     System.out.println(message);
+    //     Assertions.assertTrue(message.contains("access point name is missing"));
+    // }
 
     @WithMockUser(username = "testuser4", password = "testuser1")
     @Test
-    public void findByComplaintId() {
+    public void save_emptyFirstName() {
+        ComplaintVO point = testData.createUnsavedData();
+        point.setFirstName(" ");
 
+        ResponseEntity<?> response = restController.save(point);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        String message = response.getBody().toString();
+        System.out.println(message);
+        Assertions.assertTrue(message.contains("access point name is missing"));
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findById() {
-
+    @Override
+    protected Class<String> getCriteriaClass() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void findByIds() {
-
+    @Override
+    protected Class<ComplaintVO> getDataClass() {
+        // TODO Auto-generated method stub
+        return ComplaintVO.class;
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void getAllPaged() {
-
+    @Override
+    protected void basicCompareAssertions(ComplaintVO o1, ComplaintVO o2) {
+        // TODO Auto-generated method stub
+        ComplaintVO complaint1 = (ComplaintVO)o1;
+        ComplaintVO complaint2 = (ComplaintVO)o2;
+        
+        Assertions.assertEquals(complaint1.getDetails(), complaint2.getDetails());
+        Assertions.assertEquals(complaint1.getCreatedDate(), complaint2.getCreatedDate());
+        Assertions.assertEquals(complaint1.getFirstName(), complaint2.getFirstName());
+        Assertions.assertEquals(complaint1.getSurname(), complaint2.getSurname());
+        Assertions.assertEquals(complaint1.getEmail(), complaint2.getEmail());
+        Assertions.assertEquals(complaint1.getStatus(), complaint2.getStatus());
+        
     }
 
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void remove() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void removeComplaintReply() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void save() {
-
-    }
-
-    @WithMockUser(username = "testuser4", password = "testuser1")
-    @Test
-    public void search() {
-
+    @Override
+    protected void searchResultsAssertions(ResponseEntity<?> response) {
+        // TODO Auto-generated method stub
+        Collection<ComplaintVO> types = (Collection<ComplaintVO>) response.getBody();
+        Assertions.assertEquals(types.size(), 7);
+        
     }
 
 }

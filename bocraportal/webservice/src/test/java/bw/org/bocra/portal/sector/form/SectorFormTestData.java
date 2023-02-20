@@ -1,4 +1,4 @@
-package bw.org.bocra.portal.form;
+package bw.org.bocra.portal.sector.form;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,35 +9,38 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import bw.org.bocra.portal.GenericTestData;
+import bw.org.bocra.portal.form.FormEntryType;
+import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.sector.SectorVO;
 
 @Component
 @Profile("test")
-public class FormTestData extends GenericTestData<FormVO, FormRepository, String, FormRestController>{
+public class SectorFormTestData extends GenericTestData<SectorFormVO, SectorFormRepository, String, SectorFormRestController>{
     
     // private final FormRestController formRestController;
     // private final FormRepository formRepository;
-    private final FormService formService;
+    private final SectorFormService sectorFormService;
 
-    public FormTestData(FormRestController restController, FormRepository repository, FormService formService) {
+    public SectorFormTestData(SectorFormRestController restController, SectorFormRepository repository, SectorFormService sectorFormService) {
         super(repository, restController);
-        this.formService = formService;
+        this.sectorFormService = sectorFormService;
     }
 
     public void clean() {
         repository.deleteAll();
     }
 
-    public FormVO createUnsavedData() {
+    public SectorFormVO createUnsavedData() {
 
-        FormVO form = new FormVO();
-        form.setCode("TEST");
-        form.setCreatedBy("testuser4");
-        form.setCreatedDate(LocalDateTime.now());
-        form.setDescription("This is a test");
-        form.setEntryType(FormEntryType.SINGLE);
-        form.setFormName("Test Form");
+        FormVO form= new FormVO();
+        SectorVO sector= new SectorVO();
 
-        return form;
+        SectorFormVO sectorForm = new SectorFormVO();
+        sectorForm.setId(null);
+        sectorForm.setForm(form);
+        sectorForm.setSector(sector);
+        
+        return sectorForm;
     }
 
     // public FormVO create() {

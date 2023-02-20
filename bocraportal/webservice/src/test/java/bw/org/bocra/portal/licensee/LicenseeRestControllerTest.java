@@ -13,6 +13,8 @@ import bw.org.bocra.portal.user.LicenseeUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.UUID;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
@@ -47,10 +49,10 @@ public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, Lice
     private ObjectMapper objectMapper;
 
     @Autowired
-    protected LicenseeUserService licenseeUserService;
+    protected LicenseeService licenseeService;
 
     @Autowired
-    protected DocumentService documentService;
+    private LicenseeTestData licenseeTestData;
 
     @Autowired
     public LicenseeRestControllerTest(LicenseeRestController restController,
@@ -60,6 +62,214 @@ public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, Lice
 
     @BeforeEach
     public void clean() {
+        licenseeTestData.clean();
+    }
+
+    public Collection<LicenseeVO> dummyData(int size) {
+
+        return licenseeTestData.generateSequentialData(size);
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenseeTest_missing() {
+
+        ResponseEntity<?> response = restController.save(null);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+        String message = response.getBody().toString();
+        Assertions.assertTrue(message.contains("information is missing"));
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenseeTest_missingUin() {
+        LicenseeVO licensee = licenseeTestData.createUnsavedData();
+
+        licensee.setUin(UUID.randomUUID().toString());
+        ResponseEntity<?> response = restController.save(licensee);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        logger.info(response.getBody().toString());
+        // String message = response.getBody().toString();
+        // Assertions.assertTrue(message.contains("Uin is missing"));
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenseeTest_missingLicenseeName() {
+        LicenseeVO licensee = licenseeTestData.createUnsavedData();
+
+        licensee.setLicenseeName(null);
+        ResponseEntity<?> response = restController.save(licensee);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+        String message = response.getBody().toString();
+        Assertions.assertTrue(message.contains("name is missing"));
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenseeTest_missingStatus() {
+        LicenseeVO licensee = licenseeTestData.createUnsavedData();
+
+        licensee.setStatus(null);
+        ResponseEntity<?> response = restController.save(licensee);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+        String message = response.getBody().toString();
+        Assertions.assertTrue(message.contains("status is missing"));
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenseeTest_missingAlias() {
+        LicenseeVO licensee = licenseeTestData.createUnsavedData();
+
+        licensee.setAlias(null);
+
+        ResponseEntity<?> response = restController.save(licensee);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        licensee = (LicenseeVO) response.getBody();
+        Assertions.assertNotNull(licensee);
+        Assertions.assertNotNull(licensee.getId());
+        logger.info(licensee.toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenseeTest_missingAddress() {
+        LicenseeVO licensee = licenseeTestData.createUnsavedData();
+
+        licensee.setAddress(null);
+
+        ResponseEntity<?> response = restController.save(licensee);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        licensee = (LicenseeVO) response.getBody();
+        Assertions.assertNotNull(licensee);
+        Assertions.assertNotNull(licensee.getId());
+        logger.info(licensee.toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenceTypeTest_sameUin() {
+        LicenseeVO exists = (LicenseeVO) dummyData(1).iterator().next();
+
+        LicenseeVO licensee = new LicenseeVO();
+
+        licensee.setUin(exists.getUin());
+        licensee.setAddress("test address");
+        licensee.setLicenseeName("Test Licensee");
+        licensee.setAlias("Test");
+        licensee.setStatus(LicenseeStatus.ACTIVE);
+        licensee.setCreatedBy("testuser4");
+        licensee.setCreatedDate(LocalDateTime.now());
+        ResponseEntity<?> response = restController.save(licensee);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        logger.info(response.getBody().toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenceTypeTest_sameStatus() {
+        LicenseeVO exists = (LicenseeVO) dummyData(1).iterator().next();
+
+        LicenseeVO licensee = new LicenseeVO();
+
+        licensee.setStatus(exists.getStatus());
+        licensee.setAddress("test address");
+        licensee.setLicenseeName("Test Licensee");
+        licensee.setAlias("Test");
+        licensee.setUin(UUID.randomUUID().toString());
+        licensee.setCreatedBy("testuser4");
+        licensee.setCreatedDate(LocalDateTime.now());
+        ResponseEntity<?> response = restController.save(licensee);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        logger.info(response.getBody().toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenceTypeTest_sameLicenseeName() {
+        LicenseeVO exists = (LicenseeVO) dummyData(1).iterator().next();
+
+        LicenseeVO licensee = new LicenseeVO();
+
+        licensee.setLicenseeName(exists.getLicenseeName());
+        licensee.setAddress("test address");
+        licensee.setStatus(LicenseeStatus.ACTIVE);
+        licensee.setAlias("Test");
+        licensee.setUin(UUID.randomUUID().toString());
+        licensee.setCreatedBy("testuser4");
+        licensee.setCreatedDate(LocalDateTime.now());
+        ResponseEntity<?> response = restController.save(licensee);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        logger.info(response.getBody().toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenceTypeTest_sameAlias() {
+        LicenseeVO exists = (LicenseeVO) dummyData(1).iterator().next();
+
+        LicenseeVO licensee = new LicenseeVO();
+
+        licensee.setAlias(exists.getAlias());
+        licensee.setAddress("test address");
+        licensee.setStatus(LicenseeStatus.ACTIVE);
+        licensee.setLicenseeName("Test Licensee");
+        licensee.setUin(UUID.randomUUID().toString());
+        licensee.setCreatedBy("testuser4");
+        licensee.setCreatedDate(LocalDateTime.now());
+        ResponseEntity<?> response = restController.save(licensee);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        logger.info(response.getBody().toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveLicenceTypeTest_existingAddress() {
+        LicenseeVO exists = (LicenseeVO) dummyData(1).iterator().next();
+
+        LicenseeVO licensee = new LicenseeVO();
+
+        licensee.setAddress(exists.getAddress());
+        licensee.setAlias("Test");
+        licensee.setStatus(LicenseeStatus.ACTIVE);
+        licensee.setLicenseeName("Test Licensee");
+        licensee.setUin(UUID.randomUUID().toString());
+        licensee.setCreatedBy("testuser4");
+        licensee.setCreatedDate(LocalDateTime.now());
+        ResponseEntity<?> response = restController.save(licensee);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+
     }
 
     @Override
@@ -70,7 +280,8 @@ public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, Lice
 
         Assertions.assertEquals(l1.getId(), l2.getId());   
         Assertions.assertEquals(l1.getLicenseeName(), l2.getLicenseeName());  
-        Assertions.assertEquals(l1.getUin(), l2.getUin());        
+        Assertions.assertEquals(l1.getUin(), l2.getUin());
+        Assertions.assertEquals(l1.getStatus(), l2.getStatus());        
     }
 
     @Override
@@ -86,6 +297,8 @@ public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, Lice
     @Override
     protected void searchResultsAssertions(ResponseEntity<?> response) {
         // TODO Auto-generated method stub
+        Collection<LicenseeVO> types = (Collection<LicenseeVO>) response.getBody();
+        Assertions.assertEquals(types.size(), 7);
         
     }
 }

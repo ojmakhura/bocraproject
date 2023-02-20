@@ -215,6 +215,6 @@ public class AccessPointTypeRestControllerTest
     @Override
     protected void searchResultsAssertions(ResponseEntity<?> response) {
         Collection<AccessPointTypeVO> types = (Collection<AccessPointTypeVO>) response.getBody();
-        Assertions.assertEquals(types.size(), 2);
+        Assertions.assertEquals(types.size(), 7);
     }
 }

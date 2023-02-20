@@ -63,14 +63,14 @@ public class AccessPointTestData extends GenericTestData<AccessPointVO, AccessPo
     //     return (AccessPointVO)getRestController().save(createUnsavedAccessPoint()).getBody();
     // }
 
-    // public Collection<AccessPointVO> generateSequentialData(int size) {
+    public Collection<AccessPointVO> generateSequentialData(int size) {
 
-    //     return generateUnsavedSequentialData(size)
-    //         .stream()
-    //         .map(point -> (AccessPointVO)getRestController().save(point).getBody())
-    //         .collect(Collectors.toList());
+        return generateUnsavedSequentialData(size)
+            .stream()
+            .map(point -> accessPointService.save(point))
+            .collect(Collectors.toList());
 
-    // }
+    }
 
     @Override
     public Collection<AccessPointVO> generateUnsavedSequentialData(int size) {

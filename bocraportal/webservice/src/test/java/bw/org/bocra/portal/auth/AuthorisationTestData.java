@@ -27,8 +27,12 @@ public class AuthorisationTestData extends GenericTestData<AuthorisationVO, Auth
     @Autowired
     private AccessPointTypeTestData accessPointTypeTestData;
 
-    public AuthorisationTestData(AuthorisationRepository repository, AuthorisationRestController restController) {
+    @Autowired
+    private final AuthorisationService authorisationService;
+
+    public AuthorisationTestData(AuthorisationRepository repository, AuthorisationRestController restController, AuthorisationService authorisationService) {
         super(repository, restController);
+        this.authorisationService = authorisationService;
         //TODO Auto-generated constructor stub
     }
 
@@ -65,46 +69,46 @@ public class AuthorisationTestData extends GenericTestData<AuthorisationVO, Auth
         return auth;
     }
 
-    // public Collection<AuthorisationVO> generateSequentialData(int size) {
+    public Collection<AuthorisationVO> generateSequentialData(int size) {
 
-    //     Collection<AuthorisationVO> auths = new ArrayList<>();
-    //     Collection<AccessPointVO> access = accessPointTestData.generateSequentialData(size);
-    //     Iterator<AccessPointVO> iterator = access.iterator();
+        Collection<AuthorisationVO> auths = new ArrayList<>();
+        Collection<AccessPointVO> access = accessPointTestData.generateSequentialData(size);
+        Iterator<AccessPointVO> iterator = access.iterator();
 
-    //     for (int i = 1; i <= size / 2; i++) {
+        for (int i = 1; i <= size / 2; i++) {
 
-    //         AccessPointVO point = iterator.next();
-    //         AuthorisationVO auth = new AuthorisationVO();
+            AccessPointVO point = iterator.next();
+            AuthorisationVO auth = new AuthorisationVO();
 
-    //         auth.setAccessPoint(point);
-    //         auth.setCreatedBy("testuser4");
-    //         auth.setCreatedDate(LocalDateTime.now());
+            auth.setAccessPoint(point);
+            auth.setCreatedBy("testuser4");
+            auth.setCreatedDate(LocalDateTime.now());
 
-    //         auths.add((AuthorisationVO) authorisationRestController.save(auth).getBody());
-    //     }
+            auths.add(authorisationService.save(auth));
+        }
 
-    //     return auths;
-    // }
+        return auths;
+    }
 
-    // public Collection<AuthorisationVO> generateUnsavedSequentialData(int size) {
-    //     Collection<AuthorisationVO> auths = new ArrayList<>();
-    //     Collection<AccessPointVO> access = accessPointTestData.generateSequentialData(size);
-    //     Iterator<AccessPointVO> iterator = access.iterator();
+    public Collection<AuthorisationVO> generateUnsavedSequentialData(int size) {
+        Collection<AuthorisationVO> auths = new ArrayList<>();
+        Collection<AccessPointVO> access = accessPointTestData.generateSequentialData(size);
+        Iterator<AccessPointVO> iterator = access.iterator();
 
-    //     for (int i = 1; i <= size / 2; i++) {
+        for (int i = 1; i <= size / 2; i++) {
 
-    //         AccessPointVO point = iterator.next();
-    //         AuthorisationVO auth = new AuthorisationVO();
+            AccessPointVO point = iterator.next();
+            AuthorisationVO auth = new AuthorisationVO();
 
-    //         auth.setAccessPoint(point);
-    //         auth.setCreatedBy("testuser4");
-    //         auth.setCreatedDate(LocalDateTime.now());
+            auth.setAccessPoint(point);
+            auth.setCreatedBy("testuser4");
+            auth.setCreatedDate(LocalDateTime.now());
 
-    //         auths.add(auth);
-    //     }
+            auths.add(auth);
+        }
 
-    //     return auths;
-    // }
+        return auths;
+    }
 
     @Override
     public Collection<AuthorisationVO> searchData() {
@@ -171,12 +175,6 @@ public class AuthorisationTestData extends GenericTestData<AuthorisationVO, Auth
         }
         
         return auths;
-    }
-
-    @Override
-    public Collection<AuthorisationVO> generateUnsavedSequentialData(int size) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
