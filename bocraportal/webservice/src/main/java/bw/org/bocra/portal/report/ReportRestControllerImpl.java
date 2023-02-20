@@ -68,8 +68,6 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
     })
     public ResponseEntity<?> handleCreateWordDocument(@RequestPart("images") MultipartFile[] files,
             @RequestParam("data") String data) throws JsonMappingException, JsonProcessingException {
-        System.out.println("*****************************************************************");
-        System.out.println(data);
 
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, ?> content = mapper.readValue(data, HashMap.class);
@@ -79,17 +77,11 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
             System.out.println(content.entrySet());
             String formName = content.get("formName").toString();
 
-            // System.out.println(formName);
             XWPFParagraph title = document.createParagraph();
             XWPFRun titleRun = title.createRun();
             titleRun.setText(formName);
             titleRun.setFontSize(15);
             titleRun.setFontFamily("Calibri");
-            // titleRun.setColor("fff000");
-            titleRun.addBreak();
-            System.out.println();
-            System.out.println();
-            System.out.println();
 
             ArrayList<HashMap> reportElements = (ArrayList<HashMap>) content.get("reportElements");
 
