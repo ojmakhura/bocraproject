@@ -26,4 +26,8 @@ export class ReportRestController {
 
     return this.http.post(`${this.path}/create/word`, formData, { responseType: 'blob' });
   }
+
+  public createComplaintReportWordDocument(data: any): Observable<any> {
+    return this.http.post(`${this.path}/complaint_report/word`, data, { responseType: 'blob' });
+  }
 }

@@ -34,173 +34,91 @@
             </select>
           </div>
         </div>
+        <div class="mb-3 row">
+          <label for="label" class="col-sm-2 col-form-label">Label</label>
+          <div class="col-sm-10">
+            <input id="label" class="form-control" formControlName="label" />
+          </div>
+        </div>
+        <div *ngIf="this.reportFilterForm.value.report === 'year' && this.reportFilterForm.value.chartType === 'bar'">
+          <div style="display: block">
+            <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+              [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+            </canvas>
+          </div>
+        </div>
+        <div *ngIf="this.reportFilterForm.value.report === 'year' && this.reportFilterForm.value.chartType === 'pie'" class="row justify-content-center">
+          <div class="chart col-lg-7">
+            <canvas baseChart [data]="pieChartData" [type]="pieChartType" [options]="pieChartOptions"
+              [plugins]="pieChartPlugins">
+            </canvas>
+          </div>
+        </div>
+        <div
+          *ngIf="this.reportFilterForm.value.report === 'licensee' && this.reportFilterForm.value.chartType === 'bar'">
+          <div style="display: block">
+            <canvas baseChart [data]="barChartLicenseeData" [options]="barChartOptions" [plugins]="barChartPlugins"
+              [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+            </canvas>
+          </div>
+        </div>
+        <div
+          *ngIf="this.reportFilterForm.value.report === 'licensee' && this.reportFilterForm.value.chartType === 'pie'" class="row justify-content-center">
+          <div class="chart col-lg-7">
+            <canvas baseChart [data]="pieChartLicenseeData" [type]="pieChartType" [options]="pieChartOptions"
+              [plugins]="pieChartPlugins">
+            </canvas>
+          </div>
+        </div>
+        <div *ngIf="this.reportFilterForm.value.report === 'type' && this.reportFilterForm.value.chartType === 'bar'">
+          <div style="display: block">
+            <canvas baseChart [data]="barChartTypeData" [options]="barChartOptions" [plugins]="barChartPlugins"
+              [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+            </canvas>
+          </div>
+        </div>
+        <div *ngIf="this.reportFilterForm.value.report === 'type' && this.reportFilterForm.value.chartType === 'pie'" class="row justify-content-center">
+          <div class="chart col-lg-7">
+            <canvas baseChart [data]="pieChartTypeData" [type]="pieChartType" [options]="pieChartOptions"
+              [plugins]="pieChartPlugins">
+            </canvas>
+          </div>
+        </div>
+        <div *ngIf="this.reportFilterForm.value.report === 'status' && this.reportFilterForm.value.chartType === 'bar'">
+          <div style="display: block">
+            <canvas baseChart [data]="barChartStatusData" [options]="barChartOptions"
+              [plugins]="barChartPlugins" [type]="barChartType" (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)">
+            </canvas>
+          </div>
+        </div>
+        <div *ngIf="this.reportFilterForm.value.report === 'status' && this.reportFilterForm.value.chartType === 'pie'" class="row justify-content-center">
+          <div class="chart col-lg-7">
+            <canvas baseChart [data]="pieChartStatusData" [type]="pieChartType" [options]="pieChartOptions"
+              [plugins]="pieChartPlugins">
+            </canvas>
+          </div>
+        </div>
+        <div *ngIf="this.reportFilterForm.value.report === 'sector' && this.reportFilterForm.value.chartType === 'bar'">
+          <div style="display: block">
+            <canvas baseChart [data]="barChartSectorData" [options]="barChartOptions"
+              [plugins]="barChartPlugins" [type]="barChartType" (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)">
+            </canvas>
+          </div>
+        </div>
+        <div *ngIf="this.reportFilterForm.value.report === 'sector' && this.reportFilterForm.value.chartType === 'pie'" class="row justify-content-center">
+          <div class="chart col-lg-7">
+            <canvas baseChart [data]="pieChartSectorData" [type]="pieChartType" [options]="pieChartOptions"
+              [plugins]="pieChartPlugins">
+            </canvas>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="caption" class="col-sm-2 col-form-label">Caption</label>
+          <textarea name="caption" id="caption" rows="10" formControlName="caption" class="form-control"></textarea>
+        </div>
       </form>
-      <div class="card mb-5" *ngIf="this.reportFilterForm.value.report === 'year'">
-        <div class="card-header">Total Number of Complaints per year</div>
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <div class="card-body mb-5" *ngIf="this.reportFilterForm.value.chartType === 'bar'">
-              <div>
-                <div>
-                  <div style="display: block">
-                    <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
-                      [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <div class="card-body" *ngIf="this.reportFilterForm.value.chartType === 'pie'">
-              <div>
-                <div>
-                  <div class="chart" style="display: block">
-                    <canvas baseChart [data]="pieChartData" [type]="pieChartType" [options]="pieChartOptions"
-                      [plugins]="pieChartPlugins">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card" *ngIf="this.reportFilterForm.value.report === 'licensee'">
-        <div class="card-header">Total Number of Complaints per licensee</div>
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <div class="card-body mb-5" *ngIf="this.reportFilterForm.value.chartType === 'bar'">
-              <div>
-                <div>
-                  <div style="display: block">
-                    <canvas baseChart [data]="barChartLicenseeData" [options]="barChartOptions"
-                      [plugins]="barChartPlugins" [type]="barChartType" (chartHover)="chartHovered($event)"
-                      (chartClick)="chartClicked($event)">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <div class="card-body" *ngIf="this.reportFilterForm.value.chartType === 'pie'">
-              <div>
-                <div>
-                  <div class="chart">
-                    <canvas baseChart [data]="pieChartLicenseeData" [type]="pieChartType" [options]="pieChartOptions"
-                      [plugins]="pieChartPlugins">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card" *ngIf="this.reportFilterForm.value.report === 'type'">
-        <div class="card-header">Total Number of Complaints per complaint type</div>
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <div class="card-body mb-5" *ngIf="this.reportFilterForm.value.chartType === 'bar'">
-              <div>
-                <div>
-                  <div style="display: block">
-                    <canvas baseChart [data]="barChartTypeData" [options]="barChartOptions" [plugins]="barChartPlugins"
-                      [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <div class="card-body" *ngIf="this.reportFilterForm.value.chartType === 'pie'">
-              <div>
-                <div>
-                  <div class="chart">
-                    <canvas baseChart [data]="pieChartTypeData" [type]="pieChartType" [options]="pieChartOptions"
-                      [plugins]="pieChartPlugins">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card" *ngIf="this.reportFilterForm.value.report === 'status'">
-        <div class="card-header">Total Number of Complaints per complaint status</div>
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <div class="card-body mb-5" *ngIf="this.reportFilterForm.value.chartType === 'bar'">
-              <div>
-                <div>
-                  <div style="display: block">
-                    <canvas baseChart [data]="barChartStatusData" [options]="barChartOptions" [plugins]="barChartPlugins"
-                      [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <div class="card-body" *ngIf="this.reportFilterForm.value.chartType === 'pie'">
-              <div>
-                <div>
-                  <div class="chart">
-                    <canvas baseChart [data]="pieChartStatusData" [type]="pieChartType" [options]="pieChartOptions"
-                      [plugins]="pieChartPlugins">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card" *ngIf="this.reportFilterForm.value.report === 'sector'">
-        <div class="card-header">Total Number of Complaints per sector</div>
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <div class="card-body mb-5" *ngIf="this.reportFilterForm.value.chartType === 'bar'">
-              <div>
-                <div>
-                  <div style="display: block">
-                    <canvas baseChart [data]="barChartSectorData" [options]="barChartOptions" [plugins]="barChartPlugins"
-                      [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <div class="card-body" *ngIf="this.reportFilterForm.value.chartType === 'pie'">
-              <div>
-                <div>
-                  <div class="chart">
-                    <canvas baseChart [data]="pieChartSectorData" [type]="pieChartType" [options]="pieChartOptions"
-                      [plugins]="pieChartPlugins">
-                    </canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </form>
   </div>
 </div>

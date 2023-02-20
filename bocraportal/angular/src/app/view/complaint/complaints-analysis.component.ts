@@ -47,6 +47,8 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
   reportFilterForm = new FormGroup({
     report: new FormControl(''),
     chartType: new FormControl(''),
+    label: new FormControl(''),
+    caption: new FormControl('')
   });
   hide: boolean = false;
   protected route: ActivatedRoute;

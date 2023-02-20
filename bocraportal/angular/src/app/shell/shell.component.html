@@ -25,7 +25,7 @@
 							<a class="nav-link" routerLink="active"><i class="fa fa-phone fa-lg" aria-hidden="true"
 									title="Contact Us"></i>&nbsp; Contact Us</a>
 						</li> -->
-						<li class="nav-item px-2">
+						<li class="nav-item px-2" *ngIf="(isLoggedIn | async) === false">
 							<a class="nav-link" routerLink="/complaint"><i class="fa fa-commenting fa-lg"
 									aria-hidden="false"></i>&nbsp; File A Complaint</a>
 						</li>
