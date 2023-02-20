@@ -5,12 +5,10 @@ import { SearchDocumentsDocumentsComponent } from '@app/view/document/search-doc
 @Component({
   selector: 'search-documents-documents',
   templateUrl: './search-documents-documents.component.html',
-  styleUrls: [ './search-documents-documents.component.scss' ]
+  styleUrls: ['./search-documents-documents.component.scss'],
 })
 export class SearchDocumentsDocumentsComponentImpl extends SearchDocumentsDocumentsComponent {
-
-    constructor(private injector: Injector) {
-        super(injector);
-    }
-
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 }

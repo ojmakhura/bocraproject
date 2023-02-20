@@ -7,10 +7,9 @@ import { SubmissionDataComponentImpl } from './submission-data.component.impl';
 @Component({
   selector: 'submission-data-form-submissions',
   templateUrl: './submission-data-form-submissions.component.html',
-  styleUrls: [ './submission-data-form-submissions.component.scss' ]
+  styleUrls: ['./submission-data-form-submissions.component.scss'],
 })
 export class SubmissionDataFormSubmissionsComponentImpl extends SubmissionDataFormSubmissionsComponent {
-
   @Input() dialogRef: MatDialogRef<SubmissionDataComponentImpl>;
 
   constructor(private injector: Injector) {
@@ -19,13 +18,13 @@ export class SubmissionDataFormSubmissionsComponentImpl extends SubmissionDataFo
 
   override submissionDataEdit(id: number) {
     let form = {
-        id: id,
+      id: id,
     };
     let queryParams: any = {
-        id: id,
+      id: id,
     };
 
     this.dialogRef.close({});
-    this.router.navigate(['/form/submission/edit-form-submission'], {queryParams: queryParams});
+    this.router.navigate(['/form/submission/edit-form-submission'], { queryParams: queryParams });
   }
 }

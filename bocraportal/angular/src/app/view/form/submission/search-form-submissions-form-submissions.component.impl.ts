@@ -6,20 +6,18 @@ import { SearchFormSubmissionsFormSubmissionsComponent } from '@app/view/form/su
 @Component({
   selector: 'search-form-submissions-form-submissions',
   templateUrl: './search-form-submissions-form-submissions.component.html',
-  styleUrls: [ './search-form-submissions-form-submissions.component.scss' ]
+  styleUrls: ['./search-form-submissions-form-submissions.component.scss'],
 })
 export class SearchFormSubmissionsFormSubmissionsComponentImpl extends SearchFormSubmissionsFormSubmissionsComponent {
-
   constructor(private injector: Injector, private submissionRestController: SubmissionRestController) {
     super(injector);
   }
 
   getFormSubmissionsAnalyse() {
-
     let queryParams = {
-      submissions: this.formSubmissionsDataSource.data.map(submission => submission.id)
+      submissions: this.formSubmissionsDataSource.data.map((submission) => submission.id),
     };
 
-    this.router.navigate([`/report/report`], {queryParams: queryParams});
+    this.router.navigate([`/report/report`], { queryParams: queryParams });
   }
 }

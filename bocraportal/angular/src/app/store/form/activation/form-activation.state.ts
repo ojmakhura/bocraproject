@@ -2,32 +2,32 @@
 import { FormActivationVO } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-vo';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 
-export const formActivationKey = "formActivation";
+export const formActivationKey = 'formActivation';
 
 export interface FormActivationState {
-    activationName: String | any;
-    formActivation: FormActivationVO | any;
-    id: number | any;
-    formActivations: Array<FormActivationVO> | Array<any>;
-    formSubmissions: Array<FormSubmissionVO> | Array<any>;
-    loading: boolean;
-    loaderMessage: string | undefined;
-    success: boolean;
-    removed: boolean;
-    error: boolean;
-    messages: string[];
+  activationName: String | any;
+  formActivation: FormActivationVO | any;
+  id: number | any;
+  formActivations: Array<FormActivationVO> | Array<any>;
+  formSubmissions: Array<FormSubmissionVO> | Array<any>;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  success: boolean;
+  removed: boolean;
+  error: boolean;
+  messages: string[];
 }
 
 export const initialState: FormActivationState = {
-    activationName: null,
-    formActivation: null,
-    id: null,
-    formActivations: [],
-    formSubmissions: [],
-    loading: false,
-    removed: false,
-    success: false,
-    error: false,
-    messages: [],
-    loaderMessage: undefined
+  activationName: null,
+  formActivation: null,
+  id: null,
+  formActivations: [],
+  formSubmissions: [],
+  loading: false,
+  removed: false,
+  success: false,
+  error: false,
+  messages: [],
+  loaderMessage: undefined,
 };

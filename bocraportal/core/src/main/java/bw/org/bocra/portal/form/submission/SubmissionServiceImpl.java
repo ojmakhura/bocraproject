@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -350,7 +351,7 @@ public class SubmissionServiceImpl
         FormSubmissionCriteria criteria = new FormSubmissionCriteria();
         
         Collection<Long> periodIds = periodDao.getActivePeriods().stream()
-                                        .map(period -> period.getId()).toList();
+                                        .map(period -> period.getId()).collect(Collectors.toList());
 
         criteria.setPeriodIds(periodIds);
         Collection<FormSubmission> submissions = getFormSubmissionDao().findByCriteria(criteria);
@@ -359,7 +360,7 @@ public class SubmissionServiceImpl
     }
 
     @Override
-    protected Integer handleCheckOverdueSubmissions() throws Exception {
+    protected Collection<FormSubmissionVO> handleCheckOverdueSubmissions() throws Exception {
         Specification<FormSubmission> sSpecs = BocraportalSpecifications
                 .<FormSubmission, FormSubmissionStatus>findByAttribute(
                         "submissionStatus", FormSubmissionStatus.DRAFT)
@@ -379,7 +380,7 @@ public class SubmissionServiceImpl
             }
         }
 
-        return overdue.size();
+        return formSubmissionDao.toFormSubmissionVOCollection(overdue);
     }
 
     @Override
@@ -398,47 +399,9 @@ public class SubmissionServiceImpl
             throw new SubmissionServiceException("At lease 1 licensee must be provided.");
         }
 
-        FormActivation activation = activationRepository.getReferenceById(activationId);
+        return formSubmissionDao.createNewSubmissions(licenseeIds, activationId)
+            .stream().map(sub -> getFormSubmissionDao().toFormSubmissionVO(sub)).collect(Collectors.toList());
 
-        Collection<FormSubmissionVO> submissions = new ArrayList<>();
-
-        for (Long licenseeId : licenseeIds) {
-
-            Licensee licensee = licenseeRepository.getReferenceById(licenseeId);
-
-            FormSubmission submission = FormSubmission.Factory.newInstance();
-            submission.setCreatedBy(activation.getCreatedBy());
-            submission.setCreatedDate(LocalDateTime.now());
-            submission.setForm(activation.getForm());
-            submission.setLicensee(licensee);
-            submission.setFormActivation(activation);
-            submission.setPeriod(activation.getPeriod());
-            submission.setSubmissionStatus(FormSubmissionStatus.NEW);
-
-            submission.setExpectedSubmissionDate(activation.getActivationDeadline());
-
-            /**
-             * If the for requires single entry, the we create the data fields
-             */
-            if (activation.getForm().getEntryType() == FormEntryType.SINGLE) {
-                for (FormField field : activation.getForm().getFormFields()) {
-                    DataField dataField = DataField.Factory.newInstance();
-                    dataField.setFormSubmission(submission);
-                    dataField.setFormField(field);
-                    dataField.setValue(field.getDefaultValue());
-                    dataField.setRow(0);
-
-                    submission.getDataFields().add(dataField);
-                }
-            }
-            submission = formSubmissionRepository.saveAndFlush(submission);
-
-            FormSubmissionVO vo = new FormSubmissionVO();
-            getFormSubmissionDao().toFormSubmissionVO(submission, vo);
-            submissions.add(vo);
-        }
-
-        return submissions;
     }
 
 }

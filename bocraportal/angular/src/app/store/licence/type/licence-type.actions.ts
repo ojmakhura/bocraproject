@@ -4,91 +4,91 @@ import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type
 import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
 
 export enum LicenceTypeActionType {
-    FIND_BY_ID = '[LicenceType] Find By Id',
-    FIND_BY_ID_SUCCESS = '[LicenceType] Find By Id Success',
-    SAVE = '[LicenceType] Save',
-    SAVE_SUCCESS = '[LicenceType] Save Success',
-    REMOVE = '[LicenceType] Remove',
-    REMOVE_SUCCESS = '[LicenceType] Remove Success',
-    GET_ALL = '[LicenceType] Get All',
-    GET_ALL_SUCCESS = '[LicenceType] Get All Success',
-    SEARCH = '[LicenceType] Search',
-    SEARCH_SUCCESS = '[LicenceType] Search Success',
-    GET_ALL_PAGED = '[LicenceType] Get All Paged',
-    GET_ALL_PAGED_SUCCESS = '[LicenceType] Get All Paged Success',
-    LICENCE_TYPE_RESET = '[LicenceType] LicenceType Reset',
-    LICENCE_TYPE_FAILURE = '[LicenceType] LicenceType Action Failure',
-    LICENCE_TYPE_LOADING = '[LicenceType] LicenceType Loading'
+  FIND_BY_ID = '[LicenceType] Find By Id',
+  FIND_BY_ID_SUCCESS = '[LicenceType] Find By Id Success',
+  SAVE = '[LicenceType] Save',
+  SAVE_SUCCESS = '[LicenceType] Save Success',
+  REMOVE = '[LicenceType] Remove',
+  REMOVE_SUCCESS = '[LicenceType] Remove Success',
+  GET_ALL = '[LicenceType] Get All',
+  GET_ALL_SUCCESS = '[LicenceType] Get All Success',
+  SEARCH = '[LicenceType] Search',
+  SEARCH_SUCCESS = '[LicenceType] Search Success',
+  GET_ALL_PAGED = '[LicenceType] Get All Paged',
+  GET_ALL_PAGED_SUCCESS = '[LicenceType] Get All Paged Success',
+  LICENCE_TYPE_RESET = '[LicenceType] LicenceType Reset',
+  LICENCE_TYPE_FAILURE = '[LicenceType] LicenceType Action Failure',
+  LICENCE_TYPE_LOADING = '[LicenceType] LicenceType Loading',
 }
 
 export const findById = createAction(
-    LicenceTypeActionType.FIND_BY_ID,
-    props<{ id: number | any, loading: boolean, loaderMessage: string | undefined }>()
+  LicenceTypeActionType.FIND_BY_ID,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
-    LicenceTypeActionType.FIND_BY_ID_SUCCESS,
-    props<{ licenceType: LicenceTypeVO | any, messages: any[], success: boolean}>()
+  LicenceTypeActionType.FIND_BY_ID_SUCCESS,
+  props<{ licenceType: LicenceTypeVO | any; messages: any[]; success: boolean }>()
 );
 
 export const save = createAction(
-    LicenceTypeActionType.SAVE,
-    props<{ licenceType: LicenceTypeVO | any , loading: boolean, loaderMessage: string | undefined }>()
+  LicenceTypeActionType.SAVE,
+  props<{ licenceType: LicenceTypeVO | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
-    LicenceTypeActionType.SAVE_SUCCESS,
-    props<{ licenceType: LicenceTypeVO | any, messages: any[], success: boolean}>()
+  LicenceTypeActionType.SAVE_SUCCESS,
+  props<{ licenceType: LicenceTypeVO | any; messages: any[]; success: boolean }>()
 );
 
 export const remove = createAction(
-    LicenceTypeActionType.REMOVE,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  LicenceTypeActionType.REMOVE,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
-    LicenceTypeActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, messages: any[], success: boolean}>()
+  LicenceTypeActionType.REMOVE_SUCCESS,
+  props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
 export const getAll = createAction(
-    LicenceTypeActionType.GET_ALL,
-    props<{  loading: boolean, loaderMessage: string | undefined }>()
+  LicenceTypeActionType.GET_ALL,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
-    LicenceTypeActionType.GET_ALL_SUCCESS,
-    props<{ licenceTypes: LicenceTypeVO[] | any[], messages: any[], success: boolean}>()
+  LicenceTypeActionType.GET_ALL_SUCCESS,
+  props<{ licenceTypes: LicenceTypeVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const search = createAction(
-    LicenceTypeActionType.SEARCH,
-    props<{ criteria: LicenceTypeCriteria | any , loading: boolean, loaderMessage: string | undefined }>()
+  LicenceTypeActionType.SEARCH,
+  props<{ criteria: LicenceTypeCriteria | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
-    LicenceTypeActionType.SEARCH_SUCCESS,
-    props<{ licenceTypes: LicenceTypeVO[] | any[], messages: any[], success: boolean}>()
+  LicenceTypeActionType.SEARCH_SUCCESS,
+  props<{ licenceTypes: LicenceTypeVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const getAllPaged = createAction(
-    LicenceTypeActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  LicenceTypeActionType.GET_ALL_PAGED,
+  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
-    LicenceTypeActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ licenceTypes: LicenceTypeVO[] | any[], messages: any[], success: boolean}>()
+  LicenceTypeActionType.GET_ALL_PAGED_SUCCESS,
+  props<{ licenceTypes: LicenceTypeVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const licenceTypeReset = createAction(LicenceTypeActionType.LICENCE_TYPE_RESET);
 
 export const licenceTypeLoading = createAction(
-    LicenceTypeActionType.LICENCE_TYPE_LOADING,
-    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
+  LicenceTypeActionType.LICENCE_TYPE_LOADING,
+  props<{ loading: boolean; loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
 export const licenceTypeFailure = createAction(
-    LicenceTypeActionType.LICENCE_TYPE_FAILURE,
-    props<{ messages: any[] }>()
+  LicenceTypeActionType.LICENCE_TYPE_FAILURE,
+  props<{ messages: any[] }>()
 );

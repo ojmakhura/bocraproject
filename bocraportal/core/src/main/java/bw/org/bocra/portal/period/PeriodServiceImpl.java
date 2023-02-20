@@ -109,7 +109,6 @@ public class PeriodServiceImpl
                 start = this.calculateStartDate(end, periodVO.getPeriodConfig());
 
             } else {
-                System.out.println(periodVO);
 
                 // Since we have no start or end, we use period configuration to initialise
                 start = LocalDate.of(LocalDate.now().getYear(), periodVO.getPeriodConfig().getStartMonth(), periodVO.getPeriodConfig().getStartDay());

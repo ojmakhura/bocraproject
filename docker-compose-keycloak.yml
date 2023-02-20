@@ -6,52 +6,57 @@ services:
   keycloak:
     image: ${KEYCLOAK_REGISTRY_IMAGE}
     hostname: keycloak
-    restart: unless-stopped
     command:
       - "start"
       - "--optimized"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
-      interval: 5s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
+     test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
+     interval: 5s
+     timeout: 5s
+     retries: 3
+     start_period: 15s
     build:
       context: .
       dockerfile: Dockerfile.keycloak
-    environment:  
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
+    environment:
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
-      KC_DB_URL_HOST: ${POSTGRES_SERVER}
+      KC_DB_URL_HOST: ${DB_DOMAIN}
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-      KC_METRICS_ENABLED: true
+      KC_METRICS_ENABLED: "true"
       KC_PROXY: edge
-      KC_HOSTNAME_STRICT_HTTPS: false
-      KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
-      PROXY_ADDRESS_FORWARDING: false
+      PROXY_ADDRESS_FORWARDING: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
       TZ: Africa/Gaborone
     networks:
-      traefik-public:
+      bocraportal-public:
     deploy:
       placement:
         constraints:
           # Make the traefik service run only on the node with this label
           # as the node with it has the volume for the certificates
-          - node.role == manager
+          - node.labels.bocraportal_keycloak == true
       labels:
         - "traefik.enable=true"
+        # - "traefik.docker.network=bocraportal-public"
+        # - "traefik.constraint-label=bocraportal-public"
+        - "traefik.http.routers.keycloak-http.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+        - "traefik.http.routers.keycloak-http.entrypoints=web"
+        - "traefik.http.routers.keycloak-http.middlewares=https-redirect"
         - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
-        - "traefik.http.routers.keycloak.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-        - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
-        - "traefik.http.routers.keycloak.tls=${SSL_SECURE}"
-        - "traefik.http.routers.keycloak.tls.certresolver=le"
+        - "traefik.http.routers.keycloak-https.entrypoints=websecure"
+        - "traefik.http.routers.keycloak-https.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+        - "traefik.http.routers.keycloak-https.tls=${SSL_SECURE}"
+        - "traefik.http.routers.keycloak-https.tls.certresolver=le"
 
 ###############################################################################
 # Networks
 ###############################################################################
 networks:
-  traefik-public:
+  bocraportal-public:
     external: true

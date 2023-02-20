@@ -26,10 +26,10 @@ export interface FormState {
   max: String | any;
   defaultValue: String | any;
   removed: boolean;
-  loaderMessage: string | undefined,
+  loaderMessage: string | undefined;
   success: boolean;
   loading: boolean;
-  error: boolean,
+  error: boolean;
   messages: any[];
 }
 
@@ -55,5 +55,5 @@ export const initialState: FormState = {
   loading: false,
   error: false,
   messages: [],
-  loaderMessage: undefined
+  loaderMessage: undefined,
 };

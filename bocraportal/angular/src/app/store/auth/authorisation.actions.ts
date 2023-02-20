@@ -4,103 +4,103 @@ import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisati
 import { AuthorisationCriteria } from '@app/model/bw/org/bocra/portal/auth/authorisation-criteria';
 
 export enum AuthorisationActionType {
-    FIND_BY_ID = '[Authorisation] Find By Id',
-    FIND_BY_ID_SUCCESS = '[Authorisation] Find By Id Success',
-    SAVE = '[Authorisation] Save',
-    SAVE_SUCCESS = '[Authorisation] Save Success',
-    REMOVE = '[Authorisation] Remove',
-    REMOVE_SUCCESS = '[Authorisation] Remove Success',
-    GET_ALL = '[Authorisation] Get All',
-    GET_ALL_SUCCESS = '[Authorisation] Get All Success',
-    SEARCH = '[Authorisation] Search',
-    SEARCH_SUCCESS = '[Authorisation] Search Success',
-    GET_ALL_PAGED = '[Authorisation] Get All Paged',
-    GET_ALL_PAGED_SUCCESS = '[Authorisation] Get All Paged Success',
-    ASSIGN_MENU_SECTION = '[Authorisation] Assign Menu Section',
-    ASSIGN_MENU_SECTION_SUCCESS = '[Authorisation] Assign Menu Section Success',
-    AUTHORISATION_RESET = '[Authorisation] Authorisation Reset',
-    AUTHORISATION_FAILURE = '[Authorisation] Authorisation Action Failure',
-    AUTHORISATION_LOADING = '[Authorisation] Authorisation Loading'
+  FIND_BY_ID = '[Authorisation] Find By Id',
+  FIND_BY_ID_SUCCESS = '[Authorisation] Find By Id Success',
+  SAVE = '[Authorisation] Save',
+  SAVE_SUCCESS = '[Authorisation] Save Success',
+  REMOVE = '[Authorisation] Remove',
+  REMOVE_SUCCESS = '[Authorisation] Remove Success',
+  GET_ALL = '[Authorisation] Get All',
+  GET_ALL_SUCCESS = '[Authorisation] Get All Success',
+  SEARCH = '[Authorisation] Search',
+  SEARCH_SUCCESS = '[Authorisation] Search Success',
+  GET_ALL_PAGED = '[Authorisation] Get All Paged',
+  GET_ALL_PAGED_SUCCESS = '[Authorisation] Get All Paged Success',
+  ASSIGN_MENU_SECTION = '[Authorisation] Assign Menu Section',
+  ASSIGN_MENU_SECTION_SUCCESS = '[Authorisation] Assign Menu Section Success',
+  AUTHORISATION_RESET = '[Authorisation] Authorisation Reset',
+  AUTHORISATION_FAILURE = '[Authorisation] Authorisation Action Failure',
+  AUTHORISATION_LOADING = '[Authorisation] Authorisation Loading',
 }
 
 export const findById = createAction(
-    AuthorisationActionType.FIND_BY_ID,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  AuthorisationActionType.FIND_BY_ID,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByIdSuccess = createAction(
-    AuthorisationActionType.FIND_BY_ID_SUCCESS,
-    props<{ authorisation: AuthorisationVO | any, messages: any[], success: boolean}>()
+  AuthorisationActionType.FIND_BY_ID_SUCCESS,
+  props<{ authorisation: AuthorisationVO | any; messages: any[]; success: boolean }>()
 );
 
 export const save = createAction(
-    AuthorisationActionType.SAVE,
-    props<{ authorisation: AuthorisationVO | any , loading: boolean, loaderMessage: string | undefined }>()
+  AuthorisationActionType.SAVE,
+  props<{ authorisation: AuthorisationVO | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
-    AuthorisationActionType.SAVE_SUCCESS,
-    props<{ authorisation: AuthorisationVO | any, messages: any[], success: boolean}>()
+  AuthorisationActionType.SAVE_SUCCESS,
+  props<{ authorisation: AuthorisationVO | any; messages: any[]; success: boolean }>()
 );
 
 export const remove = createAction(
-    AuthorisationActionType.REMOVE,
-    props<{ id: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  AuthorisationActionType.REMOVE,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const removeSuccess = createAction(
-    AuthorisationActionType.REMOVE_SUCCESS,
-    props<{ removed: boolean | any, messages: any[], success: boolean}>()
+  AuthorisationActionType.REMOVE_SUCCESS,
+  props<{ removed: boolean | any; messages: any[]; success: boolean }>()
 );
 
 export const getAll = createAction(
-    AuthorisationActionType.GET_ALL,
-    props<{  loading: boolean, loaderMessage: string | undefined }>()
+  AuthorisationActionType.GET_ALL,
+  props<{ loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllSuccess = createAction(
-    AuthorisationActionType.GET_ALL_SUCCESS,
-    props<{ authorisations: AuthorisationVO[] | any[], messages: any[], success: boolean}>()
+  AuthorisationActionType.GET_ALL_SUCCESS,
+  props<{ authorisations: AuthorisationVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const search = createAction(
-    AuthorisationActionType.SEARCH,
-    props<{ criteria: AuthorisationCriteria | any, loading: boolean, loaderMessage: string | undefined }>()
+  AuthorisationActionType.SEARCH,
+  props<{ criteria: AuthorisationCriteria | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const searchSuccess = createAction(
-    AuthorisationActionType.SEARCH_SUCCESS,
-    props<{ authorisations: AuthorisationVO[] | any[], messages: any[], success: boolean}>()
+  AuthorisationActionType.SEARCH_SUCCESS,
+  props<{ authorisations: AuthorisationVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const assignMenuSection = createAction(
-    AuthorisationActionType.ASSIGN_MENU_SECTION,
-    props<{ authorisationId: number, menuSectionId: number, loading: boolean, loaderMessage: string | undefined }>()
+  AuthorisationActionType.ASSIGN_MENU_SECTION,
+  props<{ authorisationId: number; menuSectionId: number; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const assignMenuSectionSuccess = createAction(
-    AuthorisationActionType.ASSIGN_MENU_SECTION_SUCCESS,
-    props<{ authorisation: AuthorisationVO | any, messages: any[], success: boolean}>()
+  AuthorisationActionType.ASSIGN_MENU_SECTION_SUCCESS,
+  props<{ authorisation: AuthorisationVO | any; messages: any[]; success: boolean }>()
 );
 
 export const getAllPaged = createAction(
-    AuthorisationActionType.GET_ALL_PAGED,
-    props<{ pageNumber: number | any , pageSize: number | any , loading: boolean, loaderMessage: string | undefined }>()
+  AuthorisationActionType.GET_ALL_PAGED,
+  props<{ pageNumber: number | any; pageSize: number | any; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const getAllPagedSuccess = createAction(
-    AuthorisationActionType.GET_ALL_PAGED_SUCCESS,
-    props<{ authorisations: AuthorisationVO[] | any[], messages: any[], success: boolean}>()
+  AuthorisationActionType.GET_ALL_PAGED_SUCCESS,
+  props<{ authorisations: AuthorisationVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
 export const authorisationReset = createAction(AuthorisationActionType.AUTHORISATION_RESET);
 
 export const authorisationLoading = createAction(
-    AuthorisationActionType.AUTHORISATION_LOADING,
-    props<{ loading: boolean, loaderMessage: string | undefined, success: boolean, messages: any[] }>()
+  AuthorisationActionType.AUTHORISATION_LOADING,
+  props<{ loading: boolean; loaderMessage: string | undefined; success: boolean; messages: any[] }>()
 );
 
 export const authorisationFailure = createAction(
-    AuthorisationActionType.AUTHORISATION_FAILURE,
-    props<{ messages: any[] }>()
+  AuthorisationActionType.AUTHORISATION_FAILURE,
+  props<{ messages: any[] }>()
 );

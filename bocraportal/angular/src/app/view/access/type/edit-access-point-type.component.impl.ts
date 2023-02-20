@@ -3,7 +3,12 @@ import { Component, Injector } from '@angular/core';
 import * as AccessPointTypeActions from '@app/store/access/type/access-point-type.actions';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
-import { EditAccessPointTypeComponent, EditAccessPointTypeDeleteForm, EditAccessPointTypeSaveForm, EditAccessPointTypeVarsForm } from '@app/view/access/type/edit-access-point-type.component';
+import {
+  EditAccessPointTypeComponent,
+  EditAccessPointTypeDeleteForm,
+  EditAccessPointTypeSaveForm,
+  EditAccessPointTypeVarsForm,
+} from '@app/view/access/type/edit-access-point-type.component';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
 import { select } from '@ngrx/store';
@@ -28,13 +33,12 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
     return form;
   }
 
-  override doNgOnDestroy() { }
+  override doNgOnDestroy() {}
 
   override doNgAfterViewInit(): void {
-
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/access/type/edit-access-point-type",
+        viewUrl: '/access/type/edit-access-point-type',
         roles: this.keycloakService.getUserRoles(),
         loading: true,
       })
@@ -46,7 +50,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
           AccessPointTypeActions.findById({
             id: queryParams?.id,
             loading: false,
-            loaderMessage: 'Loading access point type by id ...'
+            loaderMessage: 'Loading access point type by id ...',
           })
         );
       }
@@ -60,8 +64,8 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
     //   })
     // );
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
         if (item === '/access/type/edit-access-point-type/{button:delete}') {
           this.deleteUnrestricted = false;
         }
@@ -82,8 +86,7 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
   }
 
   override beforeEditAccessPointTypeSave(form: EditAccessPointTypeSaveForm): void {
-    
-    if(this.editAccessPointTypeForm.valid){
+    if (this.editAccessPointTypeForm.valid) {
       if (form.accessPointType?.id) {
         form.accessPointType.updatedBy = this.keycloakService.getUsername();
         form.accessPointType.updatedDate = new Date();
@@ -95,36 +98,38 @@ export class EditAccessPointTypeComponentImpl extends EditAccessPointTypeCompone
         AccessPointTypeActions.save({
           accessPointType: form.accessPointType,
           loading: true,
-          loaderMessage: 'Saving access point type ...'
+          loaderMessage: 'Saving access point type ...',
         })
       );
     } else {
-      let messages: string[] = []
-      if(!this.accessPointTypeControl.valid) {
-        messages.push("Access Point Type has errors, Please fill the required form fields.")
+      let messages: string[] = [];
+      if (!this.accessPointTypeControl.valid) {
+        messages.push('Access Point Type has errors, Please fill the required form fields.');
       }
-      if(!this.accessPointTypeNameControl.valid) {
-        messages.push("Access Point Type Name is missing!")
+      if (!this.accessPointTypeNameControl.valid) {
+        messages.push('Access Point Type Name is missing!');
       }
-      if(!this.accessPointTypeCodeControl.valid) {
-        messages.push("Access Point Type Code is missing!")
+      if (!this.accessPointTypeCodeControl.valid) {
+        messages.push('Access Point Type Code is missing!');
       }
       this.store.dispatch(AccessPointTypeActions.accessPointTypeFailure({ messages: messages }));
     }
   }
 
   override beforeEditAccessPointTypeDelete(form: EditAccessPointTypeDeleteForm): void {
-    if (form?.accessPointType?.id && confirm("Are you sure you want to delete the access point type?")) {
+    if (form?.accessPointType?.id && confirm('Are you sure you want to delete the access point type?')) {
       this.store.dispatch(
         AccessPointTypeActions.remove({
           id: form?.accessPointType?.id,
           loading: false,
-          loaderMessage: 'Removing access point type by id ...'
+          loaderMessage: 'Removing access point type by id ...',
         })
       );
       this.editAccessPointTypeFormReset();
     } else {
-      this.store.dispatch(AccessPointTypeActions.accessPointTypeFailure({ messages: ['Please select something to delete'] }));
+      this.store.dispatch(
+        AccessPointTypeActions.accessPointTypeFailure({ messages: ['Please select something to delete'] })
+      );
     }
   }
 }

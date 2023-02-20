@@ -15,8 +15,7 @@
       <!-- <button color="accent" type="button" (click)="editLicenseeNewDocument()" *ngIf="licenseeId" class="btn btn-primary">
         <span translate>New Document</span>
       </button> -->
-      <button color="accent" type="button" (click)="editLicenseeNewShareholder()" *ngIf="licenseeId && false"
-        class="btn btn-primary">
+      <button color="accent" type="button" (click)="editLicenseeNewShareholder()" *ngIf="false" class="btn btn-primary">
         <span translate>New Shareholder</span>
       </button>
       <button type="button" (click)="editLicenseeSearch()" class="btn btn-primary">
@@ -27,9 +26,9 @@
 
   <div class="card-body">
     <form [formGroup]="editLicenseeForm">
-			<div *ngIf="loading | async">
-				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
-			</div>
+      <div *ngIf="loading | async">
+        <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+      </div>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}
@@ -89,10 +88,11 @@
             </div>
           </div>
         </div>
-				<div class="mb-3">
-				    <label id="licenseeAlias_label" class="col-sm-2 col-form-label" for="licenseeAlias"><span translate>alias</span></label>
-				    <input type="text" id="licenseeAlias" class="form-control" name="alias" formControlName="alias"/>
-				</div>
+        <div class="mb-3">
+          <label id="licenseeAlias_label" class="col-sm-2 col-form-label" for="licenseeAlias"><span
+              translate>alias</span></label>
+          <input type="text" id="licenseeAlias" class="form-control" name="alias" formControlName="alias" />
+        </div>
         <div class="mb-3">
           <label id="licenseeAddress_label" class="col-sm-2 col-form-label" for="licenseeAddress"><span
               translate>address</span></label>
@@ -182,7 +182,8 @@
                 <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
                 <mat-cell *matCellDef="let row; index as i">
                   <div>
-                    <button type="button" color="accent" (click)="deleteFromLicenseeForms(i)" class="btn btn-outline-primary">
+                    <button type="button" color="accent" (click)="deleteFromLicenseeForms(i)"
+                      class="btn btn-outline-primary">
                       <mat-icon>delete</mat-icon>
                     </button>
                     <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeForms(row)" class="btn btn-info">
@@ -280,9 +281,10 @@
                     <!-- <button type="button" color="accent" (click)="doEditLicenseeDocuments(row)" class="btn btn-info">
                         <mat-icon>edit</mat-icon>
                       </button> -->
-                    <!-- <button type="button" (click)="fileDownload(row)" class="btn btn-outline-primary">
+                    <button type="button" (click)="fileDownload(row?.documentId, row?.documentName)"
+                      class="btn btn-outline-primary">
                       <mat-icon>file_download</mat-icon>
-                    </button> -->
+                    </button>
                   </div>
                 </mat-cell>
               </ng-container>
@@ -349,8 +351,52 @@
               showFirstLastButtons></mat-paginator>
           </div>
         </mat-tab>
+        <mat-tab label="{{ 'shareholders' | translate }}">
+          <div>
+            <button type="button" (click)="editLicenseeNewShareholder()" class="btn btn-primary">
+              <mat-icon>add_box</mat-icon>
+            </button>
+            <mat-table matSort [dataSource]="licenseeShareholders" #shareholdersSort="matSort"
+              class="table table-bordered table-striped" style="width: 100%">
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+                <mat-cell *matCellDef="let row; index as i">
+                  <div>
+                    <button type="button" color="accent" (click)="deleteFromLicenseeShareholders(i)"
+                      class="btn btn-outline-primary">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                    <button type="button" color="accent" (click)="doEditLicenseeShareholders(row)"
+											class="btn btn-outline-primary">
+											<mat-icon>edit</mat-icon>
+										</button>
+                  </div>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="shareholder.shareholderId">
+                <mat-header-cell *matHeaderCellDef translate>ShareholderId</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{ row?.shareholder.shareholderId }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="shareholder.name">
+                <mat-header-cell *matHeaderCellDef translate>Shareholder Name</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{ row?.shareholder.name }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="numberOfShares">
+                <mat-header-cell *matHeaderCellDef translate>number.of.shares</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{ row?.numberOfShares }} </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="licenseeShareholdersModalColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: licenseeShareholdersModalColumns"></mat-row>
+            </mat-table>
+            <mat-paginator #licenseeShareholdersPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]"
+              showFirstLastButtons></mat-paginator>
+          </div>
+        </mat-tab>
       </mat-tab-group>
-
     </form>
   </div>
 </div>
@@ -686,6 +732,73 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
         <button type="button" class="btn btn-primary" (click)="addSelectedLicenseeSectors()" data-bs-dismiss="modal"
           translate>
+          save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="licenseeShareholdersModal" tabindex="-1" aria-labelledby="licenseeShareholdersLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="licenseeShareholdersAddLabel" translate>
+          action.select
+          <span translate>shareholders</span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <form>
+            <div>
+              <mat-form-field>
+                <mat-label translate>search</mat-label>
+                <input matInput type="text" [formControl]="licenseeShareholdersSearchField"
+                  id="licenseeShareholdersSearchField" />
+              </mat-form-field>
+            </div>
+            <button type="button" (click)="licenseeShareholdersSearch()" class="btn btn-primary">
+              <mat-icon>search</mat-icon>
+            </button>
+          </form>
+        </div>
+        <mat-table matSort [dataSource]="licenseeShareholdersDataSource" #licenseeShareholdersModalSort="matSort"
+          class="table table-bordered" style="width: 100%">
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+            <mat-cell *matCellDef="let row; let i = index">
+              <mat-checkbox (change)="licenseeShareholdersSelected($event, row)"></mat-checkbox>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="shareholder.shareholderId">
+            <mat-header-cell *matHeaderCellDef translate>ShareholderId</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.shareholder?.shareholderId }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="shareholder.name">
+            <mat-header-cell *matHeaderCellDef translate>Shareholder Name</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.shareholder?.name }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="numberOfShares">
+            <mat-header-cell *matHeaderCellDef translate>number.of.shares</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.numberOfShares }} </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="licenseeShareholdersModalColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: licenseeShareholdersModalColumns"></mat-row>
+        </mat-table>
+        <mat-paginator #licenseeShareholdersModalPaginator="matPaginator" [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
+        <button type="button" class="btn btn-primary" (click)="addSelectedLicenseeShareholders()"
+          data-bs-dismiss="modal" translate>
           save
         </button>
       </div>

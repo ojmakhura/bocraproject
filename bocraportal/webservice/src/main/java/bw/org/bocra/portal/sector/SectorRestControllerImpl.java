@@ -36,7 +36,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Sector with id %ld not found.", id));
             }
@@ -53,7 +53,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
             }
 
             logger.error(message);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -61,11 +61,11 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
     public ResponseEntity<?> handleGetAll() {
         try{
             logger.debug("Display all Sectors");
-             return ResponseEntity.status(HttpStatus.OK).body(sectorService.getAll());
+             return ResponseEntity.ok().body(sectorService.getAll());
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured when loading all sectors.");
+            return ResponseEntity.badRequest().body("An error occured when loading all sectors.");
         }
     }
 
@@ -74,13 +74,13 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         try{
             logger.debug("Display all Sectors with specified page number "+pageNumber+" and page size"+pageSize);
     
-            return ResponseEntity.status(HttpStatus.OK).body(sectorService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(sectorService.getAll(pageNumber, pageSize));
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
             String message = String.format("An error occurred when reading page %d of size %d.", pageNumber, pageSize);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -92,7 +92,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
             ResponseEntity<?> response;
 
             if(rm) {
-                response = ResponseEntity.status(HttpStatus.OK).body(rm);
+                response = ResponseEntity.ok().body(rm);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the sector with id " + id);
             }
@@ -106,7 +106,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete sector with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting sector with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting sector with id " + id);
         }
     }
 
@@ -118,7 +118,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the access point type.");
             }
@@ -140,31 +140,31 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(code)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This sector with this code has been already created.");
+                        return ResponseEntity.badRequest().body("This sector with this code has been already created.");
 
                     } else if(e.getCause().getMessage().contains("(name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This sector with this name has been already created.");
+                        return ResponseEntity.badRequest().body("This sector with this name has been already created.");
                     } else {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This sector is conflicting with an existing one.");
+                        return ResponseEntity.badRequest().body("This sector is conflicting with an existing one.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This sector is conflicting with an existing one.");
+                return ResponseEntity.badRequest().body("This sector is conflicting with an existing one.");
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             e.getCause().printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
                
       }
@@ -176,10 +176,10 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         
         try {
             logger.debug("Display all sectors");
-            return ResponseEntity.status(HttpStatus.OK).body(sectorService.getAll());
+            return ResponseEntity.ok().body(sectorService.getAll());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
     
@@ -200,7 +200,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 }

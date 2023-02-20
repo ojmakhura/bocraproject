@@ -105,6 +105,24 @@ export class EditFormComponentImpl extends EditFormComponent {
                 }
               });
           });
+
+        this.http
+          .get<any[]>(
+            `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
+          )
+          .subscribe((roles) => {
+            roles
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .forEach((role: any) => {
+                if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
+                  let item = new SelectItem();
+                  item.label = role['description'];
+                  item.value = role['name'];
+
+                  this.userRolesBackingList.push(item);
+                }
+              });
+          });
       });
     });
 
@@ -169,9 +187,7 @@ export class EditFormComponentImpl extends EditFormComponent {
       });
     });
 
-    this.formPeriodConfigs$?.subscribe(periods => {
-
-    });
+    this.formPeriodConfigs$?.subscribe((periods) => {});
   }
 
   /**
@@ -428,16 +444,15 @@ export class EditFormComponentImpl extends EditFormComponent {
     });
   }
 
-  override formPeriodConfigAddDialog(): void {
-  }
+  override formPeriodConfigAddDialog(): void {}
 
   override formPeriodConfigSearch(): void {
     let cr = this.formPeriodConfigSearchField.value;
     this.store.dispatch(
       PeriodConfigActions.search({
-        criteria: {periodConfigName: cr},
+        criteria: { periodConfigName: cr },
         loaderMessage: '',
-        loading: true
+        loading: true,
       })
     );
   }

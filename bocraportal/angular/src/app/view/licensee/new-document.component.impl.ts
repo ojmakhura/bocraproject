@@ -12,10 +12,9 @@ import { LicenseeCriteria } from '@app/model/bw/org/bocra/portal/licensee/licens
 @Component({
   selector: 'app-new-document',
   templateUrl: './new-document.component.html',
-  styleUrls: ['./new-document.component.scss']
+  styleUrls: ['./new-document.component.scss'],
 })
 export class NewDocumentComponentImpl extends NewDocumentComponent {
-
   currentFile?: File = undefined;
 
   constructor(@Inject(MAT_DIALOG_DATA) data: any, private injector: Injector) {
@@ -28,7 +27,7 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
     return form;
   }
 
-  override doNgOnDestroy() { }
+  override doNgOnDestroy() {}
 
   override documentLicenseeSearch(): void {
     let criteria: LicenseeCriteria = new LicenseeCriteria();
@@ -38,18 +37,17 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
       LicenseeActions.search({
         criteria: criteria,
         loading: true,
-        loaderMessage: 'Searching licensees ...'
+        loaderMessage: 'Searching licensees ...',
       })
     );
   }
 
   override documentDocumentTypeSearch(): void {
-      
     this.store.dispatch(
       DocumentTypeActions.search({
         criteria: this.documentDocumentTypeSearchField.value,
         loading: true,
-        loaderMessage: 'Searching document types ...'
+        loaderMessage: 'Searching document types ...',
       })
     );
   }
@@ -57,12 +55,12 @@ export class NewDocumentComponentImpl extends NewDocumentComponent {
   onFileSelected(event: any) {
     if (event) {
       this.currentFile = event.target.files[0];
-      this.documentDocumentNameControl.patchValue(this.currentFile?.name)
+      this.documentDocumentNameControl.patchValue(this.currentFile?.name);
     }
   }
 
   override handleDialogDone(data: any): any {
-    if(data.document) {
+    if (data.document) {
       data.document.file = this.currentFile;
     }
     return data;

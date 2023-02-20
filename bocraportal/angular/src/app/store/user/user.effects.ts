@@ -12,7 +12,7 @@ export class UserEffects {
     private actions$: Actions,
     private userRestController: UserRestController,
     private licenseeRestController: LicenseeRestController
-  ) { }
+  ) {}
 
   createUser$ = createEffect(() =>
     this.actions$.pipe(
@@ -47,20 +47,26 @@ export class UserEffects {
   findById$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.findById),
-      mergeMap(({ userId }) => this.userRestController.findUserById(userId).pipe(
-        map((user) => UserActions.findByIdSuccess({ user: user, messages: [`User ${user?.username} found`], success: true })),
-        catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
-      ))
+      mergeMap(({ userId }) =>
+        this.userRestController.findUserById(userId).pipe(
+          map((user) =>
+            UserActions.findByIdSuccess({ user: user, messages: [`User ${user?.username} found`], success: true })
+          ),
+          catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
+        )
+      )
     )
   );
 
   changePassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.changePassword),
-      mergeMap(({ userId, newPassword }) => this.userRestController.changePassword(userId, newPassword).pipe(
-        map((message) => UserActions.changePasswordSuccess({ messages: [message], success: true })),
-        catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
-      ))
+      mergeMap(({ userId, newPassword }) =>
+        this.userRestController.changePassword(userId, newPassword).pipe(
+          map((message) => UserActions.changePasswordSuccess({ messages: [message], success: true })),
+          catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
+        )
+      )
     )
   );
 

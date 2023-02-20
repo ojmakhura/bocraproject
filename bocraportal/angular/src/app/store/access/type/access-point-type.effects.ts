@@ -8,7 +8,7 @@ import { AccessPointTypeVO } from '@app/model/bw/org/bocra/portal/access/type/ac
 
 @Injectable()
 export class AccessPointTypeEffects {
-  constructor(private actions$: Actions, private accessPointTypeRestController: AccessPointTypeRestController) { }
+  constructor(private actions$: Actions, private accessPointTypeRestController: AccessPointTypeRestController) {}
 
   findById$ = createEffect(() =>
     this.actions$.pipe(
@@ -16,9 +16,15 @@ export class AccessPointTypeEffects {
       mergeMap(({ id }) =>
         this.accessPointTypeRestController.findById(id).pipe(
           map((accessPointType) =>
-            AccessPointTypeActions.findByIdSuccess({ accessPointType, messages: [`Access point type ${accessPointType.name} found.`], success: true })
+            AccessPointTypeActions.findByIdSuccess({
+              accessPointType,
+              messages: [`Access point type ${accessPointType.name} found.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [
+            AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
       )
     )
@@ -30,9 +36,17 @@ export class AccessPointTypeEffects {
       mergeMap(({ accessPointType }) =>
         this.accessPointTypeRestController.save(accessPointType).pipe(
           map((accessPointType) =>
-            AccessPointTypeActions.saveSuccess({ accessPointType, messages: [`Access point type ${accessPointType.name} saved.`], success: true })
+            AccessPointTypeActions.saveSuccess({
+              accessPointType,
+              messages: [`Access point type ${accessPointType.name} saved.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error?.error ? error.error : error : error] })])
+          catchError((error) => [
+            AccessPointTypeActions.accessPointTypeFailure({
+              messages: [error?.error ? (error?.error ? error.error : error) : error],
+            }),
+          ])
         )
       )
     )
@@ -44,9 +58,15 @@ export class AccessPointTypeEffects {
       mergeMap(({ id }) =>
         this.accessPointTypeRestController.remove(id).pipe(
           map((removed) =>
-            AccessPointTypeActions.removeSuccess({ removed, messages: [`Access point type successfully removed.`], success: true })
+            AccessPointTypeActions.removeSuccess({
+              removed,
+              messages: [`Access point type successfully removed.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [
+            AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
       )
     )
@@ -56,20 +76,29 @@ export class AccessPointTypeEffects {
     this.actions$.pipe(
       ofType(AccessPointTypeActions.getAll),
       mergeMap(() =>
-        this.accessPointTypeRestController.getAll().pipe(
-          map((data) => {
-            data.sort((a: AccessPointTypeVO, b: AccessPointTypeVO) => {
-              return a.name.localeCompare(b.name);
-            });
+        this.accessPointTypeRestController
+          .getAll()
+          .pipe(
+            map((data) => {
+              data.sort((a: AccessPointTypeVO, b: AccessPointTypeVO) => {
+                return a.name.localeCompare(b.name);
+              });
 
-            return data;
-          })
-        ).pipe(
-          map((accessPointTypes) =>
-            AccessPointTypeActions.getAllSuccess({ accessPointTypes, messages: [`${accessPointTypes.length} access point types found.`], success: true })
-          ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
-        )
+              return data;
+            })
+          )
+          .pipe(
+            map((accessPointTypes) =>
+              AccessPointTypeActions.getAllSuccess({
+                accessPointTypes,
+                messages: [`${accessPointTypes.length} access point types found.`],
+                success: true,
+              })
+            ),
+            catchError((error) => [
+              AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] }),
+            ])
+          )
       )
     )
   );
@@ -78,20 +107,29 @@ export class AccessPointTypeEffects {
     this.actions$.pipe(
       ofType(AccessPointTypeActions.search),
       mergeMap(({ criteria }) =>
-        this.accessPointTypeRestController.search(criteria).pipe(
-          map((data) => {
-            data.sort((a: AccessPointTypeVO, b: AccessPointTypeVO) => {
-              return a.name.localeCompare(b.name);
-            });
+        this.accessPointTypeRestController
+          .search(criteria)
+          .pipe(
+            map((data) => {
+              data.sort((a: AccessPointTypeVO, b: AccessPointTypeVO) => {
+                return a.name.localeCompare(b.name);
+              });
 
-            return data;
-          })
-        ).pipe(
-          map((accessPointTypes) =>
-            AccessPointTypeActions.searchSuccess({ accessPointTypes, messages: [`${accessPointTypes.length} access point types found.`], success: true })
-          ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
-        )
+              return data;
+            })
+          )
+          .pipe(
+            map((accessPointTypes) =>
+              AccessPointTypeActions.searchSuccess({
+                accessPointTypes,
+                messages: [`${accessPointTypes.length} access point types found.`],
+                success: true,
+              })
+            ),
+            catchError((error) => [
+              AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] }),
+            ])
+          )
       )
     )
   );
@@ -102,9 +140,15 @@ export class AccessPointTypeEffects {
       mergeMap(({ pageNumber, pageSize }) =>
         this.accessPointTypeRestController.getAllPaged(pageNumber, pageSize).pipe(
           map((accessPointTypes) =>
-            AccessPointTypeActions.getAllPagedSuccess({ accessPointTypes, messages: [`Page ${pageNumber} found with ${pageSize} access point types.`], success: true })
+            AccessPointTypeActions.getAllPagedSuccess({
+              accessPointTypes,
+              messages: [`Page ${pageNumber} found with ${pageSize} access point types.`],
+              success: true,
+            })
           ),
-          catchError((error) => [AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] })])
+          catchError((error) => [
+            AccessPointTypeActions.accessPointTypeFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
       )
     )

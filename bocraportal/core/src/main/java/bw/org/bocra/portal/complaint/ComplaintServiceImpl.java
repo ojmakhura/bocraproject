@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -122,6 +123,13 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
                 spec = spec.and(BocraportalSpecifications.findByAttribute("email", criteria.getEmail()));
         }
 
+        if (criteria.getSurname() != null) {
+            if (spec == null)
+                spec = BocraportalSpecifications.findByAttribute("surname", criteria.getSurname());
+            else
+                spec = spec.and(BocraportalSpecifications.findByAttribute("surname", criteria.getSurname()));
+        }
+
         if (criteria.getStatus() != null) {
             if (spec == null)
                 spec = BocraportalSpecifications.findByAttribute("status", criteria.getStatus());
@@ -129,18 +137,22 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
                 spec = spec.and(BocraportalSpecifications.findByAttribute("status", criteria.getStatus()));
         }
 
-        if(StringUtils.isNotBlank(criteria.getLicenseeName())) {
-            if(spec == null)
-                spec = BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName", criteria.getLicenseeName());
+        if (StringUtils.isNotBlank(criteria.getLicenseeName())) {
+            if (spec == null)
+                spec = BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName",
+                        criteria.getLicenseeName());
             else
-                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName", criteria.getLicenseeName()));
+                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName",
+                        criteria.getLicenseeName()));
         }
 
-        if(StringUtils.isNotBlank(criteria.getComplaintType())) {
-            if(spec == null)
-                spec = BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName", criteria.getComplaintType());
+        if (StringUtils.isNotBlank(criteria.getComplaintType())) {
+            if (spec == null)
+                spec = BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName",
+                        criteria.getComplaintType());
             else
-                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName", criteria.getComplaintType()));
+                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName",
+                        criteria.getComplaintType()));
         }
 
         if (criteria.getComplaintType() != null) {
@@ -152,9 +164,27 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
                         criteria.getComplaintType()));
         }
 
-        Collection<Complaint> specs = getComplaintRepository().findAll(spec, Sort.by("id").descending());
+        if(criteria.getStartDate() != null) {
+            if (spec == null)
+                spec =  BocraportalSpecifications.findByAttributeGreaterThanEqual("createdDate",
+                            criteria.getStartDate().atStartOfDay());
+            else
+                spec = spec.and( BocraportalSpecifications.findByAttributeGreaterThanEqual("createdDate",
+                                criteria.getStartDate().atStartOfDay()));
+        }
 
-        for (Complaint complaint : specs) {
+        if(criteria.getEndDate() != null) {
+            if (spec == null)
+                spec =  BocraportalSpecifications.findByAttributeLessThan("createdDate",
+                            criteria.getEndDate().plusDays(1).atStartOfDay());
+            else
+                spec = spec.and( BocraportalSpecifications.findByAttributeGreaterThan("createdDate",
+                                criteria.getEndDate().plusDays(1).atStartOfDay()));
+        }
+
+        Collection<Complaint> entities = getComplaintRepository().findAll(spec, Sort.by("id").descending());
+
+        for (Complaint complaint : entities) {
             complaints.add(complaintDao.toComplaintVO(complaint));
         }
 
@@ -199,12 +229,12 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     protected ComplaintVO handleFindByComplaintId(String complaintId) throws Exception {
 
         if (StringUtils.isNotBlank(complaintId)) {
-            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", complaintId);
 
+            Specification<Complaint> spec = BocraportalSpecifications.findByAttribute("complaintId", complaintId);
             List<Complaint> entities = getComplaintRepository().findAll(spec, Sort.by("id").descending());
 
             if (CollectionUtils.isEmpty(entities)) {
-                return null;
+                throw new ComplaintServiceException(String.format("No complaint with complaint ID %s counst", complaintId));
             }
 
             return complaintDao.toComplaintVO(entities.get(0));
@@ -215,8 +245,20 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
 
     @Override
     protected Collection<ComplaintVO> handleFindByIds(Set<Long> ids) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+
+        return complaintRepository.findByIdIn(ids).stream()
+                    .map(complaint -> complaintDao.toComplaintVO(complaint))
+                    .collect(Collectors.toSet());
+    }
+
+    @Override
+    protected Boolean handleAssignToUser(String complaintId, String username) throws Exception {
+        
+        Complaint complaint = complaintDao.searchUniqueComplaintId(complaintId);
+        complaint.setAssignedTo(username);
+        complaintRepository.save(complaint);
+
+        return true;
     }
 
 }

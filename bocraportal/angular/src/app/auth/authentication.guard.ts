@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 import { or } from 'mathjs';
 
@@ -11,7 +7,6 @@ import { or } from 'mathjs';
   providedIn: 'root',
 })
 export class AuthenticationGuard extends KeycloakAuthGuard {
-
   excludedUrls = [
     '/',
     '/assetts',
@@ -19,13 +14,11 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     '/home',
     '/contact',
     '/complaint',
-    '/complaint/search-complaints'
-  ]
+    '/complaint/search-complaints',
+    '/complaint/edit-complaint',
+  ];
 
-  constructor(
-    protected readonly router$: Router,
-    protected readonly keycloak: KeycloakService
-  ) {
+  constructor(protected readonly router$: Router, protected readonly keycloak: KeycloakService) {
     super(router$, keycloak);
   }
 
@@ -33,9 +26,8 @@ export class AuthenticationGuard extends KeycloakAuthGuard {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ) {
-
     
-    if(this.excludedUrls.find(url => url === state.url)) {
+    if(state.url.includes('/complaint/edit-complaint') || this.excludedUrls.find(url => url === state.url)) {
       return true;
     }
 

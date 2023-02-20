@@ -25,6 +25,9 @@ import { viewFeature } from '@app/store/view/view.reducers';
 import { ViewEffects } from '@app/store/view/view.effects';
 import { licenseeSectorFeature } from '@app/store/licensee/sector/licensee-sector.reducers';
 import { LicenseeSectorEffects } from '@app/store/licensee/sector/licensee-sector.effects';
+import { licenseeShareholderFeature } from '@app/store/licensee/shares/licensee-shareholder.reducers';
+import { LicenseeShareholderEffects } from '@app/store/licensee/shares/licensee-shareholder.effects';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 @NgModule({
   imports: [
@@ -33,14 +36,16 @@ import { LicenseeSectorEffects } from '@app/store/licensee/sector/licensee-secto
     ReactiveFormsModule,
     TranslateModule,
     SharedModule,
+    MatTableExporterModule,
     FlexLayoutModule,
     MaterialModule,
     CsvModule,
     LicenseeRoutingModule,
     StoreModule.forFeature(licenseeFeature),
     StoreModule.forFeature(licenseeSectorFeature),
+    StoreModule.forFeature(licenseeShareholderFeature),
     StoreModule.forFeature(viewFeature),
-    EffectsModule.forFeature([ LicenseeEffects, ViewEffects, LicenseeSectorEffects ])
+    EffectsModule.forFeature([LicenseeEffects, ViewEffects, LicenseeSectorEffects, LicenseeShareholderEffects]),
   ],
   declarations: [
     EditLicenseeComponentImpl,
@@ -50,10 +55,6 @@ import { LicenseeSectorEffects } from '@app/store/licensee/sector/licensee-secto
     SearchLicenseesLicenseesComponentImpl,
   ],
   entryComponents: [],
-  providers: [
-    LicenseeControllerImpl,
-    DocumentRestController,
-    LicenseeRestController,
-  ],
+  providers: [LicenseeControllerImpl, DocumentRestController, LicenseeRestController],
 })
 export class LicenseeModule {}

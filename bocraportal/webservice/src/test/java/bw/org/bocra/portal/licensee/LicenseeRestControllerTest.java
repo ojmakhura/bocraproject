@@ -9,7 +9,6 @@ import bw.org.bocra.portal.BocraportalTestContainer;
 import bw.org.bocra.portal.GenericRestTest;
 import bw.org.bocra.portal.GenericTestData;
 import bw.org.bocra.portal.document.DocumentService;
-import bw.org.bocra.portal.user.LicenseeUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -53,6 +52,7 @@ public class LicenseeRestControllerTest extends GenericRestTest<LicenseeVO, Lice
 
     @Autowired
     private LicenseeTestData licenseeTestData;
+    protected DocumentService documentService;
 
     @Autowired
     public LicenseeRestControllerTest(LicenseeRestController restController,

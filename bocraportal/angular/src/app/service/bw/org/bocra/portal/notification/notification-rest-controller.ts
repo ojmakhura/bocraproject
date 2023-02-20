@@ -6,49 +6,34 @@ import { NotificationCriteria } from '@app/model/bw/org/bocra/portal/notificatio
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationRestController {
-    protected path = '/notification';
+  protected path = '/notification';
 
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {
-    }
+  public findById(id: number | any): Observable<NotificationVO | any> {
+    return this.http.get<NotificationVO | any>(this.path + `/${id}`);
+  }
 
-    public findById(id: number | any ): Observable<NotificationVO | any> {
+  public getAll(): Observable<NotificationVO[] | any[]> {
+    return this.http.get<NotificationVO[] | any[]>(this.path + `/all`);
+  }
 
-        return this.http.get<NotificationVO | any>(this.path + `/${id}`);
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<NotificationVO[] | any[]> {
+    return this.http.get<NotificationVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+  }
 
-    }
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(this.path + `/${id}`);
+  }
 
-    public getAll(): Observable<NotificationVO[] | any[]> {
+  public save(notification: NotificationVO | any): Observable<NotificationVO | any> {
+    return this.http.post<NotificationVO | any>(this.path, notification);
+  }
 
-        return this.http.get<NotificationVO[] | any[]>(this.path + `/all`);
-
-    }
-
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<NotificationVO[] | any[]> {
-
-        return this.http.get<NotificationVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(this.path + `/${id}`);
-
-    }
-
-    public save(notification: NotificationVO | any ): Observable<NotificationVO | any> {
-
-        return this.http.post<NotificationVO | any>(this.path, notification);
-
-    }
-
-    public search(criteria: NotificationCriteria | any ): Observable<NotificationVO[] | any[]> {
-
-        return this.http.post<NotificationVO[] | any[]>(this.path + `/search`, criteria);
-
-    }
-
+  public search(criteria: NotificationCriteria | any): Observable<NotificationVO[] | any[]> {
+    return this.http.post<NotificationVO[] | any[]>(this.path + `/search`, criteria);
+  }
 }

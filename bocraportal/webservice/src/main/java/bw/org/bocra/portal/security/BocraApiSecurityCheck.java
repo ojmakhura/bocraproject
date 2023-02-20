@@ -8,6 +8,7 @@ import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.AccessToken.Access;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -44,16 +45,21 @@ public class BocraApiSecurityCheck {
             return true;
         }
 
-        SimpleKeycloakAccount acc = (SimpleKeycloakAccount) authentication.getDetails();
-        AccessToken token = acc.getKeycloakSecurityContext().getToken();
-        Access access = token.getResourceAccess(token.getIssuedFor()); // Get the authenticated client
-
-        for (Authorisation auth : auths) {
-            for(String role : auth.getRoles()) {
-                if(access.getRoles().contains(role)) {
-                    return true;
+        if(authentication.getDetails() instanceof SimpleKeycloakAccount) {
+            SimpleKeycloakAccount acc = (SimpleKeycloakAccount) authentication.getDetails();
+            AccessToken token = acc.getKeycloakSecurityContext().getToken();
+            Access access = token.getResourceAccess(token.getIssuedFor()); // Get the authenticated client
+    
+            for (Authorisation auth : auths) {
+                for(String role : auth.getRoles()) {
+                    if(access.getRoles().contains(role)) {
+                        return true;
+                    }
                 }
             }
+        } else {
+            WebAuthenticationDetails dt = (WebAuthenticationDetails) authentication.getDetails();
+            return true;
         }
 
         return false;

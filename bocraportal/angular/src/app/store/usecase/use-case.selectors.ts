@@ -4,12 +4,24 @@ import { useCaseKey, UseCaseScopeState } from './use-case.reducers';
 
 export const selectUseCaseScopeState = createFeatureSelector<UseCaseScopeState>(useCaseKey);
 
-export const selectPageVariables = createSelector(selectUseCaseScopeState, (state: UseCaseScopeState) => state.pageVariables);
+export const selectPageVariables = createSelector(
+  selectUseCaseScopeState,
+  (state: UseCaseScopeState) => state.pageVariables
+);
 
-export const selectUseCaseInDialog = createSelector(selectUseCaseScopeState, (state: UseCaseScopeState) => state.useCaseInDialog);
+export const selectUseCaseInDialog = createSelector(
+  selectUseCaseScopeState,
+  (state: UseCaseScopeState) => state.useCaseInDialog
+);
 
 export const selectMessages = createSelector(selectUseCaseScopeState, (state: UseCaseScopeState) => state.messages);
 
-export const selectUseCaseParameters = createSelector(selectUseCaseScopeState, (state: UseCaseScopeState) => state.useCaseParameters);
+export const selectUseCaseParameters = createSelector(
+  selectUseCaseScopeState,
+  (state: UseCaseScopeState) => state.useCaseParameters
+);
 
-export const selectReturnValues = createSelector(selectUseCaseScopeState, (state: UseCaseScopeState) => state.useCaseReturnValues);
+export const selectReturnValues = createSelector(
+  selectUseCaseScopeState,
+  (state: UseCaseScopeState) => state.useCaseReturnValues
+);

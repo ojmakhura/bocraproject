@@ -8,7 +8,11 @@ import * as nav from '@app/shell/navigation';
 
 @Injectable()
 export class AuthEffects {
-  constructor(private actions$: Actions, private keycloakService: KeycloakService, private authorisationRestController: AuthorisationRestController) {}
+  constructor(
+    private actions$: Actions,
+    private keycloakService: KeycloakService,
+    private authorisationRestController: AuthorisationRestController
+  ) {}
 
   // isLoggedIn$ = createEffect(() =>
   //   this.actions$.pipe(

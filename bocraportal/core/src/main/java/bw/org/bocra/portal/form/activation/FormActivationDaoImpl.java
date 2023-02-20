@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.FormRepository;
@@ -28,7 +27,7 @@ import bw.org.bocra.portal.period.config.PeriodConfigVO;
  * @see FormActivation
  */
 @Repository("formActivationDao")
-@Transactional
+// @Transactional
 public class FormActivationDaoImpl
     extends FormActivationDaoBase
 {

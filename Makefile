@@ -21,7 +21,7 @@ test_core:
 	. ./.env && mvn -f bocraportal/core test -o
 
 build_api:
-	mvn -f bocraportal/webservice install -DskipTests=true -o
+	. ./.env && mvn -f bocraportal/webservice install -DskipTests=true -o
 
 test_api: 
 	. ./.env && mvn -f bocraportal/webservice test -o
@@ -29,8 +29,11 @@ test_api:
 build_comm:
 	. ./.env && mvn -f bocraportal/comm -Pnative clean install -DskipTests -o
 
+package_comm:
+	. ./.env && mvn -f bocraportal/comm -Pnative clean package -DskipTests -o
+
 build_comm_native:
-	mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
+	. ./.env && mvn -f bocraportal/comm -Pnative native:compile -DskipTests -o
 
 test_comm: 
 	. ./.env && mvn -f bocraportal/comm test -o
@@ -85,6 +88,22 @@ ifdef service
 	. ./.env && docker compose up -d ${service}
 else
 	@echo 'no service defined. Please run again with `make  service=<name> up_service`'
+	exit 1
+endif
+
+up_stack: gen_env
+ifdef stack
+	chmod 755 .env && . ./.env && docker stack deploy -c docker-compose-${stack}.yml ${STACK_NAME}-${stack}
+else
+	@echo 'no stack defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> stack=<name> up_stack`'
+	exit 1
+endif
+
+down_stack:
+ifdef stack
+	docker stack rm ${STACK_NAME}-${stack}
+else
+	@echo 'no stack defined. Please run again with `make run_env=<LOCAL, DEV, TEST, LIVE> stack=<name> down_stack`'
 	exit 1
 endif
 
@@ -155,13 +174,18 @@ run_comm_local: gen_env
 	. ./.env && cd bocraportal/comm && mvn spring-boot:run
 
 run_cron_local: gen_env
-	. ./.env && cd bocraportal/cron && mvn spring-boot:run
+ifdef cron_secret
+	. ./.env && export KEYCLOAK_CRON_CLIENT_SECRET=${cron_secret} && cd bocraportal/cron && mvn spring-boot:run
+else
+	@echo 'No cron_secret defined. Please run again with `make cron_secret=<secret> run_env=<LOCAL_ENV, DEV_ENV, TEST_ENV, LIVE_ENV> target`'
+	exit 1
+endif
 
 run_cron_native_local: gen_env
 	. ./.env && bocraportal/cron/target/bocraportal-cron
 
 local_web_deps: build_web
-	cd bocraportal/angular/target/bocraportal && npm i
+	cd bocraportal/angular/target/bocraportal && npm i && npm install file-saver --save && npm install @types/file-saver --save-dev
 
 run_web_local: build_web
 	cd bocraportal/angular/target/bocraportal && npm start
@@ -188,21 +212,30 @@ endif
 ##
 ## System initialisation
 ##
+swarm_label_true: gen_env
+	chmod 755 .env && . ./.env && docker node update --label-add ${STACK_NAME}_${node_label}=true ${node}
+
 swarm_init:
 	docker swarm init
 
+
+
 local_prep: gen_env
-	. ./.env && mkdir ${BOCRA_DATA}
-	. ./.env && mkdir ${BOCRA_DATA}/db
-	. ./.env && mkdir ${BOCRA_DATA}/auth
-	. ./.env && cp traefik_passwd ${BOCRA_DATA}/auth/system_passwd
-	. ./.env && mkdir ${BOCRA_DATA}/keycloak
-	. ./.env && mkdir ${BOCRA_DATA}/certs
-	. ./.env && cp deployment/certs/* ${BOCRA_DATA}/certs
-	. ./.env && mkdir ${BOCRA_DATA}/registry
-	. ./.env && mkdir ${BOCRA_DATA}/traefik
-	. ./.env && cp deployment/traefik/config.yml ${BOCRA_DATA}/traefik
-	. ./.env && mkdir ${BOCRA_DATA}/web
+	. ./.env && mkdir ${BOCRA_DATA} && \
+	echo "127.0.0.1	localhost" && \
+    	echo "$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}') ${LOCAL_DOMAIN} ${DB_DOMAIN} ${REGISTRY_DOMAIN} ${RABBITMQ_HOST} ${KEYCLOAK_DOMAIN} ${API_DOMAIN}" >> ${BOCRA_DATA}/hosts && \
+    	echo "$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}') portainer.${LOCAL_DOMAIN} grafana.${LOCAL_DOMAIN} swarmprom.${LOCAL_DOMAIN}" >> ${BOCRA_DATA}/hosts && \
+    	echo "$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}') unsee.${LOCAL_DOMAIN} alertmanager.${LOCAL_DOMAIN}" >> ${BOCRA_DATA}/hosts && \
+	mkdir ${BOCRA_DATA}/db && \
+	mkdir ${BOCRA_DATA}/auth && \
+	cp traefik_passwd ${BOCRA_DATA}/auth/system_passwd && \
+	mkdir ${BOCRA_DATA}/keycloak && \
+	mkdir ${BOCRA_DATA}/certs && \
+	cp deployment/certs/* ${BOCRA_DATA}/certs && \
+	mkdir ${BOCRA_DATA}/registry && \
+	mkdir ${BOCRA_DATA}/traefik && \
+	cp deployment/traefik/config.yml ${BOCRA_DATA}/traefik && \
+	mkdir ${BOCRA_DATA}/web && \
 
 ##
 ## Check the logs
@@ -234,4 +267,4 @@ registry_logs:
 	docker compose logs registry
 
 traefik_network:
-	docker network create --driver overlay traefik-public
+	docker network create --driver overlay bocraportal-public && docker network create --driver bridge bocraportal-public

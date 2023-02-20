@@ -2,13 +2,49 @@
   "resources":{
   "includes":[
     {
+      "pattern":"\\QMETA-INF/javamail.address.map\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/javamail.charset.map\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/javamail.default.address.map\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/javamail.default.providers\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/javamail.providers\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/mailcap.default\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/mailcap\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/mimetypes.default\\E"
+    }, 
+    {
       "pattern":"\\QMETA-INF/org/apache/logging/log4j/core/config/plugins/Log4j2Plugins.dat\\E"
     }, 
     {
       "pattern":"\\QMETA-INF/services/ch.qos.logback.classic.spi.Configurator\\E"
     }, 
     {
+      "pattern":"\\QMETA-INF/services/jakarta.activation.spi.MailcapRegistryProvider\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/services/jakarta.activation.spi.MimeTypeRegistryProvider\\E"
+    }, 
+    {
       "pattern":"\\QMETA-INF/services/jakarta.el.ExpressionFactory\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/services/jakarta.mail.Provider\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/services/jakarta.mail.util.StreamProvider\\E"
     }, 
     {
       "pattern":"\\QMETA-INF/services/jakarta.validation.spi.ValidationProvider\\E"
@@ -47,43 +83,67 @@
       "pattern":"\\Qbw/org/bocra/portal/\\E"
     }, 
     {
-      "pattern":"\\Qbw/org/bocra/portal/comm/CommunicationListener.class\\E"
+      "pattern":"\\Qbw/org/bocra/portal/comm/EmailDispatchListener.class\\E"
     }, 
     {
-      "pattern":"\\Qbw/org/bocra/portal/comm/FallBackCommunicationService.class\\E"
-    }, 
-    {
-      "pattern":"\\Qbw/org/bocra/portal/comm/MessageQueueController.class\\E"
+      "pattern":"\\Qbw/org/bocra/portal/comm/FallBackEmailDispatchService.class\\E"
     }, 
     {
       "pattern":"\\Qbw/org/bocra/portal/config/CommConfig.class\\E"
     }, 
     {
+      "pattern":"\\Qbw/org/bocra/portal/config/LocalDateConverter.class\\E"
+    }, 
+    {
+      "pattern":"\\Qbw/org/bocra/portal/config/LocalDateTimeConverter.class\\E"
+    }, 
+    {
+      "pattern":"\\Qbw/org/bocra/portal/config/LocalTimeConverter.class\\E"
+    }, 
+    {
       "pattern":"\\Qbw/org/bocra/portal/config/RabbitMQConfig.class\\E"
     }, 
     {
-      "pattern":"\\Qbw/org/bocra/portal/config/SecurityConfig.class\\E"
+      "pattern":"\\Qbw/org/bocra/portal/datasource/CommDbConfig.class\\E"
     }, 
     {
-      "pattern":"\\Qbw/org/bocra/portal/email/EmailController.class\\E"
+      "pattern":"\\Qbw/org/bocra/portal/datasource/KeycloakDbConfig.class\\E"
     }, 
     {
       "pattern":"\\Qbw/org/bocra/portal/email/EmailService.class\\E"
     }, 
     {
-      "pattern":"\\Qbw/org/bocra/portal/smtp/RealmSmtpConfig.class\\E"
+      "pattern":"\\Qbw/org/bocra/portal/keycloak/\\E"
     }, 
     {
-      "pattern":"\\Qbw/org/bocra/portal/smtp/RealmSmtpConfigId.class\\E"
+      "pattern":"\\Qbw/org/bocra/portal/keycloak/realm/RealmRepository.class\\E"
     }, 
     {
-      "pattern":"\\Qbw/org/bocra/portal/smtp/RealmSmtpConfigRepository.class\\E"
+      "pattern":"\\Qbw/org/bocra/portal/keycloak/smtp/RealmSmtpConfigRepository.class\\E"
     }, 
     {
-      "pattern":"\\Qbw/org/bocra/portal/smtp/RealmSmtpController.class\\E"
+      "pattern":"\\Qbw/org/bocra/portal/keycloak/smtp/RealmSmtpController.class\\E"
     }, 
     {
-      "pattern":"\\Qbw/org/bocra/portal/smtp/RealmSmtpService.class\\E"
+      "pattern":"\\Qbw/org/bocra/portal/keycloak/smtp/RealmSmtpService.class\\E"
+    }, 
+    {
+      "pattern":"\\Qbw/org/bocra/portal/message/BocraMesssageDao.class\\E"
+    }, 
+    {
+      "pattern":"\\Qbw/org/bocra/portal/message/BocraMesssageDaoBase.class\\E"
+    }, 
+    {
+      "pattern":"\\Qbw/org/bocra/portal/message/BocraMesssageRepository.class\\E"
+    }, 
+    {
+      "pattern":"\\Qbw/org/bocra/portal/message/BocraMesssageService.class\\E"
+    }, 
+    {
+      "pattern":"\\Qbw/org/bocra/portal/message/BocraMesssageServiceBase.class\\E"
+    }, 
+    {
+      "pattern":"\\Qbw/org/bocra/portal/message/\\E"
     }, 
     {
       "pattern":"\\Qcom/c4_soft/springaddons/security/oauth2/config/SpringAddonsSecurityProperties$Case.class\\E"
@@ -131,7 +191,13 @@
       "pattern":"\\Qorg/apache/catalina/util/ServerInfo.properties\\E"
     }, 
     {
+      "pattern":"\\Qorg/apache/commons/collections4/Transformer.class\\E"
+    }, 
+    {
       "pattern":"\\Qorg/hibernate/engine/spi/CompositeTracker.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/hibernate/engine/spi/ExtendedSelfDirtinessTracker.class\\E"
     }, 
     {
       "pattern":"\\Qorg/hibernate/engine/spi/Managed.class\\E"
@@ -168,6 +234,9 @@
     }, 
     {
       "pattern":"\\Qorg/springframework/amqp/rabbit/annotation/RabbitListenerConfigurationSelector.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/aop/aspectj/annotation/AnnotationAwareAspectJAutoProxyCreator.class\\E"
     }, 
     {
       "pattern":"\\Qorg/springframework/aot/hint/annotation/Reflective.class\\E"
@@ -680,12 +749,6 @@
       "pattern":"\\Qorg/springframework/boot/autoconfigure/data/AbstractRepositoryConfigurationSourceSupport.class\\E"
     }, 
     {
-      "pattern":"\\Qorg/springframework/boot/autoconfigure/data/jpa/JpaRepositoriesAutoConfiguration$BootstrapExecutorCondition$DeferredBootstrapMode.class\\E"
-    }, 
-    {
-      "pattern":"\\Qorg/springframework/boot/autoconfigure/data/jpa/JpaRepositoriesAutoConfiguration$BootstrapExecutorCondition$LazyBootstrapMode.class\\E"
-    }, 
-    {
       "pattern":"\\Qorg/springframework/boot/autoconfigure/data/jpa/JpaRepositoriesAutoConfiguration$BootstrapExecutorCondition.class\\E"
     }, 
     {
@@ -897,6 +960,18 @@
     }, 
     {
       "pattern":"\\Qorg/springframework/boot/autoconfigure/security/SecurityDataConfiguration.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/boot/autoconfigure/security/oauth2/client/servlet/OAuth2ClientAutoConfiguration.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/boot/autoconfigure/security/oauth2/client/servlet/OAuth2ClientRegistrationRepositoryConfiguration.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/boot/autoconfigure/security/oauth2/client/servlet/OAuth2WebSecurityConfiguration$OAuth2SecurityFilterChainConfiguration.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/boot/autoconfigure/security/oauth2/client/servlet/OAuth2WebSecurityConfiguration.class\\E"
     }, 
     {
       "pattern":"\\Qorg/springframework/boot/autoconfigure/security/oauth2/resource/servlet/OAuth2ResourceServerAutoConfiguration.class\\E"
@@ -1142,9 +1217,6 @@
       "pattern":"\\Qorg/springframework/context/ApplicationContextAware.class\\E"
     }, 
     {
-      "pattern":"\\Qorg/springframework/context/ApplicationContextInitializer.class\\E"
-    }, 
-    {
       "pattern":"\\Qorg/springframework/context/EnvironmentAware.class\\E"
     }, 
     {
@@ -1193,7 +1265,19 @@
       "pattern":"\\Qorg/springframework/core/annotation/Order.class\\E"
     }, 
     {
+      "pattern":"\\Qorg/springframework/core/convert/converter/Converter.class\\E"
+    }, 
+    {
       "pattern":"\\Qorg/springframework/data/jpa/repository/JpaRepository.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/data/jpa/repository/JpaSpecificationExecutor.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/data/jpa/repository/config/EnableJpaRepositories.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/data/jpa/repository/config/JpaRepositoriesRegistrar.class\\E"
     }, 
     {
       "pattern":"\\Qorg/springframework/data/jpa/repository/support/JpaRepositoryFactoryBean.class\\E"
@@ -1206,6 +1290,9 @@
     }, 
     {
       "pattern":"\\Qorg/springframework/data/repository/ListCrudRepository.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/data/repository/config/RepositoryBeanDefinitionRegistrarSupport.class\\E"
     }, 
     {
       "pattern":"\\Qorg/springframework/data/web/config/EnableSpringDataWebSupport$QuerydslActivator.class\\E"
@@ -1230,6 +1317,9 @@
     }, 
     {
       "pattern":"\\Qorg/springframework/data/web/config/SpringDataWebConfiguration.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/mail/javamail/mime.types\\E"
     }, 
     {
       "pattern":"\\Qorg/springframework/security/config/annotation/authentication/configuration/AuthenticationConfiguration$AuthenticationManagerDelegator.class\\E"
@@ -1265,6 +1355,15 @@
       "pattern":"\\Qorg/springframework/security/config/annotation/web/configuration/HttpSecurityConfiguration.class\\E"
     }, 
     {
+      "pattern":"\\Qorg/springframework/security/config/annotation/web/configuration/OAuth2ClientConfiguration$OAuth2ClientWebMvcImportSelector.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/security/config/annotation/web/configuration/OAuth2ClientConfiguration$OAuth2ClientWebMvcSecurityConfiguration.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/security/config/annotation/web/configuration/OAuth2ClientConfiguration.class\\E"
+    }, 
+    {
       "pattern":"\\Qorg/springframework/security/config/annotation/web/configuration/OAuth2ImportSelector.class\\E"
     }, 
     {
@@ -1290,6 +1389,9 @@
     }, 
     {
       "pattern":"\\Qorg/springframework/transaction/annotation/TransactionManagementConfigurationSelector.class\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/springframework/transaction/annotation/Transactional.class\\E"
     }, 
     {
       "pattern":"\\Qorg/springframework/web/bind/annotation/Mapping.class\\E"

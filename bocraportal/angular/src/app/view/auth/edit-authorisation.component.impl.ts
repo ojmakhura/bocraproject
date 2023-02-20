@@ -23,7 +23,6 @@ import { Observable } from 'rxjs';
   styleUrls: ['./edit-authorisation.component.scss'],
 })
 export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
-
   protected http: HttpClient;
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
@@ -37,39 +36,56 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
   }
 
-  override doNgOnDestroy(): void {
-  }
+  override doNgOnDestroy(): void {}
 
   override beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
     this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
-      let client = clients.filter(client => client.clientId === environment.keycloak.clientId)[0]
-      this.keycloakService.loadUserProfile().then(profile => {
-        
-        this.http.get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`).subscribe((roles) => {
+      let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
+      this.keycloakService.loadUserProfile().then((profile) => {
+        this.http
+          .get<any[]>(
+            `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`
+          )
+          .subscribe((roles) => {
+            roles
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .forEach((role) => {
+                if (this.keycloakService.getUserRoles().includes(role.name)) {
+                  let item = new SelectItem();
+                  item.label = role['description'];
+                  item.value = role['name'];
 
-          roles.sort((a, b) => a.name.localeCompare(b.name)).forEach((role) => {
-            if (this.keycloakService.getUserRoles().includes(role.name)) {
-    
-              let item = new SelectItem();
-              item.label = role['description'];
-              item.value = role['name'];
-    
-              this.authorisationRolesBackingList.push(item);
-            }
+                  this.authorisationRolesBackingList.push(item);
+                }
+              });
           });
-        });
-      })
+
+        this.http
+          .get<any[]>(
+            `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
+          )
+          .subscribe((roles) => {
+            roles
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .forEach((role: any) => {
+                if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
+                  let item = new SelectItem();
+                  item.label = role['description'];
+                  item.value = role['name'];
+
+                  this.userRolesBackingList.push(item);
+                }
+              });
+          });
+      });
     });
 
     return form;
   }
 
-  override handleFormChanges(change: any): void {
-  }
+  override handleFormChanges(change: any): void {}
 
-  override afterOnInit() {
-
-  }
+  override afterOnInit() {}
 
   override createAccessPointVOGroup(value: AccessPointVO): FormGroup {
     return this.formBuilder.group({
@@ -83,17 +99,17 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
       accessPointType: this.formBuilder.group({
         id: [value?.accessPointType?.id],
         code: [value?.accessPointType?.code],
-        name: [value?.accessPointType?.name]
-      })
+        name: [value?.accessPointType?.name],
+      }),
     });
   }
 
   override doNgAfterViewInit(): void {
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/auth/edit-authorisation",
+        viewUrl: '/auth/edit-authorisation',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
@@ -103,7 +119,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
           AuthorisationActions.findById({
             id: queryParams?.id,
             loading: false,
-            loaderMessage: 'Loading authorisations by id ...'
+            loaderMessage: 'Loading authorisations by id ...',
           })
         );
       }
@@ -111,14 +127,14 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
 
     this.store.dispatch(
       ViewActions.loadViewAuthorisations({
-        viewUrl: "/authorisation/edit-authorisation",
+        viewUrl: '/authorisation/edit-authorisation',
         roles: this.keycloakService.getUserRoles(),
-        loading: true
+        loading: true,
       })
     );
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
         if (item === '/authorisation/edit-authorisation/{button:delete}') {
           this.deleteUnrestricted = false;
         }
@@ -129,8 +145,8 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
       this.setEditAuthorisationFormValue({ authorisation: authorisation });
     });
 
-    this.unauthorisedUrls$.subscribe(restrictedItems => {
-      restrictedItems.forEach(item => {
+    this.unauthorisedUrls$.subscribe((restrictedItems) => {
+      restrictedItems.forEach((item) => {
         if (item === '/auth/edit-authorisation/{button:delete}') {
           this.deleteUnrestricted = false;
         }
@@ -155,34 +171,35 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
         AuthorisationActions.save({
           authorisation: form.authorisation,
           loading: true,
-          loaderMessage: 'Saving authorisation ...'
+          loaderMessage: 'Saving authorisation ...',
         })
       );
     } else {
-      let messages: string[] = []
-      if(!this.authorisationControl.valid) {
-        messages.push("Authorisation has errors, Please fill in the required form fields.")
+      let messages: string[] = [];
+      if (!this.authorisationControl.valid) {
+        messages.push('Authorisation has errors, Please fill in the required form fields.');
       }
-      if(!this.authorisationAccessPointControl.valid) {
-        messages.push("Access Point is missing, click the addbox to add one")
+      if (!this.authorisationAccessPointControl.valid) {
+        messages.push('Access Point is missing, click the addbox to add one');
       }
       this.store.dispatch(AuthorisationActions.authorisationFailure({ messages: messages }));
     }
   }
 
   override beforeEditAuthorisationDelete(form: EditAuthorisationDeleteForm): void {
-    if (form?.authorisation?.id && confirm("Are you sure you want to delete the authorisation?")) {
+    if (form?.authorisation?.id && confirm('Are you sure you want to delete the authorisation?')) {
       this.store.dispatch(
         AuthorisationActions.remove({
           id: form?.authorisation?.id,
           loading: false,
-          loaderMessage: 'Removing authorisation ...'
+          loaderMessage: 'Removing authorisation ...',
         })
       );
       this.editAuthorisationFormReset();
     } else {
-
-      this.store.dispatch(AuthorisationActions.authorisationFailure({ messages: ['Please select something to delete'] }));
+      this.store.dispatch(
+        AuthorisationActions.authorisationFailure({ messages: ['Please select something to delete'] })
+      );
     }
   }
 
@@ -190,20 +207,21 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
     let criteria: AccessPointCriteria = new AccessPointCriteria();
     criteria.name = this.authorisationAccessPointSearchField.value;
     criteria.url = this.authorisationAccessPointSearchField.value;
-    this.store.dispatch(AccessPointActions.search({ criteria: criteria, loading: true, loaderMessage: 'Searching access points' }));
+    this.store.dispatch(
+      AccessPointActions.search({ criteria: criteria, loading: true, loaderMessage: 'Searching access points' })
+    );
   }
 
   override editAuthorisationFormReset() {
-
     this.store.dispatch(AuthorisationActions.authorisationReset());
-    this.editAuthorisationForm.reset()
+    this.editAuthorisationForm.reset();
     this.editAuthorisationForm.markAsPristine();
     this.authorisationRolesControl.clear();
 
-    if(this.router.url.substring(0, this.router.url.indexOf('?'))) {
-        this.router.navigate([this.router.url.substring(0, this.router.url.indexOf('?'))]);
+    if (this.router.url.substring(0, this.router.url.indexOf('?'))) {
+      this.router.navigate([this.router.url.substring(0, this.router.url.indexOf('?'))]);
     } else {
-        this.router.navigate([this.router.url]);
+      this.router.navigate([this.router.url]);
     }
   }
 }

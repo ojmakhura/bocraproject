@@ -1,0 +1,69 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # The main API 
+  ###############################################################################
+  cron:
+    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}"	
+    container_name: bocraportal-comm
+    hostname: cron
+    healthcheck:
+      test: "curl -m 5 --silent --fail --request GET http://localhost:8099/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
+    build:
+      context: .
+      dockerfile: bocraportal/cron/Dockerfile.native
+      args:
+        CERT: ${CERT}
+        CERT_PASSWORD: ${CERT_PASSWORD}
+        IMAGE_VERSION: ${IMAGE_VERSION}
+    networks:
+      bocraportal-public:
+    environment:
+      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      COMM_SERVER_PORT: ${COMM_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${KEYCLOAK_DB}
+      KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_COMM_CLIENT: ${KEYCLOAK_COMM_CLIENT}
+      KEYCLOAK_COMM_CLIENT_SECRET: ${KEYCLOAK_COMM_CLIENT_SECRET}
+      BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
+      CERT: ${CERT}
+      CERT_PASSWORD: ${CERT_PASSWORD}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
+      COMM_LOG_LEVEL: ${COMM_LOG_LEVEL}
+      WEB_URL: ${WEB_URL}
+      COMM_URL: ${COMM_URL}
+      API_URL: ${API_URL}
+      TZ: Africa/Gaborone
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocraportal_cron == true
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.cron-http.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/cron`)"
+        - "traefik.http.routers.cron-http.entrypoints=web"
+        - "traefik.http.routers.cron-http.middlewares=https-redirect"
+        - "traefik.http.routers.cron-websecure.entrypoints=websecure"
+        - "traefik.http.routers.cron-websecure.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/cron`)"
+        - "traefik.http.routers.cron-websecure.tls=${SSL_SECURE}"
+        - "traefik.http.routers.cron-websecure.tls.certresolver=le"
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  bocraportal-public:

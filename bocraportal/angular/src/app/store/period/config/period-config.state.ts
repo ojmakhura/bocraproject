@@ -2,30 +2,30 @@
 import { PeriodConfigVO } from '@app/model/bw/org/bocra/portal/period/config/period-config-vo';
 import { PeriodConfigCriteria } from '@app/model/bw/org/bocra/portal/period/config/period-config-criteria';
 
-export const periodConfigKey = "periodConfig";
+export const periodConfigKey = 'periodConfig';
 
 export interface PeriodConfigState {
-    periodConfigs: Array<PeriodConfigVO> | Array<any>,
-    periodConfig: PeriodConfigVO | any,
-    id: number | any,
-    criteria: PeriodConfigCriteria | any,
-    removed: boolean,
-    success: boolean,
-    loading: boolean,
-    loaderMessage: string | undefined,
-    error: boolean,
-    messages: any[]
+  periodConfigs: Array<PeriodConfigVO> | Array<any>;
+  periodConfig: PeriodConfigVO | any;
+  id: number | any;
+  criteria: PeriodConfigCriteria | any;
+  removed: boolean;
+  success: boolean;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  error: boolean;
+  messages: any[];
 }
 
 export const initialState: PeriodConfigState = {
-    periodConfigs: [],
-    periodConfig: null,
-    id: null,
-    criteria: null,
-    removed: false,
-    success: false,
-    loading: false,
-    error: false,
-    messages: [],
-    loaderMessage: undefined
+  periodConfigs: [],
+  periodConfig: null,
+  id: null,
+  criteria: null,
+  removed: false,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
+  loaderMessage: undefined,
 };

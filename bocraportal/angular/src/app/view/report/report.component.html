@@ -1,21 +1,25 @@
 <div class="card container">
-	<div class="card-body">
-		<form [formGroup]="reportForm">
-			<section>
-				<div class="col my-3 view-buttons">
-					<button type="button" color="accent" (click)="reportSearch()" class="btn btn-info">
-						<span translate>search</span>
-					</button>
-				</div>
-			</section>
-			<div formArrayName="formReports" class="container">
-				<div class="card-body" *ngFor="let formReportControl of formReportsControl.controls; let i=index"
-					[formGroupName]="i">
-					<app-form-report
-						[formReportGroup]="formReportControl">
-					</app-form-report>
-				</div>
-			</div>
-		</form>
-	</div>
+  <div class="card-body">
+    <form [formGroup]="reportForm">
+      <section>
+        <div class="col my-3 view-buttons">
+          <button type="button" color="accent" (click)="reportSearch()" class="btn btn-info">
+            <span translate>search</span>
+          </button>
+        </div>
+      </section>
+      <div *ngIf="loading | async">
+        <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+      </div>
+      <div formArrayName="formReports" class="container">
+        <div
+          class="card-body"
+          *ngFor="let formReportControl of formReportsControl.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <app-form-report [formReportGroup]="formReportControl"> </app-form-report>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

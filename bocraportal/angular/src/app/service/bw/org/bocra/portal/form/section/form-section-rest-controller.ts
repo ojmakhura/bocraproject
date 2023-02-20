@@ -5,49 +5,34 @@ import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FormSectionRestController {
-    protected path = '/form/section';
+  protected path = '/form/section';
 
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {
-    }
+  public findById(id: number | any): Observable<FormSectionVO | any> {
+    return this.http.get<FormSectionVO | any>(this.path + `/${id}`);
+  }
 
-    public findById(id: number | any ): Observable<FormSectionVO | any> {
+  public getAll(): Observable<FormSectionVO[] | any[]> {
+    return this.http.get<FormSectionVO[] | any[]>(this.path + `/all`);
+  }
 
-        return this.http.get<FormSectionVO | any>(this.path + `/${id}`);
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<FormSectionVO[] | any[]> {
+    return this.http.get<FormSectionVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
+  }
 
-    }
+  public remove(id: number | any): Observable<boolean | any> {
+    return this.http.delete<boolean | any>(this.path + `/${id}`);
+  }
 
-    public getAll(): Observable<FormSectionVO[] | any[]> {
+  public save(formSection: FormSectionVO | any): Observable<FormSectionVO | any> {
+    return this.http.post<FormSectionVO | any>(this.path, formSection);
+  }
 
-        return this.http.get<FormSectionVO[] | any[]>(this.path + `/all`);
-
-    }
-
-    public getAllPaged(pageNumber: number | any , pageSize: number | any ): Observable<FormSectionVO[] | any[]> {
-
-        return this.http.get<FormSectionVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
-
-    }
-
-    public remove(id: number | any ): Observable<boolean | any> {
-
-        return this.http.delete<boolean | any>(this.path + `/${id}`);
-
-    }
-
-    public save(formSection: FormSectionVO | any ): Observable<FormSectionVO | any> {
-
-        return this.http.post<FormSectionVO | any>(this.path, formSection);
-
-    }
-
-    public search(criteria: string | any ): Observable<FormSectionVO[] | any[]> {
-
-        return this.http.post<FormSectionVO[] | any[]>(this.path + `/search`, criteria);
-
-    }
-
+  public search(criteria: string | any): Observable<FormSectionVO[] | any[]> {
+    return this.http.post<FormSectionVO[] | any[]>(this.path + `/search`, criteria);
+  }
 }

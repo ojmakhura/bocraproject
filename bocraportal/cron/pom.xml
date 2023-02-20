@@ -4,9 +4,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<!-- <groupId>bw.org.bocra.portal</groupId>
-        <artifactId>bocraportal</artifactId>
-		<version>0.8</version> -->
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.0.1</version>
@@ -14,7 +11,7 @@
 	</parent>
 	<groupId>bw.org.bocra.portal</groupId>
 	<artifactId>bocraportal-cron</artifactId>
-	<version>0.8.4</version>
+	<version>0.9.1</version>
 	<name>BOCRA Online Portal Cron Module</name>
 	<description>BOCRA Online Portal Comm Module</description>
 	<properties>
@@ -22,7 +19,7 @@
 		<repackage.classifier />
 		<!-- <spring-native.version>0.12.1</spring-native.version> -->
 		<keycloak.version>20.0.2</keycloak.version>
-		<bocraportal.version>0.8.2</bocraportal.version>
+		<bocraportal.version>0.9.1</bocraportal.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -97,26 +94,9 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.springframework.experimental</groupId>
-		<artifactId>spring-native</artifactId>
-			<version>${spring-native.version}</version>
-		</dependency> -->
-		<!-- <dependency>
-			<groupId>org.springframework.cloud</groupId>
-		<artifactId>spring-cloud-bindings</artifactId>
-			<version>1.10.0</version>
-		</dependency> -->
-		<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		<optional>true</optional>
-		</dependency> -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<!-- <scope>runtime</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

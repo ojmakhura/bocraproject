@@ -5,11 +5,10 @@ import { SearchSectorsSectorsComponent } from '@app/view/sector/search-sectors-s
 @Component({
   selector: 'search-sectors-sectors',
   templateUrl: './search-sectors-sectors.component.html',
-  styleUrls: [ './search-sectors-sectors.component.scss' ]
+  styleUrls: ['./search-sectors-sectors.component.scss'],
 })
 export class SearchSectorsSectorsComponentImpl extends SearchSectorsSectorsComponent {
-
-    constructor(private injector: Injector) {
-        super(injector);
-    }
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 }

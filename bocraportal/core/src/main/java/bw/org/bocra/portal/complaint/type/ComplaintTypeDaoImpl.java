@@ -8,6 +8,7 @@ package bw.org.bocra.portal.complaint.type;
 
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
@@ -98,9 +99,14 @@ public class ComplaintTypeDaoImpl
 
     @Override
     protected Collection<ComplaintType> handleFindByCriteria(String criteria) throws Exception {
-        Specification<ComplaintType> spec = BocraportalSpecifications.<ComplaintType, String>findByAttributeLikeIgnoreCase("code", criteria)
-                                                .or(BocraportalSpecifications.<ComplaintType, String>findByAttributeLikeIgnoreCase("code", criteria));
-        // TODO Auto-generated method stub
+
+        Specification<ComplaintType> spec = null;
+
+        if(StringUtils.isNotBlank(criteria)) {
+            spec = BocraportalSpecifications.<ComplaintType, String>findByAttributeLikeIgnoreCase("code", criteria)
+                        .or(BocraportalSpecifications.<ComplaintType, String>findByAttributeLikeIgnoreCase("type", criteria));
+        }
+
         return complaintTypeRepository.findAll(spec, Sort.by("code").ascending());
     }
 }

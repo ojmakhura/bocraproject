@@ -37,7 +37,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -45,7 +45,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -65,7 +65,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -77,7 +77,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -85,7 +85,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -105,7 +105,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -117,7 +117,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -125,7 +125,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -137,7 +137,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -145,7 +145,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -158,7 +158,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -166,7 +166,7 @@ public class MenuSectionRestControllerImpl extends MenuSectionRestControllerBase
             return response;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

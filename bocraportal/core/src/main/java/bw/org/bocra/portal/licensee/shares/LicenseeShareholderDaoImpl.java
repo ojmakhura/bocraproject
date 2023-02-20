@@ -6,11 +6,25 @@
  */
 package bw.org.bocra.portal.licensee.shares;
 
+import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.document.Document;
+import bw.org.bocra.portal.document.DocumentDao;
+import bw.org.bocra.portal.document.DocumentMetadataTarget;
+import bw.org.bocra.portal.document.DocumentRepository;
+import bw.org.bocra.portal.document.DocumentVO;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.shareholder.ShareholderRepository;
 import bw.org.bocra.portal.shareholder.ShareholderVO;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +36,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class LicenseeShareholderDaoImpl
     extends LicenseeShareholderDaoBase
 {
-    
+    private DocumentDao documentDao;
+    private final DocumentRepository documentRepository;
+
     public LicenseeShareholderDaoImpl(
-        ShareholderRepository shareholderRepository,
+        ShareholderRepository shareholderRepository, DocumentRepository documentRepository,
         LicenseeRepository licenseeRepository,
         LicenseeShareholderRepository licenseeShareholderRepository
     ) {
@@ -34,6 +50,16 @@ public class LicenseeShareholderDaoImpl
             licenseeRepository,
             licenseeShareholderRepository
         );
+        this.documentRepository = documentRepository;
+    }
+
+    @Autowired
+    public void setDocumentDao(@Lazy DocumentDao documentDao) {
+        this.documentDao = documentDao;
+    }
+
+    public DocumentDao getDocumentDao() {
+        return this.documentDao;
     }
 
     /**
@@ -75,6 +101,25 @@ public class LicenseeShareholderDaoImpl
             shareholder.setUpdatedDate(source.getShareholder().getUpdatedDate());
 
             target.setShareholder(shareholder);
+        }
+
+        Specification<Document> specs = BocraportalSpecifications.<Document, DocumentMetadataTarget>findByAttribute("metadataTarget", DocumentMetadataTarget.LICENSEE_SHAREHOLDER)
+                                            .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", source.getId()));
+
+        Collection<Document> entities = documentRepository.findAll(specs, Sort.by("id").ascending());
+        if(CollectionUtils.isNotEmpty(entities)) {
+            Collection<DocumentVO> docs = entities.stream().map(d -> {
+                DocumentVO dv = new DocumentVO();
+                dv.setId(d.getId());
+                dv.setContentType(d.getContentType());
+                dv.setDocumentId(d.getDocumentId());
+                dv.setDocumentName(d.getDocumentName());
+                dv.setExtension(d.getExtension());
+                dv.setMetadataTargetId(d.getMetadataTargetId());
+                dv.setSize(d.getSize());
+                return dv;
+            }).collect(Collectors.toSet());
+            target.setDocuments(docs);
         }
     }
 

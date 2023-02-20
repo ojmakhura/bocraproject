@@ -2,67 +2,42 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { formSubmissionKey, FormSubmissionState } from './form-submission.state';
 
-export const selectFormSubmissionState = createFeatureSelector<FormSubmissionState> (
-    formSubmissionKey
-);
+export const selectFormSubmissionState = createFeatureSelector<FormSubmissionState>(formSubmissionKey);
 
-export const selectCriteria = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.criteria
-);
+export const selectCriteria = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.criteria);
 
-export const selectId = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.id
-);
+export const selectId = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.id);
 
-export const selectUpdated = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.updated
+export const selectUpdated = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.updated);
+
+export const selectStatusUpdated = createSelector(
+  selectFormSubmissionState,
+  (state: FormSubmissionState) => state.statusUpdated
 );
 
 export const selectFormSubmission = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.formSubmission
+  selectFormSubmissionState,
+  (state: FormSubmissionState) => state.formSubmission
 );
 
 export const selectFormSubmissions = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.formSubmissions
+  selectFormSubmissionState,
+  (state: FormSubmissionState) => state.formSubmissions
 );
 
-export const selectNote = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.note
-);
+export const selectNote = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.note);
 
-export const selectNotes = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.notes
-);
+export const selectNotes = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.notes);
 
-export const selectLoading = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.loading
-);
+export const selectLoading = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.loading);
 
 export const selectLoaderMessage = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.loaderMessage
+  selectFormSubmissionState,
+  (state: FormSubmissionState) => state.loaderMessage
 );
 
-export const selectSuccess = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.success
-);
+export const selectSuccess = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.success);
 
-export const selectMessages = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.messages
-);
+export const selectMessages = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.messages);
 
-export const selectError = createSelector(
-    selectFormSubmissionState,
-    (state: FormSubmissionState) => state.error
-);
-
+export const selectError = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.error);

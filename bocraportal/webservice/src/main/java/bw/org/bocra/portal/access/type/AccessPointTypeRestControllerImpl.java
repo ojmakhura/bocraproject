@@ -5,6 +5,7 @@
 //
 package bw.org.bocra.portal.access.type;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/access/type")
 @Tag(name = "Access Point Type", description = "Configuring different resource types accessible.")
 @CrossOrigin()
+@SecurityRequirement(name = "bocraportal-api")
 public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestControllerBase {
 
     public AccessPointTypeRestControllerImpl(AccessPointTypeService accessPointTypeService) {
@@ -33,7 +35,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             AccessPointTypeVO type = accessPointTypeService.findById(id);
 
             if(type != null && type.getId() != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(type);
+                return ResponseEntity.ok().body(type);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Access point type with id %ld not found.", id));
             }
@@ -49,7 +51,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             }
 
             logger.error(message);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -58,12 +60,12 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
         try {
             logger.debug("Displays all Access Point Types");
 
-            return ResponseEntity.status(HttpStatus.OK).body(accessPointTypeService.getAll());
+            return ResponseEntity.ok().body(accessPointTypeService.getAll());
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured when loading all access point types.");
+            return ResponseEntity.badRequest().body("An error occured when loading all access point types.");
         }
     }
 
@@ -72,13 +74,13 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
         try {
             
             logger.debug("Displays all Access Point Types of the specified Page number: " + pageNumber + "and Page size: " + pageSize);
-            return ResponseEntity.status(HttpStatus.OK).body(accessPointTypeService.getAll(pageNumber, pageSize));
+            return ResponseEntity.ok().body(accessPointTypeService.getAll(pageNumber, pageSize));
 
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
             String message = String.format("An error occurred when reading page %d of size %d.", pageNumber, pageSize);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -90,7 +92,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             ResponseEntity<?> response;
 
             if(rm) {
-                response = ResponseEntity.status(HttpStatus.OK).body(rm);
+                response = ResponseEntity.ok().body(rm);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the access point type with id " + id);
             }
@@ -104,7 +106,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete access point type with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting access point type with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting access point type with id " + id);
         }
     }
 
@@ -116,7 +118,7 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
             ResponseEntity<?> response;
 
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not save the access point type.");
             }
@@ -143,32 +145,32 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(code)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This access point type with this code has been already created.");
+                        return ResponseEntity.badRequest().body("This access point type with this code has been already created.");
 
                     } else if(e.getCause().getMessage().contains("(name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This access point type with this name has been already created.");
+                        return ResponseEntity.badRequest().body("This access point type with this name has been already created.");
                     } else {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This access point type is conflicting with an existing one.");
+                        return ResponseEntity.badRequest().body("This access point type is conflicting with an existing one.");
                     }
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This access point type is conflicting with an existing one.");
+                return ResponseEntity.badRequest().body("This access point type is conflicting with an existing one.");
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             // e.printStackTrace();
             e.getCause().printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -176,11 +178,11 @@ public class AccessPointTypeRestControllerImpl extends AccessPointTypeRestContro
     public ResponseEntity<?> handleSearch(String criteria) {
         try {
             logger.debug("Searches for Access Point Type by criteria "+ criteria);
-            return ResponseEntity.status(HttpStatus.OK).body(accessPointTypeService.search(criteria));
+            return ResponseEntity.ok().body(accessPointTypeService.search(criteria));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occurred. Please contact the site administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
         }
     }
 

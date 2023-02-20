@@ -21,6 +21,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ReportElementComponent } from './report-element.component';
 import { ReportChartComponent } from './report-chart.component';
 import { FormReportComponent } from './form-report.component';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 @NgModule({
   imports: [
@@ -31,12 +32,13 @@ import { FormReportComponent } from './form-report.component';
     SharedModule,
     FlexLayoutModule,
     MaterialModule,
+    MatTableExporterModule,
     CsvModule,
     ReportRoutingModule,
     SharedModule,
     NgChartsModule,
     StoreModule.forFeature(reportFeature),
-    EffectsModule.forFeature([ ReportEffects ])
+    EffectsModule.forFeature([ReportEffects]),
   ],
   declarations: [
     ReportComponentImpl,
@@ -48,8 +50,6 @@ import { FormReportComponent } from './form-report.component';
     SearchFormSubmissionsComponentImpl,
   ],
   entryComponents: [],
-  providers: [
-    ReportControllerImpl,
-  ],
+  providers: [ReportControllerImpl],
 })
 export class ReportModule {}

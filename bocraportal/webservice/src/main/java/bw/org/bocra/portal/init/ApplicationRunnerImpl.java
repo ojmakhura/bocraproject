@@ -15,18 +15,25 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
+
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bw.org.bocra.portal.access.AccessPointCriteria;
 import bw.org.bocra.portal.access.AccessPointService;
@@ -40,6 +47,8 @@ import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.period.config.PeriodConfigService;
 import bw.org.bocra.portal.period.config.PeriodConfigVO;
 import bw.org.bocra.portal.period.config.RepeatPeriod;
+import bw.org.bocra.portal.sector.SectorService;
+import bw.org.bocra.portal.sector.SectorVO;
 
 // @Component
 // @Transactional
@@ -53,14 +62,16 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     private final AccessPointTypeService accessPointTypeService;
     private final AccessPointService accessPointService;
     private final AuthorisationService authorisationService;
+    private final SectorService sectorService;
 
-    public ApplicationRunnerImpl(PeriodService periodService, PeriodConfigService periodConfigService, AccessPointTypeService accessPointTypeService, AccessPointService accessPointService, AuthorisationService authorisationService) {
+    public ApplicationRunnerImpl(PeriodService periodService, PeriodConfigService periodConfigService, AccessPointTypeService accessPointTypeService, AccessPointService accessPointService, AuthorisationService authorisationService, SectorService sectorService) {
 
         this.periodService = periodService;
         this.periodConfigService = periodConfigService;
         this.accessPointService = accessPointService;
         this.accessPointTypeService = accessPointTypeService;
         this.authorisationService = authorisationService;
+        this.sectorService = sectorService;
     }
 
     private Collection<PeriodConfigVO> initPeriodConfigs() {
@@ -129,13 +140,10 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         period = periodService.save(period);
 
         while(now.compareTo(period.getPeriodEnd()) > 0) {
-            PeriodVO next = new PeriodVO();
-            next.setPeriodConfig(config);
-            period.setCreatedBy("system");
-            period.setCreatedDate(LocalDateTime.now());
 
-            next.setPeriodStart(period.getPeriodEnd().plusDays(1));
-            period = periodService.save(next);
+            Set<Long> s = new HashSet<>();
+            s.add(period.getId());
+            period = periodService.createNextPeriods("system", s).iterator().next();
         }
         log.info("Created periods for configuration " + config.getPeriodConfigName());   
     }
@@ -177,20 +185,19 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         }
 
         try {
-            File file = ResourceUtils.getFile("classpath:accessPointData.csv");
-
+            ClassPathResource resource = new ClassPathResource("/accessPointData.csv");
             List<List<String>> records = new ArrayList<>();
 
-            try(BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    String[] values = line.split(",");
-                    records.add(Arrays.asList(values));
-                }
+            Scanner scan = new Scanner(resource.getInputStream());
+
+            while(scan.hasNextLine()) {
+
+                String[] values = scan.nextLine().split(",");
+                records.add(Arrays.asList(values));
             }
 
             for (List<String> record : records) {
-                System.out.println(record);
+                
                 AccessPointVO point = new AccessPointVO();
                 point.setCreatedBy("system");
                 point.setCreatedDate(LocalDateTime.now());
@@ -227,7 +234,20 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
             authorisation.setAccessPoint(point);
             authorisation = authorisationService.save(authorisation);
         }
+    }
 
+    private void initSectors() throws StreamReadException, DatabindException, IOException {
+
+        ClassPathResource resource = new ClassPathResource("/sectors.json");
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<SectorVO> sectors = Arrays.asList(mapper.readValue(resource.getInputStream(), SectorVO[].class));
+        for (SectorVO sector : sectors) {
+            log.info(String.format("Creating sector %s", sector.getName()));
+            sector.setCreatedBy("system");
+            sector.setCreatedDate(LocalDateTime.now());
+            sectorService.save(sector);
+        }
     }
 
     @Override
@@ -272,6 +292,14 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
             log.info("Initialising authorisations .... ");
             this.initAuthorisation();
             log.info("Authorisations initialisation complete .... ");
+        }
+
+        if(CollectionUtils.isEmpty(sectorService.getAll(1, 1))) {
+
+            log.info("Initialising sectors .... ");
+            this.initSectors();
+            log.info("Sectors initialisation complete .... ");
+
         }
 
         log.info("System fully intialised ...");

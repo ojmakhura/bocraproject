@@ -4,13 +4,13 @@ services:
   # Traefik proxy
   ###############################################################################
   proxy:
-    image: traefik:2.8
+    image: traefik:3.0
     container_name: bocraportal-proxy
     hostname: traefik
     networks:
       bocra-network:
         ipv4_address: ${BOCRA_PROXY_ADDRESS}
-      traefik-public:
+      bocraportal-public:
       default:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -22,6 +22,8 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 5432:5432
+      - 5672:5672
       # - 8080:8080
     healthcheck:
       test: [ "CMD", "wget", "http://localhost:8082/ping","--spider" ]
@@ -38,6 +40,8 @@ services:
       - "--providers.file.watch=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.postgres.address=:5432"
+      - "--entrypoints.rabbitmq.address=:5672"
       - "--entryPoints.ping.address=:8082"
       - "--log.level=DEBUG"
       - "--accessLog"
@@ -48,9 +52,9 @@ services:
       - "--ping.entrypoint=ping"
       - "--metrics"
       - "--metrics.prometheus"
-      - "--providers.docker.network=traefik-public"
-      - "--entrypoints.web.http.redirections.entrypoint.to=${ACTIVE_ROUTER_ENTRY}"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--providers.docker.network=bocraportal-public"
+      # - "--entrypoints.web.http.redirections.entrypoint.to=${ACTIVE_ROUTER_ENTRY}"
+      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       # - "--certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}"
       # - "--certificatesresolvers.le.acme.storage=${BOCRA_DATA}/traefik/acme.json"
       # - "--certificatesresolvers.le.acme.tlschallenge=true"
@@ -58,36 +62,36 @@ services:
     labels:
       # Enable Traefik for this service, to make it available in the public network
       - traefik.enable=true
-      # Use the traefik-public network (declared below)
-      # - traefik.docker.network=traefik-public
-      # Use the custom label "traefik.constraint-label=traefik-public"
+      # Use the bocraportal-public network (declared below)
+      # - traefik.docker.network=bocraportal-public
+      # Use the custom label "traefik.constraint-label=bocraportal-public"
       # This public Traefik will only use services with this label
       # That way you can add other internal Traefik instances per stack if needed
-      # - traefik.constraint-label=traefik-public
+      # - traefik.constraint-label=bocraportal-public
       # admin-auth middleware with HTTP Basic auth
       # Using the environment variables USERNAME and HASHED_PASSWORD
       # - traefik.http.middlewares.admin-auth.basicauth.usersfile=/var/system_passwd
-      # - traefik.http.routers.traefik-public-https.middlewares=admin-auth
+      # - traefik.http.routers.bocraportal-public-https.middlewares=admin-auth
       # https-redirect middleware to redirect HTTP to HTTPS
       # It can be re-used by other stacks in other Docker Compose files
       - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
       - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
       # traefik-http set up only to use the middleware to redirect to https
       # Uses the environment variable DOMAIN
-      - traefik.http.routers.traefik-public-http.rule=Host(`${PROXY_DOMAIN}`)
-      - traefik.http.routers.traefik-public-http.entrypoints=web
-      - traefik.http.routers.traefik-public-http.middlewares=https-redirect
+      - traefik.http.routers.bocraportal-public-http.rule=Host(`${PROXY_DOMAIN}`)
+      - traefik.http.routers.bocraportal-public-http.entrypoints=web
+      - traefik.http.routers.bocraportal-public-http.middlewares=https-redirect
       # traefik-https the actual router using HTTPS
       # Uses the environment variable DOMAIN
-      - traefik.http.routers.traefik-public-https.rule=Host(`${PROXY_DOMAIN}`)
-      - traefik.http.routers.traefik-public-https.entrypoints=websecure
-      - traefik.http.routers.traefik-public-https.tls=${SSL_SECURE}
+      - traefik.http.routers.bocraportal-public-https.rule=Host(`${PROXY_DOMAIN}`)
+      - traefik.http.routers.bocraportal-public-https.entrypoints=websecure
+      - traefik.http.routers.bocraportal-public-https.tls=true
       # Use the special Traefik service api@internal with the web UI/Dashboard
-      - traefik.http.routers.traefik-public-https.service=api@internal
+      - traefik.http.routers.bocraportal-public-https.service=api@internal
       # Use the "le" (Let's Encrypt) resolver created below
-      # - traefik.http.routers.traefik-public-https.tls.certresolver=le
+      # - traefik.http.routers.bocraportal-public-https.tls.certresolver=le
       # Define the port inside of the Docker service to use
-      - traefik.http.services.traefik-public.loadbalancer.server.port=8080
+      - traefik.http.services.bocraportal-public.loadbalancer.server.port=8080
 
   ###############################################################################
   # Postgres database
@@ -98,7 +102,6 @@ services:
     image: bitnami/postgresql:15
     volumes:
       - ${BOCRA_DATA}/db:/bitnami/postgresql
-      # - ./initdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
     environment:
       POSTGRESQL_POSTGRES_PASSWORD: ${POSTGRES_USER_PASSWORD}
       POSTGRESQL_USERNAME: ${POSTGRES_USER}
@@ -114,16 +117,18 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_DB_ADDRESS}
       default:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-db.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.bocra-db.rule=Host(`${DB_DOMAIN}`)"
-      - "traefik.http.routers.bocra-db.tls=${SSL_SECURE}"
-      - "traefik.http.routers.bocra-db.tls.certresolver=le"
+      # - "traefik.docker.network=bocraportal-public"
+      - "traefik.tcp.routers.bocra-db-postgres.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.bocra-db-postgres.entrypoints=postgres"
+      - "traefik.tcp.routers.bocra-db.service=postgres"
+      - "traefik.tcp.services.bocra-db.loadbalancer.server.port=5432"
+      - "traefik.tcp.routers.bocra-db.tls=true"
 
   ###############################################################################
   # Postgres administration frontend
@@ -132,7 +137,7 @@ services:
     image: dpage/pgadmin4:6.15
     container_name: bocraportal-pgadmin
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_PGADMIN_ADDRESS}
       default:
@@ -150,10 +155,13 @@ services:
       TZ: Africa/Gaborone
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bocra-pgadmin.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.bocra-pgadmin.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
-      - "traefik.http.routers.bocra-pgadmin.tls=${SSL_SECURE}"
-      - "traefik.http.routers.bocra-pgadmin.tls.certresolver=le"
+      - "traefik.http.routers.bocra-pgadmin-web.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.bocra-pgadmin-web.entrypoints=web"
+      - "traefik.http.routers.bocra-pgadmin-web.middlewares=https-redirect"
+      - "traefik.http.routers.bocra-pgadmin-websecure.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.bocra-pgadmin-websecure.rule=Host(`${DB_DOMAIN}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.bocra-pgadmin-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.bocra-pgadmin-websecure.tls.certresolver=le"
 
   ###############################################################################
   # Keycloak authentication server
@@ -171,6 +179,8 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
       context: .
       dockerfile: Dockerfile.keycloak
@@ -192,22 +202,26 @@ services:
       db:
         condition: service_healthy
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_KEYCLOAK_ADDRESS}
       default:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.keycloak.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN}`)"
-      - "traefik.http.routers.keycloak.tls=${SSL_SECURE}"
-      - "traefik.http.routers.keycloak.tls.certresolver=le"
+      - "traefik.http.routers.keycloak-web.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+      - "traefik.http.routers.keycloak-web.entrypoints=web"
+      - "traefik.http.routers.keycloak-web.middlewares=https-redirect"
+      - "traefik.http.routers.keycloak-websecure.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.keycloak-websecure.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+      - "traefik.http.routers.keycloak-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.keycloak-websecure.tls.certresolver=le"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
 
   ###############################################################################
   # The main API 
   ###############################################################################
   api:
-    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocraportal-api
     hostname: api
 
@@ -229,12 +243,12 @@ services:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_API_ADDRESS}
       default:
     environment:
-      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -250,6 +264,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
       RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_DOMAIN: rabbitmq
       RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
       API_LOG_LEVEL: ${API_LOG_LEVEL}
       WEB_URL: ${WEB_URL}
@@ -258,16 +273,19 @@ services:
     
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
-      - "traefik.http.routers.api.tls=${SSL_SECURE}"
-      - "traefik.http.routers.api.tls.certresolver=le"
+      - "traefik.http.routers.api-web.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.api-web.entrypoints=web"
+      - "traefik.http.routers.api-web.middlewares=https-redirect"
+      - "traefik.http.routers.api-websecure.entrypoints=websecure"
+      - "traefik.http.routers.api-websecure.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.api-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.api-websecure.tls.certresolver=le"
   
   ###############################################################################
   # The Communication API 
   ###############################################################################
   comm:
-    image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocraportal-comm
     hostname: comm
     healthcheck:
@@ -287,18 +305,18 @@ services:
         condition: service_healthy
     build:
       context: .
-      dockerfile: bocraportal/comm/Dockerfile.native
+      dockerfile: bocraportal/comm/Dockerfile
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
         IMAGE_VERSION: ${IMAGE_VERSION}
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_COMM_ADDRESS}
       default:
     environment:
-      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      POSTGRES_SERVER: db
       COMM_SERVER_PORT: ${COMM_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -314,20 +332,24 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
       RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_DOMAIN: rabbitmq
       RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
       COMM_LOG_LEVEL: ${COMM_LOG_LEVEL}
       WEB_URL: ${WEB_URL}
       COMM_URL: ${COMM_URL}
       API_URL: ${API_URL}
       TZ: Africa/Gaborone
-    volumes:
-      - ${BOCRA_DATA}/cron/hosts:/etc/hosts
+    # volumes:
+    #   - ${BOCRA_DATA}/hosts:/etc/hosts
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.comm.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.comm.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
-      - "traefik.http.routers.comm.tls=${SSL_SECURE}"
-      - "traefik.http.routers.comm.tls.certresolver=le"
+      - "traefik.http.routers.comm-web.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
+      - "traefik.http.routers.comm-web.entrypoints=web"
+      - "traefik.http.routers.comm-web.middlewares=https-redirect"
+      - "traefik.http.routers.comm-websecure.entrypoints=websecure"
+      - "traefik.http.routers.comm-websecure.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
+      - "traefik.http.routers.comm-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.comm-websecure.tls.certresolver=le"
 
   ###############################################################################
   # Angular web application
@@ -355,7 +377,7 @@ services:
       api:
         condition: service_healthy
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_WEB_ADDRESS}
       default:
@@ -364,9 +386,12 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bocra-web.rule=Host(`${WEB_DOMAIN}`)"
-      - "traefik.http.routers.bocra-web.entrypoints=${ACTIVE_ROUTER_ENTRY}"
-      - "traefik.http.routers.bocra-web.tls=${SSL_SECURE}"
-      - "traefik.http.routers.bocra-web.tls.certresolver=le"
+      - "traefik.http.routers.bocra-web.entrypoints=web"
+      - "traefik.http.routers.bocra-web.middlewares=https-redirect"
+      - "traefik.http.routers.bocra-websecure.rule=Host(`${WEB_DOMAIN}`)"
+      - "traefik.http.routers.bocra-websecure.entrypoints=websecure"
+      - "traefik.http.routers.bocra-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.bocra-websecure.tls.certresolver=le"
 
   ###############################################################################
   # Rabbit MQ
@@ -392,19 +417,33 @@ services:
       keycloak:
         condition: service_healthy
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_RABBIT_ADDRESS}
       default:
-    ports:
-      - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
-      - "${RABBITMQ_WEB_PORT}:${RABBITMQ_WEB_PORT}"
+    # ports:
+    #   - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
+    #   - "${RABBITMQ_WEB_PORT}:${RABBITMQ_WEB_PORT}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rabbitmq-web.rule=Host(`${RABBITMQ_DOMAIN}`)"
+      - "traefik.http.routers.rabbitmq-web.entrypoints=web"
+      - "traefik.http.routers.rabbitmq-web.middlewares=https-redirect"
+      - "traefik.http.routers.rabbitmq-websecure.entrypoints=websecure"
+      - "traefik.http.routers.rabbitmq-websecure.rule=Host(`${RABBITMQ_DOMAIN}`)"
+      - "traefik.http.routers.rabbitmq-websecure.tls=true"
+      - "traefik.http.services.rabbitmq.loadbalancer.server.port=15672"
+      #tcp
+      - "traefik.tcp.routers.rabbitmq-ingress.rule=HostSNI(`${RABBITMQ_DOMAIN}`)"
+      - "traefik.tcp.routers.rabbitmq-ingress.entrypoints=rabbitmq"
+      - "traefik.tcp.services.rabbitmq-ingress.loadbalancer.server.port=5672"
+      - "traefik.tcp.routers.rabbitmq-ingress.tls=true"
 
   ###############################################################################
   # Cron job system
   ###############################################################################
   cron:
-    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"	
+    image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}"	
     build:
       context: .
       dockerfile: bocraportal/cron/Dockerfile.native
@@ -426,7 +465,7 @@ services:
       CRON_SERVER_PORT: ${CRON_SERVER_PORT}
       CRON_LOG_LEVEL: ${CRON_LOG_LEVEL}
       CRON_DB: ${CRON_DB}
-      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      POSTGRES_SERVER: db
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -438,15 +477,23 @@ services:
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
       CERT: ${CERT}
       CERT_PASSWORD: ${CERT_PASSWORD}
-      CRON_LOG_LEVEL: ${CRON_LOG_LEVEL}
       WEB_URL: ${WEB_URL}
       COMM_URL: ${COMM_URL}
       API_URL: ${API_URL}
       TZ: Africa/Gaborone
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cron-http.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/cron`)"
+      - "traefik.http.routers.cron-http.entrypoints=web"
+      - "traefik.http.routers.cron-http.middlewares=https-redirect"
+      - "traefik.http.routers.cron-websecure.entrypoints=websecure"
+      - "traefik.http.routers.cron-websecure.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/cron`)"
+      - "traefik.http.routers.cron-websecure.tls=${SSL_SECURE}"
+      - "traefik.http.routers.cron-websecure.tls.certresolver=le"
     volumes:
       - ${BOCRA_DATA}/cron/hosts:/etc/hosts
     networks:
-      traefik-public:
+      bocraportal-public:
       bocra-network:
       default:
 
@@ -467,13 +514,16 @@ services:
       REGISTRY_AUTH_HTPASSWD_PATH: ${BOCRA_DATA}/registry/auth/registry_passwd
       REGISTRY_AUTH_HTPASSWD_REALM: registry-realm
     networks:
-      traefik-public:
+      bocraportal-public:
       default:
     depends_on:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.registry.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.registry-http.rule=Host(`${REGISTRY_DOMAIN}`)"
+      - "traefik.http.routers.registry-http.entrypoints=web"
+      - "traefik.http.routers.registry-http.middlewares=https-redirect"
+      - "traefik.http.routers.registry.entrypoints=websecure"
       - "traefik.http.routers.registry.rule=Host(`${REGISTRY_DOMAIN}`)"
       - "traefik.http.routers.registry.tls=${SSL_SECURE}"
       - "traefik.http.routers.registry.tls.certresolver=le"
@@ -499,7 +549,7 @@ services:
     networks:
       bocra-network:
         ipv4_address: ${BOCRA_JENKINS_ADDRESS}
-      traefik-public:
+      bocraportal-public:
       default:
     labels:
       - "traefik.enable=true"
@@ -511,7 +561,7 @@ services:
 # Networks
 ###############################################################################
 networks:
-  traefik-public:
+  bocraportal-public:
     # Allow setting it to false for testing
     external: true
   bocra-network:

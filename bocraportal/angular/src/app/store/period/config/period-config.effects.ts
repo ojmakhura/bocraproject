@@ -7,91 +7,125 @@ import { PeriodConfigRestController } from '@app/service/bw/org/bocra/portal/per
 
 @Injectable()
 export class PeriodConfigEffects {
+  constructor(private actions$: Actions, private periodConfigRestController: PeriodConfigRestController) {}
 
-    constructor(private actions$: Actions, private periodConfigRestController: PeriodConfigRestController) {}
-
-    findById$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(PeriodConfigActions.findById),
-            mergeMap(({ id }) => this.periodConfigRestController.findById(id).pipe(
-                map( periodConfig => PeriodConfigActions.findByIdSuccess({
-                    periodConfig,
-                    messages: [`Period config ${periodConfig.periodConfigName} found.`],
-                    success: true
-                })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  findById$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PeriodConfigActions.findById),
+      mergeMap(({ id }) =>
+        this.periodConfigRestController.findById(id).pipe(
+          map((periodConfig) =>
+            PeriodConfigActions.findByIdSuccess({
+              periodConfig,
+              messages: [`Period config ${periodConfig.periodConfigName} found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            PeriodConfigActions.periodConfigFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    save$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(PeriodConfigActions.save),
-            mergeMap(({ periodConfig }) => this.periodConfigRestController.save(periodConfig).pipe(
-                map( periodConfig => PeriodConfigActions.saveSuccess({
-                    periodConfig,
-                    messages: [`Period config ${periodConfig.periodConfigName} saved.`],
-                    success: true
-                })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  save$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PeriodConfigActions.save),
+      mergeMap(({ periodConfig }) =>
+        this.periodConfigRestController.save(periodConfig).pipe(
+          map((periodConfig) =>
+            PeriodConfigActions.saveSuccess({
+              periodConfig,
+              messages: [`Period config ${periodConfig.periodConfigName} saved.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            PeriodConfigActions.periodConfigFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    remove$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(PeriodConfigActions.remove),
-            mergeMap(({ id }) => this.periodConfigRestController.remove(id).pipe(
-                map( removed => PeriodConfigActions.removeSuccess({
-                    removed,
-                    messages: [`Period config ${id} removed.`],
-                    success: true
-                })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  remove$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PeriodConfigActions.remove),
+      mergeMap(({ id }) =>
+        this.periodConfigRestController.remove(id).pipe(
+          map((removed) =>
+            PeriodConfigActions.removeSuccess({
+              removed,
+              messages: [`Period config ${id} removed.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            PeriodConfigActions.periodConfigFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    getAll$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(PeriodConfigActions.getAll),
-            mergeMap(() => this.periodConfigRestController.getAll().pipe(
-                map( periodConfigs => PeriodConfigActions.getAllSuccess({
-                    periodConfigs,
-                    messages: [`${periodConfigs.length} period configs found.`],
-                    success: true
-                })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  getAll$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PeriodConfigActions.getAll),
+      mergeMap(() =>
+        this.periodConfigRestController.getAll().pipe(
+          map((periodConfigs) =>
+            PeriodConfigActions.getAllSuccess({
+              periodConfigs,
+              messages: [`${periodConfigs.length} period configs found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            PeriodConfigActions.periodConfigFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    search$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(PeriodConfigActions.search),
-            mergeMap(({ criteria }) => this.periodConfigRestController.search(criteria).pipe(
-                map( periodConfigs => PeriodConfigActions.searchSuccess({
-                    periodConfigs,
-                    messages: [`${periodConfigs.length} period configs found.`],
-                    success: true
-                })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  search$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PeriodConfigActions.search),
+      mergeMap(({ criteria }) =>
+        this.periodConfigRestController.search(criteria).pipe(
+          map((periodConfigs) =>
+            PeriodConfigActions.searchSuccess({
+              periodConfigs,
+              messages: [`${periodConfigs.length} period configs found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            PeriodConfigActions.periodConfigFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
+      )
+    )
+  );
 
-    getAllPaged$ = createEffect(() => 
-         this.actions$.pipe(
-            ofType(PeriodConfigActions.getAllPaged),
-            mergeMap(({ pageNumber, pageSize }) => this.periodConfigRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map( periodConfigs => PeriodConfigActions.getAllPagedSuccess({
-                    periodConfigs,
-                    messages: [`Page ${pageNumber} found with ${periodConfigs.length} period configs.`],
-                    success: true
-                })),
-                catchError(({error}) => [PeriodConfigActions.periodConfigFailure({messages: [error?.error ? error.error : error]})])
-            ))
+  getAllPaged$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PeriodConfigActions.getAllPaged),
+      mergeMap(({ pageNumber, pageSize }) =>
+        this.periodConfigRestController.getAllPaged(pageNumber, pageSize).pipe(
+          map((periodConfigs) =>
+            PeriodConfigActions.getAllPagedSuccess({
+              periodConfigs,
+              messages: [`Page ${pageNumber} found with ${periodConfigs.length} period configs.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            PeriodConfigActions.periodConfigFailure({ messages: [error?.error ? error.error : error] }),
+          ])
         )
-    );
-
+      )
+    )
+  );
 }

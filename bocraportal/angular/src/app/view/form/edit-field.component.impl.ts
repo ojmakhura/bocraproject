@@ -60,10 +60,14 @@ export class EditFieldComponentImpl extends EditFieldComponent {
   override doNgAfterViewInit() {
     this.route.queryParams.subscribe((queryParams: any) => {
       if (queryParams?.id) {
-        this.store.dispatch(FormActions.findFieldById({ id: queryParams.id, loading: true, loaderMessage: 'Loading field by id' }));
+        this.store.dispatch(
+          FormActions.findFieldById({ id: queryParams.id, loading: true, loaderMessage: 'Loading field by id' })
+        );
       } else {
         if (queryParams?.formId) {
-          this.store.dispatch(FormActions.findFormById({ id: queryParams.formId, loading: true, loaderMessage: 'Loading form by id' }));
+          this.store.dispatch(
+            FormActions.findFormById({ id: queryParams.formId, loading: true, loaderMessage: 'Loading form by id' })
+          );
         }
       }
     });
@@ -71,7 +75,9 @@ export class EditFieldComponentImpl extends EditFieldComponent {
     this.formField$.subscribe((field) => {
       if (field) {
         if (field.form) {
-          this.store.dispatch(FormActions.findFormById({ id: field.form.id, loading: true, loaderMessage: 'Loading form by id ...' }));
+          this.store.dispatch(
+            FormActions.findFormById({ id: field.form.id, loading: true, loaderMessage: 'Loading form by id ...' })
+          );
         }
 
         this.setEditFieldFormValue({ formField: field });
@@ -79,8 +85,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
     });
 
     this.form$?.subscribe((f) => {
-      
-      if(!f) {
+      if (!f) {
         return;
       }
 
@@ -120,7 +125,6 @@ export class EditFieldComponentImpl extends EditFieldComponent {
    * This method may be overwritten
    */
   override beforeEditFieldSave(form: EditFieldSaveForm): void {
-
     if (this.formFieldControl.valid) {
       this.formField.fieldId = this.formField.fieldId.trim();
       if (this.formField.id) {
@@ -135,7 +139,7 @@ export class EditFieldComponentImpl extends EditFieldComponent {
         FormActions.saveField({
           formField: this.formField,
           loading: true,
-          loaderMessage: 'Saving form field ...'
+          loaderMessage: 'Saving form field ...',
         })
       );
     } else {
@@ -146,5 +150,4 @@ export class EditFieldComponentImpl extends EditFieldComponent {
   scroll(el: HTMLElement) {
     el.scrollIntoView();
   }
-  
 }

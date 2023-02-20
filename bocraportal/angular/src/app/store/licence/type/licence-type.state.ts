@@ -2,32 +2,32 @@
 import { LicenceTypeCriteria } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-criteria';
 import { LicenceTypeVO } from '@app/model/bw/org/bocra/portal/licence/type/licence-type-vo';
 
-export const licenceTypeKey = "licenceType";
+export const licenceTypeKey = 'licenceType';
 
 export interface LicenceTypeState {
-    id: number | any,
-    licenceType: LicenceTypeVO | any,
-    licenceTypes: Array<LicenceTypeVO> | Array<any>,
-    criteria: LicenceTypeCriteria | any,
-    removed: boolean,
-    licenceTypeId: number | any,
-    success: boolean;
-    loading: boolean;
-    loaderMessage: string | undefined,
-    error: boolean,
-    messages: any[]
+  id: number | any;
+  licenceType: LicenceTypeVO | any;
+  licenceTypes: Array<LicenceTypeVO> | Array<any>;
+  criteria: LicenceTypeCriteria | any;
+  removed: boolean;
+  licenceTypeId: number | any;
+  success: boolean;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  error: boolean;
+  messages: any[];
 }
 
 export const initialState: LicenceTypeState = {
-    id: null,
-    licenceType: null,
-    licenceTypes: [],
-    criteria: null,
-    removed: false,
-    licenceTypeId: null,
-    success: false,
-    loading: false,
-    error: false,
-    messages: [],
-    loaderMessage: undefined
+  id: null,
+  licenceType: null,
+  licenceTypes: [],
+  criteria: null,
+  removed: false,
+  licenceTypeId: null,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
+  loaderMessage: undefined,
 };

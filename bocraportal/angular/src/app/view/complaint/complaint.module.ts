@@ -16,6 +16,7 @@ import { SearchComplaintsComponentImpl } from '@app/view/complaint/search-compla
 import { SearchComplaintsComplaintsComponentImpl } from '@app/view/complaint/search-complaints-complaints.component.impl'; // 2
 import { ReplyDocumentComponentImpl } from '@app/view/complaint/reply-document.component.impl'; // 3
 import { ComplaintsAnalysisComponentImpl } from '@app/view/complaint/complaints-analysis.component.impl'; // 1
+import { ComplaintsDashboardComponentImpl } from '@app/view/complaint/complaints-dashboard.component.impl'; 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { complaintFeature } from '@app/store/complaint/complaint.reducers';
@@ -26,6 +27,7 @@ import { NgChartsModule } from 'ng2-charts';
 import 'chart.js';
 import { complaintTypeFeature } from '@app/store/complaint/type/complaint-type.reducers';
 import { ComplaintTypeEffects } from '@app/store/complaint/type/complaint-type.effects';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 @NgModule({
   imports: [
@@ -38,11 +40,12 @@ import { ComplaintTypeEffects } from '@app/store/complaint/type/complaint-type.e
     MaterialModule,
     CsvModule,
     ComplaintRoutingModule,
+    MatTableExporterModule,
     SharedModule,
     NgChartsModule,
     StoreModule.forFeature(complaintFeature),
     StoreModule.forFeature(complaintTypeFeature),
-    EffectsModule.forFeature([ ComplaintEffects, ComplaintTypeEffects])
+    EffectsModule.forFeature([ComplaintEffects, ComplaintTypeEffects]),
   ],
   declarations: [
     EditComplaintComponentImpl,
@@ -55,11 +58,9 @@ import { ComplaintTypeEffects } from '@app/store/complaint/type/complaint-type.e
     ReplyDocumentComponentImpl,
     ReplyDocumentComponentImpl,
     ComplaintsAnalysisComponentImpl,
+    ComplaintsDashboardComponentImpl
   ],
   entryComponents: [],
-  providers: [
-    ComplaintControllerImpl,
-    ComplaintRestController,
-  ],
+  providers: [ComplaintControllerImpl, ComplaintRestController],
 })
 export class ComplaintModule {}

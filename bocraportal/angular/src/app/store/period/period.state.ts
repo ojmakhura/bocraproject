@@ -2,30 +2,30 @@
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
 import { PeriodCriteria } from '@app/model/bw/org/bocra/portal/period/period-criteria';
 
-export const periodKey = "period";
+export const periodKey = 'period';
 
 export interface PeriodState {
-    id: number | any,
-    criteria: PeriodCriteria | any,
-    periods: Array<PeriodVO> | Array<any>,
-    period: PeriodVO | any,
-    removed: boolean,
-    success: boolean,
-    loading: boolean,
-    loaderMessage: string | undefined,
-    error: boolean,
-    messages: any[]
+  id: number | any;
+  criteria: PeriodCriteria | any;
+  periods: Array<PeriodVO> | Array<any>;
+  period: PeriodVO | any;
+  removed: boolean;
+  success: boolean;
+  loading: boolean;
+  loaderMessage: string | undefined;
+  error: boolean;
+  messages: any[];
 }
 
 export const initialState: PeriodState = {
-    id: null,
-    criteria: null,
-    periods: [],
-    period: null,
-    removed: false,
-    success: false,
-    loading: false,
-    error: false,
-    messages: [],
-    loaderMessage: undefined
+  id: null,
+  criteria: null,
+  periods: [],
+  period: null,
+  removed: false,
+  success: false,
+  loading: false,
+  error: false,
+  messages: [],
+  loaderMessage: undefined,
 };

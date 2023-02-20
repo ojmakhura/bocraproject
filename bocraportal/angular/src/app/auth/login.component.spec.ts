@@ -27,11 +27,10 @@ describe('LoginComponent', () => {
         RouterTestingModule,
         TranslateModule.forRoot(),
         I18nModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
       ],
-      declarations: [LoginComponent]
-    })
-    .compileComponents();
+      declarations: [LoginComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

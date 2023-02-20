@@ -34,7 +34,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
             ResponseEntity<PeriodConfigVO> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -50,7 +50,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
             }
 
             logger.error(message);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 
@@ -59,7 +59,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
         try{
 
             logger.debug("Display all Period Config");
-            return ResponseEntity.status(HttpStatus.OK).body(periodConfigService.getAll());
+            return ResponseEntity.ok().body(periodConfigService.getAll());
     
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,7 +76,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
             ResponseEntity<?> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete the period config with id " + id);
             }
@@ -90,7 +90,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not delete period config with id " + id);
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unknown error encountered when deleting period config with id " + id);
+            return ResponseEntity.badRequest().body("Unknown error encountered when deleting period config with id " + id);
         }
     }
 
@@ -102,7 +102,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
             ResponseEntity<PeriodConfigVO> response;
     
             if(data.isPresent()) {
-                response = ResponseEntity.status(HttpStatus.OK).body(data.get());
+                response = ResponseEntity.ok().body(data.get());
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -129,47 +129,47 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
                     message = "An unknown error has occured. Please contact the system administrator.";
                 }
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+                return ResponseEntity.badRequest().body(message);
 
             } else if(e.getCause() instanceof PSQLException) {
 
                 if (e.getCause().getMessage().contains("duplicate key")) {
                     if(e.getCause().getMessage().contains("(code)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This licence type with this code has been already created.");
+                        return ResponseEntity.badRequest().body("This licence type with this code has been already created.");
 
                     } else if(e.getCause().getMessage().contains("(name)")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This licence type with this name has been already created.");
+                        return ResponseEntity.badRequest().body("This licence type with this name has been already created.");
                     } else {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This licence type is conflicting with an existing one.");
+                        return ResponseEntity.badRequest().body("This licence type is conflicting with an existing one.");
                     }
 
                 }   else if (e.getCause().getMessage().contains("null value in column")) {
 
                     if (e.getCause().getMessage().contains("column \"created_by\"")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created-by value is missing.");
+                        return ResponseEntity.badRequest().body("The created-by value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"created_date\"")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The created date value is missing.");
+                        return ResponseEntity.badRequest().body("The created date value is missing.");
                     } else if (e.getCause().getMessage().contains("column \"period_config_name\"")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Period config name is missing.");
+                        return ResponseEntity.badRequest().body("Period config name is missing.");
                     } else if (e.getCause().getMessage().contains("column \"repeat_period\"")) {
 
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Repeat value is missing.");
+                        return ResponseEntity.badRequest().body("Repeat value is missing.");
                     }
                 }
                 
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         } catch(Exception e) {
 
             // e.printStackTrace();
             e.getCause().printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An unknown error has occured. Please contact the portal administrator.");
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
 
@@ -177,7 +177,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     public ResponseEntity<?> handleSearch(PeriodConfigCriteria criteria) {
         try{
             logger.debug("Search Period Config by criteria "+criteria);
-            return ResponseEntity.status(HttpStatus.OK).body(periodConfigService.search(criteria));
+            return ResponseEntity.ok().body(periodConfigService.search(criteria));
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,7 +190,7 @@ public class PeriodConfigRestControllerImpl extends PeriodConfigRestControllerBa
     public ResponseEntity<?> handleGetAllPaged(Integer pageNumber, Integer pageSize) {
         try{
             logger.debug("Display all Period Configs with specified page number "+pageNumber+" and "+pageSize);
-                return ResponseEntity.status(HttpStatus.OK).body(periodConfigService.getAll(pageNumber, pageSize));
+                return ResponseEntity.ok().body(periodConfigService.getAll(pageNumber, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());

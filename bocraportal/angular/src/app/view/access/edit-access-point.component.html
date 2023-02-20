@@ -19,9 +19,9 @@
           </button>
         </div>
       </section>
-			<div *ngIf="loading | async">
-				<app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
-			</div>
+      <div *ngIf="loading | async">
+        <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+      </div>
       <div *ngIf="success | async" class="alert alert-success" role="alert">
         <div *ngFor="let message of messages | async">
           {{ message }}
@@ -95,10 +95,12 @@
           </div>
         </div>
 
-				<div class="mb-3">
-          <label id="accessPointIcon_label" class="col-sm-2 col-form-label" for="accessPointIcon"><span translate>icon</span></label>
-          <input type="text" id="accessPointIcon" class="form-control" name="icon" formControlName="icon"/>
-      </div>
+        <div class="mb-3">
+          <label id="accessPointIcon_label" class="col-sm-2 col-form-label" for="accessPointIcon"
+            ><span translate>icon</span></label
+          >
+          <input type="text" id="accessPointIcon" class="form-control" name="icon" formControlName="icon" />
+        </div>
       </div>
     </form>
     <br />
@@ -109,7 +111,12 @@
       <button type="button" (click)="editAccessPointFormReset()" class="btn btn-outline-primary">
         <span translate>reset</span>
       </button>
-      <button type="button" (click)="editAccessPointDelete()" class="btn btn-outline-primary" *ngIf="accessPointId && deleteUnrestricted">
+      <button
+        type="button"
+        (click)="editAccessPointDelete()"
+        class="btn btn-outline-primary"
+        *ngIf="accessPointId && deleteUnrestricted"
+      >
         <span translate>delete</span>
       </button>
     </div>

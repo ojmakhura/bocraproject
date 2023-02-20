@@ -7,17 +7,8 @@ import { MaterialModule } from '@app/material.module';
 import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
-  imports: [
-    FlexLayoutModule,
-    MaterialModule,
-    TranslateModule,
-    CommonModule
-  ],
-  declarations: [
-    LoaderComponent
-  ],
-  exports: [
-    LoaderComponent
-  ]
+  imports: [FlexLayoutModule, MaterialModule, TranslateModule, CommonModule],
+  declarations: [LoaderComponent],
+  exports: [LoaderComponent],
 })
-export class SharedModule { }
+export class SharedModule {}

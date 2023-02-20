@@ -1,10 +1,8 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[appRequiredRoles]'
+  selector: '[appRequiredRoles]',
 })
 export class RequiredRolesDirective {
-
-  constructor() { }
-
+  constructor() {}
 }

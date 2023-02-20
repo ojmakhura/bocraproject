@@ -1,91 +1,99 @@
 <div class="card container">
-	<div class="card-body">
-		<form [formGroup]="reportChartGroup">
-			<section>
-				<div class="col my-3 view-buttons">
+  <div class="card-body">
+    <form [formGroup]="reportChartGroup">
+      <section>
+        <div class="col my-3 view-buttons"></div>
+      </section>
+      <div class="mb-3 row">
+        <label for="chart-label" class="col-sm-2 col-form-label">Label</label>
+        <div class="col-sm-10">
+          <input type="text" id="chartLabel" class="form-control" name="chartLabel" formControlName="chartLabel" />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="period" class="col-sm-2 col-form-label">Period</label>
+        <div class="col-sm-10">
+          <select
+            id="period"
+            class="form-select"
+            formControlName="period"
+            aria-label="Default select example"
+            (change)="selectedPeriod()"
+          >
+            <option [selected]="true" value="all">All</option>
+            <option *ngFor="let period of periods" value="{{ period }}">{{ period }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="chart-type" class="col-sm-2 col-form-label">Chart Type</label>
+        <div class="col-sm-10">
+          <select
+            id="chart-type"
+            class="form-select"
+            formControlName="chartType"
+            aria-label="Default select example"
+            (change)="selectedChartType()"
+          >
+            <option [selected]="true" value="bar">Bar</option>
+            <!-- <option value="bubble">Bubble</option> -->
+            <!-- <option value="doughnut">Doughnut</option> -->
+            <option value="line">Line</option>
+            <option value="pie">Pie</option>
+            <option value="table">Table</option>
+            <!-- <option value="polarArea">Polar Area</option> -->
+            <!-- <option value="radar">Radar</option> -->
+            <!-- <option value="scatter">Scatter</option> -->
+          </select>
+        </div>
+      </div>
+      <div *ngIf="chartType === 'table'">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" *ngFor="let label of labelNames; let m = index">{{ label }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of datasets; let m = index">
+              <th scope="row">{{ x.label }}</th>
+              <td *ngFor="let val of x.data">{{ val }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="chartType === 'pie'"></div>
+      <div *ngIf="chartType === 'bar' || chartType === 'line'">
+        <canvas baseChart #chart id="chart" class="chart" [datasets]="datasets" [labels]="labelNames" [type]="chartType"> </canvas>
+      </div>
+      <div class="mb-3 row">
+        <label for="chart-label" class="col-sm-2 col-form-label">Caption</label>
+        <div class="col-sm-10">
+          <textarea type="text" id="chartCaption" class="form-control" name="chartCaption" formControlName="chartCaption" rows="6"></textarea>
+        </div>
+      </div>
 
-				</div>
-			</section>
-			<div class="mb-3 row">
-				<label for="chart-label" class="col-sm-2 col-form-label">Label</label>
-				<div class="col-sm-10">
-					<input type="text" id="chartLabel" class="form-control" name="chartLabel"
-						formControlName="chartLabel" />
-				</div>
-			</div>
-			<div class="mb-3 row">
-				<label for="period" class="col-sm-2 col-form-label">Period</label>
-				<div class="col-sm-10">
-					<select id="period" class="form-select" formControlName="period" aria-label="Default select example"
-						(change)="selectedPeriod()">
-						<option [selected]="true" value="all">All</option>
-						<option *ngFor="let period of periods" value="{{ period }}">{{ period }}</option>
-					</select>
-				</div>
-			</div>
-			<!-- <div class="mb-3">
-				<label for="section">Form Section</label>
-				<select id="section" class="form-select" formControlName="section"
-						aria-label="Default select example" (change)="selectedFormSection()">
-					<option value="all">All</option>
-					<option *ngFor="let section of sections" value="{{ section.sectionId }}">{{section.sectionLabel}}</option>
-				</select>
-			</div> -->
-			<div class="mb-3 row">
-				<label for="chart-type" class="col-sm-2 col-form-label">Chart Type</label>
-				<div class="col-sm-10">
-					<select id="chart-type" class="form-select" formControlName="chartType"
-						aria-label="Default select example" (change)="selectedChartType()">
-						<option [selected]="true" value="bar">Bar</option>
-						<!-- <option value="bubble">Bubble</option> -->
-						<!-- <option value="doughnut">Doughnut</option> -->
-						<option value="line">Line</option>
-						<option value="pie">Pie</option>
-						<option value="table">Table</option>
-						<!-- <option value="polarArea">Polar Area</option> -->
-						<!-- <option value="radar">Radar</option> -->
-						<!-- <option value="scatter">Scatter</option> -->
-					</select>
-				</div>
-			</div>
-			<div *ngIf="chartType === 'table'">
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th scope="col"></th>
-							<th scope="col" *ngFor="let label of labelNames; let m=index">{{label}}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr *ngFor="let x of datasets; let m=index">
-							<th scope="row">{{ x.label }}</th>
-							<td *ngFor="let val of x.data">{{val}}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div *ngIf="chartType === 'pie'">
-
-			</div>
-			<div *ngIf="chartType === 'bar' || chartType === 'line'">
-				<canvas baseChart class="chart" [datasets]="datasets" [labels]="labelNames" [type]="chartType">
-				</canvas>
-			</div>
-
-			<div class="col mb-3">
-				<button type="button" class="btn btn-primary" (click)="refreshChart()">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-						class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-						<path
-							d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
-						<path fill-rule="evenodd"
-							d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" />
-					</svg>
-				</button>
-				<!-- <button type="button" class="btn btn-primary" (click)="refreshColors()">
-					Colors
-				</button> -->
-			</div>
-		</form>
-	</div>
+      <div class="col mb-3">
+        <button type="button" class="btn btn-primary" (click)="refreshChart()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-arrow-repeat"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+            />
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
