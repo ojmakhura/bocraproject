@@ -203,8 +203,7 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
 
                 if (chartType.equals("table")) {
 
-                    Map<String, List<?>> tableData = (Map<String, List<?>>) chart.get("tableData");
-                    System.out.println(tableData);
+                    Map<String, List<?>> tableData = (Map<String, List<?>>) chart.get("images");
 
                     XWPFTable table = document.createTable();
                     List<String> labels = (List<String>) tableData.get("labels");
