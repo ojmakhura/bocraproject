@@ -119,7 +119,7 @@ export class EditFormComponentImpl extends EditFormComponent {
                   item.label = role['description'];
                   item.value = role['name'];
 
-                  this.userRolesBackingList.push(item);
+                  this.formRolesBackingList.push(item);
                 }
               });
           });

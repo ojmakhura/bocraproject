@@ -65,7 +65,7 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
                   item.label = role['description'];
                   item.value = role['name'];
 
-                  this.userRolesBackingList.push(item);
+                  this.criteriaRolesBackingList.push(item);
                 }
               });
           });
