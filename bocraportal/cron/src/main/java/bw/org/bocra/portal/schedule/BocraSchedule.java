@@ -1,5 +1,6 @@
 package bw.org.bocra.portal.schedule;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -17,6 +18,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import bw.org.bocra.portal.complaint.ComplaintSeachCriteria;
+import bw.org.bocra.portal.complaint.ComplaintStatus;
+import bw.org.bocra.portal.complaint.ComplaintVO;
 import bw.org.bocra.portal.form.activation.FormActivationVO;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.security.CronSecurity;
@@ -52,6 +56,43 @@ public class BocraSchedule {
     public void dailySchedule() {
         String formatTime = this.getDateTime();
         log.info("Daily cron job at " + formatTime);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
+
+        HttpEntity<String> request = new HttpEntity<String>(headers);
+        
+        String due = apiUrl + "/complaints/submission/overdue";
+
+    }
+
+    public void setComplaintsPending(String token) {
+
+        ComplaintSeachCriteria criteria = new ComplaintSeachCriteria();
+        criteria.setStatus(ComplaintStatus.NEW);
+
+        String complaintsNew = apiUrl + "/search";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
+        HttpEntity<ComplaintSeachCriteria> request = new HttpEntity<>(criteria, headers);
+
+        ResponseEntity<?> response = restTemplate.postForEntity(complaintsNew, request, ComplaintVO[].class);
+        if(response.getStatusCode() == HttpStatus.OK) {
+            ComplaintVO[] newComplaints = (ComplaintVO[]) response.getBody();
+
+            String statusUpdateUrl = apiUrl + "/status?complaintId=%s&status=%s";
+
+            for (ComplaintVO complaint : newComplaints) {
+                LocalDateTime tmp = LocalDate.now().atStartOfDay().minusDays(20l);
+                if(tmp.compareTo(complaint.getCreatedDate()) > 0) {
+                    statusUpdateUrl = String.format(statusUpdateUrl, complaint.getComplaintId(), ComplaintStatus.PENDING);
+                }
+            }
+
+        } else {
+            log.error(response.getBody().toString());
+        }
     }
 
     @Async
