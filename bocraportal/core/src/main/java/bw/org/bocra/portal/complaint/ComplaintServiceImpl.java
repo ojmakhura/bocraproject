@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.complaint;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -180,6 +181,18 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
             else
                 spec = spec.and( BocraportalSpecifications.findByAttributeGreaterThan("createdDate",
                                 criteria.getEndDate().plusDays(1).atStartOfDay()));
+        }
+
+        if(criteria.getPastDays() != null) {
+
+            LocalDate past = LocalDate.now().minusDays(criteria.getPastDays());
+
+            if (spec == null)
+                spec =  BocraportalSpecifications.findByAttributeGreaterThanEqual("createdDate",
+                            past.atStartOfDay());
+            else
+                spec = spec.and( BocraportalSpecifications.findByAttributeGreaterThanEqual("createdDate",
+                                past.atStartOfDay()));
         }
 
         Collection<Complaint> entities = getComplaintRepository().findAll(spec, Sort.by("id").descending());
