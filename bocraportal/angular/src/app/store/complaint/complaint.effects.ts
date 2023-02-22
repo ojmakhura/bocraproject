@@ -224,4 +224,24 @@ export class ComplaintEffects {
       )
     )
   );
+
+  updateStatus$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ComplaintActions.updateStatus),
+      mergeMap(({ complaintId, status }) =>
+        this.complaintRestController.updateStatus(complaintId, status).pipe(
+          map((updated) =>
+            ComplaintActions.updateStatusSuccess({
+              updated,
+              messages: ['Status successfully updated.'],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            ComplaintActions.complaintFailure({ messages: [error?.error ? error?.error : error] }),
+          ])
+        )
+      )
+    )
+  );
 }

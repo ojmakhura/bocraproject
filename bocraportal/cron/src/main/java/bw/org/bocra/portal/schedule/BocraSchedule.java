@@ -56,13 +56,7 @@ public class BocraSchedule {
     public void dailySchedule() {
         String formatTime = this.getDateTime();
         log.info("Daily cron job at " + formatTime);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
-
-        HttpEntity<String> request = new HttpEntity<String>(headers);
-        
-        String due = apiUrl + "/complaints/submission/overdue";
+        this.setComplaintsPending(cronSecurity.getAccessToken().getToken());
 
     }
 
@@ -78,6 +72,7 @@ public class BocraSchedule {
         HttpEntity<ComplaintSeachCriteria> request = new HttpEntity<>(criteria, headers);
 
         ResponseEntity<?> response = restTemplate.postForEntity(complaintsNew, request, ComplaintVO[].class);
+        
         if(response.getStatusCode() == HttpStatus.OK) {
             ComplaintVO[] newComplaints = (ComplaintVO[]) response.getBody();
 
@@ -87,6 +82,12 @@ public class BocraSchedule {
                 LocalDateTime tmp = LocalDate.now().atStartOfDay().minusDays(20l);
                 if(tmp.compareTo(complaint.getCreatedDate()) > 0) {
                     statusUpdateUrl = String.format(statusUpdateUrl, complaint.getComplaintId(), ComplaintStatus.PENDING);
+                    request = new HttpEntity<>(headers);
+                    response = restTemplate.exchange(statusUpdateUrl, HttpMethod.GET, request, Boolean.class);
+
+                    if(response.getStatusCode() != HttpStatus.OK) {
+                        log.error(response.getBody().toString());
+                    }
                 }
             }
 

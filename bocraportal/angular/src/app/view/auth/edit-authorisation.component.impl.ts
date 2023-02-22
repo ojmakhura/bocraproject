@@ -73,7 +73,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
                   item.label = role['description'];
                   item.value = role['name'];
 
-                  this.userRolesBackingList.push(item);
+                  this.authorisationRolesBackingList.push(item);
                 }
               });
           });

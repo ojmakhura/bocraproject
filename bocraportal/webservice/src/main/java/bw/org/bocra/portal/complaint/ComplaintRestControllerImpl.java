@@ -549,4 +549,31 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             return ResponseEntity.badRequest().body(message);
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleUpdateStatus(String complaintId, ComplaintStatus status) {
+
+        try {
+            
+            Boolean updated = this.complaintService.updateStatus(complaintId, status);
+
+            return ResponseEntity.ok(updated);
+
+        } catch (Exception e) {
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+
+                message = String.format("Complaint with complaint id %s not found.", complaintId);
+
+            } else if (e instanceof ComplaintServiceException || e.getCause() instanceof ComplaintServiceException) {
+                message = String.format("Complaint with complaint id %s not found.", complaintId);
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message, e);
+            return ResponseEntity.badRequest().body(message);
+        }
+    }
 }

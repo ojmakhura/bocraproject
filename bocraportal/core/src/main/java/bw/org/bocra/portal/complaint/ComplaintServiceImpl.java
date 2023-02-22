@@ -261,4 +261,13 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
         return true;
     }
 
+    @Override
+    protected Boolean handleUpdateStatus(String complaintId, ComplaintStatus status) throws Exception {
+        Complaint complaint = complaintDao.searchUniqueComplaintId(complaintId);
+        complaint.setStatus(status);
+        complaintRepository.save(complaint);
+
+        return true;
+    }
+
 }
