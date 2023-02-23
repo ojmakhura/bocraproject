@@ -235,14 +235,14 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_healthy
-    # build:
-    #   context: .
-    #   dockerfile: bocraportal/webservice/Dockerfile
-    #   args:
-    #     CERT: ${CERT}
-    #     CERT_PASSWORD: ${CERT_PASSWORD}
-    # volumes:
-    #   - ${BOCRA_DATA}/hosts:/etc/hosts
+    build:
+      context: .
+      dockerfile: bocraportal/webservice/Dockerfile
+      args:
+        CERT: ${CERT}
+        CERT_PASSWORD: ${CERT_PASSWORD}
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
     networks:
       bocraportal-public:
       bocra-network:
