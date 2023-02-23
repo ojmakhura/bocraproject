@@ -179,8 +179,8 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
-    volumes:
-      - ${BOCRA_DATA}/hosts:/etc/hosts
+    # volumes:
+    #   - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
       context: .
       dockerfile: Dockerfile.keycloak
@@ -241,8 +241,8 @@ services:
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
-    volumes:
-      - ${BOCRA_DATA}/hosts:/etc/hosts
+    # volumes:
+    #   - ${BOCRA_DATA}/hosts:/etc/hosts
     networks:
       bocraportal-public:
       bocra-network:
@@ -312,8 +312,8 @@ services:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
         IMAGE_VERSION: ${IMAGE_VERSION}
-    volumes:
-      - ${BOCRA_DATA}/hosts:/etc/hosts
+    # volumes:
+    #   - ${BOCRA_DATA}/hosts:/etc/hosts
     networks:
       bocraportal-public:
       bocra-network:
@@ -498,8 +498,8 @@ services:
       - "traefik.http.routers.cron-websecure.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/cron`)"
       - "traefik.http.routers.cron-websecure.tls=${SSL_SECURE}"
       - "traefik.http.routers.cron-websecure.tls.certresolver=le"
-    volumes:
-      - ${BOCRA_DATA}/hosts:/etc/hosts
+    # volumes:
+    #   - ${BOCRA_DATA}/hosts:/etc/hosts
     networks:
       bocraportal-public:
       bocra-network:
