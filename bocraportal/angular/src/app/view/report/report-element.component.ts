@@ -607,21 +607,13 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           label: changingCol?.name,
           elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
           position: gridDataRow[gridRow?.elementId].length,
-          value: undefined,
+          value: changingCol?.type === 'custom' ? source : undefined,
           source: []
         }
 
         gridDataRow[gridRow?.elementId].length++;
         this.periodLengths[changingCol?.tag] = gridDataRow[gridRow?.elementId].length;
       }
-
-      gridRow[colAlphabet] = {
-        period: changingCol?.tag,
-        label: changingCol?.name,
-        elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
-        value: changingCol?.type === 'custom' ? source : undefined,
-        source: [],
-      };
 
       let cell: any = gridDataRow[gridRow?.elementId][changingCol?.name];
 
@@ -635,8 +627,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
       if (changingCol?.type === 'custom') {
         Object.keys(gridRow)?.forEach((rk) => {
-          if (cell.value.includes(`[${rk}]`)) {
-            cell.value = cell.value.replaceAll(`[${rk}]`, gridRow[rk].value);
+          if (cell?.value.includes(`[${rk}]`)) {
+            cell.value = cell.value.replaceAll(`[${rk}]`, gridRow[rk].value && gridRow[rk].value !== null ? gridRow[rk].value : 0);
           }
         });
       }
@@ -645,7 +637,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         changingCol?.type === 'custom'
           ? math.evaluate(cell.value)
           : this.calculate(
-            cell.source?.map((src: any) => src?.value),
+            cell.source?.map((src: any) => src?.value && src?.value !== null ? src?.value : 0),
             changingCol?.type
           )
       );
@@ -903,7 +895,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
             changingRow?.type === 'custom'
               ? math.evaluate(gridCell.source)
               : this.calculate(
-                t?.map((src: any) => src?.value),
+                t?.map((src: any) => src?.value && src?.value !== null ? src?.value : 0),
                 changingRow?.type
               )
           );
@@ -1050,7 +1042,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   licenseeSelectionChange(event: any, j: number) {
-    console.log(this.grid);
 
     this.selectionChange(event, j, this.licenseeSelections, this.licenseeSelectionsArray, this.selectedLicensees);
 

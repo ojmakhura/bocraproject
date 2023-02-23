@@ -192,6 +192,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getChartImageData(): any {
+    
     if(this.chartType === 'table') {
       return {
         caption: this.chartCaption,
@@ -199,7 +200,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         type: this.chartType,
         tableData: {
           labels: ['', ...this.labelNames],
-          data: this.datasets
+          data: this.datasets?.map(d => [d.label, ...d?.data])
         },
       };
 
