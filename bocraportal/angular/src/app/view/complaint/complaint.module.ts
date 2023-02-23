@@ -27,6 +27,7 @@ import { NgChartsModule } from 'ng2-charts';
 import 'chart.js';
 import { complaintTypeFeature } from '@app/store/complaint/type/complaint-type.reducers';
 import { ComplaintTypeEffects } from '@app/store/complaint/type/complaint-type.effects';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { ComplaintTypeEffects } from '@app/store/complaint/type/complaint-type.e
     MaterialModule,
     CsvModule,
     ComplaintRoutingModule,
+    MatTableExporterModule,
     SharedModule,
     NgChartsModule,
     StoreModule.forFeature(complaintFeature),

@@ -25,14 +25,6 @@
           </select>
         </div>
       </div>
-      <!-- <div class="mb-3">
-				<label for="section">Form Section</label>
-				<select id="section" class="form-select" formControlName="section"
-						aria-label="Default select example" (change)="selectedFormSection()">
-					<option value="all">All</option>
-					<option *ngFor="let section of sections" value="{{ section.sectionId }}">{{section.sectionLabel}}</option>
-				</select>
-			</div> -->
       <div class="mb-3 row">
         <label for="chart-type" class="col-sm-2 col-form-label">Chart Type</label>
         <div class="col-sm-10">
@@ -73,7 +65,13 @@
       </div>
       <div *ngIf="chartType === 'pie'"></div>
       <div *ngIf="chartType === 'bar' || chartType === 'line'">
-        <canvas baseChart class="chart" [datasets]="datasets" [labels]="labelNames" [type]="chartType"> </canvas>
+        <canvas baseChart #chart id="chart" class="chart" [datasets]="datasets" [labels]="labelNames" [type]="chartType"> </canvas>
+      </div>
+      <div class="mb-3 row">
+        <label for="chart-label" class="col-sm-2 col-form-label">Caption</label>
+        <div class="col-sm-10">
+          <textarea type="text" id="chartCaption" class="form-control" name="chartCaption" formControlName="chartCaption" rows="6"></textarea>
+        </div>
       </div>
 
       <div class="col mb-3">
@@ -95,9 +93,6 @@
             />
           </svg>
         </button>
-        <!-- <button type="button" class="btn btn-primary" (click)="refreshColors()">
-					Colors
-				</button> -->
       </div>
     </form>
   </div>

@@ -173,12 +173,12 @@ services:
     command:
       - "start"
       - "--optimized"
-    # healthcheck:
-    #   test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
-    #   interval: 5s
-    #   timeout: 5s
-    #   retries: 3
-    #   start_period: 15s
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     # volumes:
     #   - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
@@ -188,7 +188,7 @@ services:
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
-      KC_DB_URL_HOST: ${POSTGRES_SERVER}
+      KC_DB_URL_HOST: db
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
       KC_METRICS_ENABLED: true
       KC_PROXY: edge
@@ -224,7 +224,6 @@ services:
     image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocraportal-api
     hostname: api
-
     healthcheck:
       test: "curl -m 5 --silent --fail --request GET http://localhost:8085/actuator/health | grep UP || exit 1"
       interval: 5s
@@ -234,21 +233,24 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      # keycloak:
-      #   condition: service_healthy
+      keycloak:
+        condition: service_healthy
     build:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
+    volumes:
+      - ${BOCRA_DATA}/hosts:/etc/hosts
     networks:
       bocraportal-public:
       bocra-network:
         ipv4_address: ${BOCRA_API_ADDRESS}
       default:
     environment:
-      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      POSTGRES_SERVER: ${DB_DOMAIN}
+      DB_DOMAIN: ${DB_DOMAIN}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -263,14 +265,14 @@ services:
       CERT_PASSWORD: ${CERT_PASSWORD}
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_HOST: rabbitmq
       RABBITMQ_DOMAIN: rabbitmq
       RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
+      BOCRA_COMPLAINT_ROLES: ${BOCRA_COMPLAINT_ROLES}
       API_LOG_LEVEL: ${API_LOG_LEVEL}
       WEB_URL: ${WEB_URL}
       COMM_URL: ${COMM_URL}
       TZ: Africa/Gaborone
-    
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api-web.rule=Host(`${API_DOMAIN}`)"
@@ -289,7 +291,7 @@ services:
     container_name: bocraportal-comm
     hostname: comm
     healthcheck:
-      test: "curl -m 5 --silent --fail --request GET http://localhost:8095/actuator/health | grep UP || exit 1"
+      test: "curl -m 5 --silent --fail --request GET http://localhost:${COMM_SERVER_PORT}/comm/actuator/health | grep UP || exit 1"
       interval: 5s
       timeout: 25s
       retries: 3
@@ -299,8 +301,8 @@ services:
         condition: service_healthy
       api:
         condition: service_healthy
-      # keycloak:
-      #   condition: service_healthy
+      keycloak:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
     build:
@@ -310,6 +312,8 @@ services:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
         IMAGE_VERSION: ${IMAGE_VERSION}
+    # volumes:
+    #   - ${BOCRA_DATA}/hosts:/etc/hosts
     networks:
       bocraportal-public:
       bocra-network:
@@ -332,7 +336,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
       RABBITMQ_HOST: ${RABBITMQ_HOST}
-      RABBITMQ_DOMAIN: rabbitmq
+      RABBITMQ_DOMAIN: ${RABBITMQ_DOMAIN}
       RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
       COMM_LOG_LEVEL: ${COMM_LOG_LEVEL}
       WEB_URL: ${WEB_URL}
@@ -372,14 +376,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      # keycloak:
-      #   condition: service_healthy
+      keycloak:
+        condition: service_healthy
       api:
         condition: service_healthy
     networks:
       bocraportal-public:
       bocra-network:
-        ipv4_address: ${BOCRA_WEB_ADDRESS}
       default:
     environment:
       TZ: Africa/Gaborone
@@ -414,8 +417,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      # keycloak:
-      #   condition: service_healthy
+      keycloak:
+        condition: service_healthy
     networks:
       bocraportal-public:
       bocra-network:
@@ -434,10 +437,10 @@ services:
       - "traefik.http.routers.rabbitmq-websecure.tls=true"
       - "traefik.http.services.rabbitmq.loadbalancer.server.port=15672"
       #tcp
-      - "traefik.tcp.routers.rabbitmq-ingress.rule=HostSNI(`${RABBITMQ_DOMAIN}`)"
+      - "traefik.tcp.routers.rabbitmq-ingress.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.rabbitmq-ingress.entrypoints=rabbitmq"
       - "traefik.tcp.services.rabbitmq-ingress.loadbalancer.server.port=5672"
-      - "traefik.tcp.routers.rabbitmq-ingress.tls=true"
+      # - "traefik.tcp.routers.rabbitmq-ingress.tls=true"
 
   ###############################################################################
   # Cron job system
@@ -446,14 +449,14 @@ services:
     image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}"	
     build:
       context: .
-      dockerfile: bocraportal/cron/Dockerfile.native
+      dockerfile: bocraportal/cron/Dockerfile
       args:
         CERT: ${CERT}
         CERT_PASSWORD: ${CERT_PASSWORD}
         IMAGE_VERSION: ${IMAGE_VERSION}
     container_name: bocraportal-cron
     healthcheck:
-      test: "curl -m 5 --silent --fail --request GET http://localhost:8099/actuator/health | grep UP || exit 1"
+      test: "curl -m 5 --silent --fail --request GET http://localhost:${CRON_SERVER_PORT}/cron/actuator/health | grep UP || exit 1"
       interval: 5s
       timeout: 25s
       retries: 3
@@ -462,10 +465,10 @@ services:
       api:
         condition: service_healthy
     environment:
-      CRON_SERVER_PORT: ${CRON_SERVER_PORT}
-      CRON_LOG_LEVEL: ${CRON_LOG_LEVEL}
-      CRON_DB: ${CRON_DB}
       POSTGRES_SERVER: db
+      CRON_LOG_LEVEL: ${CRON_LOG_LEVEL}
+      CRON_SERVER_PORT: ${CRON_SERVER_PORT}
+      COMM_SERVER_PORT: ${COMM_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -477,6 +480,11 @@ services:
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
       CERT: ${CERT}
       CERT_PASSWORD: ${CERT_PASSWORD}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
+      COMM_LOG_LEVEL: ${COMM_LOG_LEVEL}
       WEB_URL: ${WEB_URL}
       COMM_URL: ${COMM_URL}
       API_URL: ${API_URL}
@@ -490,8 +498,8 @@ services:
       - "traefik.http.routers.cron-websecure.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/cron`)"
       - "traefik.http.routers.cron-websecure.tls=${SSL_SECURE}"
       - "traefik.http.routers.cron-websecure.tls.certresolver=le"
-    volumes:
-      - ${BOCRA_DATA}/cron/hosts:/etc/hosts
+    # volumes:
+    #   - ${BOCRA_DATA}/hosts:/etc/hosts
     networks:
       bocraportal-public:
       bocra-network:

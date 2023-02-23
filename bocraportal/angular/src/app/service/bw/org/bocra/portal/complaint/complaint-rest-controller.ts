@@ -6,6 +6,7 @@ import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-
 import { HttpClient } from '@angular/common/http';
 import { ComplaintSeachCriteria } from '@app/model/bw/org/bocra/portal/complaint/complaint-seach-criteria';
 import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo';
+import { ComplaintStatus } from '@model/bw/org/bocra/portal/complaint/complaint-status';
 
 @Injectable({
   providedIn: 'root',
@@ -66,5 +67,13 @@ export class ComplaintRestController {
 
   public search(criteria: ComplaintSeachCriteria | any): Observable<ComplaintVO[] | any[]> {
     return this.http.post<ComplaintVO[] | any[]>(`${this.path}/search`, criteria);
+  }
+
+  public assignToUser(complaintId: string, username: string): Observable<boolean | any> {
+    return this.http.get<boolean | any>(`${this.path}/assign?complaintId=${complaintId}&username=${username}`);
+  }
+
+  public updateStatus(complaintId: string, status: ComplaintStatus): Observable<boolean | any> {
+    return this.http.get<boolean | any>(`${this.path}/assign?complaintId=${complaintId}&status=${status}`);
   }
 }

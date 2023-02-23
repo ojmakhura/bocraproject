@@ -13,6 +13,10 @@ export const reportReducer = createReducer(
     ...state,
     reportElements: action.reportElements,
   })),
+  on(ReportActions.createReportSuccess, (state, action) => ({
+    ...state,
+    file: action.file,
+  })),
   on(ReportActions.setSubmissions, (state, action) => ({
     ...state,
     formSubmissions: action.formSubmissions,

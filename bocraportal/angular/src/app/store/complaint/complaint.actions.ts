@@ -4,6 +4,7 @@ import { DocumentVO } from '@app/model/bw/org/bocra/portal/document/document-vo'
 import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-reply-vo';
 import { ComplaintVO } from '@app/model/bw/org/bocra/portal/complaint/complaint-vo';
 import { ComplaintSeachCriteria } from '@app/model/bw/org/bocra/portal/complaint/complaint-seach-criteria';
+import { ComplaintStatus } from '@model/bw/org/bocra/portal/complaint/complaint-status';
 
 export enum ComplaintActionType {
   FIND_BY_ID = '[Complaint] Find By Id',
@@ -12,6 +13,10 @@ export enum ComplaintActionType {
   FIND_BY_COMPLAINT_ID_SUCCESS = '[Complaint] Find By Complaint Id Success',
   SAVE = '[Complaint] Save',
   SAVE_SUCCESS = '[Complaint] Save Success',
+  ASSIGN_TO_USER = '[Complaint] Assign to User',
+  ASSIGN_TO_USER_SUCCESS = '[Complaint] Assign to User Success',
+  UPDATE_STATUS = '[Complaint] Update status',
+  UPDATE_STATUS_SUCCESS = '[Complaint] Update Status Success',
   REMOVE = '[Complaint] Remove',
   REMOVE_SUCCESS = '[Complaint] Remove Success',
   GET_ALL = '[Complaint] Get All',
@@ -64,6 +69,26 @@ export const save = createAction(
 export const saveSuccess = createAction(
   ComplaintActionType.SAVE_SUCCESS,
   props<{ complaint: ComplaintVO | any; messages: any[]; success: boolean }>()
+);
+
+export const assignToUser = createAction(
+  ComplaintActionType.ASSIGN_TO_USER,
+  props<{ complaintId: string; username: string; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const assignToUserSuccess = createAction(
+  ComplaintActionType.ASSIGN_TO_USER_SUCCESS,
+  props<{ assigned: boolean; messages: any[]; success: boolean }>()
+);
+
+export const updateStatus = createAction(
+  ComplaintActionType.UPDATE_STATUS,
+  props<{ complaintId: string; status: ComplaintStatus; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const updateStatusSuccess = createAction(
+  ComplaintActionType.UPDATE_STATUS_SUCCESS,
+  props<{ updated: boolean; messages: any[]; success: boolean }>()
 );
 
 export const remove = createAction(

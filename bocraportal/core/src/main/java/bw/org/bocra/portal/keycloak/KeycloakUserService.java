@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -69,14 +70,45 @@ public class KeycloakUserService {
         return null;
     }
 
+    public UserVO findByUsername(String username) {
+
+        UsersResource usersResource = keycloakService.getUsersResource();
+        List<UserRepresentation> users = usersResource.search(username, true);
+
+        return CollectionUtils.isEmpty(users) ? null :  userRepresentationUserVO(users.get(0));
+    }
+
     public UserVO getLoggedInUser() {
 
         String userId = keycloakService.getSecurityContext().getToken().getSubject();
-    
+
         UsersResource usersResource = keycloakService.getUsersResource();
         UserRepresentation userRep = usersResource.get(userId).toRepresentation();
 
         return userRepresentationUserVO(userRep);
+    }
+
+    public Collection<UserVO> getUsersByRoles(String client, Set<String> roles) {
+
+        RolesResource rolesResource = keycloakService.getClientRolesResource(client);
+        return this.getRolesResourceUsers(rolesResource, roles);
+    }
+
+    private Collection<UserVO> getRolesResourceUsers(RolesResource rolesResource, Set<String> roles) {
+        Map<String, UserVO> users = new HashMap<>();
+        for (String role : roles) {
+            Set<UserVO> uvo = rolesResource.get(role).getRoleUserMembers().stream()
+                    .map(user -> userRepresentationUserVO(user)).collect(Collectors.toSet());
+
+            uvo.stream().forEach(user -> users.put(user.getUserId(), user));
+        }
+
+        return users.values();
+    }
+
+    public Collection<UserVO> getUsersByRoles(Set<String> roles) {
+        RolesResource rolesResource = keycloakService.getRealmRolesResource();
+        return this.getRolesResourceUsers(rolesResource, roles);
     }
 
     private UserRepresentation userVOUserRepresentation(UserVO user) {
@@ -140,14 +172,15 @@ public class KeycloakUserService {
         UserResource userResource = realmResource.users().get(userRepresentation.getId());
 
         Collection<ClientRepresentation> cReps = keycloakService.getClientsResource()
-                                                    .findByClientId(keycloakService.getAuthClient());
+                .findByClientId(keycloakService.getAuthClient());
 
-        if(CollectionUtils.isNotEmpty(cReps)) {
+        if (CollectionUtils.isNotEmpty(cReps)) {
 
             ClientRepresentation clientRepresentation = keycloakService.getClientsResource()
                     .findByClientId(keycloakService.getAuthClient()).get(0);
-    
-            for (RoleRepresentation roleRep : userResource.roles().clientLevel(clientRepresentation.getId()).listAll()) {
+
+            for (RoleRepresentation roleRep : userResource.roles().clientLevel(clientRepresentation.getId())
+                    .listAll()) {
                 user.getRoles().add(roleRep.getName());
             }
         }
@@ -157,7 +190,8 @@ public class KeycloakUserService {
 
     public Collection<UserVO> getLicenseeUsers(Long lisenseeId) {
 
-        List<UserRepresentation> userRep = keycloakService.getUsersResource().searchByAttributes("licenseeId:" + lisenseeId);
+        List<UserRepresentation> userRep = keycloakService.getUsersResource()
+                .searchByAttributes("licenseeId:" + lisenseeId);
 
         Collection<UserVO> users = new ArrayList<>();
 
@@ -171,10 +205,10 @@ public class KeycloakUserService {
 
     public boolean updateUserPassword(String userId, String newPassword) {
 
-        if(StringUtils.isNotBlank(userId)) {
+        if (StringUtils.isNotBlank(userId)) {
             userId = keycloakService.getSecurityContext().getToken().getSubject();
         }
-        
+
         UsersResource usersResource = keycloakService.getUsersResource();
         UserResource userResource = usersResource.get(userId);
         CredentialRepresentation credential = createCredential(CredentialRepresentation.PASSWORD, newPassword, false);
@@ -185,7 +219,7 @@ public class KeycloakUserService {
 
     public void updateUser(UserVO user) {
 
-        if(StringUtils.isNotBlank(user.getUserId())) {
+        if (StringUtils.isNotBlank(user.getUserId())) {
             UsersResource usersResource = keycloakService.getUsersResource();
             UserResource userResource = usersResource.get(user.getUserId());
 
@@ -198,16 +232,17 @@ public class KeycloakUserService {
             userResource.update(userRep);
         }
     }
-    
+
     public static String getCreatedId(Response response) {
         URI location = response.getLocation();
-        //if (!response.getStatusInfo().equals(Status.CREATED)) {
+        // if (!response.getStatusInfo().equals(Status.CREATED)) {
         if (response.getStatus() != HttpStatus.CREATED.value()) {
             StatusType statusInfo = response.getStatusInfo();
             response.bufferEntity();
             String body = response.readEntity(String.class);
             throw new WebApplicationException("Create method returned status "
-                    + statusInfo.getReasonPhrase() + " (Code: " + statusInfo.getStatusCode() + "); expected status: Created (201). Response body: " + body, response);
+                    + statusInfo.getReasonPhrase() + " (Code: " + statusInfo.getStatusCode()
+                    + "); expected status: Created (201). Response body: " + body, response);
         }
 
         if (location == null) {
@@ -228,7 +263,7 @@ public class KeycloakUserService {
 
             Response res = usersResource.create(userRepresentation);
 
-            if(res.getStatus() != HttpStatus.CREATED.value()) {
+            if (res.getStatus() != HttpStatus.CREATED.value()) {
                 return ResponseEntity.status(res.getStatus()).body(getCreatedId(res));
             }
 

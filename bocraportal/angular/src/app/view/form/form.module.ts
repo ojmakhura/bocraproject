@@ -29,6 +29,7 @@ import { sectorFormFeature } from '@app/store/sector/form/sector-form.reducers';
 import { SectorFormEffects } from '@app/store/sector/form/sector-form.effects';
 import { licenceTypeFormFeature } from '@app/store/licence/type/form/licence-type-form.reducers';
 import { LicenceTypeFormEffects } from '@app/store/licence/type/form/licence-type-form.effects';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { LicenceTypeFormEffects } from '@app/store/licence/type/form/licence-typ
     TranslateModule,
     SharedModule,
     FlexLayoutModule,
+    MatTableExporterModule,
     MaterialModule,
     CsvModule,
     FormRoutingModule,

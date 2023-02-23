@@ -11,7 +11,23 @@ export class ReportRestController {
 
   constructor(private http: HttpClient) {}
 
-  public createWordDocument(): Observable<string[][] | any[]> {
-    return this.http.get<string[][] | any[]>(`${this.path}/word`);
+  public createWordDocument(data: any): Observable<any> {
+    return this.http.post(`${this.path}/word`, data, { responseType: 'blob' });
+  }
+
+  public _createWordDocument(data: any, images: File[]): Observable<any> {
+    
+    let formData: FormData = new FormData();
+
+    formData.append('data', JSON.stringify(data));
+    images.forEach(image => {
+      formData.append('images', image)
+    })
+
+    return this.http.post(`${this.path}/create/word`, formData, { responseType: 'blob' });
+  }
+
+  public createComplaintReportWordDocument(data: any): Observable<any> {
+    return this.http.post(`${this.path}/complaint/word`, data, { responseType: 'blob' });
   }
 }

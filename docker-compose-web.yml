@@ -17,7 +17,7 @@ services:
       dockerfile: bocraportal/angular/Dockerfile
     container_name: bocra-web
     volumes:
-      - ${BOCRA_DATA}/web:/web
+      - ${BOCRA_DATA}/hosts:/etc/hosts
     depends_on:
       db:
         condition: service_healthy
@@ -28,7 +28,6 @@ services:
     networks:
       bocraportal-public:
       bocra-network:
-        ipv4_address: ${BOCRA_WEB_ADDRESS}
       default:
     environment:
       TZ: Africa/Gaborone
@@ -46,7 +45,8 @@ services:
         - "traefik.http.routers.bocra-web-https.rule=Host(`${WEB_DOMAIN}`)"
         - "traefik.http.routers.bocra-web-https.entrypoints=websecure"
         - "traefik.http.routers.bocra-web-https.tls=${SSL_SECURE}"
-        # - "traefik.http.routers.bocra-web.tls.certresolver=le"
+        - "traefik.http.routers.bocra-web.tls.certresolver=le"
+        # - "traefik.http.services.bocra-web.loadbalancer.server.port=80"
 
 ###############################################################################
 # Networks

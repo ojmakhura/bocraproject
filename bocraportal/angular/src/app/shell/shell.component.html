@@ -8,7 +8,7 @@
           <strong class="me-2">Online Portal</strong>
         </a>
         <button type="button" class="btn btn-outline-secondary" data-bs-toggle="offcanvas" data-bs-target="#sidenav"
-          aria-controls="sidenav" *ngIf="isLoggedIn | async">
+          aria-controls="sidenav" *ngIf="(isLoggedIn | async) || isMobile">
           <i class="fa fa-bars fa-lg"></i>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
@@ -25,7 +25,7 @@
 							<a class="nav-link" routerLink="active"><i class="fa fa-phone fa-lg" aria-hidden="true"
 									title="Contact Us"></i>&nbsp; Contact Us</a>
 						</li> -->
-						<li class="nav-item px-2">
+						<li class="nav-item px-2" *ngIf="(isLoggedIn | async) === false">
 							<a class="nav-link" routerLink="/complaint"><i class="fa fa-commenting fa-lg"
 									aria-hidden="false"></i>&nbsp; File A Complaint</a>
 						</li>
@@ -84,7 +84,7 @@
 
   <!-- Sidebar start -->
   <div class="offcanvas offcanvas-start bg-dark text-white" data-bs-scroll="true" tabindex="-1" id="sidenav"
-    aria-labelledby="sidenavLabel" *ngIf="isLoggedIn | async">
+    aria-labelledby="sidenavLabel">
     <div class="offcanvas-header text-white">
       <h5 class="offcanvas-title" id="sidenavLabel">My Dashboard</h5>
       <button type="button" class="btn btn-outline-secondary" aria-label="Close" data-bs-dismiss="offcanvas">
@@ -112,22 +112,11 @@
               <span class="ms-3">About Us</span>
             </a>
           </li>
-          <li class="nav-item px-2">
-            <a class="nav-link" routerLink="/complaint" data-bs-dismiss="offcanvas"><i class="fa fa-commenting fa-lg" aria-hidden="false"></i>&nbsp;
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/complaint" data-bs-dismiss="offcanvas"><i class="fa fa-commenting fa-lg"
+                aria-hidden="false"></i>&nbsp;
               <span class="ms-3">Complaints</span></a>
           </li>
-          <!-- <li class="nav-item" *ngIf="isMobile">
-						<a class="nav-link" routerLink="active" routerLinkActive="active" data-bs-dismiss="offcanvas"><i
-								class="fa fa-phone fa-lg" aria-hidden="true" title="Contact Us"></i>&nbsp;
-							<span class="ms-3">Contact Us</span>
-						</a>
-					</li> -->
-          <!-- <li class="nav-item" *ngIf="isMobile">
-            <a class="nav-link" routerLink="active" data-bs-dismiss="offcanvas"
-              ><i class="fa fa-bell fa-lg" aria-hidden="false"></i>&nbsp;
-              <span class="ms-3">Notifications</span>
-            </a>
-          </li> -->
         </ul>
       </nav>
     </div>

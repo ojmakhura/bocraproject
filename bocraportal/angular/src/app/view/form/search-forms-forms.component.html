@@ -2,19 +2,15 @@
 <div class="card-body">
   <div class="table table-striped">
     <div class="col my-3 view-buttons" *ngIf="formsDataSource.data.length > 0">
-      <a
-        type="button"
-        color="accent"
-        class="btn btn-primary"
-        csvLink
-        [data]="getFormsExportData()"
-        [filename]="'forms'"
-      >
-        CSV
-      </a>
+      <button type="button" class="btn btn-info" (click)="matTableExporter.exportTable('xlsx', {fileName:'documents', sheet: 'documents'})">XLSX</button>
+      <button type="button" class="btn btn-info" (click)="matTableExporter.exportTable('csv', {fileName:'documents'})">CSV</button>
+      <button type="button" class="btn btn-info" (click)="matTableExporter.exportTable('json', {fileName:'documents'})">JSON</button>
+      <button type="button" class="btn btn-info" (click)="matTableExporter.exportTable('txt', {fileName:'documents'})">Text</button>
     </div>
     <mat-table
       matSort
+      matTableExporter
+      #exporter="matTableExporter"
       [dataSource]="formsDataSource"
       #formsSort="matSort"
       class="table table-bordered table-striped"

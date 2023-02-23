@@ -5,27 +5,20 @@ services:
   ###############################################################################
   cron:
     image: "ojmakhura/${CRON_IMAGE_NAME}:${IMAGE_VERSION}"	
-    container_name: bocraportal-comm
-    hostname: cron
-    healthcheck:
-      test: "curl -m 5 --silent --fail --request GET http://localhost:8099/actuator/health | grep UP || exit 1"
-      interval: 5s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
+    # healthcheck:
+    #   test: "curl -m 5 --silent --fail --request GET https://${API_DOMAIN}/cron/actuator/health | grep UP || exit 1"
+    #   interval: 5s
+    #   timeout: 30s
+    #   retries: 3
+    #   start_period: 5s
     volumes:
       - ${BOCRA_DATA}/hosts:/etc/hosts
-    build:
-      context: .
-      dockerfile: bocraportal/cron/Dockerfile.native
-      args:
-        CERT: ${CERT}
-        CERT_PASSWORD: ${CERT_PASSWORD}
-        IMAGE_VERSION: ${IMAGE_VERSION}
     networks:
       bocraportal-public:
     environment:
-      POSTGRES_SERVER: ${BOCRA_DB_ADDRESS}
+      POSTGRES_SERVER: ${DB_HOST}
+      CRON_LOG_LEVEL: ${CRON_LOG_LEVEL}
+      CRON_SERVER_PORT: ${CRON_SERVER_PORT}
       COMM_SERVER_PORT: ${COMM_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -33,8 +26,8 @@ services:
       POSTGRES_DB: ${KEYCLOAK_DB}
       KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM}
-      KEYCLOAK_COMM_CLIENT: ${KEYCLOAK_COMM_CLIENT}
-      KEYCLOAK_COMM_CLIENT_SECRET: ${KEYCLOAK_COMM_CLIENT_SECRET}
+      KEYCLOAK_CRON_CLIENT: ${KEYCLOAK_CRON_CLIENT}
+      KEYCLOAK_CRON_CLIENT_SECRET: ${KEYCLOAK_CRON_CLIENT_SECRET}
       BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
       CERT: ${CERT}
       CERT_PASSWORD: ${CERT_PASSWORD}
@@ -62,8 +55,10 @@ services:
         - "traefik.http.routers.cron-websecure.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/cron`)"
         - "traefik.http.routers.cron-websecure.tls=${SSL_SECURE}"
         - "traefik.http.routers.cron-websecure.tls.certresolver=le"
+        - "traefik.http.services.cron.loadbalancer.server.port=${CRON_SERVER_PORT}"
 ###############################################################################
 # Networks
 ###############################################################################
 networks:
   bocraportal-public:
+    external: true

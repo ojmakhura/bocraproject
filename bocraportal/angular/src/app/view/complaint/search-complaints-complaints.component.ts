@@ -21,6 +21,7 @@ import { ComplaintReplyVO } from '@app/model/bw/org/bocra/portal/complaint/compl
 import { SearchComplaintsComponentImpl } from '@app/view/complaint/search-complaints.component.impl';
 import { ComplaintControllerImpl } from '@app/controller/complaint/complaint-controller.impl';
 import { KeycloakService } from 'keycloak-angular';
+import { MatTableExporterDirective } from 'mat-table-exporter';
 
 @Component({
   selector: 'search-complaints-complaints-base',
@@ -35,6 +36,7 @@ export abstract class SearchComplaintsComplaintsComponent implements OnInit, OnD
   complaintsDataSource = new MatTableDataSource<ComplaintVO>([]);
   @ViewChild('complaintsPaginator', { static: true }) complaintsPaginator: MatPaginator;
   @ViewChild('complaintsSort', { static: true }) complaintsSort: MatSort;
+  @ViewChild(MatTableExporterDirective) matTableExporter: MatTableExporterDirective;
 
   @Input() protected pageVariables: any;
   protected route: ActivatedRoute;

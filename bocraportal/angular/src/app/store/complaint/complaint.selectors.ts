@@ -22,6 +22,10 @@ export const selectCriteria = createSelector(selectComplaintState, (state: Compl
 
 export const selectComplaints = createSelector(selectComplaintState, (state: ComplaintState) => state.complaints);
 
+export const selectAssigned = createSelector(selectComplaintState, (state: ComplaintState) => state.assigned);
+
+export const selectUpdated = createSelector(selectComplaintState, (state: ComplaintState) => state.updated);
+
 export const selectLoggedInSearch = createSelector(
   selectComplaintState,
   (state: ComplaintState) => state.loggedInSearch
