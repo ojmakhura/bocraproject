@@ -41,14 +41,15 @@ import DataLabelsPlugin from 'chartjs-plugin-datalabels';
   template: '',
 })
 export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+  @ViewChild(BaseChartDirective)
+  chart!: BaseChartDirective;
 
   complaintsAnalysisForm: FormGroup | any;
   reportFilterForm = new FormGroup({
     report: new FormControl(''),
     chartType: new FormControl(''),
-    label: new FormControl(''),
-    caption: new FormControl('')
+    chartLabel: new FormControl(''),
+    chartCaption: new FormControl('')
   });
   hide: boolean = false;
   protected route: ActivatedRoute;

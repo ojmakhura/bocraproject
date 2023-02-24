@@ -12,11 +12,12 @@
           </button>
         </div>
         <div class="text-start mb-3">
-          <button class="btn btn-outline-primary me-2" type="submit"
-            (click)="newComplaint()" *ngIf="!loadNew && newUnrestricted">
+          <button class="btn btn-outline-primary me-2" type="submit" (click)="newComplaint()"
+            *ngIf="!loadNew && newUnrestricted">
             New Complaint
           </button>
-          <button class="btn btn-outline-primary" type="submit" (click)="load()" *ngIf="complaintId || loadNew && loadUnrestricted">
+          <button class="btn btn-outline-primary" type="submit" (click)="load()"
+            *ngIf="complaintId || loadNew && loadUnrestricted">
             Load Complaint
           </button>
         </div>
@@ -235,6 +236,18 @@
             : 'dd MMM yyyy
             HH:ss'
             }}</label>
+        </div>
+        <div class="mb-3">
+          <label id="complaintAssignedDate_label" class="col-sm-2 col-form-label" for="complaintAssignedDate"><span
+              translate>assigned.date</span></label>
+          <input type="date" id="complaintAssignedDate" class="form-control" formControlName="assignedDate"
+            navigator="true" showOn="button" />
+        </div>
+        <div class="mb-3">
+          <label id="complaintResolvedDate_label" class="col-sm-2 col-form-label" for="complaintResolvedDate"><span
+              translate>resolved.date</span></label>
+          <input type="date" id="complaintResolvedDate" class="form-control" formControlName="resolvedDate"
+            navigator="true" showOn="button" />
         </div>
         <div class="text-end mb-3">
           <button type="button" (click)="editComplaintSave()" (click)="scroll(target)" class="btn btn-outline-primary">

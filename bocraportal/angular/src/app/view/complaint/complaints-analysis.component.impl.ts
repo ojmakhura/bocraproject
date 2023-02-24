@@ -223,22 +223,25 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
 
   downloadFormReport() {
     let d: any = {};
-    d.label = this.reportFilterForm.value.label;
-    d.caption = this.reportFilterForm.value.caption;
-    d.reportElements = []
 
-    this.reportElementComponents.forEach(elementComponent => {
-      
-      d.reportElements.push({
-        charts: elementComponent.getChartImageData()
-      });
-    });
+    d = {
+      reportName: this.reportFilterForm.value.chartLabel,
+      images: [
+        {
+          label: this.reportFilterForm.value.chartLabel,
+          image: this.chart.toBase64Image(),
+          caption: this.reportFilterForm.value.chartCaption
+        }
+      ]
+    }
+    console.log(d);
+
     this.reportController.createComplaintReportWordDocument(d).subscribe(file => {
       if (file) {
 
         let blob: any = file as Blob;
         const url = window.URL.createObjectURL(blob);
-        saveAs(blob, `${d.label}.docx`);
+        saveAs(blob, `${d.reportName}.docx`);
       }
     });
   }
