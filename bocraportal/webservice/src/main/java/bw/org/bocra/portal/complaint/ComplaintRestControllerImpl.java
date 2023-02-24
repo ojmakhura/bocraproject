@@ -7,6 +7,7 @@ package bw.org.bocra.portal.complaint;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -397,14 +399,12 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                 ComplaintVO complaint = complaintService.findByComplaintId(complaintId);
 
                 String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
-                System.out.println(1);
                 String text = String.format(
                         emailTempate,
                         complaint.getFirstName() + " " + complaint.getSurname(),
                         complaint.getComplaintId(),
                         complaint.getLicensee().getLicenseeName(),
                         complaintUrl);
-                System.out.println(2);
 
                 this.sendComplaintMessage(complaint, "Complait reply received.", List.of(complaint.getEmail()), text,
                         reply.getReplyUser());
@@ -532,6 +532,33 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                     String.format("%s %s", loggedInUser.getFirstName(), loggedInUser.getUserId()));
 
             return response;
+        } catch (Exception e) {
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+
+                message = String.format("Complaint with complaint id %s not found.", complaintId);
+
+            } else if (e instanceof ComplaintServiceException || e.getCause() instanceof ComplaintServiceException) {
+                message = String.format("Complaint with complaint id %s not found.", complaintId);
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message, e);
+            return ResponseEntity.badRequest().body(message);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleUpdateStatus(String complaintId, ComplaintStatus status) {
+
+        try {
+            
+            Boolean updated = this.complaintService.updateStatus(complaintId, status);
+
+            return ResponseEntity.ok(updated);
+
         } catch (Exception e) {
             String message = e.getMessage();
             if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException

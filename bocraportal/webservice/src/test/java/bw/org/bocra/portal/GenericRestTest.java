@@ -117,9 +117,7 @@ public abstract class GenericRestTest<T, R extends JpaRepository, C, X> {
     public void findById() throws Exception {
 
         Collection<T> dummies = testData.generateSequentialData(1);
-        System.out.println("==============================");
-        System.out.println(dummies);
-
+        
         T obj = dummies.iterator().next();
 
         Method getId = obj.getClass().getDeclaredMethod("getId");

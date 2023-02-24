@@ -22,6 +22,7 @@ export interface ComplaintState {
   success: boolean;
   error: boolean;
   assigned: boolean;
+  updated: boolean;
   messages: string[];
   loggedInSearch: ComplaintSeachCriteria | any;
 }
@@ -43,5 +44,6 @@ export const initialState: ComplaintState = {
   complaintReplies: [],
   loggedInSearch: null,
   complaintId: '',
-  assigned: false
+  assigned: false,
+  updated: false
 };

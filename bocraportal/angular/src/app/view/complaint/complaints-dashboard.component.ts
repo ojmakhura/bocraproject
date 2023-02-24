@@ -91,7 +91,10 @@ export abstract class ComplaintsDashboardComponent implements OnInit, AfterViewI
     doNgAfterViewInit(): void {
         if (this.complaintsDataSource.length > 0) {
             for(let complaint of this.complaintsDataSource){
-                if(complaint.createdDate[0] === this.year){
+                
+                let createdYear = +complaint.createdDate?.substring(0, 4);
+                
+                if(createdYear === this.year){
                     this.complaintsFiltered.push(complaint);
                 }
             }

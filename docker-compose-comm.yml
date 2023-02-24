@@ -7,12 +7,12 @@ services:
     image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocraportal-comm
     hostname: comm
-    healthcheck:
-      test: "curl -m 5 --silent --fail --request GET http://localhost:8095/actuator/health | grep UP || exit 1"
-      interval: 5s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
+    # healthcheck:
+    #   test: "curl -m 5 --silent --fail --request GET https://${API_DOMAIN}/comm/actuator/health | grep UP || exit 1"
+    #   interval: 5s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 5s
     volumes:
       - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
@@ -25,7 +25,7 @@ services:
     networks:
       bocraportal-public:
     environment:
-      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      POSTGRES_SERVER: ${DB_HOST}
       COMM_SERVER_PORT: ${COMM_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -63,8 +63,10 @@ services:
         - "traefik.http.routers.comm-websecure.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
         - "traefik.http.routers.comm-websecure.tls=${SSL_SECURE}"
         - "traefik.http.routers.comm-websecure.tls.certresolver=le"
+        - "traefik.http.services.comm.loadbalancer.server.port=${COMM_SERVER_PORT}"
 ###############################################################################
 # Networks
 ###############################################################################
 networks:
   bocraportal-public:
+    external: true

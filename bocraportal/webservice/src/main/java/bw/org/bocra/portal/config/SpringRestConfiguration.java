@@ -21,6 +21,7 @@ public class SpringRestConfiguration {
     
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
+        
         return builder -> {
             builder.simpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             builder.serializers(new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));

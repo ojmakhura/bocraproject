@@ -245,7 +245,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     @Override
     public ResponseEntity<?> handleSearch(DocumentCriteria criteria) {
         try {
-            System.out.println(criteria);
+            
             if(criteria == null) {
                 return ResponseEntity.ok().body(documentService.getAll());
             }
@@ -287,7 +287,7 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
         try {
             logger.debug("Upload Complaint Document with name : " + fileName);
             AccessToken token = keycloakService.getSecurityContext().getToken();
-            System.out.println(file.getContentType());
+            
             DocumentVO document = new DocumentVO();
             document.setCreatedBy(token.getPreferredUsername());
             document.setCreatedDate(LocalDateTime.now());

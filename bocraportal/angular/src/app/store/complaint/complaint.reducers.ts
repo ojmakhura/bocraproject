@@ -63,6 +63,13 @@ export const complaintReducer = createReducer(
     error: false,
     messages: action.messages,
   })),
+  on(ComplaintActions.updateStatusSuccess, (state, action) => ({
+    ...state,
+    updated: action.updated,
+    success: action.success,
+    error: false,
+    messages: action.messages,
+  })),
   on(ComplaintActions.remove, (state, action) => ({
     ...state,
     loading: action.loading,

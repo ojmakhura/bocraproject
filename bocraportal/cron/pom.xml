@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>bw.org.bocra.portal</groupId>
 	<artifactId>bocraportal-cron</artifactId>
-	<version>0.9.1</version>
+	<version>0.9.3</version>
 	<name>BOCRA Online Portal Cron Module</name>
 	<description>BOCRA Online Portal Comm Module</description>
 	<properties>
@@ -19,7 +19,7 @@
 		<repackage.classifier />
 		<!-- <spring-native.version>0.12.1</spring-native.version> -->
 		<keycloak.version>20.0.2</keycloak.version>
-		<bocraportal.version>0.9.1</bocraportal.version>
+		<bocraportal.version>0.9.3</bocraportal.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -126,13 +126,13 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.19.0</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.graalvm.buildtools</groupId>
 			<artifactId>graalvm-reachability-metadata</artifactId>
-			<version>0.9.19</version>
+			<version>0.9.29</version>
 			<classifier>repository</classifier>
 			<type>zip</type>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
@@ -189,7 +189,7 @@
 					</image>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
 				<extensions>true</extensions>
@@ -217,7 +217,7 @@
 						<enabled>true</enabled>
 					</metadataRepository>
 				</configuration>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>org.hibernate.orm.tooling</groupId>
 				<artifactId>hibernate-enhance-maven-plugin</artifactId>

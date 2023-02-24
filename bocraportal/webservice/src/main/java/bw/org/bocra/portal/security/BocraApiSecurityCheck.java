@@ -1,6 +1,8 @@
 package bw.org.bocra.portal.security;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
@@ -49,10 +51,17 @@ public class BocraApiSecurityCheck {
             SimpleKeycloakAccount acc = (SimpleKeycloakAccount) authentication.getDetails();
             AccessToken token = acc.getKeycloakSecurityContext().getToken();
             Access access = token.getResourceAccess(token.getIssuedFor()); // Get the authenticated client
+            
+            Set<String> roles = access != null ? access.getRoles() : new HashSet<>();
+            if(roles == null) {
+                roles = token.getRealmAccess().getRoles();
+            } else {
+                roles.addAll(token.getRealmAccess().getRoles());
+            }
     
             for (Authorisation auth : auths) {
                 for(String role : auth.getRoles()) {
-                    if(access.getRoles().contains(role)) {
+                    if(roles.contains(role)) {
                         return true;
                     }
                 }

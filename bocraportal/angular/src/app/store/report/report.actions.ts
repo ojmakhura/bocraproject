@@ -5,6 +5,9 @@ import { createAction, props } from '@ngrx/store';
 export enum ReportActionType {
   REPORT_ADD_ELEMENT = '[Report] Add Report Element',
   REPORT_ADD_ELEMENT_SUCCESS = '[Report] Add Report Element Success',
+  CREATE_WORD_REPORT = '[Report] Create Word Report',
+  CREATE_REPORT_SUCCESS = '[Report] Create Report Success',
+  CREATE_COMPLAINT_WORD_REPORT = '[Report] Create Complaint Word Report',
   REPORT_SET_ELEMENTS = '[Report] Set Report Elements',
   REPORT_SET_ELEMENTS_SUCCESS = '[Report] Set Report Elements Success',
   REPORT_SET_SUBMISSIONS = '[Report] Set Form Submissions',
@@ -17,6 +20,21 @@ export enum ReportActionType {
 export const addElement = createAction(ReportActionType.REPORT_ADD_ELEMENT, props<{ reportElement: any }>());
 
 export const setElements = createAction(ReportActionType.REPORT_SET_ELEMENTS, props<{ reportElements: any[] }>());
+
+export const createWordReport = createAction(
+  ReportActionType.CREATE_WORD_REPORT,
+  props<{ data: any; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const createReportSuccess = createAction(
+  ReportActionType.CREATE_REPORT_SUCCESS,
+  props<{ file: any; success: boolean; messages: any[] }>()
+);
+
+export const createComplaintWordReport = createAction(
+  ReportActionType.CREATE_COMPLAINT_WORD_REPORT,
+  props<{ data: any; loading: boolean; loaderMessage: string | undefined }>()
+);
 
 export const reportReset = createAction(ReportActionType.REPORT_RESET);
 
