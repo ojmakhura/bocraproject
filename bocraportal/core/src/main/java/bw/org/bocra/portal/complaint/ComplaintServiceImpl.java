@@ -140,19 +140,19 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
 
         if (StringUtils.isNotBlank(criteria.getLicenseeName())) {
             if (spec == null)
-                spec = BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName",
+                spec = BocraportalSpecifications.findByJoinAttributeLike("licensee", "licenseeName",
                         criteria.getLicenseeName());
             else
-                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName",
+                spec = spec.and(BocraportalSpecifications.findByJoinAttributeLike("licensee", "licenseeName",
                         criteria.getLicenseeName()));
         }
 
         if (StringUtils.isNotBlank(criteria.getComplaintType())) {
             if (spec == null)
-                spec = BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName",
+                spec = BocraportalSpecifications.findByJoinAttributeLike("complaintType", "typeName",
                         criteria.getComplaintType());
             else
-                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName",
+                spec = spec.and(BocraportalSpecifications.findByJoinAttributeLike("complaintType", "typeName",
                         criteria.getComplaintType()));
         }
 
@@ -179,7 +179,7 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
                 spec =  BocraportalSpecifications.findByAttributeLessThan("createdDate",
                             criteria.getEndDate().plusDays(1).atStartOfDay());
             else
-                spec = spec.and( BocraportalSpecifications.findByAttributeGreaterThan("createdDate",
+                spec = spec.and( BocraportalSpecifications.findByAttributeLessThan("createdDate",
                                 criteria.getEndDate().plusDays(1).atStartOfDay()));
         }
 
