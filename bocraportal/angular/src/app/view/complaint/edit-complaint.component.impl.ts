@@ -197,6 +197,8 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
       complaintReplies: this.createComplaintReplyVOArray(complaint?.complaintReplies),
       createdDate: [{ value: complaint?.createdDate, disabled: false }],
       updatedDate: [{ value: complaint?.updatedDate, disabled: false }],
+      assignedDate: [{ value: complaint?.assignedDate, disabled: false }],
+      resolvedDate: [{ value: complaint?.resolvedDate, disabled: false }],
     });
   }
 
@@ -225,6 +227,7 @@ export class EditComplaintComponentImpl extends EditComplaintComponent {
 
   override beforeEditComplaintSave(form: EditComplaintSaveForm): void {
     if (this.complaintControl.valid) {
+      console.log(form.complaint);
       if (form.complaint.id) {
         form.complaint.updatedDate = new Date();
       } else {

@@ -229,7 +229,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
     this.afterOnInit();
   }
 
-  handleFormChanges(change: any): void {}
+  handleFormChanges(change: any): void { }
 
   editComplaintFormReset() {
     this.store.dispatch(ComplaintActions.complaintReset());
@@ -244,9 +244,9 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
     }
   }
 
-  afterOnInit(): void {}
+  afterOnInit(): void { }
 
-  doNgAfterViewInit(): void {}
+  doNgAfterViewInit(): void { }
 
   ngAfterViewInit() {
     this.doNgAfterViewInit();
@@ -276,12 +276,12 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   /**
    * This method may be overwritten
    */
-  beforeEditComplaintSave(form: EditComplaintSaveForm): void {}
+  beforeEditComplaintSave(form: EditComplaintSaveForm): void { }
 
   /**
    * This method may be overwritten
    */
-  afterEditComplaintSave(form: EditComplaintSaveForm): void {}
+  afterEditComplaintSave(form: EditComplaintSaveForm): void { }
 
   editComplaintSave(): void {
     let form: EditComplaintSaveForm = this.editComplaintSaveForm;
@@ -311,12 +311,12 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   /**
    * This method may be overwritten
    */
-  beforeEditComplaintDelete(form: EditComplaintDeleteForm): void {}
+  beforeEditComplaintDelete(form: EditComplaintDeleteForm): void { }
 
   /**
    * This method may be overwritten
    */
-  afterEditComplaintDelete(form: EditComplaintDeleteForm): void {}
+  afterEditComplaintDelete(form: EditComplaintDeleteForm): void { }
 
   editComplaintDelete(): void {
     let form: EditComplaintDeleteForm = this.editComplaintDeleteForm;
@@ -345,12 +345,12 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   /**
    * This method may be overwritten
    */
-  beforeEditComplaintSearch(form: EditComplaintSearchForm): void {}
+  beforeEditComplaintSearch(form: EditComplaintSearchForm): void { }
 
   /**
    * This method may be overwritten
    */
-  afterEditComplaintSearch(form: EditComplaintSearchForm): void {}
+  afterEditComplaintSearch(form: EditComplaintSearchForm): void { }
 
   editComplaintSearch(): void {
     let form: EditComplaintSearchForm = this.editComplaintSearchForm;
@@ -375,7 +375,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   /**
    * This method may be overwritten
    */
-  beforeEditComplaintNewDocument(form: EditComplaintNewDocumentForm): void {}
+  beforeEditComplaintNewDocument(form: EditComplaintNewDocumentForm): void { }
 
   /**
    * This method may be overwritten
@@ -391,7 +391,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   /**
    * This method may be overwritten
    */
-  afterEditComplaintNewDocument(form: EditComplaintNewDocumentForm, dialogData: any): void {}
+  afterEditComplaintNewDocument(form: EditComplaintNewDocumentForm, dialogData: any): void { }
 
   editComplaintNewDocument(): void {
     let form: EditComplaintNewDocumentForm = this.editComplaintNewDocumentForm;
@@ -421,7 +421,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   /**
    * This method may be overwritten
    */
-  beforeEditComplaintReply(form: EditComplaintReplyForm): void {}
+  beforeEditComplaintReply(form: EditComplaintReplyForm): void { }
 
   /**
    * This method may be overwritten
@@ -437,7 +437,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   /**
    * This method may be overwritten
    */
-  afterEditComplaintReply(form: EditComplaintReplyForm, dialogData: any): void {}
+  afterEditComplaintReply(form: EditComplaintReplyForm, dialogData: any): void { }
 
   editComplaintReply(): void {
     let form: EditComplaintReplyForm = this.editComplaintReplyForm;
@@ -465,7 +465,7 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
   /**
    * This method may be overwritten
    */
-  afterSetEditComplaintVarsForm(form: EditComplaintVarsForm): void {}
+  afterSetEditComplaintVarsForm(form: EditComplaintVarsForm): void { }
 
   setEditComplaintVarsForm(form: EditComplaintVarsForm) {
     this.editComplaintVarsFormControl.setControl('complaint', this.createComplaintForm(form.complaint));
@@ -490,6 +490,8 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
       complaintReplies: this.createComplaintReplyVOArray(complaint?.complaintReplies),
       createdDate: [{ value: complaint?.createdDate, disabled: false }],
       updatedDate: [{ value: complaint?.updatedDate, disabled: false }],
+      assignedDate: [{ value: complaint?.assignedDate, disabled: false }],
+      resolvedDate: [{ value: complaint?.resolvedDate, disabled: false }],
     });
   }
 
@@ -533,11 +535,11 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
     return this.complaintComplaintTypeControl.value;
   }
 
-  complaintComplaintTypeAddDialog(): void {}
+  complaintComplaintTypeAddDialog(): void { }
 
-  complaintComplaintTypeSearch(): void {}
+  complaintComplaintTypeSearch(): void { }
 
-  handleComplaintComplaintTypeSelected(event: MatRadioChange, data: ComplaintTypeVO): void {}
+  handleComplaintComplaintTypeSelected(event: MatRadioChange, data: ComplaintTypeVO): void { }
 
   complaintComplaintTypeSelected(event: MatRadioChange, data: ComplaintTypeVO): void {
     this.complaintComplaintTypeSelect = data;
@@ -564,11 +566,11 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
     return this.complaintLicenseeControl.value;
   }
 
-  complaintLicenseeAddDialog(): void {}
+  complaintLicenseeAddDialog(): void { }
 
-  complaintLicenseeSearch(): void {}
+  complaintLicenseeSearch(): void { }
 
-  handleComplaintLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {}
+  handleComplaintLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void { }
 
   complaintLicenseeSelected(event: MatRadioChange, data: LicenseeVO): void {
     this.complaintLicenseeSelect = data;
@@ -643,20 +645,20 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
     return this.complaintDocumentsControl.value;
   }
 
-  complaintDocumentsAddDialog(): void {}
+  complaintDocumentsAddDialog(): void { }
 
-  complaintDocumentsSearch(): void {}
+  complaintDocumentsSearch(): void { }
 
-  handleDeleteFromComplaintDocuments(documents: DocumentVO): void {}
+  handleDeleteFromComplaintDocuments(documents: DocumentVO): void { }
 
   deleteFromComplaintDocuments(index: number) {
     this.handleDeleteFromComplaintDocuments(this.complaintDocuments[index]);
     this.complaintDocumentsControl.removeAt(index);
   }
 
-  doEditComplaintDocuments(documents: DocumentVO) {}
+  doEditComplaintDocuments(documents: DocumentVO) { }
 
-  handleComplaintDocumentsSelected(event: MatCheckboxChange, data: DocumentVO): void {}
+  handleComplaintDocumentsSelected(event: MatCheckboxChange, data: DocumentVO): void { }
 
   complaintDocumentsSelected(event: MatCheckboxChange, data: DocumentVO): void {
     if (event.checked) {
@@ -696,20 +698,20 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
     return this.complaintComplaintRepliesControl.value;
   }
 
-  complaintComplaintRepliesAddDialog(): void {}
+  complaintComplaintRepliesAddDialog(): void { }
 
-  complaintComplaintRepliesSearch(): void {}
+  complaintComplaintRepliesSearch(): void { }
 
-  handleDeleteFromComplaintComplaintReplies(complaintReplies: ComplaintReplyVO): void {}
+  handleDeleteFromComplaintComplaintReplies(complaintReplies: ComplaintReplyVO): void { }
 
   deleteFromComplaintComplaintReplies(index: number) {
     this.handleDeleteFromComplaintComplaintReplies(this.complaintComplaintReplies[index]);
     this.complaintComplaintRepliesControl.removeAt(index);
   }
 
-  doEditComplaintComplaintReplies(complaintReplies: ComplaintReplyVO) {}
+  doEditComplaintComplaintReplies(complaintReplies: ComplaintReplyVO) { }
 
-  handleComplaintComplaintRepliesSelected(event: MatCheckboxChange, data: ComplaintReplyVO): void {}
+  handleComplaintComplaintRepliesSelected(event: MatCheckboxChange, data: ComplaintReplyVO): void { }
 
   complaintComplaintRepliesSelected(event: MatCheckboxChange, data: ComplaintReplyVO): void {
     if (event.checked) {
@@ -755,6 +757,22 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
 
   get complaintUpdatedDate(): Date {
     return this.complaintUpdatedDateControl.value;
+  }
+
+  get complaintAssignedDateControl(): FormControl {
+    return this.complaintControl.get('assignedDate') as FormControl;
+  }
+
+  get complaintAssignedDate(): Date {
+    return this.complaintAssignedDateControl.value;
+  }
+
+  get complaintResolvedDateControl(): FormControl {
+    return this.complaintControl.get('resolvedDate') as FormControl;
+  }
+
+  get complaintResolvedDate(): Date {
+    return this.complaintResolvedDateControl.value;
   }
 
   getItemControl(name: string): FormControl {
@@ -835,6 +853,8 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
       assignedTo: [value?.assignedTo],
       createdDate: [value?.createdDate],
       updatedDate: [value?.updatedDate],
+      assignedDate: [value?.assignedDate],
+      resolvedDate: [value?.resolvedDate],
     });
   }
 
@@ -933,11 +953,11 @@ export abstract class EditComplaintComponent implements OnInit, AfterViewInit, O
     });
   }
 
-  licenseeUserAddDialog(): void {}
+  licenseeUserAddDialog(): void { }
 
-  licenseeUsersSearch(): void {}
+  licenseeUsersSearch(): void { }
 
-  handleLicenseeUserSelected(event: MatRadioChange, data: UserVO): void {}
+  handleLicenseeUserSelected(event: MatRadioChange, data: UserVO): void { }
 
   licenseeUserSelected(event: MatRadioChange, data: UserVO): void {
     this.licenseeUserSelect = data.username;

@@ -23,19 +23,14 @@
         </div>
       </div>
       <div class="mb-3" *ngIf="!(isLoggedIn | async)">
-        <label id="criteria_label" class="col-sm-2 col-form-label" for="criteria"
-          ><span translate>Complaint ID</span>*</label
-        >
+        <label id="criteria_label" class="col-sm-2 col-form-label" for="criteria"><span translate>Complaint
+            ID</span>*</label>
         <input type="text" id="criteria" class="form-control" name="criteria" formControlName="criteria" required />
-        <div
-          *ngIf="
+        <div *ngIf="
             searchComplaintsForm.invalid &&
             criteriaControl.invalid &&
             (criteriaControl.dirty || criteriaControl.touched)
-          "
-          class="alert alert-danger"
-          role="alert"
-        >
+          " class="alert alert-danger" role="alert">
           <div *ngIf="criteriaControl.errors['required']">
             <span translate>criteria.required</span>
           </div>
@@ -43,9 +38,8 @@
       </div>
       <div formGroupName="loggedInSearch" *ngIf="isLoggedIn | async">
         <div class="mb-3">
-          <label id="loggedInSearchStatus_label" class="col-sm-2 col-form-label" for="loggedInSearchStatus"
-            ><span translate>status</span></label
-          >
+          <label id="loggedInSearchStatus_label" class="col-sm-2 col-form-label" for="loggedInSearchStatus"><span
+              translate>status</span></label>
           <select id="loggedInSearchStatus" class="form-select" formControlName="status">
             <option></option>
             <option *ngFor="let key of statusOptions" [value]="key">
@@ -54,61 +48,55 @@
           </select>
         </div>
         <div class="mb-3">
-          <label id="loggedInSearchSurname_label" class="col-sm-2 col-form-label" for="loggedInSearchSurname"
-            ><span translate>surname</span></label
-          >
+          <label id="loggedInSearchSurname_label" class="col-sm-2 col-form-label" for="loggedInSearchSurname"><span
+              translate>surname</span></label>
           <input type="text" id="loggedInSearchSurname" class="form-control" name="surname" formControlName="surname" />
         </div>
         <div class="mb-3">
-          <label id="loggedInSearchEmail_label" class="col-sm-2 col-form-label" for="loggedInSearchEmail"
-            ><span translate>email</span></label
-          >
+          <label id="loggedInSearchEmail_label" class="col-sm-2 col-form-label" for="loggedInSearchEmail"><span
+              translate>email</span></label>
           <input type="text" id="loggedInSearchEmail" class="form-control" name="email" formControlName="email" />
         </div>
         <div class="mb-3">
-          <label id="loggedInSearchSubject_label" class="col-sm-2 col-form-label" for="loggedInSearchSubject"
-            ><span translate>subject</span></label
-          >
+          <label id="loggedInSearchSubject_label" class="col-sm-2 col-form-label" for="loggedInSearchSubject"><span
+              translate>subject</span></label>
           <input type="text" id="loggedInSearchSubject" class="form-control" name="subject" formControlName="subject" />
         </div>
         <div class="mb-3">
-          <label id="loggedInSearchComplaintId_label" class="col-sm-2 col-form-label" for="loggedInSearchComplaintId"
-            ><span translate>complaint.id</span></label
-          >
-          <input
-            type="text"
-            id="loggedInSearchComplaintId"
-            class="form-control"
-            name="complaintId"
-            formControlName="complaintId"
-          />
+          <label id="loggedInSearchComplaintId_label" class="col-sm-2 col-form-label"
+            for="loggedInSearchComplaintId"><span translate>complaint.id</span></label>
+          <input type="text" id="loggedInSearchComplaintId" class="form-control" name="complaintId"
+            formControlName="complaintId" />
         </div>
         <div class="mb-3">
-          <label id="loggedInSearchLicenseeName_label" class="col-sm-2 col-form-label" for="loggedInSearchLicenseeName"
-            ><span translate>licensee.name</span></label
-          >
-          <input
-            type="text"
-            id="loggedInSearchLicenseeName"
-            class="form-control"
-            name="licenseeName"
-            formControlName="licenseeName"
-          />
+          <label id="loggedInSearchLicenseeName_label" class="col-sm-2 col-form-label"
+            for="loggedInSearchLicenseeName"><span translate>licensee.name</span></label>
+          <input type="text" id="loggedInSearchLicenseeName" class="form-control" name="licenseeName"
+            formControlName="licenseeName" />
         </div>
         <div class="mb-3">
-          <label
-            id="loggedInSearchComplaintTypeName_label"
-            class="col-sm-2 col-form-label"
-            for="loggedInSearchComplaintTypeName"
-            ><span>Complaint Type Name</span></label
-          >
-          <input
-            type="text"
-            id="loggedInSearchComplaintTypeName"
-            class="form-control"
-            name="complaintTypeName"
-            formControlName="complaintTypeName"
-          />
+          <label id="loggedInSearchComplaintTypeName_label" class="col-sm-2 col-form-label"
+            for="loggedInSearchComplaintTypeName"><span>Complaint Type Name</span></label>
+          <input type="text" id="loggedInSearchComplaintTypeName" class="form-control" name="complaintTypeName"
+            formControlName="complaintTypeName" />
+        </div>
+        <div class="mb-3">
+          <label id="loggedInSearchStartDate_label" class="col-sm-2 col-form-label" for="loggedInSearchStartDate"><span
+              translate>start.date</span></label>
+          <input type="date" id="loggedInSearchStartDate" class="form-control" formControlName="startDate"
+            navigator="true" showOn="button" />
+        </div>
+        <div class="mb-3">
+          <label id="loggedInSearchEndDate_label" class="col-sm-2 col-form-label" for="loggedInSearchEndDate"><span
+              translate>end.date</span></label>
+          <input type="date" id="loggedInSearchEndDate" class="form-control" formControlName="endDate" navigator="true"
+            showOn="button" />
+        </div>
+        <div class="mb-3">
+          <label id="loggedInSearchPastDays_label" class="col-sm-2 col-form-label" for="loggedInSearchPastDays"><span
+              translate>past.days</span></label>
+          <input type="number" id="loggedInSearchPastDays" class="form-control" name="pastDays"
+            formControlName="pastDays" />
         </div>
       </div>
       <div class="text-end mb-3">
