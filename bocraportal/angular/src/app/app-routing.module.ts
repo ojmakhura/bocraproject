@@ -104,8 +104,8 @@ const routes: Routes = [
       loadChildren: async () => (await import('@app/view/shareholder/shareholder.module')).ShareholderModule
     },
     {
-      path: 'complaint/type', 
-      loadChildren: async () => (await import('@app/view/config/complaint-type.module')).ComplaintTypeModule
+      path: 'config', 
+      loadChildren: async () => (await import('@app/view/config/system-config.module')).SystemConfigModule
     },
   ]),
   // Fallback when no prior route is matched

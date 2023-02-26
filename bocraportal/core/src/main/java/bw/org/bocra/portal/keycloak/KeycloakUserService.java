@@ -20,6 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RolesResource;
+import org.keycloak.admin.client.resource.RoleResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.ClientMappingsRepresentation;
@@ -134,10 +135,7 @@ public class KeycloakUserService {
         }
 
         if (CollectionUtils.isNotEmpty(user.getRoles())) {
-
-            Map<String, List<String>> roles = new HashMap<>();
-            roles.put(findAuthenticatedClientResource().getId(), (List<String>) user.getRoles());
-            userRepresentation.setClientRoles(roles);
+            userRepresentation.setRealmRoles(user.getRoles().stream().collect(Collectors.toList()));
         }
 
         return userRepresentation;
@@ -179,7 +177,7 @@ public class KeycloakUserService {
             ClientRepresentation clientRepresentation = keycloakService.getClientsResource()
                     .findByClientId(keycloakService.getAuthClient()).get(0);
 
-            for (RoleRepresentation roleRep : userResource.roles().clientLevel(clientRepresentation.getId())
+            for (RoleRepresentation roleRep : userResource.roles().realmLevel()
                     .listAll()) {
                 user.getRoles().add(roleRep.getName());
             }
@@ -278,9 +276,9 @@ public class KeycloakUserService {
             List<RoleRepresentation> roleReps = new ArrayList<>();
 
             for (String role : user.getRoles()) {
-                RolesResource rolesResource = keycloakService
-                        .getClientRolesResource(findAuthenticatedClientResource().getId());
-
+                RolesResource rolesResource = keycloakService.getRealmRolesResource();
+                rolesResource.get(role);
+                
                 RoleRepresentation roleRep = rolesResource.get(role).toRepresentation();
                 if (StringUtils.isNotBlank(roleRep.getId())) {
                     roleReps.add(roleRep);
@@ -288,7 +286,7 @@ public class KeycloakUserService {
             }
 
             if (CollectionUtils.isNotEmpty(roleReps)) {
-                userResource.roles().clientLevel(findAuthenticatedClientResource().getId()).add(roleReps);
+                userResource.roles().realmLevel().add(roleReps);
             }
 
         } else {
@@ -349,7 +347,7 @@ public class KeycloakUserService {
     public UserVO addClientRoles(String clientId, Set<String> roles, String userId) {
         List<RoleRepresentation> roleReps = new ArrayList<>();
         UserResource userResource = keycloakService.getUsersResource().get(userId);
-        RolesResource rolesResource = keycloakService.getClientRolesResource(clientId);
+        RolesResource rolesResource = keycloakService.getRealmRolesResource();
         UserRepresentation rep = userResource.toRepresentation();
 
         if (StringUtils.isBlank(rep.getId())) {

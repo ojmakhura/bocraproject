@@ -9,10 +9,18 @@
 package bw.org.bocra.portal.config;
 
 import java.util.Collection;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.BocraportalSpecifications;
 
 /**
  * @see bw.org.bocra.portal.config.SystemConfigService
@@ -23,13 +31,13 @@ public class SystemConfigServiceImpl
     extends SystemConfigServiceBase
 {
     public SystemConfigServiceImpl(
-        SystemConfigDao systemConfig,
+        SystemConfigDao systemConfigDao,
         SystemConfigRepository systemConfigRepository,
         MessageSource messageSource
     ) {
         
         super(
-            systemConfig,
+            systemConfigDao,
             systemConfigRepository,
             messageSource
         );
@@ -42,8 +50,7 @@ public class SystemConfigServiceImpl
     protected SystemConfigVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  SystemConfigVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.config.SystemConfigService.handleFindById(Long id) Not implemented!");
+        return systemConfigDao.toSystemConfigVO(systemConfigRepository.getReferenceById(id));
     }
 
     /**
@@ -53,8 +60,8 @@ public class SystemConfigServiceImpl
     protected SystemConfigVO handleSave(SystemConfigVO systemConfig)
         throws Exception
     {
-        // TODO implement protected  SystemConfigVO handleSave(SystemConfigVO systemConfig)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.config.SystemConfigService.handleSave(SystemConfigVO systemConfig) Not implemented!");
+        SystemConfig config = systemConfigDao.systemConfigVOToEntity(systemConfig);
+        return systemConfigDao.toSystemConfigVO(systemConfigRepository.save(config));
     }
 
     /**
@@ -64,8 +71,9 @@ public class SystemConfigServiceImpl
     protected boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.config.SystemConfigService.handleRemove(Long id) Not implemented!");
+
+        systemConfigRepository.deleteById(id);
+        return true;
     }
 
     /**
@@ -75,8 +83,7 @@ public class SystemConfigServiceImpl
     protected Collection<SystemConfigVO> handleGetAll()
         throws Exception
     {
-        // TODO implement protected  Collection<SystemConfigVO> handleGetAll()
-        throw new UnsupportedOperationException("bw.org.bocra.portal.config.SystemConfigService.handleGetAll() Not implemented!");
+        return systemConfigDao.toSystemConfigVOCollection(systemConfigRepository.findAll());
     }
 
     /**
@@ -86,8 +93,13 @@ public class SystemConfigServiceImpl
     protected Collection<SystemConfigVO> handleSearch(String criteria)
         throws Exception
     {
-        // TODO implement protected  Collection<SystemConfigVO> handleSearch(String criteria)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.config.SystemConfigService.handleSearch(String criteria) Not implemented!");
+
+        if(StringUtils.isAllBlank(null))
+            return this.getAll();
+
+        Specification<SystemConfig> specs = BocraportalSpecifications.findByAttributeLikeIgnoreCase("name", criteria);
+
+        return systemConfigDao.toSystemConfigVOCollection(systemConfigRepository.findAll(specs, Sort.by("name").ascending()));
     }
 
     /**
@@ -97,8 +109,10 @@ public class SystemConfigServiceImpl
     protected Collection<SystemConfigVO> handleGetAll(Integer pageNumber, Integer pageSize)
         throws Exception
     {
-        // TODO implement protected  Collection<SystemConfigVO> handleGetAll(Integer pageNumber, Integer pageSize)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.config.SystemConfigService.handleGetAll(Integer pageNumber, Integer pageSize) Not implemented!");
+
+        Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by("name").ascending());
+        
+        return systemConfigDao.toSystemConfigVOCollection(systemConfigRepository.findAll(page).getContent());
     }
 
 }
