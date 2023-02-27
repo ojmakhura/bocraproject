@@ -1,0 +1,64 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # Keycloak authentication server
+  ###############################################################################
+  keycloak:
+    #image: ${KEYCLOAK_REGISTRY_IMAGE}
+    image: 192.168.10.155:5000/keycloak:latest
+    hostname: keycloak
+    command:
+      - "start"
+      - "--optimized"
+    #healthcheck:
+     #test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
+     #interval: 5s
+     #timeout: 5s
+     #retries: 3
+     #start_period: 15s
+    build:
+      context: .
+      dockerfile: Dockerfile.keycloak
+    #volumes:
+      #- ${BOCRA_DATA}/hosts:/etc/hosts
+    environment:
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
+      KC_DB_URL_HOST: db
+      KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
+      KC_METRICS_ENABLED: "true"
+      KC_PROXY: edge
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      PROXY_ADDRESS_FORWARDING: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      TZ: Africa/Gaborone
+    networks:
+      traefik-public:
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocraportal_keycloak == true
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-public"
+        - "traefik.constraint-label=traefik-public"
+        - "traefik.http.routers.keycloak-http.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+        - "traefik.http.routers.keycloak-http.entrypoints=web"
+        - "traefik.http.routers.keycloak-http.middlewares=https-redirect"
+        - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+        - "traefik.http.routers.keycloak-https.entrypoints=websecure"
+        - "traefik.http.routers.keycloak-https.rule=Host(`${KEYCLOAK_DOMAIN}`)"
+        - "traefik.http.routers.keycloak-https.tls=${SSL_SECURE}"
+        #- "traefik.http.routers.keycloak-https.tls.certresolver=le"
+
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  traefik-public:
+    external: true
+

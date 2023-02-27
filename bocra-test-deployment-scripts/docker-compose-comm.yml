@@ -1,0 +1,83 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # The Communication API 
+  ###############################################################################
+  comm:
+    #image: "ojmakhura/${COMM_IMAGE_NAME}:${IMAGE_VERSION}${IMAGE_VERSION_SUFFIX}"
+    image: ojmakhura/bocraportal-comm:0.9.2
+    container_name: bocraportal-comm
+    hostname: comm
+
+    #healthcheck:
+      #test: "curl -m 5 --silent --fail --request GET http://localhost:8095/actuator/health | grep UP || exit 1"
+      #interval: 5s
+      #timeout: 25s
+      #retries: 3
+      #start_period: 5s
+    #depends_on:
+      #db:
+        #condition: service_healthy
+      #api:
+        #condition: service_healthy
+      #keycloak:
+        #condition: service_healthy
+      # rabbitmq:
+    build:
+      context: .
+      dockerfile: bocraportal/comm/Dockerfile
+      args:
+        CERT: ${CERT}
+        CERT_PASSWORD: ${CERT_PASSWORD}
+    networks:
+      traefik-public:
+      #bocra-network:
+        #ipv4_address: ${BOCRA_COMM_ADDRESS}
+      default:
+    environment:
+      POSTGRES_SERVER: db 
+      COMM_SERVER_PORT: ${COMM_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${KEYCLOAK_DB}
+      KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_COMM_CLIENT: ${KEYCLOAK_COMM_CLIENT:-bocraportal-comm}
+      KEYCLOAK_COMM_CLIENT_SECRET: ${KEYCLOAK_COMM_CLIENT_SECRET:-T5aWx35Rgo4wN6c9EsPLlOXPNg5nqMmW}
+      BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
+      CERT: ${CERT}
+      CERT_PASSWORD: ${CERT_PASSWORD}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_HOST: 192.168.10.100
+      RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
+      COMM_LOG_LEVEL: ${COMM_LOG_LEVEL}
+      WEB_URL: ${WEB_URL}
+      COMM_URL: ${COMM_URL}
+      API_URL: ${API_URL}
+      TZ: Africa/Gaborone
+    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.constraint-label=traefik-public"
+      - "traefik.http.routers.comm.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+      - "traefik.http.routers.comm.rule=Host(`${API_DOMAIN}`) && PathPrefix(`/comm`)"
+      - "traefik.http.routers.comm.tls=${SSL_SECURE}"
+      #- "traefik.http.routers.comm.tls.certresolver=le"
+
+
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocraportal_api == true
+
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  traefik-public:
+    external: true
