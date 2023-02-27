@@ -10,6 +10,7 @@ export interface ReportState {
   formSubmissions: FormSubmissionVO[];
   criteria: FormSubmissionCriteria;
   loaderMessage: string | undefined;
+  file: Blob | any;
   loading: boolean;
   success: boolean;
   error: boolean;
@@ -25,4 +26,5 @@ export const initialState: ReportState = {
   reportElements: [],
   formSubmissions: [],
   criteria: new FormSubmissionCriteria(),
+  file: undefined
 };

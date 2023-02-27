@@ -6,12 +6,11 @@
 package bw.org.bocra.portal.report;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -19,17 +18,14 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.imageio.ImageIO;
-import javax.xml.bind.DatatypeConverter;
-
-import org.apache.poi.util.Units;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -40,6 +36,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -49,8 +46,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.jsonwebtoken.impl.Base64Codec;
 
 @RestController
 @RequestMapping("/report")
@@ -74,7 +69,6 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
         try {
             XWPFDocument document = new XWPFDocument();
 
-            System.out.println(content.entrySet());
             String formName = content.get("formName").toString();
 
             XWPFParagraph title = document.createParagraph();
@@ -89,15 +83,6 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
                 ArrayList<HashMap> charts = (ArrayList<HashMap>) element.get("charts");
 
                 for (HashMap chart : charts) {
-
-                    // String chartLabel = (String) chart.get("label");
-                    // if (StringUtils.isNotEmpty(chartLabel)) {
-
-                    // XWPFParagraph label = document.createParagraph();
-                    // XWPFRun labelRun = label.createRun();
-                    // labelRun.setText(chartLabel);
-                    // labelRun.addBreak();
-                    // }
 
                     Integer index = (Integer) chart.get("imageIndex");
 
@@ -144,6 +129,135 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
         }
     }
 
+    @PostMapping(path = "/complaint/word", consumes = {
+            MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE
+    })
+    public ResponseEntity<?> generateComplaintWordReport(@RequestBody(required = true) Map data) throws JsonMappingException, JsonProcessingException {
+
+        try {
+            XWPFDocument document = new XWPFDocument();
+            String reportName = data.get("reportName").toString();
+
+            // System.out.println(formName);
+            XWPFParagraph title = document.createParagraph();
+            XWPFRun titleRun = title.createRun();
+            titleRun.setText(reportName);
+            titleRun.setFontSize(15);
+            titleRun.setFontFamily("Calibri");
+            // titleRun.setColor("fff000");
+            titleRun.addBreak();
+
+            ArrayList<HashMap> images = (ArrayList<HashMap>) data.get("images");
+            this.addImagesAndTables(document, images);
+
+            return this.getResponse(document, reportName);
+
+        }  catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    private ResponseEntity<?> getResponse(XWPFDocument document, String documentName) throws IOException {
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        document.write(out);
+        out.close();
+        document.close();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType
+                        .parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + documentName + ".docx\"")
+                .body(new ByteArrayResource(out.toByteArray()));
+
+    }
+
+    private void addImagesAndTables(XWPFDocument document, ArrayList<HashMap> imageInformation) throws IllegalArgumentException, IOException, InvalidFormatException {
+
+        for (HashMap element : imageInformation) {
+            ArrayList<HashMap> charts = (ArrayList<HashMap>) element.get("charts");
+
+            for (HashMap chart : charts) {
+
+                String chartLabel = (String) chart.get("label");
+                if (StringUtils.isNotEmpty(chartLabel)) {
+
+                    XWPFParagraph label = document.createParagraph();
+                    XWPFRun labelRun = label.createRun();
+                    labelRun.setText(chartLabel);
+                    labelRun.addBreak();
+                }
+
+                String chartType = (String) chart.get("type");
+
+                if (chartType.equals("table")) {
+
+                    Map<String, List<?>> tableData = (Map<String, List<?>>) chart.get("tableData");
+
+                    XWPFTable table = document.createTable();
+                    List<String> labels = (List<String>) tableData.get("labels");
+                    XWPFTableRow labelRow = table.getRow(0);
+                    labelRow.getCell(0).setText("");
+                    for (int i = 1; i < labels.size(); i++) {
+                        labelRow.addNewTableCell().setText(labels.get(i));
+                    }
+
+                    List<List<String>> tableValues = (List<List<String>>) tableData.get("data");
+                    for (List<String> values : tableValues) {
+
+                        XWPFTableRow tableRow = table.createRow();
+                        for (int i = 0; i < values.size(); i++) {
+                            tableRow.getCell(i).setText(values.get(i));
+                        }
+                    }
+
+                } else {
+
+                    String image64 = (String) chart.get("image");
+
+                    if (StringUtils.isNotEmpty(image64)) {
+                        image64 = image64.split(";base64,")[1];
+                        image64 = image64.split("=")[0];
+
+                        byte[] imageData = Base64.getDecoder().decode(image64);
+                        InputStream in2 = new ByteArrayInputStream(imageData);
+                        XWPFParagraph image = document.createParagraph();
+                        XWPFRun imageRun = image.createRun();
+
+                        BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
+
+                        int w = img.getWidth();
+                        int h = img.getTileHeight();
+
+                        if (w > 450) {
+                            double scale = 450.0 / w;
+
+                            w = (int) (img.getWidth() * scale);
+                            h = (int) (img.getHeight() * scale);
+                        }
+
+                        imageRun.addPicture(in2, XWPFDocument.PICTURE_TYPE_PNG, "chart",
+                                Units.toEMU(w), Units.toEMU(h));
+
+                        in2.close();
+
+                    }
+                }
+                String caption = (String) chart.get("caption");
+                if (StringUtils.isNotEmpty(caption)) {
+
+                    XWPFParagraph captionParagraph = document.createParagraph();
+                    XWPFRun run = captionParagraph.createRun();
+                    run.setText(caption);
+                    run.addBreak();
+                }
+            }
+        }
+    }
+
     @Override
     public ResponseEntity<?> handleCreateWordDocument(Map data) {
         try {
@@ -160,87 +274,87 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
             titleRun.addBreak();
 
             ArrayList<HashMap> reportElements = (ArrayList<HashMap>) data.get("reportElements");
+            this.addImagesAndTables(document, reportElements);
+            // for (HashMap element : reportElements) {
+            //     ArrayList<HashMap> charts = (ArrayList<HashMap>) element.get("charts");
 
-            for (HashMap element : reportElements) {
-                ArrayList<HashMap> charts = (ArrayList<HashMap>) element.get("charts");
+            //     for (HashMap chart : charts) {
 
-                for (HashMap chart : charts) {
+            //         String chartLabel = (String) chart.get("label");
+            //         if (StringUtils.isNotEmpty(chartLabel)) {
 
-                    String chartLabel = (String) chart.get("label");
-                    if (StringUtils.isNotEmpty(chartLabel)) {
+            //             XWPFParagraph label = document.createParagraph();
+            //             XWPFRun labelRun = label.createRun();
+            //             labelRun.setText(chartLabel);
+            //             labelRun.addBreak();
+            //         }
 
-                        XWPFParagraph label = document.createParagraph();
-                        XWPFRun labelRun = label.createRun();
-                        labelRun.setText(chartLabel);
-                        labelRun.addBreak();
-                    }
+            //         String chartType = (String) chart.get("type");
 
-                    String chartType = (String) chart.get("type");
+            //         if (chartType.equals("table")) {
 
-                    if (chartType.equals("table")) {
+            //             Map<String, List<?>> tableData = (Map<String, List<?>>) chart.get("tableData");
+            //             System.out.println(tableData);
 
-                        Map<String, List<?>> tableData = (Map<String, List<?>>) chart.get("tableData");
-                        System.out.println(tableData);
+            //             XWPFTable table = document.createTable();
+            //             List<String> labels = (List<String>) tableData.get("labels");
+            //             XWPFTableRow labelRow = table.getRow(0);
+            //             labelRow.getCell(0).setText("");
+            //             for (int i = 1; i < labels.size(); i++) {
+            //                 labelRow.addNewTableCell().setText(labels.get(i));
+            //             }
 
-                        XWPFTable table = document.createTable();
-                        List<String> labels = (List<String>) tableData.get("labels");
-                        XWPFTableRow labelRow = table.getRow(0);
-                        labelRow.getCell(0).setText("");
-                        for (int i = 1; i < labels.size(); i++) {
-                            labelRow.addNewTableCell().setText(labels.get(i));
-                        }
+            //             List<List<String>> tableValues = (List<List<String>>) tableData.get("data");
+            //             for (List<String> values : tableValues) {
 
-                        List<List<String>> tableValues = (List<List<String>>) tableData.get("data");
-                        for (List<String> values : tableValues) {
+            //                 XWPFTableRow tableRow = table.createRow();
+            //                 for (int i = 0; i < values.size(); i++) {
+            //                     tableRow.getCell(i).setText(values.get(i));
+            //                 }
+            //             }
 
-                            XWPFTableRow tableRow = table.createRow();
-                            for (int i = 0; i < values.size(); i++) {
-                                tableRow.getCell(i).setText(values.get(i));
-                            }
-                        }
+            //         } else {
 
-                    } else {
+            //             String image64 = (String) chart.get("image");
 
-                        String image64 = (String) chart.get("image");
+            //             if (StringUtils.isNotEmpty(image64)) {
+            //                 image64 = image64.split(";base64,")[1];
+            //                 image64 = image64.split("=")[0];
 
-                        if (StringUtils.isNotEmpty(image64)) {
-                            image64 = image64.split(";base64,")[1];
-                            image64 = image64.split("=")[0];
+            //                 byte[] imageData = Base64.getDecoder().decode(image64);
+            //                 InputStream in2 = new ByteArrayInputStream(imageData);
+            //                 XWPFParagraph image = document.createParagraph();
+            //                 XWPFRun imageRun = image.createRun();
 
-                            byte[] imageData = Base64.getDecoder().decode(image64);
-                            InputStream in2 = new ByteArrayInputStream(imageData);
-                            XWPFParagraph image = document.createParagraph();
-                            XWPFRun imageRun = image.createRun();
+            //                 BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
 
-                            BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
+            //                 int w = img.getWidth();
+            //                 int h = img.getTileHeight();
 
-                            int w = img.getWidth();
-                            int h = img.getTileHeight();
+            //                 if (w > 450) {
+            //                     double scale = 450.0 / w;
 
-                            if (w > 450) {
-                                double scale = 450.0 / w;
+            //                     w = (int) (img.getWidth() * scale);
+            //                     h = (int) (img.getHeight() * scale);
+            //                 }
 
-                                w = (int) (img.getWidth() * scale);
-                                h = (int) (img.getHeight() * scale);
-                            }
+            //                 imageRun.addPicture(in2, XWPFDocument.PICTURE_TYPE_PNG, "chart",
+            //                         Units.toEMU(w), Units.toEMU(h));
 
-                            imageRun.addPicture(in2, XWPFDocument.PICTURE_TYPE_PNG, "chart",
-                                    Units.toEMU(w), Units.toEMU(h));
+            //                 in2.close();
 
-                            in2.close();
+            //             }
+            //         }
+            //         String caption = (String) chart.get("caption");
+            //         if (StringUtils.isNotEmpty(caption)) {
 
-                        }
-                    }
-                    String caption = (String) chart.get("caption");
-                    if (StringUtils.isNotEmpty(caption)) {
-
-                        XWPFParagraph captionParagraph = document.createParagraph();
-                        XWPFRun run = captionParagraph.createRun();
-                        run.setText(caption);
-                        run.addBreak();
-                    }
-                }
-            }
+            //             XWPFParagraph captionParagraph = document.createParagraph();
+            //             XWPFRun run = captionParagraph.createRun();
+            //             run.setText(caption);
+            //             run.addBreak();
+            //         }
+            //     }
+            // }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             document.write(out);

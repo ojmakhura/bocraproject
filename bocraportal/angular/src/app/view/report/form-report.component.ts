@@ -4,7 +4,12 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { ReportRestController } from '@app/service/bw/org/bocra/portal/report/report-rest-controller';
 import { ReportElement, ReportElementComponent } from './report-element.component';
+import * as ReportActions from '@app/store/report/report.actions';
+import * as ReportSelectors from '@app/store/report/report.selectors';
 import { saveAs } from 'file-saver';
+import { ReportState } from '@app/store/report/report.state';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 export class FormReport {
   formName: string = '';
@@ -22,19 +27,42 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() formReportGroup: FormGroup | any;
   protected formBuilder: FormBuilder;
   reportController: ReportRestController;
+  protected store: Store<ReportState>
+  private file$: Observable<any>;
+  messages: Observable<any>;
+  success: Observable<boolean>;
+  loading: Observable<boolean>;
+  loaderMessage: Observable<string | undefined>;
+  error: Observable<boolean>;
+  fileName: string = ''
 
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
-    this.reportController = this.injector.get(ReportRestController)
+    this.reportController = this.injector.get(ReportRestController);
+    this.store = injector.get(Store);
+    this.file$ = this.store.pipe(select(ReportSelectors.selectFile));
+    this.loading = this.store.pipe(select(ReportSelectors.selectLoading));
+    this.loaderMessage = this.store.pipe(select(ReportSelectors.selectLoaderMessage));
+    this.success = this.store.pipe(select(ReportSelectors.selectSuccess));
+    this.error = this.store.pipe(select(ReportSelectors.selectError));
+    this.messages = this.store.pipe(select(ReportSelectors.selectMessages));
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {
+    this.file$.subscribe((file) => {
+        if (file) {
+          let blob: any = file as Blob;
+          const url = window.URL.createObjectURL(blob);
+          saveAs(blob, `${this.fileName}.docx`);
+        }
+      });
+  }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
-  clearReport() { }
+  clearReport() {}
 
   get reportElementsControl(): FormArray {
     return this.formReportGroup.get('reportElements') as FormArray;
@@ -131,73 +159,22 @@ export class FormReportComponent implements OnInit, AfterViewInit, OnDestroy {
   downloadFormReport() {
     let d: any = {};
     d.formName = this.formName;
-    d.reportElements = []
+    d.reportElements = [];
 
-    this.reportElementComponents.forEach(elementComponent => {
-
+    this.reportElementComponents.forEach((elementComponent) => {
       d.reportElements.push({
-        charts: elementComponent.getChartImageData()
+        charts: elementComponent.getChartImageData(),
       });
     });
 
-    // this.downloadFormReport1();
-    this.reportController.createWordDocument(d).subscribe(file => {
-      if (file) {
+    this.fileName = this.formName;
 
-        let blob: any = file as Blob;
-        const url = window.URL.createObjectURL(blob);
-        saveAs(blob, `${d.formName}.docx`);
-      }
-    });
-  }
-
-  downloadFormReport1() {
-
-    let value = this.formReportGroup.value;
-
-    let d: any = {};
-    let images: File[] = [];
-
-    d.formName = value.formName;
-    d.reportElements = []
-    value.reportElements.forEach((element: any) => {
-
-      let el: any = {
-        charts: []
-      }
-
-      element.charts.forEach((ch: any) => {
-        let sarr: string[] = ch.chartImage?.split(',')
-
-        let bstr: string | undefined = atob(sarr[1])
-        let n = bstr.length
-        let u8arr = new Uint8Array(n);
-
-        while(n--){
-          u8arr[n] = bstr.charCodeAt(n);
-        }
-
-        const blob = new Blob([u8arr], { type: 'image/png' });
-
-        const link = document.createElement("a");
-        link.href = ch.chartImage;
-        link.download = `x.png`
-        link.click();
-
-        let image: File = new File([blob], `${ch.chartType}Chart`);
-
-        el.charts.push({
-          caption: ch.chartCaption,
-          label: ch.chartLabel,
-          type: ch.chartType,
-          imageIndex: images.length,
-          t: ch.chartImage
-        });
-
-        images.push(image)
-      });
-
-      d.reportElements.push(el);
-    });
+    this.store.dispatch(
+      ReportActions.createWordReport({
+        data: d,
+        loading: true,
+        loaderMessage: 'Downloading report document ....'
+      })
+    )
   }
 }

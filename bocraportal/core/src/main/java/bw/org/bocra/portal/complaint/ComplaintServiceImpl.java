@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.complaint;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -139,19 +140,19 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
 
         if (StringUtils.isNotBlank(criteria.getLicenseeName())) {
             if (spec == null)
-                spec = BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName",
+                spec = BocraportalSpecifications.findByJoinAttributeLike("licensee", "licenseeName",
                         criteria.getLicenseeName());
             else
-                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("licensee", "licenseeName",
+                spec = spec.and(BocraportalSpecifications.findByJoinAttributeLike("licensee", "licenseeName",
                         criteria.getLicenseeName()));
         }
 
         if (StringUtils.isNotBlank(criteria.getComplaintType())) {
             if (spec == null)
-                spec = BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName",
+                spec = BocraportalSpecifications.findByJoinAttributeLike("complaintType", "typeName",
                         criteria.getComplaintType());
             else
-                spec = spec.and(BocraportalSpecifications.findByJoinAttribute("complaintType", "typeName",
+                spec = spec.and(BocraportalSpecifications.findByJoinAttributeLike("complaintType", "typeName",
                         criteria.getComplaintType()));
         }
 
@@ -178,8 +179,20 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
                 spec =  BocraportalSpecifications.findByAttributeLessThan("createdDate",
                             criteria.getEndDate().plusDays(1).atStartOfDay());
             else
-                spec = spec.and( BocraportalSpecifications.findByAttributeGreaterThan("createdDate",
+                spec = spec.and( BocraportalSpecifications.findByAttributeLessThan("createdDate",
                                 criteria.getEndDate().plusDays(1).atStartOfDay()));
+        }
+
+        if(criteria.getPastDays() != null) {
+
+            LocalDate past = LocalDate.now().minusDays(criteria.getPastDays());
+
+            if (spec == null)
+                spec =  BocraportalSpecifications.findByAttributeGreaterThanEqual("createdDate",
+                            past.atStartOfDay());
+            else
+                spec = spec.and( BocraportalSpecifications.findByAttributeGreaterThanEqual("createdDate",
+                                past.atStartOfDay()));
         }
 
         Collection<Complaint> entities = getComplaintRepository().findAll(spec, Sort.by("id").descending());
@@ -256,6 +269,15 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
         
         Complaint complaint = complaintDao.searchUniqueComplaintId(complaintId);
         complaint.setAssignedTo(username);
+        complaintRepository.save(complaint);
+
+        return true;
+    }
+
+    @Override
+    protected Boolean handleUpdateStatus(String complaintId, ComplaintStatus status) throws Exception {
+        Complaint complaint = complaintDao.searchUniqueComplaintId(complaintId);
+        complaint.setStatus(status);
         complaintRepository.save(complaint);
 
         return true;

@@ -17,7 +17,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 import bw.org.bocra.portal.properties.RabbitProperties;
 
@@ -72,8 +75,12 @@ public class RabbitMQConfig {
     @Bean
     @Primary
     public ObjectMapper objectMapper() {
-        JavaTimeModule module = new JavaTimeModule();
-        return new ObjectMapper().registerModule(module);
+        
+        return new ObjectMapper()
+                    .registerModule(new ParameterNamesModule())
+                    .registerModule(new Jdk8Module())
+                    .registerModule(new JavaTimeModule())
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 	
 	@Bean

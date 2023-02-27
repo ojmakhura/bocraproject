@@ -97,3 +97,7 @@
         </div>
     </div>
 </div>
+
+<div class="card container mb-3" *ngIf="!useCaseScope.pageVariables.length">
+    <p class="text-secondary text center">There are no reports generated for the current year {{year}}</p>
+</div>

@@ -55,6 +55,7 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             return ResponseEntity.ok().body(user);
         } catch (Exception e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }

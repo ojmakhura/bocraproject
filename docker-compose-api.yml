@@ -7,12 +7,12 @@ services:
     image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}"
     container_name: bocra-api
     hostname: api
-    healthcheck:
-      test: "curl -m 5 --silent --fail --request GET http://localhost:8085/actuator/health | grep UP || exit 1"
-      interval: 5s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
+    # healthcheck:
+    #   test: "curl -m 5 --silent --fail --request GET http://localhost:8085/actuator/health | grep UP || exit 1"
+    #   interval: 5s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 5s
     volumes:
       - ${BOCRA_DATA}/hosts:/etc/hosts
     build:
@@ -25,6 +25,7 @@ services:
       bocraportal-public:
     environment:
       POSTGRES_SERVER: ${DB_DOMAIN}
+      DB_DOMAIN: ${DB_DOMAIN}
       SERVER_PORT: ${API_SERVER_PORT}
       POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -41,7 +42,8 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
       RABBITMQ_HOST: ${RABBITMQ_HOST}
       RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
-      API_LOG_LEVEL: ${API_LOG_LEVEL}
+      BOCRA_COMPLAINT_ROLES: ${BOCRA_COMPLAINT_ROLES}
+      API_LOG_LEVEL: DEBUG
       WEB_URL: ${WEB_URL}
       COMM_URL: ${COMM_URL}
       TZ: Africa/Gaborone
@@ -53,14 +55,17 @@ services:
           - node.labels.bocraportal_api == true
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.api-web.rule=Host(`${API_DOMAIN}`)"
-        - "traefik.http.routers.api-web.entrypoints=web"
-        - "traefik.http.routers.api-web.middlewares=https-redirect"
-        - "traefik.http.routers.api-websecure.entrypoints=websecure"
-        - "traefik.http.routers.api-websecure.rule=Host(`${API_DOMAIN}`)"
-        - "traefik.http.routers.api-websecure.tls=${SSL_SECURE}"
+        - "traefik.http.routers.bocraportal-api-web.rule=Host(`${API_DOMAIN}`)"
+        - "traefik.http.routers.bocraportal-api-web.entrypoints=web"
+        - "traefik.http.routers.bocraportal-api-web.middlewares=https-redirect"
+        - "traefik.http.routers.bocraportal-api-websecure.entrypoints=websecure"
+        - "traefik.http.routers.bocraportal-api-websecure.rule=Host(`${API_DOMAIN}`)"
+        - "traefik.http.routers.bocraportal-api-websecure.tls=${SSL_SECURE}"
+        - "traefik.http.routers.bocraportal-api-websecure.tls.certresolver=le"
+        - "traefik.http.services.bocraportal-api.loadbalancer.server.port=8085"
 ###############################################################################
 # Networks
 ###############################################################################
 networks:
   bocraportal-public:
+    external: true

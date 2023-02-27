@@ -41,12 +41,15 @@ import DataLabelsPlugin from 'chartjs-plugin-datalabels';
   template: '',
 })
 export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+  @ViewChild(BaseChartDirective)
+  chart!: BaseChartDirective;
 
   complaintsAnalysisForm: FormGroup | any;
   reportFilterForm = new FormGroup({
     report: new FormControl(''),
     chartType: new FormControl(''),
+    chartLabel: new FormControl(''),
+    chartCaption: new FormControl('')
   });
   hide: boolean = false;
   protected route: ActivatedRoute;
@@ -68,6 +71,9 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
   reportLabel: string[] = [];
   reportData: number[] = [];
 
+  reportYearLabel: string[] = [];
+  reportYearData: number[] = [];
+
   reportLicenseesLabel: string[] = [];
   reportLicenseesData: number[] = [];
 
@@ -79,6 +85,9 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
 
   reportSectorLabel: string[] = [];
   reportSectorData: number[] = [];
+
+  reportResolutionLabel: string[] = [];
+  reportResolutionData: number[] = [];
 
   constructor(injector: Injector) {
     this.route = injector.get(ActivatedRoute);
@@ -170,7 +179,7 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
     },
     plugins: {
       legend: {
-        display: true,
+        display: false,
       },
       datalabels: {
         anchor: 'center',
@@ -181,27 +190,32 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
   public barChartType: ChartType = 'bar';
   public barChartPlugins = [DataLabelsPlugin];
 
-  public barChartData: ChartData<'bar'> = {
+  public chartResolutionData: ChartData<'bar'> = {
     labels: [],
     datasets: [],
   };
 
-  public barChartLicenseeData: ChartData<'bar'> = {
+  public chartLicenseeData: ChartData<'bar'> = {
     labels: [],
     datasets: [],
   };
 
-  public barChartTypeData: ChartData<'bar'> = {
+  public chartTypeData: ChartData<'bar'> = {
     labels: [],
     datasets: [],
   };
 
-  public barChartStatusData: ChartData<'bar'> = {
+  public chartYearData: ChartData<'bar'> = {
     labels: [],
     datasets: [],
   };
 
-  public barChartSectorData: ChartData<'bar'> = {
+  public chartStatusData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [],
+  };
+
+  public chartSectorData: ChartData<'bar'> = {
     labels: [],
     datasets: [],
   };
@@ -230,41 +244,41 @@ export abstract class ComplaintsAnalysisComponent implements OnInit, AfterViewIn
       },
     ],
   };
-  public pieChartLicenseeData: ChartData<'pie', number[], string | string[]> = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-      },
-    ],
-  };
+  // public pieChartLicenseeData: ChartData<'pie', number[], string | string[]> = {
+  //   labels: [],
+  //   datasets: [
+  //     {
+  //       data: [],
+  //     },
+  //   ],
+  // };
 
-  public pieChartTypeData: ChartData<'pie', number[], string | string[]> = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-      },
-    ],
-  };
+  // public pieChartTypeData: ChartData<'pie', number[], string | string[]> = {
+  //   labels: [],
+  //   datasets: [
+  //     {
+  //       data: [],
+  //     },
+  //   ],
+  // };
 
-  public pieChartStatusData: ChartData<'pie', number[], string | string[]> = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-      },
-    ],
-  };
+  // public pieChartStatusData: ChartData<'pie', number[], string | string[]> = {
+  //   labels: [],
+  //   datasets: [
+  //     {
+  //       data: [],
+  //     },
+  //   ],
+  // };
 
-  public pieChartSectorData: ChartData<'pie', number[], string | string[]> = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-      },
-    ],
-  };
+  // public pieChartSectorData: ChartData<'pie', number[], string | string[]> = {
+  //   labels: [],
+  //   datasets: [
+  //     {
+  //       data: [],
+  //     },
+  //   ],
+  // };
 
   public pieChartType: ChartType = 'pie';
   public pieChartPlugins = [DataLabelsPlugin];

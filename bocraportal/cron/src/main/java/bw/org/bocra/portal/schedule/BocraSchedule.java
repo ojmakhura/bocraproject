@@ -1,5 +1,6 @@
 package bw.org.bocra.portal.schedule;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -17,6 +18,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import bw.org.bocra.portal.complaint.ComplaintSeachCriteria;
+import bw.org.bocra.portal.complaint.ComplaintStatus;
+import bw.org.bocra.portal.complaint.ComplaintVO;
 import bw.org.bocra.portal.form.activation.FormActivationVO;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.security.CronSecurity;
@@ -52,6 +56,42 @@ public class BocraSchedule {
     public void dailySchedule() {
         String formatTime = this.getDateTime();
         log.info("Daily cron job at " + formatTime);
+        this.setComplaintsPending(cronSecurity.getAccessToken().getToken());
+
+    }
+
+    public void setComplaintsPending(String token) {
+
+        ComplaintSeachCriteria criteria = new ComplaintSeachCriteria();
+        criteria.setStatus(ComplaintStatus.NEW);
+        criteria.setPastDays(20);
+
+        String complaintsNew = apiUrl + "/search";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
+        HttpEntity<ComplaintSeachCriteria> request = new HttpEntity<>(criteria, headers);
+
+        ResponseEntity<?> response = restTemplate.postForEntity(complaintsNew, request, ComplaintVO[].class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            ComplaintVO[] newComplaints = (ComplaintVO[]) response.getBody();
+
+            String statusUpdateUrl = apiUrl + "/status?complaintId=%s&status=%s";
+
+            for (ComplaintVO complaint : newComplaints) {
+                statusUpdateUrl = String.format(statusUpdateUrl, complaint.getComplaintId(), ComplaintStatus.PENDING);
+                request = new HttpEntity<>(headers);
+                response = restTemplate.exchange(statusUpdateUrl, HttpMethod.GET, request, Boolean.class);
+
+                if (response.getStatusCode() != HttpStatus.OK) {
+                    log.error(response.getBody().toString());
+                }
+            }
+
+        } else {
+            log.error(response.getBody().toString());
+        }
     }
 
     @Async
@@ -87,7 +127,7 @@ public class BocraSchedule {
     public void dueMessages() {
         String formatTime = this.getDateTime();
         log.info("Due messages cron job at " + formatTime);
-        
+
         String due = commUrl + "/messages/due";
         log.info("Loading due messages from " + due);
 
@@ -111,7 +151,7 @@ public class BocraSchedule {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
-        
+
         HttpEntity<String> request = new HttpEntity<String>(headers);
 
         ResponseEntity<Integer> response = restTemplate.exchange(due, HttpMethod.GET, request, Integer.class);
@@ -129,18 +169,18 @@ public class BocraSchedule {
 
         log.info("Creating new next periods at " + formatTime);
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());        
+        headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
         HttpEntity<String> request = new HttpEntity<String>(headers);
         String nextPeriodUrl = apiUrl + "/period/next";
-        ResponseEntity<PeriodVO[]> response = restTemplate.exchange(nextPeriodUrl, HttpMethod.GET, request, PeriodVO[].class);
-        if(response.getStatusCode() == HttpStatus.OK) {
+        ResponseEntity<PeriodVO[]> response = restTemplate.exchange(nextPeriodUrl, HttpMethod.GET, request,
+                PeriodVO[].class);
+        if (response.getStatusCode() == HttpStatus.OK) {
             log.info(
-                String.format(
-                    "Created %d periods named %s.",
-                    response.getBody().length,
-                    Stream.<PeriodVO>of(response.getBody()).map(period -> period.getPeriodName()).collect(Collectors.toList())
-                )
-            );
+                    String.format(
+                            "Created %d periods named %s.",
+                            response.getBody().length,
+                            Stream.<PeriodVO>of(response.getBody()).map(period -> period.getPeriodName())
+                                    .collect(Collectors.toList())));
         }
     }
 
@@ -151,18 +191,18 @@ public class BocraSchedule {
 
         log.info("Activating due forms at " + formatTime);
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());        
+        headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
         HttpEntity<String> request = new HttpEntity<String>(headers);
         String activateUrl = apiUrl + "/form/activation/activate";
-        ResponseEntity<FormActivationVO[]> response = restTemplate.exchange(activateUrl, HttpMethod.GET, request, FormActivationVO[].class);
-        if(response.getStatusCode() == HttpStatus.OK) {
+        ResponseEntity<FormActivationVO[]> response = restTemplate.exchange(activateUrl, HttpMethod.GET, request,
+                FormActivationVO[].class);
+        if (response.getStatusCode() == HttpStatus.OK) {
             log.info(
-                String.format(
-                    "Created %d activations named %s.",
-                    response.getBody().length,
-                    Stream.<FormActivationVO>of(response.getBody()).map(activation -> activation.getActivationName()).collect(Collectors.toList())
-                )
-            );
+                    String.format(
+                            "Created %d activations named %s.",
+                            response.getBody().length,
+                            Stream.<FormActivationVO>of(response.getBody())
+                                    .map(activation -> activation.getActivationName()).collect(Collectors.toList())));
         }
     }
 }

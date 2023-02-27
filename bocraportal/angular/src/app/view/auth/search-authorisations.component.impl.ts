@@ -29,11 +29,14 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
 
   override beforeOnInit(form: SearchAuthorisationsVarsForm): SearchAuthorisationsVarsForm {
     this.store.dispatch(authorisationActions.authorisationReset());
+    
+    this.keycloakService.loadUserProfile().then((profile) => {
 
-    this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
-      let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
+      if(!profile)
+        return;
 
-      this.keycloakService.loadUserProfile().then((profile) => {
+      this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
+        let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
         this.http
           .get<any[]>(
             `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`
@@ -51,25 +54,25 @@ export class SearchAuthorisationsComponentImpl extends SearchAuthorisationsCompo
                 }
               });
           });
-
-        this.http
-          .get<any[]>(
-            `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
-          )
-          .subscribe((roles) => {
-            roles
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .forEach((role: any) => {
-                if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
-                  let item = new SelectItem();
-                  item.label = role['description'];
-                  item.value = role['name'];
-
-                  this.userRolesBackingList.push(item);
-                }
-              });
-          });
       });
+
+      this.http
+        .get<any[]>(
+          `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
+        )
+        .subscribe((roles) => {
+          roles
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .forEach((role: any) => {
+              if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
+                let item = new SelectItem();
+                item.label = role['description'];
+                item.value = role['name'];
+
+                this.criteriaRolesBackingList.push(item);
+              }
+            });
+        });
     });
 
     return form;

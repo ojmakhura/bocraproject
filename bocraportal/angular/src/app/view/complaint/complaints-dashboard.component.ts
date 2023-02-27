@@ -51,6 +51,7 @@ export abstract class ComplaintsDashboardComponent implements OnInit, AfterViewI
 
     complaints$: Observable<Array<ComplaintVO>>;
     complaintsDataSource = new Array<ComplaintVO>;
+    complaintsFiltered = new Array<ComplaintVO>;
     protected route: ActivatedRoute;
     protected router: Router;
     protected useCaseScope: UseCaseScope;
@@ -89,14 +90,19 @@ export abstract class ComplaintsDashboardComponent implements OnInit, AfterViewI
 
     doNgAfterViewInit(): void {
         if (this.complaintsDataSource.length > 0) {
-            this.useCaseScope.pageVariables = this.complaintsDataSource.filter(entry => entry.createdDate.substring(0, 4).includes(this.year));
+            for(let complaint of this.complaintsDataSource){
+                
+                let createdYear = +complaint.createdDate?.substring(0, 4);
+                
+                if(createdYear === this.year){
+                    this.complaintsFiltered.push(complaint);
+                }
+            }
+            this.useCaseScope.pageVariables = this.complaintsFiltered;
             if (this.useCaseScope.pageVariables.length > 0) {
-                console.log(this.useCaseScope.pageVariables);
                 this.licenseeFilter.push(
                     this.useCaseScope.pageVariables.map((entry: { licensee: { licenseeName: any } }) => entry.licensee.licenseeName)
                 );
-                //     this.useCaseScope.pageVariables.filter((entry: { createdDate: string | string[] }) =>
-                // entry.createdDate.includes(year)
                 this.reportLicenseesLabel = [...new Set(this.licenseeFilter[0])];
                 for (let licensee of this.reportLicenseesLabel) {
                     let data = this.useCaseScope.pageVariables.filter((entry: { licensee: { licenseeName: string | string[] } }) =>

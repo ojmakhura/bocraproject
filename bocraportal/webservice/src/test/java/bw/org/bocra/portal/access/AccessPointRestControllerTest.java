@@ -71,7 +71,7 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
+        
         Assertions.assertTrue(
             message.contains("access point type is missing")
             || message.contains("access point type or its id is missing")
@@ -88,7 +88,7 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
+        
         Assertions.assertTrue(
             message.contains("access point type is not valid")
             || message.contains("The access point type is invalid")
@@ -107,7 +107,7 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
+        
         Assertions.assertTrue(message.contains("created date value is missing"));
     }
 
@@ -115,15 +115,15 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
     @Test
     public void save_nullCreatedBy() {
         AccessPointVO point = testData.createUnsavedData();
-        System.out.println(point);
+        
         point.setCreatedBy(null);
 
         ResponseEntity<?> response = restController.save(point);
         Assertions.assertNotNull(response);
-        System.out.println(response.getBody());
+        
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
+        
         Assertions.assertTrue(message.contains("created-by value is missing"));
     }
 
