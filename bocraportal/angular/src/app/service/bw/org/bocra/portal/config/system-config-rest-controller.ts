@@ -18,6 +18,10 @@ export class SystemConfigRestController {
         return this.http.get<SystemConfigVO | any>(`${this.path}/${id}`, {});
     }
 
+    public findByName(name: string | any ): Observable<SystemConfigVO | any> {
+        return this.http.get<SystemConfigVO | any>(`${this.path}/${name}`, name);
+    }
+
     public getAll(): Observable<SystemConfigVO[] | any[]> {
         return this.http.get<SystemConfigVO[] | any[]>(`${this.path}/all`);
     }

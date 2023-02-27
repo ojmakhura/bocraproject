@@ -140,7 +140,7 @@ public class BocraportalSpecifications {
 
         return (root, cq, cb) -> {
             Join<E, J> join = root.join(joinAttribute);
-            return cb.like(join.get(attribute), attributeValue );
+            return cb.like(cb.upper(join.get(attribute)), attributeValue );
         };
     }
     
