@@ -14,24 +14,26 @@ import bw.org.bocra.portal.complaint.type.ComplaintTypeVO;
 
 @Component
 @Profile("test")
-public class ComplaintTestData extends GenericTestData<ComplaintVO, ComplaintRepository, String, ComplaintRestController>{
-    // private final ComplaintRestController complaintRestController;
+public class ComplaintTestData extends GenericTestData<ComplaintVO, ComplaintRepository, String, ComplaintRestController> {
+
+    // private final ComplaintRestController ComplaintRestController;
     private final ComplaintTypeTestData complaintTypeTestData;
     private final ComplaintService complaintService;
+    // private final ComplaintRepository ComplaintRepository;
 
     public ComplaintTestData(ComplaintRestController complaintRestController, ComplaintTypeTestData complaintTypeTestData, ComplaintRepository complaintRepository, ComplaintService complaintService) {
         super(complaintRepository, complaintRestController);
         this.complaintTypeTestData = complaintTypeTestData;
         this.complaintService = complaintService;
     }
- 
+
+    @Override
     public  ComplaintVO createUnsavedData() {
         ComplaintTypeVO type = complaintTypeTestData.generateSequentialData(1).iterator().next();
 
-        ComplaintVO complaint = new ComplaintVO();
+        ComplaintVO complaint = createUnsavedComplaintNoType();
 
         complaint.setComplaintType(type);
-        complaint.setCreatedDate(LocalDateTime.now());
 
         return complaint;
     }
@@ -40,7 +42,20 @@ public class ComplaintTestData extends GenericTestData<ComplaintVO, ComplaintRep
 
         ComplaintVO complaint = new ComplaintVO();
 
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
         complaint.setComplaintType(null);
+        complaint.setDetails("Test");
+        complaint.setDocuments(null);
+        complaint.setEmail("test@gmail.com");
+        complaint.setFirstName("Test");
+        complaint.setSurname("User");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
         complaint.setCreatedDate(LocalDateTime.now());
 
         return complaint;
@@ -48,13 +63,15 @@ public class ComplaintTestData extends GenericTestData<ComplaintVO, ComplaintRep
     
     public ComplaintVO createUnsavedComplaintUnsavedType() {
 
-        ComplaintVO complaint = new ComplaintVO();
-
+        ComplaintVO complaint = createUnsavedComplaintNoType();
         complaint.setComplaintType(complaintTypeTestData.createUnsavedData());
-        complaint.setCreatedDate(LocalDateTime.now());
 
         return complaint;
     }
+
+    // public ComplaintVO create() {
+    //     return (ComplaintVO)getRestController().save(createUnsavedComplaint()).getBody();
+    // }
 
     public Collection<ComplaintVO> generateSequentialData(int size) {
 
@@ -65,6 +82,7 @@ public class ComplaintTestData extends GenericTestData<ComplaintVO, ComplaintRep
 
     }
 
+    @Override
     public Collection<ComplaintVO> generateUnsavedSequentialData(int size) {
         Collection<ComplaintVO> complaints = new ArrayList<>();
         ComplaintTypeVO type = complaintTypeTestData.generateSequentialData(1).iterator().next();
@@ -73,13 +91,23 @@ public class ComplaintTestData extends GenericTestData<ComplaintVO, ComplaintRep
 
             ComplaintVO complaint = new ComplaintVO();
 
+            complaint.setAssignedDate(LocalDateTime.now());
+            complaint.setAssignedTo("Bocra User");
+            complaint.setComplaintId("TestComplaint");
+            complaint.setComplaintReplies(null);
             complaint.setComplaintType(type);
+            complaint.setStatus(ComplaintStatus.NEW);
+            complaint.setDocuments(null);
             complaint.setDetails("I have no internet");
             complaint.setCreatedDate(LocalDateTime.now());
             complaint.setFirstName("Random" + i);
             complaint.setSurname("Person" + i);
+            complaint.setId(null);
+            complaint.setLicensee(null);
+            complaint.setSubject("Test Test");
             complaint.setEmail(i + "complaint@person.com");
-            
+            complaint.setCreatedDate(LocalDateTime.now());
+
             complaints.add(complaint);
             
         }
@@ -87,6 +115,7 @@ public class ComplaintTestData extends GenericTestData<ComplaintVO, ComplaintRep
         return complaints;
     }
     
+    @Override
     public Collection<ComplaintVO> searchData() {
         
         ComplaintTypeVO type = complaintTypeTestData.generateSequentialData(1).iterator().next();
@@ -96,63 +125,220 @@ public class ComplaintTestData extends GenericTestData<ComplaintVO, ComplaintRep
 
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
 
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
 
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
 
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
 
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
 
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setEmail("complaint@person.com");
+        complaint.setSubject("Test Test");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
 
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
 
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
+
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
+
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         complaint = new ComplaintVO();
+
         complaint.setComplaintType(type);
         complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setAssignedDate(LocalDateTime.now());
+        complaint.setAssignedTo("Bocra User");
+        complaint.setComplaintId("TestComplaint");
+        complaint.setComplaintReplies(null);
+        complaint.setStatus(ComplaintStatus.NEW);
+        complaint.setDocuments(null);
+        complaint.setDetails("I have no internet");
+        complaint.setCreatedDate(LocalDateTime.now());
+        complaint.setFirstName("Random");
+        complaint.setSurname("Person");
+        complaint.setId(null);
+        complaint.setLicensee(null);
+        complaint.setSubject("Test Test");
+        complaint.setEmail("complaint@person.com");
         data.add((ComplaintVO) getRestController().save(complaint).getBody());
 
         return data;

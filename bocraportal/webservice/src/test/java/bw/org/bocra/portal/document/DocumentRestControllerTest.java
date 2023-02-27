@@ -317,7 +317,7 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
         ResponseEntity<?> response = restController.getAll();
         Collection<DocumentVO> types = (Collection<DocumentVO>) response.getBody();
 
-        response = restController.remove(300L);
+        response = restController.remove("300L");
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
         Assertions.assertTrue(response.getBody().toString().contains("Could not delete access document"));

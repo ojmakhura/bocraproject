@@ -21,8 +21,8 @@ public class ShareholderTestData extends GenericTestData<ShareholderVO, Sharehol
     private final ShareholderService shareholderService;
     // private final ShareholderRepository ShareholderRepository;
 
-    public ShareholderTestData(ShareholderRestController restController, ShareholderRepository shareholderRepository, ShareholderService shareholderService) {
-        super(shareholderRepository, restController);
+    public ShareholderTestData(ShareholderRestController restController, ShareholderRepository repository, ShareholderService shareholderService) {
+        super(repository, restController);
         this.shareholderService = shareholderService;
     }
 

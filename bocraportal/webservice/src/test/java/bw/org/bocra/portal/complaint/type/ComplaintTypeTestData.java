@@ -1,7 +1,6 @@
 package bw.org.bocra.portal.complaint.type;
 
-import static org.mockito.ArgumentMatchers.same;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -13,14 +12,11 @@ import bw.org.bocra.portal.GenericTestData;
 
 @Component
 @Profile("test")
-public class ComplaintTypeTestData extends GenericTestData<ComplaintTypeVO, ComplaintTypeRepository,String, ComplaintTypeRestController>{
-    // private final ComplaintTypeRestController complaintTypeRestController;
-    
+public class ComplaintTypeTestData extends GenericTestData<ComplaintTypeVO, ComplaintTypeRepository, String, ComplaintTypeRestController> {
     private final ComplaintTypeService complaintTypeService;
 
-    public ComplaintTypeTestData(ComplaintTypeRestController restController, ComplaintTypeRepository complaintTypeRepository, ComplaintTypeService complaintTypeService) {
-        // this.complaintTypeRestController = complaintTypeRestController;
-        super(complaintTypeRepository, restController);
+    public ComplaintTypeTestData(ComplaintTypeRestController restController, ComplaintTypeRepository repository, ComplaintTypeService complaintTypeService) {
+        super(repository, restController);
         this.complaintTypeService = complaintTypeService;
     }
 
@@ -31,23 +27,17 @@ public class ComplaintTypeTestData extends GenericTestData<ComplaintTypeVO, Comp
     public ComplaintTypeVO createUnsavedData() {
         ComplaintTypeVO type = new ComplaintTypeVO();
 
-        type.setCode("test");
-        type.setTypeName("Test Type");
-        type.setDescription("This is a test");
+        type.setCode("TestCode");
+        type.setCreatedBy("Test User");
+        type.setCreatedDate(LocalDateTime.now());
+        type.setDescription("Complaint Type Description Test");
+        type.setId(null);
+        type.setTypeName("Test Name");
+        type.setUpdatedBy("Test User");
+        type.setUpdatedDate(LocalDateTime.now());
 
         return type;
     }
-
-    // public ComplaintTypeVO createComplaintType() {
-    //     ComplaintTypeVO type = new ComplaintTypeVO();
-
-    //     type.setCode("test");
-    //     type.setTypeName("Test Type");
-    //     type.setDescription("This is a test");
-    //     type = complaintTypeService.save(type);
-        
-    //     return type;
-    // }
 
     public Collection<ComplaintTypeVO> generateSequentialData(int size) {
         
@@ -55,7 +45,6 @@ public class ComplaintTypeTestData extends GenericTestData<ComplaintTypeVO, Comp
             .stream()
             .map(type -> complaintTypeService.save(type))
             .collect(Collectors.toList());
-
     }
 
     public Collection<ComplaintTypeVO> generateUnsavedSequentialData(int size) {
@@ -64,9 +53,14 @@ public class ComplaintTypeTestData extends GenericTestData<ComplaintTypeVO, Comp
 
             ComplaintTypeVO type = new ComplaintTypeVO();
 
-            type.setCode("test" + i);
-            type.setTypeName("Test Type " + i);
-            type.setDescription("This is a test " + i);
+            type.setCode("TestCode" + i);
+            type.setCreatedBy("Test User" + i);
+            type.setCreatedDate(LocalDateTime.now());
+            type.setDescription("Complaint Type Description Test" + i);
+            type.setId(null);
+            type.setTypeName("Test Name" + i);
+            type.setUpdatedBy("Test User" + i);
+            type.setUpdatedDate(LocalDateTime.now());
 
             types.add(type);
 
@@ -79,56 +73,92 @@ public class ComplaintTypeTestData extends GenericTestData<ComplaintTypeVO, Comp
 
         ComplaintTypeVO type = new ComplaintTypeVO();
 
-        type.setCode("test");
-        type.setTypeName("Test Type");
-        type.setDescription("This is a test");
+        type.setCode("TestCode");
+        type.setCreatedBy("Test User");
+        type.setCreatedDate(LocalDateTime.now());
+        type.setDescription("Complaint Type Description Test");
+        type.setId(null);
+        type.setTypeName("Test Name");
+        type.setUpdatedBy("Test User");
+        type.setUpdatedDate(LocalDateTime.now());
 
         types.add(complaintTypeService.save(type));
 
         type = new ComplaintTypeVO();
 
-        type.setCode("serious");
-        type.setTypeName("Serious Type");
-        type.setDescription("This is a test");
+        type.setCode("TestCode");
+        type.setCreatedBy("Test User");
+        type.setCreatedDate(LocalDateTime.now());
+        type.setDescription("Complaint Type Description Test");
+        type.setId(null);
+        type.setTypeName("Test Name");
+        type.setUpdatedBy("Test User");
+        type.setUpdatedDate(LocalDateTime.now());
 
         types.add(complaintTypeService.save(type));
 
         type = new ComplaintTypeVO();
 
-        type.setCode("onelove");
-        type.setTypeName("Top love");
-        type.setDescription("This is a test");
+        type.setCode("TestCode");
+        type.setCreatedBy("Test User");
+        type.setCreatedDate(LocalDateTime.now());
+        type.setDescription("Complaint Type Description Test");
+        type.setId(null);
+        type.setTypeName("Test Name");
+        type.setUpdatedBy("Test User");
+        type.setUpdatedDate(LocalDateTime.now());
 
         types.add(complaintTypeService.save(type));
 
         type = new ComplaintTypeVO();
 
-        type.setCode("test6");
-        type.setTypeName("Test Type 6");
-        type.setDescription("This is a test");
+        type.setCode("TestCode");
+        type.setCreatedBy("Test User");
+        type.setCreatedDate(LocalDateTime.now());
+        type.setDescription("Complaint Type Description Test");
+        type.setId(null);
+        type.setTypeName("Test Name");
+        type.setUpdatedBy("Test User");
+        type.setUpdatedDate(LocalDateTime.now());
 
         types.add(complaintTypeService.save(type));
 
         type = new ComplaintTypeVO();
 
-        type.setCode("sixteen");
-        type.setTypeName("One Six");
-        type.setDescription("This is a test");
+        type.setCode("TestCode");
+        type.setCreatedBy("Test User");
+        type.setCreatedDate(LocalDateTime.now());
+        type.setDescription("Complaint Type Description Test");
+        type.setId(null);
+        type.setTypeName("Test Name");
+        type.setUpdatedBy("Test User");
+        type.setUpdatedDate(LocalDateTime.now());
 
         types.add(complaintTypeService.save(type));
 
         type = new ComplaintTypeVO();
 
-        type.setCode("test16");
-        type.setTypeName("Testing sixteen");
-        type.setDescription("This is a test");
+        type.setCode("TestCode");
+        type.setCreatedBy("Test User");
+        type.setCreatedDate(LocalDateTime.now());
+        type.setDescription("Complaint Type Description Test");
+        type.setId(null);
+        type.setTypeName("Test Name");
+        type.setUpdatedBy("Test User");
+        type.setUpdatedDate(LocalDateTime.now());
 
         types.add(complaintTypeService.save(type));
+
         type = new ComplaintTypeVO();
 
-        type.setCode("stop");
-        type.setTypeName("Test Type Stop");
-        type.setDescription("This is a test");
+        type.setCode("TestCode");
+        type.setCreatedBy("Test User");
+        type.setCreatedDate(LocalDateTime.now());
+        type.setDescription("Complaint Type Description Test");
+        type.setId(null);
+        type.setTypeName("Test Name");
+        type.setUpdatedBy("Test User");
+        type.setUpdatedDate(LocalDateTime.now());
 
         types.add(complaintTypeService.save(type));
         return types;
@@ -142,14 +172,13 @@ public class ComplaintTypeTestData extends GenericTestData<ComplaintTypeVO, Comp
 
     @Override
     public String searchCriteriaEmpty() {
-        // TODO Auto-generated method stub
-        return null;
+        
+        return "";
     }
 
     @Override
     public String searchCriteriaNone() {
-        // TODO Auto-generated method stub
-        return null;
+        return "null";
     }
 
     @Override

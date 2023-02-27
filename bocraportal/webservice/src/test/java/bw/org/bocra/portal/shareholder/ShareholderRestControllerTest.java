@@ -172,17 +172,6 @@ public class ShareholderRestControllerTest
     //     ShareholderVO shareholder = new ShareholderVO();
 
     //     shareholder.setName(exists.getName());        
-    //     shareholder.setAddress("test" + 1);
-    //     shareholder.setCreatedBy("Test User" + 1);
-    //     shareholder.setCreatedDate(LocalDateTime.now());
-    //     shareholder.setDocuments(shareholder.getDocuments());
-    //     shareholder.setId(null);
-    //     shareholder.setShareholderId("test" + 1);
-    //     shareholder.setShares(shareholder.getShares());
-    //     shareholder.setType(ShareholderType.INDIVIDUAL);
-    //     shareholder.setUpdatedBy("Test user" + 1);
-    //     shareholder.setUpdatedDate(LocalDateTime.now());
-    //     ResponseEntity<?> response = restController.save(shareholder);
 
     //     Assertions.assertNotNull(response);
     //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
