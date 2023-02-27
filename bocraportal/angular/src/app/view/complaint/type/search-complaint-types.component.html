@@ -23,23 +23,18 @@
         </div>
       </div>
       <div class="mb-3">
-        <label id="criteria_label" class="col-sm-2 col-form-label" for="criteria"
-          ><span translate>criteria</span>*</label
-        >
-        <input type="text" id="criteria" class="form-control" name="criteria" formControlName="criteria" required />
-        <div
-          *ngIf="
+        <label id="criteria_label" class="col-sm-2 col-form-label" for="criteria"><span
+            translate>criteria</span></label>
+        <input type="text" id="criteria" class="form-control" name="criteria" formControlName="criteria" />
+        <!-- <div *ngIf="
             searchComplaintTypesForm.invalid &&
             criteriaControl.invalid &&
             (criteriaControl.dirty || criteriaControl.touched)
-          "
-          class="alert alert-danger"
-          role="alert"
-        >
+          " class="alert alert-danger" role="alert">
           <div *ngIf="criteriaControl.errors['required']">
             <span translate>criteria.required</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </form>
     <div class="text-end pt-3">

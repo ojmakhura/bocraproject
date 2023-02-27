@@ -23,6 +23,7 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
   reportController!: ReportRestController;
   constructor(private injector: Injector) {
     super(injector);
+    this.reportController = this.injector.get(ReportRestController)
   }
   errorMessage = '';
   showChart = false;
@@ -46,32 +47,18 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
     'rgba(0, 204, 102)',
   ]
   backgroundColor = [
-    'rgba(255, 99, 132, 0.5)',
-    'rgba(255, 159, 64, 0.5)',
-    'rgba(54, 162, 235, 0.5)',
-    'rgba(153, 102, 255, 0.5)',
-    'rgba(201, 203, 207, 0.5)',
-    'rgba(0, 172, 230, 0.5)',
-    'rgba(230, 0, 115, 0.5)',
-    'rgba(255, 51, 102, 0.5)',
-    'rgba(255, 51, 204, 0.5)',
-    'rgba(255, 140, 26, 0.5)',
-    'rgba(255, 140, 102, 0.5)',
-    'rgba(0, 204, 102, 0.5)',
-  ]
-  hoverBackgroundColor = [
-    'rgba(255, 99, 132)',
-    'rgba(255, 159, 64)',
-    'rgba(54, 162, 235)',
-    'rgba(153, 102, 255)',
-    'rgba(201, 203, 207)',
-    'rgba(0, 172, 230)',
-    'rgba(230, 0, 115)',
-    'rgba(255, 51, 102)',
-    'rgba(255, 51, 204)',
-    'rgba(255, 140, 26)',
-    'rgba(255, 140, 102)',
-    'rgba(0, 204, 102)',
+    'rgba(255, 99, 132, 0.7)',
+    'rgba(255, 159, 64, 0.7)',
+    'rgba(54, 162, 235, 0.7)',
+    'rgba(153, 102, 255, 0.7)',
+    'rgba(201, 203, 207, 0.7)',
+    'rgba(0, 172, 230, 0.7)',
+    'rgba(230, 0, 115, 0.7)',
+    'rgba(255, 51, 102, 0.7)',
+    'rgba(255, 51, 204, 0.7)',
+    'rgba(255, 140, 26, 0.7)',
+    'rgba(255, 140, 102, 0.7)',
+    'rgba(0, 204, 102, 0.7)',
   ]
 
   override doNgAfterViewInit(): void {
@@ -99,8 +86,9 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
         data: this.reportYearData,
         label: '',
         backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        hoverBackgroundColor: this.hoverBackgroundColor
+        borderColor: this.backgroundColor,
+        hoverBackgroundColor: this.borderColor,
+        hoverBorderColor: this.borderColor
       },
     ];
 
@@ -121,8 +109,9 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
         data: this.reportLicenseesData,
         label: '',
         backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        hoverBackgroundColor: this.hoverBackgroundColor
+        borderColor: this.backgroundColor,
+        hoverBackgroundColor: this.borderColor,
+        hoverBorderColor: this.borderColor
       },
     ];
 
@@ -144,8 +133,9 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
         data: this.reportTypeData,
         label: '',
         backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        hoverBackgroundColor: this.hoverBackgroundColor
+        borderColor: this.backgroundColor,
+        hoverBackgroundColor: this.borderColor,
+        hoverBorderColor: this.borderColor
       },
     ];
 
@@ -157,9 +147,8 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
       console.log(this.reportStatusData);
     }
 
-    let selectiveBackgroundColor = ['rgba(255, 194, 0, 0.8)', 'rgba(238, 36, 0, 0.8)', 'rgba(0, 128, 0, 0.8)'];
-    let selectiveBorderColor = ['rgba(255, 194, 0)', 'rgba(238, 36, 0)', 'rgba(0, 128, 0)'];
-    let selectiveHoverBackgroundColor = ['rgba(255, 194, 0)', 'rgba(238, 36, 0)', 'rgba(0, 128, 0)'];
+    let selectiveBackgroundColor = ['rgba(255, 194, 0, 0.7)', 'rgba(255, 0, 0, 0.7)', 'rgba(0, 128, 0, 0.7)'];
+    let selectiveBorderColor = ['rgba(255, 194, 0)', 'rgba(255, 0, 0)', 'rgba(0, 128, 0)'];
 
     this.chartStatusData.labels = this.reportStatusLabel;
     this.chartStatusData.datasets = [
@@ -167,8 +156,9 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
         data: this.reportStatusData,
         label: '',
         backgroundColor: selectiveBackgroundColor,
-        borderColor: selectiveBorderColor,
-        hoverBackgroundColor: selectiveHoverBackgroundColor
+        borderColor: selectiveBackgroundColor,
+        hoverBackgroundColor: selectiveBorderColor,
+        hoverBorderColor: selectiveBorderColor
       },
     ];
 
@@ -197,8 +187,9 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
         data: this.reportSectorData,
         label: '',
         backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        hoverBackgroundColor: this.hoverBackgroundColor
+        borderColor: this.backgroundColor,
+        hoverBackgroundColor: this.borderColor,
+        hoverBorderColor: this.borderColor
       },
     ];
 
@@ -252,9 +243,8 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
       }
     }
 
-    let selectiveRBackgroundColor = ['rgba(255, 194, 0, 0.6)', 'rgba(238, 36, 0, 0.6)', 'rgba(144, 238, 144, 0.6)', 'rgba(0, 128, 0, 0.6)'];
-    let selectiveRBorderColor = ['rgba(255, 194, 0)', 'rgba(238, 36, 0)', 'rgba(144, 238, 144)', 'rgba(0, 128, 0)'];
-    let selectiveRHoverBackgroundColor = ['rgba(255, 194, 0)', 'rgba(238, 36, 0)', 'rgba(144, 238, 144)', 'rgba(0, 255, 0)'];
+    let selectiveRBackgroundColor = ['rgba(255, 0, 0, 0.7)', 'rgba(255, 194, 0, 0.7)', 'rgba(144, 238, 144, 0.7)', 'rgba(0, 128, 0, 0.7)'];
+    let selectiveRBorderColor = ['rgba(255, 0, 0)', 'rgba(255, 194, 0)', 'rgba(144, 238, 144)', 'rgba(0, 128, 0)'];
 
     this.chartResolutionData.labels = this.reportResolutionLabel;
     this.chartResolutionData.datasets = [
@@ -262,12 +252,11 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
         data: this.reportResolutionData,
         label: '',
         backgroundColor: selectiveRBackgroundColor,
-        borderColor: selectiveRBorderColor,
-        hoverBackgroundColor: selectiveRHoverBackgroundColor
+        borderColor: selectiveRBackgroundColor,
+        hoverBackgroundColor: selectiveRBorderColor,
+        hoverBorderColor: selectiveRBorderColor
       },
     ];
-
-
 
   }
 
@@ -278,13 +267,13 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
       reportName: this.reportFilterForm.value.chartLabel,
       images: [
         {
+          type: this.reportFilterForm.value.chartType,
           label: this.reportFilterForm.value.chartLabel,
           image: this.chart.toBase64Image(),
           caption: this.reportFilterForm.value.chartCaption
         }
       ]
     }
-    console.log(d);
 
     this.reportController.createComplaintReportWordDocument(d).subscribe(file => {
       if (file) {

@@ -31,6 +31,8 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<any
             ];
             const isAcceptablePathMatch = acceptablePaths.some((path) => url.includes(path));
 
+            console.log('=====')
+
             return !(isGetRequest && isAcceptablePathMatch);
           },
         });
