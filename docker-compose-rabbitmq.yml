@@ -20,7 +20,7 @@ services:
       timeout: 30s
       retries: 3
     networks:
-      bocraportal-public:
+      traefik-public:
       default:
     ports:
       - "${RABBITMQ_SERVICE_PORT}:${RABBITMQ_SERVICE_PORT}"
@@ -30,7 +30,7 @@ services:
         constraints:
           # Make the traefik service run only on the node with this label
           # as the node with it has the volume for the certificates
-          - node.labels.bocraportal_rabbitmq == true
+          - node.labels.bocraportal_api == true
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.rabbitmq-web.rule=Host(`${RABBITMQ_DOMAIN}`)"
@@ -50,5 +50,5 @@ services:
 # Networks
 ###############################################################################
 networks:
-  bocraportal-public:
+  traefik-public:
     external: true
