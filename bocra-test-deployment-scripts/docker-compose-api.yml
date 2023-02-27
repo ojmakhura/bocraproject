@@ -1,0 +1,67 @@
+version: "3.9"
+services:
+  ###############################################################################
+  # The main API 
+  ###############################################################################
+  api:
+    #image: "ojmakhura/${API_IMAGE_NAME}:${IMAGE_VERSION}"
+    image: ojmakhura/bocraportal-api:0.9.2
+    container_name: bocra-api
+    hostname: api
+    #healthcheck:
+      #test: "curl -m 5 --silent --fail --request GET http://localhost:8085/actuator/health | grep UP || exit 1"
+      #interval: 5s
+      #timeout: 10s
+      #retries: 3
+      #start_period: 5s
+    # build:
+    #  context: .
+    #  dockerfile: bocraportal/webservice/Dockerfile
+    networks:
+      traefik-public:
+    environment:
+      POSTGRES_SERVER: db
+      DB_DOMAIN: db
+      SERVER_PORT: ${API_SERVER_PORT}
+      POSTGRES_SERVER_PORT: ${POSTGRES_SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      KEYCLOAK_AUTH_URL: ${KEYCLOAK_AUTH_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_API_CLIENT: ${KEYCLOAK_API_CLIENT}
+      KEYCLOAK_API_CLIENT_SECRET: ${KEYCLOAK_API_CLIENT_SECRET}
+      BOCRA_KEYCLOAK_ADDRESS: ${BOCRA_KEYCLOAK_ADDRESS}
+      CERT: ${CERT}
+      CERT_PASSWORD: ${CERT_PASSWORD}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_DOMAIN: rabbitmq
+      RABBITMQ_SERVICE_PORT: ${RABBITMQ_SERVICE_PORT}
+      BOCRA_COMPLAINT_ROLES: ${BOCRA_COMPLAINT_ROLES}
+      API_LOG_LEVEL: ${API_LOG_LEVEL}
+      WEB_URL: ${WEB_URL}
+      COMM_URL: ${COMM_URL}
+      TZ: Africa/Gaborone
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocraportal_api == true
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-public"
+        - "traefik.constraint-label=traefik-public"
+        - "traefik.http.services.api.loadbalancer.server.port=8085"
+        - "traefik.http.routers.api.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+        - "traefik.http.routers.api.rule=Host(`${API_DOMAIN}`)"
+        - "traefik.http.routers.api.tls=${SSL_SECURE}"
+        #- "traefik.http.routers.api.tls.certresolver=le"
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  traefik-public:
+    external: true

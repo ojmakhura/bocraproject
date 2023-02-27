@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  registry: 
+    image: registry:2
+    volumes:
+      - ${BOCRA_DATA}/registry/data:/var/lib/registry
+      - ${BOCRA_DATA}/registry/certs:${BOCRA_DATA}/registry/certs
+      - ${BOCRA_DATA}/auth:${BOCRA_DATA}/registry/auth
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_PATH: ${BOCRA_DATA}/registry/auth/system_passwd
+      REGISTRY_AUTH_HTPASSWD_REALM: registry-realm
+    networks:
+      traefik-public:
+    deploy:
+      placement:
+        constraints:
+          # Make the traefik service run only on the node with this label
+          # as the node with it has the volume for the certificates
+          - node.labels.bocraportal_registry == true
+      labels:
+        - "traefik.enable=true"
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - "traefik.http.routers.registry.entrypoints=${ACTIVE_ROUTER_ENTRY}"
+        - "traefik.http.routers.registry.rule=Host(`${REGISTRY_DOMAIN}`)"
+        - "traefik.http.routers.registry.tls=${SSL_SECURE}"
+        - "traefik.http.routers.registry.tls.certresolver=le"
+        - "traefik.http.services.registry.loadbalancer.server.port=5000"
+###############################################################################
+# Networks
+###############################################################################
+networks:
+  traefik-public:
+    external: true
+
