@@ -163,7 +163,7 @@ public class BocraSchedule {
      * On the last day of each month, we try to create the next periods.
      */
     @Async
-    @Scheduled(cron = "0 0 0 L * *", zone = "Africa/Gaborone")
+    @Scheduled(cron = "0 0 18 L * *", zone = "Africa/Gaborone")
     public void nextPeriods() {
         String formatTime = this.getDateTime();
 
