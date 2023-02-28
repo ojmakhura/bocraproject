@@ -34,9 +34,11 @@ export class ComplaintTypeRestController {
   }
 
   public search(criteria: string | any): Observable<ComplaintVO[] | any[]> {
-    if (criteria === null) {
-      return this.getAll();
+
+    if(!criteria || criteria?.length === 0 || criteria == null) {
+        return this.getAll();
     }
+
 
     return this.http.get<ComplaintVO[] | any[]>(`${this.path}/search?criteria=${criteria}`, {});
   }

@@ -15,6 +15,7 @@ services:
     #   start_period: 5s
     volumes:
       - ${BOCRA_DATA}/hosts:/etc/hosts
+      # - ${BOCRA_DATA}/api/app:/app
     build:
       context: .
       dockerfile: bocraportal/webservice/Dockerfile

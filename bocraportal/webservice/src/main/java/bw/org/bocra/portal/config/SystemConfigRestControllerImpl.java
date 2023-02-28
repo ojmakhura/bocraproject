@@ -34,6 +34,7 @@ public class SystemConfigRestControllerImpl extends SystemConfigRestControllerBa
     public ResponseEntity<?> handleFindById(Long id) {
         try {
             logger.debug("Searches for system configs using ID " + id);
+            
             Optional<?> data = Optional.of(systemConfigService.findById(id));
             ResponseEntity<?> response;
 
@@ -182,6 +183,36 @@ public class SystemConfigRestControllerImpl extends SystemConfigRestControllerBa
         } catch (Exception e) {
             logger.error(e.getMessage());
             return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<?> handleFindByName(String name) {
+        try {
+            logger.debug("Searches for system configs using ID " + name);
+            Optional<?> data = Optional.of(systemConfigService.findByName(name));
+            ResponseEntity<?> response;
+
+            if (data.isPresent()) {
+                response = ResponseEntity.ok().body(data.get());
+            } else {
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("System config with name %ld not found.", name));
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            String message = e.getMessage();
+            if (e instanceof NoSuchElementException || e.getCause() instanceof NoSuchElementException
+                    || e instanceof EntityNotFoundException || e.getCause() instanceof EntityNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("System config with name %d not found.", name));
+            } else {
+                message = "An unknown error has occured. Please contact the system administrator.";
+            }
+
+            logger.error(message);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 }

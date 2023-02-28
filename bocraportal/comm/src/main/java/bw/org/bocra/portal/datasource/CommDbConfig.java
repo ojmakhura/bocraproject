@@ -17,6 +17,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.zaxxer.hikari.HikariConfig;
+
 import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
@@ -33,6 +35,7 @@ public class CommDbConfig {
     @Bean(name = "commDataSource")
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource commDataSource() {
+        HikariConfig config = new HikariConfig();
         return DataSourceBuilder.create()
                 .build();
     }

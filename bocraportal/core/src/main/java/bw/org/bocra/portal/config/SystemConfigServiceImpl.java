@@ -10,6 +10,7 @@ package bw.org.bocra.portal.config;
 
 import java.util.Collection;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
@@ -111,8 +112,18 @@ public class SystemConfigServiceImpl
     {
 
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by("name").ascending());
-        
         return systemConfigDao.toSystemConfigVOCollection(systemConfigRepository.findAll(page).getContent());
+    }
+
+    @Override
+    protected SystemConfigVO handleFindByName(String name) throws Exception {
+
+        Specification<SystemConfig> specs = BocraportalSpecifications.<SystemConfig, String>findByAttribute("name", name);
+
+        Collection<SystemConfig> configs = systemConfigRepository.findAll(specs, Sort.by("name").ascending());
+        if(CollectionUtils.isEmpty(configs)) return null;
+
+        return systemConfigDao.toSystemConfigVO(configs.iterator().next());
     }
 
 }

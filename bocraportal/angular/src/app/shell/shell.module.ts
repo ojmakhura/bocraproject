@@ -13,6 +13,8 @@ import { ShellComponent } from './shell.component';
 import { useCaseFeature } from '@app/store/usecase/use-case.reducers';
 
 import { authFeature } from '@app/store/auth/auth.reducers';
+import { systemConfigFeature } from '@app/store/config/system-config.reducers';
+import { SystemConfigEffects } from '@app/store/config/system-config.effects';
 import { AuthEffects } from '@app/store/auth/auth.effects';
 import { menuFeature } from '@app/store/menu/menu.reducers';
 import { MenuEffects } from '@app/store/menu/menu.effects';
@@ -28,8 +30,10 @@ import { MenuEffects } from '@app/store/menu/menu.effects';
     RouterModule,
     StoreModule.forFeature(useCaseFeature),
     StoreModule.forFeature(authFeature),
+    StoreModule.forFeature(authFeature),
     StoreModule.forFeature(menuFeature),
-    EffectsModule.forFeature([AuthEffects, MenuEffects]),
+    StoreModule.forFeature(systemConfigFeature),
+    EffectsModule.forFeature([AuthEffects, MenuEffects, SystemConfigEffects]),
   ],
   declarations: [ShellComponent],
 })

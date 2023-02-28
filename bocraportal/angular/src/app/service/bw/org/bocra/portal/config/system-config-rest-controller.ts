@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class SystemConfigRestController {
+
+    systemConfigs: string[] | any[] = [];
     
     protected path = '/configs';
 
@@ -38,7 +40,12 @@ export class SystemConfigRestController {
         return this.http.post<SystemConfigVO | any>(`${this.path}`, systemConfig);
     }
 
-    public search(criteria: string | any ): Observable<SystemConfigVO[] | any[]> {
+    public search(criteria: string): Observable<SystemConfigVO[] | any[]> {
+
+        if(!criteria || criteria === null || criteria?.length == 0) {
+            return this.getAll();
+        }
+
         return this.http.get<SystemConfigVO[] | any[]>(`${this.path}/search?criteria=${criteria}`, {});
     }
 

@@ -23,6 +23,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
@@ -42,6 +43,8 @@ import bw.org.bocra.portal.access.type.AccessPointTypeService;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 import bw.org.bocra.portal.auth.AuthorisationService;
 import bw.org.bocra.portal.auth.AuthorisationVO;
+import bw.org.bocra.portal.config.SystemConfigService;
+import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.period.PeriodService;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.period.config.PeriodConfigService;
@@ -63,8 +66,15 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     private final AccessPointService accessPointService;
     private final AuthorisationService authorisationService;
     private final SectorService sectorService;
+    private final SystemConfigService systemConfigService;
 
-    public ApplicationRunnerImpl(PeriodService periodService, PeriodConfigService periodConfigService, AccessPointTypeService accessPointTypeService, AccessPointService accessPointService, AuthorisationService authorisationService, SectorService sectorService) {
+    @Value("${bocra.complaints.emails}")
+    private String complaintEmails;
+
+    @Value("${bocra.api.url}")
+    private String apiUrl;
+
+    public ApplicationRunnerImpl(SystemConfigService systemConfigService, PeriodService periodService, PeriodConfigService periodConfigService, AccessPointTypeService accessPointTypeService, AccessPointService accessPointService, AuthorisationService authorisationService, SectorService sectorService) {
 
         this.periodService = periodService;
         this.periodConfigService = periodConfigService;
@@ -72,6 +82,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         this.accessPointTypeService = accessPointTypeService;
         this.authorisationService = authorisationService;
         this.sectorService = sectorService;
+        this.systemConfigService = systemConfigService;
     }
 
     private Collection<PeriodConfigVO> initPeriodConfigs() {
@@ -250,6 +261,16 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         }
     }
 
+    private void initSystemConfig() {
+
+        SystemConfigVO config = new SystemConfigVO("API_URL", apiUrl);
+        systemConfigService.save(config);
+
+        config = new SystemConfigVO("COMPLAINTS_MANAGEMENT_EMAIL", complaintEmails);
+        systemConfigService.save(config);
+
+    }
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
@@ -299,6 +320,15 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
             log.info("Initialising sectors .... ");
             this.initSectors();
             log.info("Sectors initialisation complete .... ");
+
+        }
+        log.info(complaintEmails);
+
+        if(CollectionUtils.isEmpty(systemConfigService.getAll())) {
+
+            log.info("Initialising system configs .... ");
+            this.initSystemConfig();
+            log.info("System config complete .... ");
 
         }
 

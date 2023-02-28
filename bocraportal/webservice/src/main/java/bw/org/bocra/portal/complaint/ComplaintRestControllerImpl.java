@@ -39,6 +39,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
+import bw.org.bocra.portal.config.SystemConfigService;
+import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.properties.RabbitProperties;
 import bw.org.bocra.portal.user.UserVO;
@@ -56,23 +58,22 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
     @Value("${bocra.web.url}")
     private String webUrl;
-
-    @Value("${bocra.complaints.roles}")
-    private String[] complaintRoles;
-
+    
     private final RestTemplate restTemplate;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitProperties rabbitProperties;
     private final KeycloakUserService keycloakUserService;
+    private final SystemConfigService systemConfigService;
 
     public ComplaintRestControllerImpl(ComplaintService complaintService, RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties,
-            RestTemplate restTemplate, KeycloakUserService keycloakUserService) {
+            RestTemplate restTemplate, KeycloakUserService keycloakUserService, SystemConfigService systemConfigService) {
 
         super(complaintService);
         this.restTemplate = restTemplate;
         this.rabbitTemplate = rabbitTemplate;
         this.rabbitProperties = rabbitProperties;
         this.keycloakUserService = keycloakUserService;
+        this.systemConfigService = systemConfigService;
     }
 
     @Override
@@ -195,8 +196,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                             complaint.getFirstName() + " " + complaint.getSurname());
 
                     
-                    Set<String> emails = keycloakUserService.getUsersByRoles(new HashSet<>(Arrays.asList(complaintRoles)))
-                            .stream().map(user -> user.getEmail()).collect(Collectors.toSet());
+                    SystemConfigVO sysConf = this.systemConfigService.findByName("COMPLAINTS_MANAGEMENT_EMAIL");
+                    Set<String> emails = Set.of(sysConf.getValue().split(","));
 
                     emailTempate = """
                             Dear Complaint Officer
