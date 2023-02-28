@@ -14,7 +14,7 @@ export class SystemConfigEffects {
          this.actions$.pipe(
             ofType(SystemConfigActions.findById),
             mergeMap(({id}) => this.systemConfigRestController.findById(id).pipe(
-                map(( systemConfig) => SystemConfigActions.findByIdSuccess({systemConfig, messages: [`Action successful.`], success: true})),
+                map(( systemConfig) => SystemConfigActions.findByIdSuccess({systemConfig, messages: [`System config with id ${id} found.`], success: true})),
                 catchError(({error}) => [SystemConfigActions.systemConfigFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -24,7 +24,7 @@ export class SystemConfigEffects {
          this.actions$.pipe(
             ofType(SystemConfigActions.save),
             mergeMap(({systemConfig}) => this.systemConfigRestController.save(systemConfig).pipe(
-                map(( systemConfig) => SystemConfigActions.saveSuccess({systemConfig, messages: [`Action successful.`], success: true})),
+                map(( systemConfig) => SystemConfigActions.saveSuccess({systemConfig, messages: [`System config saved.`], success: true})),
                 catchError(({error}) => [SystemConfigActions.systemConfigFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -34,7 +34,7 @@ export class SystemConfigEffects {
          this.actions$.pipe(
             ofType(SystemConfigActions.remove),
             mergeMap(({id}) => this.systemConfigRestController.remove(id).pipe(
-                map(( removed) => SystemConfigActions.removeSuccess({removed, messages: [`Action successful.`], success: true})),
+                map(( removed) => SystemConfigActions.removeSuccess({removed, messages: [`System config removed.`], success: true})),
                 catchError(({error}) => [SystemConfigActions.systemConfigFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -44,7 +44,7 @@ export class SystemConfigEffects {
          this.actions$.pipe(
             ofType(SystemConfigActions.getAll),
             mergeMap(({}) => this.systemConfigRestController.getAll().pipe(
-                map(( systemConfigs) => SystemConfigActions.getAllSuccess({systemConfigs, messages: [`Action successful.`], success: true})),
+                map(( systemConfigs) => SystemConfigActions.getAllSuccess({systemConfigs, messages: [`${systemConfigs.length} configurations found.`], success: true})),
                 catchError(({error}) => [SystemConfigActions.systemConfigFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -54,7 +54,7 @@ export class SystemConfigEffects {
          this.actions$.pipe(
             ofType(SystemConfigActions.search),
             mergeMap(({criteria}) => this.systemConfigRestController.search(criteria).pipe(
-                map(( systemConfigs) => SystemConfigActions.searchSuccess({systemConfigs, messages: [`Action successful.`], success: true})),
+                map(( systemConfigs) => SystemConfigActions.searchSuccess({systemConfigs, messages: [`${systemConfigs.length} configurations found.`], success: true})),
                 catchError(({error}) => [SystemConfigActions.systemConfigFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )
@@ -64,7 +64,7 @@ export class SystemConfigEffects {
          this.actions$.pipe(
             ofType(SystemConfigActions.getAllPaged),
             mergeMap(({pageNumber, pageSize}) => this.systemConfigRestController.getAllPaged(pageNumber, pageSize).pipe(
-                map(( systemConfigs ) => SystemConfigActions.getAllPagedSuccess({systemConfigs, messages: [`Action successful.`], success: true})),
+                map(( systemConfigs ) => SystemConfigActions.getAllPagedSuccess({systemConfigs, messages: [`${systemConfigs.length} configurations found.`], success: true})),
                 catchError(({error}) => [SystemConfigActions.systemConfigFailure({messages: [error?.error ? error?.error : error]})])
             ))
         )

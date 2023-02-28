@@ -16,7 +16,7 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<any
             onLoad: 'check-sso',
             silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
           },
-          bearerExcludedUrls: ['/assets', '/home', '/about', '/contact', '/complaint', '/complaint/search-complaints'],
+          bearerExcludedUrls: ['/assets', '/home', '/about', '/contact', '/complaint/reply', '/complaint/save', '/complaint/load'],
           shouldAddToken: (request) => {
             const { method, url } = request;
 
@@ -30,8 +30,6 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<any
               '/complaint/search-complaints',
             ];
             const isAcceptablePathMatch = acceptablePaths.some((path) => url.includes(path));
-
-            console.log('=====')
 
             return !(isGetRequest && isAcceptablePathMatch);
           },
