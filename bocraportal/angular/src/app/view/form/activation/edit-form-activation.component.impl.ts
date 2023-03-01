@@ -9,6 +9,8 @@ import { EditFormActivationVarsForm } from '@app/view/form/activation/edit-form-
 import { FormCriteria } from '@app/model/bw/org/bocra/portal/form/form-criteria';
 import * as FormActions from '@app/store/form/form.actions';
 import * as FormSelectors from '@app/store/form/form.selectors';
+import * as FormSubmissionActions from '@app/store/form/submission/form-submission.actions';
+import * as FormSubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
 import * as PeriodActions from '@app/store/period/period.actions';
 import * as PeriodSelectors from '@app/store/period/period.selectors';
 import { PeriodCriteria } from '@app/model/bw/org/bocra/portal/period/period-criteria';
@@ -32,6 +34,7 @@ import { DatePipe } from '@angular/common';
 export class EditFormActivationComponentImpl extends EditFormActivationComponent {
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
+  submissionRemoved$: Observable<boolean>;
   deleteUnrestricted: boolean = true;
   acceptUnrestricted: boolean = true;
   returnUnrestricted: boolean = true;
@@ -44,6 +47,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     this.formActivationPeriods$ = this.store.pipe(select(PeriodSelectors.selectPeriods));
     this.formActivationForms$ = this.store.pipe(select(FormSelectors.selectForms));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
+    this.submissionRemoved$ = this.store.pipe(select(FormSubmissionSelectors.selectRemoved));
     this.datePipe = this._injector.get(DatePipe);
   }
 
@@ -105,6 +109,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     this.formActivation$.subscribe((formActivation) => {
       this.setEditFormActivationFormValue({ formActivation });
     });
+   
 
     // this.store.dispatch(
     //   ViewActions.loadViewAuthorisations({
@@ -124,6 +129,30 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   }
 
   override handleFormChanges(change: any): void {}
+
+  override handleDeleteFromFormActivationFormSubmissions(submission: FormSubmissionVO): void {
+    this.store.dispatch(
+      FormSubmissionActions.remove({
+        id: submission?.id,
+        loaderMessage: `Removing the form submission.`,
+        loading: true
+      })
+    );
+  }
+
+  override deleteFromFormActivationFormSubmissions(index: number) {
+    
+    let submission: FormSubmissionVO = this.formActivationFormSubmissions[index];
+
+    if(submission.submissionStatus !== 'ACCEPTED' && confirm('Are you sure you want to delete this form submission?')) {
+      this.handleDeleteFromFormActivationFormSubmissions(submission);
+      this.submissionRemoved$.subscribe(removed => {
+        if(removed) {
+          this.formActivationFormSubmissionsControl.removeAt(index);
+        }
+      });
+    }
+  }
 
   override beforeEditFormActivationDelete(form: EditFormActivationDeleteForm): void {
     if (form?.formActivation?.id) {
