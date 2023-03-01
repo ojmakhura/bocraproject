@@ -360,7 +360,16 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleActivateDueForms() {
         try {
             logger.debug("Activating due forms");
-            return ResponseEntity.ok().body(formActivationService.activateDueForms());
+            System.out.println(keycloakService.getSecurityContext());
+            System.out.println(keycloakService.getSecurityContext().getToken().getIssuedFor());
+
+            Collection<FormActivationVO> activations = formActivationService.activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor());
+
+            activations.forEach(activation -> {
+                this.sendNotifications(activation);
+            });
+
+            return ResponseEntity.ok().body(activations);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -379,7 +388,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
         try {
             logger.debug("Creating missing submission for activation " + id);
-            return ResponseEntity.ok().body(formActivationService.createMissingSubmissions(id));
+            return ResponseEntity.ok().body(formActivationService.createMissingSubmissions(id, keycloakService.getSecurityContext().getToken().getIssuedFor()));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -398,7 +407,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
         try {
             logger.debug("Recreating submission for activation " + id);
-            return ResponseEntity.ok().body(formActivationService.recreateActivationSubmission(id));
+            return ResponseEntity.ok().body(formActivationService.recreateActivationSubmission(id, keycloakService.getSecurityContext().getToken().getIssuedFor()));
 
         } catch (Exception e) {
             e.printStackTrace();

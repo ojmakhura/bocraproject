@@ -175,8 +175,7 @@ public class PeriodDaoImpl
         Specification<Period> specs = null;
         
         if (criteria.getSearchDate() != null) {
-            specs = BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThan("periodStart", criteria.getSearchDate());
-            specs = specs.and(BocraportalSpecifications.<Period, LocalDate>findByAttributeLessThanEqual("periodEnd", criteria.getSearchDate()));
+            specs = getPeriodSpecByDate(criteria.getSearchDate());
         }
 
         if (StringUtils.isNotBlank(criteria.getPeriodName())) {
@@ -190,6 +189,11 @@ public class PeriodDaoImpl
         return periodRepository.findAll(specs);
     }
 
+    private Specification<Period> getPeriodSpecByDate(LocalDate date) {
+        return BocraportalSpecifications.<Period, LocalDate>findByAttributeLessThanEqual("periodStart", date)
+            .and(BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThanEqual("periodEnd", date));
+    }
+
     public static Specification<Period> findByAttributeLessThan(String attribute, LocalDate attributeValue){
         return (root, cq, cb) -> {
             
@@ -199,11 +203,6 @@ public class PeriodDaoImpl
 
     @Override
     protected Collection<Period> handleGetActivePeriods() throws Exception {
-        LocalDate today = LocalDate.now();
-
-        Specification<Period> specs = BocraportalSpecifications.<Period, LocalDate>findByAttributeGreaterThan("startDate", today)
-                                    .and(BocraportalSpecifications.<Period, LocalDate>findByAttributeLessThan("endDate", today));
-
-        return periodRepository.findAll(specs, Sort.by("startDate").descending());
+        return periodRepository.findAll(getPeriodSpecByDate(LocalDate.now()), Sort.by("periodStart").descending());
     }
 }

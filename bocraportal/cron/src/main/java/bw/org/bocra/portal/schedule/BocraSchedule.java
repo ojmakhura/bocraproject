@@ -159,6 +159,13 @@ public class BocraSchedule {
         log.info(String.format("%d submissions overdue.", response.getBody()));
     }
 
+    @Async
+    @Scheduled(cron = "0 0/1 * * * *", zone = "Africa/Gaborone")
+    public void test() {
+        log.info("Running test ........................");
+        activateDueForms();
+    }
+
     /**
      * On the last day of each month, we try to create the next periods.
      */

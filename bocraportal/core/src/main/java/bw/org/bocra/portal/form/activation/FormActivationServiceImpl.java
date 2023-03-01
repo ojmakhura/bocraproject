@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.form.activation;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -228,7 +229,7 @@ public class FormActivationServiceImpl
     }
 
     @Override
-    protected FormActivationVO handleRecreateActivationSubmission(Long id) throws Exception {
+    protected FormActivationVO handleRecreateActivationSubmission(Long id, String createdBy) throws Exception {
         FormActivation activation = formActivationRepository.getReferenceById(id);
 
         formSubmissionDao.remove(activation.getFormSubmissions());
@@ -241,7 +242,7 @@ public class FormActivationServiceImpl
     }
 
     @Override
-    protected Collection<FormSubmissionVO> handleCreateMissingSubmissions(Long id) throws Exception {
+    protected Collection<FormSubmissionVO> handleCreateMissingSubmissions(Long id, String createdBy) throws Exception {
         FormActivation activation = formActivationRepository.getReferenceById(id);
 
         // Get the ids of the submissions already existing for the activation
@@ -259,25 +260,28 @@ public class FormActivationServiceImpl
     }
 
     @Override
-    protected Collection<FormActivationVO> handleActivateDueForms() throws Exception {
+    protected Collection<FormActivationVO> handleActivateDueForms(String createdBy) throws Exception {
 
         Collection<FormActivationVO> activations = new HashSet<>();
 
         Collection<Period> periods = periodDao.getActivePeriods();
+
         if (CollectionUtils.isEmpty(periods)) {
             return new HashSet<>();
         }
         Set<Long> periodConfigs = periods.stream()
                 .map(period -> period.getPeriodConfig().getId())
                 .collect(Collectors.toSet());
-
+        
         Collection<Form> forms = formDao.findFormsByPeriodConfigs(periodConfigs);
 
         periods.forEach(period -> {
-            Collection<Form> filtered = forms.stream().filter(form -> form.getPeriodConfig().getId() == period.getId())
-                    .collect(Collectors.toList());
+            Collection<Form> filtered = forms.stream().filter(form -> {
+                return form.getPeriodConfig().getId() == period.getPeriodConfig().getId();
+            }).collect(Collectors.toList());
             PeriodVO pv = new PeriodVO();
             pv.setId(period.getId());
+            System.out.println(filtered);
 
             filtered.forEach(fil -> {
 
@@ -289,6 +293,8 @@ public class FormActivationServiceImpl
                 if (CollectionUtils.isEmpty(this.search(criteria))) {
 
                     FormActivationVO activation = new FormActivationVO();
+                    activation.setCreatedBy(createdBy);
+                    activation.setCreatedDate(LocalDateTime.now());
                     FormVO form = new FormVO();
                     form.setId(fil.getId());
                     activation.setForm(form);
@@ -300,8 +306,14 @@ public class FormActivationServiceImpl
                             period.getPeriodName());
 
                     activation.setActivationName(activationName);
+                    activation = this.save(activation);
 
-                    activations.add(this.save(activation));
+                    Collection<FormSubmissionVO> submissions = this.submissionService
+                            .createNewSubmissions(this.getLicenseeIds(formRepository.getReferenceById(form.getId())), activation.getId());
+                    
+                    activation.setFormSubmissions(submissions);
+
+                    activations.add(activation);
 
                 }
             });
