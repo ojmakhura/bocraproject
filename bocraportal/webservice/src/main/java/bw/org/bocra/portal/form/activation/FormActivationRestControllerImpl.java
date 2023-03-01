@@ -360,8 +360,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleActivateDueForms() {
         try {
             logger.debug("Activating due forms");
-            System.out.println(keycloakService.getSecurityContext());
-            System.out.println(keycloakService.getSecurityContext().getToken().getIssuedFor());
 
             Collection<FormActivationVO> activations = formActivationService.activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor());
 

@@ -62,7 +62,7 @@ export class ComplaintRestController {
   }
 
   public save(complaint: ComplaintVO | any): Observable<ComplaintVO | any> {
-    return this.http.post<ComplaintVO | any>(`${this.path}`, complaint);
+    return this.http.post<ComplaintVO | any>(`${this.path}/save`, complaint);
   }
 
   public search(criteria: ComplaintSeachCriteria | any): Observable<ComplaintVO[] | any[]> {

@@ -22,6 +22,8 @@ export const selectFormFields = createSelector(selectFormState, (state: FormStat
 
 export const selectFormField = createSelector(selectFormState, (state: FormState) => state.formField);
 
+export const selectFormFieldRemoved = createSelector(selectFormState, (state: FormState) => state.formFieldRemoved);
+
 export const selectFieldName = createSelector(selectFormState, (state: FormState) => state.fieldName);
 
 export const selectMax = createSelector(selectFormState, (state: FormState) => state.max);

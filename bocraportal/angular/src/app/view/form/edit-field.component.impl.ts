@@ -63,21 +63,22 @@ export class EditFieldComponentImpl extends EditFieldComponent {
         this.store.dispatch(
           FormActions.findFieldById({ id: queryParams.id, loading: true, loaderMessage: 'Loading field by id' })
         );
-      } else {
-        if (queryParams?.formId) {
-          this.store.dispatch(
-            FormActions.findFormById({ id: queryParams.formId, loading: true, loaderMessage: 'Loading form by id' })
-          );
-        }
       }
     });
 
     this.formField$.subscribe((field) => {
       if (field) {
         if (field.form) {
-          this.store.dispatch(
-            FormActions.findFormById({ id: field.form.id, loading: true, loaderMessage: 'Loading form by id ...' })
-          );
+
+          if(this.formFieldFormBackingList.length == 0) {
+            field.form?.formSections?.forEach((element: FormSectionVO) => {
+              let item: SelectItem = new SelectItem();
+              item.label = element.sectionLabel;
+              item.value = element.id;
+      
+              this.formFieldFormSectionBackingList.push(item);
+            });
+          }
         }
 
         this.setEditFieldFormValue({ formField: field });

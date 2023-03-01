@@ -6,6 +6,9 @@
  */
 package bw.org.bocra.portal.form.field;
 
+import java.util.ArrayList;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +50,18 @@ public class FormFieldDaoImpl
             form.setId(source.getForm().getId());
             form.setCode (source.getForm().getCode());
             form.setFormName(source.getForm().getFormName());
+            form.setEntryType(source.getForm().getEntryType());
+
+            if(CollectionUtils.isNotEmpty(source.getForm().getFormSections())) {
+                form.setFormSections(new ArrayList<>());
+    
+                for(FormSection entity : source.getForm().getFormSections()) {
+                    FormSectionVO section = new FormSectionVO();
+                    getFormSectionDao().toFormSectionVO(entity, section);
+    
+                    form.getFormSections().add(section);
+                }
+            }
             
             target.setForm(form);
         }

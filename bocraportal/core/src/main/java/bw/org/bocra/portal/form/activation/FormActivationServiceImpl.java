@@ -281,7 +281,6 @@ public class FormActivationServiceImpl
             }).collect(Collectors.toList());
             PeriodVO pv = new PeriodVO();
             pv.setId(period.getId());
-            System.out.println(filtered);
 
             filtered.forEach(fil -> {
 

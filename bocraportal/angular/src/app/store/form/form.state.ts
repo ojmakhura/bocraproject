@@ -13,6 +13,7 @@ export interface FormState {
   fieldType: FieldType | any;
   formFields: Array<FormFieldVO> | Array<any>;
   formField: FormFieldVO | any;
+  formFieldRemoved: boolean,
   formSection: FormSectionVO | any;
   formSections: Array<FormSectionVO> | Array<any>;
   licenseeForms: Array<LicenseeFormVO> | Array<any>;
@@ -56,4 +57,5 @@ export const initialState: FormState = {
   error: false,
   messages: [],
   loaderMessage: undefined,
+  formFieldRemoved: false
 };

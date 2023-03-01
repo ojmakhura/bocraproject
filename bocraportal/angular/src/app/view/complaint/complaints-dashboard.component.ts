@@ -101,7 +101,7 @@ export abstract class ComplaintsDashboardComponent implements OnInit, AfterViewI
             this.useCaseScope.pageVariables = this.complaintsFiltered;
             if (this.useCaseScope.pageVariables.length > 0) {
                 this.licenseeFilter.push(
-                    this.useCaseScope.pageVariables.map((entry: { licensee: { licenseeName: any } }) => entry.licensee.licenseeName)
+                    this.useCaseScope.pageVariables.map((entry: { licensee: { licenseeName: any } }) => entry.licensee['alias'] ? entry.licensee['alias'] : entry.licensee.licenseeName)
                 );
                 this.reportLicenseesLabel = [...new Set(this.licenseeFilter[0])];
                 for (let licensee of this.reportLicenseesLabel) {

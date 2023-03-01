@@ -145,7 +145,7 @@ export const formReducer = createReducer(
   })),
   on(FormActions.removeFieldSuccess, (state, action) => ({
     ...state,
-    removed: action.removed,
+    formFieldRemoved: action.removed,
     loading: false,
     loaderMessage: undefined,
     success: action.success,

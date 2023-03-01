@@ -86,9 +86,6 @@ public class FormActivationDaoImpl
             target.setPeriod(period);
         }
 
-        // WARNING! No conversion for target.form (can't convert
-        // source.getForm():bw.org.bocra.portal.form.Form to
-        // bw.org.bocra.portal.form.FormVO
         if (source.getForm() != null && source.getForm().getId() != null) {
             FormVO form = new FormVO();
             form.setId(source.getForm().getId());
@@ -99,8 +96,6 @@ public class FormActivationDaoImpl
             form.setCode(source.getForm().getCode());
             form.setFormName(source.getForm().getFormName());
             form.setEntryType(source.getForm().getEntryType());
-
-            System.out.println(source.getForm());
 
             if (source.getForm().getPeriodConfig() != null && source.getForm().getPeriodConfig().getId() != null) {
                 form.setPeriodConfig(periodConfigDao.toPeriodConfigVO(source.getForm().getPeriodConfig()));
