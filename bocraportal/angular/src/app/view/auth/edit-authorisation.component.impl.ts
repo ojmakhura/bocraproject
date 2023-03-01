@@ -39,9 +39,13 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
   override doNgOnDestroy(): void {}
 
   override beforeOnInit(form: EditAuthorisationVarsForm): EditAuthorisationVarsForm {
-    this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
-      let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
-      this.keycloakService.loadUserProfile().then((profile) => {
+    
+    this.keycloakService.loadUserProfile().then((profile) => {
+
+      if(!profile) return;
+
+      this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
+        let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
         this.http
           .get<any[]>(
             `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`
@@ -59,25 +63,25 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
                 }
               });
           });
-
-        this.http
-          .get<any[]>(
-            `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
-          )
-          .subscribe((roles) => {
-            roles
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .forEach((role: any) => {
-                if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
-                  let item = new SelectItem();
-                  item.label = role['description'];
-                  item.value = role['name'];
-
-                  this.authorisationRolesBackingList.push(item);
-                }
-              });
-          });
       });
+
+      this.http
+        .get<any[]>(
+          `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
+        )
+        .subscribe((roles) => {
+          roles
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .forEach((role: any) => {
+              if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
+                let item = new SelectItem();
+                item.label = role['description'];
+                item.value = role['name'];
+
+                this.authorisationRolesBackingList.push(item);
+              }
+            });
+        });
     });
 
     return form;

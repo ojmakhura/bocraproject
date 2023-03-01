@@ -50,7 +50,9 @@ export class EditFormComponentImpl extends EditFormComponent {
   private licenseeForm$: Observable<LicenseeFormVO>;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
+  deleteFieldUnrestricted: boolean = true;
   licenseeRemoved$: Observable<boolean>;
+  fieldRemoved$: Observable<boolean>;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -65,6 +67,7 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.formSectors$ = this.store.pipe(select(SectorSelectors.selectSectors));
     this.licenseeRemoved$ = this.store.pipe(select(LicenseeFormSelectors.selectRemoved));
+    this.fieldRemoved$ = this.store.pipe(select(FormSelectors.selectFormFieldRemoved));
     this.formPeriodConfigs$ = this.store.pipe(select(PeriodConfigSelectors.selectPeriodConfigs));
   }
 
@@ -85,9 +88,16 @@ export class EditFormComponentImpl extends EditFormComponent {
       })
     );
 
-    this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
-      let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
-      this.keycloakService.loadUserProfile().then((profile) => {
+    this.keycloakService.loadUserProfile().then((profile) => {
+
+      if(!profile) return
+
+      this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
+        let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
+        
+        if(!client)
+          return;
+
         this.http
           .get<any[]>(
             `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`
@@ -105,25 +115,25 @@ export class EditFormComponentImpl extends EditFormComponent {
                 }
               });
           });
-
-        this.http
-          .get<any[]>(
-            `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
-          )
-          .subscribe((roles) => {
-            roles
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .forEach((role: any) => {
-                if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
-                  let item = new SelectItem();
-                  item.label = role['description'];
-                  item.value = role['name'];
-
-                  this.formRolesBackingList.push(item);
-                }
-              });
-          });
       });
+  
+      this.http
+        .get<any[]>(
+          `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
+        )
+        .subscribe((roles) => {
+          roles
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .forEach((role: any) => {
+              if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
+                let item = new SelectItem();
+                item.label = role['description'];
+                item.value = role['name'];
+
+                this.formRolesBackingList.push(item);
+              }
+            });
+        });
     });
 
     this.route?.queryParams?.subscribe((queryParams: any) => {
@@ -181,8 +191,13 @@ export class EditFormComponentImpl extends EditFormComponent {
 
     this.unauthorisedUrls$?.subscribe((restrictedItems) => {
       restrictedItems.forEach((item) => {
+
         if (item === '/form/edit-form/{button:delete}') {
           this.deleteUnrestricted = false;
+        }
+
+        if (item === '/form/edit-form/{button:formFields:delete}') {
+          this.deleteFieldUnrestricted = false;
         }
       });
     });
@@ -317,6 +332,7 @@ export class EditFormComponentImpl extends EditFormComponent {
   override doEditFormFormFields(formField: any) {
     this.formController.resetUseCaseScope();
     this.useCaseScope.queryParams['id'] = formField.id;
+    this.useCaseScope.pageVariables['form'] = this.form;
     this.router.navigate(['form/edit-field'], { queryParams: this.useCaseScope.queryParams });
   }
 
@@ -380,8 +396,26 @@ export class EditFormComponentImpl extends EditFormComponent {
   }
 
   override deleteFromFormFormFields(index: number) {
-    // this.handleDeleteFromFormFormFields(this.formFormFields[index]);
-    // this.formFormFieldsControl.removeAt(index);
+
+    if(confirm("Are you sure you want to delete the form field?")) {
+
+      let field: FormFieldVO = this.formFormFields[index];
+      this.store.dispatch(
+        FormActions.removeField({
+          id: field.id,
+          loaderMessage: "Deleting form field ...",
+          loading: true
+        })
+      );
+
+      this.fieldRemoved$.subscribe(removed => {
+        if(removed) {
+
+          this.handleDeleteFromFormFormFields(this.formFormFields[index]);
+          this.formFormFieldsControl.removeAt(index);
+        }
+      });
+    }
   }
 
   override deleteFromFormLicensees(index: number) {

@@ -22,16 +22,13 @@ import bw.org.bocra.portal.BocraportalSpecifications;
 @Repository("complaintTypeDao")
 @Transactional
 public class ComplaintTypeDaoImpl
-    extends ComplaintTypeDaoBase
-{
-    
+        extends ComplaintTypeDaoBase {
+
     public ComplaintTypeDaoImpl(
-        ComplaintTypeRepository complaintTypeRepository
-    ) {
+            ComplaintTypeRepository complaintTypeRepository) {
 
         super(
-            complaintTypeRepository
-        );
+                complaintTypeRepository);
     }
 
     /**
@@ -39,9 +36,8 @@ public class ComplaintTypeDaoImpl
      */
     @Override
     public void toComplaintTypeVO(
-        ComplaintType source,
-        ComplaintTypeVO target)
-    {
+            ComplaintType source,
+            ComplaintTypeVO target) {
         // TODO verify behavior of toComplaintTypeVO
         super.toComplaintTypeVO(source, target);
     }
@@ -50,25 +46,21 @@ public class ComplaintTypeDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public ComplaintTypeVO toComplaintTypeVO(final ComplaintType entity)
-    {
+    public ComplaintTypeVO toComplaintTypeVO(final ComplaintType entity) {
         // TODO verify behavior of toComplaintTypeVO
         return super.toComplaintTypeVO(entity);
     }
 
     /**
-     * Retrieves the entity object that is associated with the specified value object
+     * Retrieves the entity object that is associated with the specified value
+     * object
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private ComplaintType loadComplaintTypeFromComplaintTypeVO(ComplaintTypeVO complaintTypeVO)
-    {
-        if (complaintTypeVO.getId() == null)
-        {
-            return  ComplaintType.Factory.newInstance();
-        }
-        else
-        {
+    private ComplaintType loadComplaintTypeFromComplaintTypeVO(ComplaintTypeVO complaintTypeVO) {
+        if (complaintTypeVO.getId() == null) {
+            return ComplaintType.Factory.newInstance();
+        } else {
             return this.load(complaintTypeVO.getId());
         }
     }
@@ -76,8 +68,7 @@ public class ComplaintTypeDaoImpl
     /**
      * {@inheritDoc}
      */
-    public ComplaintType complaintTypeVOToEntity(ComplaintTypeVO complaintTypeVO)
-    {
+    public ComplaintType complaintTypeVOToEntity(ComplaintTypeVO complaintTypeVO) {
         // TODO verify behavior of complaintTypeVOToEntity
         ComplaintType entity = this.loadComplaintTypeFromComplaintTypeVO(complaintTypeVO);
         this.complaintTypeVOToEntity(complaintTypeVO, entity, true);
@@ -89,10 +80,9 @@ public class ComplaintTypeDaoImpl
      */
     @Override
     public void complaintTypeVOToEntity(
-        ComplaintTypeVO source,
-        ComplaintType target,
-        boolean copyIfNull)
-    {
+            ComplaintTypeVO source,
+            ComplaintType target,
+            boolean copyIfNull) {
         // TODO verify behavior of complaintTypeVOToEntity
         super.complaintTypeVOToEntity(source, target, copyIfNull);
     }
@@ -102,9 +92,10 @@ public class ComplaintTypeDaoImpl
 
         Specification<ComplaintType> spec = null;
 
-        if(StringUtils.isNotBlank(criteria)) {
+        if (StringUtils.isNotBlank(criteria)) {
             spec = BocraportalSpecifications.<ComplaintType, String>findByAttributeLikeIgnoreCase("code", criteria)
-                        .or(BocraportalSpecifications.<ComplaintType, String>findByAttributeLikeIgnoreCase("type", criteria));
+                    .or(BocraportalSpecifications.<ComplaintType, String>findByAttributeLikeIgnoreCase("typeName",
+                            criteria));
         }
 
         return complaintTypeRepository.findAll(spec, Sort.by("code").ascending());

@@ -35,6 +35,7 @@ import { DocumentMetadataTarget } from '@model/bw/org/bocra/portal/document/docu
 import { select } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
+import { LicenceVO } from '@app/model/bw/org/bocra/portal/licence/licence-vo';
 
 @Component({
   selector: 'app-edit-licensee',
@@ -445,5 +446,25 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
     this.useCaseScope.queryParams['shareholder'] = shareholders;
     this.useCaseScope.pageVariables['shareholder'] = shareholders;
     this.editLicenseeNewShareholder();
+  }
+  
+  override createLicenceVOGroup(value: LicenceVO): FormGroup {
+    return this.formBuilder.group({
+      id: [value?.id],
+      createdBy: [value?.createdBy],
+      updatedBy: [value?.updatedBy],
+      createdDate: [value?.createdDate],
+      updatedDate: [value?.updatedDate],
+      status: [value?.status],
+      licenceNumber: [value?.licenceNumber],
+      provisional: [value?.provisional],
+      startDate: [value?.startDate],
+      endDate: [value?.endDate],
+      licenceType: {
+        id: [value?.licenceType?.id],
+        code: [value?.licenceType?.code],
+        name: [value?.licenceType?.name],
+      }
+    });
   }
 }

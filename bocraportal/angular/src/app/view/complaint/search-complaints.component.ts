@@ -52,7 +52,7 @@ export class SearchComplaintsCreateForm {
   id: number | any;
 }
 
-export class SearchComplaintsAnalyseForm {}
+export class SearchComplaintsAnalyseForm { }
 export class SearchComplaintsVarsForm {
   criteria: String | any;
   loggedInSearch: ComplaintSeachCriteria | any;
@@ -198,7 +198,7 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
     this.afterOnInit();
   }
 
-  handleFormChanges(change: any): void {}
+  handleFormChanges(change: any): void { }
 
   searchComplaintsFormReset() {
     this.store.dispatch(ComplaintActions.complaintReset());
@@ -213,9 +213,9 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
     }
   }
 
-  afterOnInit(): void {}
+  afterOnInit(): void { }
 
-  doNgAfterViewInit(): void {}
+  doNgAfterViewInit(): void { }
 
   ngAfterViewInit() {
     this.doNgAfterViewInit();
@@ -261,12 +261,12 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
   /**
    * This method may be overwritten
    */
-  beforeSearchComplaintsSearch(form: SearchComplaintsSearchForm): void {}
+  beforeSearchComplaintsSearch(form: SearchComplaintsSearchForm): void { }
 
   /**
    * This method may be overwritten
    */
-  afterSearchComplaintsSearch(form: SearchComplaintsSearchForm): void {}
+  afterSearchComplaintsSearch(form: SearchComplaintsSearchForm): void { }
 
   searchComplaintsSearch(): void {
     let form: SearchComplaintsSearchForm = this.searchComplaintsSearchForm;
@@ -299,12 +299,12 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
   /**
    * This method may be overwritten
    */
-  beforeSearchComplaintsCreate(form: SearchComplaintsCreateForm): void {}
+  beforeSearchComplaintsCreate(form: SearchComplaintsCreateForm): void { }
 
   /**
    * This method may be overwritten
    */
-  afterSearchComplaintsCreate(form: SearchComplaintsCreateForm): void {}
+  afterSearchComplaintsCreate(form: SearchComplaintsCreateForm): void { }
 
   searchComplaintsCreate(): void {
     let form: SearchComplaintsCreateForm = this.searchComplaintsCreateForm;
@@ -333,12 +333,12 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
   /**
    * This method may be overwritten
    */
-  beforeSearchComplaintsAnalyse(): void {}
+  beforeSearchComplaintsAnalyse(): void { }
 
   /**
    * This method may be overwritten
    */
-  afterSearchComplaintsAnalyse(): void {}
+  afterSearchComplaintsAnalyse(): void { }
 
   searchComplaintsAnalyse(): void {
     this.beforeSearchComplaintsAnalyse();
@@ -353,7 +353,7 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
   /**
    * This method may be overwritten
    */
-  afterSetSearchComplaintsVarsForm(form: SearchComplaintsVarsForm): void {}
+  afterSetSearchComplaintsVarsForm(form: SearchComplaintsVarsForm): void { }
 
   setSearchComplaintsVarsForm(form: SearchComplaintsVarsForm) {
     this.searchComplaintsVarsFormControl.get('criteria').setValue(form.criteria);
@@ -382,6 +382,9 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
       complaintId: [{ value: loggedInSearch?.complaintId, disabled: false }],
       licenseeName: [{ value: loggedInSearch?.licenseeName, disabled: false }],
       complaintType: [{ value: loggedInSearch?.complaintType, disabled: false }],
+      startDate: [{ value: loggedInSearch?.startDate, disabled: false }],
+      endDate: [{ value: loggedInSearch?.endDate, disabled: false }],
+      pastDays: [{ value: loggedInSearch?.pastDays, disabled: false }],
     });
   }
 
@@ -447,6 +450,30 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
 
   get loggedInSearchComplaintTypeId(): number {
     return this.loggedInSearchComplaintTypeIdControl.value;
+  }
+
+  get loggedInSearchStartDateControl(): FormControl {
+    return this.loggedInSearchControl.get('startDate') as FormControl;
+  }
+
+  get loggedInSearchStartDate(): Date {
+    return this.loggedInSearchStartDateControl.value;
+  }
+
+  get loggedInSearchEndDateControl(): FormControl {
+    return this.loggedInSearchControl.get('endDate') as FormControl;
+  }
+
+  get loggedInSearchEndDate(): Date {
+    return this.loggedInSearchEndDateControl.value;
+  }
+
+  get loggedInSearchPastDaysControl(): FormControl {
+    return this.loggedInSearchControl.get('pastDays') as FormControl;
+  }
+
+  get loggedInSearchPastDays(): number {
+    return this.loggedInSearchPastDaysControl.value;
   }
 
   getItemControl(name: string): FormControl {
@@ -597,6 +624,8 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
       assignedTo: [value?.assignedTo],
       createdDate: [value?.createdDate],
       updatedDate: [value?.updatedDate],
+      assignedDate: [value?.assignedDate],
+      resolvedDate: [value?.resolvedDate],
     });
   }
 
@@ -620,6 +649,9 @@ export abstract class SearchComplaintsComponent implements OnInit, AfterViewInit
       complaintId: [value?.complaintId],
       licenseeName: [value?.licenseeName],
       complaintType: [value?.complaintType],
+      startDate: [value?.startDate],
+      endDate: [value?.endDate],
+      pastDays: [value?.pastDays],
     });
   }
 

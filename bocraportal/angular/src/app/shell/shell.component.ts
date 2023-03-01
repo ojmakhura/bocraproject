@@ -3,19 +3,22 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthorisationVO } from '@app/model/bw/org/bocra/portal/auth/authorisation-vo';
+import { SystemConfigVO } from '@app/model/bw/org/bocra/portal/config/system-config-vo';
 import { Menu } from '@app/model/menu/menu';
 import { AuthorisationRestController } from '@app/service/bw/org/bocra/portal/auth/authorisation-rest-controller';
+import { SystemConfigRestController } from '@app/service/bw/org/bocra/portal/config/system-config-rest-controller';
 import * as AuthActions from '@app/store/auth/auth.actions';
 import * as AuthSelectors from '@app/store/auth/auth.selectors';
 import { AuthState } from '@app/store/auth/auth.state';
 import * as MenuActions from '@app/store/menu/menu.actions';
 import * as MenuSelectors from '@app/store/menu/menu.selectors';
+import * as SystemConfigActions from '@app/store/config/system-config.actions';
+import * as SystemConfigSelectors from '@app/store/config/system-config.selectors';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { KeycloakService } from 'keycloak-angular';
 import { from, Observable, of } from 'rxjs';
 import * as nav from './navigation';
-//import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-shell',
@@ -29,6 +32,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
   isLoggedIn: Observable<boolean> = of(false);
   toggled = false;
   accoutUri: string;
+  configs$: Observable<SystemConfigVO[]>
 
   constructor(
     private router: Router,
@@ -36,10 +40,12 @@ export class ShellComponent implements OnInit, AfterViewInit {
     private keycloakService: KeycloakService,
     private store: Store<AuthState>,
     private breakpoint: BreakpointObserver,
-    private authorisationRestController: AuthorisationRestController
+    private authorisationRestController: AuthorisationRestController,
+    private systemConfigRestController: SystemConfigRestController
   ) {
     this.menus$ = this.store.pipe(select(MenuSelectors.selectMenus));
     this.username$ = this.store.pipe(select(AuthSelectors.selectUsername));
+    this.configs$ = this.store.pipe(select(SystemConfigSelectors.selectSystemConfigs));
   }
 
   ngOnInit() {}
@@ -65,6 +71,16 @@ export class ShellComponent implements OnInit, AfterViewInit {
               }
             });
           });
+
+        this.store.dispatch(SystemConfigActions.getAll({
+          loaderMessage: "Loading all configs",
+          loading: true
+        }));
+
+        this.configs$.subscribe(cfgs => {
+          console.log(cfgs);
+          this.systemConfigRestController.systemConfigs = cfgs;
+        })
       }
     });
   }

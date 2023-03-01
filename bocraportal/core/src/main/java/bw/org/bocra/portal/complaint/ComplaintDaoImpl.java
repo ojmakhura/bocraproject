@@ -65,6 +65,7 @@ public class ComplaintDaoImpl
             LicenseeVO licensee = new LicenseeVO();
             licensee.setId(source.getLicensee().getId());
             licensee.setUin(source.getLicensee().getUin());
+            licensee.setAlias(source.getLicensee().getAlias());
             licensee.setLicenseeName(source.getLicensee().getLicenseeName());
 
             licensee.setSectors(new HashSet<>());

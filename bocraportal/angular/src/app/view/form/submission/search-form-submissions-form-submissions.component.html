@@ -2,11 +2,11 @@
 <div class="card-body">
   <div class="table table-striped">
     <div class="col my-3 view-buttons" *ngIf="formSubmissionsDataSource.data.length > 0">
-      <button type="button" class="btn btn-info" (click)="matTableExporter.exportTable('xlsx', {fileName:'documents', sheet: 'documents'})">XLSX</button>
-      <button type="button" class="btn btn-info" (click)="matTableExporter.exportTable('csv', {fileName:'documents'})">CSV</button>
-      <button type="button" class="btn btn-info" (click)="matTableExporter.exportTable('json', {fileName:'documents'})">JSON</button>
-      <button type="button" class="btn btn-info" (click)="matTableExporter.exportTable('txt', {fileName:'documents'})">Text</button>
-      <a type="button" color="accent" class="btn btn-info" (click)="getFormSubmissionsAnalyse()"> Analyse </a>
+      <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('xlsx', {fileName:'documents', sheet: 'documents'})">XLSX</button>
+      <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('csv', {fileName:'documents'})">CSV</button>
+      <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('json', {fileName:'documents'})">JSON</button>
+      <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('txt', {fileName:'documents'})">Text</button>
+      <a type="button" color="accent" class="btn btn-primary" (click)="getFormSubmissionsAnalyse()"> Analyse </a>
     </div>
     <mat-table
       matSort
@@ -23,6 +23,18 @@
           <a routerLink="" id="idAction" (click)="searchFormSubmissionsEdit(row?.id)">
             {{ row?.id }}
           </a>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="expectedSubmissionDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>expected.submission.date</span></mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          {{ row?.expectedSubmissionDate | date : 'dd MMM yyyy HH:ss' }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="submissionDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>submission.date</span></mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          {{ row?.submissionDate | date : 'dd MMM yyyy HH:ss' }}
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="licensee.licenseeName">

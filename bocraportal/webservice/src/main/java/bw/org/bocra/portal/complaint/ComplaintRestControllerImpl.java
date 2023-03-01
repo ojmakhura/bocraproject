@@ -39,6 +39,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
+import bw.org.bocra.portal.config.SystemConfigService;
+import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.properties.RabbitProperties;
 import bw.org.bocra.portal.user.UserVO;
@@ -57,22 +59,23 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     @Value("${bocra.web.url}")
     private String webUrl;
 
-    @Value("${bocra.complaints.roles}")
-    private String[] complaintRoles;
-
     private final RestTemplate restTemplate;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitProperties rabbitProperties;
     private final KeycloakUserService keycloakUserService;
+    private final SystemConfigService systemConfigService;
 
-    public ComplaintRestControllerImpl(ComplaintService complaintService, RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties,
-            RestTemplate restTemplate, KeycloakUserService keycloakUserService) {
+    public ComplaintRestControllerImpl(ComplaintService complaintService, RabbitTemplate rabbitTemplate,
+            RabbitProperties rabbitProperties,
+            RestTemplate restTemplate, KeycloakUserService keycloakUserService,
+            SystemConfigService systemConfigService) {
 
         super(complaintService);
         this.restTemplate = restTemplate;
         this.rabbitTemplate = rabbitTemplate;
         this.rabbitProperties = rabbitProperties;
         this.keycloakUserService = keycloakUserService;
+        this.systemConfigService = systemConfigService;
     }
 
     @Override
@@ -168,42 +171,42 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             if (complaint != null && complaint.getId() != null) {
                 response = ResponseEntity.ok().body(complaint);
 
-                if(fresh) {
+                if (fresh) {
 
                     String emailTempate = """
                             Dear %s
-    
+
                             We acknowledge receipt of your complaint against %s and will get back
                             to you as soon as possible. Please note that to access your
                             complaint, go the the url %s.
-    
+
                             Regards,
-    
+
                             BOCRA Complaint Management Team
                             """;
-    
-                    String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
-    
+
+                    String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId="
+                            + complaint.getComplaintId();
+
                     String subject = String.format("Complaint against %s.", complaint.getLicensee().getLicenseeName());
                     String text = String.format(
                             emailTempate,
                             complaint.getFirstName() + " " + complaint.getSurname(),
                             complaint.getLicensee().getLicenseeName(),
                             complaintUrl);
-    
+
                     this.sendComplaintMessage(complaint, subject, List.of(complaint.getEmail()), text,
                             complaint.getFirstName() + " " + complaint.getSurname());
 
-                    
-                    Set<String> emails = keycloakUserService.getUsersByRoles(new HashSet<>(Arrays.asList(complaintRoles)))
-                            .stream().map(user -> user.getEmail()).collect(Collectors.toSet());
+                    SystemConfigVO sysConf = this.systemConfigService.findByName("COMPLAINTS_MANAGEMENT_EMAIL");
+                    Set<String> emails = Set.of(sysConf.getValue().split(","));
 
                     emailTempate = """
                             Dear Complaint Officer
-                            
-                            A new complaint has been logged against %s. Please go to 
+
+                            A new complaint has been logged against %s. Please go to
                             the url %s to process it.
-                            
+
                             Regards,
 
                             BOCRA Online Data Collection Portal
@@ -213,7 +216,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                             emailTempate,
                             complaint.getLicensee().getLicenseeName(),
                             complaintUrl);
-                    
+
                     this.sendComplaintMessage(complaint, subject, emails, text,
                             "System");
 
@@ -347,7 +350,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     // }
     // }
 
-    public void sendComplaintMessage(ComplaintVO complaint, String subject, Collection<String> destinations, String text,
+    public void sendComplaintMessage(ComplaintVO complaint, String subject, Collection<String> destinations,
+            String text,
             String user) {
         JSONObject messageObj = new JSONObject();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -365,7 +369,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
         List<Object> messageObjects = JSONArrayUtils.newJSONArray();
         messageObjects.add(messageObj);
 
-        rabbitTemplate.convertAndSend(rabbitProperties.getEmailQueueExchange(), rabbitProperties.getEmailQueueRoutingKey(), messageObjects);
+        rabbitTemplate.convertAndSend(rabbitProperties.getEmailQueueExchange(),
+                rabbitProperties.getEmailQueueRoutingKey(), messageObjects);
     }
 
     @Override
@@ -376,39 +381,31 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             ComplaintReplyVO added = complaintService.addComplaintReply(complaintId, reply);
             ResponseEntity<?> response;
 
-            // if (data.isPresent()) {
             response = ResponseEntity.ok().body(added);
-            // } else {
-            // response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            // }
 
-            JSONObject healthStatus = restTemplate.getForObject(commUrl + "/actuator/health", JSONObject.class);
+            String emailTempate = """
+                    Dear %s
 
-            if (reply.getId() == null && healthStatus.get("status").toString().equals("UP")) {
-                String emailTempate = """
-                        Dear %s
+                    Your complaint %s against %s has a new reply. Go to the URL
+                    %s to view the reply and respond.
 
-                        Your complaint %s against %s has a new reply. Go to the URL
-                        %s to view the reply and respond.
+                    Regards,
 
-                        Regards,
+                    BOCRA Complaint Management Team
+                    """;
 
-                        BOCRA Complaint Management Team
-                        """;
+            ComplaintVO complaint = complaintService.findByComplaintId(complaintId);
 
-                ComplaintVO complaint = complaintService.findByComplaintId(complaintId);
+            String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
+            String text = String.format(
+                    emailTempate,
+                    complaint.getFirstName() + " " + complaint.getSurname(),
+                    complaint.getComplaintId(),
+                    complaint.getLicensee().getLicenseeName(),
+                    complaintUrl);
 
-                String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
-                String text = String.format(
-                        emailTempate,
-                        complaint.getFirstName() + " " + complaint.getSurname(),
-                        complaint.getComplaintId(),
-                        complaint.getLicensee().getLicenseeName(),
-                        complaintUrl);
-
-                this.sendComplaintMessage(complaint, "Complait reply received.", List.of(complaint.getEmail()), text,
-                        reply.getReplyUser());
-            }
+            this.sendComplaintMessage(complaint, "Complait reply received.", List.of(complaint.getEmail()), text,
+                    reply.getReplyUser());
 
             return response;
         } catch (Exception e) {
@@ -493,15 +490,16 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
         try {
 
-            ResponseEntity<?> response = ResponseEntity.ok().body(this.complaintService.assignToUser(complaintId, username));
+            ResponseEntity<?> response = ResponseEntity.ok()
+                    .body(this.complaintService.assignToUser(complaintId, username));
 
             UserVO user = this.keycloakUserService.findByUsername(username);
-            if(user == null) {
+            if (user == null) {
                 return ResponseEntity.badRequest().body("Assigned user could not be found.");
             }
 
             ComplaintVO complaint = complaintService.findByComplaintId(complaintId);
-            if(complaint == null) {
+            if (complaint == null) {
                 return ResponseEntity.badRequest().body("Complaint with this complaint ID could not be found.");
             }
 
@@ -515,18 +513,17 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
                     %s
                     """;
-    
+
             String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
-    
+
             String subject = String.format("Complaint against %s.", complaint.getLicensee().getLicenseeName());
-            UserVO loggedInUser =keycloakUserService.getLoggedInUser();
+            UserVO loggedInUser = keycloakUserService.getLoggedInUser();
 
             String text = String.format(
-                emailTemplate,
-                String.format("%s %s", user.getFirstName(), user.getUserId()),
-                complaintUrl,
-                String.format("%s %s", loggedInUser.getFirstName(), loggedInUser.getUserId())
-            );
+                    emailTemplate,
+                    String.format("%s %s", user.getFirstName(), user.getUserId()),
+                    complaintUrl,
+                    String.format("%s %s", loggedInUser.getFirstName(), loggedInUser.getUserId()));
 
             this.sendComplaintMessage(complaint, subject, List.of(user.getEmail()), text,
                     String.format("%s %s", loggedInUser.getFirstName(), loggedInUser.getUserId()));
@@ -554,7 +551,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
     public ResponseEntity<?> handleUpdateStatus(String complaintId, ComplaintStatus status) {
 
         try {
-            
+
             Boolean updated = this.complaintService.updateStatus(complaintId, status);
 
             return ResponseEntity.ok(updated);

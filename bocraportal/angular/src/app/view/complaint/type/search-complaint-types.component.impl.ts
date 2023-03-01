@@ -3,12 +3,14 @@ import { Component, Injector } from '@angular/core';
 import {
   SearchComplaintTypesComponent,
   SearchComplaintTypesSearchForm,
+  SearchComplaintTypesVarsForm,
 } from '@app/view/complaint/type/search-complaint-types.component';
 import { ComplaintTypeState } from '@app/store/complaint/type/complaint-type.state';
 import * as ComplaintTypeSelectors from '@app/store/complaint/type/complaint-type.selectors';
 import * as ComplaintTypeActions from '@app/store/complaint/type/complaint-type.actions';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-search-complaint-types',
@@ -23,12 +25,34 @@ export class SearchComplaintTypesComponentImpl extends SearchComplaintTypesCompo
   doNgOnDestroy(): void {}
 
   override beforeSearchComplaintTypesSearch(form: SearchComplaintTypesSearchForm): void {
-    this.store.dispatch(
-      ComplaintTypeActions.search({
-        criteria: form.criteria,
-        loading: true,
-        loaderMessage: 'Searching complaint types ...',
-      })
-    );
+    if(form.criteria){
+      this.store.dispatch(
+        ComplaintTypeActions.search({
+          criteria: form.criteria,
+          loading: true,
+          loaderMessage: 'Searching complaint types ...',
+        })
+      );
+    }else {
+      this.store.dispatch(
+        ComplaintTypeActions.getAll({
+          loading: true,
+          loaderMessage: 'Searching complaint types ...'
+        })
+      )
+    }
   }
+
+  override newForm(searchComplaintTypesVarsForm$: SearchComplaintTypesVarsForm): FormGroup {
+    return this.formBuilder.group({
+        criteria: [{value: searchComplaintTypesVarsForm$?.criteria, disabled: false}],
+        complaintTypes: this.formBuilder.array([
+            this.formBuilder.group({
+                id: [''],
+                code: [''],
+                typeName: [''],
+            })
+        ]),
+    });
+}
 }

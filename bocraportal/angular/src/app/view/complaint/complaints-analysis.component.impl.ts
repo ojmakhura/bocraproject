@@ -19,11 +19,14 @@ import { saveAs } from 'file-saver';
 export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent {
   @ViewChildren('reportElement')
   reportElementComponents!: ReportElementComponent[];
-  complaintsDataSource = new Array<ComplaintVO>;
+  complaintsDataSource = new Array<ComplaintVO>();
   reportController!: ReportRestController;
   constructor(private injector: Injector) {
     super(injector);
+    this.reportController = this.injector.get(ReportRestController)
   }
+  errorMessage = '';
+  showChart = false;
   yearFilter: string[] = [];
   licenseeFilter: string[] = [];
   typeFilter: string[] = [];
@@ -44,75 +47,53 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
     'rgba(0, 204, 102)',
   ]
   backgroundColor = [
-    'rgba(255, 99, 132, 0.5)',
-    'rgba(255, 159, 64, 0.5)',
-    'rgba(54, 162, 235, 0.5)',
-    'rgba(153, 102, 255, 0.5)',
-    'rgba(201, 203, 207, 0.5)',
-    'rgba(0, 172, 230, 0.5)',
-    'rgba(230, 0, 115, 0.5)',
-    'rgba(255, 51, 102, 0.5)',
-    'rgba(255, 51, 204, 0.5)',
-    'rgba(255, 140, 26, 0.5)',
-    'rgba(255, 140, 102, 0.5)',
-    'rgba(0, 204, 102, 0.5)',
+    'rgba(255, 99, 132, 0.7)',
+    'rgba(255, 159, 64, 0.7)',
+    'rgba(54, 162, 235, 0.7)',
+    'rgba(153, 102, 255, 0.7)',
+    'rgba(201, 203, 207, 0.7)',
+    'rgba(0, 172, 230, 0.7)',
+    'rgba(230, 0, 115, 0.7)',
+    'rgba(255, 51, 102, 0.7)',
+    'rgba(255, 51, 204, 0.7)',
+    'rgba(255, 140, 26, 0.7)',
+    'rgba(255, 140, 102, 0.7)',
+    'rgba(0, 204, 102, 0.7)',
   ]
-  hoverBackgroundColor = [
-    'rgba(255, 99, 132)',
-    'rgba(255, 159, 64)',
-    'rgba(54, 162, 235)',
-    'rgba(153, 102, 255)',
-    'rgba(201, 203, 207)',
-    'rgba(0, 172, 230)',
-    'rgba(230, 0, 115)',
-    'rgba(255, 51, 102)',
-    'rgba(255, 51, 204)',
-    'rgba(255, 140, 26)',
-    'rgba(255, 140, 102)',
-    'rgba(0, 204, 102)',
-  ]
+
   override doNgAfterViewInit(): void {
-    // this.yearFilter.push(
-    //   this.useCaseScope.pageVariables.map((entry: { createdDate: string }) => entry.createdDate.substring(0, 4))
-    // );
-    // this.reportLabel = [...new Set(this.yearFilter[0])];
 
-
-    this.complaintsDataSource = this.useCaseScope.pageVariables;
-
-    for (let complaint of this.complaintsDataSource) {
-      this.yearFilter.push(complaint.createdDate[0]);
-    }
-
-    this.reportLabel = [...new Set(this.yearFilter)];
-    console.log(this.reportLabel);
-
-    for (let year of this.reportLabel) {
-      let total = 0;
-      for (let complaint of this.complaintsDataSource) {
-        if (complaint.createdDate[0] == year) {
-          total = total + 1;
-        }
+    for (let complaint of this.useCaseScope.pageVariables) {
+      if (complaint.status.includes('RESOLVED')) {
+        this.complaintsDataSource.push(complaint);
       }
-      this.reportData.push(total);
     }
-  
-    this.barChartData.datasets = [
+
+    this.yearFilter.push(
+      this.useCaseScope.pageVariables.map((entry: { createdDate: string; }) => entry.createdDate.substring(0, 4))
+    )
+
+    this.reportYearLabel = [...new Set(this.yearFilter[0])];
+
+    for (let year of this.reportYearLabel) {
+      let data = this.useCaseScope.pageVariables.filter((entry: { createdDate: string; }) => entry.createdDate.substring(0, 4).includes(year)).length;
+      this.reportYearData.push(data);
+    }
+
+    this.chartYearData.labels = this.reportYearLabel;
+    this.chartYearData.datasets = [
       {
-        data: this.reportData,
-        label: 'Complaints Per Year Analysis',
+        data: this.reportYearData,
+        label: '',
         backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        hoverBackgroundColor: this.hoverBackgroundColor
+        borderColor: this.backgroundColor,
+        hoverBackgroundColor: this.borderColor,
+        hoverBorderColor: this.borderColor
       },
     ];
-    this.pieChartData.datasets = [{ data: this.reportData, label: 'Complaints Report Analysis' }];
-
-    this.barChartData.labels = this.reportLabel;
-    this.pieChartData.labels = this.reportLabel;
 
     this.licenseeFilter.push(
-      this.useCaseScope.pageVariables.map((entry: { licensee: { licenseeName: any } }) => entry.licensee.licenseeName)
+      this.useCaseScope.pageVariables.map((entry: { licensee: { licenseeName: any } }) => entry.licensee['alias'] ? entry.licensee['alias'] : entry.licensee.licenseeName)
     );
     this.reportLicenseesLabel = [...new Set(this.licenseeFilter[0])];
     for (let licensee of this.reportLicenseesLabel) {
@@ -122,19 +103,17 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
       this.reportLicenseesData.push(data);
     }
 
-    this.barChartLicenseeData.datasets = [
+    this.chartLicenseeData.labels = this.reportLicenseesLabel;
+    this.chartLicenseeData.datasets = [
       {
         data: this.reportLicenseesData,
-        label: 'Complaints Per Year Analysis',
+        label: '',
         backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        hoverBackgroundColor: this.hoverBackgroundColor
+        borderColor: this.backgroundColor,
+        hoverBackgroundColor: this.borderColor,
+        hoverBorderColor: this.borderColor
       },
     ];
-    this.pieChartLicenseeData.datasets = [{ data: this.reportLicenseesData, label: 'Licensee Complaints Analysis' }];
-
-    this.barChartLicenseeData.labels = this.reportLicenseesLabel;
-    this.pieChartLicenseeData.labels = this.reportLicenseesLabel;
 
     this.typeFilter.push(
       this.useCaseScope.pageVariables.map((entry: { complaintType: { typeName: any } }) => entry.complaintType.typeName)
@@ -148,43 +127,40 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
       this.reportTypeData.push(data);
     }
 
-    this.barChartTypeData.datasets = [
+    this.chartTypeData.labels = this.reportTypeLabel;
+    this.chartTypeData.datasets = [
       {
         data: this.reportTypeData,
-        label: 'Complaints Per Complaint Type Analysis',
+        label: '',
         backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        hoverBackgroundColor: this.hoverBackgroundColor
+        borderColor: this.backgroundColor,
+        hoverBackgroundColor: this.borderColor,
+        hoverBorderColor: this.borderColor
       },
     ];
-    this.pieChartTypeData.datasets = [{ data: this.reportTypeData, label: 'Complaint Type Complaints Analysis' }];
 
-    this.barChartTypeData.labels = this.reportTypeLabel;
-    this.pieChartTypeData.labels = this.reportTypeLabel;
-
-    this.statusFilter.push(
-      this.useCaseScope.pageVariables.map((entry: { status: string }) => entry.status)
-    );
-    this.reportStatusLabel = [...new Set(this.statusFilter[0])];
+    this.reportStatusLabel = ['NEW', 'PENDING', 'RESOLVED'];
     for (let status of this.reportStatusLabel) {
       let data = this.useCaseScope.pageVariables.filter((entry: { status: string | string[] }) =>
         entry.status.includes(status)).length;
       this.reportStatusData.push(data);
+      console.log(this.reportStatusData);
     }
 
-    this.barChartStatusData.datasets = [
+    let selectiveBackgroundColor = ['rgba(255, 194, 0, 0.7)', 'rgba(255, 0, 0, 0.7)', 'rgba(0, 128, 0, 0.7)'];
+    let selectiveBorderColor = ['rgba(255, 194, 0)', 'rgba(255, 0, 0)', 'rgba(0, 128, 0)'];
+
+    this.chartStatusData.labels = this.reportStatusLabel;
+    this.chartStatusData.datasets = [
       {
         data: this.reportStatusData,
-        label: 'Complaints Per Status Analysis',
-        backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        hoverBackgroundColor: this.hoverBackgroundColor
+        label: '',
+        backgroundColor: selectiveBackgroundColor,
+        borderColor: selectiveBackgroundColor,
+        hoverBackgroundColor: selectiveBorderColor,
+        hoverBorderColor: selectiveBorderColor
       },
     ];
-    this.pieChartStatusData.datasets = [{ data: this.reportStatusData, label: 'Complaints Report Analysis' }];
-
-    this.barChartStatusData.labels = this.reportStatusLabel;
-    this.pieChartStatusData.labels = this.reportStatusLabel;
 
     for (let complaint of this.useCaseScope.pageVariables) {
       for (let sector of complaint.licensee.sectors) {
@@ -205,40 +181,106 @@ export class ComplaintsAnalysisComponentImpl extends ComplaintsAnalysisComponent
       this.reportSectorData.push(total);
     }
 
-    this.barChartSectorData.datasets = [
+    this.chartSectorData.labels = this.reportSectorLabel;
+    this.chartSectorData.datasets = [
       {
         data: this.reportSectorData,
-        label: 'Complaints Per Sector Analysis',
+        label: '',
         backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        hoverBackgroundColor: this.hoverBackgroundColor
+        borderColor: this.backgroundColor,
+        hoverBackgroundColor: this.borderColor,
+        hoverBorderColor: this.borderColor
       },
     ];
-    this.pieChartSectorData.datasets = [{ data: this.reportSectorData, label: 'Sector Complaints Analysis' }];
 
-    this.barChartSectorData.labels = this.reportSectorLabel;
-    this.pieChartSectorData.labels = this.reportSectorLabel;
+    this.reportResolutionLabel = ['60 plus days', '30 to 60 days', '20 to 30 days', 'Within 20 days'];
+    for (let period of this.reportResolutionLabel) {
+      let total = 0;
+      if (period.includes('60 plus days')) {
+        for (let complaint of this.complaintsDataSource) {
+          let resolvedDate = new Date(complaint.resolvedDate);
+          let createdDate = new Date(complaint.createdDate);
+          var diff = Math.abs(resolvedDate.getTime() - createdDate.getTime());
+          var days = Math.ceil(diff / (1000 * 3600 * 24));
+          if (days > 60) {
+            total = total + 1;
+          }
+        }
+        this.reportResolutionData.push(total);
+      } else if (period.includes('30 to 60 days')) {
+        for (let complaint of this.complaintsDataSource) {
+          let resolvedDate = new Date(complaint.resolvedDate);
+          let createdDate = new Date(complaint.createdDate);
+          var diff = Math.abs(resolvedDate.getTime() - createdDate.getTime());
+          var days = Math.ceil(diff / (1000 * 3600 * 24));
+          if (days > 30 && days <= 60) {
+            total = total + 1;
+          }
+        }
+        this.reportResolutionData.push(total);
+      } else if (period.includes('20 to 30 days')) {
+        for (let complaint of this.complaintsDataSource) {
+          let resolvedDate = new Date(complaint.resolvedDate);
+          let createdDate = new Date(complaint.createdDate);
+          var diff = Math.abs(resolvedDate.getTime() - createdDate.getTime());
+          var days = Math.ceil(diff / (1000 * 3600 * 24));
+          if (days > 20 && days <= 30) {
+            total = total + 1;
+          }
+        }
+        this.reportResolutionData.push(total);
+      } else if (period.includes('Within 20 days')) {
+        for (let complaint of this.complaintsDataSource) {
+          let resolvedDate = new Date(complaint.resolvedDate);
+          let createdDate = new Date(complaint.createdDate);
+          var diff = Math.abs(resolvedDate.getTime() - createdDate.getTime());
+          var days = Math.ceil(diff / (1000 * 3600 * 24));
+          if (days <= 20) {
+            total = total + 1;
+          }
+        }
+        this.reportResolutionData.push(total);
+      }
+    }
+
+    let selectiveRBackgroundColor = ['rgba(255, 0, 0, 0.7)', 'rgba(255, 194, 0, 0.7)', 'rgba(144, 238, 144, 0.7)', 'rgba(0, 128, 0, 0.7)'];
+    let selectiveRBorderColor = ['rgba(255, 0, 0)', 'rgba(255, 194, 0)', 'rgba(144, 238, 144)', 'rgba(0, 128, 0)'];
+
+    this.chartResolutionData.labels = this.reportResolutionLabel;
+    this.chartResolutionData.datasets = [
+      {
+        data: this.reportResolutionData,
+        label: '',
+        backgroundColor: selectiveRBackgroundColor,
+        borderColor: selectiveRBackgroundColor,
+        hoverBackgroundColor: selectiveRBorderColor,
+        hoverBorderColor: selectiveRBorderColor
+      },
+    ];
 
   }
 
   downloadFormReport() {
     let d: any = {};
-    d.label = this.reportFilterForm.value.label;
-    d.caption = this.reportFilterForm.value.caption;
-    d.reportElements = []
 
-    this.reportElementComponents.forEach(elementComponent => {
-      
-      d.reportElements.push({
-        charts: elementComponent.getChartImageData()
-      });
-    });
+    d = {
+      reportName: this.reportFilterForm.value.chartLabel,
+      images: [
+        {
+          type: this.reportFilterForm.value.chartType,
+          label: this.reportFilterForm.value.chartLabel,
+          image: this.chart.toBase64Image(),
+          caption: this.reportFilterForm.value.chartCaption
+        }
+      ]
+    }
+
     this.reportController.createComplaintReportWordDocument(d).subscribe(file => {
       if (file) {
 
         let blob: any = file as Blob;
         const url = window.URL.createObjectURL(blob);
-        saveAs(blob, `${d.label}.docx`);
+        saveAs(blob, `${d.reportName}.docx`);
       }
     });
   }

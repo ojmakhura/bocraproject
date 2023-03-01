@@ -241,8 +241,7 @@ public class FormDaoImpl
 
         Specification<Form> specs = BocraportalSpecifications.<Form, PeriodConfig, Long>findByJoinAttributeIn("periodConfig", "id", periodConfigs);
 
-        // TODO Auto-generated method stub
-        return formRepository.findAll(specs, Sort.by("name").ascending());
+        return formRepository.findAll(specs, Sort.by("formName").ascending());
     }
 
 }

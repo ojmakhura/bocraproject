@@ -21,6 +21,7 @@ import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.period.config.PeriodConfig;
+import bw.org.bocra.portal.period.config.PeriodConfigDao;
 import bw.org.bocra.portal.period.config.PeriodConfigVO;
 
 /**
@@ -29,14 +30,15 @@ import bw.org.bocra.portal.period.config.PeriodConfigVO;
 @Repository("formActivationDao")
 // @Transactional
 public class FormActivationDaoImpl
-    extends FormActivationDaoBase
-{
-    
+        extends FormActivationDaoBase {
 
-    public FormActivationDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
+    private PeriodConfigDao periodConfigDao;
+
+    public FormActivationDaoImpl(FormRepository formRepository, PeriodRepository periodRepository, PeriodConfigDao periodConfigDao,
             FormSubmissionRepository formSubmissionRepository, FormActivationRepository formActivationRepository) {
-        
+
         super(formRepository, periodRepository, formSubmissionRepository, formActivationRepository);
+        this.periodConfigDao = periodConfigDao;
     }
 
     /**
@@ -44,16 +46,19 @@ public class FormActivationDaoImpl
      */
     @Override
     public void toFormActivationVO(
-        FormActivation source,
-        FormActivationVO target)
-    {
+            FormActivation source,
+            FormActivationVO target) {
         // TODO verify behavior of toFormActivationVO
         super.toFormActivationVO(source, target);
-        // WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.Period to bw.org.bocra.portal.period.PeriodVO
-        if(source.getPeriod() != null && source.getPeriod().getId() != null) {
+        // WARNING! No conversion for target.period (can't convert
+        // source.getPeriod():bw.org.bocra.portal.period.Period to
+        // bw.org.bocra.portal.period.PeriodVO
+        if (source.getPeriod() != null && source.getPeriod().getId() != null) {
             PeriodVO period = new PeriodVO();
-            
-            // No conversion for target.periodConfig (can't convert source.getPeriodConfig():PeriodConfig to bw.org.bocra.portal.period.config.PeriodConfigVO)
+
+            // No conversion for target.periodConfig (can't convert
+            // source.getPeriodConfig():PeriodConfig to
+            // bw.org.bocra.portal.period.config.PeriodConfigVO)
             PeriodConfigVO config = new PeriodConfigVO();
             PeriodConfig conf = source.getPeriod().getPeriodConfig();
             config.setId(conf.getId());
@@ -80,9 +85,8 @@ public class FormActivationDaoImpl
 
             target.setPeriod(period);
         }
-        
-        // WARNING! No conversion for target.form (can't convert source.getForm():bw.org.bocra.portal.form.Form to bw.org.bocra.portal.form.FormVO
-        if(source.getForm() != null && source.getForm().getId() != null) {
+
+        if (source.getForm() != null && source.getForm().getId() != null) {
             FormVO form = new FormVO();
             form.setId(source.getForm().getId());
             form.setCreatedBy(source.getForm().getCreatedBy());
@@ -93,6 +97,10 @@ public class FormActivationDaoImpl
             form.setFormName(source.getForm().getFormName());
             form.setEntryType(source.getForm().getEntryType());
 
+            if (source.getForm().getPeriodConfig() != null && source.getForm().getPeriodConfig().getId() != null) {
+                form.setPeriodConfig(periodConfigDao.toPeriodConfigVO(source.getForm().getPeriodConfig()));
+            }
+
             target.setForm(form);
         }
     }
@@ -101,25 +109,21 @@ public class FormActivationDaoImpl
      * {@inheritDoc}
      */
     @Override
-    public FormActivationVO toFormActivationVO(final FormActivation entity)
-    {
+    public FormActivationVO toFormActivationVO(final FormActivation entity) {
         // TODO verify behavior of toFormActivationVO
         return super.toFormActivationVO(entity);
     }
 
     /**
-     * Retrieves the entity object that is associated with the specified value object
+     * Retrieves the entity object that is associated with the specified value
+     * object
      * from the object store. If no such entity object exists in the object store,
      * a new, blank entity is created
      */
-    private FormActivation loadFormActivationFromFormActivationVO(FormActivationVO formActivationVO)
-    {
-        if (formActivationVO.getId() == null)
-        {
-            return  FormActivation.Factory.newInstance();
-        }
-        else
-        {
+    private FormActivation loadFormActivationFromFormActivationVO(FormActivationVO formActivationVO) {
+        if (formActivationVO.getId() == null) {
+            return FormActivation.Factory.newInstance();
+        } else {
             return this.load(formActivationVO.getId());
         }
     }
@@ -127,8 +131,7 @@ public class FormActivationDaoImpl
     /**
      * {@inheritDoc}
      */
-    public FormActivation formActivationVOToEntity(FormActivationVO formActivationVO)
-    {
+    public FormActivation formActivationVOToEntity(FormActivationVO formActivationVO) {
         // TODO verify behavior of formActivationVOToEntity
         FormActivation entity = this.loadFormActivationFromFormActivationVO(formActivationVO);
         this.formActivationVOToEntity(formActivationVO, entity, true);
@@ -140,64 +143,65 @@ public class FormActivationDaoImpl
      */
     @Override
     public void formActivationVOToEntity(
-        FormActivationVO source,
-        FormActivation target,
-        boolean copyIfNull)
-    {
+            FormActivationVO source,
+            FormActivation target,
+            boolean copyIfNull) {
         // TODO verify behavior of formActivationVOToEntity
-        super.formActivationVOToEntity(source, target, copyIfNull);// WARNING! No conversion for target.period (can't convert source.getPeriod():bw.org.bocra.portal.period.Period to bw.org.bocra.portal.period.PeriodVO
-        if(source.getPeriod() != null && source.getPeriod().getId() != null) {
+        super.formActivationVOToEntity(source, target, copyIfNull);// WARNING! No conversion for target.period (can't
+                                                                   // convert
+                                                                   // source.getPeriod():bw.org.bocra.portal.period.Period
+                                                                   // to bw.org.bocra.portal.period.PeriodVO
+        if (source.getPeriod() != null && source.getPeriod().getId() != null) {
             try {
                 target.setPeriod(getPeriodDao().load(source.getPeriod().getId()));
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
 
                 throw new IllegalArgumentException(
-                    "FormActivationDao.formActivationVOToEntity - 'period' or its id can not be null"
-                );
+                        "FormActivationDao.formActivationVOToEntity - 'period' or its id can not be null");
             }
         } else {
             throw new IllegalArgumentException(
-                "FormActivationDao.formActivationVOToEntity - 'period' or its id can not be null"
-            );
+                    "FormActivationDao.formActivationVOToEntity - 'period' or its id can not be null");
         }
-        
-        // WARNING! No conversion for target.form (can't convert source.getForm():bw.org.bocra.portal.form.Form to bw.org.bocra.portal.form.FormVO
-        if(source.getForm() != null && source.getForm().getId() != null) {
-            
+
+        // WARNING! No conversion for target.form (can't convert
+        // source.getForm():bw.org.bocra.portal.form.Form to
+        // bw.org.bocra.portal.form.FormVO
+        if (source.getForm() != null && source.getForm().getId() != null) {
+
             try {
                 target.setForm(getFormDao().load(source.getForm().getId()));
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
 
                 throw new IllegalArgumentException(
-                    "FormActivationDao.formActivationVOToEntity - 'form' or its id can not be null"
-                );
+                        "FormActivationDao.formActivationVOToEntity - 'form' or its id can not be null");
             }
         } else {
             throw new IllegalArgumentException(
-                "FormActivationDao.formActivationVOToEntity - 'form' or its id can not be null"
-            );
+                    "FormActivationDao.formActivationVOToEntity - 'form' or its id can not be null");
         }
     }
 
     @Override
     protected Collection<FormActivation> handleFindByCriteria(FormActivationCriteria criteria) throws Exception {
         Specification<FormActivation> spec = null;
-        if(StringUtils.isNotBlank(criteria.getActivationName())) {
-            spec = BocraportalSpecifications.<FormActivation, String>findByAttributeContainingIgnoreCase("activationName", criteria.activationName);
+        if (StringUtils.isNotBlank(criteria.getActivationName())) {
+            spec = BocraportalSpecifications.<FormActivation, String>findByAttributeContainingIgnoreCase(
+                    "activationName", criteria.activationName);
         }
 
-        if(criteria.getFormId() != null) {
+        if (criteria.getFormId() != null) {
             Specification<FormActivation> tmp = FormActivationSpecifications.findByFormId(criteria.getFormId());
-            if(spec == null) {
+            if (spec == null) {
                 spec = tmp;
             } else {
                 spec = spec.and(tmp);
             }
         }
 
-        if(criteria.getPeriodId() != null) {
+        if (criteria.getPeriodId() != null) {
             Specification<FormActivation> tmp = FormActivationSpecifications.findByPeriodId(criteria.getPeriodId());
-            if(spec == null) {
+            if (spec == null) {
                 spec = tmp;
             } else {
                 spec = spec.and(tmp);

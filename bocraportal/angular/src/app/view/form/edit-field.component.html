@@ -2,20 +2,6 @@
 <div class="card container px-5 py-2 bg-light mb-4" #target>
   <div class="card-body">
     <form [formGroup]="editFieldForm">
-      <!-- <section>
-				<div class="text-end">
-					<button type="button" color="accent" (click)="editFieldCancel()" class="btn btn-primary">
-						<span translate>cancel</span>
-					</button>
-					<button type="button" color="accent" (click)="editFieldDone()" class="btn btn-primary">
-						<span translate>done</span>
-					</button>
-					<button type="button" color="accent" (click)="editFieldSave()" class="btn btn-primary">
-						<span translate>save</span>
-					</button>
-					<button color="accent" type="button" (click)="editFieldFormReset()" class="btn btn-primary" ><span translate>reset</span></button>
-				</div>
-			</section> -->
       <div *ngIf="loading | async">
         <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
       </div>
@@ -32,7 +18,7 @@
       <div formGroupName="formField">
         <fieldset class="form-group border p-3" formGroupName="form">
           <div class="row mb-3">
-            <label for="formFieldFormFormName" class="col-sm-2 col-form-label" translate>form.name</label>
+            <label for="formFieldFormFormName" class="col-sm-2 col-form-label" translate>form</label>
             <div class="col-sm-10">
               <input
                 type="text"
@@ -40,18 +26,6 @@
                 class="form-control-plaintext"
                 id="formFieldFormFormName"
                 value="{{ formFieldForm?.formName }}"
-              />
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label for="formFieldFormEntryType" class="col-sm-2 col-form-label" translate>entry.type</label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                readonly
-                class="form-control-plaintext"
-                id="formFieldFormEntryType"
-                value="{{ formFieldForm?.entryType }}"
               />
             </div>
           </div>

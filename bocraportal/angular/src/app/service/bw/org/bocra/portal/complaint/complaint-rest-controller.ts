@@ -34,11 +34,11 @@ export class ComplaintRestController {
     complaintId: string | any,
     reply: ComplaintReplyVO | any
   ): Observable<ComplaintReplyVO | any> {
-    return this.http.post<ComplaintReplyVO | any>(`${this.path}/complaint/reply?complaintId=${complaintId}`, reply);
+    return this.http.post<ComplaintReplyVO | any>(`${this.path}/reply?complaintId=${complaintId}`, reply);
   }
 
   public findByComplaintId(complaintId: string | any): Observable<ComplaintVO | any> {
-    return this.http.get<ComplaintVO | any>(`${this.path}?complaintId=${complaintId}`, {});
+    return this.http.get<ComplaintVO | any>(`${this.path}/load?complaintId=${complaintId}`, {});
   }
 
   public findById(id: number | any): Observable<ComplaintVO | any> {
@@ -58,11 +58,11 @@ export class ComplaintRestController {
   }
 
   public removeComplaintReply(id: number | any): Observable<Boolean | any> {
-    return this.http.delete<Boolean | any>(`${this.path}/complaint/reply`, id);
+    return this.http.delete<Boolean | any>(`${this.path}/reply`, id);
   }
 
   public save(complaint: ComplaintVO | any): Observable<ComplaintVO | any> {
-    return this.http.post<ComplaintVO | any>(`${this.path}`, complaint);
+    return this.http.post<ComplaintVO | any>(`${this.path}/save`, complaint);
   }
 
   public search(criteria: ComplaintSeachCriteria | any): Observable<ComplaintVO[] | any[]> {

@@ -37,7 +37,6 @@ export class SearchComplaintsComponentImpl extends SearchComplaintsComponent {
         );
       } else {
         if (this.criteriaControl.valid) {
-          console.log(form.criteria);
           this.store.dispatch(
             ComplaintActions.findByComplaintId({
               complaintId: form.criteria,
