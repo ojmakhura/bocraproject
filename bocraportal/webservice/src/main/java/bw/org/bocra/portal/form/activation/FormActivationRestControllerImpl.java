@@ -329,6 +329,17 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
                 return ResponseEntity.badRequest()
                         .body("An unknown database error has occured. Please contact the administrator.");
+
+            } else if (e.getCause() instanceof FormActivationServiceException) {
+
+                if(e.getMessage().contains("No licensee")) {
+
+                    return ResponseEntity.badRequest()
+                        .body("Requested activation for a form with no licensees. Please attach licensees before activating a form.");
+                }
+
+                return ResponseEntity.badRequest()
+                        .body(e.getMessage());
             }
 
             return ResponseEntity.badRequest()

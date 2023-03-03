@@ -9,9 +9,11 @@ package bw.org.bocra.portal.form;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
@@ -242,6 +244,47 @@ public class FormDaoImpl
         Specification<Form> specs = BocraportalSpecifications.<Form, PeriodConfig, Long>findByJoinAttributeIn("periodConfig", "id", periodConfigs);
 
         return formRepository.findAll(specs, Sort.by("formName").ascending());
+    }
+
+    @Override
+    public Specification<Form> getFindByCriteriaSpecifications(final FormCriteria criteria) {
+        
+        Specification<Form> specifications = null;
+        
+        if(StringUtils.isNotBlank(criteria.getCode())) {
+            specifications = BocraportalSpecifications.<Form, String>findByAttributeContainingIgnoreCase("code", criteria.getCode());
+        }
+
+        if(StringUtils.isNotBlank(criteria.getFormName())) {
+            if(specifications == null) {
+                specifications = BocraportalSpecifications.<Form, String>findByAttributeContainingIgnoreCase("formName", criteria.getFormName());
+            } else {
+                specifications = specifications.and(BocraportalSpecifications.<Form, String>findByAttributeContainingIgnoreCase("formName", criteria.getFormName()));
+            }
+        }
+
+        if(criteria.getEntryType() != null) {
+            if(specifications == null) {
+                specifications = BocraportalSpecifications.<Form, FormEntryType>findByAttribute("entryType", criteria.getEntryType());
+            } else {
+                specifications = specifications.and(BocraportalSpecifications.<Form, FormEntryType>findByAttribute("entryType", criteria.getEntryType()));
+            }
+        }
+
+        if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(criteria.getRoles())) {
+
+            Iterator<String> iter = criteria.getRoles().iterator();
+
+            // Specification tmp = BocraportalSpecifications.findByAttributeIn("roles", iter.next());
+
+            if(specifications == null) {
+                specifications = BocraportalSpecifications.<Form, String>findByAttributeIn("roles", criteria.getRoles());
+            } else {
+                specifications = specifications.and(BocraportalSpecifications.<Form, String>findByAttributeIn("roles", criteria.getRoles()));
+            }
+        }
+
+        return specifications;
     }
 
 }

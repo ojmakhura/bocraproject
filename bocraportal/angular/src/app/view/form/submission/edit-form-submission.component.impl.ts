@@ -196,7 +196,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       for (let i = 0; i < sec.dataFields.length; i++) {
         let field: DataFieldVO = sec.dataFields[i];
         if (expression.includes(`[${field.formField.fieldId}]`)) {
-          expression = expression.replace(`[${field.formField.fieldId}]`, field.value);
+          expression = expression.replaceAll(`[${field.formField.fieldId}]`, field.value);
         }
       }
 

@@ -199,34 +199,34 @@
           <label id="formFieldUnits_label" class="col-sm-2 col-form-label" for="formFieldUnits"
             ><span translate>units</span></label
           >
-          <select multiple size="5" id="formFieldUnits" class="form-select" formControlName="units">
-            <option></option>
-            <option *ngFor="let item of formFieldUnitsBackingList" [value]="item.value">{{ item.label }}</option>
-          </select>
+          <article formArrayName="units" id="formFieldUnitsArticle">
+            <button type="button" class="btn btn-primary" (click)="addUnit()">
+              <i class="bi bi-plus"></i>
+            </button>
+            <ul class="list-group" *ngFor="let control of formFieldUnitsControl.controls; let i = index">
+              <li class="list-group-item">
+                <button type="button" class="btn btn-primary" (click)="formFieldUnitsDelete(i)">
+                  <i class="bi bi-trash"></i>
+                </button>
+                {{ control.value }}
+              </li>
+            </ul>
+          </article>
         </div>
         <div class="mb-3">
           <label id="formFieldOptions_label" class="col-sm-2 form-check-label" for="formFieldOptions"
             ><span translate>options</span></label
           >
           <article formArrayName="options" id="formFieldOptionsArticle">
-            <mat-form-field class="form-group">
-              <mat-label translate>select.value.text</mat-label>
-              <mat-select
-                name="formFieldOptionsSelector"
-                id="formFieldOptionsSelector"
-                (selectionChange)="onFormFieldOptionsChange($event)"
-              >
-                <mat-option *ngFor="let item of formFieldOptionsBackingList" [value]="item.value">
-                  {{ item.label }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <button type="button" class="btn btn-primary" (click)="addOption()">
+              <i class="bi bi-plus"></i>
+            </button>
             <ul class="list-group" *ngFor="let control of formFieldOptionsControl.controls; let i = index">
               <li class="list-group-item">
                 <button type="button" class="btn btn-primary" (click)="formFieldOptionsDelete(i)">
                   <i class="bi bi-trash"></i>
                 </button>
-                {{ getFormFieldOptionsLabel(control.value) }}
+                {{ control.value }}
               </li>
             </ul>
           </article>
