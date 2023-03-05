@@ -129,6 +129,10 @@ public class FormSubmissionDaoImpl
             target.getFormActivation().setForm(null);
             target.getFormActivation().setPeriod(null);
         }
+
+        if(CollectionUtils.isNotEmpty(source.getNotes())) {
+            target.setNotes(noteDao.toNoteVOCollection(source.getNotes()));
+        }
     }
 
     /**
@@ -298,32 +302,6 @@ public class FormSubmissionDaoImpl
             }
         }
 
-        /*if(criteria.getPeriodStartDate() != null) {
-
-            Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "startDate", criteria.getPeriodStartDate());
-
-            if(specifications == null) {
-                specifications = tmp;
-            } else {
-                specifications = specifications.and(
-                    tmp
-                );
-            }
-        }*/
-
-        /*if(criteria.getPeriodEndDate() != null) {
-
-            Specification<FormSubmission> tmp = BocraportalSpecifications.<FormSubmission, Period, LocalDateTime>findByJoinAttributeLessThan("period", "endDate", criteria.getPeriodEndDate());
-
-            if(specifications == null) {
-                specifications = tmp;
-            } else {
-                specifications = specifications.and(
-                    tmp
-                );
-            }
-        }*/
-
         if(CollectionUtils.isNotEmpty(criteria.getPeriodIds())) {
 
             Specification<FormSubmission> tmp = BocraportalSpecifications.findByJoinAttributeIn("period", "id", criteria.getPeriodIds());
@@ -333,6 +311,23 @@ public class FormSubmissionDaoImpl
             } else {
                 specifications = specifications.and(tmp);
             }
+        }
+
+        Specification<FormSubmission> tmp = BocraportalSpecifications.findByJoinAttributeIsEmpty("form", "roles");
+
+        if(CollectionUtils.isNotEmpty(criteria.getRoles())) {
+
+            for(String role : criteria.getRoles()) {
+                tmp = tmp.or(BocraportalSpecifications.findByJoinAttributeIsMember("form", "roles", role));
+            }
+        } else {
+            tmp = tmp.or(BocraportalSpecifications.findByJoinAttributeIsNotEmpty("form", "roles"));
+        }
+
+        if(specifications == null) {
+            specifications = tmp;
+        } else {
+            specifications = specifications.and(tmp);
         }
 
         return formSubmissionRepository.findAll(specifications, Sort.by(Direction.ASC, "submissionDate"));

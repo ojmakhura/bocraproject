@@ -148,9 +148,9 @@ public class ShareholderRestControllerImpl extends ShareholderRestControllerBase
                   
                     message = "The shareholder type is missing.";
                 
-                }else if(message.contains("'shareholder.shareholderId'")) {
+                //} else if(message.contains("'shareholder.shareholderId'")) {
                   
-                    message = "The shareholder id is missing.";
+                //     message = "The shareholder id is missing.";
                 
                 } else {
                     message = "An unknown error has occured. Please contact the system administrator.";

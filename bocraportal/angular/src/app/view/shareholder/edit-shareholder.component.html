@@ -31,10 +31,10 @@
       <div formGroupName="shareholder">
         <div class="mb-3">
           <label id="shareholderShareholderId_label" class="col-sm-2 col-form-label"
-            for="shareholderShareholderId"><span translate>shareholder.id</span>*</label>
+            for="shareholderShareholderId"><span translate>shareholder.id</span></label>
           <input type="text" id="shareholderShareholderId" class="form-control" name="shareholderId"
-            formControlName="shareholderId" required />
-          <div *ngIf="
+            formControlName="shareholderId" />
+          <!-- <div *ngIf="
               editShareholderForm.invalid &&
               shareholderShareholderIdControl.invalid &&
               (shareholderShareholderIdControl.dirty || shareholderShareholderIdControl.touched)
@@ -42,7 +42,7 @@
             <div *ngIf="shareholderShareholderIdControl.errors['required']">
               <span translate>shareholder.id.required</span>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="mb-3">
           <label id="shareholderType_label" class="col-sm-2 col-form-label" for="shareholderType"><span

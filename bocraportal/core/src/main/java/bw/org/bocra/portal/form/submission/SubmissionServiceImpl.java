@@ -206,19 +206,33 @@ public class SubmissionServiceImpl
 
     @Override
     protected SubmissionSummary handleGetSubmissionSummary(FormSubmissionCriteria criteria) throws Exception {
+        
+        Specification<FormSubmission> tmp = BocraportalSpecifications.findByJoinAttributeIsEmpty("form", "roles");
+
+        if(CollectionUtils.isNotEmpty(criteria.getRoles())) {
+
+            for(String role : criteria.getRoles()) {
+                tmp = tmp.or(BocraportalSpecifications.findByJoinAttributeIsMember("form", "roles", role));
+            }
+        }
+                
         SubmissionSummary summary = new SubmissionSummary();
-        Specification<FormSubmission> specs = null;
+        Specification<FormSubmission> specs = tmp;
 
         if (StringUtils.isNotBlank(criteria.getSubmittedBy())) {
-            specs = BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy",
-                    criteria.getSubmittedBy());
+            specs = specs.and(BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy",
+                    criteria.getSubmittedBy()))
+                    .and(BocraportalSpecifications
+                    .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
+                            FormSubmissionStatus.SUBMITTED));
+
         }
 
         summary.setMySubmissions(formSubmissionRepository.count(specs));
-        specs = null;
+        specs = tmp;
 
         if (criteria.getLicenseeId() != null) {
-            specs = FormSubmissionSpecifications.findByLicenseeId(criteria.getLicenseeId());
+            specs = specs.and(FormSubmissionSpecifications.findByLicenseeId(criteria.getLicenseeId()));
         }
 
         /**
@@ -228,9 +242,7 @@ public class SubmissionServiceImpl
                 .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
                         FormSubmissionStatus.SUBMITTED);
 
-        if (specs != null) {
-            sSpecs = sSpecs.and(specs);
-        }
+        sSpecs = sSpecs.and(specs);
         summary.setAllSubmissions(formSubmissionRepository.count(sSpecs));
 
         /**
@@ -239,9 +251,7 @@ public class SubmissionServiceImpl
         sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
                 FormSubmissionStatus.RETURNED);
 
-        if (specs != null) {
-            sSpecs = sSpecs.and(specs);
-        }
+        sSpecs = sSpecs.and(specs);
         summary.setReturnedSubmissions(formSubmissionRepository.count(sSpecs));
 
         /**
@@ -250,10 +260,8 @@ public class SubmissionServiceImpl
         sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
                 FormSubmissionStatus.ACCEPTED);
 
-        if (specs != null) {
-            sSpecs = sSpecs.and(specs);
-        }
-        summary.setReturnedSubmissions(formSubmissionRepository.count(sSpecs));
+        sSpecs = sSpecs.and(specs);
+        summary.setAcceptedSubmissions(formSubmissionRepository.count(sSpecs));
 
         /**
          * Get count of overdue submissions
@@ -268,9 +276,7 @@ public class SubmissionServiceImpl
                 BocraportalSpecifications.<FormSubmission, LocalDate>findByAttributeLessThan("expectedSubmissionDate",
                         LocalDate.now()));
 
-        if (specs != null) {
-            sSpecs = sSpecs.and(specs);
-        }
+        sSpecs = sSpecs.and(specs);
 
         Collection<FormSubmission> overdue = formSubmissionRepository.findAll(sSpecs);
         for (FormSubmission sub : overdue) {
@@ -288,9 +294,7 @@ public class SubmissionServiceImpl
         sSpecs = BocraportalSpecifications
                 .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus", FormSubmissionStatus.NEW);
 
-        if (specs != null) {
-            sSpecs = sSpecs.and(specs);
-        }
+        sSpecs = sSpecs.and(specs);
         summary.setNewSubmissions(formSubmissionRepository.count(sSpecs));
 
         /**
@@ -299,9 +303,7 @@ public class SubmissionServiceImpl
         sSpecs = BocraportalSpecifications.<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
                 FormSubmissionStatus.DRAFT);
 
-        if (specs != null) {
-            sSpecs = sSpecs.and(specs);
-        }
+        sSpecs = sSpecs.and(specs);
         summary.setDraftSubmissions(formSubmissionRepository.count(sSpecs));
 
         return summary;

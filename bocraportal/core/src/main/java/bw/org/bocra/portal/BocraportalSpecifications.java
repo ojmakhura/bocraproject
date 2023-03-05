@@ -37,6 +37,34 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, T>Specification<E> findByAttributeNotMember(String attribute, T attributeValue) {
+        return (root, cq, cb) -> {
+            
+            return cb.isNotMember(attributeValue, root.get(attribute));
+        };
+    }
+
+    public static <E, T>Specification<E> findByAttributeIsMember(String attribute, T attributeValue) {
+        return (root, cq, cb) -> {
+            
+            return cb.isMember(attributeValue, root.get(attribute));
+        };
+    }
+
+    public static <E, T>Specification<E> findByAttributeIsEmpty(String attribute) {
+        return (root, cq, cb) -> {
+            
+            return cb.isEmpty(root.get(attribute));
+        };
+    }
+
+    public static <E, T>Specification<E> findByAttributeIsNotEmpty(String attribute) {
+        return (root, cq, cb) -> {
+            
+            return cb.isNotEmpty(root.get(attribute));
+        };
+    }
+
     public static <E, T>Specification<E> findByAttributeFalse(String attribute){
         return (root, cq, cb) -> {
             
@@ -191,6 +219,38 @@ public class BocraportalSpecifications {
         return (root, cq, cb) -> {
             Join<E, J> join = root.join(joinAttribute);
             return cb.greaterThan(join.<T>get(attribute), attributeValue);
+        };
+    }
+
+    public static <E, J, T>Specification<E> findByJoinAttributeNotMember(String joinAttribute, String attribute, T attributeValue) {
+        return (root, cq, cb) -> {
+            
+            Join<E, J> join = root.join(joinAttribute);
+            return cb.isNotMember(attributeValue, join.get(attribute));
+        };
+    }
+
+    public static <E, J, T>Specification<E> findByJoinAttributeIsMember(String joinAttribute, String attribute, T attributeValue) {
+        return (root, cq, cb) -> {
+            
+            Join<E, J> join = root.join(joinAttribute);
+            return cb.isMember(attributeValue, join.get(attribute));
+        };
+    }
+
+    public static <E, J, T>Specification<E> findByJoinAttributeIsEmpty(String joinAttribute, String attribute) {
+        return (root, cq, cb) -> {
+            
+            Join<E, J> join = root.join(joinAttribute);
+            return cb.isEmpty(join.get(attribute));
+        };
+    }
+
+    public static <E, J, T>Specification<E> findByJoinAttributeIsNotEmpty(String joinAttribute, String attribute) {
+        return (root, cq, cb) -> {
+            
+            Join<E, J> join = root.join(joinAttribute);
+            return cb.isNotEmpty(join.get(attribute));
         };
     }
 

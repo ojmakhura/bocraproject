@@ -44,7 +44,7 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 })
 export class EditFormComponentImpl extends EditFormComponent {
   protected http: HttpClient;
-  protected keycloakService: KeycloakService;
+  // protected keycloakService: KeycloakService;
   private formSection$: Observable<FormSectionVO>;
   private formField$: Observable<FormFieldVO>;
   private licenseeForm$: Observable<LicenseeFormVO>;
@@ -53,12 +53,18 @@ export class EditFormComponentImpl extends EditFormComponent {
   deleteFieldUnrestricted: boolean = true;
   licenseeRemoved$: Observable<boolean>;
   fieldRemoved$: Observable<boolean>;
+  roles: string[] = this.keycloakService
+      .getUserRoles()
+      ?.filter(role => {
+        return !this.keycloakService.getUserRoles(false).includes(role)
+                && !['offline_access', 'uma_authorization'].includes(role)
+                && !role.includes('default-roles')
+      });
 
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, private keycloakService: KeycloakService) {
     super(injector);
     this.http = this._injector.get(HttpClient);
     this.formLicenceTypes$ = this.store.pipe(select(LicenceTypeFormSelectors.selectLicenceTypeForms));
-    this.keycloakService = injector.get(KeycloakService);
     this.formFormFields$ = this.store.pipe(select(FormSelectors.selectFormFields));
     this.formField$ = this.store.pipe(select(FormSelectors.selectFormField));
     this.formSection$ = this.store.pipe(select(FormSelectors.selectFormSection));

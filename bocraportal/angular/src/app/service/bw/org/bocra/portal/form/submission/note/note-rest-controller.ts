@@ -25,6 +25,6 @@ export class NoteRestController {
   }
 
   public save(note: NoteVO | any): Observable<NoteVO | any> {
-    return this.http.post<NoteVO | any>(this.path, note);
+    return this.http.post<NoteVO | any>(`${this.path}/save`, note);
   }
 }

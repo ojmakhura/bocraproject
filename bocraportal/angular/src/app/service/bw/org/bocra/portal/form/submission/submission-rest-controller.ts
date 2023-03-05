@@ -60,7 +60,6 @@ export class SubmissionRestController {
   }
 
   public getSubmissionSummary(criteria: FormSubmissionCriteria): Observable<SubmissionSummary | any> {
-    criteria.submittedBy = this.keycloakService.getUsername();
     return this.http.post<SubmissionSummary | any>(`${this.path}/summary`, criteria);
   }
 

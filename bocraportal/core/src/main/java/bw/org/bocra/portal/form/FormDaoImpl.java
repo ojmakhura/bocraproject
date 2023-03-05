@@ -271,17 +271,21 @@ public class FormDaoImpl
             }
         }
 
-        if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(criteria.getRoles())) {
+        Specification<Form> tmp = BocraportalSpecifications.findByAttributeIsEmpty("roles");
 
-            Iterator<String> iter = criteria.getRoles().iterator();
+        if(CollectionUtils.isNotEmpty(criteria.getRoles())) {
 
-            // Specification tmp = BocraportalSpecifications.findByAttributeIn("roles", iter.next());
-
-            if(specifications == null) {
-                specifications = BocraportalSpecifications.<Form, String>findByAttributeIn("roles", criteria.getRoles());
-            } else {
-                specifications = specifications.and(BocraportalSpecifications.<Form, String>findByAttributeIn("roles", criteria.getRoles()));
+            for(String role : criteria.getRoles()) {
+                tmp = tmp.or(BocraportalSpecifications.<Form, String>findByAttributeIsMember("roles", role));
             }
+        }else {
+            tmp = tmp.or(BocraportalSpecifications.<Form, String>findByAttributeIsNotEmpty("roles"));
+        }
+
+        if(specifications == null) {
+            specifications = tmp;
+        } else {
+            specifications = specifications.and(tmp);
         }
 
         return specifications;

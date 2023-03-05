@@ -139,9 +139,6 @@ export class EditShareholderComponentImpl extends EditShareholderComponent {
       if (!this.shareholderControl.valid) {
         messages.push('Shareholder has errors, Please fill in the required form fields.');
       }
-      if (!this.shareholderIdControl.valid) {
-        messages.push('Shareholder Id is missing!');
-      }
       if (!this.shareholderNameControl.valid) {
         messages.push('Shareholder name is missing!');
       }

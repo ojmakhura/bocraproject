@@ -5,14 +5,12 @@
 //
 package bw.org.bocra.portal.licensee;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.keycloak.representations.AccessToken;
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -21,11 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import bw.org.bocra.portal.document.DocumentService;
-import bw.org.bocra.portal.document.DocumentVO;
-import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.user.UserVO;
