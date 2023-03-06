@@ -4,6 +4,10 @@ import { SearchFormsComponent } from '@app/view/form/search-forms.component';
 import { SearchFormsSearchForm } from '@app/view/form/search-forms.component';
 import { SearchFormsVarsForm } from '@app/view/form/search-forms.component';
 import * as FormActions from '@app/store/form/form.actions';
+import { KeycloakService } from 'keycloak-angular';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '@env/environment';
+import { SelectItem } from '@app/utils/select-item';
 
 @Component({
   selector: 'app-search-forms',
@@ -11,12 +15,59 @@ import * as FormActions from '@app/store/form/form.actions';
   styleUrls: ['./search-forms.component.scss'],
 })
 export class SearchFormsComponentImpl extends SearchFormsComponent {
+  protected keycloakService: KeycloakService;
+  protected http: HttpClient;
   constructor(private injector: Injector) {
     super(injector);
+    this.http = this._injector.get(HttpClient);
+    this.keycloakService = this._injector.get(KeycloakService);
   }
 
   override beforeOnInit(form: SearchFormsVarsForm): SearchFormsVarsForm {
     this.store.dispatch(FormActions.formReset());
+    this.keycloakService.loadUserProfile().then((profile) => {
+
+      if(!profile) return;
+
+      this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
+        let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
+        this.http
+          .get<any[]>(
+            `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`
+          )
+          .subscribe((roles) => {
+            roles
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .forEach((role) => {
+                if (this.keycloakService.getUserRoles().includes(role.name)) {
+                  let item = new SelectItem();
+                  item.label = role['description'];
+                  item.value = role['name'];
+
+                  this.criteriaRolesBackingList.push(item);
+                }
+              });
+          });
+      });
+
+      this.http
+        .get<any[]>(
+          `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
+        )
+        .subscribe((roles) => {
+          roles
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .forEach((role: any) => {
+              if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
+                let item = new SelectItem();
+                item.label = role['description'];
+                item.value = role['name'];
+
+                this.criteriaRolesBackingList.push(item);
+              }
+            });
+        });
+    });
     return form;
   }
 

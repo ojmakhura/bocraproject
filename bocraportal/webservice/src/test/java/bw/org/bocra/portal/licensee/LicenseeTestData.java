@@ -101,7 +101,7 @@ public class LicenseeTestData {
         licensee.setAddress("onelove");
         licensee.setLicenseeName("Top love");
         licensee.setAlias("onelove");
-        licensee.setStatus(LicenseeStatus.SUSPENDED);
+        licensee.setStatus(LicenseeStatus.INACTIVE);
         licensee.setUin(UUID.randomUUID().toString());
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
@@ -125,7 +125,7 @@ public class LicenseeTestData {
         licensee.setAddress("sixteen");
         licensee.setLicenseeName("One Six");
         licensee.setAlias("sixteen");
-        licensee.setStatus(LicenseeStatus.SUSPENDED);
+        licensee.setStatus(LicenseeStatus.INACTIVE);
         licensee.setUin(UUID.randomUUID().toString());
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());
@@ -149,7 +149,7 @@ public class LicenseeTestData {
         licensee.setAddress("stop");
         licensee.setLicenseeName("Test Type Stop");
         licensee.setAlias("stop");
-        licensee.setStatus(LicenseeStatus.SUSPENDED);
+        licensee.setStatus(LicenseeStatus.INACTIVE);
         licensee.setUin(UUID.randomUUID().toString());
         licensee.setCreatedBy("testuser4");
         licensee.setCreatedDate(LocalDateTime.now());

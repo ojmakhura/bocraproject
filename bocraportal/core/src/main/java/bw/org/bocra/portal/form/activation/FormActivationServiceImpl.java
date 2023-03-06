@@ -125,6 +125,12 @@ public class FormActivationServiceImpl
 
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
 
+        if (CollectionUtils.isEmpty(activation.getForm().getLicenseeForms())
+                && CollectionUtils.isEmpty(activation.getForm().getSectorForms())) {
+
+            throw new FormActivationServiceException("No licensees");
+        }
+
         if (activation.getActivationDeadline() == null) {
             activation.setActivationDeadline(activation.getPeriod().getPeriodEnd()
                     .plusDays(activation.getPeriod().getPeriodConfig().getFinalDay()));
@@ -272,7 +278,7 @@ public class FormActivationServiceImpl
         Set<Long> periodConfigs = periods.stream()
                 .map(period -> period.getPeriodConfig().getId())
                 .collect(Collectors.toSet());
-        
+
         Collection<Form> forms = formDao.findFormsByPeriodConfigs(periodConfigs);
 
         periods.forEach(period -> {
@@ -308,8 +314,9 @@ public class FormActivationServiceImpl
                     activation = this.save(activation);
 
                     Collection<FormSubmissionVO> submissions = this.submissionService
-                            .createNewSubmissions(this.getLicenseeIds(formRepository.getReferenceById(form.getId())), activation.getId());
-                    
+                            .createNewSubmissions(this.getLicenseeIds(formRepository.getReferenceById(form.getId())),
+                                    activation.getId());
+
                     activation.setFormSubmissions(submissions);
 
                     activations.add(activation);

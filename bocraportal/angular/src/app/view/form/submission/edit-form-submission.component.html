@@ -29,7 +29,7 @@
             >expected.submission.date</label
           >
           <label for="formSubmissionExpectedSubmissionDate" class="col-sm-2 col-form-label" translate>{{
-            formSubmissionExpectedSubmissionDate | date : 'dd MMM yyyy HH:ss'
+            formSubmissionExpectedSubmissionDate | date : 'dd MMM yyyy HH:mm:ss'
           }}</label>
         </div>
         <div>
@@ -37,7 +37,7 @@
             >submission.date</label
           >
           <label for="formSubmissionSubmissionDate" class="col-sm-2 col-form-label" translate>{{
-            formSubmissionSubmissionDate | date : 'dd MMM yyyy HH:ss'
+            formSubmissionSubmissionDate | date : 'dd MMM yyyy HH:mm:ss'
           }}</label>
         </div>
         <div formGroupName="licensee">
@@ -348,6 +348,18 @@
           >
             <span translate>reset</span>
           </button>
+        </div>
+				<div formArrayName="notes" class="mb-3">
+          <fieldset class="form-group border p-3" *ngFor="let note of formSubmissionNotesControl.controls; let i = index"
+						[formGroupName]="i">
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-2 fw-bold">{{ note.value.createdBy }}</h6>
+              <small class="text-warning">{{ note.value.createdDate | date : 'dd MMM yyyy HH:mm:ss' }}</small>
+            </div>
+            <p class="mb-1">
+              {{ note.value.note }}
+            </p>						
+					</fieldset>
         </div>
       </div>
     </form>

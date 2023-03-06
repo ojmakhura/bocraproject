@@ -17,6 +17,7 @@ import { select } from '@ngrx/store';
 import { SelectItem } from '@app/utils/select-item';
 import { FormSectionVO } from '@app/model/bw/org/bocra/portal/form/section/form-section-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-field',
@@ -150,5 +151,23 @@ export class EditFieldComponentImpl extends EditFieldComponent {
 
   scroll(el: HTMLElement) {
     el.scrollIntoView();
+  }
+
+  addOption() {
+    let tmp: any = prompt("Please enter an option");
+    this.formFieldOptionsControl.push(new FormControl(tmp));
+  }
+
+  addUnit() {
+    let tmp: any = prompt("Please enter an option");
+    this.formFieldUnitsControl.push(new FormControl(tmp));
+  }
+
+  /**
+   * Delete an item from the list
+   * @param index 
+   */
+  formFieldUnitsDelete(index: number) {
+      this.formFieldUnitsControl.removeAt(index);
   }
 }

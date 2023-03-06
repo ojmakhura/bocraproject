@@ -5,6 +5,7 @@
 //
 package bw.org.bocra.portal.form.submission.note;
 
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.keycloak.KeycloakService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -25,10 +27,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Form Submission Notes", description = "Managing form submission notes.")
 @CrossOrigin()
 public class NoteRestControllerImpl extends NoteRestControllerBase {
+
+    private final KeycloakService keycloakService;
     
-    public NoteRestControllerImpl(NoteService noteService) {
+    public NoteRestControllerImpl(NoteService noteService, KeycloakService keycloakService) {
         
         super(noteService);
+        this.keycloakService = keycloakService;
     }
 
 
@@ -65,6 +70,7 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
     @Override
     public ResponseEntity<?> handleGetFormSubmissionNotes(Long formSubmissionId) {
         try {
+            
             logger.debug("Display Form Submission Notes " + formSubmissionId);
             return ResponseEntity.ok().body(noteService.getFormSubmissionNotes(formSubmissionId));
             
@@ -102,7 +108,14 @@ public class NoteRestControllerImpl extends NoteRestControllerBase {
     @Override
     public ResponseEntity<?> handleSave(NoteVO note) {
         try {
+            
             logger.debug("Save Form Submission Note "+ note);
+
+            if(note.getCreatedBy() == null) {
+                note.setCreatedBy(keycloakService.getSecurityContext().getToken().getPreferredUsername());
+                note.setCreatedDate(LocalDateTime.now());
+            }
+
             Optional<?> data = Optional.of(noteService.save(note)); 
             ResponseEntity<?> response;
 

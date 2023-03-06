@@ -10,9 +10,12 @@ package bw.org.bocra.portal.form.submission.note;
 
 import java.util.Collection;
 import org.springframework.context.MessageSource;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import bw.org.bocra.portal.BocraportalSpecifications;
 
 /**
  * @see bw.org.bocra.portal.form.submission.note.NoteService
@@ -42,8 +45,7 @@ public class NoteServiceImpl
     protected NoteVO handleFindById(Long id)
         throws Exception
     {
-        // TODO implement protected  NoteVO handleFindById(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.submission.note.NoteService.handleFindById(Long id) Not implemented!");
+        return noteDao.toNoteVO(noteRepository.getReferenceById(id));
     }
 
     /**
@@ -53,8 +55,7 @@ public class NoteServiceImpl
     protected NoteVO handleSave(NoteVO note)
         throws Exception
     {
-        // TODO implement protected  NoteVO handleSave(NoteVO note)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.submission.note.NoteService.handleSave(NoteVO note) Not implemented!");
+        return noteDao.toNoteVO(noteRepository.save(noteDao.noteVOToEntity(note)));
     }
 
     /**
@@ -64,8 +65,8 @@ public class NoteServiceImpl
     protected boolean handleRemove(Long id)
         throws Exception
     {
-        // TODO implement protected  boolean handleRemove(Long id)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.submission.note.NoteService.handleRemove(Long id) Not implemented!");
+        noteRepository.deleteById(id);
+        return true;
     }
 
     /**
@@ -75,8 +76,10 @@ public class NoteServiceImpl
     protected Collection<NoteVO> handleGetFormSubmissionNotes(Long formSubmissionId)
         throws Exception
     {
-        // TODO implement protected  Collection<Note> handleGetFormSubmissionNotes(Long formSubmissionId)
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.submission.note.NoteService.handleGetFormSubmissionNotes(Long formSubmissionId) Not implemented!");
+        Specification<Note> spec = BocraportalSpecifications.findByJoinAttribute("formSubmission", "id", formSubmissionId);
+        Collection<Note> notes = noteRepository.findAll(spec);
+
+        return noteDao.toNoteVOCollection(notes);
     }
 
 }

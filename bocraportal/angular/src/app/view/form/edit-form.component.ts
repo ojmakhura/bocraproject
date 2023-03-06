@@ -131,7 +131,7 @@ export abstract class EditFormComponent implements OnInit, AfterViewInit, OnDest
   formFormSectionsSearchField: FormControl;
   formFormSectionsSelect: FormSectionVO[] = [];
 
-  formFormFieldsColumns = ['id', 'formSection.sectionLabel', 'fieldType', 'fieldId', 'fieldName'];
+  formFormFieldsColumns = ['id', 'position', 'formSection.sectionLabel', 'fieldType', 'fieldId', 'fieldName'];
 
   formFormFieldsModalColumns = ['actions', ...this.formFormFieldsColumns];
 

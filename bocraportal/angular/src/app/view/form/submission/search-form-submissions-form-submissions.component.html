@@ -28,13 +28,13 @@
       <ng-container matColumnDef="expectedSubmissionDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>expected.submission.date</span></mat-header-cell>
         <mat-cell *matCellDef="let row">
-          {{ row?.expectedSubmissionDate | date : 'dd MMM yyyy HH:ss' }}
+          {{ row?.expectedSubmissionDate | date : 'dd MMM yyyy HH:mm:ss' }}
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="submissionDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>submission.date</span></mat-header-cell>
         <mat-cell *matCellDef="let row">
-          {{ row?.submissionDate | date : 'dd MMM yyyy HH:ss' }}
+          {{ row?.submissionDate | date : 'dd MMM yyyy HH:mm:ss' }}
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="licensee.licenseeName">

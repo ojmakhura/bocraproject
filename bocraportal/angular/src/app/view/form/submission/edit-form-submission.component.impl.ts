@@ -4,6 +4,7 @@ import {
   EditFormSubmissionAcceptForm,
   EditFormSubmissionComponent,
   EditFormSubmissionDeleteForm,
+  EditFormSubmissionNoteForm,
   EditFormSubmissionReturnForm,
   EditFormSubmissionSubmitForm,
 } from '@app/view/form/submission/edit-form-submission.component';
@@ -34,6 +35,7 @@ import * as math from 'mathjs';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import { setTimeout } from 'timers';
+import { NoteVO } from '@app/model/bw/org/bocra/portal/form/submission/note/note-vo';
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -57,6 +59,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   acceptUnrestricted: boolean = true;
   addUnrestricted: boolean = true;
   statusUpdated$: Observable<boolean>;
+  note$: Observable<NoteVO | any>;
 
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
@@ -72,6 +75,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
     this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
+    this.note$ = this.store.pipe(select(SubmissionSelectors.selectNote));
   }
 
   override beforeOnInit(form: EditFormSubmissionVarsForm): EditFormSubmissionVarsForm {
@@ -196,7 +200,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       for (let i = 0; i < sec.dataFields.length; i++) {
         let field: DataFieldVO = sec.dataFields[i];
         if (expression.includes(`[${field.formField.fieldId}]`)) {
-          expression = expression.replace(`[${field.formField.fieldId}]`, field.value);
+          expression = expression.replaceAll(`[${field.formField.fieldId}]`, field.value);
         }
       }
 
@@ -718,5 +722,27 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   scroll(el: HTMLElement) {
     el.scrollIntoView();
+  }
+
+  override afterEditFormSubmissionNote(form: EditFormSubmissionNoteForm, dialogData: any): void {
+
+    if(dialogData.note.note) {
+      dialogData.note.formSubmission = {
+        id: this.formSubmissionId
+      }
+      this.store.dispatch(FormSubmissionActions.saveNote({
+        note: dialogData.note,
+        loaderMessage: "Saving note",
+        loading: true
+      }))
+    }
+
+    this.note$.subscribe(note => {
+      
+      if(note?.id && note?.id != null) {
+        this.formSubmissionNotesControl.insert(0, this.createNoteVOGroup(note));
+      }
+    })
+
   }
 }

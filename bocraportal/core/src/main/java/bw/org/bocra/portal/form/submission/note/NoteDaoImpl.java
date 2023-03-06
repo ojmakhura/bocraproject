@@ -75,10 +75,7 @@ public class NoteDaoImpl
      */
     private Note loadNoteFromNoteVO(NoteVO noteVO)
     {
-        // TODO implement loadNoteFromNoteVO
-        throw new UnsupportedOperationException("bw.org.bocra.portal.form.submission.note.loadNoteFromNoteVO(NoteVO) not yet implemented.");
 
-        /* A typical implementation looks like this:
         if (noteVO.getId() == null)
         {
             return  Note.Factory.newInstance();
@@ -87,7 +84,6 @@ public class NoteDaoImpl
         {
             return this.load(noteVO.getId());
         }
-        */
     }
 
     /**
