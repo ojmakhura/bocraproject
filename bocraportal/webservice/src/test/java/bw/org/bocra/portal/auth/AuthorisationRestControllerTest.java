@@ -115,7 +115,66 @@ public class AuthorisationRestControllerTest extends GenericRestTest<Authorisati
         accessPointTypeTestData.clean();
     }
 
+    public Collection<AuthorisationVO> dummyData(int size) {
 
+        return authorisationTestData.generateSequentialData(size);
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveAuthorisationTest_missing() {
+
+        ResponseEntity<?> response = restController.save(null);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+        String message = response.getBody().toString();
+        Assertions.assertTrue(message.contains("information is missing"));
+
+    }
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void saveAuthorisationTest_missingAccessPoint() {
+        AuthorisationVO auth = authorisationTestData.createUnsavedData();
+
+        auth.setAccessPoint(null);
+        ResponseEntity<?> response = restController.save(auth);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        logger.info(response.getBody().toString());
+
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save_nullCreatedBy() {
+        AuthorisationVO auth = testData.createUnsavedData();
+        System.out.println(auth);
+        auth.setCreatedBy(null);
+
+        ResponseEntity<?> response = restController.save(auth);
+        Assertions.assertNotNull(response);
+        System.out.println(response.getBody());
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        String message = response.getBody().toString();
+        System.out.println(message);
+        Assertions.assertTrue(message.contains("created-by value is missing"));
+    }
+
+    @WithMockUser(username = "testuser4", password = "testuser1")
+    @Test
+    public void save_nullCreatedDate() {
+
+        AuthorisationVO auth = testData.createUnsavedData();
+        auth.setCreatedDate(null);
+
+        ResponseEntity<?> response = restController.save(auth);
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        String message = response.getBody().toString();
+        System.out.println(message);
+        Assertions.assertTrue(message.contains("created date value is missing"));
+    }
     // private AccessPointVO createDefaultAccessPoint() {
 
     //     AccessPointTypeVO type = new AccessPointTypeVO();
@@ -143,8 +202,11 @@ public class AuthorisationRestControllerTest extends GenericRestTest<Authorisati
     @Override
     protected void basicCompareAssertions(AuthorisationVO o1, AuthorisationVO o2) {
 
-        Assertions.assertEquals(o1.getId(), o2.getId());
-        Assertions.assertEquals(o1.getAccessPoint().getId(), o2.getAccessPoint().getId());
+        AuthorisationVO auth1 = (AuthorisationVO) o1;
+        AuthorisationVO auth2 = (AuthorisationVO) o2;
+
+        Assertions.assertEquals(auth1.getId(), auth2.getId());
+        Assertions.assertEquals(auth1.getAccessPoint().getId(), auth2.getAccessPoint().getId());
     }
     
     @WithMockUser(username = "testuser4", password = "testuser1")
@@ -169,6 +231,8 @@ public class AuthorisationRestControllerTest extends GenericRestTest<Authorisati
     @Override
     protected void searchResultsAssertions(ResponseEntity<?> response) {
         // TODO Auto-generated method stub
+        Collection<AuthorisationVO> types = (Collection<AuthorisationVO>) response.getBody();
+        Assertions.assertEquals(types.size(), 7);
         
     }
 

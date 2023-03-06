@@ -368,6 +368,8 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
     @Override
     protected void searchResultsAssertions(ResponseEntity<?> response) {
         // TODO Auto-generated method stub
+        Collection<AccessPointVO> types = (Collection<AccessPointVO>) response.getBody();
+        Assertions.assertEquals(types.size(), 7);
         
     }
 }
