@@ -8,23 +8,26 @@ import java.util.stream.Collectors;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import bw.org.bocra.portal.GenericTestData;
+
 @Component
 @Profile("test")
-public class FormTestData {
+public class FormTestData extends GenericTestData<FormVO, FormRepository, String, FormRestController>{
     
-    private final FormRestController formRestController;
-    private final FormRepository formRepository;
+    // private final FormRestController formRestController;
+    // private final FormRepository formRepository;
+    private final FormService formService;
 
-    public FormTestData(FormRestController formRestController, FormRepository formRepository) {
-        this.formRestController = formRestController;
-        this.formRepository = formRepository;
+    public FormTestData(FormRestController restController, FormRepository repository, FormService formService) {
+        super(repository, restController);
+        this.formService = formService;
     }
 
     public void clean() {
-        formRepository.deleteAll();
+        repository.deleteAll();
     }
 
-    public FormVO createUnsaved() {
+    public FormVO createUnsavedData() {
 
         FormVO form = new FormVO();
         form.setCode("TEST");
@@ -37,17 +40,17 @@ public class FormTestData {
         return form;
     }
 
-    public FormVO create() {
+    // public FormVO create() {
         
-        return (FormVO) formRestController.save(createUnsaved()).getBody();
-    }
+    //     return (FormVO) formRestController.save(createUnsaved()).getBody();
+    // }
 
 
     public Collection<FormVO> generateSequentialData(int size) {
 
         return generateUnsavedSequentialData(size)
             .stream()
-            .map(form -> (FormVO)formRestController.save(form).getBody())
+            .map(form -> formService.save(form))
             .collect(Collectors.toList());
 
     }
@@ -73,7 +76,7 @@ public class FormTestData {
         return forms;
     }
     
-    public Collection<FormVO> generateSearchData() {
+    public Collection<FormVO> searchData() {
         
         Collection<FormVO> data = new ArrayList<>();
 
@@ -84,7 +87,7 @@ public class FormTestData {
         form.setFormName("Coverage");
         form.setCode("COVER");
         form.setEntryType(FormEntryType.SINGLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
 
@@ -93,7 +96,7 @@ public class FormTestData {
         form.setFormName("Quarterly Postal Mail Volume");
         form.setCode("QPMV-V1");
         form.setEntryType(FormEntryType.MULTIPLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
 
@@ -102,7 +105,7 @@ public class FormTestData {
         form.setFormName("Submit Turnover (Postal Operators)");
         form.setCode("ST-V3");
         form.setEntryType(FormEntryType.SINGLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
 
@@ -111,7 +114,7 @@ public class FormTestData {
         form.setFormName("Submit Postal Tariffs – Letter, Parcels and EMS KPIs");
         form.setCode("SPTLPE-V5");
         form.setEntryType(FormEntryType.MULTIPLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
 
@@ -120,7 +123,7 @@ public class FormTestData {
         form.setFormName("Submit Mobile Money Services");
         form.setCode("SBMS-V1");
         form.setEntryType(FormEntryType.SINGLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
 
@@ -129,7 +132,7 @@ public class FormTestData {
         form.setFormName("Submit Average Call Setup Time (2G and 3G)");
         form.setCode("SACST");
         form.setEntryType(FormEntryType.SINGLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
 
@@ -138,7 +141,7 @@ public class FormTestData {
         form.setFormName("Submit Emergency Services Provided");
         form.setCode("SESP-V1");
         form.setEntryType(FormEntryType.MULTIPLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
 
@@ -147,7 +150,7 @@ public class FormTestData {
         form.setFormName("Submit Number of Active SIMs");
         form.setCode("SNAS-V1");
         form.setEntryType(FormEntryType.SINGLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
         
@@ -156,7 +159,7 @@ public class FormTestData {
         form.setFormName("Submit Active Datacards");
         form.setCode("SAD");
         form.setEntryType(FormEntryType.MULTIPLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
         
@@ -165,7 +168,7 @@ public class FormTestData {
         form.setFormName("Submit Percentage of Population Coverage");
         form.setCode("SPPC-V1");
         form.setEntryType(FormEntryType.MULTIPLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         form = new FormVO();
         
@@ -174,8 +177,32 @@ public class FormTestData {
         form.setFormName("Submit Transmission Parameters");
         form.setCode("STP-V1");
         form.setEntryType(FormEntryType.MULTIPLE);
-        data.add((FormVO) formRestController.save(form).getBody());
+        data.add(formService.save(form));
 
         return data;
+    }
+
+    @Override
+    public String searchCriteria() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String searchCriteriaEmpty() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String searchCriteriaNone() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Class<FormVO> getDataClass() {
+        // TODO Auto-generated method stub
+        return FormVO.class;
     }
 }

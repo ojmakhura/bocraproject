@@ -53,8 +53,8 @@ import bw.org.bocra.portal.period.config.RepeatPeriod;
 import bw.org.bocra.portal.sector.SectorService;
 import bw.org.bocra.portal.sector.SectorVO;
 
-@Component
-@Transactional
+// @Component
+// @Transactional
 @Profile("!test")
 public class ApplicationRunnerImpl implements ApplicationRunner {
 
