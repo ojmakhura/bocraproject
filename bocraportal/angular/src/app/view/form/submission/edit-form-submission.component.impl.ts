@@ -740,7 +740,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.note$.subscribe(note => {
       
       if(note?.id && note?.id != null) {
-        this.addToFormSubmissionNotes(note);
+        this.formSubmissionNotesControl.insert(0, this.createNoteVOGroup(note));
       }
     })
 

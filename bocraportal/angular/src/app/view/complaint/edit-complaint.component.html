@@ -222,7 +222,7 @@
             complaint?.createdDate
             | date
             : 'dd MMM yyyy
-            HH:ss'
+            HH:mm:ss'
             }}</label>
         </div>
         <div class="mb-4">
@@ -234,7 +234,7 @@
             complaint?.updatedDate
             | date
             : 'dd MMM yyyy
-            HH:ss'
+            HH:mm:ss'
             }}</label>
         </div>
         <div class="mb-3">
@@ -329,7 +329,7 @@
                 <a class="list-group-item list-group-item-action mb-2 px-5" aria-current="true">
                   <div class="d-flex w-100 justify-content-between">
                     <h6 class="mb-2 fw-bold">{{ reply.replyUser }}</h6>
-                    <small class="text-warning">{{ reply.date | date : 'dd MMM yyyy HH:ss' }}</small>
+                    <small class="text-warning">{{ reply.date | date : 'dd MMM yyyy HH:mm:ss' }}</small>
                   </div>
                   <p class="mb-1">
                     {{ reply.reply }}
@@ -457,7 +457,7 @@
           </ng-container>
           <ng-container matColumnDef="date">
             <mat-header-cell *matHeaderCellDef translate>date</mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{ row?.date | date : 'dd MMM yyyy HH:ss' }} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.date | date : 'dd MMM yyyy HH:mm:ss' }} </mat-cell>
           </ng-container>
           <ng-container matColumnDef="replyUser">
             <mat-header-cell *matHeaderCellDef translate>reply.user</mat-header-cell>
