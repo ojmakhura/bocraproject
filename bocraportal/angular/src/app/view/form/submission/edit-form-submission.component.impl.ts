@@ -173,7 +173,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   onRowChange(section: any, dataField: DataFieldVO) {
-    let sec: DataFieldSectionVO = section.value;
     let calculationFields: FormGroup[] = [];
 
     // Find the caculation fields controls
@@ -193,7 +192,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         }
       }
     }
-    
+
     // Make the calculations
     calculationFields.forEach((fieldControl: FormGroup) => {
       let field: DataFieldVO = fieldControl.value;
@@ -203,15 +202,14 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       
         for (let i = 0; i < section.dataFields.length; i++) {
           let field: DataFieldVO = section.dataFields[i];
-          if (expression.includes(`[${field.formField.fieldId}]`) && !isNaN(field.value) && field.value != null) {
-            expression = expression.replaceAll(`[${field.formField.fieldId}]`, field.value);
+          if (expression.includes(`[${field.formField.fieldId}]`) && !isNaN(field.value)) {
+            expression = expression.replaceAll(`[${field.formField.fieldId}]`, field.value != null ? field.value : 0);
           }
         }
 
       });
       
       try {
-
         fieldControl?.get('value')?.setValue(math.evaluate(expression).toFixed(2));
         this.onRowChange(undefined, fieldControl.value);
       } catch(ex) {
