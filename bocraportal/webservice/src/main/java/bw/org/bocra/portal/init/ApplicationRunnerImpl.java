@@ -53,8 +53,8 @@ import bw.org.bocra.portal.period.config.RepeatPeriod;
 import bw.org.bocra.portal.sector.SectorService;
 import bw.org.bocra.portal.sector.SectorVO;
 
-// @Component
-// @Transactional
+@Component
+@Transactional
 @Profile("!test")
 public class ApplicationRunnerImpl implements ApplicationRunner {
 
@@ -102,7 +102,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         log.info("Creating MONTHLY period configuration ...");
         config = periodConfigService.save(config);
         configs.add(config);
-        log.info(String.format("MONTHLY period configuration creation complete with id ...", config.getId()));
+        log.info(String.format("MONTHLY period configuration creation complete with id %d ...", config.getId()));
 
         config = new PeriodConfigVO();
 
@@ -117,7 +117,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         log.info("Creating QUARTERLY period configuration ...");
         config = periodConfigService.save(config);
         configs.add(config);
-        log.info(String.format("QUARTERLY period configuration creation complete with id ...", config.getId()));
+        log.info(String.format("QUARTERLY period configuration creation complete with id %d ...", config.getId()));
 
         config = new PeriodConfigVO();
 
@@ -132,7 +132,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         log.info("Creating ANNUAL period configuration ...");
         config = periodConfigService.save(config);
         configs.add(config);
-        log.info(String.format("ANNUAL period configuration creation complete with id ...", config.getId()));
+        log.info(String.format("ANNUAL period configuration creation complete with id %d ...", config.getId()));
 
         return configs;
     }
@@ -147,6 +147,8 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         period.setPeriodConfig(config);
         period.setCreatedBy("system");
         period.setCreatedDate(LocalDateTime.now());
+        LocalDate cur = LocalDate.now();
+        period.setPeriodStart(LocalDate.now().with(java.time.temporal.TemporalAdjusters.firstDayOfYear()));
 
         period = periodService.save(period);
 
@@ -154,8 +156,14 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
             Set<Long> s = new HashSet<>();
             s.add(period.getId());
-            period = periodService.createNextPeriods("system", s).iterator().next();
+            Collection<PeriodVO> periods = periodService.createNextPeriods("system", s);
+
+            if(CollectionUtils.isNotEmpty(periods)) {
+                period = periods.iterator().next();
+            }
+            
         }
+
         log.info("Created periods for configuration " + config.getPeriodConfigName());   
     }
 
@@ -286,6 +294,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
         if(CollectionUtils.isEmpty(periodService.getAll(1, 1))) {
             log.info("Initialising periods .... ");
+
 
             for (PeriodConfigVO config : periodConfigService.getAll()) {
                 this.initPeriods(config);     

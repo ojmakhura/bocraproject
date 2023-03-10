@@ -62,7 +62,7 @@ public class PeriodConfigServiceImpl
 
         entity = periodConfigRepository.saveAndFlush(entity);
 
-        return periodConfigVO;
+        return periodConfigDao.toPeriodConfigVO(entity);
     }
 
     /**
