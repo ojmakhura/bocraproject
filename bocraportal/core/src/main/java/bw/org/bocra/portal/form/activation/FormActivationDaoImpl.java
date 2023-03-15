@@ -7,7 +7,9 @@
 package bw.org.bocra.portal.form.activation;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -103,6 +105,12 @@ public class FormActivationDaoImpl
 
             target.setForm(form);
         }
+
+        // if(CollectionUtils.isNotEmpty(source.getFormSubmissions())) {
+        //     target.setFormSubmissions(
+        //         source.getFormSubmissions().stream().map(sub -> getFormSubmissionDao().toFormSubmissionVO(sub)).collect(Collectors.toList())
+        //     );
+        // }
     }
 
     /**

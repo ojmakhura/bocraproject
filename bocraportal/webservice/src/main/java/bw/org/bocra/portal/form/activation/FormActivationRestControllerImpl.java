@@ -243,34 +243,11 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     public ResponseEntity<?> handleSave(FormActivationVO formActivation) {
         try {
             logger.debug("Saves Form Activation " + formActivation);
-            boolean fresh = formActivation.getId() == null;
+            // boolean fresh = formActivation.getId() == null;
 
             FormActivationVO activation = formActivationService.save(formActivation);
-            ResponseEntity<?> response;
 
-            if (activation.getId() != null) {
-
-                /**
-                 * The form activations is a new one so we need to
-                 * create form submissions for all the licensees
-                 * associated with the form.
-                 */
-
-                if (fresh) {
-                    FormVO f = formService.findById(activation.getForm().getId());
-                    Collection<FormSubmissionVO> submissions = this.submissionService
-                            .createNewSubmissions(this.getLicenseeIds(f), activation.getId());
-
-                    activation.setFormSubmissions(submissions);
-                    this.sendNotifications(activation);
-                }
-
-                response = ResponseEntity.ok().body(activation);
-            } else {
-                response = ResponseEntity.badRequest().body("Could not save the form activation");
-            }
-
-            return response;
+            return ResponseEntity.ok().body(activation);
         } catch (IllegalArgumentException | FormActivationServiceException e) {
 
             e.printStackTrace();

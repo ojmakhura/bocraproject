@@ -125,6 +125,15 @@ public class FormActivationServiceImpl
 
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
 
+        Set<Long> ids = getLicenseeIds(activation.getForm());
+
+        if (CollectionUtils.isEmpty(ids)) {
+            throw new FormActivationServiceException(
+                    "Cannot create an activation for a form that has no licensees. Please attach licensees to the form first.");
+        }
+
+        boolean isNew = formActivation.getId() == null;
+
         if (CollectionUtils.isEmpty(activation.getForm().getLicenseeForms())
                 && CollectionUtils.isEmpty(activation.getForm().getSectorForms())) {
 
@@ -141,6 +150,15 @@ public class FormActivationServiceImpl
                     activation.getPeriod().getPeriodName()));
         }
         activation = formActivationRepository.save(activation);
+
+        /**
+         * The form activations is a new one so we need to
+         * create form submissions for all the licensees
+         * associated with the form.
+         */
+        if (isNew) {
+            activation.setFormSubmissions(formSubmissionDao.createNewSubmissions(ids, activation.getId()));
+        }
 
         return formActivationDao.toFormActivationVO(activation);
     }
@@ -209,29 +227,6 @@ public class FormActivationServiceImpl
         }
 
         return ids;
-    }
-
-    private Set<Licensee> getLicensees(Form form) {
-        Map<Long, Licensee> lmap = new HashMap<>();
-
-        for (LicenseeForm licensee : form.getLicenseeForms()) {
-            if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
-                lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
-        }
-
-        for (SectorForm sectorForm : form.getSectorForms()) {
-            // List<SectorFormVO> sf = (List<SectorFormVO>)
-            // sectorFormService.findByForm(form.getId());
-            // if(sf != null && sf.size() > 0)
-            // sf.get(0);
-
-            for (LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
-                if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
-                    lmap.putIfAbsent(licensee.getLicensee().getId(), licensee.getLicensee());
-            }
-        }
-
-        return lmap.values().stream().collect(Collectors.toSet());
     }
 
     @Override
@@ -312,13 +307,7 @@ public class FormActivationServiceImpl
 
                     activation.setActivationName(activationName);
                     activation = this.save(activation);
-
-                    Collection<FormSubmissionVO> submissions = this.submissionService
-                            .createNewSubmissions(this.getLicenseeIds(formRepository.getReferenceById(form.getId())),
-                                    activation.getId());
-
-                    activation.setFormSubmissions(submissions);
-
+                    
                     activations.add(activation);
 
                 }
