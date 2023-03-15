@@ -57,6 +57,8 @@ services:
       COMM_URL: ${COMM_URL}
       TZ: Africa/Gaborone
     deploy:
+      mode: replicated
+      replicas: 3
       placement:
         constraints:
           # Make the traefik service run only on the node with this label
