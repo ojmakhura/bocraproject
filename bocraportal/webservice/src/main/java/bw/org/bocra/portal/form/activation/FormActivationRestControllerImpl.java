@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
+import bw.org.bocra.portal.config.SystemConfigService;
+import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.form.FormService;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
@@ -53,7 +55,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class FormActivationRestControllerImpl extends FormActivationRestControllerBase {
 
     private final SubmissionService submissionService;
-    private final FormService formService;
+    private final SystemConfigService systemConfigService;
     private final LicenseeSectorService licenseeSectorService;
     private final KeycloakUserService keycloakUserService;
     private final KeycloakService keycloakService;
@@ -67,12 +69,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     private String commUrl;
     
     public FormActivationRestControllerImpl(FormActivationService formActivationService, RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties,
-            SubmissionService submissionService, FormService formService, LicenseeSectorService licenseeSectorService,
+            SubmissionService submissionService, SystemConfigService systemConfigService, LicenseeSectorService licenseeSectorService,
             KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
 
         super(formActivationService);
         this.submissionService = submissionService;
-        this.formService = formService;
+        this.systemConfigService = systemConfigService;
         this.licenseeSectorService = licenseeSectorService;
         this.keycloakUserService = keycloakUserService;
         this.keycloakService = keycloakService;
@@ -213,6 +215,8 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                 continue;
             }
 
+            SystemConfigVO config = systemConfigService.findByName("ACTIVATION_SUBMISSION_TEMPLATE");
+
             JSONObject messageObj = new JSONObject();
             
             messageObj.put("createdBy", formActivation.getCreatedBy());
@@ -223,7 +227,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             messageObj.put("status", "DRAFT");
             messageObj.put("subject", String.format("%s data request for period %s.", formActivation.getForm().getFormName(), formActivation.getPeriod().getPeriodName()));
             messageObj.put("text", String.format(
-                emailTempate,
+                config.getValue(),
                 submission.getLicensee().getLicenseeName(),
                 formActivation.getForm().getFormName(),
                 submissionUrl,

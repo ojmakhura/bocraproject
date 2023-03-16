@@ -327,29 +327,6 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
         }
     }
 
-    // private String getAuthToken() {
-    // if(SecurityContextHolder.getContext().getAuthentication() instanceof
-    // AnonymousAuthenticationToken) {
-    // System.out.println(keycloakProperties);
-    // Keycloak keycloak = KeycloakBuilder.builder()
-    // .serverUrl(keycloakProperties.getAuthServerUrl())
-    // .realm( keycloakProperties.getRealm() )
-    // .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-    // .clientId(keycloakProperties.getResource())
-    // .clientSecret(clientSecret)
-    // .resteasyClient(new ResteasyClientBuilderImpl()
-    // .connectionPoolSize(100)
-    // .build()
-    // ) //
-    // .build();
-
-    // return keycloak.tokenManager().getAccessToken().getToken();
-    // } else {
-    // return keycloakService.getSecurityContext().getTokenString();
-
-    // }
-    // }
-
     public void sendComplaintMessage(ComplaintVO complaint, String subject, Collection<String> destinations,
             String text,
             String user) {
