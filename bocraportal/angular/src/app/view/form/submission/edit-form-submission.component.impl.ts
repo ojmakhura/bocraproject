@@ -36,6 +36,7 @@ import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import { setTimeout } from 'timers';
 import { NoteVO } from '@app/model/bw/org/bocra/portal/form/submission/note/note-vo';
+import { error } from 'console';
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -172,7 +173,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   onRowChange(section: any, dataField: DataFieldVO) {
-    let sec: DataFieldSectionVO = section.value;
     let calculationFields: FormGroup[] = [];
 
     // Find the caculation fields controls
@@ -185,7 +185,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
         if (
           formField.fieldValueType === FieldValueType.CALCULATED &&
-          formField.expression.includes(`[${dataField?.formField?.fieldId}]`)
+          formField?.expression && formField.expression != null &&
+          formField?.expression?.includes(`[${dataField?.formField?.fieldId}]`)
         ) {
           calculationFields.push(fieldControl);
         }
@@ -193,18 +194,27 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     }
 
     // Make the calculations
-    calculationFields.forEach((fieldControl) => {
+    calculationFields.forEach((fieldControl: FormGroup) => {
       let field: DataFieldVO = fieldControl.value;
       let expression: string = field.formField.expression;
 
-      for (let i = 0; i < sec.dataFields.length; i++) {
-        let field: DataFieldVO = sec.dataFields[i];
-        if (expression.includes(`[${field.formField.fieldId}]`)) {
-          expression = expression.replaceAll(`[${field.formField.fieldId}]`, field.value);
+      this.formSubmission.sections?.forEach(section => {
+      
+        for (let i = 0; i < section.dataFields.length; i++) {
+          let field: DataFieldVO = section.dataFields[i];
+          if (expression.includes(`[${field.formField.fieldId}]`) && !isNaN(field.value)) {
+            expression = expression.replaceAll(`[${field.formField.fieldId}]`, field.value != null ? field.value : 0);
+          }
         }
-      }
 
-      fieldControl?.get('value')?.setValue(math.evaluate(expression));
+      });
+      
+      try {
+        fieldControl?.get('value')?.setValue(math.evaluate(expression).toFixed(2));
+        this.onRowChange(undefined, fieldControl.value);
+      } catch(ex) {
+        
+      }
     });
   }
 
@@ -238,24 +248,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       );
     }
   }
-  // override beforeEditFormSubmissionDelete(form: EditFormSubmissionDeleteForm): void {
-  //   if (form?.formSubmission?.id && confirm('Are you sure you want to delete the form?')) {
-  //     this.store.dispatch(
-  //       FormSubmissionActions.remove({
-  //         id: form.formSubmission.id,
-  //         loading: true,
-  //         loaderMessage: 'Removing form submissions ...'
-  //       })
-  //     );
-  //     this.editFormSubmissionFormReset();
-  //   } else {
-  //     this.store.dispatch(FormSubmissionActions.formSubmissionFailure({ messages: ['Please select something to delete'] }));
-  //   }
-  // }
 
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
-    console.log(form);
-
+    
     if (this.formSubmissionControl.valid) {
       if (
         form.formSubmission.submissionStatus != FormSubmissionStatus.SUBMITTED &&

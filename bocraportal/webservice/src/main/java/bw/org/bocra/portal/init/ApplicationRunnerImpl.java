@@ -53,8 +53,8 @@ import bw.org.bocra.portal.period.config.RepeatPeriod;
 import bw.org.bocra.portal.sector.SectorService;
 import bw.org.bocra.portal.sector.SectorVO;
 
-// @Component
-// @Transactional
+@Component
+@Transactional
 @Profile("!test")
 public class ApplicationRunnerImpl implements ApplicationRunner {
 
@@ -102,7 +102,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         log.info("Creating MONTHLY period configuration ...");
         config = periodConfigService.save(config);
         configs.add(config);
-        log.info(String.format("MONTHLY period configuration creation complete with id ...", config.getId()));
+        log.info(String.format("MONTHLY period configuration creation complete with id %d ...", config.getId()));
 
         config = new PeriodConfigVO();
 
@@ -117,7 +117,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         log.info("Creating QUARTERLY period configuration ...");
         config = periodConfigService.save(config);
         configs.add(config);
-        log.info(String.format("QUARTERLY period configuration creation complete with id ...", config.getId()));
+        log.info(String.format("QUARTERLY period configuration creation complete with id %d ...", config.getId()));
 
         config = new PeriodConfigVO();
 
@@ -132,7 +132,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         log.info("Creating ANNUAL period configuration ...");
         config = periodConfigService.save(config);
         configs.add(config);
-        log.info(String.format("ANNUAL period configuration creation complete with id ...", config.getId()));
+        log.info(String.format("ANNUAL period configuration creation complete with id %d ...", config.getId()));
 
         return configs;
     }
@@ -147,6 +147,8 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         period.setPeriodConfig(config);
         period.setCreatedBy("system");
         period.setCreatedDate(LocalDateTime.now());
+        LocalDate cur = LocalDate.now();
+        period.setPeriodStart(LocalDate.now().with(java.time.temporal.TemporalAdjusters.firstDayOfYear()));
 
         period = periodService.save(period);
 
@@ -154,8 +156,14 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
             Set<Long> s = new HashSet<>();
             s.add(period.getId());
-            period = periodService.createNextPeriods("system", s).iterator().next();
+            Collection<PeriodVO> periods = periodService.createNextPeriods("system", s);
+
+            if(CollectionUtils.isNotEmpty(periods)) {
+                period = periods.iterator().next();
+            }
+            
         }
+
         log.info("Created periods for configuration " + config.getPeriodConfigName());   
     }
 
@@ -266,7 +274,84 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         SystemConfigVO config = new SystemConfigVO("API_URL", apiUrl);
         systemConfigService.save(config);
 
-        config = new SystemConfigVO("COMPLAINTS_MANAGEMENT_EMAIL", complaintEmails);
+        config = new SystemConfigVO("COMPLAINTS_MANAGEMENT_EMAIL", "tochange@bocra.org.bw");
+        systemConfigService.save(config);
+
+        String emailTempate = """
+                            Dear %s
+
+                            We acknowledge receipt of your complaint against %s and will get back
+                            to you as soon as possible. Please note that to access your
+                            complaint, go the the url %s.
+
+                            Regards,
+
+                            BOCRA Complaint Management Team
+                            """;
+        config = new SystemConfigVO("COMPLAINANT_EMAIL_TEMPLATE", emailTempate);
+        systemConfigService.save(config);
+
+        emailTempate = """
+            Dear Complaint Officer
+
+            A new complaint has been logged against %s. Please go to
+            the url %s to process it.
+
+            Regards,
+
+            BOCRA Online Data Collection Portal
+            """;
+        config = new SystemConfigVO("COMPLAINTS_OFFICER_EMAIL_TEMPLATE", emailTempate);
+        systemConfigService.save(config);
+
+        emailTempate = """
+            Dear %s
+
+            Your complaint %s against %s has a new reply. Go to the URL
+            %s to view the reply and respond.
+
+            Regards,
+
+            BOCRA Complaint Management Team
+            """;
+        config = new SystemConfigVO("COMPLAINT_REPLY_TEMPLATE", emailTempate);
+        systemConfigService.save(config);
+
+        emailTempate = """
+            Dear %s
+
+            You have been assigned to handle the complaint against %s.
+            Please go to the url %s to manage it.
+
+            Regards,
+
+            %s
+            """;
+        config = new SystemConfigVO("COMPLAINTS_USER_ASSIGNMENT_TEMPLATE", emailTempate);
+        systemConfigService.save(config);
+
+        emailTempate = """Dear %s user
+
+            You are notified that BOCRA requests your participation to
+            provide %s data. Please go to %s?id=%d to fill out the form.
+            The deadline to submit the information is %s
+            
+            Kind Regards
+            
+            BOCRA""";
+        config = new SystemConfigVO("ACTIVATION_SUBMISSION_TEMPLATE", emailTempate);
+        systemConfigService.save(config);
+
+
+        emailTempate = """Dear %s user
+        
+            You are notified that BOCRA has returned your submission for %s data. 
+            Please go to %s?id=%d to get the details of the return. The deadline to submit the information is %s
+            
+            Kind Regards
+            
+            BOCRA""";
+        config = new SystemConfigVO("SUBMISSION_RETURN_EMAIL_TEMPLATE", emailTempate);
         systemConfigService.save(config);
 
     }
@@ -286,6 +371,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
         if(CollectionUtils.isEmpty(periodService.getAll(1, 1))) {
             log.info("Initialising periods .... ");
+
 
             for (PeriodConfigVO config : periodConfigService.getAll()) {
                 this.initPeriods(config);     

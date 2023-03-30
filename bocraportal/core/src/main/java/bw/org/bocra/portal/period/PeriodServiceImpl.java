@@ -118,7 +118,7 @@ public class PeriodServiceImpl
             periodVO.setPeriodStart(start);
             periodVO.setPeriodEnd(end);
 
-        } else if(periodVO.getPeriodStart() == null) { // Only the end date is null
+        } else if(periodVO.getPeriodEnd() == null) { // Only the end date is null
 
             periodVO.setPeriodEnd(this.calculateEndDate(periodVO.getPeriodStart(), periodVO.getPeriodConfig()));
         } else { // Only the start is null
@@ -259,27 +259,7 @@ public class PeriodServiceImpl
     @Override
     protected Collection<PeriodVO> handleCreateNextPeriods(String username, Set<Long> periodIds) throws Exception {
 
-        // Collection<PeriodVO> currentPeriods = loadCurrentPeriods();
-        // Collection<PeriodVO> nextPeriods = new ArrayList<>();
-
-        // currentPeriods.stream().forEach(period -> {
-        //     if(period.getNext() == null || period.getNext().getId() == null) {
-                    
-        //         PeriodVO per = new PeriodVO();
-        //         per.setCreatedBy(username);
-        //         per.setCreatedDate(LocalDateTime.now());
-        //         per.setPeriodConfig(period.getPeriodConfig());
-        //         per.setPeriodStart(period.getPeriodEnd().plusDays(1));
-    
-        //         per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
-    
-        //         per.setPrevious(period);
-    
-        //         per = this.save(period);
-    
-        //         nextPeriods.add(per);
-        //     }
-        // });
+        Collection<PeriodVO> nextPeriods = new ArrayList<>();
 
         Collection<PeriodVO> periods = 
                     CollectionUtils.isEmpty(periodIds) ? 
@@ -291,44 +271,48 @@ public class PeriodServiceImpl
          * been created.
          * Next, for each current period, we create a new period with the current period as the previous.
          */
-        return periods.stream()
-            .filter(period -> period.getNext() != null && period.getNext().getId() != null)
-            .map(period -> {
-                PeriodVO per = new PeriodVO();
-                per.setCreatedBy(username);
-                per.setCreatedDate(LocalDateTime.now());
-                per.setPeriodConfig(period.getPeriodConfig());
-                per.setPeriodStart(period.getPeriodEnd().plusDays(1));
+        // return periods.stream()
+        //     .filter(period -> period.getNext() != null && period.getNext().getId() != null)
+        //     .map(period -> {
+        //         PeriodVO per = new PeriodVO();
+        //         per.setCreatedBy(username);
+        //         per.setCreatedDate(LocalDateTime.now());
+        //         per.setPeriodConfig(period.getPeriodConfig());
+        //         per.setPeriodStart(period.getPeriodEnd().plusDays(1));
 
-                per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
+        //         per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
 
-                per.setPrevious(period);
+        //         per.setPrevious(period);
                
-                per = this.save(period);
+        //         per = this.save(per);
 
-                return per;
-            }).collect(Collectors.toList());
+        //         return per;
+        //     }).collect(Collectors.toList());
 
-        // for (PeriodVO period : currentPeriods) {
+        for (PeriodVO period : periods) {
 
-        //     if(period.getNext() != null && period.getNext().getId() != null) {
-        //         continue;
-        //     }
+            if(period.getNext() != null && period.getNext().getId() != null) {
+                continue;
+            }
 
-        //     PeriodVO per = new PeriodVO();
-        //     per.setCreatedBy(username);
-        //     per.setCreatedDate(LocalDateTime.now());
-        //     per.setPeriodConfig(period.getPeriodConfig());
-        //     per.setPeriodStart(period.getPeriodEnd().plusDays(1));
+            System.out.println(11111);
 
-        //     per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
+            PeriodVO per = new PeriodVO();
+            per.setCreatedBy(username);
+            per.setCreatedDate(LocalDateTime.now());
+            per.setPeriodConfig(period.getPeriodConfig());
+            per.setPeriodStart(period.getPeriodEnd().plusDays(1));
 
-        //     per.setPrevious(period);
+            per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
 
-        //     per = this.save(period);
+            per.setPrevious(period);
 
-        //     nextPeriods.add(per);
-        // }
+            per = this.save(per);
+
+            nextPeriods.add(per);
+        }
+
+        return nextPeriods;
     }
 
 }
