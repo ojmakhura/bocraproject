@@ -58,7 +58,7 @@ services:
       TZ: Africa/Gaborone
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 1
       placement:
         constraints:
           # Make the traefik service run only on the node with this label
