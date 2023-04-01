@@ -220,7 +220,7 @@ public class FormActivationServiceImpl
 
             for (LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
                 Licensee lic = licensee.getLicensee();
-                System.out.println(lic);
+                
                 if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
                     ids.add(licensee.getLicensee().getId());
             }
