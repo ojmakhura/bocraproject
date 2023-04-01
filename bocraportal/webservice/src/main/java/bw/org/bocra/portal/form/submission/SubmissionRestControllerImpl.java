@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
@@ -394,6 +395,22 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
         try {
 
             return ResponseEntity.ok(submissionService.createNewSubmissions(licenseeIds, activationId));
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleUploadData(Long submissonId, MultipartFile file) {
+        
+        try {
+
+            FormSubmissionVO submission = submissionService.uploadData(submissonId, file);
+            return ResponseEntity.ok(submission);
 
         } catch(Exception e) {
 

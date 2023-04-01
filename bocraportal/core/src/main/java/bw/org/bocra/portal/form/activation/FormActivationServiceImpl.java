@@ -11,10 +11,8 @@ package bw.org.bocra.portal.form.activation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -221,6 +219,8 @@ public class FormActivationServiceImpl
         for (SectorForm sectorForm : form.getSectorForms()) {
 
             for (LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
+                Licensee lic = licensee.getLicensee();
+                System.out.println(lic);
                 if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
                     ids.add(licensee.getLicensee().getId());
             }

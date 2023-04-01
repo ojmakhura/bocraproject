@@ -8,23 +8,34 @@
  */
 package bw.org.bocra.portal.form.submission;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivation;
@@ -404,6 +415,49 @@ public class SubmissionServiceImpl
         return formSubmissionDao.createNewSubmissions(licenseeIds, activationId)
             .stream().map(sub -> getFormSubmissionDao().toFormSubmissionVO(sub)).collect(Collectors.toList());
 
+    }
+
+    @Override
+    protected FormSubmissionVO handleUploadData(Long submissonId, MultipartFile file) throws Exception {
+        FormSubmission submission = formSubmissionRepository.getReferenceById(submissonId);
+
+        Form form = submission.getForm();
+        Collection<FormField> fields = form.getFormFields();
+
+        List<String> headers = fields.stream().map(fld -> fld.getFieldId()).collect(Collectors.toList());
+
+        try(
+            InputStream is = file.getInputStream();
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is));
+            CSVParser csvParser = new CSVParser(
+                    fileReader, 
+                    CSVFormat.DEFAULT.builder()
+                        .setHeader(headers.toArray(new String[headers.size()]))
+                        .setSkipHeaderRecord(true)
+                        .build()
+                );
+        ) {
+            Collection<DataField> dataFields = new ArrayList<>();
+
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for (CSVRecord csvRecord : csvRecords) {
+                for(FormField f : fields) {
+
+                    DataField dataField = new DataField();
+                    dataField.setRow((int) csvRecord.getRecordNumber());
+                    dataField.setFormField(f);
+                    dataField.setFormSubmission(submission);
+                    dataField.setValue(csvRecord.get(f.getFieldId()));
+
+                    dataFields.add(dataField);
+                }
+            }
+
+            dataFields = dataFieldRepository.saveAll(dataFields);
+            submission.setDataFields(dataFields);
+        }
+        
+        return getFormSubmissionDao().toFormSubmissionVO(submission);
     }
 
 }
