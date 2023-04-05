@@ -78,7 +78,7 @@ public class FormSubmissionDaoImpl
             FormVO formVO = getFormDao().toFormVO(form);
             target.setForm(formVO);
 
-            if (CollectionUtils.isNotEmpty(source.getDataFields())) {
+            if (source.getForm().getEntryType() == FormEntryType.SINGLE && CollectionUtils.isNotEmpty(source.getDataFields())) {
 
                 Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
                 for (DataField dataField : source.getDataFields()) {

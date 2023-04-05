@@ -74,6 +74,26 @@ export class FormSubmissionEffects {
     )
   );
 
+  uploadData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormSubmissionActions.uploadData),
+      mergeMap(({ submissionId, file }) =>
+        this.submissionRestController.uploadData(submissionId, file).pipe(
+          map((formSubmission) =>
+            FormSubmissionActions.uploadDataSuccess({
+              formSubmission,
+              messages: [`Data for ${formSubmission?.form?.formName} uploaded.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            FormSubmissionActions.formSubmissionFailure({ messages: [error?.error ? error.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
   saveNote$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormSubmissionActions.saveNote),

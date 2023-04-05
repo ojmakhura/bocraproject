@@ -22,7 +22,7 @@ import { select } from '@ngrx/store';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import { FormFieldVO } from '@app/model/bw/org/bocra/portal/form/field/form-field-vo';
 import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-vo';
-import { FormArray, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { DataFieldSectionVO } from '@app/model/bw/org/bocra/portal/form/submission/data/data-field-section-vo';
 import { FormEntryType } from '@app/model/bw/org/bocra/portal/form/form-entry-type';
 import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
@@ -34,9 +34,7 @@ import { FieldValueType } from '@app/model/bw/org/bocra/portal/form/field/field-
 import * as math from 'mathjs';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
-import { setTimeout } from 'timers';
 import { NoteVO } from '@app/model/bw/org/bocra/portal/form/submission/note/note-vo';
-import { error } from 'console';
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -547,31 +545,15 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       if (!file) {
         return;
       }
-      file.text().then((content) => {
-        let rows: string[] = content.trim().split('\n');
-        let headers: string[] = rows[0].trim().split(',');
-        let dataRows: string[] = rows.splice(1);
 
-        for (let i = 0; i < dataRows.length; i++) {
-          const row = dataRows[i].trim();
-          const rowData = row.split(',');
-
-          if (rowData.length != headers.length) {
-            continue;
-          }
-
-          for (let j = 0; j < rowData.length; j++) {
-            let field: DataFieldVO = new DataFieldVO();
-            field.row = i + 1;
-            field.formField = this.getFormField(headers[j]);
-            field.value = rowData[j];
-            field.formSubmission = <FormSubmissionVO>{
-              id: this.formSubmissionId,
-            };
-            this.addToRowGroup(field);
-          }
-        }
-      });
+      this.store.dispatch(
+        FormSubmissionActions.uploadData({
+          submissionId: this.formSubmissionId,
+          file: file,
+          loading: true,
+          loaderMessage: "Uploading data!"
+        })
+      );
     }
   }
 

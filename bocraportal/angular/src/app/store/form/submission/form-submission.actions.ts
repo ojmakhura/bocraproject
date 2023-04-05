@@ -24,6 +24,8 @@ export enum FormSubmissionActionType {
   SEARCH_SUCCESS = '[FormSubmission] Search Success',
   GET_ALL_PAGED = '[FormSubmission] Get All Paged',
   GET_ALL_PAGED_SUCCESS = '[FormSubmission] Get All Paged Success',
+  UPLOAD_DATA = '[FormSubmission] Upload Submission Data',
+  UPLOAD_DATA_SUCCESS = '[FormSubmission] Upload Submission Data Success',
   FORM_SUBMISSION_RESET = '[FormSubmission] Form Submission Reset',
   FORM_SUBMISSION_FAILURE = '[FormSubmission] Form Submission Action Failure',
   FORM_SUBMISSION_LOADING = '[FormSubmission] Form Submission Loading',
@@ -74,6 +76,21 @@ export const updateStatus = createAction(
 export const updateStatusSuccess = createAction(
   FormSubmissionActionType.UPDATE_STATUS_SUCCESS,
   props<{ statusUpdated: boolean | any; messages: any[]; success: boolean }>()
+);
+
+export const uploadData = createAction(
+  FormSubmissionActionType.UPLOAD_DATA,
+  props<{
+    submissionId: number | any;
+    file: File | any;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
+);
+
+export const uploadDataSuccess = createAction(
+  FormSubmissionActionType.UPLOAD_DATA_SUCCESS,
+  props<{ formSubmission: FormSubmissionVO | any; messages: any[]; success: boolean }>()
 );
 
 export const saveNote = createAction(

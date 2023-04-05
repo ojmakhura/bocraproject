@@ -408,7 +408,9 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     public ResponseEntity<?> handleUploadData(Long submissonId, MultipartFile file) {
         
         try {
-
+            System.out.println(submissonId);
+            logger.info("Submission {}", submissonId);
+            logger.info("File name {} of size {}.", file.getOriginalFilename(), file.getSize());
             FormSubmissionVO submission = submissionService.uploadData(submissonId, file);
             return ResponseEntity.ok(submission);
 
