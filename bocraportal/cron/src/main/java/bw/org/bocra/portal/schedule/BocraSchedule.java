@@ -136,8 +136,8 @@ public class BocraSchedule {
 
         HttpEntity<String> request = new HttpEntity<String>(headers);
 
-        ResponseEntity<Integer> response = restTemplate.exchange(due, HttpMethod.GET, request, Integer.class);
-        log.info(String.format("%d messages sent to queue", response.getBody()));
+        // ResponseEntity<Integer> response = restTemplate.exchange(due, HttpMethod.GET, request, Integer.class);
+        // log.info(String.format("%d messages sent to queue", response.getBody()));
     }
 
     @Async

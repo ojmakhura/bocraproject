@@ -152,12 +152,12 @@ public class DocumentServiceImpl
     @Override
     protected Collection<DocumentVO> handleFindByIds(Set<Long> ids) throws Exception {
         
-        return getDocumentDao().toDocumentVOCollection(documentRepository.findByIdIn(ids));
+        return getDocumentDao().toDocumentVOCollection(documentRepository.findByIdIn(ids.stream().toList()));
     }
 
     @Override
     protected Collection<DocumentVO> handleFindByDocumentIds(Set<String> documentIds) throws Exception {
-        return getDocumentDao().toDocumentVOCollection(documentRepository.findByDocumentIdIn(documentIds));
+        return getDocumentDao().toDocumentVOCollection(documentRepository.findByDocumentIdIn(documentIds.stream().toList()));
     }
 
     @Override

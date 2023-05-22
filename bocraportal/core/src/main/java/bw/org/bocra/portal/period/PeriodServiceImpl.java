@@ -264,7 +264,7 @@ public class PeriodServiceImpl
         Collection<PeriodVO> periods = 
                     CollectionUtils.isEmpty(periodIds) ? 
                         loadCurrentPeriods() :
-                        periodDao.toPeriodVOCollection(periodRepository.findByIdIn(periodIds));
+                        periodDao.toPeriodVOCollection(periodRepository.findByIdIn(periodIds.stream().toList()));
 
         /**
          * First filter out the periods that have a next since that implies the next period has already

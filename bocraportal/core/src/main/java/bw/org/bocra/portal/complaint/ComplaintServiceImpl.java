@@ -259,7 +259,7 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     @Override
     protected Collection<ComplaintVO> handleFindByIds(Set<Long> ids) throws Exception {
 
-        return complaintRepository.findByIdIn(ids).stream()
+        return complaintRepository.findByIdIn(ids.stream().toList()).stream()
                     .map(complaint -> complaintDao.toComplaintVO(complaint))
                     .collect(Collectors.toSet());
     }
