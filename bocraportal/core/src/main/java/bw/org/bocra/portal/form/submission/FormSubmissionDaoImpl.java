@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
@@ -37,6 +38,7 @@ import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+import bw.org.bocra.portal.form.submission.data.SubmissionDataRepository;
 import bw.org.bocra.portal.form.submission.note.NoteRepository;
 import bw.org.bocra.portal.form.submission.note.NoteVO;
 import bw.org.bocra.portal.licensee.Licensee;
@@ -54,13 +56,17 @@ import bw.org.bocra.portal.period.PeriodVO;
 public class FormSubmissionDaoImpl
         extends FormSubmissionDaoBase {
 
+    private final SubmissionDataRepository submissionDataRepository;
+
     public FormSubmissionDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
             DataFieldRepository dataFieldRepository, LicenseeRepository licenseeRepository,
             NoteRepository noteRepository, FormActivationRepository formActivationRepository,
-            FormSubmissionRepository formSubmissionRepository) {
+            FormSubmissionRepository formSubmissionRepository, SubmissionDataRepository submissionDataRepository) {
 
         super(formRepository, periodRepository, dataFieldRepository, licenseeRepository, noteRepository,
                 formActivationRepository, formSubmissionRepository);
+
+        this.submissionDataRepository = submissionDataRepository;
     }
 
     /**
@@ -78,10 +84,15 @@ public class FormSubmissionDaoImpl
             FormVO formVO = getFormDao().toFormVO(form);
             target.setForm(formVO);
 
-            if (source.getForm().getEntryType() == FormEntryType.SINGLE && CollectionUtils.isNotEmpty(source.getDataFields())) {
+            if (CollectionUtils.isNotEmpty(source.getDataFields())) {
+
+                Collection<DataField> fields = source.getForm().getEntryType() == FormEntryType.SINGLE
+                        ? source.getDataFields()
+                        : submissionDataRepository.findByFormSubmissionId(source.getId(),
+                                PageRequest.of(1, 10)).getContent();
 
                 Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
-                for (DataField dataField : source.getDataFields()) {
+                for (DataField dataField : fields) {
 
                     DataFieldVO data = new DataFieldVO();
                     getDataFieldDao().toDataFieldVO(dataField, data);
@@ -109,6 +120,7 @@ public class FormSubmissionDaoImpl
                 }
 
                 target.setSections(sections);
+
             }
         }
 
