@@ -28,6 +28,9 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -45,6 +48,7 @@ import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+import bw.org.bocra.portal.form.submission.data.SubmissionDataRepository;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
@@ -62,15 +66,17 @@ public class SubmissionServiceImpl
     private final LicenseeRepository licenseeRepository;
     private final FormActivationRepository activationRepository;
     private final PeriodDao periodDao;
+    private final SubmissionDataRepository submissionDataRepository;
 
     public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, 
-            FormActivationRepository activationRepository,PeriodDao periodDao,
+            FormActivationRepository activationRepository,PeriodDao periodDao, SubmissionDataRepository submissionDataRepository,
             LicenseeRepository licenseeRepository, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
 
         super(formSubmissionDao, formSubmissionRepository, dataFieldDao, dataFieldRepository, messageSource);
         this.licenseeRepository = licenseeRepository;
         this.activationRepository = activationRepository;
         this.periodDao = periodDao;
+        this.submissionDataRepository = submissionDataRepository;
     }
 
     /**
@@ -458,6 +464,43 @@ public class SubmissionServiceImpl
         }
         
         return getFormSubmissionDao().toFormSubmissionVO(submission);
+    }
+
+    @Override
+    protected Collection<DataFieldVO> handleGetSubmissionData(Long submissionId, Integer pageNumber, Integer pageSize)
+            throws Exception {
+
+        if(submissionId == null) {
+            throw new SubmissionServiceException("Submission ID must not be null.");
+        }
+
+        if(submissionId < 1) {
+            throw new SubmissionServiceException("Submission ID must not be less than 1.");
+        }
+
+        if(pageNumber == null) {
+            throw new SubmissionServiceException("Page number must not be null.");
+        }
+
+        if(pageNumber < 1) {
+            throw new SubmissionServiceException("Page number must not be less than 1.");
+        }
+
+        if(pageSize == null) {
+            throw new SubmissionServiceException("Page size must not be null.");
+        }
+
+        if(pageSize < 1) {
+            throw new SubmissionServiceException("Page size must not be less than 1.");
+        }
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        Page<DataField> data = submissionDataRepository.findByFormSubmissionId(submissionId, pageable);
+        List<DataFieldVO> vos = new ArrayList<>();
+        data.stream().forEach(d -> vos.add(dataFieldDao.toDataFieldVO(d)));
+
+        return vos;
     }
 
 }

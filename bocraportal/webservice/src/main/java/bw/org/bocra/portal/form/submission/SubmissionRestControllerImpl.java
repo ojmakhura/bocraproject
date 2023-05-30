@@ -421,4 +421,18 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }
+
+    @Override
+    public ResponseEntity<?> handleGetSubmissionData(Long submissionId, Integer pageNumber, Integer pageSize) {
+
+        try{
+
+            return ResponseEntity.ok(submissionService.getSubmissionData(submissionId, pageNumber, pageSize));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
 }
