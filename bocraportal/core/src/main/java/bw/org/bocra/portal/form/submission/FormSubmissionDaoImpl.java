@@ -88,7 +88,7 @@ public class FormSubmissionDaoImpl
 
                 Collection<DataField> fields = source.getForm().getEntryType() == FormEntryType.SINGLE
                         ? source.getDataFields()
-                        : submissionDataRepository.findByFormSubmissionId(source.getId(),
+                        : submissionDataRepository.findByFormSubmissionIdOrderByRow(source.getId(),
                                 PageRequest.of(1, 10)).getContent();
 
                 Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();

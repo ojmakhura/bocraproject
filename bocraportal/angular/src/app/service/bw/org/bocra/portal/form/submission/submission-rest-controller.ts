@@ -79,6 +79,13 @@ export class SubmissionRestController {
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/search`, criteria);
   }
 
+  public uploadData(submissionId: number | any, file: File): Observable<FormSubmissionVO | any> {
+    const formData: FormData = new FormData();
+    formData.append('submissionId', submissionId);
+    formData.append('file', file);
+    return this.http.post<FormSubmissionVO | any>(`${this.path}/upload`, formData);
+  }
+
   public updateSubmissionStatus(
     id: number | any,
     submissionStatus: FormSubmissionStatus | any,

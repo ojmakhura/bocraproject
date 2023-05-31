@@ -496,7 +496,7 @@ public class SubmissionServiceImpl
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        Page<DataField> data = submissionDataRepository.findByFormSubmissionId(submissionId, pageable);
+        Page<DataField> data = submissionDataRepository.findByFormSubmissionIdOrderByRow(submissionId, pageable);
         List<DataFieldVO> vos = new ArrayList<>();
         data.stream().forEach(d -> vos.add(dataFieldDao.toDataFieldVO(d)));
 
