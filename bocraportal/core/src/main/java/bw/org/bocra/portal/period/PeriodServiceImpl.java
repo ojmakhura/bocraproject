@@ -266,36 +266,13 @@ public class PeriodServiceImpl
                         loadCurrentPeriods() :
                         periodDao.toPeriodVOCollection(periodRepository.findByIdIn(periodIds.stream().toList()));
 
-        /**
-         * First filter out the periods that have a next since that implies the next period has already
-         * been created.
-         * Next, for each current period, we create a new period with the current period as the previous.
-         */
-        // return periods.stream()
-        //     .filter(period -> period.getNext() != null && period.getNext().getId() != null)
-        //     .map(period -> {
-        //         PeriodVO per = new PeriodVO();
-        //         per.setCreatedBy(username);
-        //         per.setCreatedDate(LocalDateTime.now());
-        //         per.setPeriodConfig(period.getPeriodConfig());
-        //         per.setPeriodStart(period.getPeriodEnd().plusDays(1));
-
-        //         per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
-
-        //         per.setPrevious(period);
-               
-        //         per = this.save(per);
-
-        //         return per;
-        //     }).collect(Collectors.toList());
 
         for (PeriodVO period : periods) {
 
-            if(period.getNext() != null && period.getNext().getId() != null) {
+            if((period.getNext() != null && period.getNext().getId() != null) || // next period already created
+                    (period.getPeriodEnd() != null && period.getPeriodEnd().isBefore(LocalDate.now().plusDays(1)))) { // period ends today or before
                 continue;
             }
-
-            System.out.println(11111);
 
             PeriodVO per = new PeriodVO();
             per.setCreatedBy(username);

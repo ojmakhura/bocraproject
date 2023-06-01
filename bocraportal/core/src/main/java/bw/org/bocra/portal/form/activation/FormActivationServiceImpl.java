@@ -132,11 +132,11 @@ public class FormActivationServiceImpl
 
         boolean isNew = formActivation.getId() == null;
 
-        if (CollectionUtils.isEmpty(activation.getForm().getLicenseeForms())
-                && CollectionUtils.isEmpty(activation.getForm().getSectorForms())) {
+        // if (CollectionUtils.isEmpty(activation.getForm().getLicenseeForms())
+        //         && CollectionUtils.isEmpty(activation.getForm().getSectorForms())) {
 
-            throw new FormActivationServiceException("No licensees");
-        }
+        //     throw new FormActivationServiceException("Form has " + activation.getForm().getFormName() + " no licensees");
+        // }
 
         if (activation.getActivationDeadline() == null) {
             activation.setActivationDeadline(activation.getPeriod().getPeriodEnd()
@@ -278,7 +278,9 @@ public class FormActivationServiceImpl
 
         periods.forEach(period -> {
             Collection<Form> filtered = forms.stream().filter(form -> {
-                return form.getPeriodConfig().getId() == period.getPeriodConfig().getId();
+                // Make sure that there is a period and also there are licensees attached to the form.
+                return form.getPeriodConfig().getId() == period.getPeriodConfig().getId() 
+                        && CollectionUtils.isNotEmpty(form.getLicenseeForms());
             }).collect(Collectors.toList());
             PeriodVO pv = new PeriodVO();
             pv.setId(period.getId());
