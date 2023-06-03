@@ -278,10 +278,14 @@ public class FormActivationServiceImpl
 
         periods.forEach(period -> {
             Collection<Form> filtered = forms.stream().filter(form -> {
+                
                 // Make sure that there is a period and also there are licensees attached to the form.
                 return form.getPeriodConfig().getId() == period.getPeriodConfig().getId() 
-                        && CollectionUtils.isNotEmpty(form.getLicenseeForms());
+                        && (CollectionUtils.isNotEmpty(form.getLicenseeForms())
+                                || CollectionUtils.isNotEmpty(form.getSectorForms()));
+
             }).collect(Collectors.toList());
+            
             PeriodVO pv = new PeriodVO();
             pv.setId(period.getId());
 

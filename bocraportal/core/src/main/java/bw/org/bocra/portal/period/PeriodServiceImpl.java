@@ -168,6 +168,24 @@ public class PeriodServiceImpl
             return false;
         }
 
+        Period period = this.periodRepository.getReferenceById(id);
+        
+        if(period.getPrevious() != null) {
+            Period prev = period.getPrevious();
+            prev.setNext(null);
+            period.setPrevious(null);
+
+            this.periodRepository.saveAndFlush(prev);
+        }
+
+        if(period.getNext() != null) {
+            Period next = period.getNext();
+            next.setPrevious(null);
+            period.setNext(null);
+
+            this.periodRepository.saveAndFlush(next);
+        }
+
         this.periodRepository.deleteById(id);
 
         return true;
