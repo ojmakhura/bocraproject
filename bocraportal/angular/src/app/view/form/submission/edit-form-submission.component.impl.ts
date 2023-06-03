@@ -59,6 +59,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   addUnrestricted: boolean = true;
   statusUpdated$: Observable<boolean>;
   note$: Observable<NoteVO | any>;
+  file: File | undefined;
 
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
@@ -183,7 +184,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
         if (
           formField.fieldValueType === FieldValueType.CALCULATED &&
-          formField?.expression && formField.expression != null &&
+          formField?.expression &&
+          formField.expression != null &&
           formField?.expression?.includes(`[${dataField?.formField?.fieldId}]`)
         ) {
           calculationFields.push(fieldControl);
@@ -196,23 +198,19 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       let field: DataFieldVO = fieldControl.value;
       let expression: string = field.formField.expression;
 
-      this.formSubmission.sections?.forEach(section => {
-      
+      this.formSubmission.sections?.forEach((section) => {
         for (let i = 0; i < section.dataFields.length; i++) {
           let field: DataFieldVO = section.dataFields[i];
           if (expression.includes(`[${field.formField.fieldId}]`) && !isNaN(field.value)) {
             expression = expression.replaceAll(`[${field.formField.fieldId}]`, field.value != null ? field.value : 0);
           }
         }
-
       });
-      
+
       try {
         fieldControl?.get('value')?.setValue(math.evaluate(expression).toFixed(2));
         this.onRowChange(undefined, fieldControl.value);
-      } catch(ex) {
-        
-      }
+      } catch (ex) {}
     });
   }
 
@@ -248,7 +246,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   override beforeEditFormSubmissionSave(form: EditFormSubmissionSaveForm): void {
-    
     if (this.formSubmissionControl.valid) {
       if (
         form.formSubmission.submissionStatus != FormSubmissionStatus.SUBMITTED &&
@@ -523,37 +520,85 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   uploadData() {
-    this.formSubmissionDataFields.forEach((field) => {
-      if (!field.formSubmission) {
-        field.formSubmission = new FormSubmissionVO();
-        field.formSubmission.id = this.formSubmissionId;
-      }
+    // this.formSubmissionDataFields.forEach((field) => {
+    //   if (!field.formSubmission) {
+    //     field.formSubmission = new FormSubmissionVO();
+    //     field.formSubmission.id = this.formSubmissionId;
+    //   }
 
-      this.submissionRestController.addDataField(field).subscribe((dataField) => {
-        this.addToRowGroup(dataField);
-      });
-    });
+    //   this.submissionRestController.addDataField(field).subscribe((dataField) => {
+    //     this.addToRowGroup(dataField);
+    //   });
+    // });
+
+    if (!this.file) {
+      return;
+    }
+
+    this.store.dispatch(
+      FormSubmissionActions.uploadData({
+        submissionId: this.formSubmissionId,
+        file: this.file,
+        loading: true,
+        loaderMessage: 'Uploading data!',
+      })
+    );
   }
 
   getFieldKeys(object: any): string[] {
     return Object.keys(object);
   }
 
+  // onFileSelected(event: any) {
+  //   if (event) {
+  //     const file: File = event.target.files[0];
+  //     if (!file) {
+  //       return;
+  //     }
+
+  //     this.store.dispatch(
+  //       FormSubmissionActions.uploadData({
+  //         submissionId: this.formSubmissionId,
+  //         file: file,
+  //         loading: true,
+  //         loaderMessage: "Uploading data!"
+  //       })
+  //     );
+  //   }
+  // }
+
   onFileSelected(event: any) {
     if (event) {
-      const file: File = event.target.files[0];
-      if (!file) {
+      this.file = event.target.files[0];
+      if (!this.file) {
         return;
       }
 
-      this.store.dispatch(
-        FormSubmissionActions.uploadData({
-          submissionId: this.formSubmissionId,
-          file: file,
-          loading: true,
-          loaderMessage: "Uploading data!"
-        })
-      );
+      this.file.text().then((content) => {
+        let rows: string[] = content.trim().split('\n');
+        let headers: string[] = rows[0].trim().split(',');
+        let dataRows: string[] = rows.splice(1);
+
+        for (let i = 0; i < dataRows.length; i++) {
+          const row = dataRows[i].trim();
+          const rowData = row.split(',');
+
+          if (rowData.length != headers.length) {
+            continue;
+          }
+
+          for (let j = 0; j < rowData.length; j++) {
+            let field: DataFieldVO = new DataFieldVO();
+            field.row = i + 1;
+            field.formField = this.getFormField(headers[j]);
+            field.value = rowData[j];
+            field.formSubmission = <FormSubmissionVO>{
+              id: this.formSubmissionId,
+            };
+            this.addToRowGroup(field);
+          }
+        }
+      });
     }
   }
 
@@ -702,24 +747,23 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   override afterEditFormSubmissionNote(form: EditFormSubmissionNoteForm, dialogData: any): void {
-
-    if(dialogData.note.note) {
+    if (dialogData.note.note) {
       dialogData.note.formSubmission = {
-        id: this.formSubmissionId
-      }
-      this.store.dispatch(FormSubmissionActions.saveNote({
-        note: dialogData.note,
-        loaderMessage: "Saving note",
-        loading: true
-      }))
+        id: this.formSubmissionId,
+      };
+      this.store.dispatch(
+        FormSubmissionActions.saveNote({
+          note: dialogData.note,
+          loaderMessage: 'Saving note',
+          loading: true,
+        })
+      );
     }
 
-    this.note$.subscribe(note => {
-      
-      if(note?.id && note?.id != null) {
+    this.note$.subscribe((note) => {
+      if (note?.id && note?.id != null) {
         this.formSubmissionNotesControl.insert(0, this.createNoteVOGroup(note));
       }
-    })
-
+    });
   }
 }

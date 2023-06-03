@@ -354,9 +354,14 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             logger.debug("Activating due forms");
 
             Collection<FormActivationVO> activations = formActivationService.activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor());
-
+            
             activations.forEach(activation -> {
-                this.sendNotifications(activation);
+                try {
+                    this.sendNotifications(activation);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    logger.error(e.getMessage());
+                }
             });
 
             return ResponseEntity.ok().body(activations);

@@ -42,6 +42,7 @@ import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.period.Period;
 import bw.org.bocra.portal.period.PeriodDao;
 import bw.org.bocra.portal.period.PeriodVO;
+import bw.org.bocra.portal.sector.Sector;
 import bw.org.bocra.portal.sector.form.SectorForm;
 
 /**
@@ -147,7 +148,7 @@ public class FormActivationServiceImpl
             activation.setActivationName(String.format("%s: %s Activation", activation.getForm().getFormName(),
                     activation.getPeriod().getPeriodName()));
         }
-        activation = formActivationRepository.save(activation);
+        activation = formActivationRepository.saveAndFlush(activation);
 
         /**
          * The form activations is a new one so we need to
@@ -218,7 +219,9 @@ public class FormActivationServiceImpl
 
         for (SectorForm sectorForm : form.getSectorForms()) {
 
-            for (LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
+            Sector sector = sectorForm.getSector();
+
+            for (LicenseeSector licensee : sector.getLicenseeSectors()) {
                 Licensee lic = licensee.getLicensee();
                 
                 if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
@@ -270,6 +273,7 @@ public class FormActivationServiceImpl
         if (CollectionUtils.isEmpty(periods)) {
             return new HashSet<>();
         }
+
         Set<Long> periodConfigs = periods.stream()
                 .map(period -> period.getPeriodConfig().getId())
                 .collect(Collectors.toSet());
@@ -291,12 +295,15 @@ public class FormActivationServiceImpl
 
             filtered.forEach(fil -> {
 
+
                 FormActivationCriteria criteria = new FormActivationCriteria();
                 criteria.setFormId(fil.getId());
                 criteria.setPeriodId(period.getId());
 
+                Collection<FormActivationVO> existingActivations = this.search(criteria);
+
                 // We only want to create activations that do not exist.
-                if (CollectionUtils.isEmpty(this.search(criteria))) {
+                if (CollectionUtils.isEmpty(existingActivations)) {
 
                     FormActivationVO activation = new FormActivationVO();
                     activation.setCreatedBy(createdBy);
@@ -316,6 +323,10 @@ public class FormActivationServiceImpl
                     
                     activations.add(activation);
 
+                } else {
+                    // existingActivations.forEach(ex -> {
+                    //     System.out.println("=============================================== " + ex.getActivationName());
+                    // });
                 }
             });
         });
