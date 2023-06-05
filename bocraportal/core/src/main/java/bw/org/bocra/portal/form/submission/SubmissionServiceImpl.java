@@ -22,11 +22,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +47,7 @@ import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.field.FieldValueType;
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
@@ -68,9 +73,11 @@ public class SubmissionServiceImpl
     private final PeriodDao periodDao;
     private final SubmissionDataRepository submissionDataRepository;
 
-    public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, 
-            FormActivationRepository activationRepository,PeriodDao periodDao, SubmissionDataRepository submissionDataRepository,
-            LicenseeRepository licenseeRepository, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
+    public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
+            FormActivationRepository activationRepository, PeriodDao periodDao,
+            SubmissionDataRepository submissionDataRepository,
+            LicenseeRepository licenseeRepository, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository,
+            MessageSource messageSource) {
 
         super(formSubmissionDao, formSubmissionRepository, dataFieldDao, dataFieldRepository, messageSource);
         this.licenseeRepository = licenseeRepository;
@@ -99,7 +106,7 @@ public class SubmissionServiceImpl
     protected FormSubmissionVO handleSave(FormSubmissionVO formSubmissionVO)
             throws Exception {
         FormSubmission submission = getFormSubmissionDao().formSubmissionVOToEntity(formSubmissionVO);
-        submission =formSubmissionRepository.saveAndFlush(submission);
+        submission = formSubmissionRepository.saveAndFlush(submission);
 
         return getFormSubmissionDao().toFormSubmissionVO(submission);
     }
@@ -223,16 +230,16 @@ public class SubmissionServiceImpl
 
     @Override
     protected SubmissionSummary handleGetSubmissionSummary(FormSubmissionCriteria criteria) throws Exception {
-        
+
         Specification<FormSubmission> tmp = BocraportalSpecifications.findByJoinAttributeIsEmpty("form", "roles");
 
-        if(CollectionUtils.isNotEmpty(criteria.getRoles())) {
+        if (CollectionUtils.isNotEmpty(criteria.getRoles())) {
 
-            for(String role : criteria.getRoles()) {
+            for (String role : criteria.getRoles()) {
                 tmp = tmp.or(BocraportalSpecifications.findByJoinAttributeIsMember("form", "roles", role));
             }
         }
-                
+
         SubmissionSummary summary = new SubmissionSummary();
         Specification<FormSubmission> specs = tmp;
 
@@ -240,8 +247,8 @@ public class SubmissionServiceImpl
             specs = specs.and(BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy",
                     criteria.getSubmittedBy()))
                     .and(BocraportalSpecifications
-                    .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
-                            FormSubmissionStatus.SUBMITTED));
+                            .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
+                                    FormSubmissionStatus.SUBMITTED));
 
         }
 
@@ -368,9 +375,9 @@ public class SubmissionServiceImpl
     @Override
     protected Collection<FormSubmissionVO> handleLoadDueSubmissions() throws Exception {
         FormSubmissionCriteria criteria = new FormSubmissionCriteria();
-        
+
         Collection<Long> periodIds = periodDao.getActivePeriods().stream()
-                                        .map(period -> period.getId()).collect(Collectors.toList());
+                .map(period -> period.getId()).collect(Collectors.toList());
 
         criteria.setPeriodIds(periodIds);
         Collection<FormSubmission> submissions = getFormSubmissionDao().findByCriteria(criteria);
@@ -419,7 +426,7 @@ public class SubmissionServiceImpl
         }
 
         return formSubmissionDao.createNewSubmissions(licenseeIds, activationId)
-            .stream().map(sub -> getFormSubmissionDao().toFormSubmissionVO(sub)).collect(Collectors.toList());
+                .stream().map(sub -> getFormSubmissionDao().toFormSubmissionVO(sub)).collect(Collectors.toList());
 
     }
 
@@ -432,37 +439,65 @@ public class SubmissionServiceImpl
 
         List<String> headers = fields.stream().map(fld -> fld.getFieldId()).collect(Collectors.toList());
 
-        try(
-            InputStream is = file.getInputStream();
-            BufferedReader fileReader = new BufferedReader(new InputStreamReader(is));
-            CSVParser csvParser = new CSVParser(
-                    fileReader, 
-                    CSVFormat.DEFAULT.builder()
-                        .setHeader(headers.toArray(new String[headers.size()]))
-                        .setSkipHeaderRecord(true)
-                        .build()
-                );
-        ) {
+        try (
+                InputStream is = file.getInputStream();
+                BufferedReader fileReader = new BufferedReader(new InputStreamReader(is));
+                CSVParser csvParser = new CSVParser(
+                        fileReader,
+                        CSVFormat.DEFAULT.builder()
+                                .setHeader(headers.toArray(new String[headers.size()]))
+                                .setSkipHeaderRecord(true)
+                                .build());) {
             Collection<DataField> dataFields = new ArrayList<>();
+            ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+            ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
 
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
             for (CSVRecord csvRecord : csvRecords) {
-                for(FormField f : fields) {
+
+                List<DataField> expressions = new ArrayList<>();
+
+                for (FormField f : fields) {
 
                     DataField dataField = new DataField();
                     dataField.setRow((int) csvRecord.getRecordNumber());
                     dataField.setFormField(f);
                     dataField.setFormSubmission(submission);
-                    dataField.setValue(csvRecord.get(f.getFieldId()));
+
+                    System.out.println(f.getFieldId() + " " + f.getFieldValueType());
+
+                    if (f.getFieldValueType() == FieldValueType.MANUAL) {
+                        dataField.setValue(csvRecord.get(f.getFieldId()));
+                    } else {
+                        dataField.setValue(f.getExpression());
+                        expressions.add(dataField);
+                    }
 
                     dataFields.add(dataField);
                 }
+
+                // Evaluate expressions
+                for (DataField dataField : expressions) {
+                    String expression = dataField.getValue();
+                    for (DataField df : dataFields) {
+                        // check if the expression contains the field id
+                        if (df.getFormField().getFieldId().equals(dataField.getFormField().getFieldId()) && NumberUtils.isParsable(df.getValue())) {
+                            expression = expression.replaceAll('[' + df.getFormField().getFieldId() + ']', df.getValue() == null ? "0" : df.getValue());
+                        }
+                    }
+
+                    
+
+                    dataField.setValue((Double)scriptEngine.eval(expression) + "");
+                }
             }
 
-            dataFields = dataFieldRepository.saveAll(dataFields);
+            // dataFields = dataFieldRepository.saveAll(dataFields);
             submission.setDataFields(dataFields);
         }
-        
+
+        System.out.println(submission);
+
         return getFormSubmissionDao().toFormSubmissionVO(submission);
     }
 
@@ -470,27 +505,27 @@ public class SubmissionServiceImpl
     protected Collection<DataFieldVO> handleGetSubmissionData(Long submissionId, Integer pageNumber, Integer pageSize)
             throws Exception {
 
-        if(submissionId == null) {
+        if (submissionId == null) {
             throw new SubmissionServiceException("Submission ID must not be null.");
         }
 
-        if(submissionId < 1) {
+        if (submissionId < 1) {
             throw new SubmissionServiceException("Submission ID must not be less than 1.");
         }
 
-        if(pageNumber == null) {
+        if (pageNumber == null) {
             throw new SubmissionServiceException("Page number must not be null.");
         }
 
-        if(pageNumber < 1) {
+        if (pageNumber < 1) {
             throw new SubmissionServiceException("Page number must not be less than 1.");
         }
 
-        if(pageSize == null) {
+        if (pageSize == null) {
             throw new SubmissionServiceException("Page size must not be null.");
         }
 
-        if(pageSize < 1) {
+        if (pageSize < 1) {
             throw new SubmissionServiceException("Page size must not be less than 1.");
         }
 
