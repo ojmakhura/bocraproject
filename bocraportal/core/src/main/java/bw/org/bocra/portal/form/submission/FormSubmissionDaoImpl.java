@@ -88,39 +88,52 @@ public class FormSubmissionDaoImpl
 
                 Collection<DataField> fields = source.getForm().getEntryType() == FormEntryType.SINGLE
                         ? source.getDataFields()
-                        : submissionDataRepository.findByFormSubmissionIdOrderByRow(source.getId(),
-                                PageRequest.of(1, 10)).getContent();
+                        : submissionDataRepository.findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(source.getId(),
+                                PageRequest.of(0, 10 * source.getForm().getFormFields().size())).getContent();
 
-                Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
-                for (DataField dataField : fields) {
+                if(source.getForm().getEntryType() == FormEntryType.SINGLE) {
 
-                    DataFieldVO data = new DataFieldVO();
-                    getDataFieldDao().toDataFieldVO(dataField, data);
+                    Collection<DataFieldSectionVO> sections = new ArrayList<>();
 
-                    FormSection section = dataField.getFormField().getFormSection();
-
-                    DataFieldSectionVO sec = new DataFieldSectionVO();
-                    sec.setPosition(section.getPosition());
-                    sec.setSectionLabel(section.getSectionLabel());
-                    sec.setSectionId(section.getSectionId());
-
-                    if (!sectioned.containsKey(sec)) {
-                        sectioned.put(sec, new ArrayList<>());
+                    Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
+                    for (DataField dataField : fields) {
+    
+                        DataFieldVO data = new DataFieldVO();
+                        getDataFieldDao().toDataFieldVO(dataField, data);
+    
+                        FormSection section = dataField.getFormField().getFormSection();
+    
+                        DataFieldSectionVO sec = new DataFieldSectionVO();
+                        sec.setPosition(section.getPosition());
+                        sec.setSectionLabel(section.getSectionLabel());
+                        sec.setSectionId(section.getSectionId());
+    
+                        if (!sectioned.containsKey(sec)) {
+                            sectioned.put(sec, new ArrayList<>());
+                        }
+    
+                        sectioned.get(sec).add(data);
                     }
 
-                    sectioned.get(sec).add(data);
+                    for (Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
+                        DataFieldSectionVO sec = entry.getKey();
+                        sec.setDataFields(entry.getValue());
+                        sections.add(sec);
+                    }
+                    
+                    target.setSections(sections);
+
+                } else {
+                    if(target.getDataFields() == null) {
+                        target.setDataFields(new ArrayList<>());
+                    }
+
+                    fields.forEach(field -> {
+                        DataFieldVO data = new DataFieldVO();
+                        getDataFieldDao().toDataFieldVO(field, data);
+                        target.getDataFields().add(data);
+                    });
                 }
-
-                Collection<DataFieldSectionVO> sections = new ArrayList<>();
-
-                for (Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
-                    DataFieldSectionVO sec = entry.getKey();
-                    sec.setDataFields(entry.getValue());
-                    sections.add(sec);
-                }
-
-                target.setSections(sections);
-
             }
         }
 

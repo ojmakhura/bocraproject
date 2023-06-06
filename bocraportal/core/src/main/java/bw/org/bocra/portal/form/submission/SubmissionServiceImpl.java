@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.DataPage;
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormVO;
@@ -464,7 +465,6 @@ public class SubmissionServiceImpl
                     dataField.setFormField(f);
                     dataField.setFormSubmission(submission);
 
-                    System.out.println(f.getFieldId() + " " + f.getFieldValueType());
 
                     if (f.getFieldValueType() == FieldValueType.MANUAL) {
                         dataField.setValue(csvRecord.get(f.getFieldId()));
@@ -479,30 +479,32 @@ public class SubmissionServiceImpl
                 // Evaluate expressions
                 for (DataField dataField : expressions) {
                     String expression = dataField.getValue();
+
                     for (DataField df : dataFields) {
                         // check if the expression contains the field id
-                        if (df.getFormField().getFieldId().equals(dataField.getFormField().getFieldId()) && NumberUtils.isParsable(df.getValue())) {
-                            expression = expression.replaceAll('[' + df.getFormField().getFieldId() + ']', df.getValue() == null ? "0" : df.getValue());
+                        if (expression.contains('[' + df.getFormField().getFieldId() + ']') && NumberUtils.isParsable(df.getValue())) {
+                            expression = expression.replaceAll("\\[" + df.getFormField().getFieldId() + "\\]", df.getValue() == null ? "0" : df.getValue());
                         }
-                    }
-
-                    
+                    }                 
 
                     dataField.setValue((Double)scriptEngine.eval(expression) + "");
                 }
             }
 
-            // dataFields = dataFieldRepository.saveAll(dataFields);
             submission.setDataFields(dataFields);
         }
 
-        System.out.println(submission);
+        if(submission.getExpectedSubmissionDate().isAfter(LocalDate.now())) {
+            submission.setSubmissionStatus(FormSubmissionStatus.DRAFT);
+        } else {
+            submission.setSubmissionStatus(FormSubmissionStatus.OVERDUE);
+        }
 
         return getFormSubmissionDao().toFormSubmissionVO(submission);
     }
 
     @Override
-    protected Collection<DataFieldVO> handleGetSubmissionData(Long submissionId, Integer pageNumber, Integer pageSize)
+    protected DataPage handleGetSubmissionData(Long submissionId, Integer pageNumber, Integer pageSize)
             throws Exception {
 
         if (submissionId == null) {
@@ -529,13 +531,23 @@ public class SubmissionServiceImpl
             throw new SubmissionServiceException("Page size must not be less than 1.");
         }
 
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        FormSubmission submission = formSubmissionRepository.getReferenceById(submissionId);
 
-        Page<DataField> data = submissionDataRepository.findByFormSubmissionIdOrderByRow(submissionId, pageable);
-        List<DataFieldVO> vos = new ArrayList<>();
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize * submission.getForm().getFormFields().size());
+
+        Page<DataField> data = submissionDataRepository.findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(submissionId, pageable);
+        
+        List<Object> vos = new ArrayList<>();
         data.stream().forEach(d -> vos.add(dataFieldDao.toDataFieldVO(d)));
 
-        return vos;
+        DataPage page = new DataPage();
+        page.setPageNumber(data.getNumber() + 1);
+        page.setTotalElements(data.getTotalElements() / submission.getForm().getFormFields().size());
+        page.setTotalPages(data.getTotalPages() / submission.getForm().getFormFields().size());
+        page.setElements(vos);
+
+
+        return page;
     }
 
 }

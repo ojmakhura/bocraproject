@@ -16,7 +16,7 @@ import * as FormSelectors from '@app/store/form/form.selectors';
 import * as LicenseeSelectors from '@app/store/licensee/licensee.selectors';
 import * as FormSubmissionActions from '@app/store/form/submission/form-submission.actions';
 import { KeycloakService } from 'keycloak-angular';
-import { Observable } from 'rxjs';
+import { Observable, catchError, map, of, startWith, switchMap } from 'rxjs';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { select } from '@ngrx/store';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
@@ -35,6 +35,7 @@ import * as math from 'mathjs';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import { NoteVO } from '@app/model/bw/org/bocra/portal/form/submission/note/note-vo';
+import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -60,6 +61,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   statusUpdated$: Observable<boolean>;
   note$: Observable<NoteVO | any>;
   file: File | undefined;
+  loadingData: Observable<boolean> = of(false);
+  totalData: number = 0;
 
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
@@ -67,15 +70,20 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
 
   submissionStatus: FormSubmissionStatus = FormSubmissionStatus.NEW;
 
+  submissionService: SubmissionRestController;
+
   constructor(private changeDetectorRefs: ChangeDetectorRef, private injector: Injector) {
     super(injector);
     this.keycloakService = injector.get(KeycloakService);
+    this.submissionService = injector.get(SubmissionRestController);
     this.formSubmissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
     this.statusUpdated$ = this.store.pipe(select(SubmissionSelectors.selectStatusUpdated));
     this.forms$ = this.store.pipe(select(FormSelectors.selectForms));
     this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.note$ = this.store.pipe(select(SubmissionSelectors.selectNote));
+
+    this.store.dispatch(FormSubmissionActions.setLoading({ loading: true }));
   }
 
   override beforeOnInit(form: EditFormSubmissionVarsForm): EditFormSubmissionVarsForm {
@@ -151,11 +159,54 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       }
       this.submissionStatus = submission?.submissionStatus;
 
-      submission?.sections?.forEach((section) => {
-        section.dataFields.forEach((dataField: DataFieldVO) => {
+      if (submission.form.entryType === FormEntryType.MULTIPLE) {
+        this.rowGroups = this.rowGroups.slice(0, 1);
+
+        submission?.dataFields?.forEach((dataField) => {
           this.addToRowGroup(dataField);
         });
-      });
+
+        // this.submissionService.getSubmissionData(submission?.id, 1, 10).subscribe((data) => {
+        //   console.log(data);
+        //   (data['elements'] as DataFieldVO[]).forEach((dataField) => {
+        //     submission.dataFields.push(dataField);
+        //     this.addToRowGroup(dataField);
+        //   });
+
+        //   this.dataFieldsPaginator.length = data['totalElements'];
+        //   // this.dataFieldsPaginator.page = data['totalElements'];
+        // });
+
+        this.dataFieldsPaginator.page
+          .pipe(
+            startWith({}),
+            switchMap(() => {
+              return this.submissionService.getSubmissionData(submission?.id, 1, 10).pipe(catchError(() => of([])));
+            }),
+            map((data) => {
+              if(data === null) return [];
+
+              this.totalData = data['totalElements'];
+
+              return data['elements'] as DataFieldVO[];
+
+            })
+          )
+          .subscribe((data) => {
+
+            this.dataFieldsDataSource = new MatTableDataSource();
+            data.forEach((dataField) => {
+              submission.dataFields.push(dataField);
+              this.addToRowGroup(dataField);  
+            });
+          });
+      } else {
+        submission?.sections?.forEach((section) => {
+          section.dataFields.forEach((dataField: DataFieldVO) => {
+            this.addToRowGroup(dataField);
+          });
+        });
+      }
 
       this.setEditFormSubmissionFormValue({ formSubmission: submission });
       submission?.form?.formFields?.forEach((field) => {
@@ -164,7 +215,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       });
     });
 
-    this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
+    // this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
   }
 
   isCalculatedField(dataField: DataFieldVO): boolean {
@@ -543,6 +594,14 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         loaderMessage: 'Uploading data!',
       })
     );
+
+    if (
+      !confirm(
+        `You are about to upload a file. This may take a while. Would you like to wait for the wait for the upload to finish?`
+      )
+    ) {
+      this.router.navigate(['/form/processing/data-capture-processing']);
+    }
   }
 
   getFieldKeys(object: any): string[] {
@@ -574,6 +633,9 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         return;
       }
 
+      this.store.dispatch(FormSubmissionActions.setLoading({ loading: true }));
+      this.loaderMessage = of('Loading file!');
+
       this.file.text().then((content) => {
         let rows: string[] = content.trim().split('\n');
         let headers: string[] = rows[0].trim().split(',');
@@ -598,8 +660,23 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
             this.addToRowGroup(field);
           }
         }
+
+        this.store.dispatch(FormSubmissionActions.setLoading({ loading: false }));
       });
     }
+  }
+
+  createDataGroupArray(values: DataFieldVO[]): RowGroup[] | any[] {
+
+    let rowGroups: RowGroup[] = [];
+
+    values.forEach((value) => {
+      let group: RowGroup = new RowGroup();
+      
+    });
+
+
+    return [];
   }
 
   addToRowGroup(dataField: DataFieldVO) {
@@ -611,7 +688,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       group.row = dataField.row;
       this.rowGroups.push(group);
       this.dataFieldsDataSource.data.push(group);
-      this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
+      // this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
     } else {
       group = filteredGroups[0];
     }

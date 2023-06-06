@@ -170,13 +170,11 @@ export const formSubmissionReducer = createReducer(
     ...state,
     loading: action.loading,
     success: false,
+  })),
+  on(FormSubmissionActions.setLoading, (state, action) => ({
+    ...state,
+    loading: action.loading,
   }))
-  // on(FormSubmissionActions.formSubmissionSuccess, (state, action) => ({
-  //     ...state,
-  //     loading: action.loading,
-  //     success: action.success,
-  //     messages: action.messages
-  // }))
 );
 
 export const formSubmissionFeature = createFeature({

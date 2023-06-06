@@ -24,12 +24,18 @@ export enum FormSubmissionActionType {
   SEARCH_SUCCESS = '[FormSubmission] Search Success',
   GET_ALL_PAGED = '[FormSubmission] Get All Paged',
   GET_ALL_PAGED_SUCCESS = '[FormSubmission] Get All Paged Success',
+  SET_LOADING = '[FormSubmission] Set Loading',
   UPLOAD_DATA = '[FormSubmission] Upload Submission Data',
   UPLOAD_DATA_SUCCESS = '[FormSubmission] Upload Submission Data Success',
   FORM_SUBMISSION_RESET = '[FormSubmission] Form Submission Reset',
   FORM_SUBMISSION_FAILURE = '[FormSubmission] Form Submission Action Failure',
   FORM_SUBMISSION_LOADING = '[FormSubmission] Form Submission Loading',
 }
+
+export const setLoading = createAction(
+  FormSubmissionActionType.SET_LOADING,
+  props<{ loading: boolean }>()
+);
 
 export const findById = createAction(
   FormSubmissionActionType.FIND_BY_ID,

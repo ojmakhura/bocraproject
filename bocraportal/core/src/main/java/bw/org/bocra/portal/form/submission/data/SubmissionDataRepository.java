@@ -10,5 +10,5 @@ public interface SubmissionDataRepository extends
                                         JpaSpecificationExecutor<DataField> {
 
     
-    Page<DataField> findByFormSubmissionIdOrderByRow(Long id, Pageable pageable);
+    Page<DataField> findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(Long id, Pageable pageable);
 }
