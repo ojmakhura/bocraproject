@@ -567,16 +567,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   }
 
   uploadData() {
-    // this.formSubmissionDataFields.forEach((field) => {
-    //   if (!field.formSubmission) {
-    //     field.formSubmission = new FormSubmissionVO();
-    //     field.formSubmission.id = this.formSubmissionId;
-    //   }
-
-    //   this.submissionRestController.addDataField(field).subscribe((dataField) => {
-    //     this.addToRowGroup(dataField);
-    //   });
-    // });
 
     if (!this.file) {
       return;
@@ -604,24 +594,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     return Object.keys(object);
   }
 
-  // onFileSelected(event: any) {
-  //   if (event) {
-  //     const file: File = event.target.files[0];
-  //     if (!file) {
-  //       return;
-  //     }
-
-  //     this.store.dispatch(
-  //       FormSubmissionActions.uploadData({
-  //         submissionId: this.formSubmissionId,
-  //         file: file,
-  //         loading: true,
-  //         loaderMessage: "Uploading data!"
-  //       })
-  //     );
-  //   }
-  // }
-
   onFileSelected(event: any) {
     if (event) {
       this.file = event.target.files[0];
@@ -629,36 +601,44 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         return;
       }
 
-      this.store.dispatch(FormSubmissionActions.setLoading({ loading: true }));
-      this.loaderMessage = of('Loading file!');
-
-      this.file.text().then((content) => {
-        let rows: string[] = content.trim().split('\n');
-        let headers: string[] = rows[0].trim().split(',');
-        let dataRows: string[] = rows.splice(1);
-
-        for (let i = 0; i < dataRows.length; i++) {
-          const row = dataRows[i].trim();
-          const rowData = row.split(',');
-
-          if (rowData.length != headers.length) {
-            continue;
+      if(confirm(`Do you want to preview the data before uploading?`)) {
+        this.store.dispatch(FormSubmissionActions.setLoading({ loading: true }));
+        this.loaderMessage = of('Loading file!');
+  
+        this.file.text().then((content) => {
+          let rows: string[] = content.trim().split('\n');
+          let headers: string[] = rows[0].trim().split(',');
+          let dataRows: string[] = rows.splice(1);
+  
+          for (let i = 0; i < dataRows.length; i++) {
+            const row = dataRows[i].trim();
+            const rowData = row.split(',');
+  
+            if (rowData.length != headers.length) {
+              continue;
+            }
+  
+            for (let j = 0; j < rowData.length; j++) {
+              let field: DataFieldVO = new DataFieldVO();
+              field.row = i + 1;
+              field.formField = this.getFormField(headers[j]);
+              field.value = rowData[j];
+              field.formSubmission = <FormSubmissionVO>{
+                id: this.formSubmissionId,
+              };
+              this.addToRowGroup(field);
+            }
           }
-
-          // for (let j = 0; j < rowData.length; j++) {
-          //   let field: DataFieldVO = new DataFieldVO();
-          //   field.row = i + 1;
-          //   field.formField = this.getFormField(headers[j]);
-          //   field.value = rowData[j];
-          //   field.formSubmission = <FormSubmissionVO>{
-          //     id: this.formSubmissionId,
-          //   };
-          //   this.addToRowGroup(field);
-          // }
-        }
-
-        this.store.dispatch(FormSubmissionActions.setLoading({ loading: false }));
-      });
+  
+          this.store.dispatch(FormSubmissionActions.setLoading({ loading: false }));
+          this.totalData = this.rowGroups.length;
+          this.dataFieldsDataSource = new MatTableDataSource(this.rowGroups);
+        });
+      } else {
+        console.log('uploading directly')
+        console.log(this.file)
+        this.uploadData();
+      }
     }
   }
 
