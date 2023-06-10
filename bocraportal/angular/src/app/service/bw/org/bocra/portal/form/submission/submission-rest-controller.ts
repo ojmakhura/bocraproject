@@ -8,6 +8,7 @@ import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/subm
 import { HttpClient } from '@angular/common/http';
 import { FormSubmissionStatus } from '@model/bw/org/bocra/portal/form/submission/form-submission-status';
 import { KeycloakService } from 'keycloak-angular';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
 
 @Injectable({
   providedIn: 'root',
@@ -98,5 +99,9 @@ export class SubmissionRestController {
       }&username=${username}`,
       {}
     );
+  }
+
+  getSubmissionData(id: any, pageNumber: number, pageSize: number): Observable<DataPage | any>  {
+    return this.http.get<DataPage | any>(`${this.path}/data?submissionId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 }

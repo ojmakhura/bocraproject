@@ -197,6 +197,7 @@
 						</button>
 					</div>
 					<div *ngIf="rowGroups.length > 0">
+            <mat-progress-bar mode="indeterminate" *ngIf="tableDataLoading"></mat-progress-bar>
 						<mat-table [dataSource]="dataFieldsDataSource" class="table" style="width: 100%">
 							<ng-container matColumnDef="status">
 								<mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
@@ -234,7 +235,8 @@
 							<mat-header-row *matHeaderRowDef="actionRowAdded()"></mat-header-row>
 							<mat-row *matRowDef="let row; columns: actionRowAdded()"></mat-row>
 						</mat-table>
-						<mat-paginator #dataFieldsPaginator [pageSize]="10"
+            
+						<mat-paginator #dataFieldsPaginator [pageSize]="10" [length]="totalData"
 							[pageSizeOptions]="[5, 10, 20, 30, 40, 50, 60, 70, 80, 90]" showFirstLastButtons
 							aria-label="Select page of periodic elements">
 						</mat-paginator>

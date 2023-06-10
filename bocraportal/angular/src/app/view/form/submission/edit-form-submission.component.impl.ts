@@ -63,6 +63,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   file: File | undefined;
   loadingData: Observable<boolean> = of(false);
   totalData: number = 0;
+  tableDataLoading: boolean = false;
 
   dataFieldsDataSource = new MatTableDataSource<RowGroup>([]);
   @ViewChild(MatPaginator) dataFieldsPaginator: MatPaginator;
@@ -166,39 +167,34 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
           this.addToRowGroup(dataField);
         });
 
-        // this.submissionService.getSubmissionData(submission?.id, 1, 10).subscribe((data) => {
-        //   console.log(data);
-        //   (data['elements'] as DataFieldVO[]).forEach((dataField) => {
-        //     submission.dataFields.push(dataField);
-        //     this.addToRowGroup(dataField);
-        //   });
-
-        //   this.dataFieldsPaginator.length = data['totalElements'];
-        //   // this.dataFieldsPaginator.page = data['totalElements'];
-        // });
-
         this.dataFieldsPaginator.page
           .pipe(
             startWith({}),
             switchMap(() => {
-              return this.submissionService.getSubmissionData(submission?.id, 1, 10).pipe(catchError(() => of([])));
+              this.tableDataLoading = true;
+              return this.submissionService.getSubmissionData(
+                  submission?.id, 
+                  this.dataFieldsPaginator.pageIndex + 1,
+                  this.dataFieldsPaginator.pageSize
+                ).pipe(catchError(() => of([])));
             }),
             map((data) => {
               if(data === null) return [];
 
               this.totalData = data['totalElements'];
-
+              this.tableDataLoading = false;
               return data['elements'] as DataFieldVO[];
 
             })
           )
           .subscribe((data) => {
 
-            this.dataFieldsDataSource = new MatTableDataSource();
-            data.forEach((dataField) => {
-              submission.dataFields.push(dataField);
-              this.addToRowGroup(dataField);  
-            });
+            this.rowGroups = [];
+            
+            for (let j = 0; j < data.length; j++) {
+              this.addToRowGroup(data[j]);
+            }
+            this.dataFieldsDataSource = new MatTableDataSource(this.rowGroups);
           });
       } else {
         submission?.sections?.forEach((section) => {
@@ -215,7 +211,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       });
     });
 
-    // this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
+    this.dataFieldsDataSource.paginator = this.dataFieldsPaginator; 
   }
 
   isCalculatedField(dataField: DataFieldVO): boolean {
@@ -649,16 +645,16 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
             continue;
           }
 
-          for (let j = 0; j < rowData.length; j++) {
-            let field: DataFieldVO = new DataFieldVO();
-            field.row = i + 1;
-            field.formField = this.getFormField(headers[j]);
-            field.value = rowData[j];
-            field.formSubmission = <FormSubmissionVO>{
-              id: this.formSubmissionId,
-            };
-            this.addToRowGroup(field);
-          }
+          // for (let j = 0; j < rowData.length; j++) {
+          //   let field: DataFieldVO = new DataFieldVO();
+          //   field.row = i + 1;
+          //   field.formField = this.getFormField(headers[j]);
+          //   field.value = rowData[j];
+          //   field.formSubmission = <FormSubmissionVO>{
+          //     id: this.formSubmissionId,
+          //   };
+          //   this.addToRowGroup(field);
+          // }
         }
 
         this.store.dispatch(FormSubmissionActions.setLoading({ loading: false }));
@@ -687,8 +683,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       group = new RowGroup();
       group.row = dataField.row;
       this.rowGroups.push(group);
-      this.dataFieldsDataSource.data.push(group);
-      // this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
     } else {
       group = filteredGroups[0];
     }
@@ -721,8 +715,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       });
 
       this.rowGroups.splice(row, 1); // remove from the row group array
-      this.dataFieldsDataSource.data.splice(row, 1);
-      this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
+      // this.dataFieldsDataSource.data.splice(row, 1);
+      // this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
     }
   }
 
@@ -809,8 +803,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         });
 
         this.rowGroups.splice(0, 1);
-        this.dataFieldsDataSource.data.splice(0, 1);
-        this.dataFieldsDataSource.paginator = this.dataFieldsPaginator;
       }
     }
   }
