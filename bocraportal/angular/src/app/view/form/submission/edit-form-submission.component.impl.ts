@@ -572,14 +572,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       return;
     }
 
-    this.store.dispatch(
-      FormSubmissionActions.uploadData({
-        submissionId: this.formSubmissionId,
-        file: this.file,
-        loading: true,
-        loaderMessage: 'Uploading data!',
-      })
-    );
+    let sendEmail = false;
 
     if (
       !confirm(
@@ -587,7 +580,20 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       )
     ) {
       this.router.navigate(['/form/processing/data-capture-processing']);
+    } else {
+
+      sendEmail = true;
     }
+
+    this.store.dispatch(
+      FormSubmissionActions.uploadData({
+        submissionId: this.formSubmissionId,
+        file: this.file,
+        sendEmail: sendEmail,
+        loading: true,
+        loaderMessage: 'Uploading data!',
+      })
+    );
   }
 
   getFieldKeys(object: any): string[] {

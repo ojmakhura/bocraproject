@@ -77,8 +77,8 @@ export class FormSubmissionEffects {
   uploadData$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormSubmissionActions.uploadData),
-      mergeMap(({ submissionId, file }) =>
-        this.submissionRestController.uploadData(submissionId, file).pipe(
+      mergeMap(({ submissionId, file, sendEmail }) =>
+        this.submissionRestController.uploadData(submissionId, file, sendEmail ? sendEmail : false).pipe(
           map((formSubmission) =>
             FormSubmissionActions.uploadDataSuccess({
               formSubmission,

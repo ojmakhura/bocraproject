@@ -80,10 +80,11 @@ export class SubmissionRestController {
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/search`, criteria);
   }
 
-  public uploadData(submissionId: number | any, file: File): Observable<FormSubmissionVO | any> {
+  public uploadData(submissionId: number | any, file: File, sendEmail: boolean): Observable<FormSubmissionVO | any> {
     const formData: FormData = new FormData();
     formData.append('submissionId', submissionId);
     formData.append('file', file);
+    formData.append('sendEmail', `${sendEmail}`);
     return this.http.post<FormSubmissionVO | any>(`${this.path}/upload`, formData);
   }
 

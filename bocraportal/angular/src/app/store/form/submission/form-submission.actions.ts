@@ -89,6 +89,7 @@ export const uploadData = createAction(
   props<{
     submissionId: number | any;
     file: File | any;
+    sendEmail: boolean;
     loading: boolean;
     loaderMessage: string | undefined;
   }>()
