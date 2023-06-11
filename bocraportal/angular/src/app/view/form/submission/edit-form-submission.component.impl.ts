@@ -572,17 +572,15 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       return;
     }
 
-    let sendEmail = false;
+    let sendEmail = true;
 
     if (
-      !confirm(
+      confirm(
         `You are about to upload a file. This may take a while. Would you like to wait for the wait for the upload to finish?`
       )
     ) {
-      this.router.navigate(['/form/processing/data-capture-processing']);
-    } else {
-
-      sendEmail = true;
+      
+      sendEmail = false;
     }
 
     this.store.dispatch(
@@ -594,6 +592,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         loaderMessage: 'Uploading data!',
       })
     );
+
+    if(sendEmail) {
+      this.router.navigate(['/form/processing/data-capture-processing']);
+    }
   }
 
   getFieldKeys(object: any): string[] {

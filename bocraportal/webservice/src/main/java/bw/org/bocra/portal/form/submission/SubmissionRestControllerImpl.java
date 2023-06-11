@@ -465,15 +465,18 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
                 messageObj.put("dispatchDate", format.format(LocalDateTime.now()));
                 messageObj.put("messagePlatform", "EMAIL");
                 messageObj.put("status", "DRAFT");
-                messageObj.put("subject", String.format("Data for %s has been uploaded.", submission.formActivation.getActivationName()));
+                messageObj.put("subject", String.format("Data for %s has been uploaded.", submission.getFormActivation().getActivationName()));
                 messageObj.put("text", String.format(
-                    StringUtils.isNotBlank(config.getValue()) ? config.getValue() : uploadTemplate,
+                    config != null && StringUtils.isNotBlank(config.getValue()) ? config.getValue() : uploadTemplate,
                     keycloakUserService.getLoggedInUser().getUsername(),
                     submission.getFormActivation().getActivationName(),
                     submissionUrl + "?id=" + submission.getId()
                 ));
+                
+                messageObj.put("destinations", List.of(keycloakUserService.getLoggedInUser().getEmail()));
     
                 messageObjects.add(messageObj);
+                logger.info("Sending email to {}.", submission.getFormActivation().getActivationName());
                 rabbitTemplate.convertAndSend(rabbitProperties.getEmailQueueExchange(), rabbitProperties.getEmailQueueRoutingKey(), messageObjects);
             }
 

@@ -129,17 +129,18 @@ export class AccessPointEffects {
     )
   );
 
-  // pagedSearch$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(AccessPointActions.pagedSearch),
-  //     mergeMap((pageNumber, pageSize, criteria, ) =>
-  //       this.accessPointRestController.pagedSearch(pageNumber, pageSize, criteria).pipe(
-  //         map((accessPoints) =>
-  //           AccessPointActions.pagedSearchSuccess({ accessPoints, messages: [`Action successful.`], success: true })
-  //         ),
-  //         catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error.error] })])
-  //       )
-  //     )
-  //   )
-  // );
+  pagedSearch$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AccessPointActions.pagedSearch),
+      mergeMap(({pageNumber, pageSize, criteria}) =>
+        this.accessPointRestController.pagedSearch(pageNumber, pageSize, criteria).pipe(
+          map((accessPointPage) => {
+            console.log(accessPointPage)
+            return AccessPointActions.pagedSearchSuccess({ accessPointPage, messages: [`Action successful.`], success: true })
+          }),
+          catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error.error] })])
+        )
+      )
+    )
+  );
 }
