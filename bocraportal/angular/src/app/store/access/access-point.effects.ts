@@ -135,8 +135,11 @@ export class AccessPointEffects {
       mergeMap(({pageNumber, pageSize, criteria}) =>
         this.accessPointRestController.pagedSearch(pageNumber, pageSize, criteria).pipe(
           map((accessPointPage) => {
-            console.log(accessPointPage)
-            return AccessPointActions.pagedSearchSuccess({ accessPointPage, messages: [`Action successful.`], success: true })
+            return AccessPointActions.pagedSearchSuccess({ 
+              accessPointPage, 
+              messages: [`Page ${pageNumber} found with ${pageSize} access points.`], 
+              success: true 
+            })
           }),
           catchError((error) => [AccessPointActions.accessPointFailure({ messages: [error.error] })])
         )

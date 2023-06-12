@@ -19,6 +19,8 @@ import org.springframework.stereotype.Repository;
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
+import bw.org.bocra.portal.form.submission.FormSubmission;
+import bw.org.bocra.portal.form.submission.FormSubmissionCriteria;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
@@ -192,6 +194,11 @@ public class FormActivationDaoImpl
 
     @Override
     protected Collection<FormActivation> handleFindByCriteria(FormActivationCriteria criteria) throws Exception {
+        
+        return formActivationRepository.findAll(getCriteriaSpecifications(criteria), Sort.by(Direction.DESC, "id"));
+    }
+
+    public Specification<FormActivation> getCriteriaSpecifications(FormActivationCriteria criteria) {
         Specification<FormActivation> spec = null;
         if (StringUtils.isNotBlank(criteria.getActivationName())) {
             spec = BocraportalSpecifications.<FormActivation, String>findByAttributeContainingIgnoreCase(
@@ -216,6 +223,6 @@ public class FormActivationDaoImpl
             }
         }
 
-        return formActivationRepository.findAll(spec, Sort.by(Direction.DESC, "id"));
+        return spec;
     }
 }

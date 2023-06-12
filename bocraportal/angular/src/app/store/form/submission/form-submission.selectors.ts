@@ -25,6 +25,11 @@ export const selectFormSubmissions = createSelector(
   (state: FormSubmissionState) => state.formSubmissions
 );
 
+export const selectFormSubmissionsPage = createSelector(
+  selectFormSubmissionState,
+  (state: FormSubmissionState) => state.formSubmissionsPage
+);
+
 export const selectRemoved = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.removed);
 export const selectNote = createSelector(selectFormSubmissionState, (state: FormSubmissionState) => state.note);
 

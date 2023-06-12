@@ -4,6 +4,7 @@ import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/subm
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { NoteVO } from '@model/bw/org/bocra/portal/form/submission/note/note-vo';
 import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
 
 export enum FormSubmissionActionType {
   FIND_BY_ID = '[FormSubmission] Find By Id',
@@ -22,6 +23,8 @@ export enum FormSubmissionActionType {
   GET_ALL_SUCCESS = '[FormSubmission] Get All Success',
   SEARCH = '[FormSubmission] Search',
   SEARCH_SUCCESS = '[FormSubmission] Search Success',
+  PAGED_SEARCH = '[FormSubmission] Paged Search',
+  PAGED_SEARCH_SUCCESS = '[FormSubmission] Paged Search Success',
   GET_ALL_PAGED = '[FormSubmission] Get All Paged',
   GET_ALL_PAGED_SUCCESS = '[FormSubmission] Get All Paged Success',
   SET_LOADING = '[FormSubmission] Set Loading',
@@ -138,6 +141,22 @@ export const search = createAction(
 export const searchSuccess = createAction(
   FormSubmissionActionType.SEARCH_SUCCESS,
   props<{ formSubmissions: FormSubmissionVO[] | any[]; messages: any[]; success: boolean }>()
+);
+
+export const pagedSearch = createAction(
+  FormSubmissionActionType.PAGED_SEARCH,
+  props<{
+    pageNumber: number | any;
+    pageSize: number | any;
+    criteria: FormSubmissionCriteria | any;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
+);
+
+export const pagedSearchSuccess = createAction(
+  FormSubmissionActionType.PAGED_SEARCH_SUCCESS,
+  props<{ formSubmissionsPage: DataPage | any; messages: any[]; success: boolean }>()
 );
 
 export const getAllPaged = createAction(

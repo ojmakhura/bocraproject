@@ -177,6 +177,24 @@ export class FormSubmissionEffects {
     )
   );
 
+  pagedSearch$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormSubmissionActions.pagedSearch),
+      mergeMap(({pageNumber, pageSize, criteria}) =>
+        this.submissionRestController.pagedSearch(pageNumber, pageSize, criteria).pipe(
+          map((formSubmissionsPage) => {
+            
+            return FormSubmissionActions.pagedSearchSuccess({ 
+              formSubmissionsPage, 
+                messages: [`Page ${pageNumber} found with ${formSubmissionsPage.elements.length} form activations.`], 
+                success: true })
+          }),
+          catchError((error) => [FormSubmissionActions.formSubmissionFailure({ messages: [error.error] })])
+        )
+      )
+    )
+  );
+
   getAllPaged$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormSubmissionActions.getAllPaged),

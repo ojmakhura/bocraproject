@@ -18,8 +18,6 @@ import { AccessPointCriteria } from '@app/model/bw/org/bocra/portal/access/acces
 })
 export class SearchAccessPointsAccessPointsComponentImpl extends SearchAccessPointsAccessPointsComponent {
 
-  accessPointTotal: number = 0;
-
   accessPointPage$: Observable<DataPage>;
   criteria: AccessPointCriteria = new AccessPointCriteria();
 
@@ -33,70 +31,29 @@ export class SearchAccessPointsAccessPointsComponentImpl extends SearchAccessPoi
   }
 
   override ngAfterViewInit() {
+    this.accessPointsPaginator.page.subscribe((paginator) => {
+      this.store.dispatch(
+        AccessPointActions.pagedSearch({
+          pageNumber: paginator.pageIndex + 1,
+          pageSize: paginator.pageSize,
+          criteria: this.criteria,
+          loading: true,
+          loaderMessage: 'Searching access points ...',
+        })
+      );
+    });
 
-    this.accessPointsPaginator.page
-            .pipe(
-              startWith({}),
-              switchMap(() => {
-                return this.accessPointRestController.pagedSearch(
-                  this.accessPointsPaginator.pageIndex + 1,
-                  this.accessPointsPaginator.pageSize,
-                  this.criteria,
-                ).pipe(catchError(() => of(null)));
-              }),
-              map((dataPage) => {
-                console.log('dataPage: ', dataPage)
-                if (dataPage == null) return [];
-                this.accessPointTotal = dataPage['totalElements'];
-                return dataPage['elements'] as AccessPointVO[];
-              })
-            )
-            .subscribe((accessPoints) => {
-              
-              // this.store.dispatch(
-              //   AccessPointActions.pagedSearch({
-              //     pageNumber: paginator.pageIndex + 1,
-              //     pageSize: paginator.pageSize,
-              //     criteria: this.criteria,
-              //     loading: true,
-              //     loaderMessage: 'Searching access points ...',
-              //   })
-              // );
-              // this.EmpData = empData;
-              this.accessPointsDataSource = new MatTableDataSource(accessPoints);
-            });
-
-    // this.accessPointPage$
-    // .subscribe(
-    //     page => {
-    //         console.log('accessPoints: ', page)
-    //         // this.accessPointsDataSource.data = accessPoints;
-    //         this.accessPointTotal = page['totalElements'];
-    //         this.accessPointsDataSource.sort = this.accessPointsSort;
-    //         this.accessPointsDataSource.paginator = this.accessPointsPaginator;
-    //         this.accessPointsDataSource = new MatTableDataSource(page['elements'] as AccessPointVO[]);
-
-    //         // this.accessPointsPaginator.page
-    //         // .pipe(
-    //         //   startWith({}),
-    //         //   switchMap(() => {
-    //         //     return of(page).pipe(catchError(() => of(null)));
-    //         //   }),
-    //         //   map((dataPage) => {
-    //         //     console.log('dataPage: ', dataPage)
-    //         //     if (dataPage == null) return [];
-    //         //     this.accessPointTotal = dataPage['totalElements'];
-    //         //     return dataPage['elements'] as AccessPointVO[];
-    //         //   })
-    //         // )
-    //         // .subscribe((accessPoints) => {
-    //         //   console.log('accessPoints: ', accessPoints)
-    //         //   // this.EmpData = empData;
-    //         //   this.accessPointsDataSource = new MatTableDataSource(accessPoints);
-    //         // });
-    //     }
-    // );
-    // this.accessPointsDataSource.paginator = this.accessPointsPaginator;
-    // this.accessPointsDataSource.sort = this.accessPointsSort;
-}
+    this.accessPointPage$
+      .pipe(
+        map((dataPage) => {
+          if (dataPage == null) return [];
+          this.totalElements = dataPage['totalElements'];
+          return dataPage['elements'] as AccessPointVO[];
+        })
+      )
+      .subscribe((pageData) => {
+        
+        this.accessPointsDataSource = new MatTableDataSource(pageData);
+      });
+  }
 }

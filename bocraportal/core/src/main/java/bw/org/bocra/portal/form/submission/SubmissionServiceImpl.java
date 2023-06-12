@@ -43,6 +43,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
 import bw.org.bocra.portal.DataPage;
+import bw.org.bocra.portal.access.AccessPoint;
+import bw.org.bocra.portal.access.AccessPointDaoImpl;
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormVO;
@@ -548,6 +550,45 @@ public class SubmissionServiceImpl
 
 
         return page;
+    }
+
+    @Override
+    protected DataPage handleSearch(Integer pageNumber, Integer pageSize, FormSubmissionCriteria criteria)
+            throws Exception {
+
+        if (pageNumber == null) {
+            throw new SubmissionServiceException("Page number must not be null.");
+        }
+
+        if (pageNumber < 1) {
+            throw new SubmissionServiceException("Page number must not be less than 1.");
+        }
+
+        if (pageSize == null) {
+            throw new SubmissionServiceException("Page size must not be null.");
+        }
+
+        if (pageSize < 1) {
+            throw new SubmissionServiceException("Page size must not be less than 1.");
+        }
+
+        Specification<FormSubmission> specifications = ((FormSubmissionDaoImpl)formSubmissionDao).getCriteriaSpecifications(criteria);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<FormSubmission> pageData = formSubmissionRepository.findAll(specifications, pageable);
+        
+        List<Object> vos = new ArrayList<>();
+
+        pageData.getContent().forEach(submission -> {
+            vos.add(formSubmissionDao.toFormSubmissionVO(submission));
+        });
+
+        DataPage page = new DataPage();
+        page.setPageNumber(pageData.getNumber() + 1);
+        page.setTotalElements(pageData.getTotalElements());
+        page.setTotalPages(pageData.getTotalPages());
+        page.setElements(vos);
+
+        return page; 
     }
 
 }

@@ -268,6 +268,11 @@ public class FormSubmissionDaoImpl
 
     @Override
     protected Collection<FormSubmission> handleFindByCriteria(FormSubmissionCriteria criteria) throws Exception {
+        
+        return formSubmissionRepository.findAll(getCriteriaSpecifications(criteria), Sort.by(Direction.ASC, "submissionDate"));
+    }
+
+    public Specification<FormSubmission> getCriteriaSpecifications(FormSubmissionCriteria criteria) {
         Specification<FormSubmission> specifications = null;
 
         if (criteria.getStartDate() != null) {
@@ -366,7 +371,7 @@ public class FormSubmissionDaoImpl
             specifications = specifications.and(tmp);
         }
 
-        return formSubmissionRepository.findAll(specifications, Sort.by(Direction.ASC, "submissionDate"));
+        return specifications;
     }
 
     @Override

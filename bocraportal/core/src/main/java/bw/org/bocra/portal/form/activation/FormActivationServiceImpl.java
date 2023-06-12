@@ -19,19 +19,27 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.DataPage;
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmission;
+import bw.org.bocra.portal.form.submission.FormSubmissionCriteria;
 import bw.org.bocra.portal.form.submission.FormSubmissionDao;
+import bw.org.bocra.portal.form.submission.FormSubmissionDaoImpl;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.form.submission.SubmissionService;
+import bw.org.bocra.portal.form.submission.SubmissionServiceException;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.licensee.Licensee;
@@ -332,6 +340,45 @@ public class FormActivationServiceImpl
         });
 
         return activations;
+    }
+
+    @Override
+    protected DataPage handleSearch(Integer pageNumber, Integer pageSize, FormActivationCriteria criteria)
+            throws Exception {
+
+        if (pageNumber == null) {
+            throw new SubmissionServiceException("Page number must not be null.");
+        }
+
+        if (pageNumber < 1) {
+            throw new SubmissionServiceException("Page number must not be less than 1.");
+        }
+
+        if (pageSize == null) {
+            throw new SubmissionServiceException("Page size must not be null.");
+        }
+
+        if (pageSize < 1) {
+            throw new SubmissionServiceException("Page size must not be less than 1.");
+        }
+
+        Specification<FormActivation> specifications = ((FormActivationDaoImpl)formActivationDao).getCriteriaSpecifications(criteria);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<FormActivation> pageData = formActivationRepository.findAll(specifications, pageable);
+        
+        List<Object> vos = new ArrayList<>();
+
+        pageData.getContent().forEach(activation -> {
+            vos.add(formActivationDao.toFormActivationVO(activation));
+        });
+
+        DataPage page = new DataPage();
+        page.setPageNumber(pageData.getNumber() + 1);
+        page.setTotalElements(pageData.getTotalElements());
+        page.setTotalPages(pageData.getTotalPages());
+        page.setElements(vos);
+
+        return page; 
     }
 
 }

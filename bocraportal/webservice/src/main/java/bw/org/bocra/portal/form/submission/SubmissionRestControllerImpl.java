@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
+import bw.org.bocra.portal.access.AccessPointCriteria;
 import bw.org.bocra.portal.config.SystemConfigService;
 import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
@@ -251,6 +252,27 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handlePagedSearch(Integer pageNumber, Integer pageSize, FormSubmissionCriteria criteria) {
+        try {
+            logger.debug("Searches for an form submission of the specified Page Number: " + pageNumber + ", Page Size: " + pageSize + " and Criteria: " +criteria);
+
+
+            UserVO user = keycloakUserService.getLoggedInUser();
+
+            if(user.getLicensee() != null && user.getLicensee().getId() != null) {
+                criteria.setLicenseeId(user.getLicensee().getId());
+            }
+
+            return ResponseEntity.ok().body(submissionService.search(pageNumber, pageSize, criteria));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            String message = String.format("An error occurred when reading page %d of size %d.", pageNumber, pageSize);
+            return ResponseEntity.badRequest().body(message);
         }
     }
 

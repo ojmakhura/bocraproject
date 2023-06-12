@@ -84,7 +84,6 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.note$ = this.store.pipe(select(SubmissionSelectors.selectNote));
 
-    this.store.dispatch(FormSubmissionActions.setLoading({ loading: true }));
   }
 
   override beforeOnInit(form: EditFormSubmissionVarsForm): EditFormSubmissionVarsForm {

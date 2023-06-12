@@ -79,6 +79,10 @@ export class SubmissionRestController {
   public search(criteria: FormSubmissionCriteria | any): Observable<FormSubmissionVO[] | any[]> {
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/search`, criteria);
   }
+  
+  pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<DataPage | any>  {
+    return this.http.post<DataPage | any>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria);
+  }
 
   public uploadData(submissionId: number | any, file: File, sendEmail: boolean): Observable<FormSubmissionVO | any> {
     const formData: FormData = new FormData();

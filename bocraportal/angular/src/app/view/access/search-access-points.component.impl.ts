@@ -4,7 +4,6 @@ import { SearchAccessPointsComponent } from '@app/view/access/search-access-poin
 import { SearchAccessPointsSearchForm } from '@app/view/access/search-access-points.component';
 import { SearchAccessPointsVarsForm } from '@app/view/access/search-access-points.component';
 import * as AccessPointActions from '@app/store/access/access-point.actions';
-import { SearchAccessPointsAccessPointsComponentImpl } from './search-access-points-access-points.component.impl';
 
 @Component({
   selector: 'app-search-access-points',
@@ -13,8 +12,6 @@ import { SearchAccessPointsAccessPointsComponentImpl } from './search-access-poi
 })
 export class SearchAccessPointsComponentImpl extends SearchAccessPointsComponent {
   
-  @ViewChild('searchAccessPointsAccessPoints' ) searchAccessPointsAccessPoints: SearchAccessPointsAccessPointsComponentImpl;
-
   constructor(private injector: Injector) {
     super(injector);
   }
@@ -29,11 +26,14 @@ export class SearchAccessPointsComponentImpl extends SearchAccessPointsComponent
    * This method may be overwritten
    */
   override beforeSearchAccessPointsSearch(form: SearchAccessPointsSearchForm): void {
-    console.log(this.searchAccessPointsAccessPoints)
+    
+    this.searchAccessPointsAccessPointsComponent.criteria = form.criteria;
+    this.searchAccessPointsAccessPointsComponent.accessPointsPaginator.pageIndex = 0;
+    
     this.store.dispatch(
       AccessPointActions.pagedSearch({
-        pageNumber: this.searchAccessPointsAccessPoints.accessPointsPaginator.pageIndex + 1,
-        pageSize: this.searchAccessPointsAccessPoints.accessPointsPaginator.pageSize,
+        pageNumber: this.searchAccessPointsAccessPointsComponent.accessPointsPaginator.pageIndex + 1,
+        pageSize: this.searchAccessPointsAccessPointsComponent.accessPointsPaginator.pageSize,
         criteria: form.criteria,
         loading: true,
         loaderMessage: 'Searching access points ...',
