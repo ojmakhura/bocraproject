@@ -47,6 +47,20 @@ export const formSubmissionReducer = createReducer(
     error: false,
     messages: action.messages,
   })),
+  on(FormSubmissionActions.uploadData, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+  })),
+  on(FormSubmissionActions.uploadDataSuccess, (state, action) => ({
+    ...state,
+    formSubmission: action.formSubmission,
+    loading: false,
+    loaderMessage: undefined,
+    success: action.success,
+    error: false,
+    messages: action.messages,
+  })),
   on(FormSubmissionActions.updateStatus, (state, action) => ({
     ...state,
     loading: action.loading,
@@ -118,6 +132,25 @@ export const formSubmissionReducer = createReducer(
     error: false,
     messages: action.messages,
   })),
+  on(FormSubmissionActions.pagedSearch, (state, action) => ({
+    ...state,
+    accessPoints: [],
+    accessPoint: null,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+  })),
+  on(FormSubmissionActions.pagedSearchSuccess, (state, action) => ({
+    ...state,
+    formSubmissionsPage: action.formSubmissionsPage,
+    id: null,
+    accessPoint: null,
+    criteria: null,
+    loading: false,
+    loaderMessage: undefined,
+    success: action.success,
+    error: false,
+    messages: action.messages,
+  })),
   on(FormSubmissionActions.getAllPaged, (state, action) => ({
     ...state,
     loading: action.loading,
@@ -156,13 +189,11 @@ export const formSubmissionReducer = createReducer(
     ...state,
     loading: action.loading,
     success: false,
+  })),
+  on(FormSubmissionActions.setLoading, (state, action) => ({
+    ...state,
+    loading: action.loading,
   }))
-  // on(FormSubmissionActions.formSubmissionSuccess, (state, action) => ({
-  //     ...state,
-  //     loading: action.loading,
-  //     success: action.success,
-  //     messages: action.messages
-  // }))
 );
 
 export const formSubmissionFeature = createFeature({

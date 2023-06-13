@@ -8,32 +8,55 @@
  */
 package bw.org.bocra.portal.form.submission;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import bw.org.bocra.portal.BocraportalSpecifications;
+import bw.org.bocra.portal.DataPage;
+import bw.org.bocra.portal.access.AccessPoint;
+import bw.org.bocra.portal.access.AccessPointDaoImpl;
+import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.field.FieldValueType;
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+import bw.org.bocra.portal.form.submission.data.SubmissionDataRepository;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
@@ -51,15 +74,19 @@ public class SubmissionServiceImpl
     private final LicenseeRepository licenseeRepository;
     private final FormActivationRepository activationRepository;
     private final PeriodDao periodDao;
+    private final SubmissionDataRepository submissionDataRepository;
 
-    public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, 
-            FormActivationRepository activationRepository,PeriodDao periodDao,
-            LicenseeRepository licenseeRepository, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository, MessageSource messageSource) {
+    public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
+            FormActivationRepository activationRepository, PeriodDao periodDao,
+            SubmissionDataRepository submissionDataRepository,
+            LicenseeRepository licenseeRepository, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository,
+            MessageSource messageSource) {
 
         super(formSubmissionDao, formSubmissionRepository, dataFieldDao, dataFieldRepository, messageSource);
         this.licenseeRepository = licenseeRepository;
         this.activationRepository = activationRepository;
         this.periodDao = periodDao;
+        this.submissionDataRepository = submissionDataRepository;
     }
 
     /**
@@ -82,7 +109,7 @@ public class SubmissionServiceImpl
     protected FormSubmissionVO handleSave(FormSubmissionVO formSubmissionVO)
             throws Exception {
         FormSubmission submission = getFormSubmissionDao().formSubmissionVOToEntity(formSubmissionVO);
-        submission =formSubmissionRepository.saveAndFlush(submission);
+        submission = formSubmissionRepository.saveAndFlush(submission);
 
         return getFormSubmissionDao().toFormSubmissionVO(submission);
     }
@@ -206,16 +233,16 @@ public class SubmissionServiceImpl
 
     @Override
     protected SubmissionSummary handleGetSubmissionSummary(FormSubmissionCriteria criteria) throws Exception {
-        
+
         Specification<FormSubmission> tmp = BocraportalSpecifications.findByJoinAttributeIsEmpty("form", "roles");
 
-        if(CollectionUtils.isNotEmpty(criteria.getRoles())) {
+        if (CollectionUtils.isNotEmpty(criteria.getRoles())) {
 
-            for(String role : criteria.getRoles()) {
+            for (String role : criteria.getRoles()) {
                 tmp = tmp.or(BocraportalSpecifications.findByJoinAttributeIsMember("form", "roles", role));
             }
         }
-                
+
         SubmissionSummary summary = new SubmissionSummary();
         Specification<FormSubmission> specs = tmp;
 
@@ -223,8 +250,8 @@ public class SubmissionServiceImpl
             specs = specs.and(BocraportalSpecifications.<FormSubmission, String>findByAttribute("submittedBy",
                     criteria.getSubmittedBy()))
                     .and(BocraportalSpecifications
-                    .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
-                            FormSubmissionStatus.SUBMITTED));
+                            .<FormSubmission, FormSubmissionStatus>findByAttribute("submissionStatus",
+                                    FormSubmissionStatus.SUBMITTED));
 
         }
 
@@ -351,9 +378,9 @@ public class SubmissionServiceImpl
     @Override
     protected Collection<FormSubmissionVO> handleLoadDueSubmissions() throws Exception {
         FormSubmissionCriteria criteria = new FormSubmissionCriteria();
-        
+
         Collection<Long> periodIds = periodDao.getActivePeriods().stream()
-                                        .map(period -> period.getId()).collect(Collectors.toList());
+                .map(period -> period.getId()).collect(Collectors.toList());
 
         criteria.setPeriodIds(periodIds);
         Collection<FormSubmission> submissions = getFormSubmissionDao().findByCriteria(criteria);
@@ -402,8 +429,166 @@ public class SubmissionServiceImpl
         }
 
         return formSubmissionDao.createNewSubmissions(licenseeIds, activationId)
-            .stream().map(sub -> getFormSubmissionDao().toFormSubmissionVO(sub)).collect(Collectors.toList());
+                .stream().map(sub -> getFormSubmissionDao().toFormSubmissionVO(sub)).collect(Collectors.toList());
 
+    }
+
+    @Override
+    protected FormSubmissionVO handleUploadData(Long submissonId, MultipartFile file) throws Exception {
+        FormSubmission submission = formSubmissionRepository.getReferenceById(submissonId);
+
+        Form form = submission.getForm();
+        Collection<FormField> fields = form.getFormFields();
+
+        List<String> headers = fields.stream().map(fld -> fld.getFieldId()).collect(Collectors.toList());
+
+        try (
+                InputStream is = file.getInputStream();
+                BufferedReader fileReader = new BufferedReader(new InputStreamReader(is));
+                CSVParser csvParser = new CSVParser(
+                        fileReader,
+                        CSVFormat.DEFAULT.builder()
+                                .setHeader(headers.toArray(new String[headers.size()]))
+                                .setSkipHeaderRecord(true)
+                                .build());) {
+            Collection<DataField> dataFields = new ArrayList<>();
+            ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+            ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
+
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for (CSVRecord csvRecord : csvRecords) {
+
+                List<DataField> expressions = new ArrayList<>();
+
+                for (FormField f : fields) {
+
+                    DataField dataField = new DataField();
+                    dataField.setRow((int) csvRecord.getRecordNumber());
+                    dataField.setFormField(f);
+                    dataField.setFormSubmission(submission);
+
+
+                    if (f.getFieldValueType() == FieldValueType.MANUAL) {
+                        dataField.setValue(csvRecord.get(f.getFieldId()));
+                    } else {
+                        dataField.setValue(f.getExpression());
+                        expressions.add(dataField);
+                    }
+
+                    dataFields.add(dataField);
+                }
+
+                // Evaluate expressions
+                for (DataField dataField : expressions) {
+                    String expression = dataField.getValue();
+
+                    for (DataField df : dataFields) {
+                        // check if the expression contains the field id
+                        if (expression.contains('[' + df.getFormField().getFieldId() + ']') && NumberUtils.isParsable(df.getValue())) {
+                            expression = expression.replaceAll("\\[" + df.getFormField().getFieldId() + "\\]", df.getValue() == null ? "0" : df.getValue());
+                        }
+                    }                 
+
+                    dataField.setValue((Double)scriptEngine.eval(expression) + "");
+                }
+            }
+
+            submission.setDataFields(dataFields);
+        }
+
+        if(submission.getExpectedSubmissionDate().isAfter(LocalDate.now())) {
+            submission.setSubmissionStatus(FormSubmissionStatus.DRAFT);
+        } else {
+            submission.setSubmissionStatus(FormSubmissionStatus.OVERDUE);
+        }
+
+        return getFormSubmissionDao().toFormSubmissionVO(submission);
+    }
+
+    @Override
+    protected DataPage handleGetSubmissionData(Long submissionId, Integer pageNumber, Integer pageSize)
+            throws Exception {
+
+        if (submissionId == null) {
+            throw new SubmissionServiceException("Submission ID must not be null.");
+        }
+
+        if (submissionId < 1) {
+            throw new SubmissionServiceException("Submission ID must not be less than 1.");
+        }
+
+        if (pageNumber == null) {
+            throw new SubmissionServiceException("Page number must not be null.");
+        }
+
+        if (pageNumber < 1) {
+            throw new SubmissionServiceException("Page number must not be less than 1.");
+        }
+
+        if (pageSize == null) {
+            throw new SubmissionServiceException("Page size must not be null.");
+        }
+
+        if (pageSize < 1) {
+            throw new SubmissionServiceException("Page size must not be less than 1.");
+        }
+
+        FormSubmission submission = formSubmissionRepository.getReferenceById(submissionId);
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize * submission.getForm().getFormFields().size());
+
+        Page<DataField> data = submissionDataRepository.findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(submissionId, pageable);
+        
+        List<Object> vos = new ArrayList<>();
+        data.stream().forEach(d -> vos.add(dataFieldDao.toDataFieldVO(d)));
+
+        DataPage page = new DataPage();
+        page.setPageNumber(data.getNumber() + 1);
+        page.setTotalElements(data.getTotalElements() / submission.getForm().getFormFields().size());
+        page.setTotalPages(data.getTotalPages() / submission.getForm().getFormFields().size());
+        page.setElements(vos);
+
+
+        return page;
+    }
+
+    @Override
+    protected DataPage handleSearch(Integer pageNumber, Integer pageSize, FormSubmissionCriteria criteria)
+            throws Exception {
+
+        if (pageNumber == null) {
+            throw new SubmissionServiceException("Page number must not be null.");
+        }
+
+        if (pageNumber < 1) {
+            throw new SubmissionServiceException("Page number must not be less than 1.");
+        }
+
+        if (pageSize == null) {
+            throw new SubmissionServiceException("Page size must not be null.");
+        }
+
+        if (pageSize < 1) {
+            throw new SubmissionServiceException("Page size must not be less than 1.");
+        }
+
+        Specification<FormSubmission> specifications = ((FormSubmissionDaoImpl)formSubmissionDao).getCriteriaSpecifications(criteria);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<FormSubmission> pageData = formSubmissionRepository.findAll(specifications, pageable);
+        
+        List<Object> vos = new ArrayList<>();
+
+        pageData.getContent().forEach(submission -> {
+            vos.add(formSubmissionDao.toFormSubmissionVO(submission));
+        });
+
+        DataPage page = new DataPage();
+        page.setPageNumber(pageData.getNumber() + 1);
+        page.setTotalElements(pageData.getTotalElements());
+        page.setTotalPages(pageData.getTotalPages());
+        page.setElements(vos);
+
+        return page; 
     }
 
 }

@@ -2,6 +2,7 @@
 import { createAction, props } from '@ngrx/store';
 import { AccessPointCriteria } from '@app/model/bw/org/bocra/portal/access/access-point-criteria';
 import { AccessPointVO } from '@app/model/bw/org/bocra/portal/access/access-point-vo';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
 
 export enum AccessPointActionType {
   FIND_BY_ID = '[AccessPoint] Find By Id',
@@ -96,7 +97,7 @@ export const pagedSearch = createAction(
 
 export const pagedSearchSuccess = createAction(
   AccessPointActionType.PAGED_SEARCH_SUCCESS,
-  props<{ accessPoints: AccessPointVO[] | any[]; messages: any[]; success: boolean }>()
+  props<{ accessPointPage: DataPage | any; messages: any[]; success: boolean }>()
 );
 
 export const accessPointReset = createAction(AccessPointActionType.ACCESS_POINT_RESET);

@@ -12,6 +12,8 @@ import * as LicenceTypeFormSelectors from '@app/store/licence/type/form/licence-
 import * as LicenceTypeActions from '@app/store/licence/type/licence-type.actions';
 import * as LicenseeFormActions from '@app/store/licensee/form/licensee-form.actions';
 import * as LicenseeFormSelectors from '@app/store/licensee/form/licensee-form.selectors';
+import * as SectorFormActions from '@app/store/sector/form/sector-form.actions';
+import * as SectorFormSelectors from '@app/store/sector/form/sector-form.selectors';
 import * as LicenseeActions from '@app/store/licensee/licensee.actions';
 import * as SectorSelectors from '@app/store/sector/sector.selectors';
 import * as SectorActions from '@app/store/sector/sector.actions';
@@ -44,14 +46,15 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 })
 export class EditFormComponentImpl extends EditFormComponent {
   protected http: HttpClient;
-  // protected keycloakService: KeycloakService;
   private formSection$: Observable<FormSectionVO>;
   private formField$: Observable<FormFieldVO>;
   private licenseeForm$: Observable<LicenseeFormVO>;
+  private sectorForm$: Observable<SectorFormVO>;
   unauthorisedUrls$: Observable<string[]>;
   deleteUnrestricted: boolean = true;
   deleteFieldUnrestricted: boolean = true;
   licenseeRemoved$: Observable<boolean>;
+  sectorRemoved$: Observable<boolean>;
   fieldRemoved$: Observable<boolean>;
   roles: string[] = this.keycloakService
       .getUserRoles()
@@ -70,9 +73,11 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.formSection$ = this.store.pipe(select(FormSelectors.selectFormSection));
     this.formFormSections$ = this.store.pipe(select(FormSelectors.selectFormSections));
     this.licenseeForm$ = this.store.pipe(select(LicenseeFormSelectors.selectLicenseeForm));
+    this.sectorForm$ = this.store.pipe(select(SectorFormSelectors.selectSectorForm));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.formSectors$ = this.store.pipe(select(SectorSelectors.selectSectors));
     this.licenseeRemoved$ = this.store.pipe(select(LicenseeFormSelectors.selectRemoved));
+    this.sectorRemoved$ = this.store.pipe(select(SectorFormSelectors.selectRemoved));
     this.fieldRemoved$ = this.store.pipe(select(FormSelectors.selectFormFieldRemoved));
     this.formPeriodConfigs$ = this.store.pipe(select(PeriodConfigSelectors.selectPeriodConfigs));
   }
@@ -195,6 +200,12 @@ export class EditFormComponentImpl extends EditFormComponent {
       }
     });
 
+    this.sectorForm$?.subscribe((sectorForm) => {
+      if (sectorForm) {
+        this.addToFormSectors(sectorForm);
+      }
+    });
+
     this.unauthorisedUrls$?.subscribe((restrictedItems) => {
       restrictedItems.forEach((item) => {
 
@@ -211,6 +222,25 @@ export class EditFormComponentImpl extends EditFormComponent {
     this.formPeriodConfigs$?.subscribe((periods) => {});
   }
 
+  override deleteFromFormSectors(index: number) {
+    this.handleDeleteFromFormSectors(this.formSectors[index]);
+
+    if (confirm('Are you sure you want to remove the sector from the form?')) {
+      this.store.dispatch(
+        SectorFormActions.remove({
+          id: this.formSectors[index].id,
+          loading: true,
+          loaderMessage: `Removing sector ${this.formSectors[index].sector.name} ...`,
+        })
+      );
+
+      this.sectorRemoved$.subscribe((removed) => {
+        if (removed) {
+          this.formSectorsControl.removeAt(index);
+        }
+      });
+    }
+  }
   /**
    * This method may be overwritten
    */

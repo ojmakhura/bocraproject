@@ -8,6 +8,7 @@ import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/subm
 import { HttpClient } from '@angular/common/http';
 import { FormSubmissionStatus } from '@model/bw/org/bocra/portal/form/submission/form-submission-status';
 import { KeycloakService } from 'keycloak-angular';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
 
 @Injectable({
   providedIn: 'root',
@@ -78,6 +79,18 @@ export class SubmissionRestController {
   public search(criteria: FormSubmissionCriteria | any): Observable<FormSubmissionVO[] | any[]> {
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/search`, criteria);
   }
+  
+  pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<DataPage | any>  {
+    return this.http.post<DataPage | any>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria);
+  }
+
+  public uploadData(submissionId: number | any, file: File, sendEmail: boolean): Observable<FormSubmissionVO | any> {
+    const formData: FormData = new FormData();
+    formData.append('submissionId', submissionId);
+    formData.append('file', file);
+    formData.append('sendEmail', `${sendEmail}`);
+    return this.http.post<FormSubmissionVO | any>(`${this.path}/upload`, formData);
+  }
 
   public updateSubmissionStatus(
     id: number | any,
@@ -91,5 +104,9 @@ export class SubmissionRestController {
       }&username=${username}`,
       {}
     );
+  }
+
+  getSubmissionData(id: any, pageNumber: number, pageSize: number): Observable<DataPage | any>  {
+    return this.http.get<DataPage | any>(`${this.path}/data?submissionId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 }

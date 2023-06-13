@@ -5,6 +5,7 @@ import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission
 import { FormActivationCriteria } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-criteria';
 import { FormActivationVO } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-vo';
 import { HttpClient } from '@angular/common/http';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +49,9 @@ export class FormActivationRestController {
 
   public search(criteria: FormActivationCriteria | any): Observable<FormActivationVO[] | any[]> {
     return this.http.post<FormActivationVO[] | any[]>(`${this.path}/search`, criteria);
+  }
+  
+  pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<DataPage | any>  {
+    return this.http.post<DataPage | any>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria);
   }
 }

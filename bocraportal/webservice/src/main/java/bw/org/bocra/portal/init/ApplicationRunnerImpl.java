@@ -277,80 +277,64 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         config = new SystemConfigVO("COMPLAINTS_MANAGEMENT_EMAIL", "tochange@bocra.org.bw");
         systemConfigService.save(config);
 
-        String emailTempate = """
-                            Dear %s
+        String emailTempate =
+                            "Dear %s\n\n" +
 
-                            We acknowledge receipt of your complaint against %s and will get back
-                            to you as soon as possible. Please note that to access your
-                            complaint, go the the url %s.
+                            "We acknowledge receipt of your complaint against %s and will get back\n" +
+                            "to you as soon as possible. Please note that to access your\n" +
+                            "complaint, go the the url %s.\n\n" +
 
-                            Regards,
+                            "Regards,\n\n" +
 
-                            BOCRA Complaint Management Team
-                            """;
+                            "BOCRA Complaint Management Team";
+
         config = new SystemConfigVO("COMPLAINANT_EMAIL_TEMPLATE", emailTempate);
         systemConfigService.save(config);
 
-        emailTempate = """
-            Dear Complaint Officer
+        emailTempate = 
+            "Dear Complaint Officer\n\n" +
+            "A new complaint has been logged against %s. Please go to\n" +
+            "the url %s to process it.\n\n" +
+            "Regards,\n\n" +
+            "BOCRA Online Data Collection Portal";
 
-            A new complaint has been logged against %s. Please go to
-            the url %s to process it.
-
-            Regards,
-
-            BOCRA Online Data Collection Portal
-            """;
         config = new SystemConfigVO("COMPLAINTS_OFFICER_EMAIL_TEMPLATE", emailTempate);
         systemConfigService.save(config);
 
-        emailTempate = """
-            Dear %s
+        emailTempate = "Dear %s\n\n" +
+            "Your complaint %s against %s has a new reply. Go to the URL\n" +
+            "%s to view the reply and respond.\n\n" +
+            "Regards,\n\n" +
+            "BOCRA Complaint Management Team";
 
-            Your complaint %s against %s has a new reply. Go to the URL
-            %s to view the reply and respond.
-
-            Regards,
-
-            BOCRA Complaint Management Team
-            """;
         config = new SystemConfigVO("COMPLAINT_REPLY_TEMPLATE", emailTempate);
         systemConfigService.save(config);
 
-        emailTempate = """
-            Dear %s
-
-            You have been assigned to handle the complaint against %s.
-            Please go to the url %s to manage it.
-
-            Regards,
-
-            %s
-            """;
+        emailTempate =
+            "Dear %s\n\n" +
+            "You have been assigned to handle the complaint against %s.\n" +
+            "Please go to the url %s to manage it.\n\n" +
+            "Regards,\n\n" +
+            "%s";
         config = new SystemConfigVO("COMPLAINTS_USER_ASSIGNMENT_TEMPLATE", emailTempate);
         systemConfigService.save(config);
 
-        emailTempate = """Dear %s user
+        emailTempate = "Dear %s user\n\n" +
 
-            You are notified that BOCRA requests your participation to
-            provide %s data. Please go to %s?id=%d to fill out the form.
-            The deadline to submit the information is %s
-            
-            Kind Regards
-            
-            BOCRA""";
+            "You are notified that BOCRA requests your participation to\n" +
+            "provide %s data. Please go to %s?id=%d to fill out the form.\n" +
+            "The deadline to submit the information is %s\n\n" +
+            "Kind Regards\n\n" +
+            "BOCRA";
         config = new SystemConfigVO("ACTIVATION_SUBMISSION_TEMPLATE", emailTempate);
         systemConfigService.save(config);
 
+        emailTempate = "Dear %s user\n\n" +
+            "You are notified that BOCRA has returned your submission for %s data.\n" +
+            "Please go to %s?id=%d to get the details of the return. The deadline to submit the information is %s.\n\n" +
+            "Kind Regards\n\n" +
+            "BOCRA";
 
-        emailTempate = """Dear %s user
-        
-            You are notified that BOCRA has returned your submission for %s data. 
-            Please go to %s?id=%d to get the details of the return. The deadline to submit the information is %s
-            
-            Kind Regards
-            
-            BOCRA""";
         config = new SystemConfigVO("SUBMISSION_RETURN_EMAIL_TEMPLATE", emailTempate);
         systemConfigService.save(config);
 

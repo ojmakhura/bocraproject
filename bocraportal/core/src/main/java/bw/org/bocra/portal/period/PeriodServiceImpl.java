@@ -168,6 +168,24 @@ public class PeriodServiceImpl
             return false;
         }
 
+        Period period = this.periodRepository.getReferenceById(id);
+        
+        if(period.getPrevious() != null) {
+            Period prev = period.getPrevious();
+            prev.setNext(null);
+            period.setPrevious(null);
+
+            this.periodRepository.saveAndFlush(prev);
+        }
+
+        if(period.getNext() != null) {
+            Period next = period.getNext();
+            next.setPrevious(null);
+            period.setNext(null);
+
+            this.periodRepository.saveAndFlush(next);
+        }
+
         this.periodRepository.deleteById(id);
 
         return true;
@@ -264,38 +282,15 @@ public class PeriodServiceImpl
         Collection<PeriodVO> periods = 
                     CollectionUtils.isEmpty(periodIds) ? 
                         loadCurrentPeriods() :
-                        periodDao.toPeriodVOCollection(periodRepository.findByIdIn(periodIds));
+                        periodDao.toPeriodVOCollection(periodRepository.findByIdIn(periodIds.stream().toList()));
 
-        /**
-         * First filter out the periods that have a next since that implies the next period has already
-         * been created.
-         * Next, for each current period, we create a new period with the current period as the previous.
-         */
-        // return periods.stream()
-        //     .filter(period -> period.getNext() != null && period.getNext().getId() != null)
-        //     .map(period -> {
-        //         PeriodVO per = new PeriodVO();
-        //         per.setCreatedBy(username);
-        //         per.setCreatedDate(LocalDateTime.now());
-        //         per.setPeriodConfig(period.getPeriodConfig());
-        //         per.setPeriodStart(period.getPeriodEnd().plusDays(1));
-
-        //         per.setPeriodEnd(calculateEndDate(per.getPeriodStart(), period.getPeriodConfig()));
-
-        //         per.setPrevious(period);
-               
-        //         per = this.save(per);
-
-        //         return per;
-        //     }).collect(Collectors.toList());
 
         for (PeriodVO period : periods) {
 
-            if(period.getNext() != null && period.getNext().getId() != null) {
+            if((period.getNext() != null && period.getNext().getId() != null) || // next period already created
+                    (period.getPeriodEnd() != null && period.getPeriodEnd().isBefore(LocalDate.now().plusDays(1)))) { // period ends today or before
                 continue;
             }
-
-            System.out.println(11111);
 
             PeriodVO per = new PeriodVO();
             per.setCreatedBy(username);

@@ -109,6 +109,24 @@ export class FormActivationEffects {
     )
   );
 
+  pagedSearch$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormActivationActions.pagedSearch),
+      mergeMap(({pageNumber, pageSize, criteria}) =>
+        this.formActivationRestController.pagedSearch(pageNumber, pageSize, criteria).pipe(
+          map((formActivationsPage) => {
+            
+            return FormActivationActions.pagedSearchSuccess({ 
+              formActivationsPage, 
+                messages: [`Page ${pageNumber} found with ${formActivationsPage.elements.length} form activations.`], 
+                success: true })
+          }),
+          catchError((error) => [FormActivationActions.formActivationFailure({ messages: [error.error] })])
+        )
+      )
+    )
+  );
+
   getAllPaged$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.getAllPaged),

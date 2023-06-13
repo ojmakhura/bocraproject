@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
@@ -37,6 +38,7 @@ import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+import bw.org.bocra.portal.form.submission.data.SubmissionDataRepository;
 import bw.org.bocra.portal.form.submission.note.NoteRepository;
 import bw.org.bocra.portal.form.submission.note.NoteVO;
 import bw.org.bocra.portal.licensee.Licensee;
@@ -54,13 +56,17 @@ import bw.org.bocra.portal.period.PeriodVO;
 public class FormSubmissionDaoImpl
         extends FormSubmissionDaoBase {
 
+    private final SubmissionDataRepository submissionDataRepository;
+
     public FormSubmissionDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
             DataFieldRepository dataFieldRepository, LicenseeRepository licenseeRepository,
             NoteRepository noteRepository, FormActivationRepository formActivationRepository,
-            FormSubmissionRepository formSubmissionRepository) {
+            FormSubmissionRepository formSubmissionRepository, SubmissionDataRepository submissionDataRepository) {
 
         super(formRepository, periodRepository, dataFieldRepository, licenseeRepository, noteRepository,
                 formActivationRepository, formSubmissionRepository);
+
+        this.submissionDataRepository = submissionDataRepository;
     }
 
     /**
@@ -80,35 +86,54 @@ public class FormSubmissionDaoImpl
 
             if (CollectionUtils.isNotEmpty(source.getDataFields())) {
 
-                Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
-                for (DataField dataField : source.getDataFields()) {
+                Collection<DataField> fields = source.getForm().getEntryType() == FormEntryType.SINGLE
+                        ? source.getDataFields()
+                        : submissionDataRepository.findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(source.getId(),
+                                PageRequest.of(0, 10 * source.getForm().getFormFields().size())).getContent();
 
-                    DataFieldVO data = new DataFieldVO();
-                    getDataFieldDao().toDataFieldVO(dataField, data);
+                if(source.getForm().getEntryType() == FormEntryType.SINGLE) {
 
-                    FormSection section = dataField.getFormField().getFormSection();
+                    Collection<DataFieldSectionVO> sections = new ArrayList<>();
 
-                    DataFieldSectionVO sec = new DataFieldSectionVO();
-                    sec.setPosition(section.getPosition());
-                    sec.setSectionLabel(section.getSectionLabel());
-                    sec.setSectionId(section.getSectionId());
-
-                    if (!sectioned.containsKey(sec)) {
-                        sectioned.put(sec, new ArrayList<>());
+                    Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
+                    for (DataField dataField : fields) {
+    
+                        DataFieldVO data = new DataFieldVO();
+                        getDataFieldDao().toDataFieldVO(dataField, data);
+    
+                        FormSection section = dataField.getFormField().getFormSection();
+    
+                        DataFieldSectionVO sec = new DataFieldSectionVO();
+                        sec.setPosition(section.getPosition());
+                        sec.setSectionLabel(section.getSectionLabel());
+                        sec.setSectionId(section.getSectionId());
+    
+                        if (!sectioned.containsKey(sec)) {
+                            sectioned.put(sec, new ArrayList<>());
+                        }
+    
+                        sectioned.get(sec).add(data);
                     }
 
-                    sectioned.get(sec).add(data);
+                    for (Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
+                        DataFieldSectionVO sec = entry.getKey();
+                        sec.setDataFields(entry.getValue());
+                        sections.add(sec);
+                    }
+                    
+                    target.setSections(sections);
+
+                } else {
+                    if(target.getDataFields() == null) {
+                        target.setDataFields(new ArrayList<>());
+                    }
+
+                    fields.forEach(field -> {
+                        DataFieldVO data = new DataFieldVO();
+                        getDataFieldDao().toDataFieldVO(field, data);
+                        target.getDataFields().add(data);
+                    });
                 }
-
-                Collection<DataFieldSectionVO> sections = new ArrayList<>();
-
-                for (Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
-                    DataFieldSectionVO sec = entry.getKey();
-                    sec.setDataFields(entry.getValue());
-                    sections.add(sec);
-                }
-
-                target.setSections(sections);
             }
         }
 
@@ -243,6 +268,11 @@ public class FormSubmissionDaoImpl
 
     @Override
     protected Collection<FormSubmission> handleFindByCriteria(FormSubmissionCriteria criteria) throws Exception {
+        
+        return formSubmissionRepository.findAll(getCriteriaSpecifications(criteria), Sort.by(Direction.ASC, "submissionDate"));
+    }
+
+    public Specification<FormSubmission> getCriteriaSpecifications(FormSubmissionCriteria criteria) {
         Specification<FormSubmission> specifications = null;
 
         if (criteria.getStartDate() != null) {
@@ -341,7 +371,7 @@ public class FormSubmissionDaoImpl
             specifications = specifications.and(tmp);
         }
 
-        return formSubmissionRepository.findAll(specifications, Sort.by(Direction.ASC, "submissionDate"));
+        return specifications;
     }
 
     @Override

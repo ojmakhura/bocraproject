@@ -118,7 +118,7 @@ export const accessPointReducer = createReducer(
   })),
   on(AccessPointActions.pagedSearchSuccess, (state, action) => ({
     ...state,
-    accessPoints: action.accessPoints,
+    accessPointPage: action.accessPointPage,
     id: null,
     accessPoint: null,
     criteria: null,

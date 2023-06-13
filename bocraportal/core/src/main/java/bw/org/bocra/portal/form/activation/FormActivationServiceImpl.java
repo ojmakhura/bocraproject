@@ -11,29 +11,35 @@ package bw.org.bocra.portal.form.activation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import bw.org.bocra.portal.DataPage;
 import bw.org.bocra.portal.form.Form;
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmission;
+import bw.org.bocra.portal.form.submission.FormSubmissionCriteria;
 import bw.org.bocra.portal.form.submission.FormSubmissionDao;
+import bw.org.bocra.portal.form.submission.FormSubmissionDaoImpl;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
 import bw.org.bocra.portal.form.submission.SubmissionService;
+import bw.org.bocra.portal.form.submission.SubmissionServiceException;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.licensee.Licensee;
@@ -44,6 +50,7 @@ import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.period.Period;
 import bw.org.bocra.portal.period.PeriodDao;
 import bw.org.bocra.portal.period.PeriodVO;
+import bw.org.bocra.portal.sector.Sector;
 import bw.org.bocra.portal.sector.form.SectorForm;
 
 /**
@@ -134,11 +141,11 @@ public class FormActivationServiceImpl
 
         boolean isNew = formActivation.getId() == null;
 
-        if (CollectionUtils.isEmpty(activation.getForm().getLicenseeForms())
-                && CollectionUtils.isEmpty(activation.getForm().getSectorForms())) {
+        // if (CollectionUtils.isEmpty(activation.getForm().getLicenseeForms())
+        //         && CollectionUtils.isEmpty(activation.getForm().getSectorForms())) {
 
-            throw new FormActivationServiceException("No licensees");
-        }
+        //     throw new FormActivationServiceException("Form has " + activation.getForm().getFormName() + " no licensees");
+        // }
 
         if (activation.getActivationDeadline() == null) {
             activation.setActivationDeadline(activation.getPeriod().getPeriodEnd()
@@ -149,7 +156,7 @@ public class FormActivationServiceImpl
             activation.setActivationName(String.format("%s: %s Activation", activation.getForm().getFormName(),
                     activation.getPeriod().getPeriodName()));
         }
-        activation = formActivationRepository.save(activation);
+        activation = formActivationRepository.saveAndFlush(activation);
 
         /**
          * The form activations is a new one so we need to
@@ -220,7 +227,11 @@ public class FormActivationServiceImpl
 
         for (SectorForm sectorForm : form.getSectorForms()) {
 
-            for (LicenseeSector licensee : sectorForm.getSector().getLicenseeSectors()) {
+            Sector sector = sectorForm.getSector();
+
+            for (LicenseeSector licensee : sector.getLicenseeSectors()) {
+                Licensee lic = licensee.getLicensee();
+                
                 if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
                     ids.add(licensee.getLicensee().getId());
             }
@@ -270,6 +281,7 @@ public class FormActivationServiceImpl
         if (CollectionUtils.isEmpty(periods)) {
             return new HashSet<>();
         }
+
         Set<Long> periodConfigs = periods.stream()
                 .map(period -> period.getPeriodConfig().getId())
                 .collect(Collectors.toSet());
@@ -278,19 +290,28 @@ public class FormActivationServiceImpl
 
         periods.forEach(period -> {
             Collection<Form> filtered = forms.stream().filter(form -> {
-                return form.getPeriodConfig().getId() == period.getPeriodConfig().getId();
+                
+                // Make sure that there is a period and also there are licensees attached to the form.
+                return form.getPeriodConfig().getId() == period.getPeriodConfig().getId() 
+                        && (CollectionUtils.isNotEmpty(form.getLicenseeForms())
+                                || CollectionUtils.isNotEmpty(form.getSectorForms()));
+
             }).collect(Collectors.toList());
+            
             PeriodVO pv = new PeriodVO();
             pv.setId(period.getId());
 
             filtered.forEach(fil -> {
 
+
                 FormActivationCriteria criteria = new FormActivationCriteria();
                 criteria.setFormId(fil.getId());
                 criteria.setPeriodId(period.getId());
 
+                Collection<FormActivationVO> existingActivations = this.search(criteria);
+
                 // We only want to create activations that do not exist.
-                if (CollectionUtils.isEmpty(this.search(criteria))) {
+                if (CollectionUtils.isEmpty(existingActivations)) {
 
                     FormActivationVO activation = new FormActivationVO();
                     activation.setCreatedBy(createdBy);
@@ -310,11 +331,54 @@ public class FormActivationServiceImpl
                     
                     activations.add(activation);
 
+                } else {
+                    // existingActivations.forEach(ex -> {
+                    //     System.out.println("=============================================== " + ex.getActivationName());
+                    // });
                 }
             });
         });
 
         return activations;
+    }
+
+    @Override
+    protected DataPage handleSearch(Integer pageNumber, Integer pageSize, FormActivationCriteria criteria)
+            throws Exception {
+
+        if (pageNumber == null) {
+            throw new SubmissionServiceException("Page number must not be null.");
+        }
+
+        if (pageNumber < 1) {
+            throw new SubmissionServiceException("Page number must not be less than 1.");
+        }
+
+        if (pageSize == null) {
+            throw new SubmissionServiceException("Page size must not be null.");
+        }
+
+        if (pageSize < 1) {
+            throw new SubmissionServiceException("Page size must not be less than 1.");
+        }
+
+        Specification<FormActivation> specifications = ((FormActivationDaoImpl)formActivationDao).getCriteriaSpecifications(criteria);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<FormActivation> pageData = formActivationRepository.findAll(specifications, pageable);
+        
+        List<Object> vos = new ArrayList<>();
+
+        pageData.getContent().forEach(activation -> {
+            vos.add(formActivationDao.toFormActivationVO(activation));
+        });
+
+        DataPage page = new DataPage();
+        page.setPageNumber(pageData.getNumber() + 1);
+        page.setTotalElements(pageData.getTotalElements());
+        page.setTotalPages(pageData.getTotalPages());
+        page.setElements(vos);
+
+        return page; 
     }
 
 }
