@@ -7,6 +7,7 @@
 package bw.org.bocra.portal.form.activation;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,6 +23,9 @@ import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmission;
 import bw.org.bocra.portal.form.submission.FormSubmissionCriteria;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
+import bw.org.bocra.portal.form.submission.FormSubmissionVO;
+import bw.org.bocra.portal.licensee.Licensee;
+import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.period.PeriodRepository;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.period.config.PeriodConfig;
@@ -108,11 +112,36 @@ public class FormActivationDaoImpl
             target.setForm(form);
         }
 
-        // if(CollectionUtils.isNotEmpty(source.getFormSubmissions())) {
-        //     target.setFormSubmissions(
-        //         source.getFormSubmissions().stream().map(sub -> getFormSubmissionDao().toFormSubmissionVO(sub)).collect(Collectors.toList())
-        //     );
-        // }
+        if(CollectionUtils.isNotEmpty(source.getFormSubmissions())) {
+            HashSet<FormSubmissionVO> subs = new HashSet<>();
+            for (FormSubmission sub : source.getFormSubmissions()) {
+                FormSubmissionVO s = new FormSubmissionVO();
+                s.setId(sub.getId());
+                s.setSubmissionStatus(sub.getSubmissionStatus());
+                
+                LicenseeVO licensee = new LicenseeVO();
+                licensee.setId(sub.getLicensee().getId());
+                licensee.setLicenseeName(sub.getLicensee().getLicenseeName());
+
+                s.setLicensee(licensee);
+
+                FormVO form = new FormVO();
+                form.setId(sub.getForm().getId());
+                form.setFormName(sub.getForm().getFormName());
+
+                s.setForm(form);
+
+                PeriodVO period = new PeriodVO();
+                period.setId(sub.getPeriod().getId());
+                period.setPeriodName(sub.getPeriod().getPeriodName());
+
+                s.setPeriod(period);
+
+                subs.add(s);
+            }   
+            
+            target.setFormSubmissions(subs);
+        }
     }
 
     /**

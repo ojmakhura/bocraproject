@@ -47,10 +47,12 @@ import bw.org.bocra.portal.licensee.LicenseeStatus;
 import bw.org.bocra.portal.licensee.LicenseeVO;
 import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
+import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.period.Period;
 import bw.org.bocra.portal.period.PeriodDao;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.sector.Sector;
+import bw.org.bocra.portal.sector.SectorRepository;
 import bw.org.bocra.portal.sector.form.SectorForm;
 
 /**
@@ -63,10 +65,12 @@ public class FormActivationServiceImpl
 
     private final SubmissionService submissionService;
     private final PeriodDao periodDao;
+    private final LicenseeSectorRepository licenseeSectorRepository;
+    private final SectorRepository sectorRepository;
 
-    public FormActivationServiceImpl(FormActivationDao formActivationDao, PeriodDao periodDao,
+    public FormActivationServiceImpl(FormActivationDao formActivationDao, PeriodDao periodDao, LicenseeSectorRepository licenseeSectorRepository,
             FormActivationRepository formActivationRepository, FormDao formDao, FormRepository formRepository,
-            FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
+            FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository, SectorRepository sectorRepository,
             SubmissionService submissionService, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository,
             MessageSource messageSource) {
 
@@ -75,6 +79,8 @@ public class FormActivationServiceImpl
         // TODO Auto-generated constructor stub
         this.submissionService = submissionService;
         this.periodDao = periodDao;
+        this.licenseeSectorRepository = licenseeSectorRepository;
+        this.sectorRepository = sectorRepository;
     }
 
     /**
@@ -126,7 +132,7 @@ public class FormActivationServiceImpl
     /**
      * @see bw.org.bocra.portal.form.activation.FormActivationService#save(FormActivationVO)
      */
-    @Override
+    @Override    
     protected FormActivationVO handleSave(FormActivationVO formActivation)
             throws Exception {
 
@@ -230,7 +236,6 @@ public class FormActivationServiceImpl
             Sector sector = sectorForm.getSector();
 
             for (LicenseeSector licensee : sector.getLicenseeSectors()) {
-                Licensee lic = licensee.getLicensee();
                 
                 if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
                     ids.add(licensee.getLicensee().getId());
