@@ -126,6 +126,7 @@
                 <property name="hibernateHbm2DDLAuto">update</property>
                 <property name="hibernateQueryUseNamedParameters">true</property>
                 <property name="hibernateEnableCache">false</property>
+                <property name="hikari">false</property>
                 <property name="sessionFactory">org.springframework.orm.hibernate5.LocalSessionFactoryBean</property>
                 <property name="transactionManager">org.springframework.orm.hibernate5.HibernateTransactionManager</property>
                 <property name="localTransactionManager">org.springframework.orm.hibernate5.HibernateTransactionManager</property>
@@ -134,6 +135,11 @@
                 <property name="mergeMappingsUri">file:${conf.dir}/mappings/SpringMergeMappings.xml</property>
                 <property name="hibernateInheritanceStrategy">${hibernate.inheritance.strategy}</property>
                 <property name="springTypesPackage">${application.package}</property>
+                <property name="hikariConnectionTimeout">3000</property>
+                <!-- <property name="hikariIdleTimeout">600000</property> -->
+                <!-- <property name="hikariMaxLifetime">1800000</property> -->
+                <property name="hikariMinimumIdle">20</property>
+                <property name="hikariMaximumPoolsize">70</property>
                 <!-- <property name="javaTypeConversionIgnoreList">java.util.Date,java.sql.Timestamp,java.sql.Date</property> -->
                 <!-- Specialized use: OSGI, RichClient, remoting, generated JDBC tests -->
                 <!--property name="advice-impls">${core.generated.dir}</property>
