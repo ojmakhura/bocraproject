@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,6 +52,13 @@ public class FormRestControllerImpl extends FormRestControllerBase {
             }
 
             return response;
+        } catch(AuthenticationServiceException e) {
+
+            String message = e.getMessage();
+            
+            logger.error(message, e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorization failure.");
+
         } catch (Exception e) {
             e.printStackTrace();
 
