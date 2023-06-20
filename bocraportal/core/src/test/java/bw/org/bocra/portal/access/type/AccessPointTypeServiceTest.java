@@ -17,9 +17,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 // @SpringBootTest
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
-@Transactional
+// @ExtendWith(SpringExtension.class)
+// @DataJpaTest
+// @Transactional
 public class AccessPointTypeServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(AccessPointTypeServiceTest.class);
