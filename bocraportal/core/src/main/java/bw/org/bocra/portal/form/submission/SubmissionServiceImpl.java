@@ -591,4 +591,21 @@ public class SubmissionServiceImpl
         return page; 
     }
 
+    @Override
+    protected Collection<FormSubmissionVO> handlePreProcessedFindById(MultipleEntryFormFilter filters)
+            throws Exception {
+
+        Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, Long>findByAttributeIn("id",
+                filters.getIds());
+
+        Collection<FormSubmission> submissions = formSubmissionRepository.findAll(sSpecs);
+        Collection<FormSubmissionVO> vos = new ArrayList<>();
+
+        for (FormSubmission formSubmission : submissions) {
+            vos.add(getFormSubmissionDao().toFormSubmissionVO(formSubmission));
+        }
+
+        return vos;
+    }
+
 }
