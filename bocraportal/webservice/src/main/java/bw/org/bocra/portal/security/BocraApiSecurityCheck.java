@@ -37,13 +37,12 @@ public class BocraApiSecurityCheck {
     }
 
     private boolean handleIsAuthorised(String url) {
-        System.out.println("=====> " + url);
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         /// Find the api with the requesting URL
         Collection<Authorisation> auths = this.authorisationRepository.findByAccessUrlAndCode(url, "API");
 
-        System.out.println("auths " + auths);
         // If there are no authorisations, we assume the request is authorised by default
         if(CollectionUtils.isEmpty(auths)) {
             return true;

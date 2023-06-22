@@ -235,6 +235,10 @@ local_prep: gen_env
 	mkdir ${BOCRA_DATA}/registry && \
 	mkdir ${BOCRA_DATA}/traefik && \
 	cp deployment/traefik/config.yml ${BOCRA_DATA}/traefik && \
+	mkdir ${BOCRA_DATA}/grafana && \
+	cp deployment/grafana/config ${BOCRA_DATA}/grafana && \
+	mkdir ${BOCRA_DATA}/prometheus && \
+	cp deployment/prometheus/config ${BOCRA_DATA}/prometheus && \
 	mkdir ${BOCRA_DATA}/web && \
 
 ##

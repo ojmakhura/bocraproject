@@ -87,7 +87,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 "/document/type/all",
                 "/document/type/search",
                 "/form/submission/upload",
-                "/actuator/health"
+                "/actuator/**"
             ).permitAll()
             .anyRequest().authenticated();
     }
