@@ -24,7 +24,8 @@ services:
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
-      - "--providers.docker.swarmmode"
+      # - "--providers.docker.swarmmode=true"
+      - --providers.docker.swarmmode=true
       - "--providers.docker.watch=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.file.directory=/etc/traefik/dynamic_conf/"
