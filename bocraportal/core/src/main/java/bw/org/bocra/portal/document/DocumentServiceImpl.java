@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -152,12 +153,12 @@ public class DocumentServiceImpl
     @Override
     protected Collection<DocumentVO> handleFindByIds(Set<Long> ids) throws Exception {
         
-        return getDocumentDao().toDocumentVOCollection(documentRepository.findByIdIn(ids.stream().toList()));
+        return getDocumentDao().toDocumentVOCollection(documentRepository.findByIdIn(ids.stream().collect(Collectors.toList())));
     }
 
     @Override
     protected Collection<DocumentVO> handleFindByDocumentIds(Set<String> documentIds) throws Exception {
-        return getDocumentDao().toDocumentVOCollection(documentRepository.findByDocumentIdIn(documentIds.stream().toList()));
+        return getDocumentDao().toDocumentVOCollection(documentRepository.findByDocumentIdIn(documentIds.stream().collect(Collectors.toList())));
     }
 
     @Override

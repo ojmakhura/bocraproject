@@ -282,7 +282,7 @@ public class PeriodServiceImpl
         Collection<PeriodVO> periods = 
                     CollectionUtils.isEmpty(periodIds) ? 
                         loadCurrentPeriods() :
-                        periodDao.toPeriodVOCollection(periodRepository.findByIdIn(periodIds.stream().toList()));
+                        periodDao.toPeriodVOCollection(periodRepository.findByIdIn(periodIds.stream().collect(Collectors.toList())));
 
 
         for (PeriodVO period : periods) {

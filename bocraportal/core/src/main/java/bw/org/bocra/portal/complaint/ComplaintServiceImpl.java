@@ -51,7 +51,7 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     @Override
     protected ComplaintVO handleFindById(Long id)
             throws Exception {
-        return complaintDao.toComplaintVO(complaintRepository.getById(id));
+        return complaintDao.toComplaintVO(complaintRepository.getReferenceById(id));
     }
 
     /**
@@ -259,7 +259,7 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
     @Override
     protected Collection<ComplaintVO> handleFindByIds(Set<Long> ids) throws Exception {
 
-        return complaintRepository.findByIdIn(ids.stream().toList()).stream()
+        return complaintRepository.findByIdIn(ids.stream().collect(Collectors.toList())).stream()
                     .map(complaint -> complaintDao.toComplaintVO(complaint))
                     .collect(Collectors.toSet());
     }
