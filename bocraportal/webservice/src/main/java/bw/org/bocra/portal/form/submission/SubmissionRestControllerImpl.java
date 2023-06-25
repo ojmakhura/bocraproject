@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -528,10 +529,21 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
     @Override
     public ResponseEntity<?> handlePreProcessedFindById(MultipleEntryFormFilter filters) {
+
+        logger.info("Filters ids {}", filters.getIds());
+        logger.info("Filters groupBy {}", filters.getGroupBy());
+        logger.info("Filters orderby {}", filters.getOrderBy());
         
         try {
 
-            return ResponseEntity.ok(submissionService.preProcessedFindById(filters));
+            Collection<FormSubmissionVO> submissions = submissionService.findByIds(filters.getIds().stream().collect(Collectors.toSet()) );
+
+            submissions.stream().forEach(submission -> {
+                submission.setSections(null);
+                submission.getForm().setFormSections(null);
+            });
+
+            return ResponseEntity.ok(submissions);
 
         } catch(Exception e) {
 

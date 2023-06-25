@@ -32,6 +32,7 @@ import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.activation.FormActivationVO;
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.section.FormSection;
 import bw.org.bocra.portal.form.submission.data.DataField;
@@ -82,6 +83,20 @@ public class FormSubmissionDaoImpl
         if (source.getForm() != null) {
             Form form = source.getForm();
             FormVO formVO = getFormDao().toFormVO(form);
+            // formVO.setFormFields(null);
+            // formVO.setLicenceTypeForms(null);
+            // formVO.setLicenseeForms(null);
+            // formVO.setFormActivations(null);
+            // formVO.setFormSubmissions(null);
+            // formVO.setSectorForms(null);
+            formVO.setFormSections(null);
+            formVO.setFormFields(null);
+            formVO.setLicensees(null);
+            formVO.setPeriodConfig(null);
+            formVO.setFormSections(null);
+            formVO.setLicenceTypes(null);
+            formVO.setSectors(null);
+
             target.setForm(formVO);
 
             if (CollectionUtils.isNotEmpty(source.getDataFields())) {
@@ -139,25 +154,36 @@ public class FormSubmissionDaoImpl
 
         if (source.getLicensee() != null) {
             LicenseeVO licensee = new LicenseeVO();
-            getLicenseeDao().toLicenseeVO(source.getLicensee(), licensee);
+            licensee.setId(source.getLicensee().getId());
+            licensee.setAlias(source.getLicensee().getAlias());
+            licensee.setUin(source.getLicensee().getUin());
+            licensee.setTradingAs(source.getLicensee().getTradingAs());
+            licensee.setLicenseeName(source.getLicensee().getLicenseeName());
             target.setLicensee(licensee);
         }
 
         if (source.getPeriod() != null) {
             PeriodVO period = new PeriodVO();
-            getPeriodDao().toPeriodVO(source.getPeriod(), period);
+            period.setId(source.getPeriod().getId());
+            period.setPeriodName(source.getPeriod().getPeriodName());
+            period.setPeriodEnd(source.getPeriod().getPeriodEnd());
+            period.setPeriodStart(source.getPeriod().getPeriodStart());
+            
             target.setPeriod(period);
         }
 
         if (source.getFormActivation() != null) {
-            target.setFormActivation(getFormActivationDao().toFormActivationVO(source.getFormActivation()));
+            FormActivationVO activation = new FormActivationVO();
+            activation.setId(source.getFormActivation().getId());
+            activation.setActivationDeadline(source.getFormActivation().getActivationDeadline());
+            activation.setActivationName(source.getFormActivation().getActivationName());
+            target.setFormActivation(activation);
 
-            target.getFormActivation().setForm(null);
-            target.getFormActivation().setPeriod(null);
         }
 
         if (CollectionUtils.isNotEmpty(source.getNotes())) {
             List<NoteVO> notes = (List<NoteVO>) noteDao.toNoteVOCollection(source.getNotes());
+        
             // sort by created date
             Collections.<NoteVO>sort(notes, new Comparator<NoteVO>() {
                 @Override

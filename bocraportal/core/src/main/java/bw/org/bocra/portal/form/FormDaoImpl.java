@@ -82,6 +82,7 @@ public class FormDaoImpl
             for (FormField entity : source.getFormFields()) {
 
                 FormFieldVO field = formFieldDao.toFormFieldVO(entity);
+                field.setForm(null);
 
                 target.getFormFields().add(field);
             }
@@ -99,6 +100,7 @@ public class FormDaoImpl
             for(FormSection entity : source.getFormSections()) {
                 FormSectionVO section = new FormSectionVO();
                 getFormSectionDao().toFormSectionVO(entity, section);
+                section.setForm(null);
 
                 target.getFormSections().add(section);
             }
@@ -108,6 +110,7 @@ public class FormDaoImpl
         for(LicenseeForm lf : source.getLicenseeForms()) {
             LicenseeFormVO vo = new LicenseeFormVO();
             getLicenseeFormDao().toLicenseeFormVO(lf, vo);
+            vo.setForm(null);
 
             licensees.add(vo);
         }
@@ -118,7 +121,9 @@ public class FormDaoImpl
             Collection<SectorFormVO> sectors = new ArrayList<>();
             
             for(SectorForm sec : source.getSectorForms()) {
-                sectors.add(getSectorFormDao().toSectorFormVO(sec));
+                SectorFormVO vo = getSectorFormDao().toSectorFormVO(sec);
+                vo.setForm(null);
+                sectors.add(null);
             }
 
             target.setSectors(sectors);
