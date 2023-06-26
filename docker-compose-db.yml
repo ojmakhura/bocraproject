@@ -65,7 +65,7 @@ services:
   ###############################################################################
   pgadmin:
     hostname: pgadmin
-    image: dpage/pgadmin4:6.18
+    image: dpage/pgadmin4:7.3
     networks:
       bocraportal-public:
     # depends_on:
@@ -73,6 +73,8 @@ services:
       #   condition: service_healthy
       # db:
       #  condition: service_healthy
+    volumes:
+      - ${BOCRA_DATA}/pgadmin:/var/lib/pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
