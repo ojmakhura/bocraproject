@@ -83,14 +83,11 @@ public class FormSubmissionDaoImpl
         if (source.getForm() != null) {
             Form form = source.getForm();
             FormVO formVO = getFormDao().toFormVO(form);
-            // formVO.setFormFields(null);
-            // formVO.setLicenceTypeForms(null);
-            // formVO.setLicenseeForms(null);
-            // formVO.setFormActivations(null);
-            // formVO.setFormSubmissions(null);
-            // formVO.setSectorForms(null);
             formVO.setFormSections(null);
-            formVO.setFormFields(null);
+            formVO.getFormFields().forEach(field -> {
+                field.setForm(null);
+                field.setFormSection(null);
+            });
             formVO.setLicensees(null);
             formVO.setPeriodConfig(null);
             formVO.setFormSections(null);
@@ -115,6 +112,8 @@ public class FormSubmissionDaoImpl
     
                         DataFieldVO data = new DataFieldVO();
                         getDataFieldDao().toDataFieldVO(dataField, data);
+
+                        data.setFormSubmission(null);
     
                         FormSection section = dataField.getFormField().getFormSection();
     
@@ -159,6 +158,14 @@ public class FormSubmissionDaoImpl
             licensee.setUin(source.getLicensee().getUin());
             licensee.setTradingAs(source.getLicensee().getTradingAs());
             licensee.setLicenseeName(source.getLicensee().getLicenseeName());
+
+            licensee.setUsers(null);
+            licensee.setForms(null);
+            licensee.setLicences(null);
+            licensee.setDocuments(null);
+            licensee.setSectors(null);
+            licensee.setShareholders(null);
+
             target.setLicensee(licensee);
         }
 

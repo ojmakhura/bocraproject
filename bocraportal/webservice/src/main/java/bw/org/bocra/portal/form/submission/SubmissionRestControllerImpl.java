@@ -536,7 +536,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
         
         try {
 
-            Collection<FormSubmissionVO> submissions = submissionService.findByIds(filters.getIds().stream().collect(Collectors.toSet()) );
+            Collection<FormSubmissionVO> submissions = submissionService.preProcessedFindById(filters);
 
             submissions.stream().forEach(submission -> {
                 submission.setSections(null);

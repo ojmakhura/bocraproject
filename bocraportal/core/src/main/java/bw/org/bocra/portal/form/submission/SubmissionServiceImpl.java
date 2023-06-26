@@ -17,8 +17,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,11 +54,14 @@ import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.field.FieldType;
 import bw.org.bocra.portal.form.field.FieldValueType;
 import bw.org.bocra.portal.form.field.FormField;
+import bw.org.bocra.portal.form.section.FormSection;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
+import bw.org.bocra.portal.form.submission.data.DataFieldSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 import bw.org.bocra.portal.form.submission.data.SubmissionDataRepository;
 import bw.org.bocra.portal.licensee.Licensee;
@@ -467,7 +474,6 @@ public class SubmissionServiceImpl
                     dataField.setFormField(f);
                     dataField.setFormSubmission(submission);
 
-
                     if (f.getFieldValueType() == FieldValueType.MANUAL) {
                         dataField.setValue(csvRecord.get(f.getFieldId()));
                     } else {
@@ -484,19 +490,21 @@ public class SubmissionServiceImpl
 
                     for (DataField df : dataFields) {
                         // check if the expression contains the field id
-                        if (expression.contains('[' + df.getFormField().getFieldId() + ']') && NumberUtils.isParsable(df.getValue())) {
-                            expression = expression.replaceAll("\\[" + df.getFormField().getFieldId() + "\\]", df.getValue() == null ? "0" : df.getValue());
+                        if (expression.contains('[' + df.getFormField().getFieldId() + ']')
+                                && NumberUtils.isParsable(df.getValue())) {
+                            expression = expression.replaceAll("\\[" + df.getFormField().getFieldId() + "\\]",
+                                    df.getValue() == null ? "0" : df.getValue());
                         }
-                    }                 
+                    }
 
-                    dataField.setValue((Double)scriptEngine.eval(expression) + "");
+                    dataField.setValue((Double) scriptEngine.eval(expression) + "");
                 }
             }
 
             submission.setDataFields(dataFields);
         }
 
-        if(submission.getExpectedSubmissionDate().isAfter(LocalDate.now())) {
+        if (submission.getExpectedSubmissionDate().isAfter(LocalDate.now())) {
             submission.setSubmissionStatus(FormSubmissionStatus.DRAFT);
         } else {
             submission.setSubmissionStatus(FormSubmissionStatus.OVERDUE);
@@ -537,8 +545,9 @@ public class SubmissionServiceImpl
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize * submission.getForm().getFormFields().size());
 
-        Page<DataField> data = submissionDataRepository.findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(submissionId, pageable);
-        
+        Page<DataField> data = submissionDataRepository
+                .findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(submissionId, pageable);
+
         List<Object> vos = new ArrayList<>();
         data.stream().forEach(d -> vos.add(dataFieldDao.toDataFieldVO(d)));
 
@@ -547,7 +556,6 @@ public class SubmissionServiceImpl
         page.setTotalElements(data.getTotalElements() / submission.getForm().getFormFields().size());
         page.setTotalPages(data.getTotalPages() / submission.getForm().getFormFields().size());
         page.setElements(vos);
-
 
         return page;
     }
@@ -572,10 +580,11 @@ public class SubmissionServiceImpl
             throw new SubmissionServiceException("Page size must not be less than 1.");
         }
 
-        Specification<FormSubmission> specifications = ((FormSubmissionDaoImpl)formSubmissionDao).getCriteriaSpecifications(criteria);
+        Specification<FormSubmission> specifications = ((FormSubmissionDaoImpl) formSubmissionDao)
+                .getCriteriaSpecifications(criteria);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<FormSubmission> pageData = formSubmissionRepository.findAll(specifications, pageable);
-        
+
         List<Object> vos = new ArrayList<>();
 
         pageData.getContent().forEach(submission -> {
@@ -588,7 +597,7 @@ public class SubmissionServiceImpl
         page.setTotalPages(pageData.getTotalPages());
         page.setElements(vos);
 
-        return page; 
+        return page;
     }
 
     @Override
@@ -601,8 +610,97 @@ public class SubmissionServiceImpl
         Collection<FormSubmission> submissions = formSubmissionRepository.findAll(sSpecs);
         Collection<FormSubmissionVO> vos = new ArrayList<>();
 
+        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
+
         for (FormSubmission formSubmission : submissions) {
-            vos.add(getFormSubmissionDao().toFormSubmissionVO(formSubmission));
+
+            Collection<String> numberFields = new ArrayList<>();
+            formSubmission.getForm().getFormFields().forEach(f -> {
+                if (f.getFieldType() == FieldType.NUMBER) {
+                    numberFields.add(f.getFieldId());
+                }
+            });
+
+            FormSubmissionVO subVO = new FormSubmissionVO();
+            formSubmissionDao.toFormSubmissionVO(formSubmission, subVO);
+
+            Map<Integer, Collection<DataFieldVO>> fmap = new HashMap<>();
+            Collection<DataFieldVO> fvo = getDataFieldDao().toDataFieldVOCollection(formSubmission.getDataFields());
+            fvo.forEach(f -> {
+                if (!fmap.containsKey(f.getRow())) {
+                    fmap.put(f.getRow(), new ArrayList<>());
+                }
+
+                fmap.get(f.getRow()).add(f);
+            });
+
+            Map<String, Map<Integer, Collection<DataFieldVO>>> fieldMap = new HashMap<>();
+
+            fmap.entrySet().forEach(entry -> {
+
+                entry.getValue().stream().filter(p -> p.getFormField().getFieldId().equals(filters.getGroupBy())).findFirst().ifPresent(f -> {
+                    if (!fieldMap.containsKey(f.getValue())) {
+                        fieldMap.put(f.getValue(), new HashMap<>());
+                    }
+
+                    fieldMap.get(f.getValue()).put(entry.getKey(), entry.getValue());
+                
+                });
+            });
+
+            fieldMap.entrySet().forEach(entry -> {
+                System.out.println(entry.getKey() + ": " + entry.getValue().size());
+                // TODO: Aggregate number data fields
+                Map<String, Collection<Double>> agg = new HashMap<>();
+                entry.getValue().entrySet().forEach(e -> {
+                    e.getValue().forEach(f -> {
+                        if (numberFields.contains(f.getFormField().getFieldId())) {
+                            if (!agg.containsKey(f.getFormField().getFieldId())) {
+                                agg.put(f.getFormField().getFieldId(), new ArrayList<>());
+                            }
+
+                            agg.get(f.getFormField().getFieldId()).add(Double.parseDouble(f.getValue()));
+                        }
+                    });
+                });
+
+                // TODO: Aggregate the fields
+                Map<String, Double> output = new HashMap<>();
+                agg.entrySet().forEach(e -> {
+                    if(filters.getGroupOperation() == GroupOperation.MAX) {
+
+                        output.put(e.getKey(), Collections.max(e.getValue()));
+
+                    } else if(filters.getGroupOperation() == GroupOperation.MIN) {
+
+                        output.put(e.getKey(), Collections.min(e.getValue()));
+
+                    } else if(filters.getGroupOperation() == GroupOperation.MEAN) {
+
+                        output.put(e.getKey(), e.getValue().stream().mapToDouble(Double::doubleValue).average().getAsDouble());
+
+                    } else if(filters.getGroupOperation() == GroupOperation.SUM) {
+
+                        output.put(e.getKey(), e.getValue().stream().mapToDouble(Double::doubleValue).sum());
+
+                    } else if(filters.getGroupOperation() == GroupOperation.MEDIAN) {
+
+                        // scriptEngine.eval("math.evaluate")
+
+                    } else if(filters.getGroupOperation() == GroupOperation.STANDARD_DEVIATION) {
+
+                    } else if(filters.getGroupOperation() == GroupOperation.VARIANCE) {
+
+                    }
+                });
+            });
+
+            subVO.setDataFields(fvo);
+
+            System.out.println(fieldMap.size());
+
+            vos.add(subVO);
         }
 
         return vos;
