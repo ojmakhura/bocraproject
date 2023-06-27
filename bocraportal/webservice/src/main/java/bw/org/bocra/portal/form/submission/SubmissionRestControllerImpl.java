@@ -538,11 +538,6 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
             Collection<FormSubmissionVO> submissions = submissionService.preProcessedFindById(filters);
 
-            submissions.stream().forEach(submission -> {
-                submission.setSections(null);
-                submission.getForm().setFormSections(null);
-            });
-
             return ResponseEntity.ok(submissions);
 
         } catch(Exception e) {

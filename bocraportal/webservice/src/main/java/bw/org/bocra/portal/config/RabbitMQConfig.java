@@ -72,6 +72,13 @@ public class RabbitMQConfig {
 	public MessageConverter jsonMessageConverter() {
 		return new Jackson2JsonMessageConverter();
 	}
+	
+	@Bean
+	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+		final RabbitTemplate rabbitTemplate = new RabbitTemplate(cachingConnectionFactory);
+		rabbitTemplate.setMessageConverter(jsonMessageConverter());
+		return rabbitTemplate;
+	}
     
     @Bean
     @Primary
@@ -82,13 +89,7 @@ public class RabbitMQConfig {
                     .registerModule(new Jdk8Module())
                     .registerModule(new JavaTimeModule())
                     .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                    .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
-	
-	@Bean
-	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-		final RabbitTemplate rabbitTemplate = new RabbitTemplate(cachingConnectionFactory);
-		rabbitTemplate.setMessageConverter(jsonMessageConverter());
-		return rabbitTemplate;
-	}
 }

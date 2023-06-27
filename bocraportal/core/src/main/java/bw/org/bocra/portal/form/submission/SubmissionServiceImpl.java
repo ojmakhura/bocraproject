@@ -624,81 +624,120 @@ public class SubmissionServiceImpl
 
             FormSubmissionVO subVO = new FormSubmissionVO();
             formSubmissionDao.toFormSubmissionVO(formSubmission, subVO);
+            subVO.getForm().setLicenceTypes(null);
+            subVO.getForm().setFormSections(null);
+            subVO.getForm().setLicensees(null);
+            subVO.getForm().setSectors(null);
 
-            Map<Integer, Collection<DataFieldVO>> fmap = new HashMap<>();
+            subVO.getLicensee().setUsers(null);
+            subVO.getLicensee().setForms(null);
+            subVO.getLicensee().setLicences(null);
+            subVO.getLicensee().setDocuments(null);
+            subVO.getLicensee().setSectors(null);
+            subVO.getLicensee().setShareholders(null);
+
             Collection<DataFieldVO> fvo = getDataFieldDao().toDataFieldVOCollection(formSubmission.getDataFields());
-            fvo.forEach(f -> {
-                if (!fmap.containsKey(f.getRow())) {
-                    fmap.put(f.getRow(), new ArrayList<>());
-                }
 
-                fmap.get(f.getRow()).add(f);
-            });
+            final Collection<DataFieldVO> newFields = new ArrayList<>();
 
-            Map<String, Map<Integer, Collection<DataFieldVO>>> fieldMap = new HashMap<>();
+            if (filters.getGroupOperation() != GroupOperation.NONE) {
 
-            fmap.entrySet().forEach(entry -> {
-
-                entry.getValue().stream().filter(p -> p.getFormField().getFieldId().equals(filters.getGroupBy())).findFirst().ifPresent(f -> {
-                    if (!fieldMap.containsKey(f.getValue())) {
-                        fieldMap.put(f.getValue(), new HashMap<>());
+                Map<Integer, Collection<DataFieldVO>> fmap = new HashMap<>();
+                fvo.forEach(f -> {
+                    if (!fmap.containsKey(f.getRow())) {
+                        fmap.put(f.getRow(), new ArrayList<>());
                     }
 
-                    fieldMap.get(f.getValue()).put(entry.getKey(), entry.getValue());
-                
+                    fmap.get(f.getRow()).add(f);
                 });
-            });
 
-            fieldMap.entrySet().forEach(entry -> {
-                System.out.println(entry.getKey() + ": " + entry.getValue().size());
-                // TODO: Aggregate number data fields
-                Map<String, Collection<Double>> agg = new HashMap<>();
-                entry.getValue().entrySet().forEach(e -> {
-                    e.getValue().forEach(f -> {
-                        if (numberFields.contains(f.getFormField().getFieldId())) {
-                            if (!agg.containsKey(f.getFormField().getFieldId())) {
-                                agg.put(f.getFormField().getFieldId(), new ArrayList<>());
+                Map<String, Map<Integer, Collection<DataFieldVO>>> fieldMap = new HashMap<>();
+
+                fmap.entrySet().forEach(entry -> {
+
+                    entry.getValue().stream().filter(p -> p.getFormField().getFieldId().equals(filters.getGroupBy()))
+                            .findFirst().ifPresent(f -> {
+                                if (!fieldMap.containsKey(f.getValue())) {
+                                    fieldMap.put(f.getValue(), new HashMap<>());
+                                }
+
+                                fieldMap.get(f.getValue()).put(entry.getKey(), entry.getValue());
+
+                            });
+                });
+
+                int row = 1;
+
+                for (Map.Entry<String, Map<Integer, Collection<DataFieldVO>>> entry : fieldMap.entrySet()) {
+
+                    System.out.println(entry.getKey() + ": " + entry.getValue().size());
+                    // TODO: Aggregate number data fields
+                    Map<String, Collection<Double>> agg = new HashMap<>();
+                    entry.getValue().entrySet().forEach(e -> {
+                        e.getValue().forEach(f -> {
+                            if (numberFields.contains(f.getFormField().getFieldId())) {
+                                if (!agg.containsKey(f.getFormField().getFieldId())) {
+                                    agg.put(f.getFormField().getFieldId(), new ArrayList<>());
+                                }
+
+                                agg.get(f.getFormField().getFieldId()).add(Double.parseDouble(f.getValue()));
                             }
+                        });
+                    });
 
-                            agg.get(f.getFormField().getFieldId()).add(Double.parseDouble(f.getValue()));
+                    // TODO: Aggregate the fields
+                    Map<String, Double> output = new HashMap<>();
+
+                    agg.entrySet().forEach(e -> {
+                        if (filters.getGroupOperation() == GroupOperation.MAX) {
+
+                            output.put(e.getKey(), Collections.max(e.getValue()));
+
+                        } else if (filters.getGroupOperation() == GroupOperation.MIN) {
+
+                            output.put(e.getKey(), Collections.min(e.getValue()));
+
+                        } else if (filters.getGroupOperation() == GroupOperation.MEAN) {
+
+                            output.put(e.getKey(),
+                                    e.getValue().stream().mapToDouble(Double::doubleValue).average().getAsDouble());
+
+                        } else if (filters.getGroupOperation() == GroupOperation.SUM) {
+
+                            output.put(e.getKey(), e.getValue().stream().mapToDouble(Double::doubleValue).sum());
+
+                        } else if (filters.getGroupOperation() == GroupOperation.MEDIAN) {
+
+                            // scriptEngine.eval("math.evaluate")
+
+                        } else if (filters.getGroupOperation() == GroupOperation.STANDARD_DEVIATION) {
+
+                        } else if (filters.getGroupOperation() == GroupOperation.VARIANCE) {
+
                         }
                     });
-                });
 
-                // TODO: Aggregate the fields
-                Map<String, Double> output = new HashMap<>();
-                agg.entrySet().forEach(e -> {
-                    if(filters.getGroupOperation() == GroupOperation.MAX) {
+                    Collection<DataFieldVO> first = entry.getValue().values().iterator().next();
 
-                        output.put(e.getKey(), Collections.max(e.getValue()));
+                    for (DataFieldVO field : first) {
 
-                    } else if(filters.getGroupOperation() == GroupOperation.MIN) {
+                        if (output.containsKey(field.getFormField().getFieldId())) {
+                            field.setValue(output.get(field.getFormField().getFieldId()).toString());
+                        }
 
-                        output.put(e.getKey(), Collections.min(e.getValue()));
-
-                    } else if(filters.getGroupOperation() == GroupOperation.MEAN) {
-
-                        output.put(e.getKey(), e.getValue().stream().mapToDouble(Double::doubleValue).average().getAsDouble());
-
-                    } else if(filters.getGroupOperation() == GroupOperation.SUM) {
-
-                        output.put(e.getKey(), e.getValue().stream().mapToDouble(Double::doubleValue).sum());
-
-                    } else if(filters.getGroupOperation() == GroupOperation.MEDIAN) {
-
-                        // scriptEngine.eval("math.evaluate")
-
-                    } else if(filters.getGroupOperation() == GroupOperation.STANDARD_DEVIATION) {
-
-                    } else if(filters.getGroupOperation() == GroupOperation.VARIANCE) {
-
+                        field.setRow(row);
                     }
-                });
-            });
 
-            subVO.setDataFields(fvo);
+                    newFields.addAll(first);
+                }
 
-            System.out.println(fieldMap.size());
+                row++;
+
+            } else {
+                newFields.addAll(fvo);
+            }
+
+            subVO.setDataFields(newFields);
 
             vos.add(subVO);
         }
