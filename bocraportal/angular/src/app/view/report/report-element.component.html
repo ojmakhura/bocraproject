@@ -297,7 +297,7 @@
         <div class="mb-3" *ngIf="this.chartsControl?.length > 0">
           <button type="button" class="btn btn-primary" (click)="refreshColors()">Colors</button>
         </div>
-        <div class="accordion-body" *ngIf="gridDataPeriods.length > 0">
+        <div class="accordion-body" *ngIf="gridDataPeriods.length > 0 && entryType === formEntryType.SINGLE">
           <table
             mat-table
             matSort
@@ -334,6 +334,24 @@
             [pageSizeOptions]="[5, 10, 20, 30, 40, 50, 60, 70, 80, 90]"
             showFirstLastButtons
           ></mat-paginator>
+        </div>
+        <div class="accordion-body mb-3" *ngIf="gridDataPeriods.length > 0 && entryType === formEntryType.MULTIPLE">
+          
+          <mat-tab-group animationDuration="0ms" class="view-tabs">
+
+            <mat-tab *ngFor="let sub of selectedSubmissions" label="{{ sub?.licensee?.alias }}">
+              <table mat-table [dataSource]="multipleDatasources[sub?.licensee?.alias]" class="table table-bordered table-striped">
+                
+                <ng-container *ngFor="let fid of selectedFieldIds" matColumnDef="{{ fid }}">
+                  <th mat-header-cell *matHeaderCellDef> {{ multipleDataColumnNames[fid] }} </th>
+                  <td mat-cell *matCellDef="let data"> {{ data[fid] }} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="selectedFieldIds"></tr>
+                <tr mat-row *matRowDef="let row; columns: selectedFieldIds;"></tr>
+              </table>
+            </mat-tab>
+          </mat-tab-group>
         </div>
         <div class="mb-3" >
           <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('xlsx', {fileName:'table_download', sheet: 'table_download'})">XLSX</button>

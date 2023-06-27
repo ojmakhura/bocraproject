@@ -5,12 +5,15 @@ import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission
 import { NoteVO } from '@model/bw/org/bocra/portal/form/submission/note/note-vo';
 import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
 import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
+import { MultipleEntryFormFilter } from '@app/model/bw/org/bocra/portal/form/submission/multiple-entry-form-filter';
 
 export enum FormSubmissionActionType {
   FIND_BY_ID = '[FormSubmission] Find By Id',
   FIND_BY_ID_SUCCESS = '[FormSubmission] Find By Id Success',
   FIND_BY_IDS = '[FormSubmission] Find By Ids',
   FIND_BY_IDS_SUCCESS = '[FormSubmission] Find By Ids Success',
+  PRE_PROCESSED_FIND_BY_IDS = '[FormSubmission] Pre-Processed Find By Ids',
+  PRE_PROCESSED_FIND_BY_IDS_SUCCESS = '[FormSubmission] Pre-Processed Find By Ids Success',
   SAVE = '[FormSubmission] Save',
   SAVE_SUCCESS = '[FormSubmission] Save Success',
   SAVE_NOTE = '[FormSubmission] Save Note',
@@ -57,6 +60,16 @@ export const findByIds = createAction(
 
 export const findByIdsSuccess = createAction(
   FormSubmissionActionType.FIND_BY_IDS_SUCCESS,
+  props<{ formSubmissions: FormSubmissionVO[] | any[]; messages: any[]; success: boolean }>()
+);
+
+export const preProcessedFindByIds = createAction(
+  FormSubmissionActionType.PRE_PROCESSED_FIND_BY_IDS,
+  props<{ filters: MultipleEntryFormFilter | any; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const preProcessedFindByIdsSuccess = createAction(
+  FormSubmissionActionType.PRE_PROCESSED_FIND_BY_IDS_SUCCESS,
   props<{ formSubmissions: FormSubmissionVO[] | any[]; messages: any[]; success: boolean }>()
 );
 

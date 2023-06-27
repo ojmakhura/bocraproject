@@ -55,6 +55,26 @@ export class FormSubmissionEffects {
     )
   );
 
+  preProcessedFindByIds$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormSubmissionActions.preProcessedFindByIds),
+      mergeMap(({ filters }) =>
+        this.submissionRestController.preProcessedFindByIds(filters).pipe(
+          map((formSubmissions) =>
+            FormSubmissionActions.preProcessedFindByIdsSuccess({
+              formSubmissions,
+              messages: [`${formSubmissions.length} submissions found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            FormSubmissionActions.formSubmissionFailure({ messages: [error?.error ? error.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
   save$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormSubmissionActions.save),

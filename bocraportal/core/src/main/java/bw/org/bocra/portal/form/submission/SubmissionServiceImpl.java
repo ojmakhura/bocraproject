@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -352,6 +353,10 @@ public class SubmissionServiceImpl
         Collection<FormSubmissionVO> vos = new ArrayList<>();
 
         for (FormSubmission formSubmission : submissions) {
+            FormSubmissionVO vo = getFormSubmissionDao().toFormSubmissionVO(formSubmission);
+            if(StringUtils.isBlank(vo.getLicensee().getAlias())) {
+                vo.getLicensee().setAlias(vo.getLicensee().getLicenseeName());
+            }
             vos.add(getFormSubmissionDao().toFormSubmissionVO(formSubmission));
         }
 
@@ -497,7 +502,10 @@ public class SubmissionServiceImpl
                         }
                     }
 
-                    dataField.setValue((Double) scriptEngine.eval(expression) + "");
+                    double v = (Double) scriptEngine.eval(expression);
+                    DecimalFormat f = new DecimalFormat("##.00");
+
+                    dataField.setValue(f.format(v) + "");
                 }
             }
 
@@ -636,6 +644,10 @@ public class SubmissionServiceImpl
             subVO.getLicensee().setSectors(null);
             subVO.getLicensee().setShareholders(null);
 
+            if(StringUtils.isBlank(subVO.getLicensee().getAlias())) {
+                subVO.getLicensee().setAlias(subVO.getLicensee().getLicenseeName());
+            }
+
             Collection<DataFieldVO> fvo = getDataFieldDao().toDataFieldVOCollection(formSubmission.getDataFields());
 
             final Collection<DataFieldVO> newFields = new ArrayList<>();
@@ -686,36 +698,7 @@ public class SubmissionServiceImpl
                     });
 
                     // TODO: Aggregate the fields
-                    Map<String, Double> output = new HashMap<>();
-
-                    agg.entrySet().forEach(e -> {
-                        if (filters.getGroupOperation() == GroupOperation.MAX) {
-
-                            output.put(e.getKey(), Collections.max(e.getValue()));
-
-                        } else if (filters.getGroupOperation() == GroupOperation.MIN) {
-
-                            output.put(e.getKey(), Collections.min(e.getValue()));
-
-                        } else if (filters.getGroupOperation() == GroupOperation.MEAN) {
-
-                            output.put(e.getKey(),
-                                    e.getValue().stream().mapToDouble(Double::doubleValue).average().getAsDouble());
-
-                        } else if (filters.getGroupOperation() == GroupOperation.SUM) {
-
-                            output.put(e.getKey(), e.getValue().stream().mapToDouble(Double::doubleValue).sum());
-
-                        } else if (filters.getGroupOperation() == GroupOperation.MEDIAN) {
-
-                            // scriptEngine.eval("math.evaluate")
-
-                        } else if (filters.getGroupOperation() == GroupOperation.STANDARD_DEVIATION) {
-
-                        } else if (filters.getGroupOperation() == GroupOperation.VARIANCE) {
-
-                        }
-                    });
+                    Map<String, Double> output = this.calculate(agg, filters.getGroupOperation());
 
                     Collection<DataFieldVO> first = entry.getValue().values().iterator().next();
 
@@ -743,6 +726,41 @@ public class SubmissionServiceImpl
         }
 
         return vos;
+    }
+
+    private Map<String, Double> calculate(Map<String, Collection<Double>> agg, GroupOperation groupOperation) {
+        Map<String, Double> output = new HashMap<>();
+
+        agg.entrySet().forEach(e -> {
+
+            if (groupOperation == GroupOperation.MAX) {
+
+                output.put(e.getKey(), Collections.max(e.getValue()));
+
+            } else if (groupOperation == GroupOperation.MIN) {
+
+                output.put(e.getKey(), Collections.min(e.getValue()));
+
+            } else if (groupOperation == GroupOperation.MEAN) {
+
+                output.put(e.getKey(),
+                        e.getValue().stream().mapToDouble(Double::doubleValue).average().getAsDouble());
+
+            } else if (groupOperation == GroupOperation.SUM) {
+
+                output.put(e.getKey(), e.getValue().stream().mapToDouble(Double::doubleValue).sum());
+
+            } else if (groupOperation == GroupOperation.MEDIAN) {
+
+                // scriptEngine.eval("math.evaluate")
+
+            } else if (groupOperation == GroupOperation.STANDARD_DEVIATION) {
+
+            } else if (groupOperation == GroupOperation.VARIANCE) {
+
+            }
+        });
+        return output;
     }
 
 }

@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormSubmissionStatus } from '@model/bw/org/bocra/portal/form/submission/form-submission-status';
 import { KeycloakService } from 'keycloak-angular';
 import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
+import { MultipleEntryFormFilter } from '@app/model/bw/org/bocra/portal/form/submission/multiple-entry-form-filter';
 
 @Injectable({
   providedIn: 'root',
@@ -52,6 +53,10 @@ export class SubmissionRestController {
     return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/ids?ids=${ids}`, {});
   }
 
+  public preProcessedFindByIds(filters: MultipleEntryFormFilter | any): Observable<FormSubmissionVO[] | any[]> {
+    return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/ids/processed`, filters);
+  }
+
   public getAll(): Observable<FormSubmissionVO[] | any[]> {
     return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/all`);
   }
@@ -79,8 +84,8 @@ export class SubmissionRestController {
   public search(criteria: FormSubmissionCriteria | any): Observable<FormSubmissionVO[] | any[]> {
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/search`, criteria);
   }
-  
-  pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<DataPage | any>  {
+
+  pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<DataPage | any> {
     return this.http.post<DataPage | any>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria);
   }
 
@@ -106,7 +111,9 @@ export class SubmissionRestController {
     );
   }
 
-  getSubmissionData(id: any, pageNumber: number, pageSize: number): Observable<DataPage | any>  {
-    return this.http.get<DataPage | any>(`${this.path}/data?submissionId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  getSubmissionData(id: any, pageNumber: number, pageSize: number): Observable<DataPage | any> {
+    return this.http.get<DataPage | any>(
+      `${this.path}/data?submissionId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
   }
 }

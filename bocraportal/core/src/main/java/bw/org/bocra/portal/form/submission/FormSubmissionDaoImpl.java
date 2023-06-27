@@ -165,7 +165,11 @@ public class FormSubmissionDaoImpl
             licensee.setDocuments(null);
             licensee.setSectors(null);
             licensee.setShareholders(null);
-
+            
+            if(StringUtils.isBlank(source.getLicensee().getAlias())) {
+                licensee.setAlias(source.getLicensee().getLicenseeName());
+            }
+            
             target.setLicensee(licensee);
         }
 
@@ -301,8 +305,9 @@ public class FormSubmissionDaoImpl
 
     @Override
     protected Collection<FormSubmission> handleFindByCriteria(FormSubmissionCriteria criteria) throws Exception {
-        
-        return formSubmissionRepository.findAll(getCriteriaSpecifications(criteria), Sort.by(Direction.ASC, "submissionDate"));
+
+        return formSubmissionRepository.findAll(getCriteriaSpecifications(criteria),
+                Sort.by(Direction.ASC, "submissionDate"));
     }
 
     public Specification<FormSubmission> getCriteriaSpecifications(FormSubmissionCriteria criteria) {
