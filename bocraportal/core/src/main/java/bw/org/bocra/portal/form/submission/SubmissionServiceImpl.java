@@ -449,10 +449,16 @@ public class SubmissionServiceImpl
     protected FormSubmissionVO handleUploadData(Long submissonId, MultipartFile file) throws Exception {
         FormSubmission submission = formSubmissionRepository.getReferenceById(submissonId);
 
+        /**
+         * Each file MUST have the fist line as headers. So we read the first line
+         * and use it as headers before closing the buffered reader object.
+         */
+        BufferedReader fr = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        List<String> headers = List.of(fr.readLine().split(","));
+        fr.close();
+
         Form form = submission.getForm();
         Collection<FormField> fields = form.getFormFields();
-
-        List<String> headers = fields.stream().map(fld -> fld.getFieldId()).collect(Collectors.toList());
 
         try (
                 InputStream is = file.getInputStream();
@@ -463,14 +469,20 @@ public class SubmissionServiceImpl
                                 .setHeader(headers.toArray(new String[headers.size()]))
                                 .setSkipHeaderRecord(true)
                                 .build());) {
+
             Collection<DataField> dataFields = new ArrayList<>();
             ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
             ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
 
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+
             for (CSVRecord csvRecord : csvRecords) {
 
+                System.out.println(csvRecord.toString());
+                System.out.println(csvRecord);
+
                 List<DataField> expressions = new ArrayList<>();
+                List<DataField> tmpFields = new ArrayList<>();
 
                 for (FormField f : fields) {
 
@@ -480,20 +492,22 @@ public class SubmissionServiceImpl
                     dataField.setFormSubmission(submission);
 
                     if (f.getFieldValueType() == FieldValueType.MANUAL) {
-                        dataField.setValue(csvRecord.get(f.getFieldId()));
+                        dataField.setValue(csvRecord.get(f.getFieldId()).trim());
                     } else {
                         dataField.setValue(f.getExpression());
                         expressions.add(dataField);
                     }
 
-                    dataFields.add(dataField);
+                    tmpFields.add(dataField);
                 }
+
+                System.out.println(tmpFields);
 
                 // Evaluate expressions
                 for (DataField dataField : expressions) {
                     String expression = dataField.getValue();
 
-                    for (DataField df : dataFields) {
+                    for (DataField df : tmpFields) {
                         // check if the expression contains the field id
                         if (expression.contains('[' + df.getFormField().getFieldId() + ']')
                                 && NumberUtils.isParsable(df.getValue())) {
@@ -507,6 +521,8 @@ public class SubmissionServiceImpl
 
                     dataField.setValue(f.format(v) + "");
                 }
+
+                dataFields.addAll(tmpFields);
             }
 
             submission.setDataFields(dataFields);

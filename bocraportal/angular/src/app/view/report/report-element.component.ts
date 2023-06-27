@@ -125,6 +125,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   formEntryType = FormEntryType;
   multipleDatasources = {};
   multipleDataColumnNames = {};
+  submissionFilters: FormGroup | any;
 
   constructor(private injector: Injector, @Inject(LOCALE_ID) public locale: string) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -172,6 +173,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       this.entryType = this.formSubmissions[0]?.form?.entryType;
     }
 
+    // this.submissionFilters = this.multipleEntryFilters();
+    this.reportElementGroup.addControl('submissionFilters', this.multipleEntryFilters());
   }
 
   generateMultipleDatasources() {
@@ -485,6 +488,16 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       licenseeSelections: this.createLicenseeSelectionArray(reportElement?.selectedLicensees),
       periodSelections: this.createPeriodSelectionArray(reportElement?.selectedPeriods),
       fieldSelections: this.createFieldSelectionArray(reportElement?.selectedFields),
+    });
+  }
+
+  multipleEntryFilters() {
+    return this.formBuilder.group({
+      ids: this.formBuilder.array([]),
+      groupBy: [''],
+      orderBy: [''],
+      limit: [''],
+      groupOperation: ['']
     });
   }
 
