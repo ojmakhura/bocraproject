@@ -698,7 +698,6 @@ public class SubmissionServiceImpl
 
                 for (Map.Entry<String, Map<Integer, Collection<DataFieldVO>>> entry : fieldMap.entrySet()) {
 
-                    System.out.println(entry.getKey() + ": " + entry.getValue().size());
                     // TODO: Aggregate number data fields
                     Map<String, Collection<Double>> agg = new HashMap<>();
                     entry.getValue().entrySet().forEach(e -> {
@@ -708,7 +707,15 @@ public class SubmissionServiceImpl
                                     agg.put(f.getFormField().getFieldId(), new ArrayList<>());
                                 }
 
-                                agg.get(f.getFormField().getFieldId()).add(Double.parseDouble(f.getValue()));
+                                double value = 0.0;
+
+                                try {
+                                    value = Double.parseDouble(f.getValue());
+                                } catch (Exception ex) {
+                                    // Ignore
+                                }
+
+                                agg.get(f.getFormField().getFieldId()).add(value);
                             }
                         });
                     });
@@ -728,9 +735,9 @@ public class SubmissionServiceImpl
                     }
 
                     newFields.addAll(first);
-                }
 
-                row++;
+                    row++;
+                }
 
             } else {
                 newFields.addAll(fvo);
@@ -746,25 +753,29 @@ public class SubmissionServiceImpl
 
     private Map<String, Double> calculate(Map<String, Collection<Double>> agg, GroupOperation groupOperation) {
         Map<String, Double> output = new HashMap<>();
+        
+        DecimalFormat f = new DecimalFormat("##.00");
 
         agg.entrySet().forEach(e -> {
 
             if (groupOperation == GroupOperation.MAX) {
-
-                output.put(e.getKey(), Collections.max(e.getValue()));
+                Double v = Collections.max(e.getValue());
+                output.put(e.getKey(), Double.parseDouble(f.format(v)));
 
             } else if (groupOperation == GroupOperation.MIN) {
 
-                output.put(e.getKey(), Collections.min(e.getValue()));
+                double v = Collections.min(e.getValue());
+                output.put(e.getKey(), Double.parseDouble(f.format(v)));
 
             } else if (groupOperation == GroupOperation.MEAN) {
 
-                output.put(e.getKey(),
-                        e.getValue().stream().mapToDouble(Double::doubleValue).average().getAsDouble());
+                double v = e.getValue().stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+                output.put(e.getKey(), Double.parseDouble(f.format(v)));
 
             } else if (groupOperation == GroupOperation.SUM) {
 
-                output.put(e.getKey(), e.getValue().stream().mapToDouble(Double::doubleValue).sum());
+                double v = e.getValue().stream().mapToDouble(Double::doubleValue).sum();
+                output.put(e.getKey(), Double.parseDouble(f.format(v)));
 
             } else if (groupOperation == GroupOperation.MEDIAN) {
 

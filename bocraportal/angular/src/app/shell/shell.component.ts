@@ -78,7 +78,6 @@ export class ShellComponent implements OnInit, AfterViewInit {
         }));
 
         this.configs$.subscribe(cfgs => {
-          console.log(cfgs);
           this.systemConfigRestController.systemConfigs = cfgs;
         })
       }
@@ -91,11 +90,13 @@ export class ShellComponent implements OnInit, AfterViewInit {
       this.store.dispatch(MenuActions.menuReset());
     });
   }
+  
   login() {
     this.keycloakService.login({
       redirectUri: window.location.origin,
     });
   }
+
   get username(): string | null {
     const credentials = this.keycloakService.getUsername();
     return credentials ? credentials : null;
