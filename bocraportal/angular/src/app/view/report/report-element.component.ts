@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -132,6 +133,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   submissionFilters: FormGroup | any;
   periodSubmissions: any = {};
 
+  @ViewChildren('dataSourcePaginator') dataSourcePaginator: QueryList<MatPaginator>;
+  @ViewChildren('dataSourceSort') dataSourceSort: QueryList<MatSort>;
+
   constructor(private injector: Injector, @Inject(LOCALE_ID) public locale: string, private submissionService: SubmissionRestController, private store: Store<FormSubmissionState> ) {
     this.formBuilder = this.injector.get(FormBuilder);
   }
@@ -173,7 +177,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.formSubmissions) {
       this.entryType = this.formSubmissions[0]?.form?.entryType;
     }
-
   }
 
   additionalControls() {
@@ -210,6 +213,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
       this.generateGridData();
       this.generateMultipleDatasources();
+      console.log(this.multipleDatasources)
     });
     
   }
@@ -218,13 +222,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     if (!this.formSubmissions || this.formSubmissions.length == 0) {
       return;
     }
-
     this.multipleDatasources = {};
 
-    this.formSubmissions.forEach((sub) => {
+    this.formSubmissions.forEach((sub, index) => {
 
       if (!this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`]) {
-        this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`] = [];
+        this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`] = new MatTableDataSource<any>([]);
       }
 
 
@@ -240,7 +243,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         tmp[field.row][field?.formField?.fieldId] = field.value;
       });
 
-      this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`] = Object.values(tmp);
+      this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`].data = Object.values(tmp);
+
+      if(this.dataSourcePaginator) {
+        this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`].paginator = this.dataSourcePaginator.toArray()[index];
+        this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`].sort = this.dataSourceSort.toArray()[index];
+      }
     });
   }
 
@@ -426,10 +434,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   periodAliasChange(period: any, k: number) {
     this.periodAliases[period.period] = period.alias;
     let found = this.selectedPeriods.find((pr) => pr.period === period.period);
-    // console.log(found);
-    // console.log(this.selectedPeriods);
     found.alias = period.alias;
-    // console.log(this.periodAliases);
   }
 
   getPeriods() {
@@ -545,6 +550,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       ids: this.formBuilder.array([]),
       groupBy: [''],
       orderBy: [''],
+      sortOrder: [''],
       limit: [''],
       groupOperation: [''],
     });
@@ -572,7 +578,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.selectedFieldNames = this.selectedFields?.map((sel) => sel.alias);
     this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
     this.generateGridData();
-    console.log(this.selectedPeriods);
+    this.generateMultipleDatasources();
   }
 
   ngOnDestroy(): void {}

@@ -54,6 +54,26 @@ export class SubmissionRestController {
   }
 
   public preProcessedFindByIds(filters: MultipleEntryFormFilter | any): Observable<FormSubmissionVO[] | any[]> {
+    if(filters.groupBy === "") {
+      filters.groupBy = null;
+    }
+
+    if(filters.orderBy === "") {
+      filters.orderBy = null;
+    }
+
+    if(filters.groupOperation === "") {
+      filters.groupOperation = null;
+    }
+
+    if(filters.limit === "") {
+      filters.limit = null;
+    }
+
+    if(filters.sortOrder === "") {
+      filters.sortOrder = null;
+    }
+
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/ids/processed`, filters);
   }
 

@@ -478,8 +478,6 @@ public class SubmissionServiceImpl
 
             for (CSVRecord csvRecord : csvRecords) {
 
-                System.out.println(csvRecord.toString());
-                System.out.println(csvRecord);
 
                 List<DataField> expressions = new ArrayList<>();
                 List<DataField> tmpFields = new ArrayList<>();
@@ -500,8 +498,6 @@ public class SubmissionServiceImpl
 
                     tmpFields.add(dataField);
                 }
-
-                System.out.println(tmpFields);
 
                 // Evaluate expressions
                 for (DataField dataField : expressions) {
@@ -670,6 +666,7 @@ public class SubmissionServiceImpl
 
             if (filters.getGroupOperation() != GroupOperation.NONE) {
 
+                // Get a collection of fields by row
                 Map<Integer, Collection<DataFieldVO>> fmap = new HashMap<>();
                 fvo.forEach(f -> {
                     if (!fmap.containsKey(f.getRow())) {
@@ -683,13 +680,18 @@ public class SubmissionServiceImpl
 
                 fmap.entrySet().forEach(entry -> {
 
-                    entry.getValue().stream().filter(p -> p.getFormField().getFieldId().equals(filters.getGroupBy()))
+                    entry.getValue().stream().filter(p -> p.getFormField().getFieldId().equals(filters.getGroupBy()) || StringUtils.isBlank(filters.getGroupBy()))
                             .findFirst().ifPresent(f -> {
-                                if (!fieldMap.containsKey(f.getValue())) {
-                                    fieldMap.put(f.getValue(), new HashMap<>());
+                                String value = f.getValue();
+                                if(StringUtils.isBlank(filters.getGroupBy())) {
+                                    value = "All";
                                 }
 
-                                fieldMap.get(f.getValue()).put(entry.getKey(), entry.getValue());
+                                if (!fieldMap.containsKey(value)) {
+                                    fieldMap.put(value, new HashMap<>());
+                                }
+
+                                fieldMap.get(value).put(entry.getKey(), entry.getValue());
 
                             });
                 });
@@ -703,6 +705,7 @@ public class SubmissionServiceImpl
                     entry.getValue().entrySet().forEach(e -> {
                         e.getValue().forEach(f -> {
                             if (numberFields.contains(f.getFormField().getFieldId())) {
+                                
                                 if (!agg.containsKey(f.getFormField().getFieldId())) {
                                     agg.put(f.getFormField().getFieldId(), new ArrayList<>());
                                 }
@@ -731,6 +734,10 @@ public class SubmissionServiceImpl
                             field.setValue(output.get(field.getFormField().getFieldId()).toString());
                         }
 
+                        if(StringUtils.isBlank(filters.getGroupBy()) && field.getFormField().getFieldType() != FieldType.NUMBER) {
+                            field.setValue("-");
+                        }
+
                         field.setRow(row);
                     }
 
@@ -743,12 +750,78 @@ public class SubmissionServiceImpl
                 newFields.addAll(fvo);
             }
 
-            subVO.setDataFields(newFields);
+            Collection<DataFieldVO> finalFields = newFields;
+
+            if(StringUtils.isNotBlank(filters.getOrderBy())) {
+                finalFields = this.sortDataFields(newFields, filters.getOrderBy(), filters.getSortOrder() == null ? GroupSort.ASCENDING : filters.getSortOrder());
+            }
+
+            if(filters.getLimit() != null && filters.getLimit() > 0) {
+                int limit = filters.getLimit() * subVO.getForm().getFormFields().size();
+                finalFields = finalFields.stream().limit(limit).collect(Collectors.toList());
+            }
+
+            subVO.setDataFields(finalFields);
 
             vos.add(subVO);
         }
 
         return vos;
+    }
+
+    private Collection<DataFieldVO> sortDataFields(Collection<DataFieldVO> fields, String sortBy, GroupSort groupSort) {
+
+        if (StringUtils.isBlank(sortBy)) {
+            return fields;
+        }
+
+        // Get a collection of fields to sort by
+        Collection<DataFieldVO> sortFields = fields.stream().filter(f -> f.getFormField().getFieldId().equals(sortBy)).collect(Collectors.toList());
+        Collection<DataFieldVO> nonSortFields = fields.stream().filter(f -> !f.getFormField().getFieldId().equals(sortBy)).collect(Collectors.toList());
+        Map<Integer, Collection<DataFieldVO>> nonSortFieldsMap = new HashMap<>();
+
+        // Create a map of unsorted fields keyed by row
+        nonSortFields.forEach(f -> {
+            if (!nonSortFieldsMap.containsKey(f.getRow())) {
+                nonSortFieldsMap.put(f.getRow(), new ArrayList<>());
+            }
+
+            nonSortFieldsMap.get(f.getRow()).add(f);
+        });
+
+        // Sort the fields
+        sortFields = sortFields.stream().sorted((f1, f2) -> {
+            return groupSort == GroupSort.ASCENDING ? 
+                        f1.getValue().compareTo(f2.getValue()) :
+                        f2.getValue().compareTo(f1.getValue());
+
+        }).collect(Collectors.toList());
+
+        Map<Integer, Integer> rowMap = new HashMap<>();
+
+        int i = 1;
+        for (DataFieldVO dataFieldVO : sortFields) {
+            rowMap.put(i, dataFieldVO.getRow());
+            dataFieldVO.setRow(i);
+
+            i++;
+        }
+
+        Collection<DataFieldVO> sortedFields = new ArrayList<>();
+        sortFields.forEach(f -> {
+            sortedFields.add(f);
+            int row = rowMap.get(f.getRow());
+            if (nonSortFieldsMap.containsKey(row)) {
+                Collection<DataFieldVO> tmp = nonSortFieldsMap.get(row);
+                tmp.forEach(t -> {
+                    t.setRow(f.getRow());
+                    sortedFields.add(t);
+                });
+                // sortedFields.addAll(nonSortFieldsMap.get(f.getRow()));
+            }
+        });
+
+        return sortedFields;
     }
 
     private Map<String, Double> calculate(Map<String, Collection<Double>> agg, GroupOperation groupOperation) {

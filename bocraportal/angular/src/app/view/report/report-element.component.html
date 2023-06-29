@@ -130,8 +130,6 @@
                   </mat-tab-group>
                 </div>
               </div>
-
-              
             </div>
           </mat-tab>
 
@@ -360,6 +358,7 @@
                 ><span translate>Group By</span></label
               >
               <select id="groupBy" class="form-select" formControlName="groupBy" aria-label="Default select example">
+                <option value="">None</option>
                 <option *ngFor="let fid of selectedFieldIds" value="{{ fid }}">
                   {{ multipleDataColumnNames[fid] }}
                 </option>
@@ -375,7 +374,7 @@
                 formControlName="groupOperation"
                 aria-label="Default select example"
               >
-                <!-- <option value="CUSTOM">Custom</option> -->
+                <option value="NONE">None</option>
                 <option value="SUM">Sum</option>
                 <option value="MEAN">Mean</option>
                 <option value="MODE">Mode</option>
@@ -384,7 +383,26 @@
                 <option value="STANDARD_DEVIATION">Standard Deviation</option>
                 <option value="MIN">Minimum</option>
                 <option value="MAX">Maximum</option>
-                <option value="NONE">None</option>
+                <!-- <option value="CUSTOM">Custom</option> -->
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label id="orderBy_label" class="col-sm-2 col-form-label" for="orderBy"><span translate>Order By</span></label>
+              <select id="groupBy" class="form-select" formControlName="orderBy" aria-label="Default select example">
+                <option value="">None</option>
+                <option *ngFor="let fid of selectedFieldIds" value="{{ fid }}">
+                  {{ multipleDataColumnNames[fid] }}
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label id="sortOrder_label" class="col-sm-2 col-form-label" for="sortOrder"><span translate>Sort Order</span></label>
+              <select id="sortOrder" class="form-select" formControlName="sortOrder" aria-label="Default select example">
+                <option value="" selected>None</option>
+                <option value="ASCENDING">Ascending</option>
+                <option value="DESCENDING">Descending</option>
               </select>
             </div>
             <div class="mb-3">
@@ -399,22 +417,32 @@
             </div>
           </fieldset>
           <mat-tab-group animationDuration="0ms" class="view-tabs">
-            <mat-tab *ngFor="let per of selectedPeriods" label="{{ per?.alias }}">
+            <mat-tab *ngFor="let per of selectedPeriods; let i = index" label="{{ per?.alias }}">
               <mat-tab-group animationDuration="0ms" class="view-tabs">
-                <mat-tab *ngFor="let sub of selectedSubmissions[per.period]" label="{{ sub?.licensee?.alias }}">
+                <mat-tab *ngFor="let sub of selectedSubmissions[per.period]" #multipleTable label="{{ sub?.licensee?.alias }}">
                   <table
                     mat-table
+                    matTableExporter
+                    matSort
                     [dataSource]="multipleDatasources[per?.period + '-' + sub.licensee.alias]"
+                    #exporter="matTableExporter"
                     class="table table-bordered table-striped"
                   >
                     <ng-container *ngFor="let fid of selectedFieldIds" matColumnDef="{{ fid }}">
-                      <th mat-header-cell *matHeaderCellDef>{{ multipleDataColumnNames[fid] }}</th>
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ multipleDataColumnNames[fid] }}</th>
                       <td mat-cell *matCellDef="let data">{{ data[fid] }}</td>
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="selectedFieldIds"></tr>
                     <tr mat-row *matRowDef="let row; columns: selectedFieldIds"></tr>
                   </table>
+                  <mat-paginator
+                    id="multipleDataPaginator-{{i}}"
+                    #dataSourcePaginator="matPaginator"
+                    [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 20, 30, 40, 50, 60, 70, 80, 90]"
+                    showFirstLastButtons
+                  ></mat-paginator>
                 </mat-tab>
               </mat-tab-group>
             </mat-tab>
