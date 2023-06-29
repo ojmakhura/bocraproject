@@ -25,8 +25,14 @@ export class SearchFormActivationsComponentImpl extends SearchFormActivationsCom
   override beforeSearchFormActivationsSearch(form: SearchFormActivationsSearchForm): void {
     let criteria: FormActivationCriteria = new FormActivationCriteria();
     criteria.activationName = form.activationName;
+
+    this.searchFormActivationsFormActivationsComponent.criteria = criteria;
+    this.searchFormActivationsFormActivationsComponent.formActivationsPaginator.pageIndex = 0
+
     this.store.dispatch(
-      FormActivationActions.search({
+      FormActivationActions.pagedSearch({
+        pageNumber: this.searchFormActivationsFormActivationsComponent.formActivationsPaginator.pageIndex + 1,
+        pageSize: this.searchFormActivationsFormActivationsComponent.formActivationsPaginator.pageSize,
         criteria: criteria,
         loading: true,
         loaderMessage: 'Searching form activations ...',

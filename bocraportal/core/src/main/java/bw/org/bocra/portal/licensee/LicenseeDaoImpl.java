@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -75,6 +76,10 @@ public class LicenseeDaoImpl
             Licensee source,
             LicenseeVO target) {
         super.toLicenseeVO(source, target);
+
+        if(StringUtils.isBlank(source.getAlias())) {
+            target.setAlias(source.getLicenseeName());
+        }
 
         if (CollectionUtils.isNotEmpty(source.getLicences())) {
 

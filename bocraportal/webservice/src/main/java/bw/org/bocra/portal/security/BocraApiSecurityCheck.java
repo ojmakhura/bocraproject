@@ -37,6 +37,7 @@ public class BocraApiSecurityCheck {
     }
 
     private boolean handleIsAuthorised(String url) {
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         /// Find the api with the requesting URL

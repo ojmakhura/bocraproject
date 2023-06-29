@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -25,6 +26,11 @@ import { MatTableExporterDirective } from 'mat-table-exporter';
 import * as math from 'mathjs';
 import { floor } from 'mathjs';
 import { ReportChart, ReportChartComponent } from './report-chart.component';
+import { FormEntryType } from '@app/model/bw/org/bocra/portal/form/form-entry-type';
+import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
+import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
+import { Store } from '@ngrx/store';
+import { FormSubmissionState } from '@app/store/form/submission/form-submission.state';
 
 export class ReportElement {
   groupBy: string = '';
@@ -62,14 +68,18 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   colors = {};
   selectedLicensees: any[] = [];
   selectedFields: any[] = [];
+  selectedFieldNames: string[] = [];
+  selectedFieldIds: string[] = [];
+
   selectedPeriods: any[] = [];
+  selectedSubmissions = {};
   additionalDataColumns: any[] = [];
   additionalReportCalculations: any[] = [];
   additionalDataRows: any[] = [];
   customDataColumns: any = {};
   customDataRows: any = {};
   grid: any = {};
-  gridData: any = {}
+  gridData: any = {};
   gridColumnHeaders: any[] = [];
   gridRowHeaders: any[] = [];
   alphabet = [
@@ -116,8 +126,17 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   periods: any[] = [];
   periodAliases: any = {};
   originalColumnLen: number = 0;
+  entryType: FormEntryType = FormEntryType.SINGLE;
+  formEntryType = FormEntryType;
+  multipleDatasources = {};
+  multipleDataColumnNames = {};
+  submissionFilters: FormGroup | any;
+  periodSubmissions: any = {};
 
-  constructor(private injector: Injector, @Inject(LOCALE_ID) public locale: string) {
+  @ViewChildren('dataSourcePaginator') dataSourcePaginator: QueryList<MatPaginator>;
+  @ViewChildren('dataSourceSort') dataSourceSort: QueryList<MatSort>;
+
+  constructor(private injector: Injector, @Inject(LOCALE_ID) public locale: string, private submissionService: SubmissionRestController, private store: Store<FormSubmissionState> ) {
     this.formBuilder = this.injector.get(FormBuilder);
   }
 
@@ -136,67 +155,150 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       this.reportElementGroup.addControl('fieldSelection', this.formBuilder.array([]));
     }
 
+    this.additionalControls();
+
     this.fields.forEach((field, index) => {
       this.fieldSelectionsArray.insert(index, this.createFieldSelectionGroup(true, field));
     });
+
+    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
+    this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
+    this.selectedFieldIds = this.selectedFields?.map((sel) => sel.fieldId);
+    this.selectedFieldNames = this.selectedFields?.map((sel) => sel.alias);
+    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
+
+    this.selectedFields?.forEach((field) => {
+      this.multipleDataColumnNames[field.fieldId] = field.alias;
+    });
+
+    this.generateGridData();
+    this.generateMultipleDatasources();
+
+    if (this.formSubmissions) {
+      this.entryType = this.formSubmissions[0]?.form?.entryType;
+    }
+  }
+
+  additionalControls() {
 
     this.reportTypeControl.patchValue('default');
     this.dataColumnsControl.setValue('licensees');
 
     this.reportElementGroup.addControl('dataColumnsAnalytics', this.formBuilder.array([]));
     this.reportElementGroup.addControl('dataRowsAnalytics', this.formBuilder.array([]));
+    this.reportElementGroup.addControl('submissionFilters', this.multipleEntryFilters());
 
-    this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
-    this.selectedFields = this.fieldSelections?.filter((sel) => sel.selected);
-    this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
+  }
 
-    this.generateGridData();
+  filterSubmissions() {
+
+    let filters: any = this.reportElementGroup.get('submissionFilters').value;
+
+    filters.ids = this.formSubmissions?.map((sub) => sub.id);
+    if(filters.groupOperation === "") {
+      filters.groupOperation = undefined;
+    }
+
+    this.submissionService.preProcessedFindByIds(filters).subscribe((res) => {
+      
+      // this.store.dispatch(
+      //   SubmissionActions.preProcessedFindByIdsSuccess({
+      //     formSubmissions: res,
+      //     messages: [],
+      //     success: true,
+      //   })
+      // );
+
+      this.formSubmissions = res;
+
+      this.generateGridData();
+      this.generateMultipleDatasources();
+      console.log(this.multipleDatasources)
+    });
+    
+  }
+
+  generateMultipleDatasources() {
+    if (!this.formSubmissions || this.formSubmissions.length == 0) {
+      return;
+    }
+    this.multipleDatasources = {};
+
+    this.formSubmissions.forEach((sub, index) => {
+
+      if (!this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`]) {
+        this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`] = new MatTableDataSource<any>([]);
+      }
+
+
+      let tmp = {};
+      let i = 0;
+      
+      sub?.dataFields?.forEach((field: DataFieldVO) => {
+        
+        if (!tmp[field.row]) {
+          tmp[field.row] = {};
+        }
+
+        tmp[field.row][field?.formField?.fieldId] = field.value;
+      });
+
+      this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`].data = Object.values(tmp);
+
+      if(this.dataSourcePaginator) {
+        this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`].paginator = this.dataSourcePaginator.toArray()[index];
+        this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`].sort = this.dataSourceSort.toArray()[index];
+      }
+    });
   }
 
   generateGridData() {
+    this.selectedSubmissions = {};
 
     if (!this.formSubmissions || this.formSubmissions.length == 0) {
       return;
     }
 
     this.gridData = {
-      length: this.periodSelections.length
-    }
+      length: this.periodSelections.length,
+    };
 
     this.periodSelections?.forEach((per, pindex) => {
-
-      let fs = this.formSubmissions?.filter((sub) => {
+      let tmpSubmissions = this.formSubmissions?.filter((sub) => {
         return (
           per.period === sub?.period?.periodName &&
           this.licenseeSelections?.find((sel) => sel.licensee === sub?.licensee?.licenseeName)
         );
       });
 
+      if (tmpSubmissions) {
+        this.selectedSubmissions[per?.period] = tmpSubmissions;
+      }
+
       this.gridData[per.period] = {
         position: pindex,
         alias: per.alias,
-        length: fs?.length
-      }
+        length: tmpSubmissions?.length,
+      };
 
       if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
-        this.periodLengths[per.period] = fs?.length;
+        this.periodLengths[per.period] = tmpSubmissions?.length;
       } else if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
         this.periodLengths[per.period] = this.fieldSelections?.length;
       }
 
-      fs?.forEach((sub, sindex) => {
-
+      tmpSubmissions?.forEach((sub, sindex) => {
         let row = sub?.licensee?.licenseeName;
         let rowLabel = sub?.licensee?.licenseeName;
         let rowElementId = `${sub?.id}_${sub?.licensee?.licenseeName.replaceAll(' ', '_')}`;
         let rowIndex = sindex;
-        let rowLength = fs?.length
+        let rowLength = tmpSubmissions?.length;
 
         let col = row;
         let colLabel = rowLabel;
         let colElementId = rowElementId;
         let colIndex = rowIndex;
-        let colLength = rowLength
+        let colLength = rowLength;
 
         let fields: DataFieldVO[] = this.extractFields(sub);
 
@@ -204,20 +306,17 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           let selF = this.fieldSelections.find((f) => f.fieldId === field.formField.fieldId);
 
           if (this.dataColumns === 'fields' && this.dataRows === 'licensees') {
-
             col = field?.formField?.fieldId;
             colLabel = selF?.alias;
             colElementId = `${field?.formField?.fieldId}`;
             colIndex = findex;
-            colLength = fields?.length
-
+            colLength = fields?.length;
           } else if (this.dataColumns === 'licensees' && this.dataRows === 'fields') {
-
             row = field?.formField?.fieldId;
             rowIndex = findex;
             rowLabel = selF?.alias;
             rowElementId = `${field?.formField?.fieldId}`;
-            rowLength = fields?.length
+            rowLength = fields?.length;
           }
 
           this.gridData[per.period]['length'] = rowLength;
@@ -227,7 +326,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
               label: rowLabel,
               elementId: rowElementId,
               position: rowIndex,
-              length: colLength
+              length: colLength,
             };
           }
 
@@ -235,15 +334,13 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
             label: colLabel,
             elementId: colElementId,
             position: colIndex,
-            value: field?.value
-          }
-
+            value: field?.value,
+          };
         });
-
       });
     });
 
-    this.extractGrid()
+    this.extractGrid();
   }
 
   extractGrid() {
@@ -259,27 +356,25 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     let columnHeaders = {};
     let periodCols = {};
 
-    Object.keys(this.gridData)?.forEach(pkey => {
+    Object.keys(this.gridData)?.forEach((pkey) => {
       let periodData = this.gridData[pkey];
-      let exclude = ['length', 'alias', 'position', 'label', 'elementId']
+      let exclude = ['length', 'alias', 'position', 'label', 'elementId'];
 
-      Object.keys(periodData)?.forEach(rkey => {
-
+      Object.keys(periodData)?.forEach((rkey) => {
         if (!exclude.includes(rkey)) {
           let row = periodData[rkey];
 
           if (!this.grid[row?.position]) {
-
             this.grid[row?.position] = {
               row: row?.position,
               label: row?.label,
-              elementId: row?.elementId
-            }
+              elementId: row?.elementId,
+            };
           }
 
-          Object.keys(row)?.forEach(ckey => {
+          Object.keys(row)?.forEach((ckey) => {
             if (!exclude.includes(ckey)) {
-              let col = row[ckey]
+              let col = row[ckey];
 
               if (!periodCols[`${periodData?.position} ${col?.position}`]) {
                 let alphabet = this.getColumnAlphabet(cindex);
@@ -289,8 +384,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
                   colIndex: cindex,
                   period: periodData?.alias,
                   label: col?.label,
-                  elementId: col?.elementId
-                }
+                  elementId: col?.elementId,
+                };
 
                 cindex++;
               }
@@ -302,12 +397,11 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
                 elementId: col?.elementId,
                 label: col?.label,
                 period: periodData?.alias,
-
-              }
+              };
             }
           });
         }
-      })
+      });
     });
 
     this.gridColumnHeaders = Object.values(columnHeaders).sort((a: any, b: any) => a?.colIndex - b?.colIndex);
@@ -367,17 +461,31 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   get fields() {
-    let formFields: string[] = [];
+    let formFields: any[] = [];
 
     if (this.formSubmissions && this.formSubmissions?.length > 0) {
-      this.formSubmissions[0]?.form?.formSections?.forEach((sec) => {
-        formFields = [
-          ...formFields,
-          ...sec?.formFields?.map((field: any) => {
-            return { fieldId: field?.fieldId, fieldName: field?.fieldName };
-          }),
-        ];
+      // if(this.formSubmissions[0]?.form?.entryType === FormEntryType.SINGLE) {
+
+      //   this.formSubmissions[0]?.form?.formSections?.forEach((sec) => {
+      //     formFields = [
+      //       ...formFields,
+      //       ...sec?.formFields?.map((field: any) => {
+      //         return { fieldId: field?.fieldId, fieldName: field?.fieldName };
+      //       }),
+      //     ];
+      //   });
+      // } else {
+      //   console.log('This is a multi entry form')
+      this.formSubmissions[0]?.form?.formFields?.forEach((field: any) => {
+        formFields.push({ fieldId: field?.fieldId, fieldName: field?.fieldName });
+        // formFields = [
+        //   ...formFields,
+        //   ...sec?.dataFields?.map((field: any) => {
+        //     return { fieldId: field?.formField?.fieldId, fieldName: field?.formField?.fieldName };
+        //   }),
+        // ];
       });
+      // }
     }
 
     return formFields;
@@ -437,6 +545,17 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
+  multipleEntryFilters() {
+    return this.formBuilder.group({
+      ids: this.formBuilder.array([]),
+      groupBy: [''],
+      orderBy: [''],
+      sortOrder: [''],
+      limit: [''],
+      groupOperation: [''],
+    });
+  }
+
   getRandomColor() {
     var length = 6;
     var chars = '0123456789ABCDEF';
@@ -455,11 +574,14 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.generateColors(false);
     this.selectedPeriods = this.periodSelections?.filter((sel) => sel.selected);
     this.selectedFields = this.fieldSelections;
+    this.selectedFieldIds = this.selectedFields?.map((sel) => sel.fieldId);
+    this.selectedFieldNames = this.selectedFields?.map((sel) => sel.alias);
     this.selectedLicensees = this.licenseeSelections?.filter((sel) => sel.selected);
     this.generateGridData();
+    this.generateMultipleDatasources();
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   private calculate(values: number[], calculationType: string) {
     if (calculationType === 'sum') {
@@ -556,9 +678,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       });
 
       this.periodAliases[changingCol?.tag] = changingCol?.tag;
-      this.periodLengths[changingCol?.tag] = 0
+      this.periodLengths[changingCol?.tag] = 0;
       this.periods.push({ name: changingCol?.tag, length: 0 });
-
     }
 
     let source = '';
@@ -573,14 +694,14 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     let colIndex = this.originalColumnLen + index;
     let colAlphabet = this.getColumnAlphabet(colIndex);
 
-    let max = Math.max(...Object.values(this.gridData).map((g: any) => g?.position ? g?.position : 0));
+    let max = Math.max(...Object.values(this.gridData).map((g: any) => (g?.position ? g?.position : 0)));
 
     if (!this.gridData[changingCol?.tag]) {
       this.gridData[changingCol?.tag] = {
         position: max + 1,
         alias: changingCol?.tag,
-        length: 0
-      }
+        length: 0,
+      };
 
       this.gridData['length']++;
     }
@@ -595,21 +716,20 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           label: gridRow?.label,
           elementId: gridRow?.elementId,
           position: gridRow?.row,
-          length: 0
+          length: 0,
         };
 
         gridDataRow.length++;
       }
 
       if (!gridDataRow[gridRow?.elementId][changingCol?.name]) {
-
         gridDataRow[gridRow?.elementId][changingCol?.name] = {
           label: changingCol?.name,
           elementId: changingCol?.name?.replaceAll(' ', '_')?.toLowerCase(),
           position: gridDataRow[gridRow?.elementId].length,
           value: changingCol?.type === 'custom' ? source : undefined,
-          source: []
-        }
+          source: [],
+        };
 
         gridDataRow[gridRow?.elementId].length++;
         this.periodLengths[changingCol?.tag] = gridDataRow[gridRow?.elementId].length;
@@ -628,7 +748,10 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       if (changingCol?.type === 'custom') {
         Object.keys(gridRow)?.forEach((rk) => {
           if (cell?.value.includes(`[${rk}]`)) {
-            cell.value = cell.value.replaceAll(`[${rk}]`, gridRow[rk].value && gridRow[rk].value !== null ? gridRow[rk].value : 0);
+            cell.value = cell.value.replaceAll(
+              `[${rk}]`,
+              gridRow[rk].value && gridRow[rk].value !== null ? gridRow[rk].value : 0
+            );
           }
         });
       }
@@ -637,13 +760,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         changingCol?.type === 'custom'
           ? math.evaluate(cell.value)
           : this.calculate(
-            cell.source?.map((src: any) => src?.value && src?.value !== null ? src?.value : 0),
-            changingCol?.type
-          )
+              cell.source?.map((src: any) => (src?.value && src?.value !== null ? src?.value : 0)),
+              changingCol?.type
+            )
       );
 
       delete cell.source;
-
     });
 
     // Update the selected fields or licensees depending on what the columns are.
@@ -655,6 +777,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
           fieldId: changingCol?.name?.replaceAll(' ', '_'),
           alias: changingCol.name,
         });
+        this.selectedFieldIds = this.selectedFields?.map((sel) => sel.fieldId);
+        this.selectedFieldNames = this.selectedFields?.map((sel) => sel.alias);
       }
     } else if (this.dataColumns === 'licensees') {
       if (this.selectedLicensees.find((lic) => lic.licensee === changingCol.name) === undefined) {
@@ -673,9 +797,16 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
   extractFields(formSubmission: FormSubmissionVO) {
     let fields: DataFieldVO[] = [];
-    formSubmission?.sections?.forEach((section: DataFieldSectionVO) => {
-      fields = [...fields, ...section.dataFields];
-    });
+
+    if (formSubmission?.form?.entryType === FormEntryType.SINGLE) {
+      formSubmission?.sections?.forEach((section: DataFieldSectionVO) => {
+        fields = [...fields, ...section.dataFields];
+      });
+    } else {
+      formSubmission?.dataFields?.forEach((field: DataFieldVO) => {
+        fields.push(field); // = [...fields, ...section.dataFields];
+      });
+    }
 
     return fields;
   }
@@ -760,98 +891,92 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     let rowIndex: number = this.gridRowHeaders.length;
     let elementId = `${changingRow?.name?.replaceAll(' ', '_')}`.toLowerCase();
 
-    let rowDefaults: any = {}
-    let colPositions: any = {}
+    let rowDefaults: any = {};
+    let colPositions: any = {};
 
     Object.values(this.gridData)?.forEach((periodData: any) => {
-     
       Object.values(periodData)?.forEach((row: any) => {
-       
-        if(row?.elementId ) {
-
-          if(!rowDefaults[row?.elementId]) {
+        if (row?.elementId) {
+          if (!rowDefaults[row?.elementId]) {
             rowDefaults[row?.elementId] = {
               elementId: row?.elementId,
               label: row?.label,
               position: row?.position,
-            }
+            };
           }
 
           Object.values(row)?.forEach((cell: any) => {
-            if(cell?.elementId) {
+            if (cell?.elementId) {
               colPositions[cell?.elementId] = cell?.position;
             }
-          })
+          });
         }
-      })
+      });
     });
 
-    let cellDefaults: any = {}
+    let cellDefaults: any = {};
 
     sourceSplit?.rows?.forEach((rowKey) => {
-      
       sourceSplit.cols?.forEach((colKey) => {
         let cell = this.grid[rowKey][colKey];
-        
+
         if (cell && !cellDefaults[colKey]) {
           cellDefaults[colKey] = {
             period: cell.period,
             label: cell.label,
-            elementId: cell.elementId
+            elementId: cell.elementId,
           };
         }
-      })
-    })
+      });
+    });
 
     sourceSplit?.rows?.forEach(async (rowKey) => {
       let row = this.grid[rowKey];
 
       await sourceSplit.cols?.forEach(async (colKey) => {
-        let cell: any = row[colKey]
+        let cell: any = row[colKey];
 
         if (!cell) return;
 
-        let cellDefault = cellDefaults[colKey]
+        let cellDefault = cellDefaults[colKey];
 
         if (!this.gridData[cellDefault.period][elementId]) {
-          
           this.gridData[cellDefault.period][elementId] = {
-
             elementId: elementId,
             label: changingRow?.name,
             position: rowIndex, /// maybe set to row length
-            length: 0
-          }
+            length: 0,
+          };
         }
 
         this.gridData[cellDefault.period][elementId].position = rowIndex;
         let gridRow: any = this.gridData[cellDefault.period][elementId];
 
         if (!gridRow[cellDefault.label]) {
-
           gridRow[cellDefault.label] = {
             label: cellDefault.label,
             position: colPositions[cell.elementId],
             value: undefined,
             source: changingRow?.type === 'custom' ? source : [],
-            elementId: cell.elementId
-          }
+            elementId: cell.elementId,
+          };
 
           gridRow.length++;
         }
 
         if (gridRow[cellDefault.label]) {
-
           if (!gridRow[cellDefault.label].source) {
             gridRow[cellDefault.label].source = changingRow?.type === 'custom' ? source : [];
             gridRow[cellDefault.label].position = colPositions[cell.elementId];
           }
 
-
           if (row[colKey] !== undefined) {
             if (changingRow?.type === 'custom') {
               if (gridRow[cellDefault.label].source.includes(`[${rowKey}]`)) {
-                gridRow[cellDefault.label].source = gridRow[cellDefault.label].source?.replaceAll(`[${rowKey}]`, row[colKey].value);
+                gridRow[cellDefault.label].source = gridRow[cellDefault.label].source?.replaceAll(
+                  `[${rowKey}]`,
+                  row[colKey].value
+                );
               }
             } else {
               gridRow[cellDefault.label].source.push(row[colKey]);
@@ -864,12 +989,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     sourceSplit.rows?.forEach((rowKey) => {
       let row = this.grid[rowKey];
       sourceSplit.cols?.forEach((colKey) => {
-        let cellDefault = cellDefaults[colKey]
+        let cellDefault = cellDefaults[colKey];
         let cell: any = row[colKey];
-        
+
         if (cell && this.gridData[cellDefault.period][elementId]) {
           let gridRow: any = this.gridData[cellDefault.period][elementId];
-          
+
           if (gridRow[cellDefault.label]?.source && gridRow[cellDefault.label]?.source?.includes(`[${rowKey}]`)) {
             gridRow[cellDefault.label].source = gridRow[cellDefault.label].source?.replaceAll(`[${rowKey}]`, 0);
           }
@@ -879,7 +1004,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     let excludes = ['length', 'alias', 'position'];
 
-    await Object.keys(this.gridData)?.forEach(key => {
+    await Object.keys(this.gridData)?.forEach((key) => {
       if (excludes.includes(key)) return;
 
       let tmpRow = this.gridData[key][elementId];
@@ -889,15 +1014,15 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       Object.keys(tmpRow)?.forEach(async (key: any) => {
         if (key !== 'label' && key !== 'position' && key != 'length' && key !== 'elementId') {
           let gridCell: any = tmpRow[key];
-          let t = gridCell.source
+          let t = gridCell.source;
 
           gridCell.value = await Math.round(
             changingRow?.type === 'custom'
               ? math.evaluate(gridCell.source)
               : this.calculate(
-                t?.map((src: any) => src?.value && src?.value !== null ? src?.value : 0),
-                changingRow?.type
-              )
+                  t?.map((src: any) => (src?.value && src?.value !== null ? src?.value : 0)),
+                  changingRow?.type
+                )
           );
 
           delete gridCell.source;
@@ -920,7 +1045,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
 
-    this.extractGrid()
+    this.extractGrid();
   }
 
   createChartsArrayControl(charts: ReportChart[]) {
@@ -1014,6 +1139,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     if (tmp.selected) {
       let index = this.selectedFields?.findIndex((sf) => sf?.fieldId === tmp?.fieldId);
       this.selectedFields[index].alias = tmp.alias;
+
+      this.selectedFieldIds = this.selectedFields?.map((sel) => sel.fieldId);
+      this.selectedFieldNames = this.selectedFields?.map((sel) => sel.alias);
     }
 
     Object.values(this.grid).forEach((value: any) => {
@@ -1042,7 +1170,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   licenseeSelectionChange(event: any, j: number) {
-
     this.selectionChange(event, j, this.licenseeSelections, this.licenseeSelectionsArray, this.selectedLicensees);
 
     let filtered = this.formSubmissions?.filter((sub) => {
@@ -1083,7 +1210,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     return selected;
   }
 
-  selectedChartType() { }
+  selectedChartType() {}
 
   get allLiceseesSelected() {
     return this.licenseeSelections?.filter((sel) => sel.selected)?.length === this.licensees.length;
@@ -1138,8 +1265,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     let elementId = `${changingRow?.name?.replaceAll(' ', '_')}`.toLowerCase();
 
     await Object.values(this.gridData)?.forEach((periodData: any) => {
-      delete periodData[elementId]
-    })
+      delete periodData[elementId];
+    });
 
     await this.dataRowsAnalyticsControl.removeAt(index);
 
@@ -1148,26 +1275,24 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
       if (i > -1) {
         await this.selectedFields?.splice(i, 1);
-        this.gridRowHeaders = await this.selectedFields?.map((fd: any, i: number) => i)
+        this.gridRowHeaders = await this.selectedFields?.map((fd: any, i: number) => i);
       }
     } else {
       let i = await this.selectedLicensees?.findIndex((s) => s.fieldName === tmp.name);
 
       if (i > -1) {
         this.selectedLicensees?.splice(i, 1);
-        this.gridRowHeaders = await this.selectedLicensees?.map((fd: any, i: number) => i)
+        this.gridRowHeaders = await this.selectedLicensees?.map((fd: any, i: number) => i);
       }
     }
 
     Object.values(this.gridData).forEach((periodData: any) => {
-      
       if (periodData?.alias) {
         Object.values(periodData)?.forEach((row: any) => {
           if (row?.position && row?.position > i) {
-            
             row.position--;
           }
-        })
+        });
       }
     });
 
@@ -1193,10 +1318,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     let periodData = this.gridData[changingCol?.tag];
 
     Object.values(periodData)?.forEach((row: any) => {
-
       if (!row[changingCol?.name]) return;
 
-      delete row[changingCol?.name]
+      delete row[changingCol?.name];
       row.length--;
 
       if (row?.length < 1) {
@@ -1206,29 +1330,27 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     if (periodData.length < 1) {
       delete this.gridData[changingCol?.tag];
-      delete this.periodAliases[changingCol?.tag]
+      delete this.periodAliases[changingCol?.tag];
 
-      let idx: number = this.selectedPeriods?.findIndex(sp => changingCol?.tag === sp.alias);
+      let idx: number = this.selectedPeriods?.findIndex((sp) => changingCol?.tag === sp.alias);
       this.selectedPeriods.splice(idx, 1);
 
-      delete this.periodLengths[changingCol?.tag]
+      delete this.periodLengths[changingCol?.tag];
 
-      idx = this.periods?.findIndex(sp => changingCol?.tag === sp.name);
+      idx = this.periods?.findIndex((sp) => changingCol?.tag === sp.name);
       this.periods.splice(idx, 1);
 
       this.gridData.length--;
     } else {
-      this.periodLengths[changingCol?.tag]--
+      this.periodLengths[changingCol?.tag]--;
     }
 
     // Update the selected fields or licensees depending on what the columns are.
     if (this.dataColumns === 'fields') {
-
       let idx: number = this.selectedFields?.findIndex((field) => field.fieldName === changingCol.name);
       if (idx == -1) {
         this.selectedFields.splice(idx, 1);
       }
-
     } else if (this.dataColumns === 'licensees') {
       let idx: number = this.selectedLicensees?.findIndex((lic) => lic.licensee === changingCol.name);
       if (idx == -1) {
@@ -1347,16 +1469,15 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  selectDataColumns(event: any) { }
+  selectDataColumns(event: any) {}
 
-  reportTypeChange() { }
+  reportTypeChange() {}
 
   /**
    * Filter the form submissions based on the selected periods and
    * selected licensees
    */
   get filteredFormSubmissions(): FormSubmissionVO[] {
-
     let filtered = this.formSubmissions
       ?.filter((submission) => this.selectedPeriods?.find((pr) => pr.period === submission?.period?.periodName))
       ?.filter((submission) =>

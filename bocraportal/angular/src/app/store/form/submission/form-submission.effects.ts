@@ -5,6 +5,7 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as FormSubmissionActions from './form-submission.actions';
 import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
 import { NoteRestController } from '@app/service/bw/org/bocra/portal/form/submission/note/note-rest-controller';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 
 @Injectable()
 export class FormSubmissionEffects {
@@ -54,6 +55,26 @@ export class FormSubmissionEffects {
     )
   );
 
+  preProcessedFindByIds$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormSubmissionActions.preProcessedFindByIds),
+      mergeMap(({ filters }) =>
+        this.submissionRestController.preProcessedFindByIds(filters).pipe(
+          map((formSubmissions) =>
+            FormSubmissionActions.preProcessedFindByIdsSuccess({
+              formSubmissions,
+              messages: [`${formSubmissions.length} submissions found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            FormSubmissionActions.formSubmissionFailure({ messages: [error?.error ? error.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
   save$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormSubmissionActions.save),
@@ -65,6 +86,28 @@ export class FormSubmissionEffects {
               messages: [`Submission ${formSubmission?.form?.formName} saved.`],
               success: true,
             })
+          ),
+          catchError(({ error }) => [
+            FormSubmissionActions.formSubmissionFailure({ messages: [error?.error ? error.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
+  uploadData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormSubmissionActions.uploadData),
+      mergeMap(({ submissionId, file, sendEmail }) => 
+        this.submissionRestController.uploadData(submissionId, file, sendEmail ? sendEmail : sendEmail).pipe(
+          map((formSubmission: FormSubmissionVO) => {
+            alert(`Data for ${formSubmission?.formActivation?.activationName} uploaded.`);
+            return FormSubmissionActions.uploadDataSuccess({
+              formSubmission,
+              messages: [`Data for ${formSubmission?.form?.formName} uploaded.`],
+              success: true,
+            })
+          }
           ),
           catchError(({ error }) => [
             FormSubmissionActions.formSubmissionFailure({ messages: [error?.error ? error.error : error] }),
@@ -149,6 +192,24 @@ export class FormSubmissionEffects {
           catchError(({ error }) => [
             FormSubmissionActions.formSubmissionFailure({ messages: [error?.error ? error.error : error] }),
           ])
+        )
+      )
+    )
+  );
+
+  pagedSearch$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormSubmissionActions.pagedSearch),
+      mergeMap(({pageNumber, pageSize, criteria}) =>
+        this.submissionRestController.pagedSearch(pageNumber, pageSize, criteria).pipe(
+          map((formSubmissionsPage) => {
+            
+            return FormSubmissionActions.pagedSearchSuccess({ 
+              formSubmissionsPage, 
+                messages: [`Page ${pageNumber} found with ${formSubmissionsPage.elements.length} form activations.`], 
+                success: true })
+          }),
+          catchError((error) => [FormSubmissionActions.formSubmissionFailure({ messages: [error.error] })])
         )
       )
     )

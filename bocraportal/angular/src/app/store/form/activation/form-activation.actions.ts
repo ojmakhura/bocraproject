@@ -2,6 +2,7 @@
 import { createAction, props } from '@ngrx/store';
 import { FormActivationVO } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-vo';
 import { FormActivationCriteria } from '@app/model/bw/org/bocra/portal/form/activation/form-activation-criteria';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
 
 export enum FormActivationActionType {
   FIND_BY_ID = '[FormActivation] Find By Id',
@@ -14,6 +15,8 @@ export enum FormActivationActionType {
   GET_ALL_SUCCESS = '[FormActivation] Get All Success',
   SEARCH = '[FormActivation] Search',
   SEARCH_SUCCESS = '[FormActivation] Search Success',
+  PAGED_SEARCH = '[FormActivation] Paged Search',
+  PAGED_SEARCH_SUCCESS = '[FormActivation] Paged Search Success',
   GET_ALL_PAGED = '[FormActivation] Get All Paged',
   GET_ALL_PAGED_SUCCESS = '[FormActivation] Get All Paged Success',
   FORM_ACTIVATION_RESET = '[FormActivation] FormActivation Reset',
@@ -79,6 +82,22 @@ export const getAllPaged = createAction(
 export const getAllPagedSuccess = createAction(
   FormActivationActionType.GET_ALL_PAGED_SUCCESS,
   props<{ formActivations: FormActivationVO[] | any[]; messages: any[]; success: boolean }>()
+);
+
+export const pagedSearch = createAction(
+  FormActivationActionType.PAGED_SEARCH,
+  props<{
+    pageNumber: number | any;
+    pageSize: number | any;
+    criteria: FormActivationCriteria | any;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
+);
+
+export const pagedSearchSuccess = createAction(
+  FormActivationActionType.PAGED_SEARCH_SUCCESS,
+  props<{ formActivationsPage: DataPage | any; messages: any[]; success: boolean }>()
 );
 
 export const formActivationReset = createAction(FormActivationActionType.FORM_ACTIVATION_RESET);

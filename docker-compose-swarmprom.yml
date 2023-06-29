@@ -14,11 +14,11 @@ volumes:
 
 configs:
   dockerd_config:
-    file: ./dockerd-exporter/Caddyfile
-  node_rules:
-    file: ./prometheus/rules/swarm_node.rules.yml
-  task_rules:
-    file: ./prometheus/rules/swarm_task.rules.yml
+    file: ${BOCRA_DATA}/caddy/Caddyfile
+  # node_rules:
+    # file: ${BOCRA_DATA}/prometheus/rules/swarm_node.rules.yml
+  # task_rules:
+    # file: ${BOCRA_DATA}/prometheus/rules/swarm_task.rules.yml
 
 services:
   dockerd-exporter:
@@ -39,16 +39,8 @@ services:
           memory: 64M
 
   cadvisor:
-    image: google/cadvisor
-    networks:
-      - net
+    image: gcr.io/cadvisor/cadvisor:v0.47.1
     command: -logtostderr -docker_only
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /:/rootfs:ro
-      - /var/run:/var/run
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
     deploy:
       mode: global
       resources:
@@ -56,49 +48,79 @@ services:
           memory: 128M
         reservations:
           memory: 64M
+    volumes:
+      - type: bind
+        source: /
+        target: /rootfs
+        read_only: true
+      - type: bind
+        source: /var/run
+        target: /var/run
+        read_only: true
+      - type: bind
+        source: /sys
+        target: /sys
+        read_only: true
+      - type: bind
+        source: /var/lib/docker
+        target: /var/lib/docker
+        read_only: true
+      - type: bind
+        source: /dev/disk
+        target: /dev/disk
+        read_only: true                        
+    networks:
+      - net
 
   grafana:
-    image: stefanprodan/swarmprom-grafana:5.3.4
-    networks:
-      - default
-      - net
-      - bocraportal-public
-    environment:
-      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-      - GF_USERS_ALLOW_SIGN_UP=false
-      #- GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:-localhost}
-      #- GF_SMTP_ENABLED=${GF_SMTP_ENABLED:-false}
-      #- GF_SMTP_FROM_ADDRESS=${GF_SMTP_FROM_ADDRESS:-grafana@test.com}
-      #- GF_SMTP_FROM_NAME=${GF_SMTP_FROM_NAME:-Grafana}
-      #- GF_SMTP_HOST=${GF_SMTP_HOST:-smtp:25}
-      #- GF_SMTP_USER=${GF_SMTP_USER}
-      #- GF_SMTP_PASSWORD=${GF_SMTP_PASSWORD}
-    volumes:
-      - grafana:/var/lib/grafana
+    image: grafana/grafana:10.0.0
+    user: "$UID:$GID"
+    # ports:
+    #   - target: 3000
+    #     published: 3000
+    #     protocol: tcp
+    #     mode: ingress
     deploy:
-      mode: replicated
       replicas: 1
       placement:
         constraints:
           - node.role == manager
-      resources:
-        limits:
-          memory: 128M
-        reservations:
-          memory: 64M
+          - node.labels.bocraportal_portainer == true
       labels:
         - traefik.enable=true
         - traefik.docker.network=bocraportal-public
         - traefik.constraint-label=bocraportal-public
         - traefik.http.routers.swarmprom-grafana-http.rule=Host(`${GRAFANA_DOMAIN}`)
-        - traefik.http.routers.swarmprom-grafana-http.entrypoints=${WEB_ENTRY}
+        - traefik.http.routers.swarmprom-grafana-http.entrypoints=web
         - traefik.http.routers.swarmprom-grafana-http.middlewares=https-redirect
         - traefik.http.routers.swarmprom-grafana-https.rule=Host(`${GRAFANA_DOMAIN}`)
-        - traefik.http.routers.swarmprom-grafana-https.entrypoints=${WEBSECURE_ENTRY}
+        - traefik.http.routers.swarmprom-grafana-https.entrypoints=websecure
         - traefik.http.routers.swarmprom-grafana-https.tls=${SSL_SECURE}
-        - traefik.http.routers.swarmprom-grafana-https.tls.certresolver=le
+        # - traefik.http.routers.swarmprom-grafana-https.tls.certresolver=le
         - traefik.http.services.swarmprom-grafana.loadbalancer.server.port=3000
+    volumes:
+      - type: bind
+        source: ${BOCRA_DATA}/grafana/data
+        target: /var/lib/grafana
+      - type: bind
+        source: ${BOCRA_DATA}/grafana/config/grafana-datasources.yml
+        target: /etc/grafana/provisioning/datasources/provisioning-datasources.yaml
+      - type: bind
+        source: ${BOCRA_DATA}/grafana/config/grafana-dashboards.yml
+        target: /etc/grafana/provisioning/dashboards/provisioning-dashboards.yaml
+      - type: bind
+        source: ${BOCRA_DATA}/grafana/config/dashboards/grafana-dashboard-container-metrics.json
+        target: /var/lib/grafana/dashboards/container-metrics.json
+      - type: bind
+        source: ${BOCRA_DATA}/grafana/config/dashboards/grafana-dashboard-node-metrics.json
+        target: /var/lib/grafana/dashboards/node-metrics.json
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - net
+      - bocraportal-public   
 
   alertmanager:
     image: stefanprodan/swarmprom-alertmanager:v0.14.0
@@ -172,20 +194,10 @@ services:
         - traefik.http.routers.swarmprom-unsee-https.middlewares=swarmprom-unsee-auth
 
   node-exporter:
-    image: stefanprodan/swarmprom-node-exporter:v0.16.0
-    networks:
-      - net
-    environment:
-      - NODE_ID={{.Node.ID}}
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-      - /etc/hostname:/etc/nodename
+    image: bitnami/node-exporter:1.6.0
     command:
       - '--path.sysfs=/host/sys'
       - '--path.procfs=/host/proc'
-      - '--collector.textfile.directory=/etc/node-exporter/'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
       - '--no-collector.ipvs'
     deploy:
@@ -195,47 +207,62 @@ services:
           memory: 128M
         reservations:
           memory: 64M
+    volumes:
+      - type: bind
+        source: /
+        target: /rootfs
+        read_only: true
+      - type: bind
+        source: /proc
+        target: /host/proc
+        read_only: true
+      - type: bind
+        source: /sys
+        target: /host/sys
+        read_only: true
+    networks:
+      - net
 
   prometheus:
-    image: stefanprodan/swarmprom-prometheus:v2.5.0
-    networks:
-      - default
-      - net
-      - bocraportal-public
+    image: bitnami/prometheus:2.44.0
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--log.level=error'
       - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention=${PROMETHEUS_RETENTION:-24h}'
-    volumes:
-      - prometheus:/prometheus
-      - ${BOCRA_DATA}/auth/system_passwd:/var/system_passwd
-    configs:
-      - source: node_rules
-        target: /etc/prometheus/swarm_node.rules.yml
-      - source: task_rules
-        target: /etc/prometheus/swarm_task.rules.yml
+      - '--storage.tsdb.retention.time=7d'
     deploy:
-      mode: replicated
       replicas: 1
       placement:
         constraints:
           - node.role == manager
-      resources:
-        limits:
-          memory: 2048M
-        reservations:
-          memory: 128M
+          - node.labels.bocraportal_portainer == true
       labels:
         - traefik.enable=true
         - traefik.docker.network=bocraportal-public
         - traefik.constraint-label=bocraportal-public
         - traefik.http.routers.swarmprom-prometheus-http.rule=Host(`prometheus.${DOMAIN?Variable not set}`)
-        - traefik.http.routers.swarmprom-prometheus-http.entrypoints=${WEB_ENTRY}
+        - traefik.http.routers.swarmprom-prometheus-http.entrypoints=web
         - traefik.http.routers.swarmprom-prometheus-http.middlewares=https-redirect
         - traefik.http.routers.swarmprom-prometheus-https.rule=Host(`prometheus.${DOMAIN?Variable not set}`)
-        - traefik.http.routers.swarmprom-prometheus-https.entrypoints=${WEBSECURE_ENTRY}
+        - traefik.http.routers.swarmprom-prometheus-https.entrypoints=websecure
         - traefik.http.routers.swarmprom-prometheus-https.tls=${SSL_SECURE}
         - traefik.http.routers.swarmprom-prometheus-https.tls.certresolver=le
         - traefik.http.services.swarmprom-prometheus.loadbalancer.server.port=9090
-        - traefik.http.middlewares.swarmprom-prometheus-auth.basicauth.usersfile=/var/system_passwd
-        - traefik.http.routers.swarmprom-prometheus-https.middlewares=swarmprom-prometheus-auth
+        # - traefik.http.middlewares.swarmprom-prometheus-auth.basicauth.usersfile=/var/system_passwd
+        # - traefik.http.routers.swarmprom-prometheus-https.middlewares=swarmprom-prometheus-auth
+    volumes:
+      - type: bind
+        source: ${BOCRA_DATA}/prometheus/data
+        target: /prometheus
+      - type: bind
+        source: ${BOCRA_DATA}/prometheus/config/prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+      # - type: bind
+        # source: ${BOCRA_DATA}/hosts
+        # target: /etc/hosts
+    environment:
+      METRICS_PATH: /actuator/prometheus
+      TARGETS: ${API_URL}
+    networks:
+      - net
+      - bocraportal-public

@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 import org.postgresql.util.PSQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -176,7 +178,7 @@ public class SectorRestControllerImpl extends SectorRestControllerBase {
         
         try {
             logger.debug("Display all sectors");
-            return ResponseEntity.ok().body(sectorService.getAll());
+            return ResponseEntity.ok().body(StringUtils.isNotBlank(criteria) ? sectorService.search(criteria) : sectorService.getAll());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().body("An unknown error has occurred. Please contact the site administrator.");

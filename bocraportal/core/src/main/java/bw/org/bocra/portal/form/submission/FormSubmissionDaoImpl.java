@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
@@ -31,12 +32,14 @@ import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.activation.FormActivationVO;
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.section.FormSection;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
+import bw.org.bocra.portal.form.submission.data.SubmissionDataRepository;
 import bw.org.bocra.portal.form.submission.note.NoteRepository;
 import bw.org.bocra.portal.form.submission.note.NoteVO;
 import bw.org.bocra.portal.licensee.Licensee;
@@ -54,13 +57,17 @@ import bw.org.bocra.portal.period.PeriodVO;
 public class FormSubmissionDaoImpl
         extends FormSubmissionDaoBase {
 
+    private final SubmissionDataRepository submissionDataRepository;
+
     public FormSubmissionDaoImpl(FormRepository formRepository, PeriodRepository periodRepository,
             DataFieldRepository dataFieldRepository, LicenseeRepository licenseeRepository,
             NoteRepository noteRepository, FormActivationRepository formActivationRepository,
-            FormSubmissionRepository formSubmissionRepository) {
+            FormSubmissionRepository formSubmissionRepository, SubmissionDataRepository submissionDataRepository) {
 
         super(formRepository, periodRepository, dataFieldRepository, licenseeRepository, noteRepository,
                 formActivationRepository, formSubmissionRepository);
+
+        this.submissionDataRepository = submissionDataRepository;
     }
 
     /**
@@ -76,63 +83,118 @@ public class FormSubmissionDaoImpl
         if (source.getForm() != null) {
             Form form = source.getForm();
             FormVO formVO = getFormDao().toFormVO(form);
+            formVO.setFormSections(null);
+            formVO.getFormFields().forEach(field -> {
+                field.setForm(null);
+                field.setFormSection(null);
+            });
+            formVO.setLicensees(null);
+            formVO.setPeriodConfig(null);
+            formVO.setFormSections(null);
+            formVO.setLicenceTypes(null);
+            formVO.setSectors(null);
+
             target.setForm(formVO);
 
             if (CollectionUtils.isNotEmpty(source.getDataFields())) {
 
-                Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
-                for (DataField dataField : source.getDataFields()) {
+                Collection<DataField> fields = source.getForm().getEntryType() == FormEntryType.SINGLE
+                        ? source.getDataFields()
+                        : submissionDataRepository.findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(source.getId(),
+                                PageRequest.of(0, 10 * source.getForm().getFormFields().size())).getContent();
 
-                    DataFieldVO data = new DataFieldVO();
-                    getDataFieldDao().toDataFieldVO(dataField, data);
+                if(source.getForm().getEntryType() == FormEntryType.SINGLE) {
 
-                    FormSection section = dataField.getFormField().getFormSection();
+                    Collection<DataFieldSectionVO> sections = new ArrayList<>();
 
-                    DataFieldSectionVO sec = new DataFieldSectionVO();
-                    sec.setPosition(section.getPosition());
-                    sec.setSectionLabel(section.getSectionLabel());
-                    sec.setSectionId(section.getSectionId());
+                    Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
+                    for (DataField dataField : fields) {
+    
+                        DataFieldVO data = new DataFieldVO();
+                        getDataFieldDao().toDataFieldVO(dataField, data);
 
-                    if (!sectioned.containsKey(sec)) {
-                        sectioned.put(sec, new ArrayList<>());
+                        data.setFormSubmission(null);
+    
+                        FormSection section = dataField.getFormField().getFormSection();
+    
+                        DataFieldSectionVO sec = new DataFieldSectionVO();
+                        sec.setPosition(section.getPosition());
+                        sec.setSectionLabel(section.getSectionLabel());
+                        sec.setSectionId(section.getSectionId());
+    
+                        if (!sectioned.containsKey(sec)) {
+                            sectioned.put(sec, new ArrayList<>());
+                        }
+    
+                        sectioned.get(sec).add(data);
                     }
 
-                    sectioned.get(sec).add(data);
+                    for (Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
+                        DataFieldSectionVO sec = entry.getKey();
+                        sec.setDataFields(entry.getValue());
+                        sections.add(sec);
+                    }
+                    
+                    target.setSections(sections);
+
+                } else {
+                    if(target.getDataFields() == null) {
+                        target.setDataFields(new ArrayList<>());
+                    }
+
+                    fields.forEach(field -> {
+                        DataFieldVO data = new DataFieldVO();
+                        getDataFieldDao().toDataFieldVO(field, data);
+                        target.getDataFields().add(data);
+                    });
                 }
-
-                Collection<DataFieldSectionVO> sections = new ArrayList<>();
-
-                for (Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
-                    DataFieldSectionVO sec = entry.getKey();
-                    sec.setDataFields(entry.getValue());
-                    sections.add(sec);
-                }
-
-                target.setSections(sections);
             }
         }
 
         if (source.getLicensee() != null) {
             LicenseeVO licensee = new LicenseeVO();
-            getLicenseeDao().toLicenseeVO(source.getLicensee(), licensee);
+            licensee.setId(source.getLicensee().getId());
+            licensee.setAlias(source.getLicensee().getAlias());
+            licensee.setUin(source.getLicensee().getUin());
+            licensee.setTradingAs(source.getLicensee().getTradingAs());
+            licensee.setLicenseeName(source.getLicensee().getLicenseeName());
+
+            licensee.setUsers(null);
+            licensee.setForms(null);
+            licensee.setLicences(null);
+            licensee.setDocuments(null);
+            licensee.setSectors(null);
+            licensee.setShareholders(null);
+            
+            if(StringUtils.isBlank(source.getLicensee().getAlias())) {
+                licensee.setAlias(source.getLicensee().getLicenseeName());
+            }
+            
             target.setLicensee(licensee);
         }
 
         if (source.getPeriod() != null) {
             PeriodVO period = new PeriodVO();
-            getPeriodDao().toPeriodVO(source.getPeriod(), period);
+            period.setId(source.getPeriod().getId());
+            period.setPeriodName(source.getPeriod().getPeriodName());
+            period.setPeriodEnd(source.getPeriod().getPeriodEnd());
+            period.setPeriodStart(source.getPeriod().getPeriodStart());
+            
             target.setPeriod(period);
         }
 
         if (source.getFormActivation() != null) {
-            target.setFormActivation(getFormActivationDao().toFormActivationVO(source.getFormActivation()));
+            FormActivationVO activation = new FormActivationVO();
+            activation.setId(source.getFormActivation().getId());
+            activation.setActivationDeadline(source.getFormActivation().getActivationDeadline());
+            activation.setActivationName(source.getFormActivation().getActivationName());
+            target.setFormActivation(activation);
 
-            target.getFormActivation().setForm(null);
-            target.getFormActivation().setPeriod(null);
         }
 
         if (CollectionUtils.isNotEmpty(source.getNotes())) {
             List<NoteVO> notes = (List<NoteVO>) noteDao.toNoteVOCollection(source.getNotes());
+        
             // sort by created date
             Collections.<NoteVO>sort(notes, new Comparator<NoteVO>() {
                 @Override
@@ -243,6 +305,12 @@ public class FormSubmissionDaoImpl
 
     @Override
     protected Collection<FormSubmission> handleFindByCriteria(FormSubmissionCriteria criteria) throws Exception {
+
+        return formSubmissionRepository.findAll(getCriteriaSpecifications(criteria),
+                Sort.by(Direction.ASC, "submissionDate"));
+    }
+
+    public Specification<FormSubmission> getCriteriaSpecifications(FormSubmissionCriteria criteria) {
         Specification<FormSubmission> specifications = null;
 
         if (criteria.getStartDate() != null) {
@@ -341,7 +409,7 @@ public class FormSubmissionDaoImpl
             specifications = specifications.and(tmp);
         }
 
-        return formSubmissionRepository.findAll(specifications, Sort.by(Direction.ASC, "submissionDate"));
+        return specifications;
     }
 
     @Override

@@ -8,6 +8,8 @@ import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/subm
 import { HttpClient } from '@angular/common/http';
 import { FormSubmissionStatus } from '@model/bw/org/bocra/portal/form/submission/form-submission-status';
 import { KeycloakService } from 'keycloak-angular';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
+import { MultipleEntryFormFilter } from '@app/model/bw/org/bocra/portal/form/submission/multiple-entry-form-filter';
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +53,30 @@ export class SubmissionRestController {
     return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/ids?ids=${ids}`, {});
   }
 
+  public preProcessedFindByIds(filters: MultipleEntryFormFilter | any): Observable<FormSubmissionVO[] | any[]> {
+    if(filters.groupBy === "") {
+      filters.groupBy = null;
+    }
+
+    if(filters.orderBy === "") {
+      filters.orderBy = null;
+    }
+
+    if(filters.groupOperation === "") {
+      filters.groupOperation = null;
+    }
+
+    if(filters.limit === "") {
+      filters.limit = null;
+    }
+
+    if(filters.sortOrder === "") {
+      filters.sortOrder = null;
+    }
+
+    return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/ids/processed`, filters);
+  }
+
   public getAll(): Observable<FormSubmissionVO[] | any[]> {
     return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/all`);
   }
@@ -79,6 +105,18 @@ export class SubmissionRestController {
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/search`, criteria);
   }
 
+  pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<DataPage | any> {
+    return this.http.post<DataPage | any>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria);
+  }
+
+  public uploadData(submissionId: number | any, file: File, sendEmail: boolean): Observable<FormSubmissionVO | any> {
+    const formData: FormData = new FormData();
+    formData.append('submissionId', submissionId);
+    formData.append('file', file);
+    formData.append('sendEmail', `${sendEmail}`);
+    return this.http.post<FormSubmissionVO | any>(`${this.path}/upload`, formData);
+  }
+
   public updateSubmissionStatus(
     id: number | any,
     submissionStatus: FormSubmissionStatus | any,
@@ -90,6 +128,12 @@ export class SubmissionRestController {
         updateTime ? updateTime.toISOString() : new Date().toISOString()
       }&username=${username}`,
       {}
+    );
+  }
+
+  getSubmissionData(id: any, pageNumber: number, pageSize: number): Observable<DataPage | any> {
+    return this.http.get<DataPage | any>(
+      `${this.path}/data?submissionId=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
   }
 }

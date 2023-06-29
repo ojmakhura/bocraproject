@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
+import bw.org.bocra.portal.access.AccessPointCriteria;
 import bw.org.bocra.portal.config.SystemConfigService;
 import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.form.FormService;
@@ -171,26 +172,6 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             return ResponseEntity.badRequest()
                     .body("Unknown error encountered when deleting form activation with id " + id);
         }
-    }
-
-    private Set<Long> getLicenseeIds(FormVO form) {
-
-        Set<Long> ids = new HashSet<>();
-
-        for (LicenseeFormVO licensee : form.getLicensees()) {
-            if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
-                ids.add(licensee.getLicensee().getId());
-        }
-
-        for (SectorFormVO sectorForm : form.getSectors()) {
-
-            for (LicenseeSectorVO licensee : licenseeSectorService.findBySector(sectorForm.getSector().getId())) {
-                if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
-                    ids.add(licensee.getLicensee().getId());
-            }
-        }
-
-        return ids;
     }
 
     private String emailTempate = "Dear %s user\n\n"
@@ -349,14 +330,32 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     }
 
     @Override
+    public ResponseEntity<?> handlePagedSearch(Integer pageNumber, Integer pageSize, FormActivationCriteria criteria) {
+        try {
+            logger.debug("Searches for an form activation of the specified Page Number: " + pageNumber + ", Page Size: " + pageSize + " and Criteria: " +criteria);
+            return ResponseEntity.ok().body(formActivationService.search(pageNumber, pageSize, criteria));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            String message = String.format("An error occurred when reading page %d of size %d.", pageNumber, pageSize);
+            return ResponseEntity.badRequest().body(message);
+        }
+    }
+
+    @Override
     public ResponseEntity<?> handleActivateDueForms() {
         try {
             logger.debug("Activating due forms");
 
             Collection<FormActivationVO> activations = formActivationService.activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor());
-
+            
             activations.forEach(activation -> {
-                this.sendNotifications(activation);
+                try {
+                    this.sendNotifications(activation);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    logger.error(e.getMessage());
+                }
             });
 
             return ResponseEntity.ok().body(activations);

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AccessPointVO } from '@app/model/bw/org/bocra/portal/access/access-point-vo';
 import { AccessPointCriteria } from '@app/model/bw/org/bocra/portal/access/access-point-criteria';
 import { HttpClient } from '@angular/common/http';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class AccessPointRestController {
     return this.http.get<AccessPointVO[] | any[]>(this.path + `/all`);
   }
 
-  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<AccessPointVO[] | any[]> {
+  public getAllPaged(pageNumber: number | any, pageSize: number | any): Observable<DataPage | any> {
     return this.http.get<AccessPointVO[] | any[]>(this.path + `/page/${pageNumber}/size/${pageSize}`);
   }
 
@@ -29,12 +30,9 @@ export class AccessPointRestController {
     pageNumber: number | any,
     pageSize: number | any,
     criteria: AccessPointCriteria | any
-  ): Observable<AccessPointVO[] | any[]> {
-    return this.http.post<AccessPointVO[] | any[]>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, {
-      pageNumber: pageNumber,
-      pageSize: pageSize,
-      criteria: criteria,
-    });
+  ): Observable<DataPage | any> {
+
+    return this.http.post<AccessPointVO[] | any[]>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria);
   }
 
   public remove(id: number | any): Observable<boolean | any> {

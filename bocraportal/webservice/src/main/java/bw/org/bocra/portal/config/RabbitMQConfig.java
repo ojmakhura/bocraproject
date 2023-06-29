@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -71,6 +72,13 @@ public class RabbitMQConfig {
 	public MessageConverter jsonMessageConverter() {
 		return new Jackson2JsonMessageConverter();
 	}
+	
+	@Bean
+	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+		final RabbitTemplate rabbitTemplate = new RabbitTemplate(cachingConnectionFactory);
+		rabbitTemplate.setMessageConverter(jsonMessageConverter());
+		return rabbitTemplate;
+	}
     
     @Bean
     @Primary
@@ -80,13 +88,8 @@ public class RabbitMQConfig {
                     .registerModule(new ParameterNamesModule())
                     .registerModule(new Jdk8Module())
                     .registerModule(new JavaTimeModule())
+                    .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                    .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
-	
-	@Bean
-	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-		final RabbitTemplate rabbitTemplate = new RabbitTemplate(cachingConnectionFactory);
-		rabbitTemplate.setMessageConverter(jsonMessageConverter());
-		return rabbitTemplate;
-	}
 }

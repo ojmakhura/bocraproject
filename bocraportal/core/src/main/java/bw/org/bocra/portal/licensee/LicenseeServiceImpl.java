@@ -11,6 +11,7 @@ package bw.org.bocra.portal.licensee;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -106,6 +107,11 @@ public class LicenseeServiceImpl
     protected  LicenseeVO handleSave(LicenseeVO licenseeVO)
         throws Exception
     {
+
+        if(StringUtils.isBlank(licenseeVO.getAlias())) {
+            licenseeVO.setAlias(licenseeVO.getLicenseeName());
+        }
+
         Licensee entity = licenseeDao.licenseeVOToEntity(licenseeVO);
         
         if(licenseeVO.getId() == null) {

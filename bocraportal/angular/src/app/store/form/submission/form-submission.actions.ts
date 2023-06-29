@@ -4,12 +4,16 @@ import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/subm
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { NoteVO } from '@model/bw/org/bocra/portal/form/submission/note/note-vo';
 import { FormSubmissionStatus } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-status';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
+import { MultipleEntryFormFilter } from '@app/model/bw/org/bocra/portal/form/submission/multiple-entry-form-filter';
 
 export enum FormSubmissionActionType {
   FIND_BY_ID = '[FormSubmission] Find By Id',
   FIND_BY_ID_SUCCESS = '[FormSubmission] Find By Id Success',
   FIND_BY_IDS = '[FormSubmission] Find By Ids',
   FIND_BY_IDS_SUCCESS = '[FormSubmission] Find By Ids Success',
+  PRE_PROCESSED_FIND_BY_IDS = '[FormSubmission] Pre-Processed Find By Ids',
+  PRE_PROCESSED_FIND_BY_IDS_SUCCESS = '[FormSubmission] Pre-Processed Find By Ids Success',
   SAVE = '[FormSubmission] Save',
   SAVE_SUCCESS = '[FormSubmission] Save Success',
   SAVE_NOTE = '[FormSubmission] Save Note',
@@ -22,12 +26,22 @@ export enum FormSubmissionActionType {
   GET_ALL_SUCCESS = '[FormSubmission] Get All Success',
   SEARCH = '[FormSubmission] Search',
   SEARCH_SUCCESS = '[FormSubmission] Search Success',
+  PAGED_SEARCH = '[FormSubmission] Paged Search',
+  PAGED_SEARCH_SUCCESS = '[FormSubmission] Paged Search Success',
   GET_ALL_PAGED = '[FormSubmission] Get All Paged',
   GET_ALL_PAGED_SUCCESS = '[FormSubmission] Get All Paged Success',
+  SET_LOADING = '[FormSubmission] Set Loading',
+  UPLOAD_DATA = '[FormSubmission] Upload Submission Data',
+  UPLOAD_DATA_SUCCESS = '[FormSubmission] Upload Submission Data Success',
   FORM_SUBMISSION_RESET = '[FormSubmission] Form Submission Reset',
   FORM_SUBMISSION_FAILURE = '[FormSubmission] Form Submission Action Failure',
   FORM_SUBMISSION_LOADING = '[FormSubmission] Form Submission Loading',
 }
+
+export const setLoading = createAction(
+  FormSubmissionActionType.SET_LOADING,
+  props<{ loading: boolean }>()
+);
 
 export const findById = createAction(
   FormSubmissionActionType.FIND_BY_ID,
@@ -46,6 +60,16 @@ export const findByIds = createAction(
 
 export const findByIdsSuccess = createAction(
   FormSubmissionActionType.FIND_BY_IDS_SUCCESS,
+  props<{ formSubmissions: FormSubmissionVO[] | any[]; messages: any[]; success: boolean }>()
+);
+
+export const preProcessedFindByIds = createAction(
+  FormSubmissionActionType.PRE_PROCESSED_FIND_BY_IDS,
+  props<{ filters: MultipleEntryFormFilter | any; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const preProcessedFindByIdsSuccess = createAction(
+  FormSubmissionActionType.PRE_PROCESSED_FIND_BY_IDS_SUCCESS,
   props<{ formSubmissions: FormSubmissionVO[] | any[]; messages: any[]; success: boolean }>()
 );
 
@@ -74,6 +98,22 @@ export const updateStatus = createAction(
 export const updateStatusSuccess = createAction(
   FormSubmissionActionType.UPDATE_STATUS_SUCCESS,
   props<{ statusUpdated: boolean | any; messages: any[]; success: boolean }>()
+);
+
+export const uploadData = createAction(
+  FormSubmissionActionType.UPLOAD_DATA,
+  props<{
+    submissionId: number | any;
+    file: File | any;
+    sendEmail: boolean;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
+);
+
+export const uploadDataSuccess = createAction(
+  FormSubmissionActionType.UPLOAD_DATA_SUCCESS,
+  props<{ formSubmission: FormSubmissionVO | any; messages: any[]; success: boolean }>()
 );
 
 export const saveNote = createAction(
@@ -114,6 +154,22 @@ export const search = createAction(
 export const searchSuccess = createAction(
   FormSubmissionActionType.SEARCH_SUCCESS,
   props<{ formSubmissions: FormSubmissionVO[] | any[]; messages: any[]; success: boolean }>()
+);
+
+export const pagedSearch = createAction(
+  FormSubmissionActionType.PAGED_SEARCH,
+  props<{
+    pageNumber: number | any;
+    pageSize: number | any;
+    criteria: FormSubmissionCriteria | any;
+    loading: boolean;
+    loaderMessage: string | undefined;
+  }>()
+);
+
+export const pagedSearchSuccess = createAction(
+  FormSubmissionActionType.PAGED_SEARCH_SUCCESS,
+  props<{ formSubmissionsPage: DataPage | any; messages: any[]; success: boolean }>()
 );
 
 export const getAllPaged = createAction(

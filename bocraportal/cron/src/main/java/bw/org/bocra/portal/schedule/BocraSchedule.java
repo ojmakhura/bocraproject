@@ -66,7 +66,7 @@ public class BocraSchedule {
         criteria.setStatus(ComplaintStatus.NEW);
         criteria.setPastDays(20);
 
-        String complaintsNew = apiUrl + "/search";
+        String complaintsNew = apiUrl + "/complaint/search";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
@@ -77,7 +77,7 @@ public class BocraSchedule {
         if (response.getStatusCode() == HttpStatus.OK) {
             ComplaintVO[] newComplaints = (ComplaintVO[]) response.getBody();
 
-            String statusUpdateUrl = apiUrl + "/status?complaintId=%s&status=%s";
+            String statusUpdateUrl = apiUrl + "/complaint/status?complaintId=%s&status=%s";
 
             for (ComplaintVO complaint : newComplaints) {
                 statusUpdateUrl = String.format(statusUpdateUrl, complaint.getComplaintId(), ComplaintStatus.PENDING);
@@ -136,8 +136,8 @@ public class BocraSchedule {
 
         HttpEntity<String> request = new HttpEntity<String>(headers);
 
-        ResponseEntity<Integer> response = restTemplate.exchange(due, HttpMethod.GET, request, Integer.class);
-        log.info(String.format("%d messages sent to queue", response.getBody()));
+        // ResponseEntity<Integer> response = restTemplate.exchange(due, HttpMethod.GET, request, Integer.class);
+        // log.info(String.format("%d messages sent to queue", response.getBody()));
     }
 
     @Async

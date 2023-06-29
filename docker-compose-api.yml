@@ -51,6 +51,7 @@ services:
       ACTIVATION_SUBMISSION_KEY: ${ACTIVATION_SUBMISSION_KEY}
       FORM_SUBMISSION_RETURN_KEY: ${FORM_SUBMISSION_RETURN_KEY}
       COMPLAINTS_USER_ASSIGNMENT_KEY: ${COMPLAINTS_USER_ASSIGNMENT_KEY}
+      FORM_SUBMISSION_UPLOAD_KEY: ${FORM_SUBMISSION_UPLOAD_KEY}
       API_URL: ${API_URL}
       API_LOG_LEVEL: DEBUG
       WEB_URL: ${WEB_URL}
@@ -58,7 +59,7 @@ services:
       TZ: Africa/Gaborone
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 1
       placement:
         constraints:
           # Make the traefik service run only on the node with this label

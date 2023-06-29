@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 @ConfigurationPropertiesScan({"bw.org.bocra.portal.properties"})
 public class SpringRestApplication {
 
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass()); 
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringRestApplication.class, args);

@@ -44,6 +44,7 @@ public class DataFieldDaoImpl
         super.toDataFieldVO(source, target);
         if(source.getFormField().getFormSection() != null) {
             FormSection section = source.getFormField().getFormSection();
+            // section.setForm(null);
 
             if(section.getPosition() != null) {
                 target.setSectionPosition(section.getPosition());

@@ -47,8 +47,14 @@ export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsCom
    * This method may be overwritten
    */
   override beforeSearchFormSubmissionsSearch(form: SearchFormSubmissionsSearchForm): void {
+
+    this.searchFormSubmissionsFormSubmissionsComponent.criteria = form.criteria;
+    this.searchFormSubmissionsFormSubmissionsComponent.formSubmissionsPaginator.pageIndex = 0
+
     this.store.dispatch(
-      SubmissionActions.search({
+      SubmissionActions.pagedSearch({
+        pageNumber: this.searchFormSubmissionsFormSubmissionsComponent.formSubmissionsPaginator.pageIndex + 1,
+        pageSize: this.searchFormSubmissionsFormSubmissionsComponent.formSubmissionsPaginator.pageSize,
         criteria: form.criteria,
         loading: true,
         loaderMessage: 'Searching form submissions ...',

@@ -2,6 +2,7 @@
 import { FormSubmissionCriteria } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-criteria';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import { NoteVO } from '@model/bw/org/bocra/portal/form/submission/note/note-vo';
+import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
 
 export const formSubmissionKey = 'formSubmission';
 
@@ -10,6 +11,7 @@ export interface FormSubmissionState {
   id: number | any;
   formSubmission: FormSubmissionVO | any;
   formSubmissions: Array<FormSubmissionVO> | Array<any>;
+  formSubmissionsPage: DataPage | any;
   notes: Array<NoteVO> | Array<any>;
   note: NoteVO | any;
   removed: boolean;
@@ -27,6 +29,7 @@ export const initialState: FormSubmissionState = {
   id: null,
   formSubmission: null,
   formSubmissions: [],
+  formSubmissionsPage: null,
   notes: [],
   note: null,
   removed: false,

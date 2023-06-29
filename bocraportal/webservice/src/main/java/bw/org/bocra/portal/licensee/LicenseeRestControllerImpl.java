@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/licensee")
 @CrossOrigin()
-@PreAuthorize("@securityCheck.isAuthorised('/licensee')")
+// @PreAuthorize("@securityCheck.isAuthorised('/licensee')")
 @Tag(name = "Licensee", description = "Managing licensees.")
 public class LicenseeRestControllerImpl extends LicenseeRestControllerBase {
     
