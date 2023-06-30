@@ -49,7 +49,9 @@ export class ReportComponentImpl extends ReportComponent {
   override doNgAfterViewInit() {
     this.route.queryParams.subscribe((queryParams: any) => {
       let ids = queryParams?.submissions?.map((id: string) => +id);
-      this.loadData(ids);
+      if(ids && ids.length > 0) {
+        this.loadData(ids);
+      }
     });
 
     this.submissions$.subscribe((submissions) => {

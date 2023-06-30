@@ -65,7 +65,7 @@
       </div>
       <div *ngIf="chartType === 'pie'"></div>
       <div *ngIf="chartType === 'bar' || chartType === 'line'">
-        <canvas baseChart #chart id="chart" class="chart" [datasets]="datasets" [labels]="labelNames" [type]="chartType"> </canvas>
+        <canvas baseChart #chart id="chart" class="chart" [datasets]="datasets" [labels]="labelNames" [plugins]="chartPlugins" [options]="chartOptions" [type]="chartType"> </canvas>
       </div>
       <div class="mb-3 row">
         <label for="chart-label" class="col-sm-2 col-form-label">Caption</label>

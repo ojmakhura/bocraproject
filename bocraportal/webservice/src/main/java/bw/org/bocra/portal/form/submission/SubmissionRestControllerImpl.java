@@ -509,6 +509,12 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
             e.printStackTrace();
             logger.error(e.getMessage());
+            logger.error(e.getCause().getMessage());
+
+            if(e instanceof SubmissionServiceException) {
+                return ResponseEntity.badRequest().body(e.getCause().getMessage());
+            }
+
             return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }

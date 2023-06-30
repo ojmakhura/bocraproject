@@ -354,7 +354,7 @@ public class SubmissionServiceImpl
 
         for (FormSubmission formSubmission : submissions) {
             FormSubmissionVO vo = getFormSubmissionDao().toFormSubmissionVO(formSubmission);
-            if(StringUtils.isBlank(vo.getLicensee().getAlias())) {
+            if (StringUtils.isBlank(vo.getLicensee().getAlias())) {
                 vo.getLicensee().setAlias(vo.getLicensee().getLicenseeName());
             }
             vos.add(getFormSubmissionDao().toFormSubmissionVO(formSubmission));
@@ -512,10 +512,15 @@ public class SubmissionServiceImpl
                         }
                     }
 
-                    double v = (Double) scriptEngine.eval(expression);
-                    DecimalFormat f = new DecimalFormat("##.00");
+                    try {
 
-                    dataField.setValue(f.format(v) + "");
+                        double v = (Double) scriptEngine.eval(expression);
+                        DecimalFormat f = new DecimalFormat("##.00");
+
+                        dataField.setValue(f.format(v) + "");
+                    } catch (Exception e) {
+                        throw new SubmissionServiceException("An error was encountered while evaluating expression for row " + dataField.getRow() + ".");
+                    }
                 }
 
                 dataFields.addAll(tmpFields);
@@ -656,7 +661,7 @@ public class SubmissionServiceImpl
             subVO.getLicensee().setSectors(null);
             subVO.getLicensee().setShareholders(null);
 
-            if(StringUtils.isBlank(subVO.getLicensee().getAlias())) {
+            if (StringUtils.isBlank(subVO.getLicensee().getAlias())) {
                 subVO.getLicensee().setAlias(subVO.getLicensee().getLicenseeName());
             }
 
@@ -680,10 +685,12 @@ public class SubmissionServiceImpl
 
                 fmap.entrySet().forEach(entry -> {
 
-                    entry.getValue().stream().filter(p -> p.getFormField().getFieldId().equals(filters.getGroupBy()) || StringUtils.isBlank(filters.getGroupBy()))
+                    entry.getValue().stream()
+                            .filter(p -> p.getFormField().getFieldId().equals(filters.getGroupBy())
+                                    || StringUtils.isBlank(filters.getGroupBy()))
                             .findFirst().ifPresent(f -> {
                                 String value = f.getValue();
-                                if(StringUtils.isBlank(filters.getGroupBy())) {
+                                if (StringUtils.isBlank(filters.getGroupBy())) {
                                     value = "All";
                                 }
 
@@ -705,7 +712,7 @@ public class SubmissionServiceImpl
                     entry.getValue().entrySet().forEach(e -> {
                         e.getValue().forEach(f -> {
                             if (numberFields.contains(f.getFormField().getFieldId())) {
-                                
+
                                 if (!agg.containsKey(f.getFormField().getFieldId())) {
                                     agg.put(f.getFormField().getFieldId(), new ArrayList<>());
                                 }
@@ -734,7 +741,8 @@ public class SubmissionServiceImpl
                             field.setValue(output.get(field.getFormField().getFieldId()).toString());
                         }
 
-                        if(StringUtils.isBlank(filters.getGroupBy()) && field.getFormField().getFieldType() != FieldType.NUMBER) {
+                        if (StringUtils.isBlank(filters.getGroupBy())
+                                && field.getFormField().getFieldType() != FieldType.NUMBER) {
                             field.setValue("-");
                         }
 
@@ -752,11 +760,12 @@ public class SubmissionServiceImpl
 
             Collection<DataFieldVO> finalFields = newFields;
 
-            if(StringUtils.isNotBlank(filters.getOrderBy())) {
-                finalFields = this.sortDataFields(newFields, filters.getOrderBy(), filters.getSortOrder() == null ? GroupSort.ASCENDING : filters.getSortOrder());
+            if (StringUtils.isNotBlank(filters.getOrderBy())) {
+                finalFields = this.sortDataFields(newFields, filters.getOrderBy(),
+                        filters.getSortOrder() == null ? GroupSort.ASCENDING : filters.getSortOrder());
             }
 
-            if(filters.getLimit() != null && filters.getLimit() > 0) {
+            if (filters.getLimit() != null && filters.getLimit() > 0) {
                 int limit = filters.getLimit() * subVO.getForm().getFormFields().size();
                 finalFields = finalFields.stream().limit(limit).collect(Collectors.toList());
             }
@@ -776,8 +785,10 @@ public class SubmissionServiceImpl
         }
 
         // Get a collection of fields to sort by
-        Collection<DataFieldVO> sortFields = fields.stream().filter(f -> f.getFormField().getFieldId().equals(sortBy)).collect(Collectors.toList());
-        Collection<DataFieldVO> nonSortFields = fields.stream().filter(f -> !f.getFormField().getFieldId().equals(sortBy)).collect(Collectors.toList());
+        Collection<DataFieldVO> sortFields = fields.stream().filter(f -> f.getFormField().getFieldId().equals(sortBy))
+                .collect(Collectors.toList());
+        Collection<DataFieldVO> nonSortFields = fields.stream()
+                .filter(f -> !f.getFormField().getFieldId().equals(sortBy)).collect(Collectors.toList());
         Map<Integer, Collection<DataFieldVO>> nonSortFieldsMap = new HashMap<>();
 
         // Create a map of unsorted fields keyed by row
@@ -791,9 +802,8 @@ public class SubmissionServiceImpl
 
         // Sort the fields
         sortFields = sortFields.stream().sorted((f1, f2) -> {
-            return groupSort == GroupSort.ASCENDING ? 
-                        f1.getValue().compareTo(f2.getValue()) :
-                        f2.getValue().compareTo(f1.getValue());
+            return groupSort == GroupSort.ASCENDING ? f1.getValue().compareTo(f2.getValue())
+                    : f2.getValue().compareTo(f1.getValue());
 
         }).collect(Collectors.toList());
 
@@ -826,7 +836,7 @@ public class SubmissionServiceImpl
 
     private Map<String, Double> calculate(Map<String, Collection<Double>> agg, GroupOperation groupOperation) {
         Map<String, Double> output = new HashMap<>();
-        
+
         DecimalFormat f = new DecimalFormat("##.00");
 
         agg.entrySet().forEach(e -> {
