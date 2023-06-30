@@ -192,7 +192,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
           function subLabelText(text: any, x: any, y: any) {
             ctx.font = 'bolder 12px sans-serif';
             ctx.fillStyle = 'rgba(102, 102, 102, 1)';
-            ctx.textAlign = 'center';
+            ctx.textAlign = 'left';
             ctx.fillText(text, x + left, y + 40);
           }
         },
