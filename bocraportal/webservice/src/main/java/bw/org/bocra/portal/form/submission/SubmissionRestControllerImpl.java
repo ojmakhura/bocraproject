@@ -369,10 +369,10 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleFindByIds(Set<Long> ids) {
+    public ResponseEntity<?> handleFindByIds(Set<Long> ids, Boolean loadData) {
         try {
 
-            Collection<FormSubmissionVO> submissions = submissionService.findByIds(ids);
+            Collection<FormSubmissionVO> submissions = submissionService.findByIds(ids, loadData);
             return ResponseEntity.ok(submissions);
 
         } catch(Exception e) {

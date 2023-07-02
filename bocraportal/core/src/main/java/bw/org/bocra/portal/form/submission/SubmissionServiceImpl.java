@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -51,10 +52,12 @@ import bw.org.bocra.portal.DataPage;
 import bw.org.bocra.portal.access.AccessPoint;
 import bw.org.bocra.portal.access.AccessPointDaoImpl;
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.activation.FormActivationVO;
 import bw.org.bocra.portal.form.field.FieldType;
 import bw.org.bocra.portal.form.field.FieldValueType;
 import bw.org.bocra.portal.form.field.FormField;
@@ -65,6 +68,7 @@ import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 import bw.org.bocra.portal.form.submission.data.SubmissionDataRepository;
+import bw.org.bocra.portal.form.submission.note.NoteVO;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
@@ -83,10 +87,11 @@ public class SubmissionServiceImpl
     private final FormActivationRepository activationRepository;
     private final PeriodDao periodDao;
     private final SubmissionDataRepository submissionDataRepository;
+    private final FormDao formDao;
 
     public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
             FormActivationRepository activationRepository, PeriodDao periodDao,
-            SubmissionDataRepository submissionDataRepository,
+            SubmissionDataRepository submissionDataRepository, FormDao formDao,
             LicenseeRepository licenseeRepository, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository,
             MessageSource messageSource) {
 
@@ -95,6 +100,7 @@ public class SubmissionServiceImpl
         this.activationRepository = activationRepository;
         this.periodDao = periodDao;
         this.submissionDataRepository = submissionDataRepository;
+        this.formDao = formDao;
     }
 
     /**
@@ -345,7 +351,7 @@ public class SubmissionServiceImpl
     }
 
     @Override
-    protected Collection<FormSubmissionVO> handleFindByIds(Set<Long> ids) throws Exception {
+    protected Collection<FormSubmissionVO> handleFindByIds(Set<Long> ids, Boolean loadData) throws Exception {
 
         Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, Long>findByAttributeIn("id",
                 ids);
@@ -353,7 +359,129 @@ public class SubmissionServiceImpl
         Collection<FormSubmissionVO> vos = new ArrayList<>();
 
         for (FormSubmission formSubmission : submissions) {
-            FormSubmissionVO vo = getFormSubmissionDao().toFormSubmissionVO(formSubmission);
+            FormSubmissionVO vo = new FormSubmissionVO();
+
+            if (loadData) {
+                vo = getFormSubmissionDao().toFormSubmissionVO(formSubmission);
+            } else {
+                formSubmissionDao.toFormSubmissionVO(formSubmission, vo);
+
+                if (formSubmission.getForm() != null) {
+                    Form form = formSubmission.getForm();
+                    FormVO formVO = formDao.toFormVO(form);
+                    formVO.setFormSections(null);
+                    formVO.getFormFields().forEach(field -> {
+                        field.setForm(null);
+                        field.setFormSection(null);
+                    });
+                    formVO.setLicensees(null);
+                    formVO.setPeriodConfig(null);
+                    formVO.setFormSections(null);
+                    formVO.setLicenceTypes(null);
+                    formVO.setSectors(null);
+
+                    vo.setForm(formVO);
+
+                    if (CollectionUtils.isNotEmpty(formSubmission.getDataFields())) {
+
+                        Collection<DataField> fields = formSubmission.getForm().getEntryType() == FormEntryType.SINGLE
+                                ? formSubmission.getDataFields()
+                                : submissionDataRepository
+                                        .findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(formSubmission.getId(),
+                                                PageRequest.of(0, 10 * formSubmission.getForm().getFormFields().size()))
+                                        .getContent();
+
+                        if (formSubmission.getForm().getEntryType() == FormEntryType.SINGLE) {
+
+                            Collection<DataFieldSectionVO> sections = new ArrayList<>();
+
+                            Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
+                            for (DataField dataField : fields) {
+
+                                DataFieldVO data = new DataFieldVO();
+                                getDataFieldDao().toDataFieldVO(dataField, data);
+
+                                data.setFormSubmission(null);
+
+                                FormSection section = dataField.getFormField().getFormSection();
+
+                                DataFieldSectionVO sec = new DataFieldSectionVO();
+                                sec.setPosition(section.getPosition());
+                                sec.setSectionLabel(section.getSectionLabel());
+                                sec.setSectionId(section.getSectionId());
+
+                                if (!sectioned.containsKey(sec)) {
+                                    sectioned.put(sec, new ArrayList<>());
+                                }
+
+                                sectioned.get(sec).add(data);
+                            }
+
+                            for (Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
+                                DataFieldSectionVO sec = entry.getKey();
+                                sec.setDataFields(entry.getValue());
+                                sections.add(sec);
+                            }
+
+                            vo.setSections(sections);
+
+                        } else {
+                            if (vo.getDataFields() == null) {
+                                vo.setDataFields(new ArrayList<>());
+                            }
+
+                            for(DataField field : fields) {
+                                DataFieldVO data = new DataFieldVO();
+                                getDataFieldDao().toDataFieldVO(field, data);
+                                vo.getDataFields().add(data);
+
+                            }
+                        }
+                    }
+                }
+
+                if (formSubmission.getLicensee() != null) {
+                    LicenseeVO licensee = new LicenseeVO();
+                    licensee.setId(formSubmission.getLicensee().getId());
+                    licensee.setAlias(formSubmission.getLicensee().getAlias());
+                    licensee.setUin(formSubmission.getLicensee().getUin());
+                    licensee.setTradingAs(formSubmission.getLicensee().getTradingAs());
+                    licensee.setLicenseeName(formSubmission.getLicensee().getLicenseeName());
+
+                    licensee.setUsers(null);
+                    licensee.setForms(null);
+                    licensee.setLicences(null);
+                    licensee.setDocuments(null);
+                    licensee.setSectors(null);
+                    licensee.setShareholders(null);
+
+                    if (StringUtils.isBlank(formSubmission.getLicensee().getAlias())) {
+                        licensee.setAlias(formSubmission.getLicensee().getLicenseeName());
+                    }
+
+                    vo.setLicensee(licensee);
+                }
+
+                if (formSubmission.getPeriod() != null) {
+                    PeriodVO period = new PeriodVO();
+                    period.setId(formSubmission.getPeriod().getId());
+                    period.setPeriodName(formSubmission.getPeriod().getPeriodName());
+                    period.setPeriodEnd(formSubmission.getPeriod().getPeriodEnd());
+                    period.setPeriodStart(formSubmission.getPeriod().getPeriodStart());
+
+                    vo.setPeriod(period);
+                }
+
+                if (formSubmission.getFormActivation() != null) {
+                    FormActivationVO activation = new FormActivationVO();
+                    activation.setId(formSubmission.getFormActivation().getId());
+                    activation.setActivationDeadline(formSubmission.getFormActivation().getActivationDeadline());
+                    activation.setActivationName(formSubmission.getFormActivation().getActivationName());
+                    vo.setFormActivation(activation);
+
+                }
+            }
+
             if (StringUtils.isBlank(vo.getLicensee().getAlias())) {
                 vo.getLicensee().setAlias(vo.getLicensee().getLicenseeName());
             }
@@ -478,7 +606,6 @@ public class SubmissionServiceImpl
 
             for (CSVRecord csvRecord : csvRecords) {
 
-
                 List<DataField> expressions = new ArrayList<>();
                 List<DataField> tmpFields = new ArrayList<>();
 
@@ -519,7 +646,9 @@ public class SubmissionServiceImpl
 
                         dataField.setValue(f.format(v) + "");
                     } catch (Exception e) {
-                        throw new SubmissionServiceException("An error was encountered while evaluating expression for row " + dataField.getRow() + ".");
+                        throw new SubmissionServiceException(
+                                "An error was encountered while evaluating expression for row " + dataField.getRow()
+                                        + ".");
                     }
                 }
 
@@ -872,5 +1001,4 @@ public class SubmissionServiceImpl
         });
         return output;
     }
-
 }

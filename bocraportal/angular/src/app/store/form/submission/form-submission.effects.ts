@@ -38,8 +38,8 @@ export class FormSubmissionEffects {
   findByIds$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormSubmissionActions.findByIds),
-      mergeMap(({ ids }) =>
-        this.submissionRestController.findByIds(ids).pipe(
+      mergeMap(({ ids, loadData }) =>
+        this.submissionRestController.findByIds(ids, loadData).pipe(
           map((formSubmissions) =>
             FormSubmissionActions.findByIdsSuccess({
               formSubmissions,

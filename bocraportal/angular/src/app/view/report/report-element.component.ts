@@ -28,9 +28,9 @@ import { floor } from 'mathjs';
 import { ReportChart, ReportChartComponent } from './report-chart.component';
 import { FormEntryType } from '@app/model/bw/org/bocra/portal/form/form-entry-type';
 import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
-import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
 import { Store } from '@ngrx/store';
 import { FormSubmissionState } from '@app/store/form/submission/form-submission.state';
+import * as ReportActions from '@app/store/report/report.actions';
 
 export class ReportElement {
   groupBy: string = '';
@@ -191,6 +191,13 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   filterSubmissions() {
+    this.store.dispatch(
+      ReportActions.reportLoading({
+        loading: true,
+        messages: [`Perform filters on submission data ....`],
+        success: false,
+      })
+    );
 
     let filters: any = this.reportElementGroup.get('submissionFilters').value;
 
@@ -201,19 +208,18 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.submissionService.preProcessedFindByIds(filters).subscribe((res) => {
       
-      // this.store.dispatch(
-      //   SubmissionActions.preProcessedFindByIdsSuccess({
-      //     formSubmissions: res,
-      //     messages: [],
-      //     success: true,
-      //   })
-      // );
-
       this.formSubmissions = res;
 
       this.generateGridData();
       this.generateMultipleDatasources();
       console.log(this.multipleDatasources)
+      this.store.dispatch(
+        ReportActions.reportLoading({
+          loading: false,
+          messages: [`Perform filters on submission data ....`],
+          success: false,
+        })
+      );
     });
     
   }

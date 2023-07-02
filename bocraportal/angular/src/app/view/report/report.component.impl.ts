@@ -7,6 +7,7 @@ import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
 import * as SubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
+import * as ReportActions from '@app/store/report/report.actions';
 import { ReportComponent, ReportSearchForm } from '@app/view/report/report.component';
 import { select } from '@ngrx/store';
 import { ChartData } from 'chart.js';
@@ -47,8 +48,13 @@ export class ReportComponentImpl extends ReportComponent {
   doNgOnDestroy(): void {}
 
   override doNgAfterViewInit() {
+
+    console.log(this.route.queryParams)
+
+    let ids = [];
+
     this.route.queryParams.subscribe((queryParams: any) => {
-      let ids = queryParams?.submissions?.map((id: string) => +id);
+      ids = queryParams?.submissions?.map((id: string) => +id);
       if(ids && ids.length > 0) {
         this.loadData(ids);
       }
@@ -78,6 +84,18 @@ export class ReportComponentImpl extends ReportComponent {
       });
 
       this.report = this.reportForm.value;
+
+      if(submissions.length > 0 && ids.length > 0) {
+      
+        this.store.dispatch(
+          ReportActions.reportLoading({
+            loading: false,
+            messages: [`Loading reports ....`],
+            success: false,
+          })
+        );
+
+      }
     });
   }
 
@@ -145,8 +163,17 @@ export class ReportComponentImpl extends ReportComponent {
 
   private loadData(ids: number[]) {
     this.store.dispatch(
+      ReportActions.reportLoading({
+        loading: true,
+        messages: [`Loading ${ids?.length} submissions for report generation ....`],
+        success: false,
+      })
+    );
+
+    this.store.dispatch(
       SubmissionActions.findByIds({
         ids: ids,
+        loadData: true,
         loaderMessage: `Loading ${ids?.length} submissions for report generation ....`,
         loading: true,
       })

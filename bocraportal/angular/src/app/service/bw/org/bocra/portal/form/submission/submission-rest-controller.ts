@@ -49,8 +49,8 @@ export class SubmissionRestController {
     return this.http.get<FormSubmissionVO | any>(`${this.path}/${id}`, {});
   }
 
-  public findByIds(ids: Set<number> | any): Observable<FormSubmissionVO[] | any[]> {
-    return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/ids?ids=${ids}`, {});
+  public findByIds(ids: Set<number> | any, loadData: boolean): Observable<FormSubmissionVO[] | any[]> {
+    return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/ids?ids=${ids}&loadData=${loadData}`, {});
   }
 
   public preProcessedFindByIds(filters: MultipleEntryFormFilter | any): Observable<FormSubmissionVO[] | any[]> {
