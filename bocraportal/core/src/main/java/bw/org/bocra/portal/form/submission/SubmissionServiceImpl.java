@@ -361,7 +361,7 @@ public class SubmissionServiceImpl
         for (FormSubmission formSubmission : submissions) {
             FormSubmissionVO vo = new FormSubmissionVO();
 
-            if (loadData) {
+            if (loadData || formSubmission.getForm().getEntryType() == FormEntryType.SINGLE) {
                 vo = getFormSubmissionDao().toFormSubmissionVO(formSubmission);
             } else {
                 formSubmissionDao.toFormSubmissionVO(formSubmission, vo);
