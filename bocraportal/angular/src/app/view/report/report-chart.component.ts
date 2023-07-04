@@ -2,8 +2,11 @@
 import { AfterViewInit, Component, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
-import { ChartDataset } from 'chart.js';
+import { ChartDataset, Chart } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import * as pluginAnnotation from 'chartjs-plugin-annotation';
+
+Chart.register(pluginAnnotation);
 
 export class ReportChart {
   chartLabel: string = '';
@@ -56,11 +59,11 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.reportChartGroup.addControl('chartCaption', this.formBuilder.control([]));
     this.reportChartGroup.addControl('scaleType', this.formBuilder.control([]));
     this.reportChartGroup.addControl('target', this.formBuilder.control([]));
+    this.reportChartGroup.addControl('minimum', this.formBuilder.control([]));
     this.chartTypeControl.patchValue('bar');
     this.periodControl.patchValue('all');
 
     this.datasets = this.basicDatasets();
-
   }
 
   ngAfterViewInit(): void {
@@ -77,7 +80,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   scaleTypeChanged() {
-    this.chartOptions.scales.yAxes.type = this.scaleTypeControl.value;
+    this.chartOptions.scales.y.type = this.scaleTypeControl.value;
     this.chart.render();
   }
 
@@ -89,12 +92,10 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.reportChartGroup.get('target') as FormControl;
   }
 
-  targetChange() {
+  targetChange() {}
 
-  }
-  
   basicDatasets() {
-    let tset = {};
+    
     this.labelNames = [];
     this.periods = [];
 
@@ -119,44 +120,42 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
       rows.forEach((row) => {
         let found: any = gridValues.find((gv: any) => gv?.label === row[rowSelector]);
-        let key = periods.length > 1 ? `${pr.alias}: ${row[rowSelector]}` : row[rowSelector];
 
-        if (tset[key]?.data === undefined) {
-          tset[key] = {
-            label: key,
-            backgroundColor: this.colors[row[colourSelector]],
-            data: [],
-          };
-        }
         if (tmpSet[pr.alias][row[rowSelector]]?.data === undefined) {
           tmpSet[pr.alias][row[rowSelector]] = {
             label: row[rowSelector],
             backgroundColor: this.colors[row[colourSelector]],
             data: [],
+            labels: [],
           };
         }
 
         let fvalues = Object.values(found);
         columns?.forEach((col) => {
           let foundData: any = fvalues.find((fv: any) => fv?.period === pr.period && fv?.label === col[colSelector]);
-          tset[key]?.data.push(foundData ? foundData.value : '0');
-          if (foundData) tmpSet[pr.alias][row[rowSelector]]?.data.push(foundData.value);
+          
+          if (foundData) {
+            tmpSet[pr.alias][row[rowSelector]]?.data.push(foundData.value);
+            tmpSet[pr.alias][row[rowSelector]]?.labels.push(foundData.label);
+          }
         });
       });
     });
 
-
     let temp = {};
+    let tempLabels = {}
 
     periods.forEach((pr) => {
-      let a = tmpSet[pr.alias];
 
       rows.forEach((row) => {
-        let key = periods.length > 1 ? `${pr.alias}: ${row[rowSelector]}` : row[rowSelector];
         let k = row[rowSelector];
 
-        
         if (tmpSet[pr.alias][k]) {
+
+          if(!tempLabels[pr.alias]) {
+            tempLabels[pr.alias] = tmpSet[pr.alias][k].labels;
+          }
+
           if (this.dataRows === 'licensees') {
             tmpSet[pr.alias][k].backgroundColor = this.colors[row[rowSelector]];
           }
@@ -174,12 +173,11 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     let dset: any[] = Object.values(temp);
-
-    this.labelNames =
-      this.dataColumns === 'licensees'
-        ? this.getSelectedSubmissionLicensees()
-        : this.getDafieldAsLabels(temp);
-
+    
+    Object.values(tempLabels).forEach((v: any) => {
+      this.labelNames = this.labelNames.concat(v);
+    });
+    
     this.periods = this.selectedPeriods?.map((per) => per.alias);
 
     this.getChartOptions();
@@ -190,6 +188,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getChartOptions() {
+    
     this.chartOptions = {
       responsive: true,
       layout: {
@@ -198,14 +197,32 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
       scales: {
-        yAxes: {
+        y: {
           display: true,
           type: 'linear',
-        }
-      }
+        },
+      },
+      plugins: {
+        plugins: {
+          annotation: {
+            annotations: {
+              l1:{
+                type: 'line',
+                borderColor: 'black',
+                borderWidth: 3,
+                scaleID: 'y',
+                value: 1500000,
+              },
+            },
+          },
+        },
+      },
     };
-    
   }
+
+  getChartTargetLine(target: number) {}
+
+  getChartAnnotations() {}
 
   getChartPlugins() {
     let periods =
@@ -213,60 +230,70 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     let subs = this.selectedSubmissions;
     let names = this.labelNames;
 
-    if (periods && periods.length > 1) {
-      if (this.chart?.plugins) {
-        this.chart.plugins = [];
-      }
+    let cols = this.dataColumns;
+    let rows = this.dataRows;
+    
+    let sFields = this.selectedFields;
 
-      this.chartPlugins = [
-        {
-          id: 'subLabels',
-          afterDatasetsDraw(chart2: any, args: any, pluginOptions: any) {
-            const {
-              ctx,
-              chartArea: { left, right, top, bottom, width, height },
-            } = chart2;
-            ctx.save();
-
-            let stepValue = width / names.length;
-            let start = 0;
-
-            periods.forEach((pr) => {
-              let s = subs[pr.alias];
-              let end = start + stepValue * s.length;
-              let mid = (start + end) / 2;
-              subLabelText(pr.alias, start, bottom);
-              start += stepValue * s.length;
-            });
-
-            function subLabelText(text: any, x: any, y: any) {
-              ctx.font = 'bolder 12px sans-serif';
-              ctx.fillStyle = 'rgba(102, 102, 102, 1)';
-              ctx.textAlign = 'left';
-              ctx.fillText(text, x + left, y + 40);
-            }
-          },
-        },
-      ];
+    if (this.chart?.plugins) {
+      this.chart.plugins = [];
     }
 
+    this.chartPlugins = [
+      pluginAnnotation,
+      {
+        id: 'subLabels',
+        afterDatasetsDraw(chart: any, args: any, pluginOptions: any) {
+          var pr = document.getElementById('period');
+          var val = pr['value'];
+
+          const {
+            ctx,
+            chartArea: { left, width },
+            scales: { 
+              x: {
+                bottom: bottomAxis, // bottom of the labels
+              }
+            },
+          } = chart;
+          ctx.save();
+
+          let stepValue = width / names.length;
+
+          var prs = val === 'all' ? periods : periods.filter((p) => p?.period === val);
+
+          if (prs.length > 1) {
+            let start = 0;
+            periods.forEach((pr) => {
+              let s = rows === 'fields' ? subs[pr.alias] : sFields;
+              
+              subLabelText(pr.alias, start, bottomAxis);
+              start += stepValue * s.length;
+            });
+          }
+
+          function subLabelText(text: any, x: any, y: any) {
+            
+            ctx.font = 'bolder 12px sans-serif';
+            ctx.fillStyle = 'rgba(102, 102, 102, 1)';
+            ctx.textAlign = 'left';
+            ctx.fillText(text, x + left, y + 10);
+          }
+        },
+      },
+    ];
   }
 
   getDafieldAsLabels(data: any) {
     let keys = Object.keys(data);
-    let selectedFieldNames = this.selectedFields?.map((fl) => fl.alias)
+    let selectedFieldNames = this.selectedFields?.map((fl) => fl.alias);
     let labels: string[] = selectedFieldNames;
 
-    if(keys.length > 0) {
-      
+    if (keys.length > 0) {
       let len = data[keys[0]].data.length;
-
-      console.log(len, this.selectedFields.length)
-
       let multiplier = len / this.selectedFields.length;
-      console.log(multiplier);
 
-      for(let i = 1; i < multiplier; i++) {
+      for (let i = 1; i < multiplier; i++) {
         labels = labels.concat(selectedFieldNames);
       }
     }
@@ -278,11 +305,10 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     let licensees: string[] = [];
 
     this.selectedPeriods.forEach((per) => {
-      console.log(per)
-      if(this.period === 'all' || this.period === per.period) {
-
+      
+      if (this.period === 'all' || this.period === per.period) {
         let submissions: FormSubmissionVO[] = this.selectedSubmissions[per.period];
-  
+
         submissions.forEach((sub) => {
           licensees.push(sub.licensee.licenseeName);
         });
@@ -304,10 +330,9 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectedPeriod() {
-    console.log(this.chart)
+    
     this.datasets = this.basicDatasets();
     this.getChartPlugins();
-
   }
 
   selectedFormSection() {}
