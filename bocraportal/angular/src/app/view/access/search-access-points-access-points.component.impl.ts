@@ -5,7 +5,7 @@ import { AccessPointVO } from '@app/model/bw/org/bocra/portal/access/access-poin
 import { DataPage } from '@app/model/bw/org/bocra/portal/data-page';
 import { AccessPointRestController } from '@app/service/bw/org/bocra/portal/access/access-point-rest-controller';
 import { SearchAccessPointsAccessPointsComponent } from '@app/view/access/search-access-points-access-points.component';
-import { Observable, catchError, map, of, startWith, switchMap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import * as AccessPointSelectors from '@app/store/access/access-point.selectors';
 import * as AccessPointActions from '@app/store/access/access-point.actions';
 import { select } from '@ngrx/store';
