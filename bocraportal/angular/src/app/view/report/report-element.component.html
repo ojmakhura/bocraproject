@@ -325,7 +325,7 @@
               <td mat-cell *matCellDef="let data">{{ data.row }}: {{ data?.label }}</td>
             </ng-container>
             <ng-container *ngFor="let period of gridDataPeriods; let m = index" matColumnDef="{{ period }}">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="periodLengths[periods[m]?.name]">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="gridData[periods[m]?.name].length">
                 {{ periodAliases[periods[m]?.name] }}
               </th>
             </ng-container>

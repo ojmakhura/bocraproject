@@ -34,6 +34,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() colors: any;
   @Input() chartIndex: number;
   @Input() grid: any;
+  @Input() gridColumnHeaders: any[];
 
   sections: any[] = [];
   periods: any[] = [];
@@ -104,7 +105,7 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
     let colSelector = this.dataColumns === 'licensees' ? 'licensee' : 'alias';
     let rowSelector = this.dataColumns === 'licensees' ? 'alias' : 'licensee';
-    let colourSelector = this.dataColumns === 'licensees' ? 'licensee' : 'fieldId';
+    let colourSelector = this.dataColumns === 'licensees' ? 'fieldId' : 'licensee';
 
     let periods =
       this.period === 'all' ? this.selectedPeriods : this.selectedPeriods.filter((p) => this.period === p?.period);
@@ -115,7 +116,8 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       let gridValues = Object.values(this.grid);
 
       if (!tmpSet[pr.alias]) {
-        tmpSet[pr.alias] = {};
+        tmpSet[pr.alias] = {
+        };
       }
 
       rows.forEach((row) => {
@@ -126,43 +128,42 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
             label: row[rowSelector],
             backgroundColor: this.colors[row[colourSelector]],
             data: [],
-            labels: [],
           };
         }
 
         let fvalues = Object.values(found);
         columns?.forEach((col) => {
+
           let foundData: any = fvalues.find((fv: any) => fv?.period === pr.period && fv?.label === col[colSelector]);
           
-          if (foundData) {
+          if (foundData && foundData.active) {
             tmpSet[pr.alias][row[rowSelector]]?.data.push(foundData.value);
-            tmpSet[pr.alias][row[rowSelector]]?.labels.push(foundData.label);
+          } else if(this.dataColumns === 'fields') {
+
+            tmpSet[pr.alias][row[rowSelector]]?.data.push(0);
           }
         });
       });
     });
 
     let temp = {};
-    let tempLabels = {}
 
     periods.forEach((pr) => {
 
       rows.forEach((row) => {
+        
         let k = row[rowSelector];
 
         if (tmpSet[pr.alias][k]) {
 
-          if(!tempLabels[pr.alias]) {
-            tempLabels[pr.alias] = tmpSet[pr.alias][k].labels;
-          }
-
           if (this.dataRows === 'licensees') {
-            tmpSet[pr.alias][k].backgroundColor = this.colors[row[rowSelector]];
+            tmpSet[pr.alias][k].backgroundColor = this.colors[row[colourSelector]];
           }
 
           if (!temp[tmpSet[pr.alias][k].label]) {
+
             temp[tmpSet[pr.alias][k].label] = {};
-            temp[tmpSet[pr.alias][k].label].backgroundColor = this.colors[row[rowSelector]];
+            temp[tmpSet[pr.alias][k].label].backgroundColor = this.colors[row[colourSelector]];
             temp[tmpSet[pr.alias][k].label].data = [];
             temp[tmpSet[pr.alias][k].label].label = tmpSet[pr.alias][k].label;
           }
@@ -173,16 +174,26 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     let dset: any[] = Object.values(temp);
-    
-    Object.values(tempLabels).forEach((v: any) => {
-      this.labelNames = this.labelNames.concat(v);
-    });
-    
+        
     this.periods = this.selectedPeriods?.map((per) => per.alias);
 
     this.getChartOptions();
-
     this.getChartPlugins();
+
+    this.labelNames = this.period === 'all' ? 
+                      this.gridColumnHeaders.map((h) => h.label) : 
+                      this.gridColumnHeaders
+                        .filter(g => g.period === this.period)
+                        .map((h) => h.label);
+
+    if (this.dataRows === 'licensees') {
+      this.labelNames = this.labelNames.filter((l) => this.selectedFields.find((f) => f.alias === l));
+    } else {
+      this.labelNames = this.labelNames.filter((l) => this.selectedLicensees.find((f) => f.licensee === l));
+    }
+
+    console.log(this.grid)
+    console.log(dset)
 
     return dset;
   }
@@ -307,10 +318,10 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedPeriods.forEach((per) => {
       
       if (this.period === 'all' || this.period === per.period) {
-        let submissions: FormSubmissionVO[] = this.selectedSubmissions[per.period];
+        let submissions: any[] = this.selectedSubmissions[per.period];
 
         submissions.forEach((sub) => {
-          licensees.push(sub.licensee.licenseeName);
+          licensees.push(sub.licensee);
         });
       }
     });
