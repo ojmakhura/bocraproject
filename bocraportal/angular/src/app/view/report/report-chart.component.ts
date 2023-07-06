@@ -61,6 +61,8 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.reportChartGroup.addControl('scaleType', this.formBuilder.control([]));
     this.reportChartGroup.addControl('target', this.formBuilder.control([]));
     this.reportChartGroup.addControl('minimum', this.formBuilder.control([]));
+    this.reportChartGroup.addControl('limit', this.formBuilder.control([]));
+    this.reportChartGroup.addControl('limitOrder', this.formBuilder.control([]));
     this.chartTypeControl.patchValue('bar');
     this.periodControl.patchValue('all');
 
@@ -191,9 +193,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.labelNames = this.labelNames.filter((l) => this.selectedLicensees.find((f) => f.licensee === l));
     }
-
-    console.log(this.grid)
-    console.log(dset)
 
     return dset;
   }
@@ -386,6 +385,22 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get chartCaption() {
     return this.chartCaptionControl.value;
+  }
+
+  get chartLimitControl() {
+    return this.reportChartGroup.get('limit') as FormControl;
+  }
+
+  get limit() {
+    return this.chartLimitControl.value;
+  }
+
+  get chartLimitOrderControl() {
+    return this.reportChartGroup.get('limitOrder') as FormControl;
+  }
+
+  get limitOrder() {
+    return this.chartLimitOrderControl.value;
   }
 
   selectedChartType() {

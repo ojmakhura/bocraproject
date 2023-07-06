@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -88,6 +89,10 @@ public class SubmissionServiceImpl
     private final PeriodDao periodDao;
     private final SubmissionDataRepository submissionDataRepository;
     private final FormDao formDao;
+
+    protected static String MATHJS_URL = 
+            "https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.2/math.js";
+
 
     public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
             FormActivationRepository activationRepository, PeriodDao periodDao,
@@ -602,6 +607,8 @@ public class SubmissionServiceImpl
             ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
             ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
 
+            // scriptEngine.eval(new InputStreamReader(new URL(MATHJS_URL).openStream()));
+
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             for (CSVRecord csvRecord : csvRecords) {
@@ -758,6 +765,7 @@ public class SubmissionServiceImpl
     protected Collection<FormSubmissionVO> handlePreProcessedFindById(MultipleEntryFormFilter filters)
             throws Exception {
 
+        
         Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, Long>findByAttributeIn("id",
                 filters.getIds());
 
@@ -878,8 +886,27 @@ public class SubmissionServiceImpl
                         field.setRow(row);
                     }
 
-                    newFields.addAll(first);
+                    boolean thresholdMet = true;
 
+                    if(StringUtils.isNotBlank(filters.getThresholdField()) && filters.getThreshold() != null && filters.getThreshold() > 0) {
+
+                        for(DataFieldVO field : first) {
+                            if(field.getFormField().getFieldId().equals(filters.getThresholdField())) {
+                                try {
+                                    double value = Double.parseDouble(field.getValue());
+                                    if(value >= filters.getThreshold()) {
+                                        thresholdMet = true;
+                                    }
+                                } catch(Exception ex) {
+                                    // Ignore
+                                }
+                            }
+                        }
+                    }
+
+                    if(thresholdMet) {
+                        newFields.addAll(first);
+                    }
                     row++;
                 }
 

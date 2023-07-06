@@ -255,7 +255,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         this.multipleDatasources[`${sub?.period?.periodName}-${sub.licensee.alias}`].sort =
           this.dataSourceSort.toArray()[index];
       }
+
     });
+    
   }
 
   initialiseDataGrid() {
@@ -642,6 +644,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       sortOrder: [''],
       limit: [''],
       groupOperation: [''],
+      threshold: '',
+      thresholdField: '',
+      thresholdDirection: '',
     });
   }
 
@@ -673,9 +678,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {}
 
   private calculate(values: number[], calculationType: string) {
-
-    console.log(values, calculationType)
-
     if (calculationType === 'sum') {
       return math.sum(values);
     } else if (calculationType === 'mean') {
@@ -891,7 +893,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.extractGrid();
 
-    console.log(this.grid)
   }
 
   setGridTableData() {
@@ -1403,19 +1404,6 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     });
 
-    // await Object.values(this.grid)?.forEach(async (row: any | undefined) => {
-
-    //   if(row?.position > i) {
-    //     await Object.defineProperty(
-    //       this.grid,
-    //       `${row?.position+1}`,
-    //       Object.getOwnPropertyDescriptor(this.grid, `${row?.position}`)
-    //     );
-    //     delete this.grid[`${row?.position}`];
-    //   }
-    // })
-
-    // this.setGridTableData();
     await this.extractGrid();
   }
 
@@ -1423,6 +1411,8 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
     this.additionalDataColumns = this.dataColumnsAnalytics;
     let changingCol: any = this.additionalDataColumns[index];
     let periodData = this.gridData[changingCol?.tag];
+
+    if(!periodData) return;
 
     Object.values(periodData)?.forEach((row: any) => {
       if (!row[changingCol?.name]) return;
@@ -1469,6 +1459,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   removeFromArray(arrayControl: FormArray, index: number) {
+    
     arrayControl.removeAt(index);
   }
 

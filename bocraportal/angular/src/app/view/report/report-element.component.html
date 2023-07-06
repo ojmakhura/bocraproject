@@ -388,8 +388,10 @@
             </div>
 
             <div class="mb-3">
-              <label id="orderBy_label" class="col-sm-2 col-form-label" for="orderBy"><span translate>Order By</span></label>
-              <select id="groupBy" class="form-select" formControlName="orderBy" aria-label="Default select example">
+              <label id="orderBy_label" class="col-sm-2 col-form-label" for="orderBy"
+                ><span translate>Order By</span></label
+              >
+              <select id="groupBy" class="form-select" formControlName="orderBy" aria-label="Default select">
                 <option value="">None</option>
                 <option *ngFor="let fid of selectedFieldIds" value="{{ fid }}">
                   {{ multipleDataColumnNames[fid] }}
@@ -398,8 +400,10 @@
             </div>
 
             <div class="mb-3">
-              <label id="sortOrder_label" class="col-sm-2 col-form-label" for="sortOrder"><span translate>Sort Order</span></label>
-              <select id="sortOrder" class="form-select" formControlName="sortOrder" aria-label="Default select example">
+              <label id="sortOrder_label" class="col-sm-2 col-form-label" for="sortOrder"
+                ><span translate>Sort Order</span></label
+              >
+              <select id="sortOrder" class="form-select" formControlName="sortOrder" aria-label="Default select">
                 <option value="" selected>None</option>
                 <option value="ASCENDING">Ascending</option>
                 <option value="DESCENDING">Descending</option>
@@ -408,6 +412,45 @@
             <div class="mb-3">
               <label id="limit_label" class="col-sm-2 col-form-label" for="limit"><span translate>Limit</span></label>
               <input type="number" id="limit" class="form-control" name="limit" formControlName="limit" />
+            </div>
+            <div class="mb-3 row" *ngIf="false">
+              <label for="limit" class="col-sm-2 col-form-label">Limit</label>
+              <div class="col-sm-10">
+                <input type="number" id="limit" class="form-control" name="limit" formControlName="limit" />
+              </div>
+            </div>
+            <div class="mb-3 row" *ngIf="false">
+              <label for="threshold" class="col-sm-2 col-form-label">Threshold</label>
+              <div class="col-sm-10">
+                <input type="number" id="threshold" class="form-control" name="threshold" formControlName="threshold" />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label id="thresholdField_label" class="col-sm-2 col-form-label" for="thresholdField"
+                ><span translate>Threshold Field</span></label
+              >
+              <select id="thresholdField" class="form-select" formControlName="thresholdField" aria-label="Default select">
+                <option value="">None</option>
+                <option *ngFor="let fid of selectedFieldIds" value="{{ fid }}">
+                  {{ multipleDataColumnNames[fid] }}
+                </option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label id="thresholdDirection_label" for="thresholdDirection" class="col-sm-2 col-form-label"
+                >Threshold Direction</label
+              >
+              <select
+                id="thresholdDirection"
+                class="form-select"
+                formControlName="thresholdDirection"
+                aria-label="Default select"
+              >
+                <option value=""></option>
+                <option value="above">Above</option>
+                <option value="below">Below</option>
+              </select>
             </div>
 
             <div class="text-end">
@@ -419,12 +462,16 @@
           <mat-tab-group animationDuration="0ms" class="view-tabs">
             <mat-tab *ngFor="let per of selectedPeriods; let i = index" label="{{ per?.alias }}">
               <mat-tab-group animationDuration="0ms" class="view-tabs">
-                <mat-tab *ngFor="let sub of selectedSubmissions[per.period]" #multipleTable label="{{ sub?.licensee?.alias }}">
+                <mat-tab
+                  *ngFor="let sub of selectedSubmissions[per.period]"
+                  #multipleTable
+                  label="{{ sub?.licensee }}"
+                >
                   <table
                     mat-table
                     matTableExporter
                     matSort
-                    [dataSource]="multipleDatasources[per?.period + '-' + sub.licensee.alias]"
+                    [dataSource]="multipleDatasources[per?.period + '-' + sub.licensee]"
                     #exporter="matTableExporter"
                     class="table table-bordered table-striped"
                   >
@@ -437,7 +484,7 @@
                     <tr mat-row *matRowDef="let row; columns: selectedFieldIds"></tr>
                   </table>
                   <mat-paginator
-                    id="multipleDataPaginator-{{i}}"
+                    id="multipleDataPaginator-{{ i }}"
                     #dataSourcePaginator="matPaginator"
                     [pageSize]="10"
                     [pageSizeOptions]="[5, 10, 20, 30, 40, 50, 60, 70, 80, 90]"

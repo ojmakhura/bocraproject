@@ -74,6 +74,10 @@ export class SubmissionRestController {
       filters.sortOrder = null;
     }
 
+    if(filters.limitDirection === "") {
+      filters.limitDirection = null;
+    }
+
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/ids/processed`, filters);
   }
 
