@@ -673,6 +673,9 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {}
 
   private calculate(values: number[], calculationType: string) {
+
+    console.log(values, calculationType)
+
     if (calculationType === 'sum') {
       return math.sum(values);
     } else if (calculationType === 'mean') {
@@ -1116,7 +1119,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       if (!tmpRow) return;
 
       Object.keys(tmpRow)?.forEach(async (key: any) => {
-        if (key !== 'label' && key !== 'position' && key != 'length' && key !== 'elementId') {
+        if (!['label', 'position', 'length', 'elementId', 'active'].includes(key)) {
           let gridCell: any = tmpRow[key];
           let t = gridCell.source;
 
