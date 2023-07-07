@@ -38,6 +38,8 @@ export class ReportComponentImpl extends ReportComponent {
   fullReport: FormReport[] = [];
   report: any = {};
 
+  loadingData = false;
+
   submissionSearchForm: FormGroup;
 
   constructor(private injector: Injector) {
@@ -48,8 +50,6 @@ export class ReportComponentImpl extends ReportComponent {
   doNgOnDestroy(): void {}
 
   override doNgAfterViewInit() {
-    console.log(this.route.queryParams);
-
     let ids = [];
 
     this.route.queryParams.subscribe((queryParams: any) => {
@@ -85,13 +85,17 @@ export class ReportComponentImpl extends ReportComponent {
 
         this.report = this.reportForm.value;
 
-        this.store.dispatch(
-          ReportActions.reportLoading({
-            loading: false,
-            messages: [`Loading reports ....`],
-            success: false,
-          })
-        );
+        if(this.loadingData) {
+          this.store.dispatch(
+            ReportActions.reportLoading({
+              loading: false,
+              messages: [`Loading reports ....`],
+              success: false,
+            })
+          );
+
+          this.loadingData = false;
+        }
       },
       error: (err) => {
         this.store.dispatch(
@@ -171,6 +175,9 @@ export class ReportComponentImpl extends ReportComponent {
   }
 
   private loadData(ids: number[]) {
+
+    this.loadingData = true;
+    
     this.store.dispatch(
       ReportActions.reportLoading({
         loading: true,
