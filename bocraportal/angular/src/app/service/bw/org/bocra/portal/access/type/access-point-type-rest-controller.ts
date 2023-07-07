@@ -32,11 +32,15 @@ export class AccessPointTypeRestController {
     pageSize: number | any,
     criteria: AccessPointCriteria | any
   ): Observable<AccessPointTypeVO[] | any[]> {
-    return this.http.post<AccessPointTypeVO[] | any[]>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, {
-      pageNumber: pageNumber,
-      pageSize: pageSize,
-      criteria: criteria,
-    });
+    if(criteria) {
+      return this.http.post<AccessPointTypeVO[] | any[]>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, {
+        pageNumber: pageNumber,
+        pageSize: pageSize,
+        criteria: criteria,
+      });
+    } else {
+      return this.getAllPaged(pageNumber, pageSize);
+    }
   }
 
   public remove(id: number | any): Observable<boolean | any> {

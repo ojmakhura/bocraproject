@@ -34,6 +34,6 @@ export class LicenceTypeRestController {
   }
 
   public search(searchCriteria: LicenceTypeCriteria | any): Observable<LicenceTypeVO[] | any[]> {
-    return this.http.post<LicenceTypeVO[] | any[]>(this.path + `/search`, searchCriteria);
+    return this.http.post<LicenceTypeVO[] | any[]>(this.path + `/search`, searchCriteria || {});
   }
 }

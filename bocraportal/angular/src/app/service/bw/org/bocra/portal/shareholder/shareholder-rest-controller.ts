@@ -34,6 +34,6 @@ export class ShareholderRestController {
   }
 
   public search(criteria: ShareholderCriteria | any): Observable<ShareholderVO[] | any[]> {
-    return this.http.post<ShareholderVO[] | any[]>(`${this.path}/search`, criteria);
+    return this.http.post<ShareholderVO[] | any[]>(`${this.path}/search`, criteria || {});
   }
 }

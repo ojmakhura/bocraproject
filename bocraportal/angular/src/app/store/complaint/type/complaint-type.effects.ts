@@ -117,7 +117,7 @@ export class ComplaintTypeEffects {
           map((complaintTypes) =>
             ComplaintTypeActions.getAllPagedSuccess({
               complaintTypes,
-              messages: [`Page ${pageNumber} found with ${pageSize} complaint types.`],
+              messages: [`Page ${pageNumber} found with ${complaintTypes.length} complaint types.`],
               success: true,
             })
           ),

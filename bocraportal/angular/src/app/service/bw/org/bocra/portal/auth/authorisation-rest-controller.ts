@@ -58,6 +58,6 @@ export class AuthorisationRestController {
   }
 
   public search(criteria: AuthorisationCriteria | any): Observable<AuthorisationVO[] | any[]> {
-    return this.http.post<AuthorisationVO[] | any[]>(`${this.path}/search`, criteria);
+    return this.http.post<AuthorisationVO[] | any[]>(`${this.path}/search`, criteria ? criteria : {});
   }
 }

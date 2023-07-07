@@ -33,6 +33,6 @@ export class PeriodConfigRestController {
   }
 
   public search(criteria: PeriodConfigCriteria | any): Observable<PeriodConfigVO[] | any[]> {
-    return this.http.post<PeriodConfigVO[] | any[]>(this.path + `/search`, criteria);
+    return this.http.post<PeriodConfigVO[] | any[]>(this.path + `/search`, criteria || {});
   }
 }

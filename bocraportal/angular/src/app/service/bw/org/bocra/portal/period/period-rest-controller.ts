@@ -46,6 +46,6 @@ export class PeriodRestController {
   }
 
   public search(criteria: PeriodCriteria | any): Observable<PeriodVO[] | any[]> {
-    return this.http.post<PeriodVO[] | any[]>(`${this.path}/search`, criteria);
+    return this.http.post<PeriodVO[] | any[]>(`${this.path}/search`, criteria || {});
   }
 }

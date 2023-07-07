@@ -117,7 +117,7 @@ export class DocumentTypeEffects {
           map((documentTypes) =>
             DocumentTypeActions.getAllPagedSuccess({
               documentTypes,
-              messages: [`Page ${pageNumber} found with ${pageSize} document types.`],
+              messages: [`Page ${pageNumber} found with ${documentTypes?.length} document types.`],
               success: true,
             })
           ),

@@ -60,7 +60,8 @@ export class DocumentRestController {
   }
 
   public search(criteria: DocumentCriteria | any): Observable<DocumentVO[] | any[]> {
-    return this.http.post<DocumentVO[] | any[]>(`${this.path}/search`, criteria);
+
+    return this.http.post<DocumentVO[] | any[]>(`${this.path}/search`, criteria ? criteria : {});
   }
 
   public uploadFile(

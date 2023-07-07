@@ -125,7 +125,7 @@ export class SectorEffects {
           map((sectors) =>
             SectorActions.getAllPagedSuccess({
               sectors,
-              messages: [`Page ${pageNumber} found with ${pageSize} sectors.`],
+              messages: [`Page ${pageNumber} found with ${sectors?.length} sectors.`],
               success: true,
             })
           ),

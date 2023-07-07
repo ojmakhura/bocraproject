@@ -35,6 +35,6 @@ export class ContactMessageRestController {
   }
 
   public search(criteria: string | any): Observable<ContactMessageVO[] | any[]> {
-    return this.http.get<ContactMessageVO[] | any[]>(this.path + `/search/criteria/${criteria}`);
+    return criteria ? this.http.get<ContactMessageVO[] | any[]>(this.path + `/search/criteria/${criteria}`) : this.getAll();
   }
 }

@@ -98,7 +98,12 @@ public class ComplaintTypeRestControllerImpl extends ComplaintTypeRestController
             logger.error(e.getMessage());
 
             if(e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
+
                 return ResponseEntity.badRequest().body("Could not delete complaint type with id " + id);
+
+            } else if(e instanceof PSQLException || e.getCause() instanceof PSQLException) {
+
+                return ResponseEntity.badRequest().body("Access point type is being used by other records in the system, it cannot be deleted.");
             }
 
             return ResponseEntity.badRequest().body("Unknown error encountered when deleting complaint type with id " + id);

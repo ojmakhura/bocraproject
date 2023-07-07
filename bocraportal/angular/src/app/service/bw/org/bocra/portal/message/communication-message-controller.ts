@@ -42,7 +42,7 @@ export class CommunicationMessageController {
     criteria: string | any
   ): Observable<CommunicationMessageVO[] | any[]> {
     return this.http.get<CommunicationMessageVO[] | any[]>(
-      `${this.path}/search?pageNumber=${pageNumber}&pageSize=${pageSize}&criteria=${criteria}`,
+      `${this.path}/search?pageNumber=${pageNumber}&pageSize=${pageSize}&criteria=${criteria || ' '}`,
       {}
     );
   }
@@ -56,6 +56,6 @@ export class CommunicationMessageController {
   }
 
   public search(criteria: string | any): Observable<CommunicationMessageVO[] | any[]> {
-    return this.http.post<CommunicationMessageVO[] | any[]>(`${this.path}/search?criteria=${criteria}`, {});
+    return this.http.post<CommunicationMessageVO[] | any[]>(`${this.path}/search?criteria=${criteria || ' '}`, {});
   }
 }

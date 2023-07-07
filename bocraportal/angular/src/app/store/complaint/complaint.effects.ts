@@ -133,7 +133,7 @@ export class ComplaintEffects {
           map((complaints) =>
             ComplaintActions.getAllPagedSuccess({
               complaints,
-              messages: [`Page ${pageNumber} found with ${pageSize} complaints.`],
+              messages: [`Page ${pageNumber} found with ${complaints.length} complaints.`],
               success: true,
             })
           ),
