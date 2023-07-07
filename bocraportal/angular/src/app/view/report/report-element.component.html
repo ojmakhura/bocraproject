@@ -353,76 +353,87 @@
             <legend id="formPeriodConfig_label" class="col-sm-2 col-form-label" for="submissionFilters">
               <span translate>Process Submissions</span>
             </legend>
-            <div class="mb-3">
-              <label id="groupBy_label" class="col-sm-2 col-form-label" for="groupBy"
-                ><span translate>Group By</span></label
-              >
-              <select id="groupBy" class="form-select" formControlName="groupBy" aria-label="Default select example">
-                <option value="">None</option>
-                <option *ngFor="let fid of selectedFieldIds" value="{{ fid }}">
-                  {{ multipleDataColumnNames[fid] }}
-                </option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label id="groupOperation_label" class="col-sm-2 col-form-label" for="groupOperation"
-                ><span>Group Operation</span></label
-              >
-              <select
-                id="groupOperation"
-                class="form-select"
-                formControlName="groupOperation"
-                aria-label="Default select example"
-              >
-                <option value="NONE">None</option>
-                <option value="SUM">Sum</option>
-                <option value="MEAN">Mean</option>
-                <option value="MODE">Mode</option>
-                <option value="MEDIAN">Median</option>
-                <option value="VARIANCE">Variance</option>
-                <option value="STANDARD_DEVIATION">Standard Deviation</option>
-                <option value="MIN">Minimum</option>
-                <option value="MAX">Maximum</option>
-                <!-- <option value="CUSTOM">Custom</option> -->
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <label id="orderBy_label" class="col-sm-2 col-form-label" for="orderBy"
-                ><span translate>Order By</span></label
-              >
-              <select id="groupBy" class="form-select" formControlName="orderBy" aria-label="Default select">
-                <option value="">None</option>
-                <option *ngFor="let fid of selectedFieldIds" value="{{ fid }}">
-                  {{ multipleDataColumnNames[fid] }}
-                </option>
-              </select>
+            <div class="form-row row">
+              <div class="form-group col-md-6">
+                <label id="groupBy_label" class="col-sm-2 col-form-label" for="groupBy"
+                  ><span translate>Group By</span></label
+                >
+                <select id="groupBy" class="form-select" formControlName="groupBy" aria-label="Default select example">
+                  <option value="">None</option>
+                  <option *ngFor="let fid of selectedFieldIds" value="{{ fid }}">
+                    {{ multipleDataColumnNames[fid] }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                
+                <label id="groupOperation_label" class="col-sm-2 col-form-label" for="groupOperation"
+                  >Operation</label>
+                <select
+                  id="groupOperation"
+                  class="form-select"
+                  formControlName="groupOperation"
+                  aria-label="Default select example"
+                >
+                  <option value="NONE">None</option>
+                  <option value="SUM">Sum</option>
+                  <option value="MEAN">Mean</option>
+                  <option value="MODE">Mode</option>
+                  <option value="MEDIAN">Median</option>
+                  <option value="VARIANCE">Variance</option>
+                  <option value="STANDARD_DEVIATION">Standard Deviation</option>
+                  <option value="MIN">Minimum</option>
+                  <option value="MAX">Maximum</option>
+                  <!-- <option value="CUSTOM">Custom</option> -->
+                </select>
+              </div>
             </div>
 
-            <div class="mb-3">
-              <label id="sortOrder_label" class="col-sm-2 col-form-label" for="sortOrder"
-                ><span translate>Sort Order</span></label
-              >
-              <select id="sortOrder" class="form-select" formControlName="sortOrder" aria-label="Default select">
-                <option value="" selected>None</option>
-                <option value="ASCENDING">Ascending</option>
-                <option value="DESCENDING">Descending</option>
-              </select>
+            <div class="form-row row">
+              <div class="form-group col-md-6">
+                <label id="orderBy_label" class="col-sm-2 col-form-label" for="orderBy"
+                  ><span translate>Order By</span></label
+                >
+                <select id="groupBy" class="form-select" formControlName="orderBy" aria-label="Default select">
+                  <option value="">None</option>
+                  <option *ngFor="let fid of selectedFieldIds" value="{{ fid }}">
+                    {{ multipleDataColumnNames[fid] }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label id="sortOrder_label" class="col-sm-2 col-form-label" for="sortOrder"
+                  ><span translate>Sort Order</span></label
+                >
+                <select id="sortOrder" class="form-select" formControlName="sortOrder" aria-label="Default select">
+                  <option value="" selected>None</option>
+                  <option value="ASCENDING">Ascending</option>
+                  <option value="DESCENDING">Descending</option>
+                </select>
+              </div>
             </div>
             <div class="mb-3">
               <label id="limit_label" class="col-sm-2 col-form-label" for="limit"><span translate>Limit</span></label>
               <input type="number" id="limit" class="form-control" name="limit" formControlName="limit" />
             </div>
-            <div class="mb-3 row" *ngIf="false">
-              <label for="limit" class="col-sm-2 col-form-label">Limit</label>
-              <div class="col-sm-10">
-                <input type="number" id="limit" class="form-control" name="limit" formControlName="limit" />
-              </div>
+            <!-- <div class="mb-3">
+              <label id="min_label" class="col-sm-2 col-form-label" for="min"><span translate>Min</span></label>
+              <input type="number" id="min" class="form-control" name="min" formControlName="min" />
             </div>
-            <div class="mb-3 row" *ngIf="false">
-              <label for="threshold" class="col-sm-2 col-form-label">Threshold</label>
-              <div class="col-sm-10">
-                <input type="number" id="threshold" class="form-control" name="threshold" formControlName="threshold" />
+            <div class="mb-3">
+              <label id="max_label" class="col-sm-2 col-form-label" for="max"><span translate>Max</span></label>
+              <input type="number" id="max" class="form-control" name="max" formControlName="max" />
+            </div> -->
+
+            <div class="form-row row">
+              <div class="form-group col-md-6">
+                <label id="min_label" class="col-sm-2 col-form-label" for="min"><span translate>Min</span></label>
+              <input type="number" id="min" class="form-control" name="min" formControlName="min" />
+              </div>
+              <div class="form-group col-md-6">
+                <label id="max_label" class="col-sm-2 col-form-label" for="max"><span translate>Max</span></label>
+              <input type="number" id="max" class="form-control" name="max" formControlName="max" />
               </div>
             </div>
 
@@ -435,21 +446,6 @@
                 <option *ngFor="let fid of selectedFieldIds" value="{{ fid }}">
                   {{ multipleDataColumnNames[fid] }}
                 </option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label id="thresholdDirection_label" for="thresholdDirection" class="col-sm-2 col-form-label"
-                >Threshold Direction</label
-              >
-              <select
-                id="thresholdDirection"
-                class="form-select"
-                formControlName="thresholdDirection"
-                aria-label="Default select"
-              >
-                <option value=""></option>
-                <option value="above">Above</option>
-                <option value="below">Below</option>
               </select>
             </div>
 

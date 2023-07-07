@@ -761,19 +761,51 @@ public class SubmissionServiceImpl
         return page;
     }
 
+    private Collection<DataField> getRangeRows(Collection<DataField> fields, Double min, Double max, String fieldId) {
+
+        // If there is not field id or min and max values, return all fields
+        if(StringUtils.isBlank(fieldId) || (min == null && max == null)) {
+            return fields;
+        }
+
+
+        Collection<DataField> filteredById = fields.stream().filter(f -> f.getFormField().getFieldId().equals(fieldId))
+                .collect(Collectors.toList());
+
+        Set<Integer> rowList = filteredById.stream().filter(f -> {
+            try {
+                Double row = Double.parseDouble(f.getValue());
+
+                if(min != null && max != null) {
+                    return row >= min && row <= max;
+                } else if(min != null) {
+                    return row >= min;
+                } else if(max != null) {
+                    return row <= max;
+                } else {
+                    return false;
+                }
+
+            } catch (Exception e) {
+                
+                throw new SubmissionServiceException("The range field value is not a number.");
+            }
+        }).map(f -> f.getRow()).collect(Collectors.toSet());
+
+        return fields.stream().filter(f -> rowList.contains(f.getRow())).collect(Collectors.toList());
+
+    }
+
     @Override
     protected Collection<FormSubmissionVO> handlePreProcessedFindById(MultipleEntryFormFilter filters)
             throws Exception {
 
-        
         Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, Long>findByAttributeIn("id",
                 filters.getIds());
 
         Collection<FormSubmission> submissions = formSubmissionRepository.findAll(sSpecs);
-        Collection<FormSubmissionVO> vos = new ArrayList<>();
 
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
+        Collection<FormSubmissionVO> vos = new ArrayList<>();
 
         for (FormSubmission formSubmission : submissions) {
 
@@ -802,11 +834,14 @@ public class SubmissionServiceImpl
                 subVO.getLicensee().setAlias(subVO.getLicensee().getLicenseeName());
             }
 
-            Collection<DataFieldVO> fvo = getDataFieldDao().toDataFieldVOCollection(formSubmission.getDataFields());
+            Collection<DataField> fields = this.getRangeRows(formSubmission.getDataFields(), filters.getMin(),
+                    filters.getMax(), filters.getThresholdField());
+
+            Collection<DataFieldVO> fvo = getDataFieldDao().toDataFieldVOCollection(fields);
 
             final Collection<DataFieldVO> newFields = new ArrayList<>();
 
-            if (filters.getGroupOperation() != GroupOperation.NONE) {
+            if (filters.getGroupOperation() != null && filters.getGroupOperation() != GroupOperation.NONE) {
 
                 // Get a collection of fields by row
                 Map<Integer, Collection<DataFieldVO>> fmap = new HashMap<>();
@@ -886,27 +921,8 @@ public class SubmissionServiceImpl
                         field.setRow(row);
                     }
 
-                    boolean thresholdMet = true;
-
-                    if(StringUtils.isNotBlank(filters.getThresholdField()) && filters.getThreshold() != null && filters.getThreshold() > 0) {
-
-                        for(DataFieldVO field : first) {
-                            if(field.getFormField().getFieldId().equals(filters.getThresholdField())) {
-                                try {
-                                    double value = Double.parseDouble(field.getValue());
-                                    if(value >= filters.getThreshold()) {
-                                        thresholdMet = true;
-                                    }
-                                } catch(Exception ex) {
-                                    // Ignore
-                                }
-                            }
-                        }
-                    }
-
-                    if(thresholdMet) {
-                        newFields.addAll(first);
-                    }
+                    newFields.addAll(first);
+                    
                     row++;
                 }
 

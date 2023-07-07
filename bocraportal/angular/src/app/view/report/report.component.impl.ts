@@ -48,45 +48,43 @@ export class ReportComponentImpl extends ReportComponent {
   doNgOnDestroy(): void {}
 
   override doNgAfterViewInit() {
-
-    console.log(this.route.queryParams)
+    console.log(this.route.queryParams);
 
     let ids = [];
 
     this.route.queryParams.subscribe((queryParams: any) => {
       ids = queryParams?.submissions?.map((id: string) => +id);
-      if(ids && ids.length > 0) {
+      if (ids && ids.length > 0) {
         this.loadData(ids);
       }
     });
 
-    this.submissions$.subscribe((submissions) => {
-      this.submissions = submissions;
-      this.licensees = [...new Set(submissions.map((submission) => submission.licensee.licenseeName))];
+    this.submissions$.subscribe({
+      next: (submissions) => {
+        this.submissions = submissions;
+        this.licensees = [...new Set(submissions.map((submission) => submission.licensee.licenseeName))];
 
-      submissions
-        .map((submission) => submission.form)
-        .forEach((form) => {
-          let fs: FormVO[] = this.forms.filter((f) => f.code === form.code);
-          if (!fs || fs.length === 0) {
-            this.forms.push(form);
-          }
+        submissions
+          .map((submission) => submission.form)
+          .forEach((form) => {
+            let fs: FormVO[] = this.forms.filter((f) => f.code === form.code);
+            if (!fs || fs.length === 0) {
+              this.forms.push(form);
+            }
+          });
+
+        this.forms.forEach((form) => {
+          let rep: FormReport = new FormReport();
+
+          rep.formSubmissions = submissions.filter((submission) => submission.form.formName === form.formName);
+          rep.formName = form.formName;
+          rep.formCode = form.code;
+          this.fullReport.push(rep);
+          this.formReportsControl.push(this.createFormReportGroup(rep));
         });
 
-      this.forms.forEach((form) => {
-        let rep: FormReport = new FormReport();
+        this.report = this.reportForm.value;
 
-        rep.formSubmissions = submissions.filter((submission) => submission.form.formName === form.formName);
-        rep.formName = form.formName;
-        rep.formCode = form.code;
-        this.fullReport.push(rep);
-        this.formReportsControl.push(this.createFormReportGroup(rep));
-      });
-
-      this.report = this.reportForm.value;
-
-      if(submissions.length > 0 && ids.length > 0) {
-      
         this.store.dispatch(
           ReportActions.reportLoading({
             loading: false,
@@ -94,8 +92,19 @@ export class ReportComponentImpl extends ReportComponent {
             success: false,
           })
         );
-
-      }
+      },
+      error: (err) => {
+        this.store.dispatch(
+          ReportActions.reportLoading({
+            loading: false,
+            messages: [`Loading reports ....`],
+            success: false,
+          })
+        );
+      },
+      complete: () => {
+        console.log('ReportComponentImpl.doNgAfterViewInit() - complete');
+      },
     });
   }
 

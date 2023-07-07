@@ -78,6 +78,18 @@ export class SubmissionRestController {
       filters.limitDirection = null;
     }
 
+    if(filters.min === "") {
+      filters.min = null;
+    }
+
+    if(filters.max === "") {
+      filters.max = null;
+    }
+
+    if(filters.thresholdField === "") {
+      filters.thresholdField = null;
+    }
+
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/ids/processed`, filters);
   }
 
