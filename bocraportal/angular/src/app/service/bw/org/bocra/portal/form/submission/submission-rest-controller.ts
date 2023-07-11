@@ -49,8 +49,8 @@ export class SubmissionRestController {
     return this.http.get<FormSubmissionVO | any>(`${this.path}/${id}`, {});
   }
 
-  public findByIds(ids: Set<number> | any): Observable<FormSubmissionVO[] | any[]> {
-    return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/ids?ids=${ids}`, {});
+  public findByIds(ids: Set<number> | any, loadData: boolean): Observable<FormSubmissionVO[] | any[]> {
+    return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/ids?ids=${ids}&loadData=${loadData}`, {});
   }
 
   public preProcessedFindByIds(filters: MultipleEntryFormFilter | any): Observable<FormSubmissionVO[] | any[]> {
@@ -72,6 +72,22 @@ export class SubmissionRestController {
 
     if(filters.sortOrder === "") {
       filters.sortOrder = null;
+    }
+
+    if(filters.limitDirection === "") {
+      filters.limitDirection = null;
+    }
+
+    if(filters.min === "") {
+      filters.min = null;
+    }
+
+    if(filters.max === "") {
+      filters.max = null;
+    }
+
+    if(filters.thresholdField === "") {
+      filters.thresholdField = null;
     }
 
     return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/ids/processed`, filters);
@@ -102,11 +118,11 @@ export class SubmissionRestController {
   }
 
   public search(criteria: FormSubmissionCriteria | any): Observable<FormSubmissionVO[] | any[]> {
-    return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/search`, criteria);
+    return this.http.post<FormSubmissionVO[] | any[]>(`${this.path}/search`, criteria || {});
   }
 
   pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<DataPage | any> {
-    return this.http.post<DataPage | any>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria);
+    return this.http.post<DataPage | any>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria || {});
   }
 
   public uploadData(submissionId: number | any, file: File, sendEmail: boolean): Observable<FormSubmissionVO | any> {

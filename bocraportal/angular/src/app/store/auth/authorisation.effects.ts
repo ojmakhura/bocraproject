@@ -137,7 +137,7 @@ export class AuthorisationEffects {
           map((authorisations) =>
             AuthorisationActions.getAllPagedSuccess({
               authorisations,
-              messages: [`Page ${pageNumber} found with ${pageSize} authorisations.`],
+              messages: [`Page ${pageNumber} found with ${authorisations?.length} authorisations.`],
               success: true,
             })
           ),

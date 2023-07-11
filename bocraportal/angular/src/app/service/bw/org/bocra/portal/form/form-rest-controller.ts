@@ -38,6 +38,6 @@ export class FormRestController {
   }
 
   public search(criteria: FormCriteria | any): Observable<FormVO[] | any[]> {
-    return this.http.post<FormVO[] | any[]>(`${this.path}/search`, criteria);
+    return this.http.post<FormVO[] | any[]>(`${this.path}/search`, criteria ? criteria : {});
   }
 }

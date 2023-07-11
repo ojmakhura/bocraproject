@@ -117,7 +117,7 @@ export class AccessPointEffects {
           map((accessPoints) =>
             AccessPointActions.getAllPagedSuccess({
               accessPoints,
-              messages: [`Page ${pageNumber} found with ${pageSize} access points.`],
+              messages: [`Page ${pageNumber} found with ${accessPoints?.length} access points.`],
               success: true,
             })
           ),
@@ -137,7 +137,7 @@ export class AccessPointEffects {
           map((accessPointPage) => {
             return AccessPointActions.pagedSearchSuccess({ 
               accessPointPage, 
-              messages: [`Page ${pageNumber} found with ${pageSize} access points.`], 
+              messages: [`Page ${pageNumber} found with ${accessPointPage?.elements ? accessPointPage?.elements.length : 0 } access points.`], 
               success: true 
             })
           }),

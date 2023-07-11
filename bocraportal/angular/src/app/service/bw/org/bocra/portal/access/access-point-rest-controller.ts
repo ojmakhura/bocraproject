@@ -44,6 +44,7 @@ export class AccessPointRestController {
   }
 
   public search(criteria: AccessPointCriteria | any): Observable<AccessPointVO[] | any[]> {
+    
     return this.http.post<AccessPointVO[] | any[]>(this.path + `/search`, criteria);
   }
 }

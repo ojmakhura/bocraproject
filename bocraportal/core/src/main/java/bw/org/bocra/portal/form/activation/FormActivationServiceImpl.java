@@ -308,7 +308,6 @@ public class FormActivationServiceImpl
 
             filtered.forEach(fil -> {
 
-
                 FormActivationCriteria criteria = new FormActivationCriteria();
                 criteria.setFormId(fil.getId());
                 criteria.setPeriodId(period.getId());
@@ -332,7 +331,15 @@ public class FormActivationServiceImpl
                             period.getPeriodName());
 
                     activation.setActivationName(activationName);
-                    activation = this.save(activation);
+
+                    try {
+                        activation = this.save(activation);
+                    } catch(Exception e) {
+                        
+                        logger.error("Error saving activation: " + activationName);
+                        e.printStackTrace();
+                    }
+                    
                     
                     activations.add(activation);
 

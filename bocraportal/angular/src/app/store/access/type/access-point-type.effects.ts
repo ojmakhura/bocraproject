@@ -142,7 +142,7 @@ export class AccessPointTypeEffects {
           map((accessPointTypes) =>
             AccessPointTypeActions.getAllPagedSuccess({
               accessPointTypes,
-              messages: [`Page ${pageNumber} found with ${pageSize} access point types.`],
+              messages: [`Page ${pageNumber} found with ${accessPointTypes?.length} access point types.`],
               success: true,
             })
           ),

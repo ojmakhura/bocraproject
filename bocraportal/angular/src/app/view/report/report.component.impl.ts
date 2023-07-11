@@ -7,6 +7,7 @@ import { DataFieldVO } from '@app/model/bw/org/bocra/portal/form/submission/data
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 import * as SubmissionActions from '@app/store/form/submission/form-submission.actions';
 import * as SubmissionSelectors from '@app/store/form/submission/form-submission.selectors';
+import * as ReportActions from '@app/store/report/report.actions';
 import { ReportComponent, ReportSearchForm } from '@app/view/report/report.component';
 import { select } from '@ngrx/store';
 import { ChartData } from 'chart.js';
@@ -37,6 +38,8 @@ export class ReportComponentImpl extends ReportComponent {
   fullReport: FormReport[] = [];
   report: any = {};
 
+  loadingData = false;
+
   submissionSearchForm: FormGroup;
 
   constructor(private injector: Injector) {
@@ -47,35 +50,65 @@ export class ReportComponentImpl extends ReportComponent {
   doNgOnDestroy(): void {}
 
   override doNgAfterViewInit() {
+    let ids = [];
+
     this.route.queryParams.subscribe((queryParams: any) => {
-      let ids = queryParams?.submissions?.map((id: string) => +id);
-      this.loadData(ids);
+      ids = queryParams?.submissions?.map((id: string) => +id);
+      if (ids && ids.length > 0) {
+        this.loadData(ids);
+      }
     });
 
-    this.submissions$.subscribe((submissions) => {
-      this.submissions = submissions;
-      this.licensees = [...new Set(submissions.map((submission) => submission.licensee.licenseeName))];
+    this.submissions$.subscribe({
+      next: (submissions) => {
+        this.submissions = submissions;
+        this.licensees = [...new Set(submissions.map((submission) => submission.licensee.licenseeName))];
 
-      submissions
-        .map((submission) => submission.form)
-        .forEach((form) => {
-          let fs: FormVO[] = this.forms.filter((f) => f.code === form.code);
-          if (!fs || fs.length === 0) {
-            this.forms.push(form);
-          }
+        submissions
+          .map((submission) => submission.form)
+          .forEach((form) => {
+            let fs: FormVO[] = this.forms.filter((f) => f.code === form.code);
+            if (!fs || fs.length === 0) {
+              this.forms.push(form);
+            }
+          });
+
+        this.forms.forEach((form) => {
+          let rep: FormReport = new FormReport();
+
+          rep.formSubmissions = submissions.filter((submission) => submission.form.formName === form.formName);
+          rep.formName = form.formName;
+          rep.formCode = form.code;
+          this.fullReport.push(rep);
+          this.formReportsControl.push(this.createFormReportGroup(rep));
         });
 
-      this.forms.forEach((form) => {
-        let rep: FormReport = new FormReport();
+        this.report = this.reportForm.value;
 
-        rep.formSubmissions = submissions.filter((submission) => submission.form.formName === form.formName);
-        rep.formName = form.formName;
-        rep.formCode = form.code;
-        this.fullReport.push(rep);
-        this.formReportsControl.push(this.createFormReportGroup(rep));
-      });
+        if(this.loadingData) {
+          this.store.dispatch(
+            ReportActions.reportLoading({
+              loading: false,
+              messages: [`Loading reports ....`],
+              success: false,
+            })
+          );
 
-      this.report = this.reportForm.value;
+          this.loadingData = false;
+        }
+      },
+      error: (err) => {
+        this.store.dispatch(
+          ReportActions.reportLoading({
+            loading: false,
+            messages: [`Loading reports ....`],
+            success: false,
+          })
+        );
+      },
+      complete: () => {
+        console.log('ReportComponentImpl.doNgAfterViewInit() - complete');
+      },
     });
   }
 
@@ -142,9 +175,21 @@ export class ReportComponentImpl extends ReportComponent {
   }
 
   private loadData(ids: number[]) {
+
+    this.loadingData = true;
+    
+    this.store.dispatch(
+      ReportActions.reportLoading({
+        loading: true,
+        messages: [`Loading ${ids?.length} submissions for report generation ....`],
+        success: false,
+      })
+    );
+
     this.store.dispatch(
       SubmissionActions.findByIds({
         ids: ids,
+        loadData: true,
         loaderMessage: `Loading ${ids?.length} submissions for report generation ....`,
         loading: true,
       })

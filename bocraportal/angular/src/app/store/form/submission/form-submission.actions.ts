@@ -55,7 +55,7 @@ export const findByIdSuccess = createAction(
 
 export const findByIds = createAction(
   FormSubmissionActionType.FIND_BY_IDS,
-  props<{ ids: number[] | any[]; loading: boolean; loaderMessage: string | undefined }>()
+  props<{ ids: number[] | any[]; loadData: boolean; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const findByIdsSuccess = createAction(

@@ -47,6 +47,29 @@
           </select>
         </div>
       </div>
+
+      <div class="mb-3 row" *ngIf="chartType === 'bar'">
+        <label for="chart-type" class="col-sm-2 col-form-label">Scale Type</label>
+        <div class="col-sm-10">
+          <select
+            id="chart-type"
+            class="form-select"
+            formControlName="scaleType"
+            aria-label="Default select example"
+            (change)="scaleTypeChanged()"
+          >
+            <option [selected]="true" value="linear">Linear</option>
+            <option value="logarithmic">Logarithmic</option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-3 row" *ngIf="false">
+        <label for="target" class="col-sm-2 col-form-label">Target</label>
+        <div class="col-sm-10">
+          <input type="number" id="target" class="form-control" name="target" formControlName="target" />
+        </div>
+      </div>
+
       <div *ngIf="chartType === 'table'">
         <table class="table table-striped">
           <thead>
@@ -65,12 +88,30 @@
       </div>
       <div *ngIf="chartType === 'pie'"></div>
       <div *ngIf="chartType === 'bar' || chartType === 'line'">
-        <canvas baseChart #chart id="chart" class="chart" [datasets]="datasets" [labels]="labelNames" [type]="chartType"> </canvas>
+        <canvas
+          baseChart
+          #chart
+          id="chart"
+          class="chart"
+          [datasets]="datasets"
+          [labels]="labelNames"
+          [plugins]="chartPlugins"
+          [options]="chartOptions"
+          [type]="chartType"
+        >
+        </canvas>
       </div>
       <div class="mb-3 row">
         <label for="chart-label" class="col-sm-2 col-form-label">Caption</label>
         <div class="col-sm-10">
-          <textarea type="text" id="chartCaption" class="form-control" name="chartCaption" formControlName="chartCaption" rows="6"></textarea>
+          <textarea
+            type="text"
+            id="chartCaption"
+            class="form-control"
+            name="chartCaption"
+            formControlName="chartCaption"
+            rows="6"
+          ></textarea>
         </div>
       </div>
 

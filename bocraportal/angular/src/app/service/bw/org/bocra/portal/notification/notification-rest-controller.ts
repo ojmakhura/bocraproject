@@ -34,6 +34,6 @@ export class NotificationRestController {
   }
 
   public search(criteria: NotificationCriteria | any): Observable<NotificationVO[] | any[]> {
-    return this.http.post<NotificationVO[] | any[]>(this.path + `/search`, criteria);
+    return this.http.post<NotificationVO[] | any[]>(this.path + `/search`, criteria || {});
   }
 }

@@ -369,10 +369,10 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleFindByIds(Set<Long> ids) {
+    public ResponseEntity<?> handleFindByIds(Set<Long> ids, Boolean loadData) {
         try {
 
-            Collection<FormSubmissionVO> submissions = submissionService.findByIds(ids);
+            Collection<FormSubmissionVO> submissions = submissionService.findByIds(ids, loadData);
             return ResponseEntity.ok(submissions);
 
         } catch(Exception e) {
@@ -509,6 +509,12 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
             e.printStackTrace();
             logger.error(e.getMessage());
+            logger.error(e.getCause().getMessage());
+
+            if(e instanceof SubmissionServiceException) {
+                return ResponseEntity.badRequest().body(e.getCause().getMessage());
+            }
+
             return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
         }
     }

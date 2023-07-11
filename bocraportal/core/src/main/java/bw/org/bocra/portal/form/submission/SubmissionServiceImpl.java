@@ -13,12 +13,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -51,10 +53,12 @@ import bw.org.bocra.portal.DataPage;
 import bw.org.bocra.portal.access.AccessPoint;
 import bw.org.bocra.portal.access.AccessPointDaoImpl;
 import bw.org.bocra.portal.form.Form;
+import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormEntryType;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.activation.FormActivation;
 import bw.org.bocra.portal.form.activation.FormActivationRepository;
+import bw.org.bocra.portal.form.activation.FormActivationVO;
 import bw.org.bocra.portal.form.field.FieldType;
 import bw.org.bocra.portal.form.field.FieldValueType;
 import bw.org.bocra.portal.form.field.FormField;
@@ -65,6 +69,7 @@ import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
 import bw.org.bocra.portal.form.submission.data.SubmissionDataRepository;
+import bw.org.bocra.portal.form.submission.note.NoteVO;
 import bw.org.bocra.portal.licensee.Licensee;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.LicenseeVO;
@@ -83,10 +88,15 @@ public class SubmissionServiceImpl
     private final FormActivationRepository activationRepository;
     private final PeriodDao periodDao;
     private final SubmissionDataRepository submissionDataRepository;
+    private final FormDao formDao;
+
+    protected static String MATHJS_URL = 
+            "https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.2/math.js";
+
 
     public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
             FormActivationRepository activationRepository, PeriodDao periodDao,
-            SubmissionDataRepository submissionDataRepository,
+            SubmissionDataRepository submissionDataRepository, FormDao formDao,
             LicenseeRepository licenseeRepository, DataFieldDao dataFieldDao, DataFieldRepository dataFieldRepository,
             MessageSource messageSource) {
 
@@ -95,6 +105,7 @@ public class SubmissionServiceImpl
         this.activationRepository = activationRepository;
         this.periodDao = periodDao;
         this.submissionDataRepository = submissionDataRepository;
+        this.formDao = formDao;
     }
 
     /**
@@ -345,7 +356,7 @@ public class SubmissionServiceImpl
     }
 
     @Override
-    protected Collection<FormSubmissionVO> handleFindByIds(Set<Long> ids) throws Exception {
+    protected Collection<FormSubmissionVO> handleFindByIds(Set<Long> ids, Boolean loadData) throws Exception {
 
         Specification<FormSubmission> sSpecs = BocraportalSpecifications.<FormSubmission, Long>findByAttributeIn("id",
                 ids);
@@ -353,8 +364,130 @@ public class SubmissionServiceImpl
         Collection<FormSubmissionVO> vos = new ArrayList<>();
 
         for (FormSubmission formSubmission : submissions) {
-            FormSubmissionVO vo = getFormSubmissionDao().toFormSubmissionVO(formSubmission);
-            if(StringUtils.isBlank(vo.getLicensee().getAlias())) {
+            FormSubmissionVO vo = new FormSubmissionVO();
+
+            if (loadData || formSubmission.getForm().getEntryType() == FormEntryType.SINGLE) {
+                vo = getFormSubmissionDao().toFormSubmissionVO(formSubmission);
+            } else {
+                formSubmissionDao.toFormSubmissionVO(formSubmission, vo);
+
+                if (formSubmission.getForm() != null) {
+                    Form form = formSubmission.getForm();
+                    FormVO formVO = formDao.toFormVO(form);
+                    formVO.setFormSections(null);
+                    formVO.getFormFields().forEach(field -> {
+                        field.setForm(null);
+                        field.setFormSection(null);
+                    });
+                    formVO.setLicensees(null);
+                    formVO.setPeriodConfig(null);
+                    formVO.setFormSections(null);
+                    formVO.setLicenceTypes(null);
+                    formVO.setSectors(null);
+
+                    vo.setForm(formVO);
+
+                    if (CollectionUtils.isNotEmpty(formSubmission.getDataFields())) {
+
+                        Collection<DataField> fields = formSubmission.getForm().getEntryType() == FormEntryType.SINGLE
+                                ? formSubmission.getDataFields()
+                                : submissionDataRepository
+                                        .findByFormSubmissionIdOrderByRowAscFormFieldPositionAsc(formSubmission.getId(),
+                                                PageRequest.of(0, 10 * formSubmission.getForm().getFormFields().size()))
+                                        .getContent();
+
+                        if (formSubmission.getForm().getEntryType() == FormEntryType.SINGLE) {
+
+                            Collection<DataFieldSectionVO> sections = new ArrayList<>();
+
+                            Map<DataFieldSectionVO, List<DataFieldVO>> sectioned = new HashMap<>();
+                            for (DataField dataField : fields) {
+
+                                DataFieldVO data = new DataFieldVO();
+                                getDataFieldDao().toDataFieldVO(dataField, data);
+
+                                data.setFormSubmission(null);
+
+                                FormSection section = dataField.getFormField().getFormSection();
+
+                                DataFieldSectionVO sec = new DataFieldSectionVO();
+                                sec.setPosition(section.getPosition());
+                                sec.setSectionLabel(section.getSectionLabel());
+                                sec.setSectionId(section.getSectionId());
+
+                                if (!sectioned.containsKey(sec)) {
+                                    sectioned.put(sec, new ArrayList<>());
+                                }
+
+                                sectioned.get(sec).add(data);
+                            }
+
+                            for (Map.Entry<DataFieldSectionVO, List<DataFieldVO>> entry : sectioned.entrySet()) {
+                                DataFieldSectionVO sec = entry.getKey();
+                                sec.setDataFields(entry.getValue());
+                                sections.add(sec);
+                            }
+
+                            vo.setSections(sections);
+
+                        } else {
+                            if (vo.getDataFields() == null) {
+                                vo.setDataFields(new ArrayList<>());
+                            }
+
+                            for(DataField field : fields) {
+                                DataFieldVO data = new DataFieldVO();
+                                getDataFieldDao().toDataFieldVO(field, data);
+                                vo.getDataFields().add(data);
+
+                            }
+                        }
+                    }
+                }
+
+                if (formSubmission.getLicensee() != null) {
+                    LicenseeVO licensee = new LicenseeVO();
+                    licensee.setId(formSubmission.getLicensee().getId());
+                    licensee.setAlias(formSubmission.getLicensee().getAlias());
+                    licensee.setUin(formSubmission.getLicensee().getUin());
+                    licensee.setTradingAs(formSubmission.getLicensee().getTradingAs());
+                    licensee.setLicenseeName(formSubmission.getLicensee().getLicenseeName());
+
+                    licensee.setUsers(null);
+                    licensee.setForms(null);
+                    licensee.setLicences(null);
+                    licensee.setDocuments(null);
+                    licensee.setSectors(null);
+                    licensee.setShareholders(null);
+
+                    if (StringUtils.isBlank(formSubmission.getLicensee().getAlias())) {
+                        licensee.setAlias(formSubmission.getLicensee().getLicenseeName());
+                    }
+
+                    vo.setLicensee(licensee);
+                }
+
+                if (formSubmission.getPeriod() != null) {
+                    PeriodVO period = new PeriodVO();
+                    period.setId(formSubmission.getPeriod().getId());
+                    period.setPeriodName(formSubmission.getPeriod().getPeriodName());
+                    period.setPeriodEnd(formSubmission.getPeriod().getPeriodEnd());
+                    period.setPeriodStart(formSubmission.getPeriod().getPeriodStart());
+
+                    vo.setPeriod(period);
+                }
+
+                if (formSubmission.getFormActivation() != null) {
+                    FormActivationVO activation = new FormActivationVO();
+                    activation.setId(formSubmission.getFormActivation().getId());
+                    activation.setActivationDeadline(formSubmission.getFormActivation().getActivationDeadline());
+                    activation.setActivationName(formSubmission.getFormActivation().getActivationName());
+                    vo.setFormActivation(activation);
+
+                }
+            }
+
+            if (StringUtils.isBlank(vo.getLicensee().getAlias())) {
                 vo.getLicensee().setAlias(vo.getLicensee().getLicenseeName());
             }
             vos.add(getFormSubmissionDao().toFormSubmissionVO(formSubmission));
@@ -474,10 +607,11 @@ public class SubmissionServiceImpl
             ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
             ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
 
+            // scriptEngine.eval(new InputStreamReader(new URL(MATHJS_URL).openStream()));
+
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             for (CSVRecord csvRecord : csvRecords) {
-
 
                 List<DataField> expressions = new ArrayList<>();
                 List<DataField> tmpFields = new ArrayList<>();
@@ -512,10 +646,17 @@ public class SubmissionServiceImpl
                         }
                     }
 
-                    double v = (Double) scriptEngine.eval(expression);
-                    DecimalFormat f = new DecimalFormat("##.00");
+                    try {
 
-                    dataField.setValue(f.format(v) + "");
+                        double v = (Double) scriptEngine.eval(expression);
+                        DecimalFormat f = new DecimalFormat("##.00");
+
+                        dataField.setValue(f.format(v) + "");
+                    } catch (Exception e) {
+                        throw new SubmissionServiceException(
+                                "An error was encountered while evaluating expression for row " + dataField.getRow()
+                                        + ".");
+                    }
                 }
 
                 dataFields.addAll(tmpFields);
@@ -620,6 +761,41 @@ public class SubmissionServiceImpl
         return page;
     }
 
+    private Collection<DataField> getRangeRows(Collection<DataField> fields, Double min, Double max, String fieldId) {
+
+        // If there is not field id or min and max values, return all fields
+        if(StringUtils.isBlank(fieldId) || (min == null && max == null)) {
+            return fields;
+        }
+
+
+        Collection<DataField> filteredById = fields.stream().filter(f -> f.getFormField().getFieldId().equals(fieldId))
+                .collect(Collectors.toList());
+
+        Set<Integer> rowList = filteredById.stream().filter(f -> {
+            try {
+                Double row = Double.parseDouble(f.getValue());
+
+                if(min != null && max != null) {
+                    return row >= min && row <= max;
+                } else if(min != null) {
+                    return row >= min;
+                } else if(max != null) {
+                    return row <= max;
+                } else {
+                    return false;
+                }
+
+            } catch (Exception e) {
+                
+                throw new SubmissionServiceException("The range field value is not a number.");
+            }
+        }).map(f -> f.getRow()).collect(Collectors.toSet());
+
+        return fields.stream().filter(f -> rowList.contains(f.getRow())).collect(Collectors.toList());
+
+    }
+
     @Override
     protected Collection<FormSubmissionVO> handlePreProcessedFindById(MultipleEntryFormFilter filters)
             throws Exception {
@@ -628,10 +804,8 @@ public class SubmissionServiceImpl
                 filters.getIds());
 
         Collection<FormSubmission> submissions = formSubmissionRepository.findAll(sSpecs);
-        Collection<FormSubmissionVO> vos = new ArrayList<>();
 
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
+        Collection<FormSubmissionVO> vos = new ArrayList<>();
 
         for (FormSubmission formSubmission : submissions) {
 
@@ -656,15 +830,18 @@ public class SubmissionServiceImpl
             subVO.getLicensee().setSectors(null);
             subVO.getLicensee().setShareholders(null);
 
-            if(StringUtils.isBlank(subVO.getLicensee().getAlias())) {
+            if (StringUtils.isBlank(subVO.getLicensee().getAlias())) {
                 subVO.getLicensee().setAlias(subVO.getLicensee().getLicenseeName());
             }
 
-            Collection<DataFieldVO> fvo = getDataFieldDao().toDataFieldVOCollection(formSubmission.getDataFields());
+            Collection<DataField> fields = this.getRangeRows(formSubmission.getDataFields(), filters.getMin(),
+                    filters.getMax(), filters.getThresholdField());
+
+            Collection<DataFieldVO> fvo = getDataFieldDao().toDataFieldVOCollection(fields);
 
             final Collection<DataFieldVO> newFields = new ArrayList<>();
 
-            if (filters.getGroupOperation() != GroupOperation.NONE) {
+            if (filters.getGroupOperation() != null && filters.getGroupOperation() != GroupOperation.NONE) {
 
                 // Get a collection of fields by row
                 Map<Integer, Collection<DataFieldVO>> fmap = new HashMap<>();
@@ -680,10 +857,12 @@ public class SubmissionServiceImpl
 
                 fmap.entrySet().forEach(entry -> {
 
-                    entry.getValue().stream().filter(p -> p.getFormField().getFieldId().equals(filters.getGroupBy()) || StringUtils.isBlank(filters.getGroupBy()))
+                    entry.getValue().stream()
+                            .filter(p -> p.getFormField().getFieldId().equals(filters.getGroupBy())
+                                    || StringUtils.isBlank(filters.getGroupBy()))
                             .findFirst().ifPresent(f -> {
                                 String value = f.getValue();
-                                if(StringUtils.isBlank(filters.getGroupBy())) {
+                                if (StringUtils.isBlank(filters.getGroupBy())) {
                                     value = "All";
                                 }
 
@@ -705,7 +884,7 @@ public class SubmissionServiceImpl
                     entry.getValue().entrySet().forEach(e -> {
                         e.getValue().forEach(f -> {
                             if (numberFields.contains(f.getFormField().getFieldId())) {
-                                
+
                                 if (!agg.containsKey(f.getFormField().getFieldId())) {
                                     agg.put(f.getFormField().getFieldId(), new ArrayList<>());
                                 }
@@ -734,7 +913,8 @@ public class SubmissionServiceImpl
                             field.setValue(output.get(field.getFormField().getFieldId()).toString());
                         }
 
-                        if(StringUtils.isBlank(filters.getGroupBy()) && field.getFormField().getFieldType() != FieldType.NUMBER) {
+                        if (StringUtils.isBlank(filters.getGroupBy())
+                                && field.getFormField().getFieldType() != FieldType.NUMBER) {
                             field.setValue("-");
                         }
 
@@ -742,7 +922,7 @@ public class SubmissionServiceImpl
                     }
 
                     newFields.addAll(first);
-
+                    
                     row++;
                 }
 
@@ -752,11 +932,12 @@ public class SubmissionServiceImpl
 
             Collection<DataFieldVO> finalFields = newFields;
 
-            if(StringUtils.isNotBlank(filters.getOrderBy())) {
-                finalFields = this.sortDataFields(newFields, filters.getOrderBy(), filters.getSortOrder() == null ? GroupSort.ASCENDING : filters.getSortOrder());
+            if (StringUtils.isNotBlank(filters.getOrderBy())) {
+                finalFields = this.sortDataFields(newFields, filters.getOrderBy(),
+                        filters.getSortOrder() == null ? GroupSort.ASCENDING : filters.getSortOrder());
             }
 
-            if(filters.getLimit() != null && filters.getLimit() > 0) {
+            if (filters.getLimit() != null && filters.getLimit() > 0) {
                 int limit = filters.getLimit() * subVO.getForm().getFormFields().size();
                 finalFields = finalFields.stream().limit(limit).collect(Collectors.toList());
             }
@@ -776,8 +957,10 @@ public class SubmissionServiceImpl
         }
 
         // Get a collection of fields to sort by
-        Collection<DataFieldVO> sortFields = fields.stream().filter(f -> f.getFormField().getFieldId().equals(sortBy)).collect(Collectors.toList());
-        Collection<DataFieldVO> nonSortFields = fields.stream().filter(f -> !f.getFormField().getFieldId().equals(sortBy)).collect(Collectors.toList());
+        Collection<DataFieldVO> sortFields = fields.stream().filter(f -> f.getFormField().getFieldId().equals(sortBy))
+                .collect(Collectors.toList());
+        Collection<DataFieldVO> nonSortFields = fields.stream()
+                .filter(f -> !f.getFormField().getFieldId().equals(sortBy)).collect(Collectors.toList());
         Map<Integer, Collection<DataFieldVO>> nonSortFieldsMap = new HashMap<>();
 
         // Create a map of unsorted fields keyed by row
@@ -791,9 +974,8 @@ public class SubmissionServiceImpl
 
         // Sort the fields
         sortFields = sortFields.stream().sorted((f1, f2) -> {
-            return groupSort == GroupSort.ASCENDING ? 
-                        f1.getValue().compareTo(f2.getValue()) :
-                        f2.getValue().compareTo(f1.getValue());
+            return groupSort == GroupSort.ASCENDING ? f1.getValue().compareTo(f2.getValue())
+                    : f2.getValue().compareTo(f1.getValue());
 
         }).collect(Collectors.toList());
 
@@ -826,7 +1008,7 @@ public class SubmissionServiceImpl
 
     private Map<String, Double> calculate(Map<String, Collection<Double>> agg, GroupOperation groupOperation) {
         Map<String, Double> output = new HashMap<>();
-        
+
         DecimalFormat f = new DecimalFormat("##.00");
 
         agg.entrySet().forEach(e -> {
@@ -862,5 +1044,4 @@ public class SubmissionServiceImpl
         });
         return output;
     }
-
 }

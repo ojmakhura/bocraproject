@@ -97,6 +97,6 @@ export class LicenseeRestController {
   }
 
   public search(criteria: LicenseeCriteria | any): Observable<LicenseeVO[] | any[]> {
-    return this.http.post<LicenseeVO[] | any[]>(this.path + `/search`, criteria);
+    return this.http.post<LicenseeVO[] | any[]>(this.path + `/search`, criteria || {});
   }
 }

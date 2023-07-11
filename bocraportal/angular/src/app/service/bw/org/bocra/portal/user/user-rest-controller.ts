@@ -33,7 +33,7 @@ export class UserRestController {
 
   public search(criteria: string | any): Observable<UserVO | any> {
     if (!criteria) {
-      criteria = '';
+      criteria = ' ';
     }
 
     return this.http.get<UserVO | any>(`${this.path}/search?criteria=${criteria}`);
