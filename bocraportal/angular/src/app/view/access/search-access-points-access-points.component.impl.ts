@@ -54,6 +54,7 @@ export class SearchAccessPointsAccessPointsComponentImpl extends SearchAccessPoi
       .subscribe((pageData) => {
         
         this.accessPointsDataSource = new MatTableDataSource(pageData);
+        this.accessPointsDataSource.sort = this.accessPointsSort;
       });
   }
 }

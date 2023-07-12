@@ -15,6 +15,7 @@ export interface UserState {
   newPassword: string;
   currentPassword: string;
   removed: boolean;
+  updated: boolean;
   success: boolean;
   loading: boolean;
   loaderMessage: string | undefined;
@@ -29,6 +30,7 @@ export const initialState: UserState = {
   id: null,
   user: null,
   removed: false,
+  updated: false,
   success: false,
   loading: false,
   error: false,

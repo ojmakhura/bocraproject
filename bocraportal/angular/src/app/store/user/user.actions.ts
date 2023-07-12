@@ -11,6 +11,10 @@ export enum UserActionType {
   LOAD_USERS_SUCCESS = '[User] Load Users Success',
   FIND_BY_ID = '[User] Find By Id',
   FIND_BY_ID_SUCCESS = '[User] Find By Id Success',
+  ADD_ROLE = '[User] [User] Add Role To User',
+  ADD_ROLE_SUCCESS = '[User] Add Role To User Success',
+  REMOVE_ROLE = '[User] [User] Remove Role To User',
+  REMOVE_ROLE_SUCCESS = '[User] Remove Role To User Success',
   SAVE = '[User] Save',
   SAVE_SUCCESS = '[User] Save Success',
   CHANGE_PASSWORD = '[User] Change Password',
@@ -81,6 +85,26 @@ export const findById = createAction(
 export const findByIdSuccess = createAction(
   UserActionType.FIND_BY_ID_SUCCESS,
   props<{ user: UserVO | any; messages: string[]; success: boolean }>()
+);
+
+export const addRole = createAction(
+  UserActionType.ADD_ROLE,
+  props<{ userId: string; role: string; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const addRoleSuccess = createAction(
+  UserActionType.ADD_ROLE_SUCCESS,
+  props<{ updated: boolean | any; messages: string[]; success: boolean }>()
+);
+
+export const removeRole = createAction(
+  UserActionType.REMOVE_ROLE,
+  props<{ userId: string; role: string; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const removeRoleSuccess = createAction(
+  UserActionType.REMOVE_ROLE_SUCCESS,
+  props<{ updated: boolean | any; messages: string[]; success: boolean }>()
 );
 
 // export const save = createAction(

@@ -17,4 +17,16 @@ export class SearchAuthorisationsAuthorisationsComponentImpl extends SearchAutho
   override doSearchAuthorisationsEdit(form: any): any {
     return form;
   }
+    
+  override ngAfterViewInit() {
+      this.authorisations$
+      .subscribe(
+          authorisations => {
+              this.authorisationsDataSource.data = authorisations;
+              this.totalElements = authorisations.length;
+              this.authorisationsDataSource.paginator = this.authorisationsPaginator;
+              this.authorisationsDataSource.sort = this.authorisationsSort;
+          }
+      );
+  }
 }

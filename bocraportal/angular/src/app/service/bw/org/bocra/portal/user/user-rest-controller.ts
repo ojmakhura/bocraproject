@@ -5,49 +5,65 @@ import { UserVO } from '@app/model/bw/org/bocra/portal/user/user-vo';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UserRestController {
-  protected path = '/user';
+    
+    protected path = '/user';
 
-  constructor(private http: HttpClient) {}
-
-  public changePassword(userId: string | any, newPassword: string | any): Observable<string | any> {
-    return this.http.get<string | any>(`${this.path}/updatePassword?userId=${userId}&newPassword=${newPassword}`);
-  }
-
-  public createUser(user: UserVO | any): Observable<UserVO | any> {
-    return this.http.post<UserVO | any>(`${this.path}/create`, user);
-  }
-
-  public findUserById(userId: string | any): Observable<UserVO | any> {
-    if (!userId) {
-      userId = '';
-    }
-    return this.http.get<UserVO | any>(`${this.path}?userId=${userId}`);
-  }
-
-  public loadUsers(): Observable<UserVO[] | any[]> {
-    return this.http.get<UserVO[] | any[]>(`${this.path}/load`);
-  }
-
-  public search(criteria: string | any): Observable<UserVO | any> {
-    if (!criteria) {
-      criteria = ' ';
+    constructor(private http: HttpClient) {
     }
 
-    return this.http.get<UserVO | any>(`${this.path}/search?criteria=${criteria}`);
-  }
+    public addRole(userId: string | any , role: string | any ): Observable<Boolean | any> {
+        return this.http.put<Boolean | any>(`${this.path}/role?userId=${userId}&role=${role}`, {});
+    }
 
-  public updateUserName(userId: string | any, username: string | any): Observable<Boolean | any> {
-    return this.http.patch<Boolean | any>(`${this.path}/${userId}?username=${username}`, {});
-  }
+    public changePassword(userId: string | any , newPassword: string | any ): Observable<string | any> {
+        return this.http.get<string | any>(`${this.path}/updatePassword?userId=${userId}&newPassword=${newPassword}`, {});
+    }
 
-  findByRealmRoles(roles: string[]): Observable<UserVO[] | any[]> {
-    return this.http.get<UserVO[] | any[]>(`${this.path}/realm/roles?roles=${roles}`);
-  }
+    public findByClientRoles(roles: Set<string> | any , clientId: string | any ): Observable<UserVO[] | any[]> {
+        return this.http.get<UserVO[] | any[]>(`${this.path}/client/roles?roles=${roles}`); // {clientId: clientId});
+    }
 
-  findByClientRoles(roles: string[]): Observable<UserVO[] | any[]> {
-    return this.http.get<UserVO[] | any[]>(`${this.path}/client/roles?roles=${roles}`);
-  }
+    public findByLicenseeId(licenseeId: number | any ): Observable<UserVO[] | any[]> {
+        return this.http.get<UserVO[] | any[]>(`${this.path}/licensee/id?licenseeId=${licenseeId}`, {});
+    }
+
+    public findByLicenseeName(licenseeName: string | any ): Observable<UserVO[] | any[]> {
+        return this.http.get<UserVO[] | any[]>(`${this.path}/licensee/name?licenseeName=${licenseeName}`, {});
+    }
+
+    public findByRealmRoles(roles: Set<string> | any ): Observable<UserVO[] | any[]> {
+        return this.http.get<UserVO[] | any[]>(`${this.path}/realm/roles?roles=${roles}`, {});
+    }
+
+    public findUserById(userId: string | any ): Observable<UserVO | any> {
+        return this.http.get<UserVO | any>(`${this.path}?userId=${userId}`, {});
+    }
+
+    public loadUsers(): Observable<UserVO[] | any[]> {
+        return this.http.get<UserVO[] | any[]>(`${this.path}/load`);
+    }
+
+    public removeRole(userId: string | any , role: string | any ): Observable<Boolean | any> {
+        return this.http.delete<Boolean | any>(`${this.path}/role?userId=${userId}&role=${role}`, {});
+    }
+
+    public saveUser(user: UserVO | any ): Observable<UserVO | any> {
+        return this.http.post<UserVO | any>(`${this.path}/create`, user);
+    }
+
+    public search(criteria: string | any ): Observable<UserVO | any> {
+        return this.http.get<UserVO | any>(`${this.path}/search?criteria=${criteria}`, {});
+    }
+
+    public updateUserName(userId: string | any , username: string | any ): Observable<Boolean | any> {
+        return this.http.patch<Boolean | any>(`${this.path}/${userId}?username=${username}`, {});
+    }
+
+    public createUser(user: UserVO | any): Observable<UserVO | any> {
+      return this.http.post<UserVO | any>(`${this.path}/create`, user);
+    }
+
 }

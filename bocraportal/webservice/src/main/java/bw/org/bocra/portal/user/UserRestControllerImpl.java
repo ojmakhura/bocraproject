@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
 import bw.org.bocra.portal.licensee.LicenseeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,10 +32,12 @@ public class UserRestControllerImpl extends UserRestControllerBase {
 
     protected Logger logger = LoggerFactory.getLogger(UserRestControllerImpl.class);
     private final KeycloakUserService keycloakUserService;
+    private final KeycloakService keycloakService;
 
-    public UserRestControllerImpl(LicenseeService licenseeService, KeycloakUserService keycloakUserService) {
+    public UserRestControllerImpl(LicenseeService licenseeService, KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
         super(licenseeService);
         this.keycloakUserService = keycloakUserService;
+        this.keycloakService = keycloakService;
     }
 
     @Override
@@ -64,6 +67,8 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     public ResponseEntity<?> handleLoadUsers() {
         try{
             logger.debug("Load Users ");
+            System.out.println(this.keycloakService.getSecurityContext().getToken().getId());
+            System.out.println(this.keycloakService.getSecurityContext().getToken().getRealmAccess().getRoles());
             return ResponseEntity.ok().body(this.keycloakUserService.loadUsers());
             
         } catch (Exception e) {
@@ -96,9 +101,12 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     public ResponseEntity<?> handleSearch(String criteria) {
         try{
             logger.debug("Search user by criteria"+criteria);
-        List<UserVO> users = this.keycloakUserService.search(criteria);
 
-        return ResponseEntity.ok(users);
+            List<UserVO> users = this.keycloakUserService.search(criteria);
+
+            System.out.println(users);
+
+            return ResponseEntity.ok(users);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
@@ -202,6 +210,36 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             Collection<UserVO> users = this.keycloakUserService.getUsersByRoles(client, roles);
 
             return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleAddRole(String userId, String role) {
+        try{
+            logger.debug("Add role to user.");
+            
+            return ResponseEntity.ok(this.keycloakUserService.updateUserRoles(userId, role, 1));
+        } catch(RuntimeException e){
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleRemoveRole(String userId, String role) {
+        try{
+            logger.debug("Remove role to user.");
+            
+            return ResponseEntity.ok(this.keycloakUserService.updateUserRoles(userId, role, -1));
+        } catch(RuntimeException e){
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             logger.error(e.getMessage());
             return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");

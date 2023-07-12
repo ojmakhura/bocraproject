@@ -53,6 +53,7 @@ export class SearchFormActivationsFormActivationsComponentImpl extends SearchFor
       .subscribe((pageData) => {
         
         this.formActivationsDataSource = new MatTableDataSource(pageData);
+        this.formActivationsDataSource.sort = this.formActivationsSort;
       });
   }
 }
