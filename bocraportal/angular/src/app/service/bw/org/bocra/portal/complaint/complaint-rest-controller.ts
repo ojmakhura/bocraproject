@@ -38,7 +38,7 @@ export class ComplaintRestController {
   }
 
   public findByComplaintId(complaintId: string | any): Observable<ComplaintVO | any> {
-    return this.http.get<ComplaintVO | any>(`${this.path}/load?complaintId=${complaintId}`, {});
+    return this.http.get<ComplaintVO | any>(`${this.path}/load/complaintId/${complaintId}`, {});
   }
 
   public findById(id: number | any): Observable<ComplaintVO | any> {

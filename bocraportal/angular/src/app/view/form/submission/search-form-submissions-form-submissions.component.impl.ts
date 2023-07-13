@@ -58,6 +58,7 @@ export class SearchFormSubmissionsFormSubmissionsComponentImpl extends SearchFor
       .subscribe((pageData) => {
         
         this.formSubmissionsDataSource = new MatTableDataSource(pageData);
+        this.formSubmissionsDataSource.sort = this.formSubmissionsSort;
       });
   }
 }

@@ -13,17 +13,18 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.RoleResource;
+import org.keycloak.admin.client.resource.RoleScopeResource;
+import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.ClientMappingsRepresentation;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
@@ -43,11 +44,11 @@ public class KeycloakUserService {
 
     protected Logger logger = LoggerFactory.getLogger(KeycloakUserService.class);
 
-    private final LicenseeService licenseeService;
+    String[] excludedRoles = { "offline_access", "uma_authorization", "default-roles-bocra" };
+
     private final KeycloakService keycloakService;
 
-    public KeycloakUserService(LicenseeService licenseeService, KeycloakService keycloakService) {
-        this.licenseeService = licenseeService;
+    public KeycloakUserService(KeycloakService keycloakService) {
         this.keycloakService = keycloakService;
     }
 
@@ -76,7 +77,7 @@ public class KeycloakUserService {
         UsersResource usersResource = keycloakService.getUsersResource();
         List<UserRepresentation> users = usersResource.search(username, true);
 
-        return CollectionUtils.isEmpty(users) ? null :  userRepresentationUserVO(users.get(0));
+        return CollectionUtils.isEmpty(users) ? null : userRepresentationUserVO(users.get(0));
     }
 
     public UserVO getLoggedInUser() {
@@ -164,21 +165,20 @@ public class KeycloakUserService {
                 licensee.setLicenseeName(licenseeNames.get(0));
 
             user.setLicensee(licensee);
+        } else {
+            user.setLicensee(null);
         }
 
         RealmResource realmResource = keycloakService.getRealmResource();
         UserResource userResource = realmResource.users().get(userRepresentation.getId());
+        List<RoleRepresentation> roles = userResource.roles().realmLevel().listAll();
 
-        Collection<ClientRepresentation> cReps = keycloakService.getClientsResource()
-                .findByClientId(keycloakService.getAuthClient());
+        roles = roles.stream().filter(role -> !ArrayUtils.contains(excludedRoles, role.getName()))
+                .collect(Collectors.toList());
 
-        if (CollectionUtils.isNotEmpty(cReps)) {
+        if (CollectionUtils.isNotEmpty(roles)) {
 
-            ClientRepresentation clientRepresentation = keycloakService.getClientsResource()
-                    .findByClientId(keycloakService.getAuthClient()).get(0);
-
-            for (RoleRepresentation roleRep : userResource.roles().realmLevel()
-                    .listAll()) {
+            for (RoleRepresentation roleRep : roles) {
                 user.getRoles().add(roleRep.getName());
             }
         }
@@ -278,7 +278,7 @@ public class KeycloakUserService {
             for (String role : user.getRoles()) {
                 RolesResource rolesResource = keycloakService.getRealmRolesResource();
                 rolesResource.get(role);
-                
+
                 RoleRepresentation roleRep = rolesResource.get(role).toRepresentation();
                 if (StringUtils.isNotBlank(roleRep.getId())) {
                     roleReps.add(roleRep);
@@ -298,9 +298,16 @@ public class KeycloakUserService {
 
     public Collection<UserVO> loadUsers() {
 
+        UserVO loggedInUser = this.getLoggedInUser();
+        boolean hasLicensee = loggedInUser.getLicensee() != null;
+
         UsersResource usersResource = keycloakService.getUsersResource();
 
-        List<UserRepresentation> userRep = usersResource.list();
+        List<UserRepresentation> userRep = hasLicensee
+                ? usersResource.searchByAttributes("licenseeId:" + loggedInUser.getLicensee().getId() + " "
+                        + "licenseeName:" + loggedInUser.getLicensee().getLicenseeName())
+                : usersResource.list();
+
         Collection<UserVO> users = new ArrayList<>();
 
         for (UserRepresentation user : userRep) {
@@ -319,7 +326,7 @@ public class KeycloakUserService {
     private List<UserVO> userRepsToVOs(List<UserRepresentation> usersRep) {
 
         if (CollectionUtils.isEmpty(usersRep)) {
-            return null;
+            return new ArrayList<>();
         }
 
         List<UserVO> users = new ArrayList<>();
@@ -332,6 +339,7 @@ public class KeycloakUserService {
     }
 
     public List<UserVO> searchByAttributes(String criteria) {
+
         List<UserRepresentation> usersRep = keycloakService.getUsersResource().searchByAttributes(criteria);
 
         return this.userRepsToVOs(usersRep);
@@ -339,7 +347,23 @@ public class KeycloakUserService {
 
     public List<UserVO> search(String criteria) {
 
-        List<UserRepresentation> usersRep = keycloakService.getUsersResource().search(criteria);
+        UserVO loggedInUser = this.getLoggedInUser();
+        boolean hasLicensee = loggedInUser.getLicensee() != null;
+
+        List<UserRepresentation> usersRep = hasLicensee
+                ? keycloakService.getUsersResource()
+                        .searchByAttributes("licenseeId:" + loggedInUser.getLicensee().getId() + " " + "licenseeName:"
+                                + loggedInUser.getLicensee().getLicenseeName())
+                : keycloakService.getUsersResource().search(criteria);
+
+        String lower = criteria.toLowerCase();
+
+        usersRep = usersRep.stream().filter(user -> {
+            return user.getUsername().toLowerCase().contains(lower)
+                    || user.getEmail().toLowerCase().contains(lower)
+                    || user.getFirstName().toLowerCase().contains(lower)
+                    || user.getLastName().toLowerCase().contains(lower);
+        }).collect(Collectors.toList());
 
         return this.userRepsToVOs(usersRep);
     }
@@ -371,11 +395,40 @@ public class KeycloakUserService {
 
     public UserVO findUserById(String userId) {
         UserRepresentation rep = keycloakService.getUsersResource().get(userId).toRepresentation();
-
+        
         if (StringUtils.isNotBlank(rep.getId())) {
             return userRepresentationUserVO(rep);
         }
 
         return null;
+    }
+
+    public boolean updateUserRoles(String userId, String role, int action) {
+
+        RoleResource roleResource = keycloakService.getRealmRolesResource().get(role);
+        
+        if (roleResource == null) {
+            throw new RuntimeException("Role not found!");
+        }
+        
+        UserResource userResource = keycloakService.getUsersResource().get(userId);
+        
+        if (userResource == null) {
+            throw new RuntimeException("User not found!");
+        }
+        
+        RoleScopeResource roleScopeResource = userResource.roles().realmLevel();
+        
+        RoleRepresentation roleRep = roleResource.toRepresentation();
+        
+        if (action > 0) {
+            
+            roleScopeResource.add(Arrays.asList(roleRep));
+            
+        } else {
+            roleScopeResource.remove(Arrays.asList(roleRep));
+        }
+        
+        return true;
     }
 }

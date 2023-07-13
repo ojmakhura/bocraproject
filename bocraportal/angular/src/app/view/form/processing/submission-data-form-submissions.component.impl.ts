@@ -3,6 +3,7 @@ import { Component, Injector, Input } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SubmissionDataFormSubmissionsComponent } from '@app/view/form/processing/submission-data-form-submissions.component';
 import { SubmissionDataComponentImpl } from './submission-data.component.impl';
+import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
 
 @Component({
   selector: 'submission-data-form-submissions',
@@ -16,6 +17,19 @@ export class SubmissionDataFormSubmissionsComponentImpl extends SubmissionDataFo
     super(injector);
   }
 
+  override ngOnInit(): void {
+    this.formSubmissionsDataSource.filterPredicate = (data: FormSubmissionVO, filter: string) => {
+      return (
+        data.id.toString().includes(filter) ||
+        data.licensee.licenseeName.toLowerCase().includes(filter) ||
+        data.form.formName.toLowerCase().includes(filter) ||
+        data.period.periodName.toLowerCase().includes(filter) ||
+        data.expectedSubmissionDate.toLowerCase().includes(filter) ||
+        data.submissionStatus.toLowerCase().includes(filter)
+      );
+    };
+  }
+
   override submissionDataEdit(id: number) {
     let form = {
       id: id,
@@ -26,5 +40,10 @@ export class SubmissionDataFormSubmissionsComponentImpl extends SubmissionDataFo
 
     this.dialogRef.close({});
     this.router.navigate(['/form/submission/edit-form-submission'], { queryParams: queryParams });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.formSubmissionsDataSource.filter = filterValue.trim().toLowerCase();
   }
 }

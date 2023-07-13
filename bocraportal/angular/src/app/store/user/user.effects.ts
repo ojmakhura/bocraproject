@@ -58,6 +58,34 @@ export class UserEffects {
     )
   );
 
+  addRole$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.addRole),
+      mergeMap(({ userId, role }) =>
+        this.userRestController.addRole(userId, role).pipe(
+          map((updated) =>
+            UserActions.addRoleSuccess({ updated: updated, messages: [`User role added`], success: true })
+          ),
+          catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
+        )
+      )
+    )
+  );
+
+  removeRole$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.removeRole),
+      mergeMap(({ userId, role }) =>
+        this.userRestController.removeRole(userId, role).pipe(
+          map((updated) =>
+            UserActions.addRoleSuccess({ updated: updated, messages: [`User role removed`], success: true })
+          ),
+          catchError(({ error }) => [UserActions.userFailure({ messages: [error?.error ? error.error : error] })])
+        )
+      )
+    )
+  );
+
   changePassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.changePassword),

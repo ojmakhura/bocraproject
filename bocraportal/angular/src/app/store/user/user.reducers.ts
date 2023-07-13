@@ -73,6 +73,32 @@ export const userReducer = createReducer(
     error: false,
     messages: action.messages,
   })),
+  on(UserActions.addRole, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+  })),
+  on(UserActions.addRoleSuccess, (state, action) => ({
+    ...state,
+    updated: action.updated,
+    loaderMessage: undefined,
+    success: action.success,
+    error: false,
+    messages: action.messages,
+  })),
+  on(UserActions.removeRole, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+  })),
+  on(UserActions.removeRoleSuccess, (state, action) => ({
+    ...state,
+    updated: action.updated,
+    loaderMessage: undefined,
+    success: action.success,
+    error: false,
+    messages: action.messages,
+  })),
   // on(UserActions.saveSuccess, (state, action) => ({
   //     ...state,
   //     userId: null,

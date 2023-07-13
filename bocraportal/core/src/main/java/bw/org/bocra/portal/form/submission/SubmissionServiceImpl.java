@@ -18,6 +18,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -587,7 +588,8 @@ public class SubmissionServiceImpl
          * and use it as headers before closing the buffered reader object.
          */
         BufferedReader fr = new BufferedReader(new InputStreamReader(file.getInputStream()));
-        List<String> headers = List.of(fr.readLine().split(","));
+        
+        List<String> headers = Arrays.asList(fr.readLine().split(","));
         fr.close();
 
         Form form = submission.getForm();
@@ -607,11 +609,12 @@ public class SubmissionServiceImpl
             ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
             ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
 
-            // scriptEngine.eval(new InputStreamReader(new URL(MATHJS_URL).openStream()));
-
+            System.out.println(csvParser.getHeaderNames());            
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             for (CSVRecord csvRecord : csvRecords) {
+
+                Map<String, String> recordMap = csvRecord.toMap();
 
                 List<DataField> expressions = new ArrayList<>();
                 List<DataField> tmpFields = new ArrayList<>();
@@ -622,6 +625,8 @@ public class SubmissionServiceImpl
                     dataField.setRow((int) csvRecord.getRecordNumber());
                     dataField.setFormField(f);
                     dataField.setFormSubmission(submission);
+
+                    System.out.print(f.getFieldId() + " <==> " + recordMap.get(f.getFieldId()) + " ");
 
                     if (f.getFieldValueType() == FieldValueType.MANUAL) {
                         dataField.setValue(csvRecord.get(f.getFieldId()).trim());

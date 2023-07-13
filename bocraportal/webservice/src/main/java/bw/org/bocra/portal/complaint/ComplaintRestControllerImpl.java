@@ -7,16 +7,12 @@ package bw.org.bocra.portal.complaint;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotBlank;
@@ -30,11 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
@@ -178,22 +172,22 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
                             We acknowledge receipt of your complaint against %s and will get back
                             to you as soon as possible. Please note that to access your
-                            complaint, go the the url %s.
+                            complaint, use the complaint id %s.
 
                             Regards,
 
                             BOCRA Complaint Management Team
                             """;
 
-                    String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId="
-                            + complaint.getComplaintId();
+                    // String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId="
+                            // + complaint.getComplaintId();
 
                     String subject = String.format("Complaint against %s.", complaint.getLicensee().getLicenseeName());
                     String text = String.format(
                             emailTempate,
                             complaint.getFirstName() + " " + complaint.getSurname(),
                             complaint.getLicensee().getLicenseeName(),
-                            complaintUrl);
+                            complaint.getComplaintId());
 
                     this.sendComplaintMessage(complaint, subject, List.of(complaint.getEmail()), text,
                             complaint.getFirstName() + " " + complaint.getSurname());
@@ -204,8 +198,8 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                     emailTempate = """
                             Dear Complaint Officer
 
-                            A new complaint has been logged against %s. Please go to
-                            the url %s to process it.
+                            A new complaint has been logged against %s. Please use the
+                            id %s to access and process it.
 
                             Regards,
 
@@ -215,7 +209,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                     text = String.format(
                             emailTempate,
                             complaint.getLicensee().getLicenseeName(),
-                            complaintUrl);
+                            complaint.getComplaintId());
 
                     this.sendComplaintMessage(complaint, subject, emails, text,
                             "System");
@@ -363,8 +357,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             String emailTempate = """
                     Dear %s
 
-                    Your complaint %s against %s has a new reply. Go to the URL
-                    %s to view the reply and respond.
+                    Your complaint %s against %s has a new reply.
 
                     Regards,
 
@@ -373,13 +366,12 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
 
             ComplaintVO complaint = complaintService.findByComplaintId(complaintId);
 
-            String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
+            // String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
             String text = String.format(
                     emailTempate,
                     complaint.getFirstName() + " " + complaint.getSurname(),
                     complaint.getComplaintId(),
-                    complaint.getLicensee().getLicenseeName(),
-                    complaintUrl);
+                    complaint.getLicensee().getLicenseeName());
 
             this.sendComplaintMessage(complaint, "Complait reply received.", List.of(complaint.getEmail()), text,
                     reply.getReplyUser());
@@ -484,14 +476,14 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                     Dear %s
 
                     You have been assigned to handle the complaint against %s.
-                    Please go to the url %s to manage it.
+                    Please use the complaint id %s to manage it.
 
                     Regards,
 
                     %s
                     """;
 
-            String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
+            // String complaintUrl = webUrl + "/complaint/edit-complaint?complaintId=" + complaint.getComplaintId();
 
             String subject = String.format("Complaint against %s.", complaint.getLicensee().getLicenseeName());
             UserVO loggedInUser = keycloakUserService.getLoggedInUser();
@@ -499,7 +491,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
             String text = String.format(
                     emailTemplate,
                     String.format("%s %s", user.getFirstName(), user.getUserId()),
-                    complaintUrl,
+                    complaint.getComplaintId(),
                     String.format("%s %s", loggedInUser.getFirstName(), loggedInUser.getUserId()));
 
             this.sendComplaintMessage(complaint, subject, List.of(user.getEmail()), text,
