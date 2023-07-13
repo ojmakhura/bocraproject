@@ -6,9 +6,9 @@
       <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('csv', {fileName:'documents'})">CSV</button>
       <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('json', {fileName:'documents'})">JSON</button>
       <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('txt', {fileName:'documents'})">Text</button>
-      <a type="button" (click)="getComplaintsAnalyse()" class="btn btn-primary" *ngIf="isLoggedIn | async">
-        <span translate>analyse</span>
-      </a>
+      <button type="button" class="btn btn-primary" (click)="getComplaintsAnalyse()" *ngIf="isLoggedIn | async">
+        Analyse
+      </button>
     </div>
     <mat-table
       matSort
@@ -31,6 +31,12 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>created.date</span></mat-header-cell>
         <mat-cell *matCellDef="let row">
           {{ row?.createdDate }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="licenseeName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header><span translate>licensee.name</span></mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          {{ row?.licensee?.licenseeName }}
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="firstName">

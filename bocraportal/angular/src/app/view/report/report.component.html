@@ -18,6 +18,13 @@
           [formGroupName]="i"
         >
           <app-form-report [formReportGroup]="formReportControl"> </app-form-report>
+          <div>
+            <button mat-button color="primary" type="button" matTooltip="Delete Report"
+                        (click)="formReportsControl.removeAt(i); forms.splice(i, 1);"
+                        class="btn btn-outline-primary">
+                <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
     </form>

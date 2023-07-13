@@ -801,17 +801,17 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     let max = Math.max(...Object.values(this.gridData).map((g: any) => (g?.position ? g?.position : 0)));
 
-    if (!this.gridData[changingCol?.tag]) {
-      this.gridData[changingCol?.tag] = {
+    let gridDataRow = this.gridData[changingCol?.tag];
+    if (!gridDataRow) {
+      gridDataRow = {
         position: max + 1,
         alias: changingCol?.tag,
         length: 0,
       };
+      this.gridData[changingCol?.tag] = gridDataRow;
 
       this.gridData['length']++;
     }
-
-    let gridDataRow = this.gridData[changingCol?.tag];
 
     sourceSplit?.rows?.forEach((rowKey) => {
       let gridRow = this.grid[rowKey];
@@ -840,9 +840,11 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
         gridDataRow[gridRow?.elementId].length++;
         this.periodLengths[changingCol?.tag] = gridDataRow[gridRow?.elementId].length;
+        gridDataRow.length = gridDataRow[gridRow?.elementId].length;
       }
 
       let cell: any = gridDataRow[gridRow?.elementId][changingCol?.name];
+      cell.source = []
 
       sourceSplit.cols?.forEach((colKey) => {
         if (gridRow[colKey] !== undefined) {

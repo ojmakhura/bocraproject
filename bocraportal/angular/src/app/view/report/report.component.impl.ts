@@ -47,7 +47,11 @@ export class ReportComponentImpl extends ReportComponent {
     this.submissions$ = this.store.pipe(select(SubmissionSelectors.selectFormSubmissions));
   }
 
-  doNgOnDestroy(): void {}
+  doNgOnDestroy(): void {
+    this.store.dispatch(
+      SubmissionActions.formSubmissionReset()
+    );
+  }
 
   override doNgAfterViewInit() {
     let ids = [];

@@ -429,6 +429,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     return data.formField.fieldType === 'TEXTAREA';
   }
 
+  isNumber(data: DataFieldVO): boolean {
+    return data.formField.fieldType === 'NUMBER';
+  }
+
   isButton(data: DataFieldVO): boolean {
     return data.formField.fieldType === 'BUTTON';
   }
