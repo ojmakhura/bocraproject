@@ -46,7 +46,7 @@ services:
   postgres-exporter:
     image: bitnami/postgres-exporter:latest
     environment:
-      DATA_SOURCE_NAME: "postgresql://bocraportal:Cash8Aes@db:5432/bocraportal?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable"
       # - DATA_SOURCE_USER=bocraportal
       # - DATA_SOURCE_PASS=Cash8Aes
     ports:
