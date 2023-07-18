@@ -359,6 +359,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   generateGridData() {
+    
     this.selectedSubmissions = {};
 
     if (!this.formSubmissions || this.formSubmissions.length == 0) {
@@ -1236,6 +1237,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       return f !== undefined;
     });
 
+    this.periodSelections.forEach((ps) => {
+      if(ps?.selected) {
+        delete this.selectedSubmissions[ps?.alias]
+      }
+    });
+
     this.licenseeSelectionsArray?.controls?.forEach((lc) => {
       if (filtered?.find((sub) => sub.licensee.alias === lc.value.licensee)) {
         lc.get('selected')?.patchValue(true);
@@ -1282,11 +1289,25 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   licenseeSelectionChange(event: any, j: number) {
+
     this.selectionChange(event, j, this.licenseeSelections, this.licenseeSelectionsArray, this.selectedLicensees);
 
     let filtered = this.formSubmissions?.filter((sub) => {
       let f = this.selectedLicensees.find((l) => l.licensee === sub.licensee.alias);
       return f !== undefined;
+    });
+
+    this.selectedSubmissions = {};
+
+    filtered?.forEach((sub) => {
+      if(!this.selectedSubmissions[sub.period.periodName]) {
+        this.selectedSubmissions[sub.period.periodName] = [];
+      }
+
+      this.selectedSubmissions[sub.period.periodName].push({
+        id: sub.id,
+        licensee: sub.licensee.alias,
+      });
     });
 
     this.periodSelectionsArray?.controls?.forEach((pr) => {

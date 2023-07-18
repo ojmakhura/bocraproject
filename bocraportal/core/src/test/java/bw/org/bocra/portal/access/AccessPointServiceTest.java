@@ -6,6 +6,7 @@
 package bw.org.bocra.portal.access;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,6 +30,7 @@ public class AccessPointServiceTest {
     private AccessPointRepository accessPointRepository;
 
     @Test
+    @DisplayName("Check Injects")
     public void checkInjects() {
 
         Assertions.assertNotNull(accessPointDao);
@@ -36,41 +38,9 @@ public class AccessPointServiceTest {
         Assertions.assertNotNull(accessPointService);
 
     }
-    
 
     @Test
-    public void findById_success() {
-        
-    }
-
-    @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
-        
-    }
-
-    @Test
-    public void getAll_fail() {
-        
-    }
-
-    @Test
-    public void remove_success() {
-        
-    }
-
-    @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
+    @DisplayName("Test Successful Save")
     public void save_success() {
         
     }
@@ -127,6 +97,38 @@ public class AccessPointServiceTest {
 
     @Test
     public void save_AccessPoint_Icon_null() {
+        
+    }
+    
+
+    @Test
+    public void findById_success() {
+        
+    }
+
+    @Test
+    public void findById_fail() {
+        
+    }
+
+
+    @Test
+    public void getAll_success() {
+        
+    }
+
+    @Test
+    public void getAll_fail() {
+        
+    }
+
+    @Test
+    public void remove_success() {
+        
+    }
+
+    @Test
+    public void remove_fail() {
         
     }
 

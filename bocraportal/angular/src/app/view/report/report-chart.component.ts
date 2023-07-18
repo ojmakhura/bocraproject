@@ -183,7 +183,10 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getChartPlugins();
 
     this.labelNames = this.period === 'all' ? 
-                      this.gridColumnHeaders.map((h) => h.label) : 
+                      this.gridColumnHeaders
+                        .filter(g => this.selectedPeriods.find((p) => p.period === g.period))
+                        // .filter(g => this.selectedPeriods.find((p) => p.period === g.period))
+                        .map((h) => h.label) : 
                       this.gridColumnHeaders
                         .filter(g => g.period === this.period)
                         .map((h) => h.label);
