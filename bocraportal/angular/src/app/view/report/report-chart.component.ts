@@ -48,6 +48,9 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
   datasets: ChartDataset[] = [];
+  // pieChartDatasets: any = {}
+
+  exclude = ['length', 'alias', 'position', 'label', 'elementId', 'active', 'row'];
 
   constructor(private injector: Injector) {
     this.formBuilder = this.injector.get(FormBuilder);
@@ -58,7 +61,8 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.reportChartGroup.addControl('section', this.formBuilder.control([]));
     this.reportChartGroup.addControl('chartLabel', this.formBuilder.control([]));
     this.reportChartGroup.addControl('chartCaption', this.formBuilder.control([]));
-    this.reportChartGroup.addControl('scaleType', this.formBuilder.control([]));
+    this.reportChartGroup.addControl('scaleType', this.formBuilder.control(['linear']));
+    this.reportChartGroup.addControl('minY', this.formBuilder.control([]));
     this.reportChartGroup.addControl('target', this.formBuilder.control([]));
     this.reportChartGroup.addControl('minimum', this.formBuilder.control([]));
     this.reportChartGroup.addControl('limit', this.formBuilder.control([]));
@@ -91,8 +95,30 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.reportChartGroup.get('scaleType') as FormControl;
   }
 
+  get scaleType(): [] {
+    return this.scaleTypeControl.value;
+  }
+
+  minYChanged() {
+    
+    this.chartOptions.scales.y.min = this.minYControl.value;
+    this.chart.render();
+  }
+
+  get minYControl(): FormControl {
+    return this.reportChartGroup.get('minY') as FormControl;
+  }
+
+  get minY(): number {
+    return this.minYControl.value;
+  }
+
   get targetControl(): FormControl {
     return this.reportChartGroup.get('target') as FormControl;
+  }
+
+  get target(): string {
+    return this.targetControl.value;
   }
 
   targetChange() {}
@@ -185,7 +211,6 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.labelNames = this.period === 'all' ? 
                       this.gridColumnHeaders
                         .filter(g => this.selectedPeriods.find((p) => p.period === g.period))
-                        // .filter(g => this.selectedPeriods.find((p) => p.period === g.period))
                         .map((h) => h.label) : 
                       this.gridColumnHeaders
                         .filter(g => g.period === this.period)
@@ -212,7 +237,8 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
       scales: {
         y: {
           display: true,
-          type: 'linear',
+          type: this.scaleType.length === 0 ? 'linear' : this.scaleType,
+          min: this.minYControl.value == 0 ? undefined : this.minYControl.value,
         },
       },
       plugins: {
@@ -409,7 +435,67 @@ export class ReportChartComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedChartType() {
     if (this.chartType === 'bar') {
       this.datasets = this.basicDatasets();
+    } else if (this.chartType === 'pie') {
+      this.pieChartDatasets();
     }
+  }
+
+  // TODO: complete this
+  pieChartDatasets() {
+
+    let pieData = {};
+
+    console.log(this.grid);
+
+    Object.keys(this.grid).forEach((key) => {
+      let row = this.grid[key];
+      // console.log(row)
+
+      if(row?.active) {
+
+        Object.keys(row).forEach((k) => {
+          if (!this.exclude.includes(k)) {
+            let x = row[k];
+            // console.log(x)
+
+            if(x?.active) {
+
+              if(!pieData[x.period]) {
+                pieData[x.period] = {};
+              }
+  
+              let pied = pieData[x.period];
+  
+              if(!pied[row.label]) {
+                pied[row.label] = {
+                  labels: [],
+                  datasets: [
+                    {
+                      label: row?.label,
+                      data: [],
+                      // backgroundColor: Object.values(Utils.CHART_COLORS),
+                    }
+                  ]
+                };
+              }
+
+              let data = pied[row.label];
+              data.labels.push(x.label);
+              data.datasets[0].data.push(x.value);
+            }
+          }          
+        });
+      }
+
+      let pieCharts = {};
+
+      this.selectedPeriods.forEach((per) => {})
+
+    });
+
+    console.log(pieData);
+
+    return pieData;
   }
 
   clearReport() {}

@@ -69,6 +69,12 @@
           <input type="number" id="target" class="form-control" name="target" formControlName="target" />
         </div>
       </div>
+      <div class="mb-3 row">
+        <label for="minY" class="col-sm-2 col-form-label">Min Y</label>
+        <div class="col-sm-10">
+          <input type="number" id="minY" class="form-control" name="minY" formControlName="minY" (change)="minYChanged()"/>
+        </div>
+      </div>
 
       <div *ngIf="chartType === 'table'">
         <table class="table table-striped">
@@ -86,7 +92,11 @@
           </tbody>
         </table>
       </div>
-      <div *ngIf="chartType === 'pie'"></div>
+      <div *ngIf="chartType === 'pie'">
+        <div *ngFor="let period of selectedPeriods">
+          {{ period.alias }}
+        </div>
+      </div>
       <div *ngIf="chartType === 'bar' || chartType === 'line'">
         <canvas
           baseChart
