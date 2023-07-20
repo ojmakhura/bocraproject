@@ -72,7 +72,14 @@
       <div class="mb-3 row">
         <label for="minY" class="col-sm-2 col-form-label">Min Y</label>
         <div class="col-sm-10">
-          <input type="number" id="minY" class="form-control" name="minY" formControlName="minY" (change)="minYChanged()"/>
+          <input
+            type="number"
+            id="minY"
+            class="form-control"
+            name="minY"
+            formControlName="minY"
+            (change)="minYChanged()"
+          />
         </div>
       </div>
 
@@ -93,8 +100,22 @@
         </table>
       </div>
       <div *ngIf="chartType === 'pie'">
-        <div *ngFor="let period of selectedPeriods">
-          {{ period.alias }}
+        <div id="pieChartDiv" #pieChartDiv *ngFor="let period of selectedPeriods">
+          <h3 id="periodLabel">{{ period.alias }}</h3>
+          <div id="dataDiv" *ngFor="let data of pieChartDatasets[period.alias]">
+            <h4 id="dataLabel">{{ data.label }}</h4>
+            <canvas
+              baseChart
+              #pieCharts
+              id="pieCharts"
+              class="chart"
+              [datasets]="data.datasets"
+              [labels]="data.labels"
+              [type]="'pie'"
+            >
+            </canvas>
+            <textarea type="text" id="pieChartCaption" class="form-control" name="pieChartCaption" rows="6"></textarea>
+          </div>
         </div>
       </div>
       <div *ngIf="chartType === 'bar' || chartType === 'line'">

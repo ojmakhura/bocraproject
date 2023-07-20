@@ -1285,7 +1285,26 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   fieldSelectionChange(event: any, j: number) {
+    
     this.selectionChange(event, j, this.fieldSelections, this.fieldSelectionsArray, this.selectedFields);
+    let tmp = this.fieldSelectionsArray.at(j).value;
+
+    Object.keys(this.grid).forEach((rowKey) => {
+      let row = this.grid[rowKey];
+      if(this.dataRows === 'fields') {
+        if (row.elementId === tmp?.fieldId) {
+          row.active = tmp?.selected;
+        }
+      } else {
+        Object.keys(row).forEach((key) => {
+          let cell = row[key];
+          if (cell?.elementId === tmp?.fieldId) {
+            cell.active = tmp?.selected;
+          }
+        });
+      }
+    });
+
   }
 
   licenseeSelectionChange(event: any, j: number) {
@@ -1315,6 +1334,24 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
         pr.get('selected')?.patchValue(true);
       } else {
         pr.get('selected')?.patchValue(false);
+      }
+    });
+
+    let tmp = this.licenseeSelectionsArray.at(j).value;
+    
+    Object.keys(this.grid).forEach((rowKey) => {
+      let row = this.grid[rowKey];
+      if(this.dataRows === 'licensee') {
+        if (row.label === tmp?.licensee) {
+          row.active = tmp?.selected;
+        }
+      } else {
+        Object.keys(row).forEach((key) => {
+          let cell = row[key];
+          if (cell?.label === tmp?.licensee) {
+            cell.active = tmp?.selected;
+          }
+        });
       }
     });
   }
