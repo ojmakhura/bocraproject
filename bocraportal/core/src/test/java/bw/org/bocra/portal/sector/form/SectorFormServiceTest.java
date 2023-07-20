@@ -9,139 +9,146 @@ import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.sector.SectorDao;
 import bw.org.bocra.portal.sector.SectorRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class SectorFormServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(SectorFormServiceTest.class);
-    
-    @InjectMocks
-    private SectorFormServiceImpl sectorFormService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private SectorFormService sectorFormService;
+
+    @Autowired
     private SectorFormDao sectorFormDao;
 
-    @Mock
+    @Autowired
     private SectorFormRepository sectorFormRepository;
-    @Mock
+
+    @Autowired
     private SectorDao sectorDao;
 
-    @Mock
+    @Autowired
     private SectorRepository sectorRepository;
-    @Mock
+
+    @Autowired
     private FormDao formDao;
 
-    @Mock
+    @Autowired
     private FormRepository formRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(sectorFormDao);
-        Assertions.assertNotNull(sectorFormRepository);
-        Assertions.assertNotNull(sectorDao);
-        Assertions.assertNotNull(sectorRepository);
-        Assertions.assertNotNull(formDao);
-        Assertions.assertNotNull(formRepository);
-        Assertions.assertNotNull(sectorFormService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void create_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void create_fail() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Create Success")
+    public void testCreateSuccess() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Create Fail")
+    public void testCreateFail() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void findBySector_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void findBySector_fail() {
-        
-    }
-
-
-    @Test
-    public void findByForm_success() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void findByForm_fail() {
-        
-    }
-
-
-    @Test
-    public void updateSector_success() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void updateSector_fail() {
-        
-    }
-
-
-    @Test
-    public void updateForm_success() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void updateForm_fail() {
+    @DisplayName("Test Find By Sector Success")
+    public void testFindBySectorSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Sector Fail")
+    public void testFindBySectorFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Form Success")
+    public void testFindByFormSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Form Fail")
+    public void testFindByFormFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Sector Success")
+    public void testUpdateSectorSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Sector Fail")
+    public void testUpdateSectorFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Form Success")
+    public void testUpdateFormSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Form Fail")
+    public void testUpdateFormFail() {
         
     }
 

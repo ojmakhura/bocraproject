@@ -9,176 +9,206 @@ import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorDao;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class SectorServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(SectorServiceTest.class);
-    
-    @InjectMocks
-    private SectorServiceImpl sectorService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private SectorService sectorService;
+
+    @Autowired
     private SectorDao sectorDao;
 
-    @Mock
+    @Autowired
     private SectorRepository sectorRepository;
-    @Mock
+
+    @Autowired
     private LicenseeSectorDao licenseeSectorDao;
 
-    @Mock
+    @Autowired
     private LicenseeSectorRepository licenseeSectorRepository;
-    @Mock
+
+    @Autowired
     private LicenseeDao licenseeDao;
 
-    @Mock
+    @Autowired
     private LicenseeRepository licenseeRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(sectorDao);
-        Assertions.assertNotNull(sectorRepository);
-        Assertions.assertNotNull(licenseeSectorDao);
-        Assertions.assertNotNull(licenseeSectorRepository);
-        Assertions.assertNotNull(licenseeDao);
-        Assertions.assertNotNull(licenseeRepository);
-        Assertions.assertNotNull(sectorService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_sector_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_Sector_Id_null() {
+    @DisplayName("Test Save Sector Null")
+    public void testSaveSectorNull() {
         
     }
 
     @Test
-    public void save_Sector_CreatedBy_null() {
+    @DisplayName("Test Save Sector Id Null")
+    public void testSaveSectorIdNull() {
         
     }
 
     @Test
-    public void save_Sector_UpdatedBy_null() {
+    @DisplayName("Test Save Sector Created By Null")
+    public void testSaveSectorCreatedByNull() {
         
     }
 
     @Test
-    public void save_Sector_CreatedDate_null() {
+    @DisplayName("Test Save Sector Updated By Null")
+    public void testSaveSectorUpdatedByNull() {
         
     }
 
     @Test
-    public void save_Sector_UpdatedDate_null() {
+    @DisplayName("Test Save Sector Created Date Null")
+    public void testSaveSectorCreatedDateNull() {
         
     }
 
     @Test
-    public void save_Sector_Code_null() {
+    @DisplayName("Test Save Sector Updated Date Null")
+    public void testSaveSectorUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_Sector_Name_null() {
+    @DisplayName("Test Save Sector Code Null")
+    public void testSaveSectorCodeNull() {
         
     }
 
     @Test
-    public void save_Sector_ThemeColour_null() {
+    @DisplayName("Test Save Sector Name Null")
+    public void testSaveSectorNameNull() {
         
     }
 
     @Test
-    public void save_Sector_Description_null() {
+    @DisplayName("Test Save Sector Theme Colour Null")
+    public void testSaveSectorThemeColourNull() {
         
     }
 
     @Test
-    public void save_Sector_Licensees_null() {
+    @DisplayName("Test Save Sector Description Null")
+    public void testSaveSectorDescriptionNull() {
         
     }
 
     @Test
-    public void save_Sector_Forms_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Sector Licensees Null")
+    public void testSaveSectorLicenseesNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Sector Forms Null")
+    public void testSaveSectorFormsNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void addLicensee_success() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void addLicensee_fail() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Add Licensee Success")
+    public void testAddLicenseeSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Add Licensee Fail")
+    public void testAddLicenseeFail() {
         
     }
 

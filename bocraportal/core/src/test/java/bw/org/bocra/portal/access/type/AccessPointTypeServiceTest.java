@@ -5,35 +5,24 @@
 //
 package bw.org.bocra.portal.access.type;
 
-import javax.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import bw.org.bocra.portal.BocraportalCoreApplication;
+import org.junit.jupiter.api.AfterEach;
 
-@SpringBootTest(classes = BocraportalCoreApplication.class)
-// @ExtendWith(SpringExtension.class)
-// @DataJpaTest
-// @Transactional
-
-@TestPropertySource("/application.properties")
-// @ExtendWith(MockitoExtension.class)
-// @ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class AccessPointTypeServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(AccessPointTypeServiceTest.class);
@@ -42,138 +31,232 @@ public class AccessPointTypeServiceTest {
     ApplicationContext context;
 
     @Autowired
-    private AccessPointTypeServiceImpl accessPointTypeService;
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private AccessPointTypeService accessPointTypeService;
 
-    @MockBean
+    @Autowired
     private AccessPointTypeDao accessPointTypeDao;
 
-    @MockBean
+    @Autowired
     private AccessPointTypeRepository accessPointTypeRepository;
 
-    // @Autowired
-    // private DataSource dataSource;
-    // @Autowired
-    // private JdbcTemplate jdbcTemplate;
-    // @Autowired
-    // private EntityManager entityManager;
+    public void init() {
 
-    // @Before
-    // public void init() {
-    // MockitoAnnotations.openMocks(this);
-    // }
+        jdbc.execute(
+                "INSERT INTO access_point_type (id, code, name, description) VALUES (1, 'test', 'Test Type', 'This is a test')");
+    }
 
-    @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(accessPointTypeDao);
-        Assertions.assertNotNull(accessPointTypeRepository);
-        Assertions.assertNotNull(accessPointTypeService);
-
-        // Assertions.assertNotNull(accessPointTypeService.getAccessPointTypeDao());
-        // Assertions.assertNotNull(accessPointTypeService.getAccessPointTypeRepository());
-        // assertThat(dataSource).isNotNull();
-        // assertThat(jdbcTemplate).isNotNull();
-        // assertThat(entityManager).isNotNull();
-
+    @AfterEach
+    public void clean() {
+        jdbc.execute("DELETE FROM access_point_type");
     }
 
     @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
 
+        this.init();
+
+        AccessPointTypeVO type = accessPointTypeService.findById(1l);
+
+        assertNotNull(type);
+        assertNotNull(type.getId());
+        assertEquals("test", type.getCode());
+        assertEquals("Test Type", type.getName());
+        assertEquals("This is a test", type.getDescription());
+        
     }
 
     @Test
-    public void findById_fail() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
 
+        Exception exception = assertThrows(AccessPointTypeServiceException.class, () -> {
+            accessPointTypeService.findById(2l);
+        }, "AccessPointTypeServiceException should be thrown");
+
+        assertTrue(exception.getMessage().contains("java.util.NoSuchElementException: No value present"));
+        
     }
 
     @Test
-    public void repository_save_success() {
-        // AccessPointType type = AccessPointType.Factory.newInstance();
-        // type.setId(1l);
-        // type.setCode("test");
-        // type.setName("Test Type");
-        // type.setDescription("This is a test");
-
-        // accessPointTypeRepository.save(type);
-
-        // assertNotNull(accessPointTypeRepository.getReferenceById(1l));
-    }
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
 
         AccessPointTypeVO type = new AccessPointTypeVO();
 
-        type.setId(1l);
+        type.setCode("test2");
+        type.setName("Test Type 2");
+        type.setDescription("This is a test 2");
+        
+        type = accessPointTypeService.save(type);
+
+        assertNotNull(type);
+        assertNotNull(type.getId());
+        assertEquals(1L, type.getId(), "Id should be 2");
+        assertEquals("test2", type.getCode(), "Code should be test2");
+        assertEquals("Test Type 2", type.getName(), "Name should be Test Type 2");
+        
+    }
+
+    @Test
+    @DisplayName("Test save null")
+    public void testSaveNullFail() {
+
+        Exception exception = assertThrows(AccessPointTypeServiceException.class, () -> {
+            accessPointTypeService.save(null);
+        }, "AccessPointTypeServiceException should be thrown");
+
+        assertTrue(exception.getMessage().contains("'accessPointType' can not be null"));
+    }
+
+    @Test
+    @DisplayName("Test save same code")
+    public void testSaveSameCodeFail() {
+
+        AccessPointTypeVO type = new AccessPointTypeVO();
+
         type.setCode("test");
         type.setName("Test Type");
         type.setDescription("This is a test");
-        Mockito.when(accessPointTypeService.save(type)).thenReturn(type);
-        type.setId(null);
-        type = accessPointTypeService.save(type);
         
-        Assertions.assertNotNull(type);
-        Assertions.assertNotNull(type.getId());
-    }
+        type = accessPointTypeService.save(type);
 
-    @Test
-    public void save_fail() {
+        Exception exception = assertThrows(AccessPointTypeServiceException.class, () -> {
 
-    }
+            AccessPointTypeVO type2 = new AccessPointTypeVO();
+    
+            type2.setCode("test");
+            type2.setName("Test Type 2");
+            type2.setDescription("This is a test 2");
 
-    @Test
-    public void save_accessPointType_null() {
+            type2 = accessPointTypeService.save(type2);
+        }, "AccessPointTypeServiceException should be thrown");
 
-    }
-
-    @Test
-    public void save_AccessPointType_Id_null() {
+        assertTrue(exception.getMessage().contains("org.springframework.dao.DataIntegrityViolationException: could not execute statement"));
 
     }
 
     @Test
-    public void save_AccessPointType_Code_null() {
+    @DisplayName("Test save null fail")
+    public void testSaveCodeNullFail() {
+
+        Exception exception = assertThrows(AccessPointTypeServiceException.class, () -> {
+
+            AccessPointTypeVO type2 = new AccessPointTypeVO();
+    
+            type2.setName("Test Type 2");
+            type2.setDescription("This is a test 2");
+
+            type2 = accessPointTypeService.save(type2);
+        }, "AccessPointTypeServiceException should be thrown");
+
+        assertTrue(exception.getMessage().contains("'accessPointType.code' can not be null or empty"));
 
     }
 
     @Test
-    public void save_AccessPointType_Name_null() {
-
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
+        
     }
 
     @Test
-    public void save_AccessPointType_Description_null() {
-
+    @DisplayName("Test Save Access Point Type Null")
+    public void testSaveAccessPointTypeNull() {
+        
     }
 
     @Test
-    public void remove_success() {
-
+    @DisplayName("Test Save Access Point Type Id Null")
+    public void testSaveAccessPointTypeIdNull() {
+        
     }
 
     @Test
-    public void remove_fail() {
-
+    @DisplayName("Test Save Access Point Type Code Null")
+    public void testSaveAccessPointTypeCodeNull() {
+        
     }
 
     @Test
-    public void getAll_success() {
-
+    @DisplayName("Test Save Access Point Type Name Null")
+    public void testSaveAccessPointTypeNameNull() {
+        
     }
 
     @Test
-    public void getAll_fail() {
-
+    @DisplayName("Test Save Access Point Type Description Null")
+    public void testSaveAccessPointTypeDescriptionNull() {
+        
     }
 
     @Test
-    public void search_success() {
-
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
+        
     }
 
     @Test
-    public void search_fail() {
-
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
+        
     }
+
+    @Test
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Search Success")
+    public void testPagedSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Search Fail")
+    public void testPagedSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Search Criteria Null")
+    public void testPagedSearchCriteriaNull() {
+        
+    }
+
 }

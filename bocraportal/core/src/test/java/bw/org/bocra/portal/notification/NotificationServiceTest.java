@@ -5,168 +5,200 @@
 //
 package bw.org.bocra.portal.notification;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class NotificationServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(NotificationServiceTest.class);
-    
-    @InjectMocks
-    private NotificationServiceImpl notificationService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private NotificationDao notificationDao;
 
-    @Mock
+    @Autowired
     private NotificationRepository notificationRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(notificationDao);
-        Assertions.assertNotNull(notificationRepository);
-        Assertions.assertNotNull(notificationService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_notification_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_Notification_Id_null() {
+    @DisplayName("Test Save Notification Null")
+    public void testSaveNotificationNull() {
         
     }
 
     @Test
-    public void save_Notification_Subject_null() {
+    @DisplayName("Test Save Notification Id Null")
+    public void testSaveNotificationIdNull() {
         
     }
 
     @Test
-    public void save_Notification_TargetType_null() {
+    @DisplayName("Test Save Notification Subject Null")
+    public void testSaveNotificationSubjectNull() {
         
     }
 
     @Test
-    public void save_Notification_Read_null() {
+    @DisplayName("Test Save Notification Target Type Null")
+    public void testSaveNotificationTargetTypeNull() {
         
     }
 
     @Test
-    public void save_Notification_Message_null() {
+    @DisplayName("Test Save Notification Read Null")
+    public void testSaveNotificationReadNull() {
         
     }
 
     @Test
-    public void save_Notification_NotificationDate_null() {
+    @DisplayName("Test Save Notification Message Null")
+    public void testSaveNotificationMessageNull() {
         
     }
 
     @Test
-    public void save_Notification_TargetId_null() {
+    @DisplayName("Test Save Notification Notification Date Null")
+    public void testSaveNotificationNotificationDateNull() {
         
     }
 
     @Test
-    public void save_Notification_TargetName_null() {
+    @DisplayName("Test Save Notification Target Id Null")
+    public void testSaveNotificationTargetIdNull() {
         
     }
 
     @Test
-    public void save_Notification_Type_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Notification Target Name Null")
+    public void testSaveNotificationTargetNameNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Notification Type Null")
+    public void testSaveNotificationTypeNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void loadUserNotifications_success() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void loadUserNotifications_fail() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void loadUserNotifications_userId_null() {
-        
-    }
-
-
-    @Test
-    public void getUnreadCount_success() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void getUnreadCount_fail() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Load User Notifications Success")
+    public void testLoadUserNotificationsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Load User Notifications Fail")
+    public void testLoadUserNotificationsFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Load User Notifications User Id Null")
+    public void testLoadUserNotificationsUserIdNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get Unread Count Success")
+    public void testGetUnreadCountSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get Unread Count Fail")
+    public void testGetUnreadCountFail() {
         
     }
 

@@ -7,159 +7,188 @@ package bw.org.bocra.portal.menu;
 
 import bw.org.bocra.portal.auth.AuthorisationDao;
 import bw.org.bocra.portal.auth.AuthorisationRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class MenuSectionServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(MenuSectionServiceTest.class);
-    
-    @InjectMocks
-    private MenuSectionServiceImpl menuSectionService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private MenuSectionService menuSectionService;
+
+    @Autowired
     private MenuSectionDao menuSectionDao;
 
-    @Mock
+    @Autowired
     private MenuSectionRepository menuSectionRepository;
-    @Mock
+
+    @Autowired
     private AuthorisationDao authorisationDao;
 
-    @Mock
+    @Autowired
     private AuthorisationRepository authorisationRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(menuSectionDao);
-        Assertions.assertNotNull(menuSectionRepository);
-        Assertions.assertNotNull(authorisationDao);
-        Assertions.assertNotNull(authorisationRepository);
-        Assertions.assertNotNull(menuSectionService);
-
-    }
-    
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_menuSection_null() {
+    @DisplayName("Test Save Menu Section Null")
+    public void testSaveMenuSectionNull() {
         
     }
 
     @Test
-    public void save_MenuSection_Id_null() {
+    @DisplayName("Test Save Menu Section Id Null")
+    public void testSaveMenuSectionIdNull() {
         
     }
 
     @Test
-    public void save_MenuSection_CreatedBy_null() {
+    @DisplayName("Test Save Menu Section Created By Null")
+    public void testSaveMenuSectionCreatedByNull() {
         
     }
 
     @Test
-    public void save_MenuSection_UpdatedBy_null() {
+    @DisplayName("Test Save Menu Section Updated By Null")
+    public void testSaveMenuSectionUpdatedByNull() {
         
     }
 
     @Test
-    public void save_MenuSection_CreatedDate_null() {
+    @DisplayName("Test Save Menu Section Created Date Null")
+    public void testSaveMenuSectionCreatedDateNull() {
         
     }
 
     @Test
-    public void save_MenuSection_UpdatedDate_null() {
+    @DisplayName("Test Save Menu Section Updated Date Null")
+    public void testSaveMenuSectionUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_MenuSection_Position_null() {
+    @DisplayName("Test Save Menu Section Position Null")
+    public void testSaveMenuSectionPositionNull() {
         
     }
 
     @Test
-    public void save_MenuSection_DisplayId_null() {
+    @DisplayName("Test Save Menu Section Display Id Null")
+    public void testSaveMenuSectionDisplayIdNull() {
         
     }
 
     @Test
-    public void save_MenuSection_DisplayName_null() {
+    @DisplayName("Test Save Menu Section Display Name Null")
+    public void testSaveMenuSectionDisplayNameNull() {
         
     }
 
     @Test
-    public void save_MenuSection_Authorisations_null() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Menu Section Authorisations Null")
+    public void testSaveMenuSectionAuthorisationsNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
-        
-    }
-
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void findByAuthorisationRoles_success() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void findByAuthorisationRoles_fail() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Authorisation Roles Success")
+    public void testFindByAuthorisationRolesSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Authorisation Roles Fail")
+    public void testFindByAuthorisationRolesFail() {
         
     }
 

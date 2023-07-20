@@ -5,196 +5,254 @@
 //
 package bw.org.bocra.portal.form;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class FormServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(FormServiceTest.class);
-    
-    @InjectMocks
-    private FormServiceImpl formService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private FormService formService;
+
+    @Autowired
     private FormDao formDao;
 
-    @Mock
+    @Autowired
     private FormRepository formRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(formDao);
-        Assertions.assertNotNull(formRepository);
-        Assertions.assertNotNull(formService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_form_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_Form_Id_null() {
+    @DisplayName("Test Save Form Null")
+    public void testSaveFormNull() {
         
     }
 
     @Test
-    public void save_Form_CreatedBy_null() {
+    @DisplayName("Test Save Form Id Null")
+    public void testSaveFormIdNull() {
         
     }
 
     @Test
-    public void save_Form_UpdatedBy_null() {
+    @DisplayName("Test Save Form Created By Null")
+    public void testSaveFormCreatedByNull() {
         
     }
 
     @Test
-    public void save_Form_CreatedDate_null() {
+    @DisplayName("Test Save Form Updated By Null")
+    public void testSaveFormUpdatedByNull() {
         
     }
 
     @Test
-    public void save_Form_UpdatedDate_null() {
+    @DisplayName("Test Save Form Created Date Null")
+    public void testSaveFormCreatedDateNull() {
         
     }
 
     @Test
-    public void save_Form_Code_null() {
+    @DisplayName("Test Save Form Updated Date Null")
+    public void testSaveFormUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_Form_FormName_null() {
+    @DisplayName("Test Save Form Code Null")
+    public void testSaveFormCodeNull() {
         
     }
 
     @Test
-    public void save_Form_Description_null() {
+    @DisplayName("Test Save Form Form Name Null")
+    public void testSaveFormFormNameNull() {
         
     }
 
     @Test
-    public void save_Form_EntryType_null() {
+    @DisplayName("Test Save Form Description Null")
+    public void testSaveFormDescriptionNull() {
         
     }
 
     @Test
-    public void save_Form_Roles_null() {
+    @DisplayName("Test Save Form Entry Type Null")
+    public void testSaveFormEntryTypeNull() {
         
     }
 
     @Test
-    public void save_Form_LicenceTypes_null() {
+    @DisplayName("Test Save Form Roles Null")
+    public void testSaveFormRolesNull() {
         
     }
 
     @Test
-    public void save_Form_FormSections_null() {
+    @DisplayName("Test Save Form Licence Types Null")
+    public void testSaveFormLicenceTypesNull() {
         
     }
 
     @Test
-    public void save_Form_FormFields_null() {
+    @DisplayName("Test Save Form Form Sections Null")
+    public void testSaveFormFormSectionsNull() {
         
     }
 
     @Test
-    public void save_Form_Licensees_null() {
+    @DisplayName("Test Save Form Form Fields Null")
+    public void testSaveFormFormFieldsNull() {
         
     }
 
     @Test
-    public void save_Form_Sectors_null() {
+    @DisplayName("Test Save Form Licensees Null")
+    public void testSaveFormLicenseesNull() {
         
     }
 
     @Test
-    public void save_Form_PeriodConfig_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Form Sectors Null")
+    public void testSaveFormSectorsNull() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Save Form Period Config Null")
+    public void testSaveFormPeriodConfigNull() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_Code_null() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_Criteria_FormName_null() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_EntryType_null() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Code Null")
+    public void testSearchCriteriaCodeNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Form Name Null")
+    public void testSearchCriteriaFormNameNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Entry Type Null")
+    public void testSearchCriteriaEntryTypeNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Roles Null")
+    public void testSearchCriteriaRolesNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get Forms By Periods Success")
+    public void testGetFormsByPeriodsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get Forms By Periods Fail")
+    public void testGetFormsByPeriodsFail() {
         
     }
 

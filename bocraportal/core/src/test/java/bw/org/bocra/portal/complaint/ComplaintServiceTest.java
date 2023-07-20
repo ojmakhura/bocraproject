@@ -5,300 +5,368 @@
 //
 package bw.org.bocra.portal.complaint;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class ComplaintServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(ComplaintServiceTest.class);
-    
-    @InjectMocks
-    private ComplaintServiceImpl complaintService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private ComplaintService complaintService;
+
+    @Autowired
     private ComplaintDao complaintDao;
 
-    @Mock
+    @Autowired
     private ComplaintRepository complaintRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(complaintDao);
-        Assertions.assertNotNull(complaintRepository);
-        Assertions.assertNotNull(complaintService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_complaint_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_Complaint_Id_null() {
+    @DisplayName("Test Save Complaint Null")
+    public void testSaveComplaintNull() {
         
     }
 
     @Test
-    public void save_Complaint_Status_null() {
+    @DisplayName("Test Save Complaint Id Null")
+    public void testSaveComplaintIdNull() {
         
     }
 
     @Test
-    public void save_Complaint_ComplaintId_null() {
+    @DisplayName("Test Save Complaint Status Null")
+    public void testSaveComplaintStatusNull() {
         
     }
 
     @Test
-    public void save_Complaint_ComplaintType_null() {
+    @DisplayName("Test Save Complaint Complaint Id Null")
+    public void testSaveComplaintComplaintIdNull() {
         
     }
 
     @Test
-    public void save_Complaint_Licensee_null() {
+    @DisplayName("Test Save Complaint Complaint Type Null")
+    public void testSaveComplaintComplaintTypeNull() {
         
     }
 
     @Test
-    public void save_Complaint_FirstName_null() {
+    @DisplayName("Test Save Complaint Licensee Null")
+    public void testSaveComplaintLicenseeNull() {
         
     }
 
     @Test
-    public void save_Complaint_Surname_null() {
+    @DisplayName("Test Save Complaint First Name Null")
+    public void testSaveComplaintFirstNameNull() {
         
     }
 
     @Test
-    public void save_Complaint_Email_null() {
+    @DisplayName("Test Save Complaint Surname Null")
+    public void testSaveComplaintSurnameNull() {
         
     }
 
     @Test
-    public void save_Complaint_Subject_null() {
+    @DisplayName("Test Save Complaint Email Null")
+    public void testSaveComplaintEmailNull() {
         
     }
 
     @Test
-    public void save_Complaint_Details_null() {
+    @DisplayName("Test Save Complaint Subject Null")
+    public void testSaveComplaintSubjectNull() {
         
     }
 
     @Test
-    public void save_Complaint_AssignedTo_null() {
+    @DisplayName("Test Save Complaint Details Null")
+    public void testSaveComplaintDetailsNull() {
         
     }
 
     @Test
-    public void save_Complaint_Documents_null() {
+    @DisplayName("Test Save Complaint Assigned To Null")
+    public void testSaveComplaintAssignedToNull() {
         
     }
 
     @Test
-    public void save_Complaint_ComplaintReplies_null() {
+    @DisplayName("Test Save Complaint Documents Null")
+    public void testSaveComplaintDocumentsNull() {
         
     }
 
     @Test
-    public void save_Complaint_CreatedDate_null() {
+    @DisplayName("Test Save Complaint Complaint Replies Null")
+    public void testSaveComplaintComplaintRepliesNull() {
         
     }
 
     @Test
-    public void save_Complaint_UpdatedDate_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Complaint Created Date Null")
+    public void testSaveComplaintCreatedDateNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Complaint Updated Date Null")
+    public void testSaveComplaintUpdatedDateNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void search_success() {
+    @DisplayName("Test Save Complaint Assigned Date Null")
+    public void testSaveComplaintAssignedDateNull() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Save Complaint Resolved Date Null")
+    public void testSaveComplaintResolvedDateNull() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_Status_null() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_Criteria_Surname_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_Email_null() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_Criteria_Subject_null() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_ComplaintId_null() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
         
     }
 
     @Test
-    public void search_Criteria_LicenseeName_null() {
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_ComplaintType_null() {
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
         
     }
 
     @Test
-    public void addComplaintReply_success() {
+    @DisplayName("Test Add Complaint Reply Success")
+    public void testAddComplaintReplySuccess() {
         
     }
 
     @Test
-    public void addComplaintReply_fail() {
+    @DisplayName("Test Add Complaint Reply Fail")
+    public void testAddComplaintReplyFail() {
         
     }
 
     @Test
-    public void addComplaintReply_complaintId_null() {
+    @DisplayName("Test Add Complaint Reply Complaint Id Null")
+    public void testAddComplaintReplyComplaintIdNull() {
         
     }
 
     @Test
-    public void addComplaintReply_reply_null() {
+    @DisplayName("Test Add Complaint Reply Reply Null")
+    public void testAddComplaintReplyReplyNull() {
         
     }
 
     @Test
-    public void addComplaintReply_Reply_Id_null() {
+    @DisplayName("Test Add Complaint Reply Reply Id Null")
+    public void testAddComplaintReplyReplyIdNull() {
         
     }
 
     @Test
-    public void addComplaintReply_Reply_Date_null() {
+    @DisplayName("Test Add Complaint Reply Reply Date Null")
+    public void testAddComplaintReplyReplyDateNull() {
         
     }
 
     @Test
-    public void addComplaintReply_Reply_ReplyUser_null() {
+    @DisplayName("Test Add Complaint Reply Reply Reply User Null")
+    public void testAddComplaintReplyReplyReplyUserNull() {
         
     }
 
     @Test
-    public void addComplaintReply_Reply_Reply_null() {
+    @DisplayName("Test Add Complaint Reply Reply Reply Null")
+    public void testAddComplaintReplyReplyReplyNull() {
         
     }
 
     @Test
-    public void addComplaintReply_Reply_Complaint_null() {
+    @DisplayName("Test Add Complaint Reply Reply Complaint Null")
+    public void testAddComplaintReplyReplyComplaintNull() {
         
     }
 
     @Test
-    public void addComplaintReply_Reply_Documents_null() {
-        
-    }
-
-
-    @Test
-    public void removeComplaintReply_success() {
+    @DisplayName("Test Add Complaint Reply Reply Documents Null")
+    public void testAddComplaintReplyReplyDocumentsNull() {
         
     }
 
     @Test
-    public void removeComplaintReply_fail() {
-        
-    }
-
-
-    @Test
-    public void findByComplaintId_success() {
+    @DisplayName("Test Remove Complaint Reply Success")
+    public void testRemoveComplaintReplySuccess() {
         
     }
 
     @Test
-    public void findByComplaintId_fail() {
+    @DisplayName("Test Remove Complaint Reply Fail")
+    public void testRemoveComplaintReplyFail() {
         
     }
 
     @Test
-    public void findByComplaintId_complaintId_null() {
-        
-    }
-
-
-    @Test
-    public void findByIds_success() {
+    @DisplayName("Test Find By Complaint Id Success")
+    public void testFindByComplaintIdSuccess() {
         
     }
 
     @Test
-    public void findByIds_fail() {
+    @DisplayName("Test Find By Complaint Id Fail")
+    public void testFindByComplaintIdFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Complaint Id Complaint Id Null")
+    public void testFindByComplaintIdComplaintIdNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Ids Success")
+    public void testFindByIdsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Ids Fail")
+    public void testFindByIdsFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Assign To User Success")
+    public void testAssignToUserSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Assign To User Fail")
+    public void testAssignToUserFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Assign To User Complaint Id Null")
+    public void testAssignToUserComplaintIdNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Assign To User Username Null")
+    public void testAssignToUserUsernameNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Status Success")
+    public void testUpdateStatusSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Status Fail")
+    public void testUpdateStatusFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Status Complaint Id Null")
+    public void testUpdateStatusComplaintIdNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Status Status Null")
+    public void testUpdateStatusStatusNull() {
         
     }
 

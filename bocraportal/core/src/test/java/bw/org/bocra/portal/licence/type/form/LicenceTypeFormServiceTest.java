@@ -9,139 +9,146 @@ import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.licence.type.LicenceTypeDao;
 import bw.org.bocra.portal.licence.type.LicenceTypeRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class LicenceTypeFormServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(LicenceTypeFormServiceTest.class);
-    
-    @InjectMocks
-    private LicenceTypeFormServiceImpl licenceTypeFormService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private LicenceTypeFormService licenceTypeFormService;
+
+    @Autowired
     private LicenceTypeFormDao licenceTypeFormDao;
 
-    @Mock
+    @Autowired
     private LicenceTypeFormRepository licenceTypeFormRepository;
-    @Mock
+
+    @Autowired
     private LicenceTypeDao licenceTypeDao;
 
-    @Mock
+    @Autowired
     private LicenceTypeRepository licenceTypeRepository;
-    @Mock
+
+    @Autowired
     private FormDao formDao;
 
-    @Mock
+    @Autowired
     private FormRepository formRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(licenceTypeFormDao);
-        Assertions.assertNotNull(licenceTypeFormRepository);
-        Assertions.assertNotNull(licenceTypeDao);
-        Assertions.assertNotNull(licenceTypeRepository);
-        Assertions.assertNotNull(formDao);
-        Assertions.assertNotNull(formRepository);
-        Assertions.assertNotNull(licenceTypeFormService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void create_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void create_fail() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Create Success")
+    public void testCreateSuccess() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Create Fail")
+    public void testCreateFail() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void findByLicenceType_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void findByLicenceType_fail() {
-        
-    }
-
-
-    @Test
-    public void findByForm_success() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void findByForm_fail() {
-        
-    }
-
-
-    @Test
-    public void updateLicenceType_success() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void updateLicenceType_fail() {
-        
-    }
-
-
-    @Test
-    public void updateForm_success() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void updateForm_fail() {
+    @DisplayName("Test Find By Licence Type Success")
+    public void testFindByLicenceTypeSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Licence Type Fail")
+    public void testFindByLicenceTypeFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Form Success")
+    public void testFindByFormSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Form Fail")
+    public void testFindByFormFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Licence Type Success")
+    public void testUpdateLicenceTypeSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Licence Type Fail")
+    public void testUpdateLicenceTypeFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Form Success")
+    public void testUpdateFormSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Form Fail")
+    public void testUpdateFormFail() {
         
     }
 
