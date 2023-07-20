@@ -359,6 +359,7 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   generateGridData() {
+    
     this.selectedSubmissions = {};
 
     if (!this.formSubmissions || this.formSubmissions.length == 0) {
@@ -801,17 +802,17 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
     let max = Math.max(...Object.values(this.gridData).map((g: any) => (g?.position ? g?.position : 0)));
 
-    if (!this.gridData[changingCol?.tag]) {
-      this.gridData[changingCol?.tag] = {
+    let gridDataRow = this.gridData[changingCol?.tag];
+    if (!gridDataRow) {
+      gridDataRow = {
         position: max + 1,
         alias: changingCol?.tag,
         length: 0,
       };
+      this.gridData[changingCol?.tag] = gridDataRow;
 
       this.gridData['length']++;
     }
-
-    let gridDataRow = this.gridData[changingCol?.tag];
 
     sourceSplit?.rows?.forEach((rowKey) => {
       let gridRow = this.grid[rowKey];
@@ -840,9 +841,11 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
 
         gridDataRow[gridRow?.elementId].length++;
         this.periodLengths[changingCol?.tag] = gridDataRow[gridRow?.elementId].length;
+        gridDataRow.length = gridDataRow[gridRow?.elementId].length;
       }
 
       let cell: any = gridDataRow[gridRow?.elementId][changingCol?.name];
+      cell.source = []
 
       sourceSplit.cols?.forEach((colKey) => {
         if (gridRow[colKey] !== undefined) {
@@ -1234,6 +1237,12 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       return f !== undefined;
     });
 
+    this.periodSelections.forEach((ps) => {
+      if(ps?.selected) {
+        delete this.selectedSubmissions[ps?.alias]
+      }
+    });
+
     this.licenseeSelectionsArray?.controls?.forEach((lc) => {
       if (filtered?.find((sub) => sub.licensee.alias === lc.value.licensee)) {
         lc.get('selected')?.patchValue(true);
@@ -1276,10 +1285,30 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   fieldSelectionChange(event: any, j: number) {
+    
     this.selectionChange(event, j, this.fieldSelections, this.fieldSelectionsArray, this.selectedFields);
+    let tmp = this.fieldSelectionsArray.at(j).value;
+
+    Object.keys(this.grid).forEach((rowKey) => {
+      let row = this.grid[rowKey];
+      if(this.dataRows === 'fields') {
+        if (row.elementId === tmp?.fieldId) {
+          row.active = tmp?.selected;
+        }
+      } else {
+        Object.keys(row).forEach((key) => {
+          let cell = row[key];
+          if (cell?.elementId === tmp?.fieldId) {
+            cell.active = tmp?.selected;
+          }
+        });
+      }
+    });
+
   }
 
   licenseeSelectionChange(event: any, j: number) {
+
     this.selectionChange(event, j, this.licenseeSelections, this.licenseeSelectionsArray, this.selectedLicensees);
 
     let filtered = this.formSubmissions?.filter((sub) => {
@@ -1287,11 +1316,42 @@ export class ReportElementComponent implements OnInit, AfterViewInit, OnDestroy 
       return f !== undefined;
     });
 
+    this.selectedSubmissions = {};
+
+    filtered?.forEach((sub) => {
+      if(!this.selectedSubmissions[sub.period.periodName]) {
+        this.selectedSubmissions[sub.period.periodName] = [];
+      }
+
+      this.selectedSubmissions[sub.period.periodName].push({
+        id: sub.id,
+        licensee: sub.licensee.alias,
+      });
+    });
+
     this.periodSelectionsArray?.controls?.forEach((pr) => {
       if (filtered?.find((sub: FormSubmissionVO) => sub.period.periodName === pr.value.period)) {
         pr.get('selected')?.patchValue(true);
       } else {
         pr.get('selected')?.patchValue(false);
+      }
+    });
+
+    let tmp = this.licenseeSelectionsArray.at(j).value;
+    
+    Object.keys(this.grid).forEach((rowKey) => {
+      let row = this.grid[rowKey];
+      if(this.dataRows === 'licensee') {
+        if (row.label === tmp?.licensee) {
+          row.active = tmp?.selected;
+        }
+      } else {
+        Object.keys(row).forEach((key) => {
+          let cell = row[key];
+          if (cell?.label === tmp?.licensee) {
+            cell.active = tmp?.selected;
+          }
+        });
       }
     });
   }

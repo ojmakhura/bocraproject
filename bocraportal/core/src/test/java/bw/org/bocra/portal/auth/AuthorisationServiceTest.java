@@ -5,8 +5,18 @@
 //
 package bw.org.bocra.portal.auth;
 
+import bw.org.bocra.portal.access.AccessPoint;
+import bw.org.bocra.portal.access.AccessPointDao;
+import bw.org.bocra.portal.access.AccessPointVO;
+import bw.org.bocra.portal.access.type.AccessPointTypeDao;
+import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 import bw.org.bocra.portal.menu.MenuSectionDao;
 import bw.org.bocra.portal.menu.MenuSectionRepository;
+
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,26 +25,42 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
 
-@SpringBootTest
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = AuthorisationServiceImpl.class)
+// @ExtendWith(MockitoExtension.class)
 public class AuthorisationServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(AuthorisationServiceTest.class);
     
-    @InjectMocks
+    @Autowired
+    ApplicationContext context;
+    
+    @Autowired
     private AuthorisationServiceImpl authorisationService;
 
-    @Mock
+    @MockBean
     private AuthorisationDao authorisationDao;
 
-    @Mock
+    // @MockBean
+    // AccessPointTypeVO accessPointTypeVO;
+
+    @MockBean
+    AccessPointTypeDao accessPointTypeDao;
+
+    @MockBean
+    AccessPointDao accessPointDao;
+
+    @MockBean
     private AuthorisationRepository authorisationRepository;
-    @Mock
+
+    @MockBean
     private MenuSectionDao menuSectionDao;
 
-    @Mock
+    @MockBean
     private MenuSectionRepository menuSectionRepository;
 
     @Test
@@ -47,10 +73,25 @@ public class AuthorisationServiceTest {
         Assertions.assertNotNull(authorisationService);
 
     }
+
+    private AccessPoint defaultAccessPoint() {
+        AccessPoint accessPoint = new AccessPoint();
+        accessPoint.setId(1l);
+        accessPoint.setName("AccessPointName");
+        accessPoint.setUrl("AccessPointUrl");
+        return accessPoint;
+    }
     
 
     @Test
     public void findById_success() {
+
+        // Authorisation auth = new Authorisation();
+        // auth.setId(2l);
+        // auth.setAccessPoint(defaultAccessPoint());
+        // auth.setRoles(List.of("ROLE_ADMIN", "ROLE_USER"));
+
+        // when(authorisationRepository.getReferenceById(2l)).thenReturn(auth);
         
     }
 

@@ -119,16 +119,16 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
 
         if (criteria.getEmail() != null) {
             if (spec == null)
-                spec = BocraportalSpecifications.findByAttribute("email", criteria.getEmail());
+                spec = BocraportalSpecifications.findByAttributeContainingIgnoreCase("email", criteria.getEmail());
             else
-                spec = spec.and(BocraportalSpecifications.findByAttribute("email", criteria.getEmail()));
+                spec = spec.and(BocraportalSpecifications.findByAttributeContainingIgnoreCase("email", criteria.getEmail()));
         }
 
         if (criteria.getSurname() != null) {
             if (spec == null)
-                spec = BocraportalSpecifications.findByAttribute("surname", criteria.getSurname());
+                spec = BocraportalSpecifications.findByAttributeContainingIgnoreCase("surname", criteria.getSurname());
             else
-                spec = spec.and(BocraportalSpecifications.findByAttribute("surname", criteria.getSurname()));
+                spec = spec.and(BocraportalSpecifications.findByAttributeContainingIgnoreCase("surname", criteria.getSurname()));
         }
 
         if (criteria.getStatus() != null) {
@@ -140,19 +140,19 @@ public class ComplaintServiceImpl extends ComplaintServiceBase {
 
         if (StringUtils.isNotBlank(criteria.getLicenseeName())) {
             if (spec == null)
-                spec = BocraportalSpecifications.findByJoinAttributeLike("licensee", "licenseeName",
+                spec = BocraportalSpecifications.findByJoinAttributeContainingIgnoreCase("licensee", "licenseeName",
                         criteria.getLicenseeName());
             else
-                spec = spec.and(BocraportalSpecifications.findByJoinAttributeLike("licensee", "licenseeName",
+                spec = spec.and(BocraportalSpecifications.findByJoinAttributeContainingIgnoreCase("licensee", "licenseeName",
                         criteria.getLicenseeName()));
         }
 
         if (StringUtils.isNotBlank(criteria.getComplaintType())) {
             if (spec == null)
-                spec = BocraportalSpecifications.findByJoinAttributeLike("complaintType", "typeName",
+                spec = BocraportalSpecifications.findByJoinAttributeContainingIgnoreCase("complaintType", "typeName",
                         criteria.getComplaintType());
             else
-                spec = spec.and(BocraportalSpecifications.findByJoinAttributeLike("complaintType", "typeName",
+                spec = spec.and(BocraportalSpecifications.findByJoinAttributeContainingIgnoreCase("complaintType", "typeName",
                         criteria.getComplaintType()));
         }
 

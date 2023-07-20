@@ -9,6 +9,9 @@ import { KeycloakService } from 'keycloak-angular';
   styleUrls: ['./search-complaints-complaints.component.scss'],
 })
 export class SearchComplaintsComplaintsComponentImpl extends SearchComplaintsComplaintsComponent {
+
+  override complaintsColumns = ['id', 'createdDate', 'licenseeName', 'firstName', 'surname', 'status'];
+  
   constructor(private injector: Injector, public override keycloakService: KeycloakService) {
     super(injector, keycloakService);
   }

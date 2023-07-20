@@ -146,8 +146,12 @@
 											<ng-template #editable>
 												<input class="form-control" type="{{ this.getType(dataField) }}"
 													formControlName="value" id="{{ getDataFieldId(dataField) }}"
-													*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField)"
+													*ngIf="!isTextArea(dataField) && !isSelect(dataField) && !isRange(dataField) && !isNumber(dataField)"
 													(change)="onRowChange(section, dataField)" />
+                        <input class="form-control float-end text-end" type="{{ this.getType(dataField) }}"
+                            formControlName="value" id="{{ getDataFieldId(dataField) }}"
+                            *ngIf="isNumber(dataField)"
+                            (change)="onRowChange(section, dataField)" />
 												<textarea class="form-control" formControlName="value"
 													*ngIf="isTextArea(dataField)" id="{{ getDataFieldId(dataField) }}"
 													(change)="onRowChange(section, dataField)"></textarea>
@@ -159,7 +163,7 @@
 													<option value="2">Two</option>
 													<option value="3">Three</option>
 												</select>
-												<input type="range" class="form-range"
+												<input type="range" class="form-range float-end text-end"
 													min="{{ dataField.formField.min }}"
 													id="{{ getDataFieldId(dataField) }}" formControlName="value"
 													max="{{ dataField.formField.max }}" *ngIf="isRange(dataField)"

@@ -75,7 +75,8 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
             XWPFParagraph title = document.createParagraph();
             XWPFRun titleRun = title.createRun();
             titleRun.setText(formName);
-            titleRun.setFontSize(15);
+            titleRun.setFontSize(24);
+            titleRun.setBold(true);
             titleRun.setFontFamily("Calibri");
 
             ArrayList<HashMap> reportElements = (ArrayList<HashMap>) content.get("reportElements");
@@ -129,13 +130,12 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
             XWPFDocument document = new XWPFDocument();
             String reportName = data.get("reportName").toString();
 
-            // System.out.println(formName);
             XWPFParagraph title = document.createParagraph();
             XWPFRun titleRun = title.createRun();
             titleRun.setText(reportName);
-            titleRun.setFontSize(15);
+            titleRun.setFontSize(22);
+            titleRun.setBold(true);
             titleRun.setFontFamily("Calibri");
-            // titleRun.setColor("fff000");
             titleRun.addBreak();
 
             ArrayList<HashMap> images = (ArrayList<HashMap>) data.get("images");
@@ -171,9 +171,10 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
             throws IllegalArgumentException, IOException, InvalidFormatException {
 
         for (HashMap element : imageInformation) {
+            
             ArrayList<HashMap> charts = (ArrayList<HashMap>) element.get("charts");
 
-            for (HashMap chart : charts) {
+            for (HashMap<String, ?> chart : charts) {
 
                 String chartLabel = (String) chart.get("label");
                 if (StringUtils.isNotEmpty(chartLabel)) {
@@ -181,6 +182,8 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
                     XWPFParagraph label = document.createParagraph();
                     XWPFRun labelRun = label.createRun();
                     labelRun.setText(chartLabel);
+                    labelRun.setFontSize(18);
+                    labelRun.setBold(true);
                     labelRun.addBreak();
                 }
 
@@ -207,37 +210,57 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
                         }
                     }
 
+                } else if (chartType.equals("pie")) {
+
+                    Map<String, List<Map<String, String>>> images = (Map<String, List<Map<String, String>>>) chart.get("images");
+
+                    images.entrySet().forEach(entry -> {
+    
+                        XWPFParagraph label = document.createParagraph();
+                        XWPFRun labelRun = label.createRun();
+                        labelRun.setText(entry.getKey());
+                        labelRun.setFontSize(18);
+                        labelRun.setBold(true);
+                        labelRun.addBreak();
+
+                        List<Map<String, String>> pies = entry.getValue();
+                        
+                        pies.forEach(pieData -> {
+
+                            String labelString = pieData.get("dataLabel");
+    
+                            XWPFParagraph pieLabel = document.createParagraph();
+                            XWPFRun pieLabelRun = pieLabel.createRun();
+                            pieLabelRun.setText(labelString);
+                            pieLabelRun.setFontSize(15);
+
+                            String image64 = (String) pieData.get("image");
+                            try {
+                                this.addImageToDocment(image64, document);
+                            } catch (InvalidFormatException e) {
+                                
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+    
+                            String pieChartCaptionText = (String) pieData.get("pieChartCaption");
+
+                            if (StringUtils.isNotEmpty(pieChartCaptionText)) {
+
+                                XWPFParagraph pieChartCaption = document.createParagraph();
+                                XWPFRun pieChartCaptionRun = pieChartCaption.createRun();
+                                pieChartCaptionRun.setText(pieChartCaptionText);
+                                pieChartCaptionRun.addBreak();
+                            }
+                        });
+                    });
+
                 } else {
 
                     String image64 = (String) chart.get("image");
+                    this.addImageToDocment(image64, document);
 
-                    if (StringUtils.isNotEmpty(image64)) {
-                        image64 = image64.split(";base64,")[1];
-                        image64 = image64.split("=")[0];
-
-                        byte[] imageData = Base64.getDecoder().decode(image64);
-                        InputStream in2 = new ByteArrayInputStream(imageData);
-                        XWPFParagraph image = document.createParagraph();
-                        XWPFRun imageRun = image.createRun();
-
-                        BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
-
-                        int w = img.getWidth();
-                        int h = img.getTileHeight();
-
-                        if (w > 450) {
-                            double scale = 450.0 / w;
-
-                            w = (int) (img.getWidth() * scale);
-                            h = (int) (img.getHeight() * scale);
-                        }
-
-                        imageRun.addPicture(in2, XWPFDocument.PICTURE_TYPE_PNG, "chart",
-                                Units.toEMU(w), Units.toEMU(h));
-
-                        in2.close();
-
-                    }
                 }
                 String caption = (String) chart.get("caption");
                 if (StringUtils.isNotEmpty(caption)) {
@@ -251,104 +274,55 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
         }
     }
 
+    private void addImageToDocment(String image64, XWPFDocument document) throws IOException, InvalidFormatException {
+
+        if (StringUtils.isNotEmpty(image64)) {
+            image64 = image64.split(";base64,")[1];
+            image64 = image64.split("=")[0];
+
+            byte[] imageData = Base64.getDecoder().decode(image64);
+            InputStream in2 = new ByteArrayInputStream(imageData);
+            XWPFParagraph image = document.createParagraph();
+            XWPFRun imageRun = image.createRun();
+
+            BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
+
+            int w = img.getWidth();
+            int h = img.getTileHeight();
+
+            if (w > 450) {
+                double scale = 450.0 / w;
+
+                w = (int) (img.getWidth() * scale);
+                h = (int) (img.getHeight() * scale);
+            }
+
+            imageRun.addPicture(in2, XWPFDocument.PICTURE_TYPE_PNG, "chart",
+                    Units.toEMU(w), Units.toEMU(h));
+
+            in2.close();
+
+            imageRun.addBreak();
+        }
+    }
+
     @Override
     public ResponseEntity<?> handleCreateWordDocument(Map data) {
         try {
             XWPFDocument document = new XWPFDocument();
             String formName = data.get("formName").toString();
 
-            // System.out.println(formName);
             XWPFParagraph title = document.createParagraph();
             XWPFRun titleRun = title.createRun();
             titleRun.setText(formName);
-            titleRun.setFontSize(15);
+            titleRun.setFontSize(25);
+            titleRun.setBold(true);
             titleRun.setFontFamily("Calibri");
             // titleRun.setColor("fff000");
             titleRun.addBreak();
 
             ArrayList<HashMap> reportElements = (ArrayList<HashMap>) data.get("reportElements");
             this.addImagesAndTables(document, reportElements);
-            // for (HashMap element : reportElements) {
-            // ArrayList<HashMap> charts = (ArrayList<HashMap>) element.get("charts");
-
-            // for (HashMap chart : charts) {
-
-            // String chartLabel = (String) chart.get("label");
-            // if (StringUtils.isNotEmpty(chartLabel)) {
-
-            // XWPFParagraph label = document.createParagraph();
-            // XWPFRun labelRun = label.createRun();
-            // labelRun.setText(chartLabel);
-            // labelRun.addBreak();
-            // }
-
-            // String chartType = (String) chart.get("type");
-
-            // if (chartType.equals("table")) {
-
-            // Map<String, List<?>> tableData = (Map<String, List<?>>)
-            // chart.get("tableData");
-            // System.out.println(tableData);
-
-            // XWPFTable table = document.createTable();
-            // List<String> labels = (List<String>) tableData.get("labels");
-            // XWPFTableRow labelRow = table.getRow(0);
-            // labelRow.getCell(0).setText("");
-            // for (int i = 1; i < labels.size(); i++) {
-            // labelRow.addNewTableCell().setText(labels.get(i));
-            // }
-
-            // List<List<String>> tableValues = (List<List<String>>) tableData.get("data");
-            // for (List<String> values : tableValues) {
-
-            // XWPFTableRow tableRow = table.createRow();
-            // for (int i = 0; i < values.size(); i++) {
-            // tableRow.getCell(i).setText(values.get(i));
-            // }
-            // }
-
-            // } else {
-
-            // String image64 = (String) chart.get("image");
-
-            // if (StringUtils.isNotEmpty(image64)) {
-            // image64 = image64.split(";base64,")[1];
-            // image64 = image64.split("=")[0];
-
-            // byte[] imageData = Base64.getDecoder().decode(image64);
-            // InputStream in2 = new ByteArrayInputStream(imageData);
-            // XWPFParagraph image = document.createParagraph();
-            // XWPFRun imageRun = image.createRun();
-
-            // BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
-
-            // int w = img.getWidth();
-            // int h = img.getTileHeight();
-
-            // if (w > 450) {
-            // double scale = 450.0 / w;
-
-            // w = (int) (img.getWidth() * scale);
-            // h = (int) (img.getHeight() * scale);
-            // }
-
-            // imageRun.addPicture(in2, XWPFDocument.PICTURE_TYPE_PNG, "chart",
-            // Units.toEMU(w), Units.toEMU(h));
-
-            // in2.close();
-
-            // }
-            // }
-            // String caption = (String) chart.get("caption");
-            // if (StringUtils.isNotEmpty(caption)) {
-
-            // XWPFParagraph captionParagraph = document.createParagraph();
-            // XWPFRun run = captionParagraph.createRun();
-            // run.setText(caption);
-            // run.addBreak();
-            // }
-            // }
-            // }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             document.write(out);
