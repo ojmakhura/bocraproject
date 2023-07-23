@@ -14,11 +14,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.ResourceUtils;
+
+import bw.org.bocra.portal.access.type.AccessPointType;
+import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
+
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 
 @SpringBootTest
 public class AccessPointServiceTest {
@@ -39,6 +54,56 @@ public class AccessPointServiceTest {
 
     @Autowired
     private AccessPointRepository accessPointRepository;
+
+    @Autowired
+    private AccessPointTypeRepository accessPointTypeRepository;
+
+    public void loadTypeCsvFile() throws Exception {
+        File file = ResourceUtils.getFile("classpath:access_point_type.csv");
+        try (
+                
+                InputStream is = file.toURI().toURL().openStream();
+                BufferedReader fileReader = new BufferedReader(new InputStreamReader(is));
+                CSVParser csvParser = new CSVParser(
+                        fileReader,
+                        CSVFormat.DEFAULT.builder()
+                                .setHeader("code" , "description","name")
+                                .setSkipHeaderRecord(true)
+                                .build());) {
+
+            Collection<AccessPointType> types = new ArrayList<>();
+            csvParser.forEach(csvRecord -> {
+                AccessPointType type = new AccessPointType();
+                type.setCode(csvRecord.get("code"));
+                type.setName(csvRecord.get("name"));
+                type.setDescription(csvRecord.get("description"));
+                types.add(type);
+            });
+
+            accessPointTypeRepository.saveAll(types);
+        }
+    }
+
+    public void loadCsvFile() throws Exception {
+        File file = ResourceUtils.getFile("classpath:access_point.csv");
+        try (
+                
+                InputStream is = file.toURI().toURL().openStream();
+                BufferedReader fileReader = new BufferedReader(new InputStreamReader(is));
+                CSVParser csvParser = new CSVParser(
+                        fileReader,
+                        CSVFormat.DEFAULT.builder()
+                                .setHeader("created_by","created_date","icon","name","updated_by","updated_date","url","access_point_type_fk")
+                                .setSkipHeaderRecord(true)
+                                .build());) {
+
+            Collection<AccessPoint> points = new ArrayList<>();
+            
+
+            accessPointRepository.saveAll(points);
+        }
+    }
+
 
     @Test
     @DisplayName("Test Find By Id Success")

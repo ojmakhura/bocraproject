@@ -63,7 +63,8 @@ public class AccessPointTypeServiceImpl
     @Override
     protected boolean handleRemove(Long id)
             throws Exception {
-        accessPointTypeRepository.deleteById(id);
+
+        accessPointTypeDao.remove(id);
 
         return true;
     }
