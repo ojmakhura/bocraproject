@@ -55,7 +55,7 @@ export class UserRestController {
     }
 
     public search(criteria: string | any ): Observable<UserVO | any> {
-        return this.http.get<UserVO | any>(`${this.path}/search?criteria=${criteria}`, {});
+        return this.http.get<UserVO | any>(`${this.path}/search?criteria=${criteria ? criteria : ''}`, {});
     }
 
     public updateUserName(userId: string | any , username: string | any ): Observable<Boolean | any> {

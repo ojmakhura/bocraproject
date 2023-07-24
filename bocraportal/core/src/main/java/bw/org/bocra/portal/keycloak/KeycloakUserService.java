@@ -356,14 +356,17 @@ public class KeycloakUserService {
                                 + loggedInUser.getLicensee().getLicenseeName())
                 : keycloakService.getUsersResource().search(criteria);
 
-        String lower = criteria.toLowerCase();
+        if(StringUtils.isNotBlank(criteria)) {
 
-        usersRep = usersRep.stream().filter(user -> {
-            return user.getUsername().toLowerCase().contains(lower)
-                    || user.getEmail().toLowerCase().contains(lower)
-                    || user.getFirstName().toLowerCase().contains(lower)
-                    || user.getLastName().toLowerCase().contains(lower);
-        }).collect(Collectors.toList());
+            String lower = criteria.toLowerCase();
+
+            usersRep = usersRep.stream().filter(user -> {
+                return user.getUsername().toLowerCase().contains(lower)
+                        || user.getEmail().toLowerCase().contains(lower)
+                        || user.getFirstName().toLowerCase().contains(lower)
+                        || user.getLastName().toLowerCase().contains(lower);
+            }).collect(Collectors.toList());
+        }
 
         return this.userRepsToVOs(usersRep);
     }
