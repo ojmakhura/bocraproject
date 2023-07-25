@@ -11,188 +11,309 @@ import bw.org.bocra.portal.form.submission.FormSubmissionDao;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class FormActivationServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(FormActivationServiceTest.class);
-    
-    @InjectMocks
-    private FormActivationServiceImpl formActivationService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private FormActivationService formActivationService;
+
+    @Autowired
     private FormActivationDao formActivationDao;
 
-    @Mock
+    @Autowired
     private FormActivationRepository formActivationRepository;
-    @Mock
+
+    @Autowired
     private FormDao formDao;
 
-    @Mock
+    @Autowired
     private FormRepository formRepository;
-    @Mock
+
+    @Autowired
     private FormSubmissionDao formSubmissionDao;
 
-    @Mock
+    @Autowired
     private FormSubmissionRepository formSubmissionRepository;
-    @Mock
+
+    @Autowired
     private DataFieldDao dataFieldDao;
 
-    @Mock
+    @Autowired
     private DataFieldRepository dataFieldRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(formActivationDao);
-        Assertions.assertNotNull(formActivationRepository);
-        Assertions.assertNotNull(formDao);
-        Assertions.assertNotNull(formRepository);
-        Assertions.assertNotNull(formSubmissionDao);
-        Assertions.assertNotNull(formSubmissionRepository);
-        Assertions.assertNotNull(dataFieldDao);
-        Assertions.assertNotNull(dataFieldRepository);
-        Assertions.assertNotNull(formActivationService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_formActivation_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_FormActivation_Id_null() {
+    @DisplayName("Test Save Form Activation Null")
+    public void testSaveFormActivationNull() {
         
     }
 
     @Test
-    public void save_FormActivation_CreatedDate_null() {
+    @DisplayName("Test Save Form Activation Id Null")
+    public void testSaveFormActivationIdNull() {
         
     }
 
     @Test
-    public void save_FormActivation_UpdatedBy_null() {
+    @DisplayName("Test Save Form Activation Created Date Null")
+    public void testSaveFormActivationCreatedDateNull() {
         
     }
 
     @Test
-    public void save_FormActivation_UpdatedDate_null() {
+    @DisplayName("Test Save Form Activation Updated By Null")
+    public void testSaveFormActivationUpdatedByNull() {
         
     }
 
     @Test
-    public void save_FormActivation_CreatedBy_null() {
+    @DisplayName("Test Save Form Activation Updated Date Null")
+    public void testSaveFormActivationUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_FormActivation_ActivationName_null() {
+    @DisplayName("Test Save Form Activation Created By Null")
+    public void testSaveFormActivationCreatedByNull() {
         
     }
 
     @Test
-    public void save_FormActivation_Period_null() {
+    @DisplayName("Test Save Form Activation Activation Name Null")
+    public void testSaveFormActivationActivationNameNull() {
         
     }
 
     @Test
-    public void save_FormActivation_Form_null() {
+    @DisplayName("Test Save Form Activation Period Null")
+    public void testSaveFormActivationPeriodNull() {
         
     }
 
     @Test
-    public void save_FormActivation_FormSubmissions_null() {
+    @DisplayName("Test Save Form Activation Form Null")
+    public void testSaveFormActivationFormNull() {
         
     }
 
     @Test
-    public void save_FormActivation_ActivationDeadline_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Form Activation Form Submissions Null")
+    public void testSaveFormActivationFormSubmissionsNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Form Activation Activation Deadline Null")
+    public void testSaveFormActivationActivationDeadlineNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_ActivationName_null() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_Criteria_PeriodId_null() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_FormId_null() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
         
     }
+
+    @Test
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Activation Name Null")
+    public void testSearchCriteriaActivationNameNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Period Id Null")
+    public void testSearchCriteriaPeriodIdNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Form Id Null")
+    public void testSearchCriteriaFormIdNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Recreate Activation Submission Success")
+    public void testRecreateActivationSubmissionSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Recreate Activation Submission Fail")
+    public void testRecreateActivationSubmissionFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Recreate Activation Submission Created By Null")
+    public void testRecreateActivationSubmissionCreatedByNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Create Missing Submissions Success")
+    public void testCreateMissingSubmissionsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Create Missing Submissions Fail")
+    public void testCreateMissingSubmissionsFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Create Missing Submissions Created By Null")
+    public void testCreateMissingSubmissionsCreatedByNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Activate Due Forms Success")
+    public void testActivateDueFormsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Activate Due Forms Fail")
+    public void testActivateDueFormsFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Activate Due Forms Created By Null")
+    public void testActivateDueFormsCreatedByNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Search Success")
+    public void testPagedSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Search Fail")
+    public void testPagedSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Search Criteria Null")
+    public void testPagedSearchCriteriaNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Search Criteria Activation Name Null")
+    public void testPagedSearchCriteriaActivationNameNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Search Criteria Period Id Null")
+    public void testPagedSearchCriteriaPeriodIdNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Search Criteria Form Id Null")
+    public void testPagedSearchCriteriaFormIdNull() {
+        
+    }
+
 }

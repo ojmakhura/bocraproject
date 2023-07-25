@@ -5,177 +5,212 @@
 //
 package bw.org.bocra.portal.period;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class PeriodServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(PeriodServiceTest.class);
-    
-    @InjectMocks
-    private PeriodServiceImpl periodService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private PeriodService periodService;
+
+    @Autowired
     private PeriodDao periodDao;
 
-    @Mock
+    @Autowired
     private PeriodRepository periodRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(periodDao);
-        Assertions.assertNotNull(periodRepository);
-        Assertions.assertNotNull(periodService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_period_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_Period_Id_null() {
+    @DisplayName("Test Save Period Null")
+    public void testSavePeriodNull() {
         
     }
 
     @Test
-    public void save_Period_PeriodConfig_null() {
+    @DisplayName("Test Save Period Id Null")
+    public void testSavePeriodIdNull() {
         
     }
 
     @Test
-    public void save_Period_PeriodName_null() {
+    @DisplayName("Test Save Period Period Config Null")
+    public void testSavePeriodPeriodConfigNull() {
         
     }
 
     @Test
-    public void save_Period_PeriodStart_null() {
+    @DisplayName("Test Save Period Period Name Null")
+    public void testSavePeriodPeriodNameNull() {
         
     }
 
     @Test
-    public void save_Period_PeriodEnd_null() {
+    @DisplayName("Test Save Period Period Start Null")
+    public void testSavePeriodPeriodStartNull() {
         
     }
 
     @Test
-    public void save_Period_CreatedBy_null() {
+    @DisplayName("Test Save Period Period End Null")
+    public void testSavePeriodPeriodEndNull() {
         
     }
 
     @Test
-    public void save_Period_UpdatedBy_null() {
+    @DisplayName("Test Save Period Created By Null")
+    public void testSavePeriodCreatedByNull() {
         
     }
 
     @Test
-    public void save_Period_CreatedDate_null() {
+    @DisplayName("Test Save Period Updated By Null")
+    public void testSavePeriodUpdatedByNull() {
         
     }
 
     @Test
-    public void save_Period_UpdatedDate_null() {
+    @DisplayName("Test Save Period Created Date Null")
+    public void testSavePeriodCreatedDateNull() {
         
     }
 
     @Test
-    public void save_Period_Next_null() {
+    @DisplayName("Test Save Period Updated Date Null")
+    public void testSavePeriodUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_Period_Previous_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Period Next Null")
+    public void testSavePeriodNextNull() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Save Period Previous Null")
+    public void testSavePeriodPreviousNull() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_PeriodName_null() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_Criteria_SearchDate_null() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void loadCurrentPeriods_success() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
         
     }
 
     @Test
-    public void loadCurrentPeriods_fail() {
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Load Current Periods Success")
+    public void testLoadCurrentPeriodsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Load Current Periods Fail")
+    public void testLoadCurrentPeriodsFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Create Next Periods Success")
+    public void testCreateNextPeriodsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Create Next Periods Fail")
+    public void testCreateNextPeriodsFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Create Next Periods Username Null")
+    public void testCreateNextPeriodsUsernameNull() {
         
     }
 

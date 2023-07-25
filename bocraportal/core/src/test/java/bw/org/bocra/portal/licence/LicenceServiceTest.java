@@ -5,181 +5,218 @@
 //
 package bw.org.bocra.portal.licence;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class LicenceServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(LicenceServiceTest.class);
-    
-    @InjectMocks
-    private LicenceServiceImpl licenceService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private LicenceService licenceService;
+
+    @Autowired
     private LicenceDao licenceDao;
 
-    @Mock
+    @Autowired
     private LicenceRepository licenceRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(licenceDao);
-        Assertions.assertNotNull(licenceRepository);
-        Assertions.assertNotNull(licenceService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_licence_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_Licence_Id_null() {
+    @DisplayName("Test Save Licence Null")
+    public void testSaveLicenceNull() {
         
     }
 
     @Test
-    public void save_Licence_CreatedBy_null() {
+    @DisplayName("Test Save Licence Id Null")
+    public void testSaveLicenceIdNull() {
         
     }
 
     @Test
-    public void save_Licence_UpdatedBy_null() {
+    @DisplayName("Test Save Licence Created By Null")
+    public void testSaveLicenceCreatedByNull() {
         
     }
 
     @Test
-    public void save_Licence_CreatedDate_null() {
+    @DisplayName("Test Save Licence Updated By Null")
+    public void testSaveLicenceUpdatedByNull() {
         
     }
 
     @Test
-    public void save_Licence_UpdatedDate_null() {
+    @DisplayName("Test Save Licence Created Date Null")
+    public void testSaveLicenceCreatedDateNull() {
         
     }
 
     @Test
-    public void save_Licence_LicenceType_null() {
+    @DisplayName("Test Save Licence Updated Date Null")
+    public void testSaveLicenceUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_Licence_Licensee_null() {
+    @DisplayName("Test Save Licence Licence Type Null")
+    public void testSaveLicenceLicenceTypeNull() {
         
     }
 
     @Test
-    public void save_Licence_Status_null() {
+    @DisplayName("Test Save Licence Licensee Null")
+    public void testSaveLicenceLicenseeNull() {
         
     }
 
     @Test
-    public void save_Licence_LicenceNumber_null() {
+    @DisplayName("Test Save Licence Status Null")
+    public void testSaveLicenceStatusNull() {
         
     }
 
     @Test
-    public void save_Licence_Provisional_null() {
+    @DisplayName("Test Save Licence Licence Number Null")
+    public void testSaveLicenceLicenceNumberNull() {
         
     }
 
     @Test
-    public void save_Licence_StartDate_null() {
+    @DisplayName("Test Save Licence Provisional Null")
+    public void testSaveLicenceProvisionalNull() {
         
     }
 
     @Test
-    public void save_Licence_EndDate_null() {
+    @DisplayName("Test Save Licence Start Date Null")
+    public void testSaveLicenceStartDateNull() {
         
     }
 
     @Test
-    public void save_Licence_Documents_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Licence End Date Null")
+    public void testSaveLicenceEndDateNull() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Save Licence Documents Null")
+    public void testSaveLicenceDocumentsNull() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_Status_null() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_Criteria_LicenceNumber_null() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_LicenceType_null() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Status Null")
+    public void testSearchCriteriaStatusNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Licence Number Null")
+    public void testSearchCriteriaLicenceNumberNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Licence Type Null")
+    public void testSearchCriteriaLicenceTypeNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
         
     }
 

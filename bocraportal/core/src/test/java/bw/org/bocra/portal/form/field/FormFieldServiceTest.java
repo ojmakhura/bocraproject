@@ -7,203 +7,243 @@ package bw.org.bocra.portal.form.field;
 
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class FormFieldServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(FormFieldServiceTest.class);
-    
-    @InjectMocks
-    private FormFieldServiceImpl formFieldService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private FormFieldService formFieldService;
+
+    @Autowired
     private FormFieldDao formFieldDao;
 
-    @Mock
+    @Autowired
     private FormFieldRepository formFieldRepository;
-    @Mock
+
+    @Autowired
     private FormDao formDao;
 
-    @Mock
+    @Autowired
     private FormRepository formRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(formFieldDao);
-        Assertions.assertNotNull(formFieldRepository);
-        Assertions.assertNotNull(formDao);
-        Assertions.assertNotNull(formRepository);
-        Assertions.assertNotNull(formFieldService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_formField_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_FormField_Id_null() {
+    @DisplayName("Test Save Form Field Null")
+    public void testSaveFormFieldNull() {
         
     }
 
     @Test
-    public void save_FormField_CreatedBy_null() {
+    @DisplayName("Test Save Form Field Id Null")
+    public void testSaveFormFieldIdNull() {
         
     }
 
     @Test
-    public void save_FormField_UpdatedBy_null() {
+    @DisplayName("Test Save Form Field Created By Null")
+    public void testSaveFormFieldCreatedByNull() {
         
     }
 
     @Test
-    public void save_FormField_CreatedDate_null() {
+    @DisplayName("Test Save Form Field Updated By Null")
+    public void testSaveFormFieldUpdatedByNull() {
         
     }
 
     @Test
-    public void save_FormField_UpdatedDate_null() {
+    @DisplayName("Test Save Form Field Created Date Null")
+    public void testSaveFormFieldCreatedDateNull() {
         
     }
 
     @Test
-    public void save_FormField_Form_null() {
+    @DisplayName("Test Save Form Field Updated Date Null")
+    public void testSaveFormFieldUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_FormField_FormSection_null() {
+    @DisplayName("Test Save Form Field Form Null")
+    public void testSaveFormFieldFormNull() {
         
     }
 
     @Test
-    public void save_FormField_FieldType_null() {
+    @DisplayName("Test Save Form Field Form Section Null")
+    public void testSaveFormFieldFormSectionNull() {
         
     }
 
     @Test
-    public void save_FormField_Position_null() {
+    @DisplayName("Test Save Form Field Field Type Null")
+    public void testSaveFormFieldFieldTypeNull() {
         
     }
 
     @Test
-    public void save_FormField_FieldId_null() {
+    @DisplayName("Test Save Form Field Position Null")
+    public void testSaveFormFieldPositionNull() {
         
     }
 
     @Test
-    public void save_FormField_FieldName_null() {
+    @DisplayName("Test Save Form Field Field Id Null")
+    public void testSaveFormFieldFieldIdNull() {
         
     }
 
     @Test
-    public void save_FormField_Description_null() {
+    @DisplayName("Test Save Form Field Field Name Null")
+    public void testSaveFormFieldFieldNameNull() {
         
     }
 
     @Test
-    public void save_FormField_FieldValueType_null() {
+    @DisplayName("Test Save Form Field Description Null")
+    public void testSaveFormFieldDescriptionNull() {
         
     }
 
     @Test
-    public void save_FormField_Expression_null() {
+    @DisplayName("Test Save Form Field Field Value Type Null")
+    public void testSaveFormFieldFieldValueTypeNull() {
         
     }
 
     @Test
-    public void save_FormField_DefaultValue_null() {
+    @DisplayName("Test Save Form Field Expression Null")
+    public void testSaveFormFieldExpressionNull() {
         
     }
 
     @Test
-    public void save_FormField_Required_null() {
+    @DisplayName("Test Save Form Field Default Value Null")
+    public void testSaveFormFieldDefaultValueNull() {
         
     }
 
     @Test
-    public void save_FormField_Min_null() {
+    @DisplayName("Test Save Form Field Required Null")
+    public void testSaveFormFieldRequiredNull() {
         
     }
 
     @Test
-    public void save_FormField_Max_null() {
+    @DisplayName("Test Save Form Field Min Null")
+    public void testSaveFormFieldMinNull() {
         
     }
 
     @Test
-    public void save_FormField_Units_null() {
+    @DisplayName("Test Save Form Field Max Null")
+    public void testSaveFormFieldMaxNull() {
         
     }
 
     @Test
-    public void save_FormField_Options_null() {
+    @DisplayName("Test Save Form Field Units Null")
+    public void testSaveFormFieldUnitsNull() {
         
     }
 
     @Test
-    public void save_FormField_MinLength_null() {
+    @DisplayName("Test Save Form Field Options Null")
+    public void testSaveFormFieldOptionsNull() {
         
     }
 
     @Test
-    public void save_FormField_MaxLength_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Form Field Min Length Null")
+    public void testSaveFormFieldMinLengthNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Form Field Max Length Null")
+    public void testSaveFormFieldMaxLengthNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
+
+    @Test
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
 }

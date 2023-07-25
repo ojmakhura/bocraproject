@@ -5,162 +5,207 @@
 //
 package bw.org.bocra.portal.shareholder;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class ShareholderServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(ShareholderServiceTest.class);
-    
-    @InjectMocks
-    private ShareholderServiceImpl shareholderService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private ShareholderService shareholderService;
+
+    @Autowired
     private ShareholderDao shareholderDao;
 
-    @Mock
+    @Autowired
     private ShareholderRepository shareholderRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(shareholderDao);
-        Assertions.assertNotNull(shareholderRepository);
-        Assertions.assertNotNull(shareholderService);
-
-    }
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_success() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_shareholder_null() {
+    @DisplayName("Test Save Shareholder Null")
+    public void testSaveShareholderNull() {
         
     }
 
     @Test
-    public void save_Shareholder_Id_null() {
+    @DisplayName("Test Save Shareholder Id Null")
+    public void testSaveShareholderIdNull() {
         
     }
 
     @Test
-    public void save_Shareholder_CreatedBy_null() {
+    @DisplayName("Test Save Shareholder Created By Null")
+    public void testSaveShareholderCreatedByNull() {
         
     }
 
     @Test
-    public void save_Shareholder_UpdatedBy_null() {
+    @DisplayName("Test Save Shareholder Updated By Null")
+    public void testSaveShareholderUpdatedByNull() {
         
     }
 
     @Test
-    public void save_Shareholder_CreatedDate_null() {
+    @DisplayName("Test Save Shareholder Created Date Null")
+    public void testSaveShareholderCreatedDateNull() {
         
     }
 
     @Test
-    public void save_Shareholder_UpdatedDate_null() {
+    @DisplayName("Test Save Shareholder Updated Date Null")
+    public void testSaveShareholderUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_Shareholder_ShareholderId_null() {
+    @DisplayName("Test Save Shareholder Shareholder Id Null")
+    public void testSaveShareholderShareholderIdNull() {
         
     }
 
     @Test
-    public void save_Shareholder_Type_null() {
+    @DisplayName("Test Save Shareholder Type Null")
+    public void testSaveShareholderTypeNull() {
         
     }
 
     @Test
-    public void save_Shareholder_Name_null() {
+    @DisplayName("Test Save Shareholder Name Null")
+    public void testSaveShareholderNameNull() {
         
     }
 
     @Test
-    public void save_Shareholder_Address_null() {
+    @DisplayName("Test Save Shareholder Address Null")
+    public void testSaveShareholderAddressNull() {
         
     }
 
     @Test
-    public void save_Shareholder_Licensees_null() {
+    @DisplayName("Test Save Shareholder Documents Null")
+    public void testSaveShareholderDocumentsNull() {
         
     }
 
     @Test
-    public void remove_success() {
+    @DisplayName("Test Save Shareholder Shares Null")
+    public void testSaveShareholderSharesNull() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void getAll_success() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
         
     }
 
     @Test
-    public void search_Criteria_ShareholderId_null() {
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
         
     }
 
     @Test
-    public void search_Criteria_Type_null() {
+    @DisplayName("Test Search Criteria Shareholder Id Null")
+    public void testSearchCriteriaShareholderIdNull() {
         
     }
 
     @Test
-    public void search_Criteria_Name_null() {
+    @DisplayName("Test Search Criteria Type Null")
+    public void testSearchCriteriaTypeNull() {
         
     }
 
+    @Test
+    @DisplayName("Test Search Criteria Name Null")
+    public void testSearchCriteriaNameNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
 
 }

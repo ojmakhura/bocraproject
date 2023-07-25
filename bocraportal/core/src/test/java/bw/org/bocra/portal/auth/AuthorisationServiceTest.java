@@ -5,255 +5,250 @@
 //
 package bw.org.bocra.portal.auth;
 
-import bw.org.bocra.portal.access.AccessPoint;
-import bw.org.bocra.portal.access.AccessPointDao;
-import bw.org.bocra.portal.access.AccessPointVO;
-import bw.org.bocra.portal.access.type.AccessPointTypeDao;
-import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 import bw.org.bocra.portal.menu.MenuSectionDao;
 import bw.org.bocra.portal.menu.MenuSectionRepository;
-
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest(classes = AuthorisationServiceImpl.class)
-// @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class AuthorisationServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(AuthorisationServiceTest.class);
-    
+
     @Autowired
     ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
     
     @Autowired
-    private AuthorisationServiceImpl authorisationService;
+    private AuthorisationService authorisationService;
 
-    @MockBean
+    @Autowired
     private AuthorisationDao authorisationDao;
 
-    // @MockBean
-    // AccessPointTypeVO accessPointTypeVO;
-
-    @MockBean
-    AccessPointTypeDao accessPointTypeDao;
-
-    @MockBean
-    AccessPointDao accessPointDao;
-
-    @MockBean
+    @Autowired
     private AuthorisationRepository authorisationRepository;
 
-    @MockBean
+    @Autowired
     private MenuSectionDao menuSectionDao;
 
-    @MockBean
+    @Autowired
     private MenuSectionRepository menuSectionRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(authorisationDao);
-        Assertions.assertNotNull(authorisationRepository);
-        Assertions.assertNotNull(menuSectionDao);
-        Assertions.assertNotNull(menuSectionRepository);
-        Assertions.assertNotNull(authorisationService);
-
-    }
-
-    private AccessPoint defaultAccessPoint() {
-        AccessPoint accessPoint = new AccessPoint();
-        accessPoint.setId(1l);
-        accessPoint.setName("AccessPointName");
-        accessPoint.setUrl("AccessPointUrl");
-        return accessPoint;
-    }
-    
-
-    @Test
-    public void findById_success() {
-
-        // Authorisation auth = new Authorisation();
-        // auth.setId(2l);
-        // auth.setAccessPoint(defaultAccessPoint());
-        // auth.setRoles(List.of("ROLE_ADMIN", "ROLE_USER"));
-
-        // when(authorisationRepository.getReferenceById(2l)).thenReturn(auth);
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_authorisation_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_Authorisation_Id_null() {
+    @DisplayName("Test Save Authorisation Null")
+    public void testSaveAuthorisationNull() {
         
     }
 
     @Test
-    public void save_Authorisation_CreatedBy_null() {
+    @DisplayName("Test Save Authorisation Id Null")
+    public void testSaveAuthorisationIdNull() {
         
     }
 
     @Test
-    public void save_Authorisation_UpdatedBy_null() {
+    @DisplayName("Test Save Authorisation Created By Null")
+    public void testSaveAuthorisationCreatedByNull() {
         
     }
 
     @Test
-    public void save_Authorisation_CreatedDate_null() {
+    @DisplayName("Test Save Authorisation Updated By Null")
+    public void testSaveAuthorisationUpdatedByNull() {
         
     }
 
     @Test
-    public void save_Authorisation_UpdatedDate_null() {
+    @DisplayName("Test Save Authorisation Created Date Null")
+    public void testSaveAuthorisationCreatedDateNull() {
         
     }
 
     @Test
-    public void save_Authorisation_AccessPoint_null() {
+    @DisplayName("Test Save Authorisation Updated Date Null")
+    public void testSaveAuthorisationUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_Authorisation_Roles_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Authorisation Access Point Null")
+    public void testSaveAuthorisationAccessPointNull() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Save Authorisation Roles Null")
+    public void testSaveAuthorisationRolesNull() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_AccessPointName_null() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_Criteria_AccessPointUrl_null() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_Roles_null() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void getAccessTypeCodeAuthorisations_success() {
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
         
     }
 
     @Test
-    public void getAccessTypeCodeAuthorisations_fail() {
-        
-    }
-
-
-    @Test
-    public void assignMenuSection_success() {
+    @DisplayName("Test Search Criteria Access Point Name Null")
+    public void testSearchCriteriaAccessPointNameNull() {
         
     }
 
     @Test
-    public void assignMenuSection_fail() {
-        
-    }
-
-
-    @Test
-    public void findByRolesAndUrl_success() {
+    @DisplayName("Test Search Criteria Access Point Url Null")
+    public void testSearchCriteriaAccessPointUrlNull() {
         
     }
 
     @Test
-    public void findByRolesAndUrl_fail() {
+    @DisplayName("Test Search Criteria Roles Null")
+    public void testSearchCriteriaRolesNull() {
         
     }
 
     @Test
-    public void findByRolesAndUrl_url_null() {
-        
-    }
-
-
-    @Test
-    public void findByUrlPrefix_success() {
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
         
     }
 
     @Test
-    public void findByUrlPrefix_fail() {
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
         
     }
 
     @Test
-    public void findByUrlPrefix_prefix_null() {
+    @DisplayName("Test Get Access Type Code Authorisations Success")
+    public void testGetAccessTypeCodeAuthorisationsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get Access Type Code Authorisations Fail")
+    public void testGetAccessTypeCodeAuthorisationsFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Assign Menu Section Success")
+    public void testAssignMenuSectionSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Assign Menu Section Fail")
+    public void testAssignMenuSectionFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Roles And Url Success")
+    public void testFindByRolesAndUrlSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Roles And Url Fail")
+    public void testFindByRolesAndUrlFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Roles And Url Url Null")
+    public void testFindByRolesAndUrlUrlNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Url Prefix Success")
+    public void testFindByUrlPrefixSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Url Prefix Fail")
+    public void testFindByUrlPrefixFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Url Prefix Prefix Null")
+    public void testFindByUrlPrefixPrefixNull() {
         
     }
 

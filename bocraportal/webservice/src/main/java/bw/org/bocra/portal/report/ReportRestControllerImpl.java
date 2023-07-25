@@ -102,7 +102,6 @@ public class ReportRestControllerImpl extends ReportRestControllerBase {
                 }
             }
 
-            // System.out.println(reportElements);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             document.write(out);
             byte[] outArray = out.toByteArray();

@@ -5,141 +5,170 @@
 //
 package bw.org.bocra.portal.complaint.type;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class ComplaintTypeServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(ComplaintTypeServiceTest.class);
-    
-    @InjectMocks
-    private ComplaintTypeServiceImpl complaintTypeService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private ComplaintTypeService complaintTypeService;
+
+    @Autowired
     private ComplaintTypeDao complaintTypeDao;
 
-    @Mock
+    @Autowired
     private ComplaintTypeRepository complaintTypeRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(complaintTypeDao);
-        Assertions.assertNotNull(complaintTypeRepository);
-        Assertions.assertNotNull(complaintTypeService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_complaintType_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_ComplaintType_Id_null() {
+    @DisplayName("Test Save Complaint Type Null")
+    public void testSaveComplaintTypeNull() {
         
     }
 
     @Test
-    public void save_ComplaintType_CreatedBy_null() {
+    @DisplayName("Test Save Complaint Type Id Null")
+    public void testSaveComplaintTypeIdNull() {
         
     }
 
     @Test
-    public void save_ComplaintType_UpdatedBy_null() {
+    @DisplayName("Test Save Complaint Type Created By Null")
+    public void testSaveComplaintTypeCreatedByNull() {
         
     }
 
     @Test
-    public void save_ComplaintType_CreatedDate_null() {
+    @DisplayName("Test Save Complaint Type Updated By Null")
+    public void testSaveComplaintTypeUpdatedByNull() {
         
     }
 
     @Test
-    public void save_ComplaintType_UpdatedDate_null() {
+    @DisplayName("Test Save Complaint Type Created Date Null")
+    public void testSaveComplaintTypeCreatedDateNull() {
         
     }
 
     @Test
-    public void save_ComplaintType_Code_null() {
+    @DisplayName("Test Save Complaint Type Updated Date Null")
+    public void testSaveComplaintTypeUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_ComplaintType_TypeName_null() {
+    @DisplayName("Test Save Complaint Type Code Null")
+    public void testSaveComplaintTypeCodeNull() {
         
     }
 
     @Test
-    public void save_ComplaintType_Description_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Complaint Type Type Name Null")
+    public void testSaveComplaintTypeTypeNameNull() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Save Complaint Type Description Null")
+    public void testSaveComplaintTypeDescriptionNull() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
         
     }
 

@@ -5,181 +5,218 @@
 //
 package bw.org.bocra.portal.period.config;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class PeriodConfigServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(PeriodConfigServiceTest.class);
-    
-    @InjectMocks
-    private PeriodConfigServiceImpl periodConfigService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private PeriodConfigService periodConfigService;
+
+    @Autowired
     private PeriodConfigDao periodConfigDao;
 
-    @Mock
+    @Autowired
     private PeriodConfigRepository periodConfigRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(periodConfigDao);
-        Assertions.assertNotNull(periodConfigRepository);
-        Assertions.assertNotNull(periodConfigService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_periodConfig_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_PeriodConfig_Id_null() {
+    @DisplayName("Test Save Period Config Null")
+    public void testSavePeriodConfigNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_PeriodConfigName_null() {
+    @DisplayName("Test Save Period Config Id Null")
+    public void testSavePeriodConfigIdNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_StartDay_null() {
+    @DisplayName("Test Save Period Config Period Config Name Null")
+    public void testSavePeriodConfigPeriodConfigNameNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_StartMonth_null() {
+    @DisplayName("Test Save Period Config Start Day Null")
+    public void testSavePeriodConfigStartDayNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_CreatedBy_null() {
+    @DisplayName("Test Save Period Config Start Month Null")
+    public void testSavePeriodConfigStartMonthNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_UpdatedBy_null() {
+    @DisplayName("Test Save Period Config Created By Null")
+    public void testSavePeriodConfigCreatedByNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_CreatedDate_null() {
+    @DisplayName("Test Save Period Config Updated By Null")
+    public void testSavePeriodConfigUpdatedByNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_UpdatedDate_null() {
+    @DisplayName("Test Save Period Config Created Date Null")
+    public void testSavePeriodConfigCreatedDateNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_Repeat_null() {
+    @DisplayName("Test Save Period Config Updated Date Null")
+    public void testSavePeriodConfigUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_RepeatPeriod_null() {
+    @DisplayName("Test Save Period Config Repeat Null")
+    public void testSavePeriodConfigRepeatNull() {
         
     }
 
     @Test
-    public void save_PeriodConfig_FinalDay_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Period Config Repeat Period Null")
+    public void testSavePeriodConfigRepeatPeriodNull() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Save Period Config Final Day Null")
+    public void testSavePeriodConfigFinalDayNull() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_PeriodConfigName_null() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_Criteria_StartDayFrom_null() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_StartDayTo_null() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
         
     }
 
     @Test
-    public void search_Criteria_StartMonthFrom_null() {
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
         
     }
 
     @Test
-    public void search_Criteria_StartMonthTo_null() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Search Criteria Period Config Name Null")
+    public void testSearchCriteriaPeriodConfigNameNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Search Criteria Start Day From Null")
+    public void testSearchCriteriaStartDayFromNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Start Day To Null")
+    public void testSearchCriteriaStartDayToNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Start Month From Null")
+    public void testSearchCriteriaStartMonthFromNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Start Month To Null")
+    public void testSearchCriteriaStartMonthToNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
         
     }
 

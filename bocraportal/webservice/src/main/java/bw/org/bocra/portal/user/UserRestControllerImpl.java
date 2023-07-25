@@ -67,8 +67,6 @@ public class UserRestControllerImpl extends UserRestControllerBase {
     public ResponseEntity<?> handleLoadUsers() {
         try{
             logger.debug("Load Users ");
-            System.out.println(this.keycloakService.getSecurityContext().getToken().getId());
-            System.out.println(this.keycloakService.getSecurityContext().getToken().getRealmAccess().getRoles());
             return ResponseEntity.ok().body(this.keycloakUserService.loadUsers());
             
         } catch (Exception e) {
@@ -103,8 +101,6 @@ public class UserRestControllerImpl extends UserRestControllerBase {
             logger.debug("Search user by criteria"+criteria);
 
             List<UserVO> users = this.keycloakUserService.search(criteria);
-
-            System.out.println(users);
 
             return ResponseEntity.ok(users);
         } catch (Exception e) {

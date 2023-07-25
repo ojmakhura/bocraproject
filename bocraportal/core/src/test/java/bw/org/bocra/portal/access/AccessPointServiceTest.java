@@ -5,161 +5,277 @@
 //
 package bw.org.bocra.portal.access;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.ResourceUtils;
 
-@ExtendWith(MockitoExtension.class)
+import bw.org.bocra.portal.access.type.AccessPointType;
+import bw.org.bocra.portal.access.type.AccessPointTypeRepository;
+
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+
+@SpringBootTest
 public class AccessPointServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(AccessPointServiceTest.class);
-    
-    @InjectMocks
-    private AccessPointServiceImpl accessPointService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private AccessPointService accessPointService;
+
+    @Autowired
     private AccessPointDao accessPointDao;
 
-    @Mock
+    @Autowired
     private AccessPointRepository accessPointRepository;
 
-    @Test
-    @DisplayName("Check Injects")
-    public void checkInjects() {
+    @Autowired
+    private AccessPointTypeRepository accessPointTypeRepository;
 
-        Assertions.assertNotNull(accessPointDao);
-        Assertions.assertNotNull(accessPointRepository);
-        Assertions.assertNotNull(accessPointService);
+    public void loadTypeCsvFile() throws Exception {
+        File file = ResourceUtils.getFile("classpath:access_point_type.csv");
+        try (
+                
+                InputStream is = file.toURI().toURL().openStream();
+                BufferedReader fileReader = new BufferedReader(new InputStreamReader(is));
+                CSVParser csvParser = new CSVParser(
+                        fileReader,
+                        CSVFormat.DEFAULT.builder()
+                                .setHeader("code" , "description","name")
+                                .setSkipHeaderRecord(true)
+                                .build());) {
 
+            Collection<AccessPointType> types = new ArrayList<>();
+            csvParser.forEach(csvRecord -> {
+                AccessPointType type = new AccessPointType();
+                type.setCode(csvRecord.get("code"));
+                type.setName(csvRecord.get("name"));
+                type.setDescription(csvRecord.get("description"));
+                types.add(type);
+            });
+
+            accessPointTypeRepository.saveAll(types);
+        }
     }
 
+    public void loadCsvFile() throws Exception {
+        File file = ResourceUtils.getFile("classpath:access_point.csv");
+        try (
+                
+                InputStream is = file.toURI().toURL().openStream();
+                BufferedReader fileReader = new BufferedReader(new InputStreamReader(is));
+                CSVParser csvParser = new CSVParser(
+                        fileReader,
+                        CSVFormat.DEFAULT.builder()
+                                .setHeader("created_by","created_date","icon","name","updated_by","updated_date","url","access_point_type_fk")
+                                .setSkipHeaderRecord(true)
+                                .build());) {
+
+            Collection<AccessPoint> points = new ArrayList<>();
+            
+
+            accessPointRepository.saveAll(points);
+        }
+    }
+
+
     @Test
-    @DisplayName("Test Successful Save")
-    public void save_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_accessPoint_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void save_AccessPoint_Id_null() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void save_AccessPoint_CreatedBy_null() {
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
         
     }
 
     @Test
-    public void save_AccessPoint_UpdatedBy_null() {
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
         
     }
 
     @Test
-    public void save_AccessPoint_CreatedDate_null() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void save_AccessPoint_UpdatedDate_null() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void save_AccessPoint_AccessPointType_null() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_AccessPoint_Name_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_AccessPoint_Url_null() {
+    @DisplayName("Test Save Access Point Null")
+    public void testSaveAccessPointNull() {
         
     }
 
     @Test
-    public void save_AccessPoint_Icon_null() {
-        
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Save Access Point Id Null")
+    public void testSaveAccessPointIdNull() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Access Point Created By Null")
+    public void testSaveAccessPointCreatedByNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Save Access Point Updated By Null")
+    public void testSaveAccessPointUpdatedByNull() {
         
     }
 
     @Test
-    public void remove_success() {
+    @DisplayName("Test Save Access Point Created Date Null")
+    public void testSaveAccessPointCreatedDateNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void search_success() {
+    @DisplayName("Test Save Access Point Updated Date Null")
+    public void testSaveAccessPointUpdatedDateNull() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Save Access Point Access Point Type Null")
+    public void testSaveAccessPointAccessPointTypeNull() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Save Access Point Name Null")
+    public void testSaveAccessPointNameNull() {
         
     }
 
     @Test
-    public void search_Criteria_Type_null() {
+    @DisplayName("Test Save Access Point Url Null")
+    public void testSaveAccessPointUrlNull() {
         
     }
 
     @Test
-    public void search_Criteria_Name_null() {
+    @DisplayName("Test Save Access Point Icon Null")
+    public void testSaveAccessPointIconNull() {
         
     }
 
     @Test
-    public void search_Criteria_Url_null() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Pages Search Success")
+    public void testPagedSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Pages Search Fail")
+    public void testPagedSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Pages Search Criteria Null")
+    public void testPagedSearchCriteriaNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Pages Search Criteria Type Null")
+    public void testPagedSearchCriteriaTypeNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Pages Search Criteria Name Null")
+    public void testPagedSearchCriteriaNameNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Pages Search Criteria Url Null")
+    public void testPagedSearchCriteriaUrlNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Pages Search Criteria Type Id Null")
+    public void testPagedSearchCriteriaTypeIdNull() {
         
     }
 

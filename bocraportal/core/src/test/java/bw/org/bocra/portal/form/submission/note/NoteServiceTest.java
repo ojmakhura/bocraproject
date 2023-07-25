@@ -5,111 +5,122 @@
 //
 package bw.org.bocra.portal.form.submission.note;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class NoteServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(NoteServiceTest.class);
-    
-    @InjectMocks
-    private NoteServiceImpl noteService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private NoteService noteService;
+
+    @Autowired
     private NoteDao noteDao;
 
-    @Mock
+    @Autowired
     private NoteRepository noteRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(noteDao);
-        Assertions.assertNotNull(noteRepository);
-        Assertions.assertNotNull(noteService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_note_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_Note_Id_null() {
+    @DisplayName("Test Save Note Null")
+    public void testSaveNoteNull() {
         
     }
 
     @Test
-    public void save_Note_CreatedBy_null() {
+    @DisplayName("Test Save Note Id Null")
+    public void testSaveNoteIdNull() {
         
     }
 
     @Test
-    public void save_Note_CreatedDate_null() {
+    @DisplayName("Test Save Note Created By Null")
+    public void testSaveNoteCreatedByNull() {
         
     }
 
     @Test
-    public void save_Note_Note_null() {
+    @DisplayName("Test Save Note Created Date Null")
+    public void testSaveNoteCreatedDateNull() {
         
     }
 
     @Test
-    public void save_Note_FormSubmission_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Note Note Null")
+    public void testSaveNoteNoteNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getFormSubmissionNotes_success() {
+    @DisplayName("Test Save Note Form Submission Null")
+    public void testSaveNoteFormSubmissionNull() {
         
     }
 
     @Test
-    public void getFormSubmissionNotes_fail() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get Form Submission Notes Success")
+    public void testGetFormSubmissionNotesSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get Form Submission Notes Fail")
+    public void testGetFormSubmissionNotesFail() {
         
     }
 

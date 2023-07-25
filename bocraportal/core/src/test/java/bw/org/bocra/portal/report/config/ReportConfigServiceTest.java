@@ -5,167 +5,200 @@
 //
 package bw.org.bocra.portal.report.config;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class ReportConfigServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(ReportConfigServiceTest.class);
-    
-    @InjectMocks
-    private ReportConfigServiceImpl reportConfigService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private ReportConfigService reportConfigService;
+
+    @Autowired
     private ReportConfigDao reportConfigDao;
 
-    @Mock
+    @Autowired
     private ReportConfigRepository reportConfigRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(reportConfigDao);
-        Assertions.assertNotNull(reportConfigRepository);
-        Assertions.assertNotNull(reportConfigService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_reportConfig_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_ReportConfig_Id_null() {
+    @DisplayName("Test Save Report Config Null")
+    public void testSaveReportConfigNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_CreatedBy_null() {
+    @DisplayName("Test Save Report Config Id Null")
+    public void testSaveReportConfigIdNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_UpdatedBy_null() {
+    @DisplayName("Test Save Report Config Created By Null")
+    public void testSaveReportConfigCreatedByNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_CreatedDate_null() {
+    @DisplayName("Test Save Report Config Updated By Null")
+    public void testSaveReportConfigUpdatedByNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_UpdatedDate_null() {
+    @DisplayName("Test Save Report Config Created Date Null")
+    public void testSaveReportConfigCreatedDateNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_Code_null() {
+    @DisplayName("Test Save Report Config Updated Date Null")
+    public void testSaveReportConfigUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_Name_null() {
+    @DisplayName("Test Save Report Config Code Null")
+    public void testSaveReportConfigCodeNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_Description_null() {
+    @DisplayName("Test Save Report Config Name Null")
+    public void testSaveReportConfigNameNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_Forms_null() {
+    @DisplayName("Test Save Report Config Description Null")
+    public void testSaveReportConfigDescriptionNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_Licensees_null() {
+    @DisplayName("Test Save Report Config Forms Null")
+    public void testSaveReportConfigFormsNull() {
         
     }
 
     @Test
-    public void save_ReportConfig_LicenceTypes_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Report Config Licensees Null")
+    public void testSaveReportConfigLicenseesNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Report Config Licence Types Null")
+    public void testSaveReportConfigLicenceTypesNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void search_Criteria_Code_null() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_Criteria_Name_null() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Code Null")
+    public void testSearchCriteriaCodeNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Name Null")
+    public void testSearchCriteriaNameNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
         
     }
 

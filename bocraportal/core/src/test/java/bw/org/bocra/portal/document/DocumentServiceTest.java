@@ -5,243 +5,302 @@
 //
 package bw.org.bocra.portal.document;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class DocumentServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(DocumentServiceTest.class);
-    
-    @InjectMocks
-    private DocumentServiceImpl documentService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private DocumentService documentService;
+
+    @Autowired
     private DocumentDao documentDao;
 
-    @Mock
+    @Autowired
     private DocumentRepository documentRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(documentDao);
-        Assertions.assertNotNull(documentRepository);
-        Assertions.assertNotNull(documentService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_document_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_Document_Id_null() {
+    @DisplayName("Test Save Document Null")
+    public void testSaveDocumentNull() {
         
     }
 
     @Test
-    public void save_Document_CreatedBy_null() {
+    @DisplayName("Test Save Document Id Null")
+    public void testSaveDocumentIdNull() {
         
     }
 
     @Test
-    public void save_Document_UpdatedBy_null() {
+    @DisplayName("Test Save Document Created By Null")
+    public void testSaveDocumentCreatedByNull() {
         
     }
 
     @Test
-    public void save_Document_CreatedDate_null() {
+    @DisplayName("Test Save Document Updated By Null")
+    public void testSaveDocumentUpdatedByNull() {
         
     }
 
     @Test
-    public void save_Document_UpdatedDate_null() {
+    @DisplayName("Test Save Document Created Date Null")
+    public void testSaveDocumentCreatedDateNull() {
         
     }
 
     @Test
-    public void save_Document_Licence_null() {
+    @DisplayName("Test Save Document Updated Date Null")
+    public void testSaveDocumentUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_Document_Licensee_null() {
+    @DisplayName("Test Save Document Metadata Target Null")
+    public void testSaveDocumentMetadataTargetNull() {
         
     }
 
     @Test
-    public void save_Document_DocumentType_null() {
+    @DisplayName("Test Save Document Licensee Null")
+    public void testSaveDocumentLicenseeNull() {
         
     }
 
     @Test
-    public void save_Document_DocumentName_null() {
+    @DisplayName("Test Save Document Complaint Null")
+    public void testSaveDocumentComplaintNull() {
         
     }
 
     @Test
-    public void save_Document_File_null() {
+    @DisplayName("Test Save Document Licence Null")
+    public void testSaveDocumentLicenceNull() {
         
     }
 
     @Test
-    public void save_Document_DocumentId_null() {
+    @DisplayName("Test Save Document Complaint Reply Null")
+    public void testSaveDocumentComplaintReplyNull() {
         
     }
 
     @Test
-    public void save_Document_Extension_null() {
+    @DisplayName("Test Save Document Licensee Shareholder Null")
+    public void testSaveDocumentLicenseeShareholderNull() {
         
     }
 
     @Test
-    public void save_Document_Size_null() {
+    @DisplayName("Test Save Document Shareholder Null")
+    public void testSaveDocumentShareholderNull() {
         
     }
 
     @Test
-    public void save_Document_Complaint_null() {
+    @DisplayName("Test Save Document Document Type Null")
+    public void testSaveDocumentDocumentTypeNull() {
         
     }
 
     @Test
-    public void save_Document_MetadataTarget_null() {
+    @DisplayName("Test Save Document Document Name Null")
+    public void testSaveDocumentDocumentNameNull() {
         
     }
 
     @Test
-    public void save_Document_MetadataTargetId_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Document File Null")
+    public void testSaveDocumentFileNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Document Document Id Null")
+    public void testSaveDocumentDocumentIdNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void search_success() {
+    @DisplayName("Test Save Document Extension Null")
+    public void testSaveDocumentExtensionNull() {
         
     }
 
     @Test
-    public void search_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_paged_success() {
+    @DisplayName("Test Save Document Size Null")
+    public void testSaveDocumentSizeNull() {
         
     }
 
     @Test
-    public void getAll_paged_fail() {
-        
-    }
-
-
-    @Test
-    public void getLicenseeDocuments_success() {
+    @DisplayName("Test Save Document Metadata Target Id Null")
+    public void testSaveDocumentMetadataTargetIdNull() {
         
     }
 
     @Test
-    public void getLicenseeDocuments_fail() {
-        
-    }
-
-
-    @Test
-    public void getLicenceDocuments_success() {
+    @DisplayName("Test Save Document Content Type Null")
+    public void testSaveDocumentContentTypeNull() {
         
     }
 
     @Test
-    public void getLicenceDocuments_fail() {
-        
-    }
-
-
-    @Test
-    public void downloadFile_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void downloadFile_fail() {
-        
-    }
-
-
-    @Test
-    public void findByIds_success() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void findByIds_fail() {
-        
-    }
-
-
-    @Test
-    public void findByDocumentIds_success() {
+    @DisplayName("Test Remove Document Id Null")
+    public void testRemoveDocumentIdNull() {
         
     }
 
     @Test
-    public void findByDocumentIds_fail() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Download File Success")
+    public void testDownloadFileSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Download File Fail")
+    public void testDownloadFileFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Download File Document Id Null")
+    public void testDownloadFileDocumentIdNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Ids Success")
+    public void testFindByIdsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Ids Fail")
+    public void testFindByIdsFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Document Ids Success")
+    public void testFindByDocumentIdsSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Document Ids Fail")
+    public void testFindByDocumentIdsFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Document Id Success")
+    public void testFindByDocumentIdSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Document Id Fail")
+    public void testFindByDocumentIdFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Document Id Document Id Null")
+    public void testFindByDocumentIdDocumentIdNull() {
         
     }
 

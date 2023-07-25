@@ -5,110 +5,152 @@
 //
 package bw.org.bocra.portal.config;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class SystemConfigServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(SystemConfigServiceTest.class);
-    
-    @InjectMocks
-    private SystemConfigServiceImpl systemConfigService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private SystemConfigService systemConfigService;
+
+    @Autowired
     private SystemConfigDao systemConfigDao;
 
-    @Mock
+    @Autowired
     private SystemConfigRepository systemConfigRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(systemConfigDao);
-        Assertions.assertNotNull(systemConfigRepository);
-        Assertions.assertNotNull(systemConfigService);
-
-    }
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_success() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_systemConfig_null() {
+    @DisplayName("Test Save System Config Null")
+    public void testSaveSystemConfigNull() {
         
     }
 
     @Test
-    public void save_SystemConfig_Id_null() {
+    @DisplayName("Test Save System Config Id Null")
+    public void testSaveSystemConfigIdNull() {
         
     }
 
     @Test
-    public void save_SystemConfig_Name_null() {
+    @DisplayName("Test Save System Config Name Null")
+    public void testSaveSystemConfigNameNull() {
         
     }
 
     @Test
-    public void save_SystemConfig_Value_null() {
+    @DisplayName("Test Save System Config Value Null")
+    public void testSaveSystemConfigValueNull() {
         
     }
 
     @Test
-    public void remove_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void getAll_success() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Name Success")
+    public void testFindByNameSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Name Fail")
+    public void testFindByNameFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Find By Name Name Null")
+    public void testFindByNameNameNull() {
         
     }
 

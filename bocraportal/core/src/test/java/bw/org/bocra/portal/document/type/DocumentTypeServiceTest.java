@@ -7,148 +7,176 @@ package bw.org.bocra.portal.document.type;
 
 import bw.org.bocra.portal.document.DocumentDao;
 import bw.org.bocra.portal.document.DocumentRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class DocumentTypeServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(DocumentTypeServiceTest.class);
-    
-    @InjectMocks
-    private DocumentTypeServiceImpl documentTypeService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private DocumentTypeService documentTypeService;
+
+    @Autowired
     private DocumentDao documentDao;
 
-    @Mock
+    @Autowired
     private DocumentRepository documentRepository;
-    @Mock
+
+    @Autowired
     private DocumentTypeDao documentTypeDao;
 
-    @Mock
+    @Autowired
     private DocumentTypeRepository documentTypeRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(documentDao);
-        Assertions.assertNotNull(documentRepository);
-        Assertions.assertNotNull(documentTypeDao);
-        Assertions.assertNotNull(documentTypeRepository);
-        Assertions.assertNotNull(documentTypeService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_documentType_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_DocumentType_Id_null() {
+    @DisplayName("Test Save Document Type Null")
+    public void testSaveDocumentTypeNull() {
         
     }
 
     @Test
-    public void save_DocumentType_CreatedBy_null() {
+    @DisplayName("Test Save Document Type Id Null")
+    public void testSaveDocumentTypeIdNull() {
         
     }
 
     @Test
-    public void save_DocumentType_UpdatedBy_null() {
+    @DisplayName("Test Save Document Type Created By Null")
+    public void testSaveDocumentTypeCreatedByNull() {
         
     }
 
     @Test
-    public void save_DocumentType_CreatedDate_null() {
+    @DisplayName("Test Save Document Type Updated By Null")
+    public void testSaveDocumentTypeUpdatedByNull() {
         
     }
 
     @Test
-    public void save_DocumentType_UpdatedDate_null() {
+    @DisplayName("Test Save Document Type Created Date Null")
+    public void testSaveDocumentTypeCreatedDateNull() {
         
     }
 
     @Test
-    public void save_DocumentType_Code_null() {
+    @DisplayName("Test Save Document Type Updated Date Null")
+    public void testSaveDocumentTypeUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_DocumentType_Name_null() {
+    @DisplayName("Test Save Document Type Code Null")
+    public void testSaveDocumentTypeCodeNull() {
         
     }
 
     @Test
-    public void save_DocumentType_Description_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Document Type Name Null")
+    public void testSaveDocumentTypeNameNull() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Save Document Type Description Null")
+    public void testSaveDocumentTypeDescriptionNull() {
         
     }
 
     @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
         
     }
 

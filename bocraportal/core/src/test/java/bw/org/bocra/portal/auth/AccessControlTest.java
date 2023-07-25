@@ -5,46 +5,50 @@
 //
 package bw.org.bocra.portal.auth;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class AccessControlTest {
 
     protected Logger logger = LoggerFactory.getLogger(AccessControlTest.class);
-    
-    @InjectMocks
-    private AccessControlImpl accessControl;
 
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private AccessControl accessControl;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(accessControl);
-
-    }
-    
-
-    @Test
-    public void authorised_success() {
+    @DisplayName("Test Authorised Success")
+    public void testAuthorisedSuccess() {
         
     }
 
     @Test
-    public void authorised_fail() {
+    @DisplayName("Test Authorised Fail")
+    public void testAuthorisedFail() {
         
     }
 
     @Test
-    public void authorised_url_null() {
+    @DisplayName("Test Authorised Url Null")
+    public void testAuthorisedUrlNull() {
         
     }
 

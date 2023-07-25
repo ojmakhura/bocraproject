@@ -9,129 +9,218 @@ import bw.org.bocra.portal.licensee.LicenseeDao;
 import bw.org.bocra.portal.licensee.LicenseeRepository;
 import bw.org.bocra.portal.shareholder.ShareholderDao;
 import bw.org.bocra.portal.shareholder.ShareholderRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class LicenseeShareholderServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(LicenseeShareholderServiceTest.class);
-    
-    @InjectMocks
-    private LicenseeShareholderServiceImpl licenseeShareholderService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private LicenseeShareholderService licenseeShareholderService;
+
+    @Autowired
     private LicenseeShareholderDao licenseeShareholderDao;
 
-    @Mock
+    @Autowired
     private LicenseeShareholderRepository licenseeShareholderRepository;
-    @Mock
+
+    @Autowired
     private ShareholderDao shareholderDao;
 
-    @Mock
+    @Autowired
     private ShareholderRepository shareholderRepository;
-    @Mock
+
+    @Autowired
     private LicenseeDao licenseeDao;
 
-    @Mock
+    @Autowired
     private LicenseeRepository licenseeRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(licenseeShareholderDao);
-        Assertions.assertNotNull(licenseeShareholderRepository);
-        Assertions.assertNotNull(shareholderDao);
-        Assertions.assertNotNull(shareholderRepository);
-        Assertions.assertNotNull(licenseeDao);
-        Assertions.assertNotNull(licenseeRepository);
-        Assertions.assertNotNull(licenseeShareholderService);
-
-    }
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void create_success() {
+    @DisplayName("Test Create Success")
+    public void testCreateSuccess() {
         
     }
 
     @Test
-    public void create_fail() {
+    @DisplayName("Test Create Fail")
+    public void testCreateFail() {
         
     }
 
     @Test
-    public void remove_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void remove_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void getAll_success() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
 
     @Test
-    public void getAll_fail() {
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
         
     }
 
     @Test
-    public void findByLicensee_success() {
+    @DisplayName("Test Find By Licensee Success")
+    public void testFindByLicenseeSuccess() {
         
     }
 
     @Test
-    public void findByLicensee_fail() {
+    @DisplayName("Test Find By Licensee Fail")
+    public void testFindByLicenseeFail() {
         
     }
 
     @Test
-    public void findByShareholder_success() {
+    @DisplayName("Test Find By Shareholder Success")
+    public void testFindByShareholderSuccess() {
         
     }
 
     @Test
-    public void findByShareholder_fail() {
+    @DisplayName("Test Find By Shareholder Fail")
+    public void testFindByShareholderFail() {
         
     }
 
     @Test
-    public void updateLicensee_success() {
+    @DisplayName("Test Update Licensee Success")
+    public void testUpdateLicenseeSuccess() {
         
     }
 
     @Test
-    public void updateLicensee_fail() {
+    @DisplayName("Test Update Licensee Fail")
+    public void testUpdateLicenseeFail() {
         
     }
 
     @Test
-    public void updateShareholder_success() {
+    @DisplayName("Test Update Shareholder Success")
+    public void testUpdateShareholderSuccess() {
         
     }
 
     @Test
-    public void updateShareholder_fail() {
+    @DisplayName("Test Update Shareholder Fail")
+    public void testUpdateShareholderFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Attach Document Success")
+    public void testAttachDocumentSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Attach Document Fail")
+    public void testAttachDocumentFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Save Licensee Shareholder Null")
+    public void testSaveLicenseeShareholderNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Save Licensee Shareholder Id Null")
+    public void testSaveLicenseeShareholderIdNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Save Licensee Shareholder Licensee Null")
+    public void testSaveLicenseeShareholderLicenseeNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Save Licensee Shareholder Shareholder Null")
+    public void testSaveLicenseeShareholderShareholderNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Save Licensee Shareholder Number Of Shares Null")
+    public void testSaveLicenseeShareholderNumberOfSharesNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Save Licensee Shareholder Documents Null")
+    public void testSaveLicenseeShareholderDocumentsNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Number Of Shares Success")
+    public void testUpdateNumberOfSharesSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Update Number Of Shares Fail")
+    public void testUpdateNumberOfSharesFail() {
         
     }
 

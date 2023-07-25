@@ -7,159 +7,189 @@ package bw.org.bocra.portal.form.section;
 
 import bw.org.bocra.portal.form.FormDao;
 import bw.org.bocra.portal.form.FormRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class FormSectionServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(FormSectionServiceTest.class);
-    
-    @InjectMocks
-    private FormSectionServiceImpl formSectionService;
 
-    @Mock
+    @Autowired
+    ApplicationContext context;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+    
+    @Autowired
+    private FormSectionService formSectionService;
+
+    @Autowired
     private FormSectionDao formSectionDao;
 
-    @Mock
+    @Autowired
     private FormSectionRepository formSectionRepository;
-    @Mock
+
+    @Autowired
     private FormDao formDao;
 
-    @Mock
+    @Autowired
     private FormRepository formRepository;
 
     @Test
-    public void checkInjects() {
-
-        Assertions.assertNotNull(formSectionDao);
-        Assertions.assertNotNull(formSectionRepository);
-        Assertions.assertNotNull(formDao);
-        Assertions.assertNotNull(formRepository);
-        Assertions.assertNotNull(formSectionService);
-
-    }
-    
-
-    @Test
-    public void findById_success() {
+    @DisplayName("Test Find By Id Success")
+    public void testFindByIdSuccess() {
         
     }
 
     @Test
-    public void findById_fail() {
-        
-    }
-
-
-    @Test
-    public void save_success() {
+    @DisplayName("Test Find By Id Fail")
+    public void testFindByIdFail() {
         
     }
 
     @Test
-    public void save_fail() {
+    @DisplayName("Test Save Success")
+    public void testSaveSuccess() {
         
     }
 
     @Test
-    public void save_formSection_null() {
+    @DisplayName("Test Save Fail")
+    public void testSaveFail() {
         
     }
 
     @Test
-    public void save_FormSection_Id_null() {
+    @DisplayName("Test Save Form Section Null")
+    public void testSaveFormSectionNull() {
         
     }
 
     @Test
-    public void save_FormSection_CreatedBy_null() {
+    @DisplayName("Test Save Form Section Id Null")
+    public void testSaveFormSectionIdNull() {
         
     }
 
     @Test
-    public void save_FormSection_UpdatedBy_null() {
+    @DisplayName("Test Save Form Section Created By Null")
+    public void testSaveFormSectionCreatedByNull() {
         
     }
 
     @Test
-    public void save_FormSection_CreatedDate_null() {
+    @DisplayName("Test Save Form Section Updated By Null")
+    public void testSaveFormSectionUpdatedByNull() {
         
     }
 
     @Test
-    public void save_FormSection_UpdatedDate_null() {
+    @DisplayName("Test Save Form Section Created Date Null")
+    public void testSaveFormSectionCreatedDateNull() {
         
     }
 
     @Test
-    public void save_FormSection_Position_null() {
+    @DisplayName("Test Save Form Section Updated Date Null")
+    public void testSaveFormSectionUpdatedDateNull() {
         
     }
 
     @Test
-    public void save_FormSection_SectionId_null() {
+    @DisplayName("Test Save Form Section Position Null")
+    public void testSaveFormSectionPositionNull() {
         
     }
 
     @Test
-    public void save_FormSection_SectionLabel_null() {
+    @DisplayName("Test Save Form Section Section Id Null")
+    public void testSaveFormSectionSectionIdNull() {
         
     }
 
     @Test
-    public void save_FormSection_Form_null() {
+    @DisplayName("Test Save Form Section Section Label Null")
+    public void testSaveFormSectionSectionLabelNull() {
         
     }
 
     @Test
-    public void save_FormSection_FormFields_null() {
-        
-    }
-
-
-    @Test
-    public void remove_success() {
+    @DisplayName("Test Save Form Section Form Null")
+    public void testSaveFormSectionFormNull() {
         
     }
 
     @Test
-    public void remove_fail() {
-        
-    }
-
-
-    @Test
-    public void getAll_success() {
+    @DisplayName("Test Save Form Section Form Fields Null")
+    public void testSaveFormSectionFormFieldsNull() {
         
     }
 
     @Test
-    public void getAll_fail() {
-        
-    }
-
-
-    @Test
-    public void search_success() {
+    @DisplayName("Test Remove Success")
+    public void testRemoveSuccess() {
         
     }
 
     @Test
-    public void search_fail() {
+    @DisplayName("Test Remove Fail")
+    public void testRemoveFail() {
         
     }
 
     @Test
-    public void search_criteria_null() {
+    @DisplayName("Test Get All Success")
+    public void testGetAllSuccess() {
         
     }
+
+    @Test
+    @DisplayName("Test Get All Fail")
+    public void testGetAllFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Success")
+    public void testSearchSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Fail")
+    public void testSearchFail() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Search Criteria Null")
+    public void testSearchCriteriaNull() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Success")
+    public void testPagedGetAllSuccess() {
+        
+    }
+
+    @Test
+    @DisplayName("Test Paged Get All Fail")
+    public void testPagedGetAllFail() {
+        
+    }
+
 }

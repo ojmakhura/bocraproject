@@ -44,7 +44,7 @@ public class KeycloakUserService {
 
     protected Logger logger = LoggerFactory.getLogger(KeycloakUserService.class);
 
-    String[] excludedRoles = { "offline_access", "uma_authorization", "default-roles-bocra" };
+    String[] excludedRoles = { "offline_access", "uma_authorization", "default-roles-bocraportal" };
 
     private final KeycloakService keycloakService;
 
@@ -356,14 +356,17 @@ public class KeycloakUserService {
                                 + loggedInUser.getLicensee().getLicenseeName())
                 : keycloakService.getUsersResource().search(criteria);
 
-        String lower = criteria.toLowerCase();
+        if(StringUtils.isNotBlank(criteria)) {
 
-        usersRep = usersRep.stream().filter(user -> {
-            return user.getUsername().toLowerCase().contains(lower)
-                    || user.getEmail().toLowerCase().contains(lower)
-                    || user.getFirstName().toLowerCase().contains(lower)
-                    || user.getLastName().toLowerCase().contains(lower);
-        }).collect(Collectors.toList());
+            String lower = criteria.toLowerCase();
+
+            usersRep = usersRep.stream().filter(user -> {
+                return user.getUsername().toLowerCase().contains(lower)
+                        || user.getEmail().toLowerCase().contains(lower)
+                        || user.getFirstName().toLowerCase().contains(lower)
+                        || user.getLastName().toLowerCase().contains(lower);
+            }).collect(Collectors.toList());
+        }
 
         return this.userRepsToVOs(usersRep);
     }

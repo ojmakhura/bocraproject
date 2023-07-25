@@ -344,9 +344,7 @@ public class FormActivationServiceImpl
                     activations.add(activation);
 
                 } else {
-                    // existingActivations.forEach(ex -> {
-                    //     System.out.println("=============================================== " + ex.getActivationName());
-                    // });
+                    
                 }
             });
         });
