@@ -44,7 +44,7 @@ public class KeycloakUserService {
 
     protected Logger logger = LoggerFactory.getLogger(KeycloakUserService.class);
 
-    String[] excludedRoles = { "offline_access", "uma_authorization", "default-roles-bocra" };
+    String[] excludedRoles = { "offline_access", "uma_authorization", "default-roles-bocraportal" };
 
     private final KeycloakService keycloakService;
 

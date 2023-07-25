@@ -609,7 +609,6 @@ public class SubmissionServiceImpl
             ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
             ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
 
-            System.out.println(csvParser.getHeaderNames());            
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             for (CSVRecord csvRecord : csvRecords) {
@@ -625,8 +624,6 @@ public class SubmissionServiceImpl
                     dataField.setRow((int) csvRecord.getRecordNumber());
                     dataField.setFormField(f);
                     dataField.setFormSubmission(submission);
-
-                    System.out.print(f.getFieldId() + " <==> " + recordMap.get(f.getFieldId()) + " ");
 
                     if (f.getFieldValueType() == FieldValueType.MANUAL) {
                         dataField.setValue(csvRecord.get(f.getFieldId()).trim());
