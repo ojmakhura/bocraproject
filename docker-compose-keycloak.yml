@@ -4,11 +4,11 @@ services:
   # Keycloak authentication server
   ###############################################################################
   keycloak:
-    image: ${KEYCLOAK_REGISTRY_IMAGE}
+    image: bitnami/keycloak:22.0.1
     hostname: keycloak
-    command:
-      - "start"
-      - "--optimized"
+    # command:
+    #   - "start"
+    #   - "--optimized"
     # healthcheck:
     #  test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
     #  interval: 5s
@@ -21,14 +21,14 @@ services:
     volumes:
       - ${BOCRA_DATA}/hosts:/etc/hosts
     environment:
-      KC_DB_USERNAME: ${POSTGRES_USER}
-      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
-      KC_DB_URL_DATABASE: ${KEYCLOAK_DB}
-      KC_DB_URL_HOST: db
+      KEYCLOAK_DATABASE_USER: ${POSTGRES_USER}
+      KEYCLOAK_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_DB}
+      KEYCLOAK_DATABASE_HOST: db
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
       KC_METRICS_ENABLED: "true"
       KC_PROXY: edge
-      KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
+      KEYCLOAK_ADMIN_USER: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
       PROXY_ADDRESS_FORWARDING: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
