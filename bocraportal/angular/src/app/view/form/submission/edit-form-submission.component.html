@@ -249,7 +249,7 @@
 				<div class="mb-3">
 					<label id="formSubmissionSubmissionStatus_label" class="col-sm-2 col-form-label"
 						for="formSubmissionSubmissionStatus"><span translate>submission.status</span>*</label>
-					<div><label>{{formSubmissionSubmissionStatus}}</label></div>
+					<div><label>{{formSubmissionSubmissionStatus}} </label></div>
 					<!-- <input type="text" id="formSubmissionSubmissionStatus" class="form-control"
 						name="submissionStatus" formControlName="submissionStatus" required disabled="true"/> -->
           <div
@@ -286,6 +286,8 @@
 						class="btn btn-outline-primary" *ngIf="formSubmissionId && deleteUnrestricted">
 						<span translate>delete</span>
 					</button> -->
+
+          <button type="button" class="btn btn-outline-primary" (click)="downloadSubmission()" color="accent">Download</button>
 
           <button
             type="button"

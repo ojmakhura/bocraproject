@@ -254,4 +254,22 @@ export class FormSubmissionEffects {
       )
     )
   );
+
+  downloadSubmission$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormSubmissionActions.downloadSubmission),
+      mergeMap(({ id }) =>
+        this.submissionRestController.downloadSubmission(id).pipe(
+          map((file) =>
+            FormSubmissionActions.downloadSubmissionSuccess({
+              file,
+              messages: [`Form submission downloaded.`],
+              success: true,
+            })
+          ),
+          catchError((error) => [FormSubmissionActions.formSubmissionFailure({ messages: [error.error] })])
+        )
+      )
+    )
+  );
 }

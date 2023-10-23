@@ -19,6 +19,20 @@ export const formSubmissionReducer = createReducer(
     error: false,
     messages: action.messages,
   })),
+  on(FormSubmissionActions.downloadSubmission, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+  })),
+  on(FormSubmissionActions.downloadSubmissionSuccess, (state, action) => ({
+    ...state,
+    file: action.file,
+    loading: false,
+    loaderMessage: undefined,
+    success: action.success,
+    error: false,
+    messages: action.messages,
+  })),
   on(FormSubmissionActions.findByIds, (state, action) => ({
     ...state,
     loading: action.loading,

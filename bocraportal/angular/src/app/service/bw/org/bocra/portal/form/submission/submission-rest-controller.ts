@@ -109,6 +109,10 @@ export class SubmissionRestController {
     return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/due`);
   }
 
+  public downloadSubmission(id: number): Observable<any> {
+    return this.http.get(`${this.path}/download?id=${id}`, { responseType: 'blob' });
+  }
+
   public remove(id: number | any): Observable<boolean | any> {
     return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
   }

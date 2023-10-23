@@ -372,6 +372,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     });
   }
 
+  downloadSubmission() {
+    
+  }
+
   private doFormSubmissionSave(formSubmission: FormSubmissionVO) {
     if (formSubmission?.id) {
       formSubmission.updatedBy = this.keycloakService.getUsername();
