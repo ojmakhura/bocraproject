@@ -36,6 +36,8 @@ export enum FormSubmissionActionType {
   FORM_SUBMISSION_RESET = '[FormSubmission] Form Submission Reset',
   FORM_SUBMISSION_FAILURE = '[FormSubmission] Form Submission Action Failure',
   FORM_SUBMISSION_LOADING = '[FormSubmission] Form Submission Loading',
+  DOWNLOAD_SUBMISSION = '[FormSubmission] Download Submission',
+  DOWNLOAD_SUBMISSION_SUCCESS = '[FormSubmission] Download Submission Success',
 }
 
 export const setLoading = createAction(
@@ -61,6 +63,16 @@ export const findByIds = createAction(
 export const findByIdsSuccess = createAction(
   FormSubmissionActionType.FIND_BY_IDS_SUCCESS,
   props<{ formSubmissions: FormSubmissionVO[] | any[]; messages: any[]; success: boolean }>()
+);
+
+export const downloadSubmission = createAction(
+  FormSubmissionActionType.DOWNLOAD_SUBMISSION,
+  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const downloadSubmissionSuccess = createAction(
+  FormSubmissionActionType.DOWNLOAD_SUBMISSION_SUCCESS,
+  props<{ file: any | any; messages: any[]; success: boolean }>()
 );
 
 export const preProcessedFindByIds = createAction(

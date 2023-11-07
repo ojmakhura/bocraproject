@@ -22,6 +22,7 @@ export interface FormSubmissionState {
   updated: boolean;
   error: boolean;
   messages: any[];
+  file: Blob | any;
 }
 
 export const initialState: FormSubmissionState = {
@@ -40,4 +41,5 @@ export const initialState: FormSubmissionState = {
   loaderMessage: undefined,
   updated: false,
   statusUpdated: false,
+  file: undefined
 };

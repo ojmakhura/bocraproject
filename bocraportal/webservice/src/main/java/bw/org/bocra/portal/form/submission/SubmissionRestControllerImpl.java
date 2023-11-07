@@ -27,7 +27,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -544,6 +546,25 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
             Collection<FormSubmissionVO> submissions = submissionService.preProcessedFindById(filters);
 
             return ResponseEntity.ok(submissions);
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleDownloadSubmission(Long id) {
+
+        logger.info("Download submission {}", id);
+
+        try {
+
+            // FormSubmissionVO submission = submissionService.findById(id);
+
+            return ResponseEntity.ok(submissionService.downloadSubmission(id));
 
         } catch(Exception e) {
 
