@@ -183,9 +183,13 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   }
 
   override formActivationFormSearch(): void {
+  
     this.store.dispatch(
       FormActions.searchForms({
-        criteria: { formName: this.formActivationFormSearchField.value },
+        criteria: { 
+          formName: this.formActivationFormSearchField.value,
+          periodConfigId: this.formActivationPeriod?.periodConfig?.id
+        },
         loading: true,
         loaderMessage: 'Searching forms ...',
       })
@@ -254,24 +258,24 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
       submissionDate: [value?.submissionDate],
       submissionStatus: [value?.submissionStatus],
       upload: [value?.upload],
-      form: {
+      form: this.formBuilder.group({
         id: value?.form?.id,
         code: value?.form?.code,
         formName: value?.form?.formName,
         entryType: value?.form?.entryType,
-      },
-      period: {
+      }),
+      period: this.formBuilder.group({
         id: value?.period?.id,
         periodName: value?.period?.periodName,
         periodStart: value?.period?.periodStart,
         periodEnd: value?.period?.periodEnd,
-      },
-      licensee: {
+      }),
+      licensee: this.formBuilder.group({
         id: value?.licensee?.id,
         uin: value?.licensee?.uin,
         licenseeName: value?.licensee?.licenseeName,
         status: value?.licensee?.status,
-      },
+      }),
     });
   }
 
@@ -285,11 +289,11 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
       updatedBy: [value?.updatedBy],
       createdDate: [value?.createdDate],
       updatedDate: [value?.updatedDate],
-      periodConfig: {
+      periodConfig: this.formBuilder.group({
         id: [value?.periodConfig?.id],
         finalDay: [value?.periodConfig?.finalDay],
         periodConfigName: [value?.periodConfig?.periodConfigName],
-      },
+      }),
     });
   }
 

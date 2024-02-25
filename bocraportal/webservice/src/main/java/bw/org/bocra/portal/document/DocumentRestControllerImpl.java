@@ -132,14 +132,14 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
     }
 
     @Override
-    public ResponseEntity<?> handleRemove(String documentId) {
+    public ResponseEntity<?> handleRemove(Long id) {
         try {
-            logger.debug("Deletes document by ID " + documentId);
+            logger.debug("Deletes document by ID " + id);
 
-            if (documentService.remove(documentId)) {
-                return ResponseEntity.ok().body("Document successfully deleted.");
+            if (documentService.remove(id)) {
+                return ResponseEntity.ok().body(true);
             } else {
-                return ResponseEntity.badRequest().body("Could not delete document");
+                return ResponseEntity.badRequest().body(false);
             }
 
         } catch (Exception e) {
@@ -147,13 +147,13 @@ public class DocumentRestControllerImpl extends DocumentRestControllerBase {
             logger.error(e.getMessage());
 
             if (e instanceof EmptyResultDataAccessException || e.getCause() instanceof EmptyResultDataAccessException) {
-                return ResponseEntity.badRequest().body("Could not delete document with id " + documentId);
+                return ResponseEntity.badRequest().body("Could not delete document with id " + id);
             } else if(e instanceof DocumentServiceException || e.getCause() instanceof DocumentServiceException) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
 
             return ResponseEntity.badRequest()
-                    .body("Unknown error encountered when deleting document with id " + documentId);
+                    .body("Unknown error encountered when deleting document with id " + id);
         }
     }
 

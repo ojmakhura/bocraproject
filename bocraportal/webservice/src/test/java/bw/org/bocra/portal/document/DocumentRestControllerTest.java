@@ -71,7 +71,6 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(
             message.contains("document type is missing")
             || message.contains("ocument type or its id is missing")
@@ -88,7 +87,6 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(
             message.contains("document type is not valid")
             || message.contains("The document type is invalid")
@@ -108,7 +106,6 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
     //     Assertions.assertNotNull(response);
     //     Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     //     String message = response.getBody().toString();
-    //     System.out.println(message);
     //     Assertions.assertTrue(message.contains("created date value is missing"));
     // }
 
@@ -116,15 +113,12 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
     @Test
     public void save_nullCreatedBy() {
         DocumentVO document = testData.createUnsavedData();
-        System.out.println(document);
         document.setCreatedBy(null);
 
         ResponseEntity<?> response = restController.save(document);
         Assertions.assertNotNull(response);
-        System.out.println(response.getBody());
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("created-by value is missing"));
     }
 
@@ -139,7 +133,6 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("document name is missing"));
     }
 
@@ -153,7 +146,6 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("document name is missing"));
     }
 
@@ -167,7 +159,6 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("access document url is missing"));
     }
 
@@ -181,7 +172,6 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("access document url is missing"));
     }
 
@@ -195,7 +185,6 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("document extension is missing"));
     }
 
@@ -317,7 +306,7 @@ public class DocumentRestControllerTest extends GenericRestTest<DocumentVO, Docu
         ResponseEntity<?> response = restController.getAll();
         Collection<DocumentVO> types = (Collection<DocumentVO>) response.getBody();
 
-        response = restController.remove("300L");
+        response = restController.remove(200L);
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
         Assertions.assertTrue(response.getBody().toString().contains("Could not delete access document"));

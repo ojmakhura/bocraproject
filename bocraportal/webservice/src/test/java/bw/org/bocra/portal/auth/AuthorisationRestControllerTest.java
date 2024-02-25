@@ -149,15 +149,12 @@ public class AuthorisationRestControllerTest extends GenericRestTest<Authorisati
     @Test
     public void save_nullCreatedBy() {
         AuthorisationVO auth = testData.createUnsavedData();
-        System.out.println(auth);
         auth.setCreatedBy(null);
 
         ResponseEntity<?> response = restController.save(auth);
         Assertions.assertNotNull(response);
-        System.out.println(response.getBody());
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("created-by value is missing"));
     }
 
@@ -172,7 +169,6 @@ public class AuthorisationRestControllerTest extends GenericRestTest<Authorisati
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("created date value is missing"));
     }
     // private AccessPointVO createDefaultAccessPoint() {

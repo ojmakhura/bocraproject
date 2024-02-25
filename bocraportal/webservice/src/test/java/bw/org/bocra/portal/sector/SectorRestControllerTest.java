@@ -214,7 +214,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
 
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains(String.format("Sector with id %d not found.", id + 10)));
     }
 
@@ -344,7 +343,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertNotNull(message);
         Assertions.assertTrue(message.contains("sector information is missing"));
     }
@@ -364,7 +362,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertNotNull(message);
         Assertions.assertTrue(message.contains("sector code is missing"));
     }
@@ -384,7 +381,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertNotNull(message);
         Assertions.assertTrue(message.contains("sector name is missing"));
     }
@@ -404,7 +400,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertNotNull(message);
         Assertions.assertTrue(message.contains("sector colour is missing"));
     }
@@ -424,7 +419,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertNotNull(message);
         Assertions.assertTrue(message.contains("sector code is missing"));
     }
@@ -444,7 +438,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertNotNull(message);
         Assertions.assertTrue(message.contains("sector name is missing"));
     }
@@ -464,7 +457,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertNotNull(message);
         Assertions.assertTrue(message.contains("sector colour is missing"));
     }
@@ -482,8 +474,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         
         sector = sectorService.save(sector);
 
-        System.out.println(sector);
-
         sector = new SectorVO();
 
         sector.setCreatedBy("testuser4");
@@ -494,12 +484,9 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
 
         ResponseEntity<?> response = sectorRestController.save(sector);
 
-        System.out.println(response.getBody());
-
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertNotNull(message);
         Assertions.assertTrue(message.contains("sector with this code has been already created"));
     }
@@ -530,7 +517,6 @@ public class SectorRestControllerTest extends GenericRestTest<SectorVO, SectorRe
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertNotNull(message);
         Assertions.assertTrue(message.contains("sector with this name has been already created"));
     }
