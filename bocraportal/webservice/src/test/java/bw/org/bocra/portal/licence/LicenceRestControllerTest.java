@@ -89,7 +89,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(
         //     message.contains("licence type is missing")
         //     || message.contains("licence type or its id is missing")
@@ -107,7 +106,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(
         //     message.contains("licence type is not valid")
         //     || message.contains("The licence type is invalid")
@@ -128,7 +126,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(message.contains("created date value is missing"));
     }
 
@@ -136,15 +133,12 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
     @Test
     public void save_nullCreatedBy() {
         LicenceVO lice = testData.createUnsavedData();
-        System.out.println(lice);
         lice.setCreatedBy(null);
 
         ResponseEntity<?> response = restController.save(lice);
         Assertions.assertNotNull(response);
-        System.out.println(response.getBody());
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(message.contains("created-by value is missing"));
     }
 
@@ -160,7 +154,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(message.contains("licensee name is missing"));
     }
 
@@ -176,7 +169,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(message.contains("licence type is missing"));
     }
 
@@ -192,7 +184,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(message.contains("status is missing"));
     }
 
@@ -208,7 +199,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(message.contains("licence number is missing"));
     }
 
@@ -224,7 +214,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(message.contains("Start date is missing"));
     }
 
@@ -240,7 +229,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(message.contains("End date is missing"));
     }
 
@@ -253,7 +241,6 @@ public class LicenceRestControllerTest extends GenericRestTest<LicenceVO,Licence
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         // Assertions.assertTrue(message.contains("licence number is missing"));
     }
 

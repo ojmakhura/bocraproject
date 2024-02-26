@@ -460,11 +460,11 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       provisional: [value?.provisional],
       startDate: [value?.startDate],
       endDate: [value?.endDate],
-      licenceType: {
+      licenceType: this.formBuilder.group({
         id: [value?.licenceType?.id],
         code: [value?.licenceType?.code],
         name: [value?.licenceType?.name],
-      }
+      })
     });
   }
 }

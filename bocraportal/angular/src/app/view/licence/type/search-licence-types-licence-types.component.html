@@ -2,10 +2,10 @@
 <div class="card-body">
   <div class="table table-striped">
     <div class="col my-3 view-buttons" *ngIf="licenceTypesDataSource.data.length > 0">
-      <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('xlsx', {fileName:'documents', sheet: 'documents'})">XLSX</button>
-      <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('csv', {fileName:'documents'})">CSV</button>
-      <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('json', {fileName:'documents'})">JSON</button>
-      <button type="button" class="btn btn-primary" (click)="matTableExporter.exportTable('txt', {fileName:'documents'})">Text</button>
+      <button type="button" class="btn btn-primary" (click)="exporter.exportTable('xlsx', {fileName:'documents', sheet: 'documents'})">XLSX</button>
+      <button type="button" class="btn btn-primary" (click)="exporter.exportTable('csv', {fileName:'documents'})">CSV</button>
+      <button type="button" class="btn btn-primary" (click)="exporter.exportTable('json', {fileName:'documents'})">JSON</button>
+      <button type="button" class="btn btn-primary" (click)="exporter.exportTable('txt', {fileName:'documents'})">Text</button>
     </div>
     <mat-table
       matSort

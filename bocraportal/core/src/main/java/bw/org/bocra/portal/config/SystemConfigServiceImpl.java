@@ -9,6 +9,8 @@
 package bw.org.bocra.portal.config;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -124,6 +126,17 @@ public class SystemConfigServiceImpl
         if(CollectionUtils.isEmpty(configs)) return null;
 
         return systemConfigDao.toSystemConfigVO(configs.iterator().next());
+    }
+
+    @Override
+    protected Collection<SystemConfigVO> handleSaveAll(Set<SystemConfigVO> systemConfigs) throws Exception {
+
+        if(CollectionUtils.isEmpty(systemConfigs)) {
+            return CollectionUtils.emptyCollection();
+        }
+        
+        Collection<SystemConfig> configs = systemConfigs.stream().map(systemConfigDao::systemConfigVOToEntity).collect(Collectors.toList());
+        return systemConfigDao.toSystemConfigVOCollection(systemConfigRepository.saveAll(configs));
     }
 
 }

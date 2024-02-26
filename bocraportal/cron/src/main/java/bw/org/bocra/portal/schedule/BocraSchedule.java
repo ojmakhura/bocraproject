@@ -160,7 +160,7 @@ public class BocraSchedule {
     }
 
     /**
-     * On the last day of each month, we create the next periods.
+     * On the last day of each month at 1800hrs, we create the next periods.
      */
     @Async
     @Scheduled(cron = "0 0 18 L * *", zone = "Africa/Gaborone")
@@ -184,8 +184,11 @@ public class BocraSchedule {
         }
     }
 
+    /**
+     * Three days before the last day of each month, we activate the due forms.
+     */
     @Async
-    @Scheduled(cron = "1 0 0 1 * *", zone = "Africa/Gaborone")
+    @Scheduled(cron = "0 0 0 L-3 * *", zone = "Africa/Gaborone")
     public void activateDueForms() {
         String formatTime = this.getDateTime();
 

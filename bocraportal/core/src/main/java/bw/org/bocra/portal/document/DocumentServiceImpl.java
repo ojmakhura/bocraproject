@@ -81,11 +81,11 @@ public class DocumentServiceImpl
      * @see bw.org.bocra.portal.document.DocumentService#remove(Long)
      */
     @Override
-    protected  boolean handleRemove(String documentId)
+    protected  boolean handleRemove(Long id)
         throws Exception
     {
         
-        this.documentDao.remove(getDocuments(documentId));
+        this.documentRepository.deleteById(id);
 
         return true;
     }

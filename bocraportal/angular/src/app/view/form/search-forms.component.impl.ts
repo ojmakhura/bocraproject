@@ -4,10 +4,13 @@ import { SearchFormsComponent } from '@app/view/form/search-forms.component';
 import { SearchFormsSearchForm } from '@app/view/form/search-forms.component';
 import { SearchFormsVarsForm } from '@app/view/form/search-forms.component';
 import * as FormActions from '@app/store/form/form.actions';
+import * as PeriodConfigSelectors from '@app/store/period/config/period-config.selectors';
+import * as PeriodConfigActions from '@app/store/period/config/period-config.actions';
 import { KeycloakService } from 'keycloak-angular';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { SelectItem } from '@app/utils/select-item';
+import { select } from '@ngrx/store';
 
 @Component({
   selector: 'app-search-forms',
@@ -21,13 +24,17 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
     super(injector);
     this.http = this._injector.get(HttpClient);
     this.keycloakService = this._injector.get(KeycloakService);
+    this.formsPeriodConfigs$ = this.store.pipe(select(PeriodConfigSelectors.selectPeriodConfigs));
   }
 
   override beforeOnInit(form: SearchFormsVarsForm): SearchFormsVarsForm {
     this.store.dispatch(FormActions.formReset());
+    this.store.dispatch(PeriodConfigActions.getAll({
+      loading: true,
+      loaderMessage: 'Loading period configs ...',
+    }));
     this.keycloakService.loadUserProfile().then((profile) => {
-
-      if(!profile) return;
+      if (!profile) return;
 
       this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
         let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
@@ -51,14 +58,12 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
       });
 
       this.http
-        .get<any[]>(
-          `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`
-        )
+        .get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`)
         .subscribe((roles) => {
           roles
             .sort((a, b) => a.name.localeCompare(b.name))
             .forEach((role: any) => {
-              if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes("${")) {
+              if (this.keycloakService.getUserRoles().includes(role.name) && !role.description?.includes('${')) {
                 let item = new SelectItem();
                 item.label = role['description'];
                 item.value = role['name'];

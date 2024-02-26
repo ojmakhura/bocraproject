@@ -138,7 +138,6 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("access point name is missing"));
     }
 
@@ -152,7 +151,6 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("access point name is missing"));
     }
 
@@ -166,7 +164,6 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("access point url is missing"));
     }
 
@@ -180,7 +177,6 @@ public class AccessPointRestControllerTest extends GenericRestTest<AccessPointVO
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("access point url is missing"));
     }
 

@@ -1187,7 +1187,6 @@ public class SubmissionServiceImpl
             int row) {
 
         Map<String, Collection> grouped = this.getGroupedDataFields(sections, dataFields);
-            System.out.println(grouped);
 
         for (FormSection section : sections) {
 

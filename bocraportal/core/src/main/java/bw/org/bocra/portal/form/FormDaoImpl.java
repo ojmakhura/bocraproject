@@ -287,6 +287,18 @@ public class FormDaoImpl
             tmp = tmp.or(BocraportalSpecifications.<Form, String>findByAttributeIsNotEmpty("roles"));
         }
 
+        if(criteria.getPeriodConfigId() != null) {
+
+            Specification<Form> periodSpecs = BocraportalSpecifications.<Form, Long>findByAttribute(criteria.getPeriodConfigId(), "periodConfig", "id")
+                .or(BocraportalSpecifications.<Form, Long>findByAttributeNull("periodConfig"));
+
+            if(specifications == null) {
+                specifications = periodSpecs;
+            } else {
+                specifications = specifications.and(periodSpecs);
+            }
+        }
+
         if(specifications == null) {
             specifications = tmp;
         } else {

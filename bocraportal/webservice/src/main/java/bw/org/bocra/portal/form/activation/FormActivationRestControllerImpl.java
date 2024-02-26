@@ -8,11 +8,9 @@ package bw.org.bocra.portal.form.activation;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
@@ -31,21 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
-import bw.org.bocra.portal.access.AccessPointCriteria;
 import bw.org.bocra.portal.config.SystemConfigService;
 import bw.org.bocra.portal.config.SystemConfigVO;
-import bw.org.bocra.portal.form.FormService;
-import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
-import bw.org.bocra.portal.form.submission.SubmissionService;
 import bw.org.bocra.portal.keycloak.KeycloakService;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
-import bw.org.bocra.portal.licensee.LicenseeStatus;
-import bw.org.bocra.portal.licensee.form.LicenseeFormVO;
-import bw.org.bocra.portal.licensee.sector.LicenseeSectorService;
-import bw.org.bocra.portal.licensee.sector.LicenseeSectorVO;
 import bw.org.bocra.portal.properties.RabbitProperties;
-import bw.org.bocra.portal.sector.form.SectorFormVO;
 import bw.org.bocra.portal.user.UserVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -55,9 +44,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @CrossOrigin()
 public class FormActivationRestControllerImpl extends FormActivationRestControllerBase {
 
-    private final SubmissionService submissionService;
     private final SystemConfigService systemConfigService;
-    private final LicenseeSectorService licenseeSectorService;
     private final KeycloakUserService keycloakUserService;
     private final KeycloakService keycloakService;
     private final RabbitTemplate rabbitTemplate;
@@ -68,15 +55,13 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
     @Value("${bocra.comm.url}")
     private String commUrl;
-    
-    public FormActivationRestControllerImpl(FormActivationService formActivationService, RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties,
-            SubmissionService submissionService, SystemConfigService systemConfigService, LicenseeSectorService licenseeSectorService,
+
+    public FormActivationRestControllerImpl(FormActivationService formActivationService, RabbitTemplate rabbitTemplate,
+            RabbitProperties rabbitProperties, SystemConfigService systemConfigService,
             KeycloakUserService keycloakUserService, KeycloakService keycloakService) {
 
         super(formActivationService);
-        this.submissionService = submissionService;
         this.systemConfigService = systemConfigService;
-        this.licenseeSectorService = licenseeSectorService;
         this.keycloakUserService = keycloakUserService;
         this.keycloakService = keycloakService;
         this.rabbitTemplate = rabbitTemplate;
@@ -174,54 +159,48 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         }
     }
 
-    private String emailTempate = "Dear %s user\n\n"
-                    + "You are notified that BOCRA requests your participation to\n"
-                    + "provide %s data. Please go to %s?id=%d to fill out the form.\n\n"
-                    + "The deadline to submit the information is %s\n\n"
-                    + "Kind Regards\n\n"
-                    + "BOCRA";
-
     public void sendNotifications(FormActivationVO formActivation) {
-        
+
         String submissionUrl = webUrl + "/form/submission/edit-form-submission";
         List<Object> messageObjects = JSONArrayUtils.newJSONArray();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        
+
         for (FormSubmissionVO submission : formActivation.getFormSubmissions()) {
 
             Collection<UserVO> users = keycloakUserService.getLicenseeUsers(submission.getLicensee().getId());
             Collection<String> userEmails = users.stream().map(user -> user.getEmail()).collect(Collectors.toSet());
 
-            if(CollectionUtils.isEmpty(userEmails)) {
+            if (CollectionUtils.isEmpty(userEmails)) {
                 continue;
             }
 
             SystemConfigVO config = systemConfigService.findByName("ACTIVATION_SUBMISSION_TEMPLATE");
 
             JSONObject messageObj = new JSONObject();
-            
+
             messageObj.put("createdBy", formActivation.getCreatedBy());
             messageObj.put("createdDate", format.format(LocalDateTime.now()));
             messageObj.put("sendNow", Boolean.TRUE);
             messageObj.put("dispatchDate", format.format(formActivation.getPeriod().getPeriodEnd().atStartOfDay()));
             messageObj.put("messagePlatform", "EMAIL");
             messageObj.put("status", "DRAFT");
-            messageObj.put("subject", String.format("%s data request for period %s.", formActivation.getForm().getFormName(), formActivation.getPeriod().getPeriodName()));
+            messageObj.put("subject", String.format("%s data request for period %s.",
+                    formActivation.getForm().getFormName(), formActivation.getPeriod().getPeriodName()));
             messageObj.put("text", String.format(
-                config.getValue(),
-                submission.getLicensee().getLicenseeName(),
-                formActivation.getForm().getFormName(),
-                submissionUrl,
-                submission.getId(),
-                submission.getExpectedSubmissionDate()
-            ));
-                
+                    config.getValue(),
+                    submission.getLicensee().getLicenseeName(),
+                    formActivation.getForm().getFormName(),
+                    submissionUrl,
+                    submission.getId(),
+                    submission.getExpectedSubmissionDate()));
+
             messageObj.put("destinations", userEmails);
 
             messageObjects.add(messageObj);
         }
 
-        rabbitTemplate.convertAndSend(rabbitProperties.getEmailQueueExchange(), rabbitProperties.getEmailQueueRoutingKey(), messageObjects);
+        rabbitTemplate.convertAndSend(rabbitProperties.getEmailQueueExchange(),
+                rabbitProperties.getEmailQueueRoutingKey(), messageObjects);
     }
 
     @Override
@@ -294,10 +273,10 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
             } else if (e.getCause() instanceof FormActivationServiceException) {
 
-                if(e.getMessage().contains("No licensee")) {
+                if (e.getMessage().contains("No licensee")) {
 
                     return ResponseEntity.badRequest()
-                        .body("Requested activation for a form with no licensees. Please attach licensees before activating a form.");
+                            .body("Requested activation for a form with no licensees. Please attach licensees before activating a form.");
                 }
 
                 return ResponseEntity.badRequest()
@@ -332,7 +311,8 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     @Override
     public ResponseEntity<?> handlePagedSearch(Integer pageNumber, Integer pageSize, FormActivationCriteria criteria) {
         try {
-            logger.debug("Searches for an form activation of the specified Page Number: " + pageNumber + ", Page Size: " + pageSize + " and Criteria: " +criteria);
+            logger.debug("Searches for an form activation of the specified Page Number: " + pageNumber + ", Page Size: "
+                    + pageSize + " and Criteria: " + criteria);
             return ResponseEntity.ok().body(formActivationService.search(pageNumber, pageSize, criteria));
         } catch (Exception e) {
             e.printStackTrace();
@@ -347,8 +327,9 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         try {
             logger.debug("Activating due forms");
 
-            Collection<FormActivationVO> activations = formActivationService.activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor());
-            
+            Collection<FormActivationVO> activations = formActivationService
+                    .activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor());
+
             activations.forEach(activation -> {
                 try {
                     this.sendNotifications(activation);
@@ -377,7 +358,8 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
         try {
             logger.debug("Creating missing submission for activation " + id);
-            return ResponseEntity.ok().body(formActivationService.createMissingSubmissions(id, keycloakService.getSecurityContext().getToken().getIssuedFor()));
+            return ResponseEntity.ok().body(formActivationService.createMissingSubmissions(id,
+                    keycloakService.getSecurityContext().getToken().getIssuedFor()));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -396,7 +378,8 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
 
         try {
             logger.debug("Recreating submission for activation " + id);
-            return ResponseEntity.ok().body(formActivationService.recreateActivationSubmission(id, keycloakService.getSecurityContext().getToken().getIssuedFor()));
+            return ResponseEntity.ok().body(formActivationService.recreateActivationSubmission(id,
+                    keycloakService.getSecurityContext().getToken().getIssuedFor()));
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -115,7 +115,6 @@ public class ShareholderRestControllerTest
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(
             message.contains("type is missing")
             || message.contains("type or its id is missing")
@@ -152,12 +151,10 @@ public class ShareholderRestControllerTest
     @Test
     public void save_nullCreatedBy() {
         ShareholderVO shareholder = shareholderTestData.createUnsavedData();
-        System.out.println(shareholder);
         shareholder.setCreatedBy(null);
 
         ResponseEntity<?> response = restController.save(shareholder);
         Assertions.assertNotNull(response);
-        System.out.println(response.getBody());
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         logger.info(response.getBody().toString());
 
