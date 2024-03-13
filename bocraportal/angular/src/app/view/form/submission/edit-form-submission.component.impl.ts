@@ -149,7 +149,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
           this.submitUnrestricted = false;
         }
       });
-    });
+    }); 
 
     this.formSubmission$.subscribe((submission) => {
       this.rowGroups = [];
@@ -163,7 +163,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       }
       this.submissionStatus = submission?.submissionStatus;
 
-      if (submission.form.entryType === FormEntryType.MULTIPLE) {
+      if (submission?.form?.entryType === FormEntryType.MULTIPLE) {
         this.rowGroups = this.rowGroups.slice(0, 1);
 
         submission?.dataFields?.forEach((dataField) => {
