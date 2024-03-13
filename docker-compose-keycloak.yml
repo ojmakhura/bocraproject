@@ -6,32 +6,24 @@ services:
   keycloak:
     image: bitnami/keycloak:22.0.1
     hostname: keycloak
-    # command:
-    #   - "start"
-    #   - "--optimized"
-    # healthcheck:
-    #  test: ["CMD", "curl", "--fail", "http://localhost:8080/health/ready"]
-    #  interval: 5s
-    #  timeout: 5s
-    #  retries: 3
-    #  start_period: 15s
     build:
       context: .
       dockerfile: Dockerfile.keycloak
     volumes:
       - ${BOCRA_DATA}/hosts:/etc/hosts
     environment:
-      KEYCLOAK_DATABASE_USER: ${POSTGRES_USER}
+      KEYCLOAK_ENABLE_HEALTH_ENDPOINTS: "true"
       KEYCLOAK_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
-      KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_DB}
-      KEYCLOAK_DATABASE_HOST: db
-      KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-      KC_METRICS_ENABLED: "true"
-      KC_PROXY: edge
-      KEYCLOAK_ADMIN_USER: ${KEYCLOAK_USER}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
       PROXY_ADDRESS_FORWARDING: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_DATABASE_USER: ${POSTGRES_USER}
+      KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_DB}
+      KEYCLOAK_DATABASE_HOST: db
+      KEYCLOAK_ADMIN_USER: ${KEYCLOAK_USER}
+      KC_METRICS_ENABLED: "true"
+      KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
+      KC_PROXY: edge
       TZ: Africa/Gaborone
     networks:
       bocraportal-public:

@@ -352,8 +352,7 @@ public class KeycloakUserService {
 
         List<UserRepresentation> usersRep = hasLicensee
                 ? keycloakService.getUsersResource()
-                        .searchByAttributes("licenseeId:" + loggedInUser.getLicensee().getId() + " " + "licenseeName:"
-                                + loggedInUser.getLicensee().getLicenseeName())
+                        .searchByAttributes("licenseeId:" + loggedInUser.getLicensee().getId())
                 : keycloakService.getUsersResource().search(criteria);
 
         if(StringUtils.isNotBlank(criteria)) {

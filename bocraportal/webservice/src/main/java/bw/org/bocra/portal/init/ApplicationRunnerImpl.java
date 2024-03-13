@@ -43,6 +43,9 @@ import bw.org.bocra.portal.access.type.AccessPointTypeService;
 import bw.org.bocra.portal.access.type.AccessPointTypeVO;
 import bw.org.bocra.portal.auth.AuthorisationService;
 import bw.org.bocra.portal.auth.AuthorisationVO;
+import bw.org.bocra.portal.config.SystemConfig;
+import bw.org.bocra.portal.config.SystemConfigName;
+import bw.org.bocra.portal.config.SystemConfigRepository;
 import bw.org.bocra.portal.config.SystemConfigService;
 import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.period.PeriodService;
@@ -67,6 +70,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     private final AuthorisationService authorisationService;
     private final SectorService sectorService;
     private final SystemConfigService systemConfigService;
+    private final SystemConfigRepository systemConfigRepository;
 
     @Value("${bocra.complaints.emails}")
     private String complaintEmails;
@@ -74,7 +78,10 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     @Value("${bocra.api.url}")
     private String apiUrl;
 
-    public ApplicationRunnerImpl(SystemConfigService systemConfigService, PeriodService periodService, PeriodConfigService periodConfigService, AccessPointTypeService accessPointTypeService, AccessPointService accessPointService, AuthorisationService authorisationService, SectorService sectorService) {
+    public ApplicationRunnerImpl(SystemConfigService systemConfigService, PeriodService periodService,
+            PeriodConfigService periodConfigService, AccessPointTypeService accessPointTypeService,
+            AccessPointService accessPointService, AuthorisationService authorisationService,
+            SectorService sectorService, SystemConfigRepository systemConfigRepository) {
 
         this.periodService = periodService;
         this.periodConfigService = periodConfigService;
@@ -83,6 +90,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         this.authorisationService = authorisationService;
         this.sectorService = sectorService;
         this.systemConfigService = systemConfigService;
+        this.systemConfigRepository = systemConfigRepository;
     }
 
     private Collection<PeriodConfigVO> initPeriodConfigs() {
@@ -152,19 +160,19 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
         period = periodService.save(period);
 
-        while(now.compareTo(period.getPeriodEnd()) > 0) {
+        while (now.compareTo(period.getPeriodEnd()) > 0) {
 
             Set<Long> s = new HashSet<>();
             s.add(period.getId());
             Collection<PeriodVO> periods = periodService.createNextPeriods("system", s);
 
-            if(CollectionUtils.isNotEmpty(periods)) {
+            if (CollectionUtils.isNotEmpty(periods)) {
                 period = periods.iterator().next();
             }
-            
+
         }
 
-        log.info("Created periods for configuration " + config.getPeriodConfigName());   
+        log.info("Created periods for configuration " + config.getPeriodConfigName());
     }
 
     public void initAccessPointType() {
@@ -209,14 +217,14 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
             Scanner scan = new Scanner(resource.getInputStream());
 
-            while(scan.hasNextLine()) {
+            while (scan.hasNextLine()) {
 
                 String[] values = scan.nextLine().split(",");
                 records.add(Arrays.asList(values));
             }
 
             for (List<String> record : records) {
-                
+
                 AccessPointVO point = new AccessPointVO();
                 point.setCreatedBy("system");
                 point.setCreatedDate(LocalDateTime.now());
@@ -226,7 +234,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
                 point.setName(recordIter.next());
                 point.setUrl(recordIter.next());
                 point.setAccessPointType(typeMap.get(recordIter.next()));
-                if(record.size() == 4) {
+                if (record.size() == 4) {
                     point.setIcon(recordIter.next());
                 }
 
@@ -242,13 +250,13 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     private void initAuthorisation() {
         Set<String> roles = new HashSet<>();
         roles.add("DEVELOPER");
-        
+
         for (AccessPointVO point : accessPointService.getAll()) {
             log.info(String.format("Creating authorisation for %s", point.getName()));
             AuthorisationVO authorisation = new AuthorisationVO();
             authorisation.setCreatedBy("system");
             authorisation.setCreatedDate(LocalDateTime.now());
-            
+
             authorisation.setRoles(roles);
             authorisation.setAccessPoint(point);
             authorisation = authorisationService.save(authorisation);
@@ -271,72 +279,116 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
     private void initSystemConfig() {
 
-        SystemConfigVO config = new SystemConfigVO("API_URL", apiUrl);
-        systemConfigService.save(config);
+        Set<SystemConfigVO> names = new HashSet<>();
 
-        config = new SystemConfigVO("COMPLAINTS_MANAGEMENT_EMAIL", "tochange@bocra.org.bw");
-        systemConfigService.save(config);
+        if (CollectionUtils.isEmpty(systemConfigRepository.findByNameIn(Arrays.asList(SystemConfigName.API_URL)))) {
 
-        String emailTempate =
-                            "Dear %s\n\n" +
+            names.add(new SystemConfigVO(SystemConfigName.API_URL, apiUrl));
 
-                            "We acknowledge receipt of your complaint against %s and will get back\n" +
-                            "to you as soon as possible. Please note that to access your\n" +
-                            "complaint, go the the url %s.\n\n" +
+        }
 
-                            "Regards,\n\n" +
+        if (CollectionUtils.isEmpty(
+                systemConfigRepository.findByNameIn(Arrays.asList(SystemConfigName.COMPLAINTS_MANAGEMENT_EMAIL)))) {
+            names.add(new SystemConfigVO(SystemConfigName.COMPLAINTS_MANAGEMENT_EMAIL, "tochange@bocra.org.bw"));
+        }
 
-                            "BOCRA Complaint Management Team";
+        if (CollectionUtils.isEmpty(
+                systemConfigRepository.findByNameIn(Arrays.asList(SystemConfigName.COMPLAINANT_EMAIL_TEMPLATE)))) {
+            String emailTempate = """
+                    Dear %s
 
-        config = new SystemConfigVO("COMPLAINANT_EMAIL_TEMPLATE", emailTempate);
-        systemConfigService.save(config);
+                    We acknowledge receipt of your complaint against %s and will get back
+                    to you as soon as possible. Please note that to access your
+                    complaint, go the the url %s.
 
-        emailTempate = 
-            "Dear Complaint Officer\n\n" +
-            "A new complaint has been logged against %s. Please go to\n" +
-            "the url %s to process it.\n\n" +
-            "Regards,\n\n" +
-            "BOCRA Online Data Collection Portal";
+                    Regards,
 
-        config = new SystemConfigVO("COMPLAINTS_OFFICER_EMAIL_TEMPLATE", emailTempate);
-        systemConfigService.save(config);
+                    BOCRA Complaint Management Team""";
 
-        emailTempate = "Dear %s\n\n" +
-            "Your complaint %s against %s has a new reply. Go to the URL\n" +
-            "%s to view the reply and respond.\n\n" +
-            "Regards,\n\n" +
-            "BOCRA Complaint Management Team";
+            names.add(new SystemConfigVO(SystemConfigName.COMPLAINANT_EMAIL_TEMPLATE, emailTempate));
+        }
 
-        config = new SystemConfigVO("COMPLAINT_REPLY_TEMPLATE", emailTempate);
-        systemConfigService.save(config);
+        if (CollectionUtils.isEmpty(
+                systemConfigRepository
+                        .findByNameIn(Arrays.asList(SystemConfigName.COMPLAINTS_OFFICER_EMAIL_TEMPLATE)))) {
+            String emailTempate = "Dear Complaint Officer\n\n" +
+                    "A new complaint has been logged against %s. Please go to\n" +
+                    "the url %s to process it.\n\n" +
+                    "Regards,\n\n" +
+                    "BOCRA Portal";
 
-        emailTempate =
-            "Dear %s\n\n" +
-            "You have been assigned to handle the complaint against %s.\n" +
-            "Please go to the url %s to manage it.\n\n" +
-            "Regards,\n\n" +
-            "%s";
-        config = new SystemConfigVO("COMPLAINTS_USER_ASSIGNMENT_TEMPLATE", emailTempate);
-        systemConfigService.save(config);
+            names.add(new SystemConfigVO(SystemConfigName.COMPLAINTS_OFFICER_EMAIL_TEMPLATE, emailTempate));
+        }
 
-        emailTempate = "Dear %s user\n\n" +
+        if (CollectionUtils.isEmpty(
+                systemConfigRepository
+                        .findByNameIn(Arrays.asList(SystemConfigName.COMPLAINT_REPLY_TEMPLATE)))) {
+            String emailTempate = "Dear %s\n\n" +
+                    "Your complaint %s against %s has a new reply. Go to the URL\n" +
+                    "%s to view the reply and respond.\n\n" +
+                    "Regards,\n\n" +
+                    "BOCRA Complaint Management Team";
 
-            "You are notified that BOCRA requests your participation to\n" +
-            "provide %s data. Please go to %s?id=%d to fill out the form.\n" +
-            "The deadline to submit the information is %s\n\n" +
-            "Kind Regards\n\n" +
-            "BOCRA";
-        config = new SystemConfigVO("ACTIVATION_SUBMISSION_TEMPLATE", emailTempate);
-        systemConfigService.save(config);
+            names.add(new SystemConfigVO(SystemConfigName.COMPLAINT_REPLY_TEMPLATE, emailTempate));
+        }
 
-        emailTempate = "Dear %s user\n\n" +
-            "You are notified that BOCRA has returned your submission for %s data.\n" +
-            "Please go to %s?id=%d to get the details of the return. The deadline to submit the information is %s.\n\n" +
-            "Kind Regards\n\n" +
-            "BOCRA";
+        if (CollectionUtils.isEmpty(
+                systemConfigRepository
+                        .findByNameIn(Arrays.asList(SystemConfigName.COMPLAINTS_USER_ASSIGNMENT_TEMPLATE)))) {
 
-        config = new SystemConfigVO("SUBMISSION_RETURN_EMAIL_TEMPLATE", emailTempate);
-        systemConfigService.save(config);
+            String emailTempate = "Dear %s\n\n" +
+                    "You have been assigned to handle the complaint against %s.\n" +
+                    "Please go to the url %s to manage it.\n\n" +
+                    "Regards,\n\n" +
+                    "%s";
+            names.add(new SystemConfigVO(SystemConfigName.COMPLAINTS_USER_ASSIGNMENT_TEMPLATE, emailTempate));
+        }
+
+        if (CollectionUtils.isEmpty(
+                systemConfigRepository
+                        .findByNameIn(Arrays.asList(SystemConfigName.ACTIVATION_SUBMISSION_TEMPLATE)))) {
+            String emailTempate = "Dear %s user\n\n" +
+
+                    "You are notified that BOCRA requests your participation to\n" +
+                    "provide %s data. Please go to %s?id=%d to fill out the form.\n" +
+                    "The deadline to submit the information is %s\n\n" +
+                    "Kind Regards\n\n" +
+                    "BOCRA Portal";
+            names.add(new SystemConfigVO(SystemConfigName.ACTIVATION_SUBMISSION_TEMPLATE, emailTempate));
+        }
+
+        if (CollectionUtils.isEmpty(
+                systemConfigRepository
+                        .findByNameIn(Arrays.asList(SystemConfigName.SUBMISSION_RETURN_EMAIL_TEMPLATE)))) {
+            String emailTempate = "Dear %s user\n\n" +
+                    "You are notified that BOCRA has returned your submission for %s data.\n" +
+                    "Please go to %s?id=%d to get the details of the return. The deadline to submit the information is %s.\n\n"
+                    +
+                    "Kind Regards\n\n" +
+                    "BOCRA Portal";
+
+            names.add(new SystemConfigVO(SystemConfigName.SUBMISSION_RETURN_EMAIL_TEMPLATE, emailTempate));
+        }
+
+        if (CollectionUtils.isEmpty(
+                systemConfigRepository
+                        .findByNameIn(Arrays.asList(SystemConfigName.SUBMISSION_REMINDER)))) {
+            String emailTempate = """
+                    Dear %s
+
+                    You are reminded that you have not submitted your %s data. Please go to %s?id=%d to
+                    fill out the form. The deadline to submit the information is %s.
+
+                    Kind Regards
+
+                    BOCRA Portal
+                    """;
+
+            names.add(new SystemConfigVO(SystemConfigName.SUBMISSION_REMINDER, emailTempate));
+        }
+
+        if(CollectionUtils.isNotEmpty(names))
+            systemConfigService.saveAll(names);
 
     }
 
@@ -344,48 +396,47 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
 
         log.info("Checking system initialisation status");
-        
+
         if (CollectionUtils.isEmpty(periodConfigService.getAll(1, 1))) {
             log.info("Initialising period configurations .... ");
 
             this.initPeriodConfigs();
             log.info("Period configurations initialisation complete .... ");
-            
+
         }
 
-        if(CollectionUtils.isEmpty(periodService.getAll(1, 1))) {
+        if (CollectionUtils.isEmpty(periodService.getAll(1, 1))) {
             log.info("Initialising periods .... ");
 
-
             for (PeriodConfigVO config : periodConfigService.getAll()) {
-                this.initPeriods(config);     
+                this.initPeriods(config);
             }
 
             log.info("Period initialisation complete .... ");
         }
 
-        if(CollectionUtils.isEmpty(accessPointTypeService.getAll(1, 1))) {
+        if (CollectionUtils.isEmpty(accessPointTypeService.getAll(1, 1))) {
 
             log.info("Initialising access point types .... ");
             this.initAccessPointType();
             log.info("Access point types initialisation complete .... ");
         }
 
-        if(CollectionUtils.isEmpty(accessPointService.getAll(1, 1))) {
+        if (CollectionUtils.isEmpty(accessPointService.getAll(1, 1))) {
 
             log.info("Initialising access points .... ");
             this.initMenuAccessPoints();
             log.info("Access points initialisation complete .... ");
         }
 
-        if(CollectionUtils.isEmpty(authorisationService.getAll(1, 1))) {
+        if (CollectionUtils.isEmpty(authorisationService.getAll(1, 1))) {
 
             log.info("Initialising authorisations .... ");
             this.initAuthorisation();
             log.info("Authorisations initialisation complete .... ");
         }
 
-        if(CollectionUtils.isEmpty(sectorService.getAll(1, 1))) {
+        if (CollectionUtils.isEmpty(sectorService.getAll(1, 1))) {
 
             log.info("Initialising sectors .... ");
             this.initSectors();
@@ -394,13 +445,9 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         }
         log.info(complaintEmails);
 
-        if(CollectionUtils.isEmpty(systemConfigService.getAll())) {
-
-            log.info("Initialising system configs .... ");
-            this.initSystemConfig();
-            log.info("System config complete .... ");
-
-        }
+        log.info("Initialising system configs .... ");
+        this.initSystemConfig();
+        log.info("System config complete .... ");
 
         log.info("System fully intialised ...");
     }

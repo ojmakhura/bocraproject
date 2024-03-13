@@ -103,7 +103,6 @@ public class FormServiceImpl
     protected  Collection<FormVO> handleSearch(FormCriteria criteria)
         throws Exception
     {
-
         return (Collection<FormVO>) getFormDao().findByCriteria(FormDao.TRANSFORM_FORMVO, criteria);
 
     }

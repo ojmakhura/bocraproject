@@ -281,6 +281,7 @@ public class FormActivationServiceImpl
 
         Collection<FormActivationVO> activations = new HashSet<>();
 
+        // We want currently active periods only.
         Collection<Period> periods = periodDao.getActivePeriods();
 
         if (CollectionUtils.isEmpty(periods)) {

@@ -25,6 +25,7 @@ import bw.org.bocra.portal.document.Document;
 import bw.org.bocra.portal.document.DocumentMetadataTarget;
 import bw.org.bocra.portal.document.DocumentRepository;
 import bw.org.bocra.portal.document.DocumentVO;
+import bw.org.bocra.portal.document.type.DocumentTypeVO;
 import bw.org.bocra.portal.form.FormRepository;
 import bw.org.bocra.portal.form.FormVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionRepository;
@@ -126,6 +127,7 @@ public class LicenseeDaoImpl
                                             .and(BocraportalSpecifications.<Document, Long>findByAttribute("metadataTargetId", source.getId()));
 
         Collection<Document> entities = documentRepository.findAll(specs, Sort.by("id").ascending());
+
         if(CollectionUtils.isNotEmpty(entities)) {
             Collection<DocumentVO> docs = entities.stream().map(d -> {
                 DocumentVO dv = new DocumentVO();
@@ -136,6 +138,17 @@ public class LicenseeDaoImpl
                 dv.setExtension(d.getExtension());
                 dv.setMetadataTargetId(d.getMetadataTargetId());
                 dv.setSize(d.getSize());
+
+                if(d.getDocumentType() != null) {
+
+                    DocumentTypeVO dt = new DocumentTypeVO();
+                    dt.setId(d.getDocumentType().getId());
+                    dt.setCode(d.getDocumentType().getCode());
+                    dt.setName(d.getDocumentType().getName());
+
+                    dv.setDocumentType(dt);
+                }
+
                 return dv;
             }).collect(Collectors.toSet());
             target.setDocuments(docs);
@@ -183,6 +196,17 @@ public class LicenseeDaoImpl
                     dv.setExtension(d.getExtension());
                     dv.setMetadataTargetId(d.getMetadataTargetId());
                     dv.setSize(d.getSize());
+
+                    if(d.getDocumentType() != null) {
+
+                        DocumentTypeVO dt = new DocumentTypeVO();
+                        dt.setId(d.getDocumentType().getId());
+                        dt.setCode(d.getDocumentType().getCode());
+                        dt.setName(d.getDocumentType().getName());
+
+                        dv.setDocumentType(dt);
+                    }
+
                     return dv;
                 }).collect(Collectors.toSet());
                 ls.setDocuments(docs);
@@ -266,5 +290,30 @@ public class LicenseeDaoImpl
 
         // target.setLicenseeSectors(sectors);
         // }
+    }
+
+    @Override
+    public Specification<Licensee> getFindByCriteriaSpecifications(final LicenseeCriteria criteria) {
+        
+        Specification<Licensee> specifications = null;
+        
+        if(StringUtils.isNotBlank(criteria.getUin())) {
+            specifications = BocraportalSpecifications.<Licensee, String>findByAttributeContainingIgnoreCase("uin", criteria.getUin());
+        }
+
+        if(StringUtils.isNotBlank(criteria.getLicenseeName())) {
+
+            Specification<Licensee> tmp = BocraportalSpecifications.<Licensee, String>findByAttributeContainingIgnoreCase("licenseeName", criteria.getLicenseeName())
+                                            .or(BocraportalSpecifications.<Licensee, String>findByAttributeContainingIgnoreCase("alias", criteria.getLicenseeName()))
+                                            .or(BocraportalSpecifications.<Licensee, String>findByAttributeContainingIgnoreCase("tradingAs", criteria.getLicenseeName()));  
+
+            if(specifications == null) {
+                specifications = tmp;
+            } else {
+                specifications = specifications.and(tmp);
+            }
+        }
+
+        return specifications;
     }
 }

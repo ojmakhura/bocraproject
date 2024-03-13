@@ -503,6 +503,10 @@
             <mat-header-cell *matHeaderCellDef translate>entry.type</mat-header-cell>
             <mat-cell *matCellDef="let row"> {{ row?.entryType }} </mat-cell>
           </ng-container>
+          <ng-container matColumnDef="periodConfig.periodConfigName">
+            <mat-header-cell *matHeaderCellDef translate>period.config</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.periodConfig?.periodConfigName }} </mat-cell>
+          </ng-container>
           <mat-header-row *matHeaderRowDef="formActivationFormModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: formActivationFormModalColumns"></mat-row>
         </mat-table>

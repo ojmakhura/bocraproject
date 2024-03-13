@@ -288,7 +288,7 @@ public class PeriodServiceImpl
         for (PeriodVO period : periods) {
 
             if((period.getNext() != null && period.getNext().getId() != null) || // next period already created
-                    (period.getPeriodEnd() != null && period.getPeriodEnd().isBefore(LocalDate.now().plusDays(1)))) { // period ends today or before
+                    (period.getPeriodEnd() != null && period.getPeriodEnd().isBefore(LocalDate.now().plusDays(1)))) { // period ends today or tomorrow
                 continue;
             }
 

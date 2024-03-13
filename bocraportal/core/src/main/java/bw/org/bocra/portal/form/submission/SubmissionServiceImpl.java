@@ -9,6 +9,7 @@
 package bw.org.bocra.portal.form.submission;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +41,8 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,6 +68,7 @@ import bw.org.bocra.portal.form.field.FieldType;
 import bw.org.bocra.portal.form.field.FieldValueType;
 import bw.org.bocra.portal.form.field.FormField;
 import bw.org.bocra.portal.form.section.FormSection;
+import bw.org.bocra.portal.form.section.FormSectionVO;
 import bw.org.bocra.portal.form.submission.data.DataField;
 import bw.org.bocra.portal.form.submission.data.DataFieldDao;
 import bw.org.bocra.portal.form.submission.data.DataFieldRepository;
@@ -91,9 +96,7 @@ public class SubmissionServiceImpl
     private final SubmissionDataRepository submissionDataRepository;
     private final FormDao formDao;
 
-    protected static String MATHJS_URL = 
-            "https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.2/math.js";
-
+    protected static String MATHJS_URL = "https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.2/math.js";
 
     public SubmissionServiceImpl(FormSubmissionDao formSubmissionDao, FormSubmissionRepository formSubmissionRepository,
             FormActivationRepository activationRepository, PeriodDao periodDao,
@@ -436,7 +439,7 @@ public class SubmissionServiceImpl
                                 vo.setDataFields(new ArrayList<>());
                             }
 
-                            for(DataField field : fields) {
+                            for (DataField field : fields) {
                                 DataFieldVO data = new DataFieldVO();
                                 getDataFieldDao().toDataFieldVO(field, data);
                                 vo.getDataFields().add(data);
@@ -588,7 +591,7 @@ public class SubmissionServiceImpl
          * and use it as headers before closing the buffered reader object.
          */
         BufferedReader fr = new BufferedReader(new InputStreamReader(file.getInputStream()));
-        
+
         List<String> headers = Arrays.asList(fr.readLine().split(","));
         fr.close();
 
@@ -766,10 +769,9 @@ public class SubmissionServiceImpl
     private Collection<DataField> getRangeRows(Collection<DataField> fields, Double min, Double max, String fieldId) {
 
         // If there is not field id or min and max values, return all fields
-        if(StringUtils.isBlank(fieldId) || (min == null && max == null)) {
+        if (StringUtils.isBlank(fieldId) || (min == null && max == null)) {
             return fields;
         }
-
 
         Collection<DataField> filteredById = fields.stream().filter(f -> f.getFormField().getFieldId().equals(fieldId))
                 .collect(Collectors.toList());
@@ -778,18 +780,18 @@ public class SubmissionServiceImpl
             try {
                 Double row = Double.parseDouble(f.getValue());
 
-                if(min != null && max != null) {
+                if (min != null && max != null) {
                     return row >= min && row <= max;
-                } else if(min != null) {
+                } else if (min != null) {
                     return row >= min;
-                } else if(max != null) {
+                } else if (max != null) {
                     return row <= max;
                 } else {
                     return false;
                 }
 
             } catch (Exception e) {
-                
+
                 throw new SubmissionServiceException("The range field value is not a number.");
             }
         }).map(f -> f.getRow()).collect(Collectors.toSet());
@@ -924,7 +926,7 @@ public class SubmissionServiceImpl
                     }
 
                     newFields.addAll(first);
-                    
+
                     row++;
                 }
 
@@ -1045,5 +1047,203 @@ public class SubmissionServiceImpl
             }
         });
         return output;
+    }
+
+    @Override
+    protected byte[] handleDownloadSubmission(Long id) throws Exception {
+
+        FormSubmission submission = formSubmissionRepository.getReferenceById(id);
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet(submission.getForm().getFormName() + " - " + submission.getPeriod().getPeriodName());
+
+        int row = this.createHeader(sheet, submission);
+
+        Comparator<FormSection> sectionComparator = Comparator.comparing(FormSection::getPosition);
+
+        Collection<FormSection> sections = submission.getForm().getFormSections().stream().sorted(sectionComparator)
+                .collect(Collectors.toList());
+
+        if (submission.getForm().getEntryType() == FormEntryType.SINGLE) {
+
+            row = this.addSingleEntryData(sheet, sections, submission.getDataFields(), row);
+
+        } else {
+
+            row = this.writeMultipleEntryData(sheet, submission, row);
+        }
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        workbook.write(bos);
+
+        byte[] out = bos.toByteArray();
+
+        bos.flush();
+        bos.close();
+        workbook.close();
+
+        return out;
+    }
+
+    private int writeMultipleEntryData(XSSFSheet sheet, FormSubmission submission, int row) {
+
+        sheet.createRow(row);
+        row++;
+
+        Collection<FormField> formFields = submission.getForm().getFormFields().stream()
+                .sorted(Comparator.comparing(FormField::getPosition)).collect(Collectors.toList());
+        sheet.createRow(row);
+
+        Iterator<FormField> iterator = formFields.iterator();
+        for (int i = 0; i < formFields.size(); i++) {
+            sheet.getRow(row).createCell(i).setCellValue(iterator.next().getFieldName());
+        }
+
+        row++;
+
+        Map<Integer, Map<String, String>> grouped = this.groupDataFieldsByRow(submission.getDataFields());
+
+        for (Map.Entry<Integer, Map<String, String>> entry : grouped.entrySet()) {
+
+            sheet.createRow(row);
+            Map<String, String> data = entry.getValue();
+            iterator = formFields.iterator();
+            for (int i = 0; i < formFields.size(); i++) {
+                sheet.getRow(row).createCell(i).setCellValue(data.get(iterator.next().getFieldId()));
+            }
+            row++;
+        }
+
+        return row;
+    }
+
+    private int createHeader(XSSFSheet sheet, FormSubmission submission) {
+        int row = 0;
+
+        sheet.createRow(row).createCell(0).setCellValue(submission.getForm().getFormName() + " - " + submission.getPeriod().getPeriodName());
+        row++;
+        sheet.createRow(row);
+        row++;
+        sheet.createRow(row).createCell(0).setCellValue("Expected Submission Date");
+        sheet.getRow(row).createCell(1).setCellValue("Submission Date");
+
+        row++;
+        sheet.createRow(row).createCell(0).setCellValue(submission.getExpectedSubmissionDate().toString());
+        sheet.getRow(row).createCell(1)
+                .setCellValue(submission.getSubmissionDate() == null ? "" : submission.getSubmissionDate().toString());
+
+        row++;
+        sheet.createRow(row).createCell(0).setCellValue("Accepted Date");
+        sheet.getRow(row).createCell(1).setCellValue("Accepted By");
+
+        row++;
+        sheet.createRow(row).createCell(0)
+                .setCellValue(submission.getAcceptedDate() == null ? "" : submission.getAcceptedDate().toString());
+        sheet.getRow(row).createCell(1).setCellValue(submission.getAcceptedBy());
+
+        row++;
+        sheet.createRow(row);
+
+        row++;
+
+        sheet.createRow(row).createCell(0).setCellValue("Licensee Name");
+        sheet.getRow(row).createCell(1).setCellValue("Licensee Trading As");
+
+        row++;
+
+        sheet.createRow(row).createCell(0).setCellValue(submission.getLicensee().getLicenseeName());
+        sheet.getRow(row).createCell(1).setCellValue(submission.getLicensee().getTradingAs());
+
+        row++;
+
+        sheet.createRow(row);
+        row++;
+
+        sheet.createRow(row).createCell(0).setCellValue("Form Name");
+        sheet.getRow(row).createCell(1).setCellValue(submission.getForm().getFormName());
+
+        row++;
+
+        sheet.createRow(row).createCell(0).setCellValue("Form Entry Type");
+        sheet.getRow(row).createCell(1).setCellValue(submission.getForm().getEntryType().name());
+
+        row++;
+        sheet.createRow(row).createCell(0).setCellValue("Form Status");
+        sheet.getRow(row).createCell(1).setCellValue(submission.getSubmissionStatus().name());
+
+        row++;
+        sheet.createRow(row).createCell(0).setCellValue("Period");
+        sheet.getRow(row).createCell(1).setCellValue(submission.getPeriod().getPeriodName());
+
+        row++;
+
+        sheet.createRow(row);
+        row++;
+
+        return row;
+    }
+
+    private int addSingleEntryData(XSSFSheet sheet, Collection<FormSection> sections, Collection<DataField> dataFields,
+            int row) {
+
+        Map<String, Collection> grouped = this.getGroupedDataFields(sections, dataFields);
+
+        for (FormSection section : sections) {
+
+            sheet.createRow(row).createCell(0).setCellValue(section.getSectionLabel());
+            row++;
+
+            Collection<DataField> fields = grouped.get(section.getSectionId());
+
+
+            if (CollectionUtils.isNotEmpty(fields)) {
+                fields = fields.stream().sorted(Comparator.comparing(DataField::getFormField))
+                        .collect(Collectors.toList());
+
+                for (DataField dataField : fields) {
+                    sheet.createRow(row).createCell(0).setCellValue(dataField.getFormField().getFieldName());
+                    sheet.getRow(row).createCell(1).setCellValue(dataField.getValue());
+                    row++;
+                }
+            }
+
+            sheet.createRow(row);
+            row++;
+        }
+
+        return row;
+    }
+
+    private Map<String, Collection> getGroupedDataFields(Collection<FormSection> sections, Collection<DataField> fields) {
+
+        Map<String, Collection> grouped = new HashMap<>();
+
+        for (FormSection section : sections) {
+
+            Collection<DataField> sectionFields = fields.stream()
+                    .filter(f -> f.getFormField().getFormSection().getSectionId().equals(section.getSectionId()))
+                    .collect(Collectors.toList());
+
+            grouped.put(section.getSectionId(), sectionFields);
+        }
+
+        return grouped;
+
+    }
+
+    private Map<Integer, Map<String, String>> groupDataFieldsByRow(Collection<DataField> fields) {
+
+        Map<Integer, Map<String, String>> grouped = new HashMap<>();
+
+        fields.forEach(f -> {
+            if (!grouped.containsKey(f.getRow())) {
+                grouped.put(f.getRow(), new HashMap<>());
+            }
+
+            grouped.get(f.getRow()).put(f.getFormField().getFieldId(), f.getValue());
+        });
+
+        return grouped;
+
     }
 }

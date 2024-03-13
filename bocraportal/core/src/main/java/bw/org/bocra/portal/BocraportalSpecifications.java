@@ -2,9 +2,11 @@ package bw.org.bocra.portal;
 
 import java.util.Collection;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.CriteriaBuilder.In;
 
 public class BocraportalSpecifications {
@@ -16,10 +18,58 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, T>Specification<E> findByAttributeNull(String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<T> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.get(att);
+                    } else {
+                        path = root.<T>get(att);
+                    }
+
+                }
+
+                return cb.isNull(path);
+            }
+            
+            return null;
+        };
+    }
+
     public static <E, T>Specification<E> findByAttributeNotNull(String attribute) {
         return (root, cq, cb) -> {
             
             return cb.isNotNull(root.<T>get(attribute));
+        };
+    }
+
+    public static <E, T>Specification<E> findByAttributeNotNull(String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<T> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.get(att);
+                    } else {
+                        path = root.<T>get(att);
+                    }
+
+                }
+
+                return cb.isNotNull(path);
+            }
+            
+            return null;
         };
     }
 
@@ -30,10 +80,58 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, T>Specification<E> findByAttribute(T attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<T> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.get(att);
+                    } else {
+                        path = root.<T>get(att);
+                    }
+
+                }
+
+                return cb.equal(path, attributeValue);
+            }
+            
+            return null;
+        };
+    }
+
     public static <E, T>Specification<E> findByAttributeNotEqual(String attribute, T attributeValue) {
         return (root, cq, cb) -> {
             
             return cb.notEqual(root.<T>get(attribute), attributeValue);
+        };
+    }
+
+    public static <E, T>Specification<E> findByAttributeNotEqual(T attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<T> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.get(att);
+                    } else {
+                        path = root.<T>get(att);
+                    }
+
+                }
+
+                return cb.notEqual(path, attributeValue);
+            }
+            
+            return null;
         };
     }
 
@@ -44,10 +142,58 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, T>Specification<E> findByAttributeNotMember(T attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<Collection<T>> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<Collection<T>>get(att);
+                    } else {
+                        path = root.<Collection<T>>get(att);
+                    }
+
+                }
+
+                return cb.isNotMember(attributeValue, path);
+            }
+            
+            return null;
+        };
+    }
+
     public static <E, T>Specification<E> findByAttributeIsMember(String attribute, T attributeValue) {
         return (root, cq, cb) -> {
             
             return cb.isMember(attributeValue, root.get(attribute));
+        };
+    }
+
+    public static <E, T>Specification<E> findByAttributeIsMember(T attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<Collection<T>> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<Collection<T>>get(att);
+                    } else {
+                        path = root.<Collection<T>>get(att);
+                    }
+
+                }
+
+                return cb.isMember(attributeValue, path);
+            }
+            
+            return null;
         };
     }
 
@@ -58,6 +204,30 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, T>Specification<E> findByAttributeIsEmpty(String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<Collection<T>> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<Collection<T>>get(att);
+                    } else {
+                        path = root.<Collection<T>>get(att);
+                    }
+
+                }
+
+                return cb.isEmpty(path);
+            }
+            
+            return null;
+        };
+    }
+
     public static <E, T>Specification<E> findByAttributeIsNotEmpty(String attribute) {
         return (root, cq, cb) -> {
             
@@ -65,10 +235,59 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, T>Specification<E> findByAttributeIsNotEmpty(String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<Collection<T>> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<Collection<T>>get(att);
+                    } else {
+                        path = root.<Collection<T>>get(att);
+                    }
+
+                }
+
+                return cb.isNotEmpty(path);
+            }
+            
+            return null;
+        };
+    }
+
+
     public static <E, T>Specification<E> findByAttributeFalse(String attribute){
         return (root, cq, cb) -> {
             
             return cb.isFalse(root.<Boolean>get(attribute));
+        };
+    }
+
+    public static <E, T>Specification<E> findByAttributeFalse(String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<Boolean> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<Boolean>get(att);
+                    } else {
+                        path = root.<Boolean>get(att);
+                    }
+
+                }
+
+                return cb.isFalse(path);
+            }
+            
+            return null;
         };
     }
 
@@ -79,10 +298,58 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, T>Specification<E> findByAttributeTrue(String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<Boolean> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<Boolean>get(att);
+                    } else {
+                        path = root.<Boolean>get(att);
+                    }
+
+                }
+
+                return cb.isTrue(path);
+            }
+            
+            return null;
+        };
+    }
+
     public static <E, T>Specification<E> findByAttributeStartingWithIgnoreCase(String attribute, String attributeValue){
         return (root, cq, cb) -> {
             
             return cb.like(cb.upper(root.<String>get(attribute)), attributeValue.toUpperCase() + "%");
+        };
+    }
+
+    public static <E>Specification<E> findByAttributeStartingWithIgnoreCase(String attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<String> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<String>get(att);
+                    } else {
+                        path = root.<String>get(att);
+                    }
+
+                }
+
+                return cb.like(cb.upper(path), attributeValue.toUpperCase() + "%");
+            }
+            
+            return null;
         };
     }
     
@@ -92,11 +359,59 @@ public class BocraportalSpecifications {
             return cb.like(cb.upper(root.<String>get(attribute)), "%" + attributeValue.toUpperCase());
         };
     }
+
+    public static <E>Specification<E> findByAttributeEndingWithIgnoreCase(String attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<String> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<String>get(att);
+                    } else {
+                        path = root.<String>get(att);
+                    }
+
+                }
+
+                return cb.like(cb.upper(path), "%" + attributeValue.toUpperCase());
+            }
+            
+            return null;
+        };
+    }
     
     public static <E, T>Specification<E> findByAttributeContainingIgnoreCase(String attribute, String attributeValue){
         return (root, cq, cb) -> {
             
             return cb.like(cb.upper(root.<String>get(attribute)), "%" + attributeValue.toUpperCase() + "%");
+        };
+    }
+
+    public static <E>Specification<E> findByAttributeContainingIgnoreCase(String attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<String> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<String>get(att);
+                    } else {
+                        path = root.<String>get(att);
+                    }
+
+                }
+
+                return cb.like(cb.upper(path), "%" + attributeValue.toUpperCase() + "%");
+            }
+            
+            return null;
         };
     }
     
@@ -106,6 +421,30 @@ public class BocraportalSpecifications {
             return cb.like(cb.upper(root.<String>get(attribute)), "%" + attributeValue.toUpperCase() + "%");
         };
     }
+
+    public static <E>Specification<E> findByAttributeLikeIgnoreCase(String attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<String> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<String>get(att);
+                    } else {
+                        path = root.<String>get(att);
+                    }
+
+                }
+
+                return cb.like(cb.upper(path), "%" + attributeValue.toUpperCase() + "%");
+            }
+            
+            return null;
+        };
+    }
     
     public static <E, T>Specification<E> findByAttributeNotLikeIgnoreCase(String attribute, String attributeValue){
         return (root, cq, cb) -> {
@@ -113,11 +452,59 @@ public class BocraportalSpecifications {
             return cb.notLike(cb.upper(root.<String>get(attribute)), "%" + attributeValue.toUpperCase() + "%");
         };
     }
+
+    public static <E>Specification<E> findByAttributeNotLikeIgnoreCase(String attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<String> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<String>get(att);
+                    } else {
+                        path = root.<String>get(att);
+                    }
+
+                }
+
+                return cb.notLike(cb.upper(path), "%" + attributeValue.toUpperCase() + "%");
+            }
+            
+            return null;
+        };
+    }
     
     public static <E, T>Specification<E> findByAttributeContaining(String attribute, String attributeValue){
         return (root, cq, cb) -> {
             
-            return cb.like(root.<String>get(attribute), "%" + attributeValue.toUpperCase() + "%");
+            return cb.like(root.<String>get(attribute), "%" + attributeValue + "%");
+        };
+    }
+
+    public static <E>Specification<E> findByAttributeContaining(String attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<String> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<String>get(att);
+                    } else {
+                        path = root.<String>get(att);
+                    }
+
+                }
+
+                return cb.like(path, "%" + attributeValue + "%");
+            }
+            
+            return null;
         };
     }
 
@@ -127,11 +514,59 @@ public class BocraportalSpecifications {
             return cb.lessThan(root.<T>get(attribute), attributeValue);
         };
     }
+
+    public static <E, T extends Comparable<? super T>>Specification<E> findByAttributeLessThan(T attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<T> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<T>get(att);
+                    } else {
+                        path = root.<T>get(att);
+                    }
+
+                }
+
+                return cb.lessThan(path, attributeValue);
+            }
+            
+            return null;
+        };
+    }
     
     public static <E, T extends Comparable<? super T>>Specification<E> findByAttributeLessThanEqual(String attribute, T attributeValue){
         return (root, cq, cb) -> {
             
             return cb.lessThanOrEqualTo(root.<T>get(attribute), attributeValue);
+        };
+    }
+
+    public static <E, T extends Comparable<? super T>>Specification<E> findByAttributeLessThanEqual(T attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<T> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<T>get(att);
+                    } else {
+                        path = root.<T>get(att);
+                    }
+
+                }
+
+                return cb.lessThanOrEqualTo(path, attributeValue);
+            }
+            
+            return null;
         };
     }
     
@@ -141,11 +576,59 @@ public class BocraportalSpecifications {
             return cb.greaterThan(root.<T>get(attribute), attributeValue);
         };
     }
+
+    public static <E, T extends Comparable<? super T>>Specification<E> findByAttributeGreaterThan(T attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<T> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<T>get(att);
+                    } else {
+                        path = root.<T>get(att);
+                    }
+
+                }
+
+                return cb.greaterThan(path, attributeValue);
+            }
+            
+            return null;
+        };
+    }
     
     public static <E, T extends Comparable<? super T>>Specification<E> findByAttributeGreaterThanEqual(String attribute, T attributeValue){
         return (root, cq, cb) -> {
             
             return cb.greaterThanOrEqualTo(root.<T>get(attribute), attributeValue);
+        };
+    }
+
+    public static <E, T extends Comparable<? super T>>Specification<E> findByAttributeGreaterThanEqual(T attributeValue, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<T> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<T>get(att);
+                    } else {
+                        path = root.<T>get(att);
+                    }
+
+                }
+
+                return cb.greaterThanOrEqualTo(path, attributeValue);
+            }
+            
+            return null;
         };
     }
     
@@ -156,11 +639,59 @@ public class BocraportalSpecifications {
         };
     }
 
+    public static <E, T extends Comparable<? super T>>Specification<E> findByAttributeGreaterThanEqual(T attributeStart, T attributeEnd, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<T> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<T>get(att);
+                    } else {
+                        path = root.<T>get(att);
+                    }
+
+                }
+                
+                return cb.between(path, attributeStart, attributeEnd);
+            }
+            
+            return null;
+        };
+    }
+
     public static <E, T>Specification<E> findByAttributeIn(String attribute, Collection<T> proprertyIn){
 
         return (root, cq, cb) -> {
 
             return cb.in(root.get(attribute)).value(proprertyIn);
+        };
+    }
+
+    public static <E, T>Specification<E> findByAttributeIn(Collection<T> proprertyIn, String... attributes) {
+        return (root, cq, cb) -> {
+
+            if(attributes.length > 0) {
+
+                Path<Collection<T>> path = null;
+
+                for (String att : attributes) {
+
+                    if(path != null) {
+                        path = path.<Collection<T>>get(att);
+                    } else {
+                        path = root.<Collection<T>>get(att);
+                    }
+
+                }
+                
+                return cb.in(path).value(proprertyIn);
+            }
+            
+            return null;
         };
     }
 

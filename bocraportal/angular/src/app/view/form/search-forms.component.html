@@ -47,26 +47,43 @@
           </select>
         </div>
         <div class="mb-3">
-          <label id="criteriaRoles_label" class="col-sm-2 form-check-label" for="criteriaRoles"><span translate>roles</span></label>
+          <label id="criteriaRoles_label" class="col-sm-2 form-check-label" for="criteriaRoles"
+            ><span translate>roles</span></label
+          >
           <article formArrayName="roles" id="criteriaRolesArticle">
-              <mat-form-field class="form-group">
-                  <mat-label translate>select.value.text</mat-label>
-                  <mat-select name="criteriaRolesSelector" id="criteriaRolesSelector" (selectionChange)="onCriteriaRolesChange($event)">
-                      <mat-option *ngFor="let item of criteriaRolesBackingList" [value]="item.value">
-                          {{ item.label }}
-                      </mat-option>
-                  </mat-select>
-              </mat-form-field>
-              <ul class="list-group" *ngFor="let control of criteriaRolesControl.controls; let i = index">
-                  <li class="list-group-item">
-                      <button type="button" class="btn btn-info" (click)="criteriaRolesDelete(i)">
-                          <i class="bi bi-trash"></i>
-                      </button>
-                      {{ getCriteriaRolesLabel(control.value) }} 
-                  </li>
-              </ul>
+            <mat-form-field class="form-group">
+              <mat-label translate>select.value.text</mat-label>
+              <mat-select
+                name="criteriaRolesSelector"
+                id="criteriaRolesSelector"
+                (selectionChange)="onCriteriaRolesChange($event)"
+              >
+                <mat-option *ngFor="let item of criteriaRolesBackingList" [value]="item.value">
+                  {{ item.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <ul class="list-group" *ngFor="let control of criteriaRolesControl.controls; let i = index">
+              <li class="list-group-item">
+                <button type="button" class="btn btn-info" (click)="criteriaRolesDelete(i)">
+                  <i class="bi bi-trash"></i>
+                </button>
+                {{ getCriteriaRolesLabel(control.value) }}
+              </li>
+            </ul>
           </article>
-      </div>
+        </div>
+        <div class="mb-3">
+          <label id="criteriaPeriodConfigId_label" class="col-sm-2 col-form-label" for="criteriaPeriodConfigId"
+            ><span translate>period.config</span></label
+          >
+          <select id="criteriaEntryType" class="form-select" formControlName="periodConfigId">
+            <option></option>
+            <option *ngFor="let config of formsPeriodConfigs$ | async" [value]="config.id">
+              {{ config.periodConfigName }}
+            </option>
+          </select>
+        </div>
       </div>
     </form>
     <div class="text-end mt-5">

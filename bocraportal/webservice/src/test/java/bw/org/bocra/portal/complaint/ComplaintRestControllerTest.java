@@ -66,7 +66,6 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(
             message.contains("complaint type is missing")
             || message.contains("complaint type or its id is missing")
@@ -83,7 +82,6 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(
             message.contains("access complaint type is not valid")
             || message.contains("The complaint type is invalid")
@@ -102,7 +100,6 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("created date value is missing"));
     }
 
@@ -110,15 +107,12 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
     @Test
     public void save_nullAssignedDate() {
         ComplaintVO complaint = testData.createUnsavedData();
-        System.out.println(complaint);
         complaint.setAssignedDate(null);
 
         ResponseEntity<?> response = restController.save(complaint);
         Assertions.assertNotNull(response);
-        System.out.println(response.getBody());
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("AssignedDate value is missing"));
     }
 
@@ -126,15 +120,11 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
     @Test
     public void save_nullAssignedTo() {
         ComplaintVO complaint = testData.createUnsavedData();
-        System.out.println(complaint);
         complaint.setAssignedTo(null);
 
         ResponseEntity<?> response = restController.save(complaint);
-        Assertions.assertNotNull(response);
-        System.out.println(response.getBody());
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("AssignedDate value is missing"));
     }
 
@@ -149,7 +139,6 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("First name is missing"));
     }
 
@@ -164,7 +153,6 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("Surname is missing"));
     }
 
@@ -178,7 +166,6 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("First name is missing"));
     }
 
@@ -192,7 +179,6 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("Surname is missing"));
     }
 
@@ -206,7 +192,6 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("Licensee is missing"));
     }
 
@@ -220,7 +205,6 @@ public class ComplaintRestControllerTest extends GenericRestTest<ComplaintVO, Co
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(message.contains("Licensee is missing"));
     }
 

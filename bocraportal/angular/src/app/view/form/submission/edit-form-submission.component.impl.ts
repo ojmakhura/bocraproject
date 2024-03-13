@@ -36,6 +36,7 @@ import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import { NoteVO } from '@app/model/bw/org/bocra/portal/form/submission/note/note-vo';
 import { SubmissionRestController } from '@app/service/bw/org/bocra/portal/form/submission/submission-rest-controller';
+import * as saveAs from 'file-saver';
 
 @Component({
   selector: 'app-edit-form-submission',
@@ -72,6 +73,8 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   submissionStatus: FormSubmissionStatus = FormSubmissionStatus.NEW;
 
   submissionService: SubmissionRestController;
+  file$: Observable<Blob>;
+  fileName: string = '';
 
   constructor(private changeDetectorRefs: ChangeDetectorRef, private injector: Injector) {
     super(injector);
@@ -83,6 +86,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.formSubmissionLicensees$ = this.store.pipe(select(LicenseeSelectors.selectLicensees));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.note$ = this.store.pipe(select(SubmissionSelectors.selectNote));
+    this.file$ = this.store.pipe(select(SubmissionSelectors.selectFile));
 
   }
 
@@ -145,7 +149,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
           this.submitUnrestricted = false;
         }
       });
-    });
+    }); 
 
     this.formSubmission$.subscribe((submission) => {
       this.rowGroups = [];
@@ -159,7 +163,7 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
       }
       this.submissionStatus = submission?.submissionStatus;
 
-      if (submission.form.entryType === FormEntryType.MULTIPLE) {
+      if (submission?.form?.entryType === FormEntryType.MULTIPLE) {
         this.rowGroups = this.rowGroups.slice(0, 1);
 
         submission?.dataFields?.forEach((dataField) => {
@@ -370,6 +374,25 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
         this.formSubmissionControl.get('submissionStatus')?.patchValue(formSubmission.submissionStatus);
       }
     });
+  }
+
+  downloadSubmission() {
+    this.store.dispatch(
+      FormSubmissionActions.downloadSubmission({
+        id: this.formSubmissionId,
+        loading: true,
+        loaderMessage: 'Downloading submission ...',
+      })
+    );
+
+    this.file$.subscribe((file: any) => {
+      if (file) {
+        let blob: any = file as Blob;
+        const url = window.URL.createObjectURL(blob);
+        saveAs(blob, `${this.formSubmission.form.formName}-${this.formSubmission.period.periodName}.xlsx`);
+      }
+    });
+
   }
 
   private doFormSubmissionSave(formSubmission: FormSubmissionVO) {

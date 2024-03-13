@@ -249,7 +249,7 @@
 				<div class="mb-3">
 					<label id="formSubmissionSubmissionStatus_label" class="col-sm-2 col-form-label"
 						for="formSubmissionSubmissionStatus"><span translate>submission.status</span>*</label>
-					<div><label>{{formSubmissionSubmissionStatus}}</label></div>
+					<div><label>{{formSubmissionSubmissionStatus}} </label></div>
 					<!-- <input type="text" id="formSubmissionSubmissionStatus" class="form-control"
 						name="submissionStatus" formControlName="submissionStatus" required disabled="true"/> -->
           <div
@@ -286,6 +286,8 @@
 						class="btn btn-outline-primary" *ngIf="formSubmissionId && deleteUnrestricted">
 						<span translate>delete</span>
 					</button> -->
+
+          <button type="button" class="btn btn-outline-primary" (click)="downloadSubmission()" color="accent">Download</button>
 
           <button
             type="button"
@@ -438,6 +440,10 @@
           <ng-container matColumnDef="entryType">
             <mat-header-cell *matHeaderCellDef translate>entry.type</mat-header-cell>
             <mat-cell *matCellDef="let row"> {{ row?.entryType }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="periodConfig.periodConfigName">
+            <mat-header-cell *matHeaderCellDef translate>period.config.name</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row.periodConfig?.periodConfigName }} </mat-cell>
           </ng-container>
           <mat-header-row *matHeaderRowDef="formSubmissionFormModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: formSubmissionFormModalColumns"></mat-row>

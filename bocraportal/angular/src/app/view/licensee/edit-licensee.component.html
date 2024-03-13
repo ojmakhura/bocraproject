@@ -119,10 +119,6 @@
       <mat-tab-group animationDuration="0ms" class="view-tabs" *ngIf="licenseeId">
         <mat-tab label="{{ 'licences' | translate }}" *ngIf="licenseeId">
           <div>
-            <button type="button" (click)="licenseeLicencesAddDialog()" class="btn btn-primary" data-bs-toggle="modal"
-              data-bs-target="#licenseeLicencesModal">
-              <mat-icon>add_box</mat-icon>
-            </button>
             <mat-table matSort [dataSource]="licenseeLicences" #licencesSort="matSort"
               class="table table-bordered table-striped" style="width: 100%">
               <ng-container matColumnDef="actions">
@@ -132,9 +128,6 @@
                     <button type="button" (click)="deleteFromLicenseeLicences(i)" class="btn btn-outline-primary">
                       <mat-icon>delete</mat-icon>
                     </button>
-                    <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeLicences(row)" class="btn btn-info">
-                      <mat-icon>edit</mat-icon>
-                    </button> -->
                   </div>
                 </mat-cell>
               </ng-container>
@@ -171,10 +164,6 @@
         </mat-tab>
         <mat-tab label="{{ 'users' | translate }}" *ngIf="licenseeId">
           <div>
-            <!-- <button type="button" matTooltip="Add User" (click)="licenseeUsersAddDialog()" class="btn btn-primary"
-              data-bs-toggle="modal" data-bs-target="#licenseeUsersModal">
-              <mat-icon>add_box</mat-icon>
-            </button> -->
             <mat-table matSort [dataSource]="licenseeUsers" #usersSort="matSort"
               class="table table-bordered table-striped" style="width: 100%">
               <ng-container matColumnDef="actions">
@@ -184,9 +173,6 @@
                     <button type="button" (click)="deleteFromLicenseeUsers(i)" class="btn btn-outline-primary">
                       <mat-icon>delete</mat-icon>
                     </button>
-                    <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeUsers(row)" class="btn btn-info">
-                      <mat-icon>edit</mat-icon>
-                    </button> -->
                   </div>
                 </mat-cell>
               </ng-container>
@@ -254,7 +240,7 @@
                 <mat-cell *matCellDef="let row"> {{ row?.form?.code }} </mat-cell>
               </ng-container>
               <ng-container matColumnDef="formName">
-                <mat-header-cell *matHeaderCellDef translate>form.form.name</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef translate>form.name</mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{ row?.form?.formName }} </mat-cell>
               </ng-container>
               <mat-header-row *matHeaderRowDef="licenseeFormsModalColumns"></mat-header-row>
@@ -279,9 +265,6 @@
                     <button type="button" (click)="deleteFromLicenseeDocuments(i)" class="btn btn-outline-primary">
                       <mat-icon>delete</mat-icon>
                     </button>
-                    <!-- <button type="button" color="accent" (click)="doEditLicenseeDocuments(row)" class="btn btn-info">
-                        <mat-icon>edit</mat-icon>
-                      </button> -->
                     <button type="button" (click)="fileDownload(row?.documentId, row?.documentName)"
                       class="btn btn-outline-primary">
                       <mat-icon>file_download</mat-icon>
@@ -298,11 +281,11 @@
                 <mat-cell *matCellDef="let row"> {{ row.documentId }} </mat-cell>
               </ng-container>
               <ng-container matColumnDef="documentName">
-                <mat-header-cell *matHeaderCellDef translate>document.name</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef translate>name</mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{ row.documentName }} </mat-cell>
               </ng-container>
               <ng-container matColumnDef="documentType.name">
-                <mat-header-cell *matHeaderCellDef translate>document.type.name</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef translate>document.type</mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{ row.documentType.name }} </mat-cell>
               </ng-container>
               <mat-header-row *matHeaderRowDef="licenseeDocumentsModalColumns"></mat-header-row>
@@ -327,9 +310,6 @@
                     <button type="button" (click)="deleteFromLicenseeSectors(i)" class="btn btn-outline-primary">
                       <mat-icon>delete</mat-icon>
                     </button>
-                    <!-- <button type="button" *ngIf="false" color="accent" (click)="doEditLicenseeSectors(row)" class="btn btn-info">
-                      <mat-icon>edit</mat-icon>
-                    </button> -->
                   </div>
                 </mat-cell>
               </ng-container>

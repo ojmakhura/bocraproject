@@ -202,7 +202,6 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodRe
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(StringUtils.isNotBlank(message));
         Assertions.assertTrue(message.contains("Invalid period config"));
     }
@@ -228,7 +227,6 @@ public class PeriodRestControllerTest extends GenericRestTest<PeriodVO, PeriodRe
         Assertions.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         
         String message = response.getBody().toString();
-        System.out.println(message);
         Assertions.assertTrue(StringUtils.isNotBlank(message));
         Assertions.assertTrue(message.contains("Invalid next period"));
     }
