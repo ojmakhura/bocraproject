@@ -21,6 +21,7 @@ import { LicenseeFormRestController } from '@app/service/bw/org/bocra/portal/lic
 import { LicenseeSectorRestController } from '@app/service/bw/org/bocra/portal/licensee/sector/licensee-sector-rest-controller';
 import { FormActivationRestController } from '@app/service/bw/org/bocra/portal/form/activation/form-activation-rest-controller';
 import { MatTableExporterModule } from 'mat-table-exporter';
+import { BulkActivationComponent } from './bulk/bulk-activation.component';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { MatTableExporterModule } from 'mat-table-exporter';
     EditFormActivationComponentImpl,
     SearchFormActivationsComponentImpl,
     SearchFormActivationsFormActivationsComponentImpl,
+    BulkActivationComponent
   ],
   entryComponents: [],
   providers: [

@@ -19,6 +19,8 @@ export enum FormActivationActionType {
   PAGED_SEARCH_SUCCESS = '[FormActivation] Paged Search Success',
   GET_ALL_PAGED = '[FormActivation] Get All Paged',
   GET_ALL_PAGED_SUCCESS = '[FormActivation] Get All Paged Success',
+  ACTIVATE_FOR = '[FormActivation] Activate For',
+  ACTIVATE_FOR_SUCCESS = '[FormActivation] Activate For Success',
   FORM_ACTIVATION_RESET = '[FormActivation] FormActivation Reset',
   FORM_ACTIVATION_FAILURE = '[FormActivation] FormActivation Action Failure',
   FORM_ACTIVATION_LOADING = '[FormActivation] FormActivation Loading',
@@ -71,6 +73,16 @@ export const search = createAction(
 
 export const searchSuccess = createAction(
   FormActivationActionType.SEARCH_SUCCESS,
+  props<{ formActivations: FormActivationVO[] | any[]; messages: any[]; success: boolean }>()
+);
+
+export const activateFor = createAction(
+  FormActivationActionType.ACTIVATE_FOR,
+  props<{ activationDate: Date; periodConfigId: number; loading: boolean; loaderMessage: string | undefined }>()
+);
+
+export const activateForSuccess = createAction(
+  FormActivationActionType.ACTIVATE_FOR_SUCCESS,
   props<{ formActivations: FormActivationVO[] | any[]; messages: any[]; success: boolean }>()
 );
 

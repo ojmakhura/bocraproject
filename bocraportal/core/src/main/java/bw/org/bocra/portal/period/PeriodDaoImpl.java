@@ -186,6 +186,19 @@ public class PeriodDaoImpl
             }
         }
 
+        if(criteria.getPeriodConfigId() != null) {
+
+            Specification<Period> tmp = (root, cq, cb) -> {
+                return cb.equal(root.get("periodConfig").get("id"), criteria.getPeriodConfigId());
+            };
+
+            if (specs == null) {
+                specs = tmp;
+            } else {
+                specs = specs.and(tmp);
+            }
+        }
+
         return periodRepository.findAll(specs);
     }
 

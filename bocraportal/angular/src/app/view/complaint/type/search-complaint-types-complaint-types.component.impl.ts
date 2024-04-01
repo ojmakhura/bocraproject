@@ -8,6 +8,7 @@ import { SearchComplaintTypesComplaintTypesComponent } from '@app/view/complaint
   styleUrls: ['./search-complaint-types-complaint-types.component.scss'],
 })
 export class SearchComplaintTypesComplaintTypesComponentImpl extends SearchComplaintTypesComplaintTypesComponent {
+  
   constructor(private injector: Injector) {
     super(injector);
   }

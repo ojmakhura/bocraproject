@@ -35,10 +35,11 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   submissionRemoved$: Observable<boolean>;
-  deleteUnrestricted: boolean = true;
+  deleteUnrestricted: boolean = false;
   acceptUnrestricted: boolean = true;
   returnUnrestricted: boolean = true;
   submitUnrestricted: boolean = true;
+  bulkAuthorised: boolean = false;
   datePipe: DatePipe;
 
   constructor(private injector: Injector) {
@@ -109,20 +110,19 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     this.formActivation$.subscribe((formActivation) => {
       this.setEditFormActivationFormValue({ formActivation });
     });
-   
-
-    // this.store.dispatch(
-    //   ViewActions.loadViewAuthorisations({
-    //     viewUrl: "/form/activation",
-    //     roles: this.keycloakService.getUserRoles(),
-    //     loading: true,
-    //   })
-    // );
 
     this.unauthorisedUrls$.subscribe((restrictedItems) => {
       restrictedItems.forEach((item) => {
         if (item === '/form/activation/edit-form-activation/{button:delete}') {
-          this.deleteUnrestricted = false;
+          this.deleteUnrestricted = true;
+        } else if (item === '/form/activation/edit-form-activation/{button:accept}') {
+          this.acceptUnrestricted = false;
+        } else if (item === '/form/activation/edit-form-activation/{button:return}') {
+          this.returnUnrestricted = false;
+        } else if (item === '/form/activation/edit-form-activation/{button:submit}') {
+          this.submitUnrestricted = false;
+        } else if (item === '/form/activation/edit-form-activation/{button:bulk}') {
+          this.bulkAuthorised = true;
         }
       });
     });

@@ -33,6 +33,7 @@ import org.springframework.web.client.RestTemplate;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
+import bw.org.bocra.portal.config.SystemConfigName;
 import bw.org.bocra.portal.config.SystemConfigService;
 import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.keycloak.KeycloakUserService;
@@ -192,7 +193,7 @@ public class ComplaintRestControllerImpl extends ComplaintRestControllerBase {
                     this.sendComplaintMessage(complaint, subject, List.of(complaint.getEmail()), text,
                             complaint.getFirstName() + " " + complaint.getSurname());
 
-                    SystemConfigVO sysConf = this.systemConfigService.findByName("COMPLAINTS_MANAGEMENT_EMAIL");
+                    SystemConfigVO sysConf = this.systemConfigService.findByName(SystemConfigName.COMPLAINTS_MANAGEMENT_EMAIL);
                     Set<String> emails = Set.of(sysConf.getValue().split(","));
 
                     emailTempate = """

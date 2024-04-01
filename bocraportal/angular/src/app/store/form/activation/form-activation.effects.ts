@@ -89,6 +89,26 @@ export class FormActivationEffects {
     )
   );
 
+  activateFor$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormActivationActions.activateFor),
+      mergeMap(({ activationDate, periodConfigId }) =>
+        this.formActivationRestController.activateDueFormsForDate(activationDate, periodConfigId).pipe(
+          map((formActivations) =>
+            FormActivationActions.activateForSuccess({
+              formActivations,
+              messages: [`${formActivations.length} form activations found.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            FormActivationActions.formActivationFailure({ messages: [error?.error ? error?.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
   search$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.search),

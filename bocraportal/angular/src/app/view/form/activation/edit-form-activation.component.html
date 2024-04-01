@@ -7,6 +7,9 @@
           <button type="button" (click)="editFormActivationSearch()" class="btn btn-primary">
             <span translate>search</span>
           </button>
+          <button type="button" [routerLink]="['/form/activation/bulk']" class="btn btn-primary">
+            <span translate>Bulk</span>
+          </button>
         </div>
       </section>
       <div *ngIf="loading | async">
@@ -162,7 +165,7 @@
           <button
             type="button"
             (click)="editFormActivationDelete()"
-            class="btn btn-outline-primary"
+            class="btn btn-outline-danger"
             *ngIf="formActivationId && deleteUnrestricted"
           >
             <span translate>delete</span>

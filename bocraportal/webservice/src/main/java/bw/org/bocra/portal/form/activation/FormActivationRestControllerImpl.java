@@ -5,9 +5,11 @@
 //
 package bw.org.bocra.portal.form.activation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
+import bw.org.bocra.portal.config.SystemConfigName;
 import bw.org.bocra.portal.config.SystemConfigService;
 import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.form.submission.FormSubmissionVO;
@@ -174,7 +177,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
                 continue;
             }
 
-            SystemConfigVO config = systemConfigService.findByName("ACTIVATION_SUBMISSION_TEMPLATE");
+            SystemConfigVO config = systemConfigService.findByName(SystemConfigName.ACTIVATION_SUBMISSION_TEMPLATE);
 
             JSONObject messageObj = new JSONObject();
 
@@ -380,6 +383,33 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
             logger.debug("Recreating submission for activation " + id);
             return ResponseEntity.ok().body(formActivationService.recreateActivationSubmission(id,
                     keycloakService.getSecurityContext().getToken().getIssuedFor()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body("An unknown error has occured. Please contact the portal administrator.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> handleActivateDueFormsForDate(LocalDate activationDate, Long periodConfigId) {
+        try {
+            logger.debug("Activating due forms");
+
+            Collection<FormActivationVO> activations = formActivationService
+                    .activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor(), activationDate, periodConfigId);
+
+            activations.forEach(activation -> {
+                try {
+                    this.sendNotifications(activation);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    logger.error(e.getMessage());
+                }
+            });
+
+            return ResponseEntity.ok().body(activations);
 
         } catch (Exception e) {
             e.printStackTrace();

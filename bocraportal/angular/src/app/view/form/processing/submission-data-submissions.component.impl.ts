@@ -8,6 +8,7 @@ import { SubmissionDataSubmissionsComponent } from '@app/view/form/processing/su
   styleUrls: ['./submission-data-submissions.component.scss'],
 })
 export class SubmissionDataSubmissionsComponentImpl extends SubmissionDataSubmissionsComponent {
+  
   constructor(private injector: Injector) {
     super(injector);
   }

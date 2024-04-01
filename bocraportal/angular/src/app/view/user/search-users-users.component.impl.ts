@@ -8,6 +8,7 @@ import { SearchUsersUsersComponent } from '@app/view/user/search-users-users.com
   styleUrls: ['./search-users-users.component.scss'],
 })
 export class SearchUsersUsersComponentImpl extends SearchUsersUsersComponent {
+  
   constructor(private injector: Injector) {
     super(injector);
   }
