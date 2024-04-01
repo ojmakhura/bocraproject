@@ -188,7 +188,7 @@ public class SystemConfigRestControllerImpl extends SystemConfigRestControllerBa
 
 
     @Override
-    public ResponseEntity<?> handleFindByName(String name) {
+    public ResponseEntity<?> handleFindByName(SystemConfigName name) {
         try {
             logger.debug("Searches for system configs using ID " + name);
             Optional<?> data = Optional.of(systemConfigService.findByName(name));

@@ -76,6 +76,20 @@ export const formActivationReducer = createReducer(
     error: false,
     messages: action.messages,
   })),
+  on(FormActivationActions.activateFor, (state, action) => ({
+    ...state,
+    loading: action.loading,
+    loaderMessage: action.loaderMessage,
+  })),
+  on(FormActivationActions.activateForSuccess, (state, action) => ({
+    ...state,
+    formActivations: action.formActivations,
+    loading: false,
+    loaderMessage: undefined,
+    success: action.success,
+    error: false,
+    messages: action.messages,
+  })),
   on(FormActivationActions.pagedSearch, (state, action) => ({
     ...state,
     accessPoints: [],

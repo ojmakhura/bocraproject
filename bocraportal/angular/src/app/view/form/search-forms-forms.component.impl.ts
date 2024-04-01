@@ -8,6 +8,7 @@ import { SearchFormsFormsComponent } from '@app/view/form/search-forms-forms.com
   styleUrls: ['./search-forms-forms.component.scss'],
 })
 export class SearchFormsFormsComponentImpl extends SearchFormsFormsComponent {
+  
   constructor(private injector: Injector) {
     super(injector);
   }

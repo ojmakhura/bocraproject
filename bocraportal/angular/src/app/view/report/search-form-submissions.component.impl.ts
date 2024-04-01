@@ -10,6 +10,7 @@ import * as ReportSelectors from '@app/store/report/report.selectors';
   styleUrls: ['./search-form-submissions.component.scss'],
 })
 export class SearchFormSubmissionsComponentImpl extends SearchFormSubmissionsComponent {
+  totalElements: number = 0;
   constructor(private injector: Injector) {
     super(injector);
     this.formSubmissions$ = this.store.pipe(select(ReportSelectors.selectFormSubmissions));

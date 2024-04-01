@@ -8,6 +8,7 @@
  */
 package bw.org.bocra.portal.form.activation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,6 +50,7 @@ import bw.org.bocra.portal.licensee.form.LicenseeForm;
 import bw.org.bocra.portal.licensee.sector.LicenseeSector;
 import bw.org.bocra.portal.licensee.sector.LicenseeSectorRepository;
 import bw.org.bocra.portal.period.Period;
+import bw.org.bocra.portal.period.PeriodCriteria;
 import bw.org.bocra.portal.period.PeriodDao;
 import bw.org.bocra.portal.period.PeriodVO;
 import bw.org.bocra.portal.sector.Sector;
@@ -279,10 +281,15 @@ public class FormActivationServiceImpl
     @Override
     protected Collection<FormActivationVO> handleActivateDueForms(String createdBy) throws Exception {
 
-        Collection<FormActivationVO> activations = new HashSet<>();
-
         // We want currently active periods only.
         Collection<Period> periods = periodDao.getActivePeriods();
+
+        return activateForPeriods(periods, createdBy);
+    }
+
+    private Collection<FormActivationVO> activateForPeriods(Collection<Period> periods, String createdBy) {
+
+        Collection<FormActivationVO> activations = new HashSet<>();
 
         if (CollectionUtils.isEmpty(periods)) {
             return new HashSet<>();
@@ -351,6 +358,7 @@ public class FormActivationServiceImpl
         });
 
         return activations;
+
     }
 
     @Override
@@ -390,6 +398,22 @@ public class FormActivationServiceImpl
         page.setElements(vos);
 
         return page; 
+    }
+
+    @Override
+    protected Collection<FormActivationVO> handleActivateDueForms(String createdBy, LocalDate activationDate, Long periodConfigId)
+            throws Exception {
+
+        PeriodCriteria criteria = new PeriodCriteria();
+        criteria.setSearchDate(activationDate);
+
+        if(periodConfigId != null && periodConfigId >= 1) {
+            criteria.setPeriodConfigId(periodConfigId);
+        }
+        
+        Collection<Period> periods = periodDao.findByCriteria(criteria);
+
+        return activateForPeriods(periods, createdBy);
     }
 
 }

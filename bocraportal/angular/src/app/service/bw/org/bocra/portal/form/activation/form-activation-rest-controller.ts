@@ -54,4 +54,8 @@ export class FormActivationRestController {
   pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<DataPage | any>  {
     return this.http.post<DataPage | any>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria || {});
   }
+
+  activateDueFormsForDate(activationDate: Date, periodConfigId: number): Observable<FormActivationVO[] | any[]> {
+    return this.http.get<FormActivationVO[] | any[]>(`${this.path}/activate/for?activationDate=${activationDate}&periodConfigId=${periodConfigId ? periodConfigId : -1}`);  
+  }
 }
