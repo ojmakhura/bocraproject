@@ -37,6 +37,9 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
       if (!profile) return;
 
       this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
+
+        if(!clients || clients.length == 0) return;
+
         let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
         this.http
           .get<any[]>(
@@ -60,6 +63,9 @@ export class SearchFormsComponentImpl extends SearchFormsComponent {
       this.http
         .get<any[]>(`${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/realm/composite`)
         .subscribe((roles) => {
+
+          if(!roles || roles.length == 0) return;
+
           roles
             .sort((a, b) => a.name.localeCompare(b.name))
             .forEach((role: any) => {

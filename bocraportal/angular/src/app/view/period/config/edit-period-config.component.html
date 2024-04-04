@@ -47,7 +47,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="periodConfigPeriodConfigNameControl.errors['required']">
+            <div *ngIf="periodConfigPeriodConfigNameControl.hasError('required')">
               <span translate>period.config.name.required</span>
             </div>
           </div>
@@ -123,7 +123,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="periodConfigRepeatPeriodControl.errors['required']">
+            <div *ngIf="periodConfigRepeatPeriodControl.hasError('required')">
               <span translate>repeat.period.required</span>
             </div>
           </div>

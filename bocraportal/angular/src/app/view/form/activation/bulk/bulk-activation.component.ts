@@ -71,6 +71,7 @@ export class BulkActivationComponent implements OnInit, AfterViewInit {
         id: [],
         periodConfigName: [],
       }),
+      sendEmail: [false],
     });
   }
 

@@ -78,7 +78,7 @@ export const searchSuccess = createAction(
 
 export const activateFor = createAction(
   FormActivationActionType.ACTIVATE_FOR,
-  props<{ activationDate: Date; periodConfigId: number; loading: boolean; loaderMessage: string | undefined }>()
+  props<{ activationDate: Date; periodConfigId: number, sendEmail: boolean; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const activateForSuccess = createAction(

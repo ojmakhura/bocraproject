@@ -47,7 +47,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="formFieldFormSectionControl.errors['required']">
+            <div *ngIf="formFieldFormSectionControl.hasError('required')">
               <span translate>form.section.required</span>
             </div>
           </div>
@@ -71,7 +71,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="formFieldFieldTypeControl.errors['required']">
+            <div *ngIf="formFieldFieldTypeControl.hasError('required')">
               <span translate>field.type.required</span>
             </div>
           </div>
@@ -103,7 +103,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="formFieldFieldNameControl.errors['required']">
+            <div *ngIf="formFieldFieldNameControl.hasError('required')">
               <span translate>field.name.required</span>
             </div>
           </div>
@@ -133,7 +133,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="formFieldFieldValueTypeControl.errors['required']">
+            <div *ngIf="formFieldFieldValueTypeControl.hasError('required')">
               <span translate>field.value.type.required</span>
             </div>
           </div>

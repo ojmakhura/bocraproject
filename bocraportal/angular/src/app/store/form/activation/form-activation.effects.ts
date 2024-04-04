@@ -92,8 +92,8 @@ export class FormActivationEffects {
   activateFor$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.activateFor),
-      mergeMap(({ activationDate, periodConfigId }) =>
-        this.formActivationRestController.activateDueFormsForDate(activationDate, periodConfigId).pipe(
+      mergeMap(({ activationDate, periodConfigId, sendEmail }) =>
+        this.formActivationRestController.activateDueFormsForDate(activationDate, periodConfigId, sendEmail).pipe(
           map((formActivations) =>
             FormActivationActions.activateForSuccess({
               formActivations,

@@ -45,7 +45,7 @@ export class SearchComplaintsComponentImpl extends SearchComplaintsComponent {
             })
           );
         } else {
-          if (this?.criteriaControl?.errors['required']) {
+          if (this?.criteriaControl?.hasError('required')) {
             this.store.dispatch(
               ComplaintActions.complaintFailure({
                 messages: ['Complaint ID is required'],

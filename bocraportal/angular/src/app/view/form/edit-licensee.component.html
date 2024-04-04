@@ -68,7 +68,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="licenseeFormLicenseeControl.errors['required']">
+            <div *ngIf="licenseeFormLicenseeControl.hasError('required')">
               <span translate>licensee.required</span>
             </div>
           </div>

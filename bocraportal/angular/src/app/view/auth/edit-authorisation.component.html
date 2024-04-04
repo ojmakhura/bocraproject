@@ -115,7 +115,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="authorisationAccessPointControl.errors['required']">
+            <div *ngIf="authorisationAccessPointControl.hasError('required')">
               <span translate>access.point.required</span>
             </div>
           </div>

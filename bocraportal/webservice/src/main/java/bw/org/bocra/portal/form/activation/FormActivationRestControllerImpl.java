@@ -393,21 +393,25 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     }
 
     @Override
-    public ResponseEntity<?> handleActivateDueFormsForDate(LocalDate activationDate, Long periodConfigId) {
+    public ResponseEntity<?> handleActivateDueFormsForDate(LocalDate activationDate, Long periodConfigId,
+            Boolean sendEmail) {
         try {
             logger.debug("Activating due forms");
 
             Collection<FormActivationVO> activations = formActivationService
-                    .activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor(), activationDate, periodConfigId);
+                    .activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor(), activationDate,
+                            periodConfigId);
 
-            activations.forEach(activation -> {
-                try {
-                    this.sendNotifications(activation);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    logger.error(e.getMessage());
-                }
-            });
+            if (sendEmail) {
+                activations.forEach(activation -> {
+                    try {
+                        this.sendNotifications(activation);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        logger.error(e.getMessage());
+                    }
+                });
+            }
 
             return ResponseEntity.ok().body(activations);
 
