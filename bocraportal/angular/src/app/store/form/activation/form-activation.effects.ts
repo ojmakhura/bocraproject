@@ -9,6 +9,46 @@ import { FormActivationRestController } from '@app/service/bw/org/bocra/portal/f
 export class FormActivationEffects {
   constructor(private actions$: Actions, private formActivationRestController: FormActivationRestController) {}
 
+  recreateActivationSubmissions$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormActivationActions.recreateActivationSubmissions),
+      mergeMap(({ id }) =>
+        this.formActivationRestController.recreateActivationSubmission(id).pipe(
+          map((formSubmissions) =>
+            FormActivationActions.recreateActivationSubmissionsSuccess({
+              formSubmissions,
+              messages: [`Recreated ${formSubmissions.length} submissions.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            FormActivationActions.formActivationFailure({ messages: [error?.error ? error?.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
+  createMissingSubmissions$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormActivationActions.createMissingSubmissions),
+      mergeMap(({ id }) =>
+        this.formActivationRestController.createMissingSubmissions(id).pipe(
+          map((formSubmissions) =>
+            FormActivationActions.createMissingSubmissionsSuccess({
+              formSubmissions,
+              messages: [`Recreated ${formSubmissions.length} submissions.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            FormActivationActions.formActivationFailure({ messages: [error?.error ? error?.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
   findById$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.findById),

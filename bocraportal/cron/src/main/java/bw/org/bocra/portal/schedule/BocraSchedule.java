@@ -188,7 +188,7 @@ public class BocraSchedule {
      * Three days before the last day of each month, we activate the due forms.
      */
     @Async
-    @Scheduled(cron = "0 0 0 L-3 * *", zone = "Africa/Gaborone")
+    @Scheduled(cron = "0 0 0 L * *", zone = "Africa/Gaborone")
     public void activateDueForms() {
         String formatTime = this.getDateTime();
 

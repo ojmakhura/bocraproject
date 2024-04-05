@@ -162,6 +162,12 @@
           <button type="button" (click)="editFormActivationSave()" class="btn btn-outline-primary">
             <span translate>save</span>
           </button>
+					<button type="button" (click)="editFormActivationCreateMissing()" class="btn  btn-outline-primary">
+						<span translate>create.missing</span>
+					</button>
+					<button type="button" (click)="editFormActivationFormReset()" class="btn  btn-outline-primary" >
+            <span translate>reset</span>
+          </button>
           <button
             type="button"
             (click)="editFormActivationDelete()"
@@ -169,9 +175,6 @@
             *ngIf="formActivationId && deleteUnrestricted"
           >
             <span translate>delete</span>
-          </button>
-          <button type="button" (click)="editFormActivationFormReset()" class="btn btn-outline-primary">
-            <span translate>reset</span>
           </button>
         </div>
         <mat-tab-group animationDuration="0ms" class="view-tabs">

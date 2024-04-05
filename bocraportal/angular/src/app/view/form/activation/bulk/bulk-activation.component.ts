@@ -83,6 +83,7 @@ export class BulkActivationComponent implements OnInit, AfterViewInit {
       FormActivationActions.activateFor({
         activationDate: this.bulkActivationForm.value.periodDate,
         periodConfigId: this.bulkActivationForm.value.periodConfig.id,
+        sendEmail: this.bulkActivationForm.value.sendEmail,
         loaderMessage: 'Activating forms...',
         loading: true,
       })
