@@ -137,12 +137,12 @@ public class FormActivationServiceImpl
      * @see bw.org.bocra.portal.form.activation.FormActivationService#save(FormActivationVO)
      */
     @Override
-    protected FormActivationVO handleSave(FormActivationVO formActivation)
+    protected FormActivationVO handleSave(FormActivationVO formActivation, Boolean includeInactive)
             throws Exception {
 
         FormActivation activation = getFormActivationDao().formActivationVOToEntity(formActivation);
 
-        Set<Long> ids = getLicenseeIds(activation.getForm());
+        Set<Long> ids = getLicenseeIds(activation.getForm(), includeInactive);
 
         if (CollectionUtils.isEmpty(ids)) {
             throw new FormActivationServiceException(
@@ -227,23 +227,38 @@ public class FormActivationServiceImpl
                 .loadAll(FormActivationDao.TRANSFORM_FORMACTIVATIONVO, pageNumber, pageSize);
     }
 
-    private Set<Long> getLicenseeIds(Form form) {
+    private Set<Long> getLicenseeIds(Form form, boolean includeInactive) {
 
         Set<Long> ids = new HashSet<>();
 
-        for (LicenseeForm licensee : form.getLicenseeForms()) {
-            if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
-                ids.add(licensee.getLicensee().getId());
+        if(includeInactive) {
+            ids.addAll(form.getLicenseeForms().stream().map(lic -> lic.getLicensee().getId()).collect(Collectors.toSet()));
+        } else {
+
+            for (LicenseeForm licensee : form.getLicenseeForms()) {
+            
+                if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
+                    ids.add(licensee.getLicensee().getId());
+            }
         }
 
         for (SectorForm sectorForm : form.getSectorForms()) {
 
             Sector sector = sectorForm.getSector();
 
-            for (LicenseeSector licensee : sector.getLicenseeSectors()) {
+            if (includeInactive) {
 
-                if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE)
-                    ids.add(licensee.getLicensee().getId());
+                ids.addAll(sector.getLicenseeSectors().stream().map(lic -> lic.getLicensee().getId())
+                        .collect(Collectors.toSet()));
+
+            } else {
+
+                for (LicenseeSector licensee : sector.getLicenseeSectors()) {
+
+                    if (licensee.getLicensee().getStatus() == LicenseeStatus.ACTIVE) {
+                        ids.add(licensee.getLicensee().getId());
+                    }
+                }
             }
         }
 
@@ -251,20 +266,23 @@ public class FormActivationServiceImpl
     }
 
     @Override
-    protected FormActivationVO handleRecreateActivationSubmission(Long id, String createdBy) throws Exception {
+    protected FormActivationVO handleRecreateActivationSubmission(Long id, String createdBy, Boolean includeInactive)
+            throws Exception {
         FormActivation activation = formActivationRepository.getReferenceById(id);
 
         formSubmissionDao.remove(activation.getFormSubmissions());
 
         FormActivationVO formActivation = formActivationDao.toFormActivationVO(activation);
         formActivation
-                .setFormSubmissions(submissionService.createNewSubmissions(getLicenseeIds(activation.getForm()), id));
+                .setFormSubmissions(submissionService
+                        .createNewSubmissions(getLicenseeIds(activation.getForm(), includeInactive), id));
 
         return formActivation;
     }
 
     @Override
-    protected Collection<FormSubmissionVO> handleCreateMissingSubmissions(Long id, String createdBy) throws Exception {
+    protected Collection<FormSubmissionVO> handleCreateMissingSubmissions(Long id, String createdBy,
+            Boolean includeInactive) throws Exception {
         FormActivation activation = formActivationRepository.getReferenceById(id);
 
         // Get the ids of the submissions already existing for the activation
@@ -272,7 +290,7 @@ public class FormActivationServiceImpl
                 .collect(Collectors.toSet());
 
         // Get licensees attached to the form
-        Set<Long> formLicenseeIds = getLicenseeIds(activation.getForm());
+        Set<Long> formLicenseeIds = getLicenseeIds(activation.getForm(), includeInactive);
 
         formLicenseeIds.removeAll(submissionLicenseeIds);
 
@@ -280,7 +298,8 @@ public class FormActivationServiceImpl
     }
 
     @Override
-    protected Collection<FormActivationVO> handleActivateDueForms(String createdBy) throws Exception {
+    protected Collection<FormActivationVO> handleActivateDueForms(String createdBy, Boolean includeInactive)
+            throws Exception {
 
         // We want currently active periods only.
         Collection<Period> periods = periodDao.getActivePeriods();
@@ -288,14 +307,15 @@ public class FormActivationServiceImpl
         periods = periods.stream().filter(period -> period.getPeriodEnd().equals(LocalDate.now()))
                 .collect(Collectors.toList());
 
-        if(CollectionUtils.isEmpty(periods)) {
+        if (CollectionUtils.isEmpty(periods)) {
             return new HashSet<>();
         }
 
-        return activateForPeriods(periods, createdBy);
+        return activateForPeriods(periods, createdBy, includeInactive);
     }
 
-    private Collection<FormActivationVO> activateForPeriods(Collection<Period> periods, String createdBy) {
+    private Collection<FormActivationVO> activateForPeriods(Collection<Period> periods, String createdBy,
+            boolean includeInactive) {
 
         Collection<FormActivationVO> activations = new HashSet<>();
 
@@ -350,7 +370,7 @@ public class FormActivationServiceImpl
                     activation.setActivationName(activationName);
 
                     try {
-                        activation = this.save(activation);
+                        activation = this.save(activation, includeInactive);
                     } catch (Exception e) {
 
                         logger.error("Error saving activation: " + activationName);
@@ -411,7 +431,7 @@ public class FormActivationServiceImpl
 
     @Override
     protected Collection<FormActivationVO> handleActivateDueForms(String createdBy, LocalDate activationDate,
-            Long periodConfigId)
+            Long periodConfigId, Boolean includeInactive)
             throws Exception {
 
         PeriodCriteria criteria = new PeriodCriteria();
@@ -423,7 +443,7 @@ public class FormActivationServiceImpl
 
         Collection<Period> periods = periodDao.findByCriteria(criteria);
 
-        return activateForPeriods(periods, createdBy);
+        return activateForPeriods(periods, createdBy, includeInactive);
     }
 
 }

@@ -33,7 +33,7 @@ export enum FormActivationActionType {
 
 export const recreateActivationSubmissions = createAction(
   FormActivationActionType.RECREATE_ACTIVATION_SUBMISSIONS,
-  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
+  props<{ id: number | any; includeInactive: boolean; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const recreateActivationSubmissionsSuccess = createAction(
@@ -43,7 +43,7 @@ export const recreateActivationSubmissionsSuccess = createAction(
 
 export const createMissingSubmissions = createAction(
   FormActivationActionType.CREATE_MISSING_SUBMISSIONS,
-  props<{ id: number | any; loading: boolean; loaderMessage: string | undefined }>()
+  props<{ id: number | any; includeInactive: boolean; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const createMissingSubmissionsSuccess = createAction(
@@ -63,7 +63,7 @@ export const findByIdSuccess = createAction(
 
 export const save = createAction(
   FormActivationActionType.SAVE,
-  props<{ formActivation: FormActivationVO | any; loading: boolean; loaderMessage: string | undefined }>()
+  props<{ formActivation: FormActivationVO | any; includeInactive: boolean; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const saveSuccess = createAction(
@@ -103,7 +103,7 @@ export const searchSuccess = createAction(
 
 export const activateFor = createAction(
   FormActivationActionType.ACTIVATE_FOR,
-  props<{ activationDate: Date; periodConfigId: number, sendEmail: boolean; loading: boolean; loaderMessage: string | undefined }>()
+  props<{ activationDate: Date; periodConfigId: number, sendEmail: boolean; includeInactive: boolean; loading: boolean; loaderMessage: string | undefined }>()
 );
 
 export const activateForSuccess = createAction(

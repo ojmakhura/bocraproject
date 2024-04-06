@@ -196,7 +196,7 @@ public class BocraSchedule {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
         HttpEntity<String> request = new HttpEntity<String>(headers);
-        String activateUrl = apiUrl + "/form/activation/activate";
+        String activateUrl = apiUrl + "/form/activation/activate?includeInactive=false";
         ResponseEntity<FormActivationVO[]> response = restTemplate.exchange(activateUrl, HttpMethod.GET, request,
                 FormActivationVO[].class);
         if (response.getStatusCode() == HttpStatus.OK) {

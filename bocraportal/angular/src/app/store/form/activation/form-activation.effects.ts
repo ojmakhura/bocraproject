@@ -12,8 +12,8 @@ export class FormActivationEffects {
   recreateActivationSubmissions$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.recreateActivationSubmissions),
-      mergeMap(({ id }) =>
-        this.formActivationRestController.recreateActivationSubmission(id).pipe(
+      mergeMap(({ id, includeInactive }) =>
+        this.formActivationRestController.recreateActivationSubmission(id, includeInactive).pipe(
           map((formSubmissions) =>
             FormActivationActions.recreateActivationSubmissionsSuccess({
               formSubmissions,
@@ -32,8 +32,8 @@ export class FormActivationEffects {
   createMissingSubmissions$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.createMissingSubmissions),
-      mergeMap(({ id }) =>
-        this.formActivationRestController.createMissingSubmissions(id).pipe(
+      mergeMap(({ id, includeInactive }) =>
+        this.formActivationRestController.createMissingSubmissions(id, includeInactive).pipe(
           map((formSubmissions) =>
             FormActivationActions.createMissingSubmissionsSuccess({
               formSubmissions,
@@ -72,8 +72,8 @@ export class FormActivationEffects {
   save$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.save),
-      mergeMap(({ formActivation }) =>
-        this.formActivationRestController.save(formActivation).pipe(
+      mergeMap(({ formActivation, includeInactive }) =>
+        this.formActivationRestController.save(formActivation, includeInactive).pipe(
           map((formActivation) =>
             FormActivationActions.saveSuccess({
               formActivation,
@@ -132,8 +132,8 @@ export class FormActivationEffects {
   activateFor$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.activateFor),
-      mergeMap(({ activationDate, periodConfigId, sendEmail }) =>
-        this.formActivationRestController.activateDueFormsForDate(activationDate, periodConfigId, sendEmail).pipe(
+      mergeMap(({ activationDate, periodConfigId, sendEmail, includeInactive }) =>
+        this.formActivationRestController.activateDueFormsForDate(activationDate, periodConfigId, sendEmail, includeInactive).pipe(
           map((formActivations) =>
             FormActivationActions.activateForSuccess({
               formActivations,

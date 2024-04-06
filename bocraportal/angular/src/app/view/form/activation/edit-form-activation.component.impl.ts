@@ -22,7 +22,7 @@ import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import * as FormActivationActions from '@app/store/form/activation/form-activation.actions';
 import * as FormActivationSelectors from '@app/store/form/activation/form-activation.selectors';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import { Observable } from 'rxjs';
@@ -39,6 +39,7 @@ export enum Actions {
   styleUrls: ['./edit-form-activation.component.scss'],
 })
 export class EditFormActivationComponentImpl extends EditFormActivationComponent {
+
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   submissionRemoved$: Observable<boolean>;
@@ -50,6 +51,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
   submitUnrestricted: boolean = true;
   bulkAuthorised: boolean = false;
   datePipe: DatePipe;
+  includeInactive: FormControl = new FormControl(false);
 
   constructor(private injector: Injector) {
     super(injector);
@@ -156,6 +158,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     this.store.dispatch(
       FormActivationActions.createMissingSubmissions({
         id: form.formActivation.id,
+        includeInactive: this.includeInactive.value,
         loading: true,
         loaderMessage: 'Creating missing submissions ...',
       })
@@ -256,6 +259,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
       this.store.dispatch(
         FormActivationActions.save({
           formActivation: form.formActivation,
+          includeInactive: this.includeInactive.value,
           loading: true,
           loaderMessage: 'Saving form activation ...',
         })

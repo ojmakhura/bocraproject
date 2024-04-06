@@ -157,6 +157,21 @@
             showOn="button"
           />
         </div>
+        <div class="mb-3">
+          <label id="includeInactive_label" class="col-sm-2 form-check-label" for="includeInactive"
+            ><span translate>Include Inactive Licensees</span></label
+          >
+          <input
+            type="checkbox"
+            id="includeInactive"
+            class="form-check-input"
+            [formControl]="includeInactive"
+            onLabel="#{yes}"
+            offLabel="#{messages['no']}"
+            onIcon="ui-icon-check"
+            offIcon="ui-icon-close"
+          />
+        </div>
         <br />
         <div class="text-end">
           <button type="button" (click)="editFormActivationSave()" class="btn btn-outline-primary">
