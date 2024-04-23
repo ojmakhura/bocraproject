@@ -207,12 +207,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     }
 
     @Override
-    public ResponseEntity<?> handleSave(FormActivationVO formActivation) {
+    public ResponseEntity<?> handleSave(FormActivationVO formActivation, Boolean includeInactive) {
         try {
             logger.debug("Saves Form Activation " + formActivation);
             // boolean fresh = formActivation.getId() == null;
 
-            FormActivationVO activation = formActivationService.save(formActivation);
+            FormActivationVO activation = formActivationService.save(formActivation, includeInactive);
 
             return ResponseEntity.ok().body(activation);
         } catch (IllegalArgumentException | FormActivationServiceException e) {
@@ -326,12 +326,12 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     }
 
     @Override
-    public ResponseEntity<?> handleActivateDueForms() {
+    public ResponseEntity<?> handleActivateDueForms(Boolean includeInactive) {
         try {
             logger.debug("Activating due forms");
 
             Collection<FormActivationVO> activations = formActivationService
-                    .activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor());
+                    .activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor(), includeInactive);
 
             activations.forEach(activation -> {
                 try {
@@ -353,7 +353,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     }
 
     @Override
-    public ResponseEntity<?> handleCreateMissingSubmissions(Long id) {
+    public ResponseEntity<?> handleCreateMissingSubmissions(Long id, Boolean includeInactive) {
 
         if (id == null) {
             return ResponseEntity.badRequest().body("Form activation should not be null.");
@@ -362,7 +362,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         try {
             logger.debug("Creating missing submission for activation " + id);
             return ResponseEntity.ok().body(formActivationService.createMissingSubmissions(id,
-                    keycloakService.getSecurityContext().getToken().getIssuedFor()));
+                    keycloakService.getSecurityContext().getToken().getIssuedFor(), includeInactive));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -373,7 +373,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     }
 
     @Override
-    public ResponseEntity<?> handleRecreateActivationSubmission(Long id) {
+    public ResponseEntity<?> handleRecreateActivationSubmission(Long id, Boolean includeInactive) {
 
         if (id == null) {
             return ResponseEntity.badRequest().body("Form activation should not be null.");
@@ -382,7 +382,7 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
         try {
             logger.debug("Recreating submission for activation " + id);
             return ResponseEntity.ok().body(formActivationService.recreateActivationSubmission(id,
-                    keycloakService.getSecurityContext().getToken().getIssuedFor()));
+                    keycloakService.getSecurityContext().getToken().getIssuedFor(), includeInactive));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -393,21 +393,25 @@ public class FormActivationRestControllerImpl extends FormActivationRestControll
     }
 
     @Override
-    public ResponseEntity<?> handleActivateDueFormsForDate(LocalDate activationDate, Long periodConfigId) {
+    public ResponseEntity<?> handleActivateDueFormsForDate(LocalDate activationDate, Long periodConfigId,
+            Boolean sendEmail, Boolean includeInactive) {
         try {
             logger.debug("Activating due forms");
 
             Collection<FormActivationVO> activations = formActivationService
-                    .activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor(), activationDate, periodConfigId);
+                    .activateDueForms(keycloakService.getSecurityContext().getToken().getIssuedFor(), activationDate,
+                            periodConfigId, includeInactive);
 
-            activations.forEach(activation -> {
-                try {
-                    this.sendNotifications(activation);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    logger.error(e.getMessage());
-                }
-            });
+            if (sendEmail) {
+                activations.forEach(activation -> {
+                    try {
+                        this.sendNotifications(activation);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        logger.error(e.getMessage());
+                    }
+                });
+            }
 
             return ResponseEntity.ok().body(activations);
 

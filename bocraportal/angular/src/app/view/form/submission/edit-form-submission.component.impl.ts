@@ -55,10 +55,10 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
   submissionName: string = 'defaultTemplate';
   templateHeaders: string[][] = [];
   rowGroups: RowGroup[] = [];
-  submitUnrestricted: boolean = true;
-  returnUnrestricted: boolean = true;
-  acceptUnrestricted: boolean = true;
-  addUnrestricted: boolean = true;
+  submitUnrestricted: boolean = false;
+  returnUnrestricted: boolean = false;
+  acceptUnrestricted: boolean = false;
+  addUnrestricted: boolean = false;
   statusUpdated$: Observable<boolean>;
   note$: Observable<NoteVO | any>;
   file: File | undefined;
@@ -134,20 +134,21 @@ export class EditFormSubmissionComponentImpl extends EditFormSubmissionComponent
     this.unauthorisedUrls$.subscribe((restrictedItems) => {
       restrictedItems.forEach((item) => {
         if (item === '/form/submission/edit-form-submission/{button:delete}') {
-          this.deleteUnrestricted = false;
+          this.deleteUnrestricted = true;
         }
 
         if (item === '/form/submission/edit-form-submission/{button:return}') {
-          this.returnUnrestricted = false;
+          this.returnUnrestricted = true;
         }
 
         if (item === '/form/submission/edit-form-submission/{button:accept}') {
-          this.acceptUnrestricted = false;
+          this.acceptUnrestricted = true;
         }
 
         if (item === '/form/submission/edit-form-submission/{button:submit}') {
-          this.submitUnrestricted = false;
+          this.submitUnrestricted = true;
         }
+
       });
     }); 
 

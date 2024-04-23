@@ -9,6 +9,46 @@ import { FormActivationRestController } from '@app/service/bw/org/bocra/portal/f
 export class FormActivationEffects {
   constructor(private actions$: Actions, private formActivationRestController: FormActivationRestController) {}
 
+  recreateActivationSubmissions$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormActivationActions.recreateActivationSubmissions),
+      mergeMap(({ id, includeInactive }) =>
+        this.formActivationRestController.recreateActivationSubmission(id, includeInactive).pipe(
+          map((formSubmissions) =>
+            FormActivationActions.recreateActivationSubmissionsSuccess({
+              formSubmissions,
+              messages: [`Recreated ${formSubmissions.length} submissions.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            FormActivationActions.formActivationFailure({ messages: [error?.error ? error?.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
+  createMissingSubmissions$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FormActivationActions.createMissingSubmissions),
+      mergeMap(({ id, includeInactive }) =>
+        this.formActivationRestController.createMissingSubmissions(id, includeInactive).pipe(
+          map((formSubmissions) =>
+            FormActivationActions.createMissingSubmissionsSuccess({
+              formSubmissions,
+              messages: [`Recreated ${formSubmissions.length} submissions.`],
+              success: true,
+            })
+          ),
+          catchError(({ error }) => [
+            FormActivationActions.formActivationFailure({ messages: [error?.error ? error?.error : error] }),
+          ])
+        )
+      )
+    )
+  );
+
   findById$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.findById),
@@ -32,8 +72,8 @@ export class FormActivationEffects {
   save$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.save),
-      mergeMap(({ formActivation }) =>
-        this.formActivationRestController.save(formActivation).pipe(
+      mergeMap(({ formActivation, includeInactive }) =>
+        this.formActivationRestController.save(formActivation, includeInactive).pipe(
           map((formActivation) =>
             FormActivationActions.saveSuccess({
               formActivation,
@@ -92,8 +132,8 @@ export class FormActivationEffects {
   activateFor$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActivationActions.activateFor),
-      mergeMap(({ activationDate, periodConfigId }) =>
-        this.formActivationRestController.activateDueFormsForDate(activationDate, periodConfigId).pipe(
+      mergeMap(({ activationDate, periodConfigId, sendEmail, includeInactive }) =>
+        this.formActivationRestController.activateDueFormsForDate(activationDate, periodConfigId, sendEmail, includeInactive).pipe(
           map((formActivations) =>
             FormActivationActions.activateForSuccess({
               formActivations,

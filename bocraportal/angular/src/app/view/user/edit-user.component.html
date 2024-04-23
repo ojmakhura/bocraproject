@@ -49,7 +49,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="userUsernameControl.errors['required']">
+            <div *ngIf="userUsernameControl.hasError('required')">
               <span translate>username.required</span>
             </div>
           </div>
@@ -66,7 +66,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="userEmailControl.errors['required']">
+            <div *ngIf="userEmailControl.hasError('required')">
               <span translate>email.required</span>
             </div>
             <div *ngIf="userEmailControl.errors['email']">
@@ -98,7 +98,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="userPasswordControl.errors['required']">
+            <div *ngIf="userPasswordControl.hasError('required')">
               <span translate>password.required</span>
             </div>
           </div>
@@ -136,7 +136,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="userFirstNameControl.errors['required']">
+            <div *ngIf="userFirstNameControl.hasError('required')">
               <span translate>first.name.required</span>
             </div>
           </div>
@@ -162,7 +162,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="userLastNameControl.errors['required']">
+            <div *ngIf="userLastNameControl.hasError('required')">
               <span translate>last.name.required</span>
             </div>
           </div>

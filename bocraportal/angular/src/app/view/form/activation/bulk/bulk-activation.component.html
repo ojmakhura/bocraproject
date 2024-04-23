@@ -33,15 +33,45 @@
         />
       </div>
       <div class="mb-3" formGroupName="periodConfig">
-        <label id="licenceStatus_label" class="col-sm-2 col-form-label" for="licenceStatus"
-          ><span translate>status</span>*</label
+        <label id="periodConfig_label" class="col-sm-2 col-form-label" for="periodConfig"
+          ><span translate>Period Config</span>*</label
         >
-        <select id="licenceStatus" class="form-select" formControlName="id">
+        <select id="periodConfig" class="form-select" formControlName="id">
           <option></option>
           <option *ngFor="let periodConfig of periodConfigs$ | async" [value]="periodConfig.id">
             {{ periodConfig.periodConfigName }}
           </option>
         </select>
+      </div>
+      <div class="mb-3">
+        <label id="sendEmail_label" class="col-sm-2 form-check-label" for="sendEmail"
+          ><span translate>Send Email</span></label
+        >
+        <input
+          type="checkbox"
+          id="sendEmail"
+          class="form-check-input"
+          formControlName="sendEmail"
+          onLabel="#{yes}"
+          offLabel="#{messages['no']}"
+          onIcon="ui-icon-check"
+          offIcon="ui-icon-close"
+        />
+      </div>
+      <div class="mb-3">
+        <label id="includeInactive_label" class="col-sm-2 form-check-label" for="includeInactive"
+          ><span translate>Include Inactive Licensees</span></label
+        >
+        <input
+          type="checkbox"
+          id="includeInactive"
+          class="form-check-input"
+          formControlName="includeInactive"
+          onLabel="#{yes}"
+          offLabel="#{messages['no']}"
+          onIcon="ui-icon-check"
+          offIcon="ui-icon-close"
+        />
       </div>
 
       <div class="text-end">

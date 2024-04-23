@@ -56,7 +56,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="menuSectionDisplayIdControl.errors['required']">
+            <div *ngIf="menuSectionDisplayIdControl.hasError('required')">
               <span translate>display.id.required</span>
             </div>
           </div>
@@ -82,7 +82,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="menuSectionDisplayNameControl.errors['required']">
+            <div *ngIf="menuSectionDisplayNameControl.hasError('required')">
               <span translate>display.name.required</span>
             </div>
           </div>

@@ -188,7 +188,7 @@ public class BocraSchedule {
      * Three days before the last day of each month, we activate the due forms.
      */
     @Async
-    @Scheduled(cron = "0 0 0 L-3 * *", zone = "Africa/Gaborone")
+    @Scheduled(cron = "0 0 0 L * *", zone = "Africa/Gaborone")
     public void activateDueForms() {
         String formatTime = this.getDateTime();
 
@@ -196,7 +196,7 @@ public class BocraSchedule {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + cronSecurity.getAccessToken().getToken());
         HttpEntity<String> request = new HttpEntity<String>(headers);
-        String activateUrl = apiUrl + "/form/activation/activate";
+        String activateUrl = apiUrl + "/form/activation/activate?includeInactive=false";
         ResponseEntity<FormActivationVO[]> response = restTemplate.exchange(activateUrl, HttpMethod.GET, request,
                 FormActivationVO[].class);
         if (response.getStatusCode() == HttpStatus.OK) {

@@ -71,6 +71,8 @@ export class BulkActivationComponent implements OnInit, AfterViewInit {
         id: [],
         periodConfigName: [],
       }),
+      sendEmail: [false],
+      includeInactive: [false],
     });
   }
 
@@ -82,6 +84,8 @@ export class BulkActivationComponent implements OnInit, AfterViewInit {
       FormActivationActions.activateFor({
         activationDate: this.bulkActivationForm.value.periodDate,
         periodConfigId: this.bulkActivationForm.value.periodConfig.id,
+        sendEmail: this.bulkActivationForm.value.sendEmail,
+        includeInactive: this.bulkActivationForm.value.includeInactive,
         loaderMessage: 'Activating forms...',
         loading: true,
       })

@@ -55,7 +55,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="documentDocumentTypeControl.errors['required']">
+            <div *ngIf="documentDocumentTypeControl.hasError('required')">
               <span translate>document.type.required</span>
             </div>
           </div>
@@ -81,7 +81,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="documentDocumentNameControl.errors['required']">
+            <div *ngIf="documentDocumentNameControl.hasError('required')">
               <span translate>document.name.required</span>
             </div>
           </div>
@@ -105,7 +105,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="documentFileControl.errors['required']">
+            <div *ngIf="documentFileControl.hasError('required')">
               <span translate>file.required</span>
             </div>
           </div>
