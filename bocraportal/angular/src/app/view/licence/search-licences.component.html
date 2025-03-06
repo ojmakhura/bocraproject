@@ -23,25 +23,33 @@
         </div>
       </div>
       <div formGroupName="criteria">
-        <div class="mb-3">
-          <label id="criteriaUin_label" class="col-sm-2 col-form-label" for="criteriaUin"
-            ><span translate>uin</span></label
-          >
-          <input type="text" id="criteriaUin" class="form-control" name="uin" formControlName="uin" />
-        </div>
-        <div class="mb-3">
-          <label id="criteriaLicenseeName_label" class="col-sm-2 col-form-label" for="criteriaLicenseeName"
-            ><span translate>licensee.name</span></label
-          >
-          <input
-            type="text"
-            id="criteriaLicenseeName"
-            class="form-control"
-            name="licenseeName"
-            formControlName="licenseeName"
-          />
-        </div>
-      </div>
+				<div class="mb-3">
+				    <label id="criteriaStatus_label" class="col-sm-2 col-form-label" for="criteriaStatus"><span translate>status</span></label>
+				    <select id="criteriaStatus" class="form-select" formControlName="status" >
+				        <option></option>
+				        <option *ngFor="let key of statusOptions" [value]="key">
+				            {{ statusT[key] }}
+				        </option>
+				    </select>
+				</div>
+				<div class="mb-3">
+				    <label id="criteriaLicenceNumber_label" class="col-sm-2 col-form-label" for="criteriaLicenceNumber"><span translate>licence.number</span></label>
+				    <input type="text" id="criteriaLicenceNumber" class="form-control" name="licenceNumber" formControlName="licenceNumber"/>
+				</div>
+				<div class="mb-3">
+				    <label id="criteriaLicenceType_label" class="col-sm-2 col-form-label" for="criteriaLicenceType"><span translate>licence.type</span></label>
+				    <input type="text" id="criteriaLicenceType" class="form-control" name="licenceType" formControlName="licenceType"/>
+				</div>
+				<div class="mb-3">
+				    <label id="criteriaLicenseeName_label" class="col-sm-2 col-form-label" for="criteriaLicenseeName"><span translate>licensee.name</span>*</label>
+				    <input type="text" id="criteriaLicenseeName" class="form-control" name="licenseeName" formControlName="licenseeName" required/>
+				    <div *ngIf="searchLicencesForm.invalid && criteriaLicenseeNameControl.invalid && (criteriaLicenseeNameControl.dirty || criteriaLicenseeNameControl.touched)" class="alert alert-danger" role="alert">
+				        <div *ngIf="criteriaLicenseeNameControl.hasError('required')">
+				            <span translate>licensee.name.required</span>
+				        </div>
+				    </div>
+				</div>
+        	</div>
     </form>
     <br />
     <div class="text-end mt-5">

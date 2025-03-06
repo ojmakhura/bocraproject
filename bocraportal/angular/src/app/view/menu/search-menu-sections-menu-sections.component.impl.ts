@@ -8,6 +8,7 @@ import { SearchMenuSectionsMenuSectionsComponent } from '@app/view/menu/search-m
   styleUrls: ['./search-menu-sections-menu-sections.component.scss'],
 })
 export class SearchMenuSectionsMenuSectionsComponentImpl extends SearchMenuSectionsMenuSectionsComponent {
+
   constructor(private injector: Injector) {
     super(injector);
   }

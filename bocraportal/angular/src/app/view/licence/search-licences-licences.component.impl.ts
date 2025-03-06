@@ -8,6 +8,7 @@ import { SearchLicencesLicencesComponent } from '@app/view/licence/search-licenc
   styleUrls: ['./search-licences-licences.component.scss'],
 })
 export class SearchLicencesLicencesComponentImpl extends SearchLicencesLicencesComponent {
+  
   constructor(private injector: Injector) {
     super(injector);
   }

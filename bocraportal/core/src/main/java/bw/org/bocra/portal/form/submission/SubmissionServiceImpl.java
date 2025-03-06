@@ -616,8 +616,6 @@ public class SubmissionServiceImpl
 
             for (CSVRecord csvRecord : csvRecords) {
 
-                Map<String, String> recordMap = csvRecord.toMap();
-
                 List<DataField> expressions = new ArrayList<>();
                 List<DataField> tmpFields = new ArrayList<>();
 

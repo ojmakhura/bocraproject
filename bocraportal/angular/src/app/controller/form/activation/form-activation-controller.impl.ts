@@ -28,4 +28,7 @@ export class FormActivationControllerImpl extends FormActivationController {
 	public doEditGroup(form: any): void {
 	}
 
+	public doCreateMissingSubmissions(form: any): void {
+	}
+
 }

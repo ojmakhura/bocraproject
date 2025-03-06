@@ -39,7 +39,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="licenceTypeCodeControl.errors['required']">
+            <div *ngIf="licenceTypeCodeControl.hasError('required')">
               <span translate>code.required</span>
             </div>
           </div>
@@ -58,7 +58,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="licenceTypeNameControl.errors['required']">
+            <div *ngIf="licenceTypeNameControl.hasError('required')">
               <span translate>name.required</span>
             </div>
           </div>

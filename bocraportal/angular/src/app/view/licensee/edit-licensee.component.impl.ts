@@ -396,11 +396,11 @@ export class EditLicenseeComponentImpl extends EditLicenseeComponent {
       documentName: [value?.documentName],
       file: [value?.file],
       documentId: [value?.documentId],
-      documentType: {
+      documentType: this.formBuilder.group({
         id: [value?.documentType?.id],
         code: [value?.documentType?.code],
         name: [value?.documentType?.name],
-      },
+      }),
     });
   }
 

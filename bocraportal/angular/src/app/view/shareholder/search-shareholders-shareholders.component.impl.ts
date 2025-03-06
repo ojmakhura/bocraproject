@@ -8,6 +8,7 @@ import { SearchShareholdersShareholdersComponent } from '@app/view/shareholder/s
   styleUrls: ['./search-shareholders-shareholders.component.scss'],
 })
 export class SearchShareholdersShareholdersComponentImpl extends SearchShareholdersShareholdersComponent {
+  
   constructor(private injector: Injector) {
     super(injector);
   }

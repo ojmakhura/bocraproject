@@ -51,7 +51,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="sectorCodeControl.errors['required']">
+            <div *ngIf="sectorCodeControl.hasError('required')">
               <span translate>code.required</span>
             </div>
           </div>
@@ -70,7 +70,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="sectorNameControl.errors['required']">
+            <div *ngIf="sectorNameControl.hasError('required')">
               <span translate>name.required</span>
             </div>
           </div>
@@ -102,7 +102,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="sectorThemeColourControl.errors['required']">
+            <div *ngIf="sectorThemeColourControl.hasError('required')">
               <span translate>theme.colour.required</span>
             </div>
           </div>

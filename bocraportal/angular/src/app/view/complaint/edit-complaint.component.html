@@ -89,7 +89,7 @@
               complaintLicenseeControl.invalid &&
               (complaintLicenseeControl.dirty || complaintLicenseeControl.touched)
             " class="alert alert-danger" role="alert">
-            <div *ngIf="complaintLicenseeControl.errors['required']">
+            <div *ngIf="complaintLicenseeControl.hasError('required')">
               <span translate>licensee.required</span>
             </div>
           </div>
@@ -121,7 +121,7 @@
               complaintFirstNameControl.invalid &&
               (complaintFirstNameControl.dirty || complaintFirstNameControl.touched)
             " class="alert alert-danger" role="alert">
-            <div *ngIf="complaintFirstNameControl.errors['required']">
+            <div *ngIf="complaintFirstNameControl.hasError('required')">
               <span translate>first.name.required</span>
             </div>
           </div>
@@ -136,7 +136,7 @@
               complaintSurnameControl.invalid &&
               (complaintSurnameControl.dirty || complaintSurnameControl.touched)
             " class="alert alert-danger" role="alert">
-            <div *ngIf="complaintSurnameControl.errors['required']">
+            <div *ngIf="complaintSurnameControl.hasError('required')">
               <span translate>surname.required</span>
             </div>
           </div>
@@ -150,7 +150,7 @@
               complaintEmailControl.invalid &&
               (complaintEmailControl.dirty || complaintEmailControl.touched)
             " class="alert alert-danger" role="alert">
-            <div *ngIf="complaintEmailControl.errors['required']">
+            <div *ngIf="complaintEmailControl.hasError('required')">
               <span translate>email.required</span>
             </div>
             <div *ngIf="complaintEmailControl.errors['email']">
@@ -168,7 +168,7 @@
               complaintSubjectControl.invalid &&
               (complaintSubjectControl.dirty || complaintSubjectControl.touched)
             " class="alert alert-danger" role="alert">
-            <div *ngIf="complaintSubjectControl.errors['required']">
+            <div *ngIf="complaintSubjectControl.hasError('required')">
               <span translate>subject.required</span>
             </div>
           </div>
@@ -182,7 +182,7 @@
               complaintDetailsControl.invalid &&
               (complaintDetailsControl.dirty || complaintDetailsControl.touched)
             " class="alert alert-danger" role="alert">
-            <div *ngIf="complaintDetailsControl.errors['required']">
+            <div *ngIf="complaintDetailsControl.hasError('required')">
               <span translate>details.required</span>
             </div>
           </div>
@@ -214,7 +214,7 @@
 						required navigator="true" showOn="button" />
 					<div *ngIf="editComplaintForm.invalid && complaintCreatedDateControl.invalid && (complaintCreatedDateControl.dirty || complaintCreatedDateControl.touched)"
 						class="alert alert-danger" role="alert">
-						<div *ngIf="complaintCreatedDateControl.errors['required']">
+						<div *ngIf="complaintCreatedDateControl.hasError('required')">
 							<span translate>created.date.required</span>
 						</div>
 					</div> -->

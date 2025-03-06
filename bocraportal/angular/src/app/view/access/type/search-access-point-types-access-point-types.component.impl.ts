@@ -8,6 +8,7 @@ import { SearchAccessPointTypesAccessPointTypesComponent } from '@app/view/acces
   styleUrls: ['./search-access-point-types-access-point-types.component.scss'],
 })
 export class SearchAccessPointTypesAccessPointTypesComponentImpl extends SearchAccessPointTypesAccessPointTypesComponent {
+  
   constructor(private injector: Injector) {
     super(injector);
   }

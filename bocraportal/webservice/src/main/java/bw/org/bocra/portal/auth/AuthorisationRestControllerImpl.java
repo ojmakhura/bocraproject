@@ -240,24 +240,22 @@ public class AuthorisationRestControllerImpl extends AuthorisationRestController
         try {
             logger.debug("Searches for a Restricted View item by "+"Url: "+url+" and Roles: "+roles);
             Collection<AuthorisationVO> data = authorisationService.findByUrlPrefix(url);
+
             Collection<String> restrictedUrls = new ArrayList<>();
 
             for(AuthorisationVO auth : data) {
                 // Any authorisation entry is but default restricted
                 boolean restricted = true;
                 for(String inRole : auth.getRoles()) {
-                    for(String role : roles) {
-                        if(role.equalsIgnoreCase(inRole)) { // If we find matching roles, then the url is not restricted
-                            restricted = false;
-                            break;
-                        }
-                    }
 
-                    if(!restricted) break; // only need to find 1 unrestricted role
+                    if(roles.contains(inRole)) {
+                        restricted = false;
+                        break;
+                    }
                 }
 
-                // Add restricted URL
-                if(restricted) {
+                // Add unrestricted URL
+                if(!restricted) {
                     restrictedUrls.add(auth.getAccessPoint().getUrl());
                 }
             }

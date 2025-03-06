@@ -1,0 +1,147 @@
+<div class="card container px-5 py-2 bg-light mb-4">
+  <div *ngIf="success | async" class="alert alert-success" role="alert">
+    <div *ngFor="let message of messages | async">
+      {{ message }}
+    </div>
+  </div>
+  <div *ngIf="error | async" class="alert alert-danger" role="alert">
+    <div *ngFor="let message of messages | async">
+      {{ message }}
+    </div>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="bulkActivationForm">
+      <section>
+        <div class="text-end">
+          <button type="button" [routerLink]="['/form/activation/search-form-activations']" class="btn btn-primary">
+            <span translate>search</span>
+          </button>
+        </div>
+      </section>
+      <div class="mb-3">
+        <label id="periodDate_label" class="col-sm-2 col-form-label" for="periodDate"
+          ><span translate>date</span></label
+        >
+        <input
+          type="date"
+          id="periodDate"
+          class="form-control"
+          formControlName="periodDate"
+          navigator="true"
+          showOn="button"
+          required
+        />
+      </div>
+      <div class="mb-3" formGroupName="periodConfig">
+        <label id="periodConfig_label" class="col-sm-2 col-form-label" for="periodConfig"
+          ><span translate>Period Config</span>*</label
+        >
+        <select id="periodConfig" class="form-select" formControlName="id">
+          <option></option>
+          <option *ngFor="let periodConfig of periodConfigs$ | async" [value]="periodConfig.id">
+            {{ periodConfig.periodConfigName }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label id="sendEmail_label" class="col-sm-2 form-check-label" for="sendEmail"
+          ><span translate>Send Email</span></label
+        >
+        <input
+          type="checkbox"
+          id="sendEmail"
+          class="form-check-input"
+          formControlName="sendEmail"
+          onLabel="#{yes}"
+          offLabel="#{messages['no']}"
+          onIcon="ui-icon-check"
+          offIcon="ui-icon-close"
+        />
+      </div>
+      <div class="mb-3">
+        <label id="includeInactive_label" class="col-sm-2 form-check-label" for="includeInactive"
+          ><span translate>Include Inactive Licensees</span></label
+        >
+        <input
+          type="checkbox"
+          id="includeInactive"
+          class="form-check-input"
+          formControlName="includeInactive"
+          onLabel="#{yes}"
+          offLabel="#{messages['no']}"
+          onIcon="ui-icon-check"
+          offIcon="ui-icon-close"
+        />
+      </div>
+
+      <div class="text-end">
+        <button type="button" (click)="activate()" class="btn btn-outline-primary">
+          <span translate>Activate</span>
+        </button>
+      </div>
+    </form>
+    <hr />
+    <fieldset class="form-group border p-3">
+      <legend id="documentComplaint_label" class="col-sm-2 col-form-label" for="documentComplaint">
+        <span translate>Activations</span>
+      </legend>
+      <mat-expansion-panel hideToggle *ngFor="let activation of formActivations$ | async">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ activation.activationName }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+          <mat-table
+            matSort
+            [dataSource]="activation.formSubmissions"
+            #formSubmissionsSort="matSort"
+            class="table table-bordered table-striped"
+            style="width: 100%"
+          >
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
+              <mat-cell *matCellDef="let row; index as i">
+                <div>
+                  <button
+                    type="button"
+                    (click)="editActivation(row)"
+                    class="btn btn-outline-primary"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                </div>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="licensee.licenseeName">
+              <mat-header-cell *matHeaderCellDef translate>licensee.name </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{ row?.licensee?.licenseeName }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="form.formName">
+              <mat-header-cell *matHeaderCellDef translate>form.name</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{ row?.form?.formName }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="period.periodName">
+              <mat-header-cell *matHeaderCellDef translate>period.name</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{ row?.period?.periodName }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="submissionStatus">
+              <mat-header-cell *matHeaderCellDef translate>submission.status</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{ row?.submissionStatus }} </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="activationColumns"> </mat-header-row>
+            <mat-row *matRowDef="let row; columns: activationColumns"> </mat-row>
+          </mat-table>
+          <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+        </div>
+      </mat-expansion-panel>
+    </fieldset>
+  </div>
+</div>
+<div *ngIf="loading | async">
+  <app-loader [isLoading]="loading | async" [size]="2" [message]="loaderMessage | async"></app-loader>
+</div>

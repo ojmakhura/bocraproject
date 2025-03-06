@@ -37,6 +37,7 @@ import com.nimbusds.jose.shaded.json.JSONObject;
 import com.nimbusds.jose.util.JSONArrayUtils;
 
 import bw.org.bocra.portal.access.AccessPointCriteria;
+import bw.org.bocra.portal.config.SystemConfigName;
 import bw.org.bocra.portal.config.SystemConfigService;
 import bw.org.bocra.portal.config.SystemConfigVO;
 import bw.org.bocra.portal.form.submission.data.DataFieldVO;
@@ -478,7 +479,7 @@ public class SubmissionRestControllerImpl extends SubmissionRestControllerBase {
 
                 List<Object> messageObjects = JSONArrayUtils.newJSONArray();
                 DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                SystemConfigVO config = systemConfigService.findByName("ACTIVATION_SUBMISSION_TEMPLATE");
+                SystemConfigVO config = systemConfigService.findByName(SystemConfigName.ACTIVATION_SUBMISSION_TEMPLATE);
                 String submissionUrl = webUrl + "/form/submission/edit-form-submission";
     
                 JSONObject messageObj = new JSONObject();

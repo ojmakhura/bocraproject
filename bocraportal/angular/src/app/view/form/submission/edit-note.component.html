@@ -7,7 +7,7 @@
         <div class="mb-3">
           <textarea id="noteNote" class="form-control" formControlName="note" required></textarea>
           <div *ngIf="editNoteForm.invalid" class="alert alert-danger" role="alert">
-            <div *ngIf="noteNoteControl.errors['required']">
+            <div *ngIf="noteNoteControl.hasError('required')">
               <span translate>This field is required.</span>
             </div>
           </div>

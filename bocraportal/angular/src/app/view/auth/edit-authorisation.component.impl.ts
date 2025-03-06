@@ -46,7 +46,10 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
 
       this.http.get<any[]>(`${environment.keycloakRealmUrl}/clients`).subscribe((clients) => {
         let client = clients.filter((client) => client.clientId === environment.keycloak.clientId)[0];
-        this.http
+
+        if(client) {
+
+          this.http
           .get<any[]>(
             `${environment.keycloakRealmUrl}/users/${profile.id}/role-mappings/clients/${client.id}/composite`
           )
@@ -63,6 +66,7 @@ export class EditAuthorisationComponentImpl extends EditAuthorisationComponent {
                 }
               });
           });
+        }
       });
 
       this.http

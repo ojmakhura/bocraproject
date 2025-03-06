@@ -11,6 +11,7 @@ import { KeycloakService } from 'keycloak-angular';
 export class SearchComplaintsComplaintsComponentImpl extends SearchComplaintsComplaintsComponent {
 
   override complaintsColumns = ['id', 'createdDate', 'licenseeName', 'firstName', 'surname', 'status'];
+  totalElements: number = 0;
   
   constructor(private injector: Injector, public override keycloakService: KeycloakService) {
     super(injector, keycloakService);

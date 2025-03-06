@@ -16,6 +16,11 @@ export const selectFormActivations = createSelector(
     (state: FormActivationState) => state.formActivations
 );
 
+export const selectFormSubmissions = createSelector(
+    selectFormActivationState,
+    (state: FormActivationState) => state.formSubmissions
+);
+
 export const selectFormActivationsPage = createSelector(
     selectFormActivationState,
     (state: FormActivationState) => state.formActivationsPage

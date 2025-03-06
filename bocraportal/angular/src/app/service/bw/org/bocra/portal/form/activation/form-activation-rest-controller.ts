@@ -15,12 +15,12 @@ export class FormActivationRestController {
 
   constructor(private http: HttpClient) {}
 
-  public activateDueForms(): Observable<FormActivationVO[] | any[]> {
-    return this.http.get<FormActivationVO[] | any[]>(`${this.path}/activate`);
+  public activateDueForms(includeInactive: boolean): Observable<FormActivationVO[] | any[]> {
+    return this.http.get<FormActivationVO[] | any[]>(`${this.path}/activate?includeInactive=${includeInactive}`);
   }
 
-  public createMissingSubmissions(id: number | any): Observable<FormSubmissionVO[] | any[]> {
-    return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/submission/missing?id=${id}`, {});
+  public createMissingSubmissions(id: number | any, includeInactive: boolean): Observable<FormSubmissionVO[] | any[]> {
+    return this.http.get<FormSubmissionVO[] | any[]>(`${this.path}/submission/missing?id=${id}&includeInactive=${includeInactive}`, {});
   }
 
   public findById(id: number | any): Observable<FormActivationVO | any> {
@@ -35,16 +35,16 @@ export class FormActivationRestController {
     return this.http.get<FormActivationVO[] | any[]>(`${this.path}/page/${pageNumber}/size/${pageSize}`, {});
   }
 
-  public recreateActivationSubmission(id: number | any): Observable<FormActivationVO | any> {
-    return this.http.get<FormActivationVO | any>(`${this.path}/submissions/recreate/id/${id}`, {});
+  public recreateActivationSubmission(id: number | any, includeInactive: boolean): Observable<FormActivationVO | any> {
+    return this.http.get<FormActivationVO | any>(`${this.path}/submissions/recreate/id/${id}?includeInactive=${includeInactive}`, {});
   }
 
   public remove(id: number | any): Observable<boolean | any> {
     return this.http.delete<boolean | any>(`${this.path}/${id}`, {});
   }
 
-  public save(formActivation: FormActivationVO | any): Observable<FormActivationVO | any> {
-    return this.http.post<FormActivationVO | any>(`${this.path}`, formActivation);
+  public save(formActivation: FormActivationVO | any, includeInactive: boolean): Observable<FormActivationVO | any> {
+    return this.http.post<FormActivationVO | any>(`${this.path}?includeInactive=${includeInactive}`, formActivation);
   }
 
   public search(criteria: FormActivationCriteria | any): Observable<FormActivationVO[] | any[]> {
@@ -53,5 +53,9 @@ export class FormActivationRestController {
   
   pagedSearch(pageNumber: any, pageSize: any, criteria: any): Observable<DataPage | any>  {
     return this.http.post<DataPage | any>(this.path + `/search/page/${pageNumber}/size/${pageSize}`, criteria || {});
+  }
+
+  activateDueFormsForDate(activationDate: Date, periodConfigId: number, sendEmail: boolean, includeInactive: boolean): Observable<FormActivationVO[] | any[]> {
+    return this.http.get<FormActivationVO[] | any[]>(`${this.path}/activate/for?activationDate=${activationDate}&periodConfigId=${periodConfigId ? periodConfigId : -1}&sendEmail=${sendEmail}&includeInactive=${includeInactive}`);  
   }
 }

@@ -118,9 +118,9 @@ public class SystemConfigServiceImpl
     }
 
     @Override
-    protected SystemConfigVO handleFindByName(String name) throws Exception {
+    protected SystemConfigVO handleFindByName(SystemConfigName name) throws Exception {
 
-        Specification<SystemConfig> specs = BocraportalSpecifications.<SystemConfig, String>findByAttribute("name", name);
+        Specification<SystemConfig> specs = BocraportalSpecifications.<SystemConfig, SystemConfigName>findByAttribute("name", name);
 
         Collection<SystemConfig> configs = systemConfigRepository.findAll(specs, Sort.by("name").ascending());
         if(CollectionUtils.isEmpty(configs)) return null;

@@ -3,6 +3,7 @@ import { Component, Injector } from '@angular/core';
 import {
   EditFormActivationComponent,
   EditFormActivationDeleteForm,
+  EditFormActivationCreateMissingForm,
   EditFormActivationSaveForm,
 } from '@app/view/form/activation/edit-form-activation.component';
 import { EditFormActivationVarsForm } from '@app/view/form/activation/edit-form-activation.component';
@@ -19,12 +20,18 @@ import { select } from '@ngrx/store';
 import { PeriodVO } from '@app/model/bw/org/bocra/portal/period/period-vo';
 import { FormVO } from '@app/model/bw/org/bocra/portal/form/form-vo';
 import * as FormActivationActions from '@app/store/form/activation/form-activation.actions';
+import * as FormActivationSelectors from '@app/store/form/activation/form-activation.selectors';
 import { FormSubmissionVO } from '@app/model/bw/org/bocra/portal/form/submission/form-submission-vo';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import * as ViewActions from '@app/store/view/view.actions';
 import * as ViewSelectors from '@app/store/view/view.selectors';
 import { Observable } from 'rxjs';
 import { DatePipe } from '@angular/common';
+
+export enum Actions {
+  RECREATE_SUBMISSIONS = 'RecreateSubmissions',
+  CREATE_MISSING_SUBMISSIONS = 'CreateMissingSubmissions',
+}
 
 @Component({
   selector: 'app-edit-form-activation',
@@ -32,14 +39,19 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./edit-form-activation.component.scss'],
 })
 export class EditFormActivationComponentImpl extends EditFormActivationComponent {
+
   protected keycloakService: KeycloakService;
   unauthorisedUrls$: Observable<string[]>;
   submissionRemoved$: Observable<boolean>;
-  deleteUnrestricted: boolean = true;
+  formSubmissions$: Observable<FormSubmissionVO[]>;
+  submissionAction: Actions;
+  deleteUnrestricted: boolean = false;
   acceptUnrestricted: boolean = true;
   returnUnrestricted: boolean = true;
   submitUnrestricted: boolean = true;
+  bulkAuthorised: boolean = false;
   datePipe: DatePipe;
+  includeInactive: FormControl = new FormControl(false);
 
   constructor(private injector: Injector) {
     super(injector);
@@ -48,6 +60,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     this.formActivationForms$ = this.store.pipe(select(FormSelectors.selectForms));
     this.unauthorisedUrls$ = this.store.pipe(select(ViewSelectors.selectUnauthorisedUrls));
     this.submissionRemoved$ = this.store.pipe(select(FormSubmissionSelectors.selectRemoved));
+    this.formSubmissions$ = this.store.pipe(select(FormActivationSelectors.selectFormSubmissions));
     this.datePipe = this._injector.get(DatePipe);
   }
 
@@ -109,23 +122,47 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
     this.formActivation$.subscribe((formActivation) => {
       this.setEditFormActivationFormValue({ formActivation });
     });
-   
-
-    // this.store.dispatch(
-    //   ViewActions.loadViewAuthorisations({
-    //     viewUrl: "/form/activation",
-    //     roles: this.keycloakService.getUserRoles(),
-    //     loading: true,
-    //   })
-    // );
 
     this.unauthorisedUrls$.subscribe((restrictedItems) => {
       restrictedItems.forEach((item) => {
         if (item === '/form/activation/edit-form-activation/{button:delete}') {
-          this.deleteUnrestricted = false;
+          this.deleteUnrestricted = true;
+        } else if (item === '/form/activation/edit-form-activation/{button:accept}') {
+          this.acceptUnrestricted = false;
+        } else if (item === '/form/activation/edit-form-activation/{button:return}') {
+          this.returnUnrestricted = false;
+        } else if (item === '/form/activation/edit-form-activation/{button:submit}') {
+          this.submitUnrestricted = false;
+        } else if (item === '/form/activation/edit-form-activation/{button:bulk}') {
+          this.bulkAuthorised = true;
         }
       });
     });
+
+    this.listenToFormActivationFormSubmissions();
+  }
+
+  listenToFormActivationFormSubmissions(): void {
+    this.formSubmissions$.subscribe((submissions) => {
+      if(this.submissionAction === Actions.RECREATE_SUBMISSIONS) {
+        this.formActivationFormSubmissionsControl.clear();
+      }
+      submissions.forEach((submission) => {
+        this.formActivationFormSubmissionsControl.push(this.createFormSubmissionVOGroup(submission));
+      });
+    });
+  }
+
+  override afterEditFormActivationCreateMissing(form: EditFormActivationCreateMissingForm): void {
+    this.submissionAction = Actions.CREATE_MISSING_SUBMISSIONS;
+    this.store.dispatch(
+      FormActivationActions.createMissingSubmissions({
+        id: form.formActivation.id,
+        includeInactive: this.includeInactive.value,
+        loading: true,
+        loaderMessage: 'Creating missing submissions ...',
+      })
+    );
   }
 
   override handleFormChanges(change: any): void {}
@@ -222,6 +259,7 @@ export class EditFormActivationComponentImpl extends EditFormActivationComponent
       this.store.dispatch(
         FormActivationActions.save({
           formActivation: form.formActivation,
+          includeInactive: this.includeInactive.value,
           loading: true,
           loaderMessage: 'Saving form activation ...',
         })

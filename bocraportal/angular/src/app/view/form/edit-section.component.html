@@ -50,7 +50,7 @@
             class="alert alert-danger"
             role="alert"
           >
-            <div *ngIf="formSectionSectionIdControl.errors['required']">
+            <div *ngIf="formSectionSectionIdControl.hasError('required')">
               <span translate>section.id.required</span>
             </div>
           </div>
@@ -67,48 +67,6 @@
             formControlName="sectionLabel"
           />
         </div>
-        <!-- <mat-tab-group animationDuration="0ms" class = "view-tabs">
-                    <mat-tab label="{{'form.fields' | translate}}">
-		            	<div>
-		            		<mat-table matSort [dataSource]="formSectionFormFields" #formFieldsSort="matSort" class="table table-bordered table-striped" style="width: 100%;">
-		            			<ng-container matColumnDef="actions">
-		            				<mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-		                            <mat-cell *matCellDef="let row; index as i">
-		                                <button type="button" color="accent" (click)="deleteFromFormSectionFormFields(i)" class="btn btn-primary">
-		                                    <mat-icon>delete</mat-icon>
-		                                </button>
-		                                <button type="button" color="accent" (click)="doEditFormSectionFormFields(row)" class="btn btn-primary">
-		                                    <mat-icon>edit</mat-icon>
-		                                </button>
-		                            </mat-cell>
-		            			</ng-container>
-		            			<ng-container matColumnDef="id">
-		            				<mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-		                            <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
-		            			</ng-container>
-		            			<ng-container matColumnDef="formSection.sectionName">
-		            				<mat-header-cell *matHeaderCellDef translate>section.name</mat-header-cell>
-		                            <mat-cell *matCellDef="let row"> {{ row?.formSection?.sectionName }} </mat-cell>
-		            			</ng-container>
-		            			<ng-container matColumnDef="fieldId">
-		            				<mat-header-cell *matHeaderCellDef translate>field.id</mat-header-cell>
-		                            <mat-cell *matCellDef="let row"> {{ row?.fieldId }} </mat-cell>
-		            			</ng-container>
-		            			<ng-container matColumnDef="fieldName">
-		            				<mat-header-cell *matHeaderCellDef translate>field.name</mat-header-cell>
-		                            <mat-cell *matCellDef="let row"> {{ row?.fieldName }} </mat-cell>
-		            			</ng-container>
-		            			<ng-container matColumnDef="fieldType">
-		            				<mat-header-cell *matHeaderCellDef translate>field.type</mat-header-cell>
-		                            <mat-cell *matCellDef="let row"> {{ row?.fieldType }} </mat-cell>
-		            			</ng-container>
-		            			<mat-header-row *matHeaderRowDef="formSectionFormFieldsModalColumns"></mat-header-row>
-		            			<mat-row *matRowDef="let row; columns: formSectionFormFieldsModalColumns;"></mat-row>
-		            		</mat-table>
-		            		<mat-paginator #formSectionFormFieldsPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-		            	</div>
-                    </mat-tab>
-                </mat-tab-group> -->
       </div>
     </form>
   </div>
@@ -118,70 +76,6 @@
   &nbsp;&nbsp;&nbsp;&nbsp;
   <button type="button" class="btn btn-primary" color="accent" (click)="dialogDone()" translate>action.done</button>
 </div>
-<!-- <div class="modal fade" id="formSectionFormFieldsModal" tabindex="-1" aria-labelledby="formSectionFormFieldsLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="formSectionFormFieldsAddLabel" translate>
-                    action.select
-                    <span translate>form.fields</span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <form>
-                        <div>
-                            <mat-form-field>
-                            <mat-label translate>search</mat-label>
-                            <input matInput type="text" [formControl]="formSectionFormFieldsSearchField"
-                                id="formSectionFormFieldsSearchField" />
-                            </mat-form-field>
-                        </div>
-                        <button type="button" (click)="formSectionFormFieldsSearch()" class="btn btn-primary">
-                            <mat-icon>search</mat-icon>
-                        </button>
-                    </form>
-                </div>
-             <mat-table matSort [dataSource]="formSectionFormFieldsDataSource" #formSectionFormFieldsModalSort="matSort" class="table table-bordered" style="width: 100%;">
-                 <ng-container matColumnDef="actions">
-                     <mat-header-cell *matHeaderCellDef translate>actions</mat-header-cell>
-                     <mat-cell *matCellDef="let row; let i=index">
-                         <mat-checkbox (change)="formSectionFormFieldsSelected($event, row)"></mat-checkbox>
-                     </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="id">
-                     <mat-header-cell *matHeaderCellDef translate>id</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.id }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="formSection.sectionName">
-                     <mat-header-cell *matHeaderCellDef translate>form.section.section.name</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.formSection?.sectionName }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="fieldId">
-                     <mat-header-cell *matHeaderCellDef translate>field.id</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.fieldId }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="fieldName">
-                     <mat-header-cell *matHeaderCellDef translate>field.name</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.fieldName }} </mat-cell>
-                 </ng-container>
-                 <ng-container matColumnDef="fieldType">
-                     <mat-header-cell *matHeaderCellDef translate>field.type</mat-header-cell>
-                     <mat-cell *matCellDef="let row"> {{ row?.fieldType }} </mat-cell>
-                 </ng-container>
-                 <mat-header-row *matHeaderRowDef="formSectionFormFieldsModalColumns"></mat-header-row>
-                 <mat-row *matRowDef="let row; columns: formSectionFormFieldsModalColumns;"></mat-row>
-             </mat-table>
-             <mat-paginator #formSectionFormFieldsModalPaginator="matPaginator" [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" translate>action.close</button>
-                <button type="button" class="btn btn-primary" (click)="addSelectedFormSectionFormFields()" data-bs-dismiss="modal" translate>save</button>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <!-- Modal for form -->
 <div
@@ -249,6 +143,10 @@
           <ng-container matColumnDef="entryType">
             <mat-header-cell *matHeaderCellDef translate>entry.type</mat-header-cell>
             <mat-cell *matCellDef="let row"> {{ row?.entryType }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="periodConfig.periodConfigName">
+            <mat-header-cell *matHeaderCellDef translate>period.config.name</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row?.periodConfig.periodConfigName }} </mat-cell>
           </ng-container>
           <mat-header-row *matHeaderRowDef="formSectionFormModalColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: formSectionFormModalColumns"></mat-row>
