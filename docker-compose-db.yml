@@ -5,7 +5,7 @@ services:
   ###############################################################################
   db:
     hostname: db
-    image: bitnami/postgresql:15
+    image: soldevelo/postgresql:15
     volumes:
       - ${BOCRA_DATA}/db:/bitnami/postgresql
       # - ${BOCRA_DATA}/postgres-conf:/opt/bitnami/postgresql/conf
@@ -44,7 +44,7 @@ services:
         - "traefik.tcp.routers.bocra-db.tls=true"
 
   postgres-exporter:
-    image: bitnami/postgres-exporter:latest
+    image: soldevelo/postgres-exporter:latest
     environment:
       DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable"
       # - DATA_SOURCE_USER=bocraportal
